@@ -39,9 +39,9 @@ RSpec.describe PostAlerter do
   fab!(:group)
 
   fab!(:admin)
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:coding_horror)
-  fab!(:walterwhite) { Fabricate(:walter_white) }
+  fab!(:walterwhite) { Fabricate(:walter_white, refresh_auto_groups: true) }
   fab!(:user)
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
@@ -715,8 +715,8 @@ RSpec.describe PostAlerter do
     end
 
     it "doesn't notify the linked user if the user is staged and the category is restricted and allows strangers" do
-      staged_user = Fabricate(:staged)
-      group_member = Fabricate(:user)
+      staged_user = Fabricate(:staged, refresh_auto_groups: true)
+      group_member = Fabricate(:user, refresh_auto_groups: true)
       group.add(group_member)
 
       staged_user_post = create_post(user: staged_user, category: private_category)
@@ -2057,6 +2057,7 @@ RSpec.describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
         Jobs.run_immediately!
         TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
         TopicUser.change(
@@ -2075,7 +2076,10 @@ RSpec.describe PostAlerter do
         ).to eq(0)
 
         expect {
-          PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [other_tag.name, watched_tag.name],
+          )
         }.to change { Notification.where(user_id: user.id).count }.by(1)
         expect(
           user
@@ -2085,7 +2089,10 @@ RSpec.describe PostAlerter do
         ).to eq(1)
 
         expect {
-          PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [watched_tag.name, other_tag.name],
+          )
         }.not_to change { Notification.count }
         expect(
           user
@@ -2149,11 +2156,26 @@ RSpec.describe PostAlerter do
       end
 
       it "only notifies staff watching added tag" do
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: staged.id).count).to eq(0)
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag2.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(0)
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag3.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(1)
       end
     end
@@ -2294,7 +2316,7 @@ RSpec.describe PostAlerter do
 
       post =
         PostCreator.create!(
-          Fabricate(:user),
+          Fabricate(:user, refresh_auto_groups: true),
           title: "one of my first topics",
           raw: "one of my first posts",
           category: category.id,

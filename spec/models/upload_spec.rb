@@ -19,7 +19,12 @@ RSpec.describe Upload do
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
-      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post =
+        Fabricate(
+          :post,
+          raw: "<img src='#{post_upload.url}'>",
+          user: Fabricate(:user, refresh_auto_groups: true),
+        )
       post.link_post_uploads
 
       badge_upload = Fabricate(:upload)
@@ -444,6 +449,7 @@ RSpec.describe Upload do
       end
 
       it "marks the upload as not secure if its access control post is a public post" do
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload)
         upload.update!(secure: true, access_control_post: Fabricate(:post))
         upload.update_secure_status
         expect(upload.secure).to eq(false)
@@ -453,6 +459,21 @@ RSpec.describe Upload do
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         upload.update_secure_status
         expect(upload.secure).to eq(true)
+      end
+
+      it "does not attempt to change the ACL if the secure status has not changed" do
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        upload.update_secure_status
+      end
+
+      it "does not attempt to change the ACL if s3_use_acls is disabled" do
+        SiteSetting.secure_uploads = false
+        SiteSetting.s3_use_acls = false
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        upload.update!(secure: true, access_control_post: Fabricate(:post))
+        upload.update_secure_status
+        expect(upload.secure).to eq(false)
       end
 
       it "marks an image upload as secure if login_required is enabled" do

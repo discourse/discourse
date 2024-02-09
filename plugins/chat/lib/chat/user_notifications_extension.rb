@@ -2,7 +2,7 @@
 
 module Chat
   module UserNotificationsExtension
-    def chat_summary(user, opts)
+    def chat_summary(user, _ = nil)
       guardian = Guardian.new(user)
       return unless guardian.can_chat?
 
@@ -11,9 +11,9 @@ module Chat
           .joins(:user, :chat_channel)
           .where.not(user: user)
           .where("chat_messages.created_at > ?", 1.week.ago)
-          .joins(
-            "LEFT OUTER JOIN chat_mentions cm ON cm.chat_message_id = chat_messages.id AND cm.notification_id IS NOT NULL",
-          )
+          .joins("LEFT OUTER JOIN chat_mentions cm ON cm.chat_message_id = chat_messages.id")
+          .joins("LEFT OUTER JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = cm.id")
+          .joins("LEFT OUTER JOIN notifications n ON cmn.notification_id = n.id")
           .joins(
             "INNER JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = chat_channels.id",
           )
@@ -22,7 +22,7 @@ module Chat
           (uccm.last_read_message_id IS NULL OR chat_messages.id > uccm.last_read_message_id) AND
           (uccm.last_unread_mention_when_emailed_id IS NULL OR chat_messages.id > uccm.last_unread_mention_when_emailed_id) AND
           (
-            (cm.user_id = :user_id AND uccm.following IS true AND chat_channels.chatable_type = 'Category') OR
+            (n.user_id = :user_id AND cmn.notification_id IS NOT NULL AND uccm.following IS true AND chat_channels.chatable_type = 'Category') OR
             (chat_channels.chatable_type = 'DirectMessage')
           )
         SQL
@@ -53,6 +53,15 @@ module Chat
     end
 
     def summary_subject(user, grouped_messages)
+      if SiteSetting.private_email
+        return(
+          I18n.t(
+            "user_notifications.chat_summary.subject.private_message",
+            email_prefix: @email_prefix,
+          )
+        )
+      end
+
       all_channels = grouped_messages.keys
       grouped_channels = all_channels.partition { |c| !c.direct_message_channel? }
       channels = grouped_channels.first

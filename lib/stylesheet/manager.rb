@@ -9,7 +9,9 @@ end
 class Stylesheet::Manager
   BASE_COMPILER_VERSION = 1
 
-  CACHE_PATH ||= "tmp/stylesheet-cache"
+  CACHE_PATH = "tmp/stylesheet-cache"
+  private_constant :CACHE_PATH
+
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   THEME_REGEX ||= /_theme\z/
   COLOR_SCHEME_STYLESHEET ||= "color_definitions"
@@ -191,6 +193,12 @@ class Stylesheet::Manager
     File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
   end
 
+  if Rails.env.test?
+    def self.rm_cache_folder
+      FileUtils.rm_rf(cache_fullpath)
+    end
+  end
+
   attr_reader :theme_ids
 
   def initialize(theme_id: nil)
@@ -293,7 +301,7 @@ class Stylesheet::Manager
           data = {
             target: target,
             theme_id: theme_id,
-            theme_name: theme&.name.downcase,
+            theme_name: theme&.name&.downcase,
             remote: theme.remote_theme_id?,
           }
           builder = Builder.new(target: target, theme: theme, manager: self)

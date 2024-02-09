@@ -6,6 +6,7 @@ import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import I18n from "discourse-i18n";
+import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
@@ -24,8 +25,23 @@ export default ComboBoxComponent.extend({
     prioritizedCategoryId: null,
   },
 
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll([this.value])
+    ) {
+      // eslint-disable-next-line no-console
+      console.warn("Category selected with category-chooser was not loaded");
+      Category.asyncFindByIds([this.value]).then(() => {
+        this.notifyPropertyChange("value");
+      });
+    }
+  },
+
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   modifyNoSelection() {
@@ -76,7 +92,7 @@ export default ComboBoxComponent.extend({
   },
 
   search(filter) {
-    if (this.siteSettings.lazy_load_categories) {
+    if (this.site.lazy_load_categories) {
       return Category.asyncSearch(this._normalize(filter), {
         scopedCategoryId: this.selectKit.options?.scopedCategoryId,
         prioritizedCategoryId: this.selectKit.options?.prioritizedCategoryId,

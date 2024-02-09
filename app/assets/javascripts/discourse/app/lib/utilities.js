@@ -78,17 +78,21 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  container.querySelector(".tabLoc")?.focus();
-
-  const element = container.querySelector(".topic-body");
+  const element = container.querySelector(".topic-body, .small-action-desc");
   if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
 
+  if (postNumber > 1) {
+    element.setAttribute("tabindex", "0");
+    element.focus();
+  }
+
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
+    element.removeAttribute("tabindex");
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
@@ -490,7 +494,11 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return clipboardCopyFallback(text);
+  if (clipboardCopyFallback(text)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject();
+  }
 }
 
 // Use this version of clipboardCopy if you must use an AJAX call
@@ -612,4 +620,120 @@ export function getCaretPosition(element, options) {
   };
 
   return adjustedPosition;
+}
+
+/**
+ * Generate markdown table from an array of objects
+ * Inspired by https://github.com/Ygilany/array-to-table
+ *
+ * @param  {Array} array       Array of objects
+ * @param  {Array} columns     Column headings
+ * @param  {String} colPrefix  Table column prefix
+ *
+ * @return {String} Markdown table
+ */
+export function arrayToTable(array, cols, colPrefix = "col") {
+  let table = "";
+
+  // Generate table headers
+  table += "|";
+  table += cols.join(" | ");
+  table += "|\r\n|";
+
+  // Generate table header separator
+  table += cols
+    .map(function () {
+      return "---";
+    })
+    .join(" | ");
+  table += "|\r\n";
+
+  // Generate table body
+  array.forEach(function (item) {
+    table += "|";
+
+    table +=
+      cols
+        .map(function (_key, index) {
+          return String(item[`${colPrefix}${index}`] || "").replace(
+            /\r?\n|\r/g,
+            " "
+          );
+        })
+        .join(" | ") + "|\r\n";
+  });
+
+  return table;
+}
+
+/**
+ *
+ * @returns a regular expression finding all markdown tables
+ */
+export function findTableRegex() {
+  return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
+}
+
+export function tokenRange(tokens, start, end) {
+  const contents = [];
+  let startPushing = false;
+  let items = [];
+
+  tokens.forEach((token) => {
+    if (token.type === start) {
+      startPushing = true;
+    }
+
+    if (token.type === end) {
+      contents.push(items);
+      items = [];
+      startPushing = false;
+    }
+
+    if (startPushing) {
+      items.push(token);
+    }
+  });
+
+  return contents;
+}
+
+export function allowOnlyNumericInput(event, allowNegative = false) {
+  const ALLOWED_KEYS = [
+    "Enter",
+    "Backspace",
+    "Tab",
+    "Delete",
+    "ArrowLeft",
+    "ArrowUp",
+    "ArrowRight",
+    "ArrowDown",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+  ];
+
+  if (!ALLOWED_KEYS.includes(event.key)) {
+    if (allowNegative && event.key === "-") {
+      return;
+    } else {
+      event.preventDefault();
+    }
+  }
+}
+
+export function cleanNullQueryParams(params) {
+  for (const [key, val] of Object.entries(params)) {
+    if (val === "undefined" || val === "null") {
+      params[key] = null;
+    }
+  }
+  return params;
 }

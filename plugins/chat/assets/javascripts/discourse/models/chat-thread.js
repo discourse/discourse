@@ -29,8 +29,8 @@ export default class ChatThread {
   @tracked threadMessageBusLastId;
   @tracked replyCount;
   @tracked tracking;
-  @tracked currentUserMembership = null;
-  @tracked preview = null;
+  @tracked currentUserMembership;
+  @tracked preview;
 
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
@@ -38,13 +38,16 @@ export default class ChatThread {
     this.id = args.id;
     this.channel = channel;
     this.status = args.status;
-    this.draft = args.draft;
     this.staged = args.staged;
     this.replyCount = args.reply_count;
 
     this.originalMessage = args.original_message
       ? ChatMessage.create(channel, args.original_message)
       : null;
+
+    if (this.originalMessage) {
+      this.originalMessage.thread = this;
+    }
 
     this.title = args.title;
 
@@ -58,12 +61,19 @@ export default class ChatThread {
     this.preview = ChatThreadPreview.create(args.preview);
   }
 
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this.channel, {
+      user,
+      thread: this,
+    });
+  }
+
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.processed = false;
     message.draft = false;
-    message.createdAt ??= moment.utc().format();
+    message.createdAt = new Date();
     message.thread = this;
 
     this.messagesManager.addMessages([message]);

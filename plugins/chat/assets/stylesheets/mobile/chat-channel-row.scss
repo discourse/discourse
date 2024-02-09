@@ -1,3 +1,6 @@
+:root {
+  --channel-list-avatar-size: 43px;
+}
 .chat-channel-row {
   margin: 0;
   border-radius: 0;
@@ -5,8 +8,8 @@
   transition: height 0.25s ease-in-out, opacity 0.25s ease-out;
   transform-origin: top center;
   will-change: height, opacity, left;
-  height: 4em;
   position: relative;
+  height: 4em;
 
   &.-fade-out {
     .chat-channel-row__content {
@@ -20,11 +23,13 @@
 
   &__content {
     padding-inline: 1.5rem;
+    padding-block: 0.5rem;
     z-index: 2;
-    background: var(--primary-very-low);
     box-sizing: border-box;
-    height: 100%;
     transition: border-radius 0.25s ease-in-out;
+    //for sliding delete animation
+    background: var(--primary-very-low);
+    height: 100%;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
@@ -33,6 +38,28 @@
     &:not(.-animate-reset) {
       border-top-right-radius: 0.25rem;
       border-bottom-right-radius: 0.25rem;
+    }
+  }
+
+  &__info {
+    .is-category & {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .is-dm & {
+      display: grid;
+      grid-template-areas:
+        "name metadata"
+        "msg msg";
+      width: 100%;
+      align-items: center;
+      &:has(.chat-channel-unread-indicator) {
+        grid-template-areas:
+          "name metadata"
+          "msg metadata";
+      }
     }
   }
 
@@ -69,13 +96,36 @@
     }
   }
 
-  .chat-channel-metadata {
-    .chat-channel-unread-indicator {
-      font-size: var(--font-down-2);
-      margin-top: 0.25rem;
+  .chat-channel {
+    &__user-info,
+    &__channel-info {
+      grid-area: name;
     }
-    &__date {
+    &__metadata {
+      grid-area: metadata;
+      .chat-channel-unread-indicator {
+        font-size: var(--font-down-2);
+        margin-top: 0.25rem;
+      }
+    }
+    &__metadata-date {
       font-size: var(--font-down-2);
+    }
+    &__last-message {
+      @include ellipsis;
+      grid-area: msg;
+      color: var(--primary-high);
+
+      .emoji {
+        width: 1em;
+        height: 1em;
+      }
+    }
+  }
+
+  .chat-channel-icon {
+    &.--users-count {
+      font-size: var(--font-up-2);
     }
   }
 }

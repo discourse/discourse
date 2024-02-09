@@ -19,10 +19,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :trust_level,
              :can_send_private_email_messages,
              :can_send_private_messages,
+             :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
              :can_delete_account,
+             :can_post_anonymously,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -67,8 +69,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :experimental_search_menu_groups_enabled?,
-             :experimental_bookmark_redesign_enabled?
+             :experimental_bookmark_redesign_enabled?,
+             :use_experimental_topic_bulk_actions?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -119,6 +121,19 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  def can_post_anonymously
+    SiteSetting.allow_anonymous_posting &&
+      (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
+  end
+
+  def can_ignore_users
+    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+  end
+
+  def can_upload_avatar
+    !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
   end
 
   def can_edit
@@ -278,5 +293,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
+  end
+
+  def use_experimental_topic_bulk_actions?
+    scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
   end
 end

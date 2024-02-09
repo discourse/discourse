@@ -8,6 +8,7 @@ module PageObjects
       def modal
         find(".grant-badge-modal")
       end
+
       def select_badge(badge_name)
         within(modal) do
           grantable_badges_dropdown.expand
@@ -16,7 +17,7 @@ module PageObjects
       end
 
       def grant
-        within(modal) { find(".modal-footer .btn").click }
+        within(modal) { find(".d-modal__footer .btn").click }
       end
 
       def has_success_flash_visible?

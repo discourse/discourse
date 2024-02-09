@@ -148,16 +148,10 @@ module SystemHelpers
   end
 
   def using_browser_timezone(timezone, &example)
-    previous_browser_timezone = ENV["TZ"]
-
-    ENV["TZ"] = timezone
-
-    using_session(timezone) do |session|
+    using_session(timezone) do
+      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
       freeze_time(&example)
-      session.quit
     end
-
-    ENV["TZ"] = previous_browser_timezone
   end
 
   # When using parallelism, Capybara's `using_session` method can cause
@@ -199,6 +193,13 @@ module SystemHelpers
   end
 
   def skip_unless_s3_system_specs_enabled!
+    if ENV["CI"]
+      return(
+        skip(
+          "S3 system specs are temporarily disabled in this environment to address parallel spec issues",
+        )
+      )
+    end
     if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
       skip(
         "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",

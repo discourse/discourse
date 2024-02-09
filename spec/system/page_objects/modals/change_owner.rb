@@ -8,6 +8,7 @@ module PageObjects
       def modal
         find(".change-ownership-modal")
       end
+
       def select_new_owner(user)
         within(modal) do
           users_dropdown.expand
@@ -17,7 +18,7 @@ module PageObjects
       end
 
       def confirm_new_owner
-        within(modal) { find(".modal-footer .btn").click }
+        within(modal) { find(".d-modal__footer .btn").click }
       end
 
       def users_dropdown

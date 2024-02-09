@@ -13,6 +13,8 @@ bs_BA:
           never: "Nikad"
     chat:
       deleted_chat_username: obrisano
+      dates:
+        yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
       channel_settings:
@@ -62,6 +64,7 @@ bs_BA:
           settings: Postavke
       new_message_modal:
         no_items: "Nema stavki"
+        filter: "Filter"
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"

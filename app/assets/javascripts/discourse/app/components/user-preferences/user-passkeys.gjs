@@ -9,7 +9,11 @@ import PasskeyOptionsDropdown from "discourse/components/user-preferences/passke
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
+import {
+  bufferToBase64,
+  stringToBuffer,
+  WebauthnAbortHandler,
+} from "discourse/lib/webauthn";
 import I18n from "discourse-i18n";
 
 export default class UserPasskeys extends Component {
@@ -71,6 +75,7 @@ export default class UserPasskeys extends Component {
 
       const credential = await navigator.credentials.create({
         publicKey: publicKeyCredentialCreationOptions,
+        signal: WebauthnAbortHandler.signal(),
       });
 
       let credentialParam = {

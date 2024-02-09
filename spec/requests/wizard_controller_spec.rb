@@ -7,9 +7,7 @@ RSpec.describe WizardController do
     it "needs you to be logged in" do
       get "/wizard.json"
       expect(response.status).to eq(403)
-    end
 
-    it "needs you to be logged in" do
       get "/wizard"
       # for whatever reason, no access is 404
       # we may want to revisit this at some point and make it 403

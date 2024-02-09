@@ -142,6 +142,7 @@ export default class ChatMessageActionsDesktop extends Component {
                 @onReaction={{this.messageInteractor.react}}
                 @message={{this.message}}
                 @showCount={{false}}
+                @disableTooltip={{true}}
               />
             {{/each}}
           {{/if}}
@@ -160,6 +161,7 @@ export default class ChatMessageActionsDesktop extends Component {
             <DButton
               @action={{this.messageInteractor.toggleBookmark}}
               class="btn-flat bookmark-btn"
+              @translatedTitle={{this.message.bookmark.reminderTitle}}
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -181,7 +183,6 @@ export default class ChatMessageActionsDesktop extends Component {
             )
           }}
             <DropdownSelectBox
-              @class="more-buttons secondary-actions"
               @options={{hash
                 icon="ellipsis-v"
                 placement="left"
@@ -190,6 +191,7 @@ export default class ChatMessageActionsDesktop extends Component {
               }}
               @content={{this.messageInteractor.secondaryActions}}
               @onChange={{this.messageInteractor.handleSecondaryActions}}
+              class="more-buttons secondary-actions"
             />
           {{/if}}
         </div>

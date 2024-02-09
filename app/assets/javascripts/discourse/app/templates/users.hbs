@@ -48,11 +48,11 @@
             />
             {{#if this.showGroupFilter}}
               <ComboBox
-                @class="directory-group-selector"
                 @value={{this.group}}
                 @content={{this.groupOptions}}
                 @onChange={{action this.groupChanged}}
                 @options={{hash none="directory.group.all"}}
+                class="directory-group-selector"
               />
             {{/if}}
             {{#if this.currentUser.staff}}

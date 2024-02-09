@@ -9,7 +9,7 @@
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}
-      @panel={{this.currentPanel}}
+      @panel={{this.sidebarState.currentPanel}}
     />
   {{else}}
     <Sidebar::ApiPanels

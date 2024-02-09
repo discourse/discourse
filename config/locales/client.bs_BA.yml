@@ -1051,8 +1051,6 @@ bs_BA:
           title: "Generirani sigurnosni kodovi"
           description: "Svaki od ovih rezervnih kodova može se koristiti samo jednom. Držite ih na sigurnom, ali pristupačnom mjestu."
       second_factor:
-        forgot_password: "Zaboravili ste password?"
-        confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         name: "Ime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
@@ -1098,6 +1096,7 @@ bs_BA:
         error: "Desila se greška pri promjeni vašeg email-a. Možda se ta email adresa kod nas već koristi?"
         success: "Poslali smo email na datu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
         success_staff: "Poslali smo email na vašu trenutnu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
+        confirm_success: "Your email has been updated."
       change_avatar:
         title: "Promjeni sliku"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na temelju"
@@ -1152,14 +1151,13 @@ bs_BA:
           generic: "Vaš %{provider} račun će biti korišten za prijavu."
       name:
         title: "Ime"
-        instructions: "vaše puno ime (opciono)"
-        instructions_required: "Vaše puno ime"
+        instructions: "Vaše puno ime (opciono)."
+        instructions_required: "Vaše puno ime."
         required: "Unesite ime"
         too_short: "Vaše ime je prekratko."
         ok: "Vaše ime izgleda ok."
       username:
         title: "Nadimak"
-        instructions: "unikatno, bez tipke praznog prostora, kratko"
         short_instructions: "Ljudi vas mogu spomenuti preko @%{username}."
         available: "Vaš nadimak je dostupan."
         not_available: "Nije dostupan. Pokušaj %{suggestion}?"
@@ -1306,7 +1304,7 @@ bs_BA:
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
         ok: "Vaša lozinka dobro izgleda."
-        instructions: "minimalno %{count} karaktera"
+        instructions: "Minimalno %{count} karaktera."
         required: "Molimo unesite lozinku"
       summary:
         title: "Sumirano"
@@ -1579,6 +1577,9 @@ bs_BA:
         one: "Označi bar %{count} predmet."
         few: "Označi bar %{count} predmeta."
         other: "Označi bar %{count} predmeta."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
       to: Ka
@@ -1618,10 +1619,6 @@ bs_BA:
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "skicirano lokalno"
       edit_conflict: "uredi sukob"
-      group_mentioned:
-        one: "Spominjući %{group}, obavijestiti će te %{count} korisnika – da li ste sigurni?"
-        few: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
-        other: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
       duplicate_link: "Izgleda da vaš link ka <b>%{domain}</b> je već objavljen u temi od strane <b>@%{username}</b> u<a href='%{post_url}'>odgovoru prije %{ago}</a> – da li ste sigurni da želite ponovno objaviti link?"
       reference_topic_title: "RE:%{title}"
       error:
@@ -1768,6 +1765,7 @@ bs_BA:
         private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
         linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
         watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} je objavio/la "%{topic}" - %{site_title}'
         confirm_title: "Obavijesti uključene - %{site_title}"
         confirm_body: "Uspješno! Obavijesti su sada uključene."
         custom: "Obavijest od %{username} na %{site_title}"
@@ -1937,6 +1935,9 @@ bs_BA:
         tag: "Nema više %{tag} tema."
         top: "Nema više top tema."
         bookmarks: "U zabilješkama više nema spremljenih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2892,7 +2893,6 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
-      description: "Description"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3048,6 +3048,18 @@ bs_BA:
       errors:
         typeMismatch:
           default: "Molim unesite ispravnu vrijednost."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Naprijed"
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Save"
+          reason: "zašto pravite izmjenu?"
+      spreadsheet:
+        show: "Show"
+        about: "O nama"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -3075,8 +3087,7 @@ bs_BA:
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         new_features:
-          dismiss: "Odpusti"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -3306,7 +3317,8 @@ bs_BA:
         not_enabled: "Ne"
         change_settings_short: "Postavke"
         howto: "Kako instaliram pluginove?"
-        official: "Officionalni Plugin"
+        author: "Od %{author}"
+        learn_more: "Saznaj više"
       backups:
         title: "Backups"
         menu:
@@ -3397,6 +3409,10 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+        component:
+          all_filter: "All"
+          enabled_filter: "Omogućen"
+          disabled_filter: "Neomogućen"
         theme:
           theme: "Izgled"
           component: "Komponenta"
@@ -3520,6 +3536,9 @@ bs_BA:
           yaml:
             text: "YAML"
             title: "Definirajte postavke teme u YAML formatu"
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Neaktivan"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -3575,7 +3594,6 @@ bs_BA:
           css: "Stylesheet"
       email:
         title: "Emailovi"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Pregled Sajta"
         advanced_test:
@@ -4035,7 +4053,6 @@ bs_BA:
             other: "U zadnjih %{count} dana:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -4163,6 +4180,8 @@ bs_BA:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Images"
       badges:
         title: Bedž
         new_badge: Novi Bedž
@@ -4269,6 +4288,7 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"

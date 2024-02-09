@@ -125,6 +125,8 @@ ur:
       facebook: "فیس بک پر شیئر کریں"
       email: "ای میل کے ذریعے بھیجیں"
       url: "یو آر ایل کو کاپی اور شیئر کریں"
+    word_connector:
+      comma: "، "
     action_codes:
       public_topic: "اس ٹاپک کو پبلک بنایا گیا %{when}"
       open_topic: "اسے %{when}پر عنوان میں تبدیل کر دیا"
@@ -673,7 +675,6 @@ ur:
           imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
-            gmail: "جی میل"
           credentials:
             title: "شہادت"
             smtp_server: "SMTP سرور"
@@ -1174,8 +1175,6 @@ ur:
         title: "دو عنصری کی تصدیق"
         enable: "دو فیکٹر توثیق انتظام"
         disable_all: "سبھی کو غیر فعال کریں۔"
-        forgot_password: "پاس ورڈ بھول گئے؟"
-        confirm_password_description: "جاری رکھنے کیلئے براہ کرم اپنے پاسوَرڈ کی تصدیق کریں"
         name: "نام"
         label: "کَوڈ"
         rate_limit: "دوبارہ توثیقی کوڈ کی کوشش کرنے سے پہلے براہ کرم تھوڑا انتظار کریں۔"
@@ -1230,6 +1229,15 @@ ur:
         success: "ہم نے اِس ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
         success_via_admin: "ہم نے اس پتے پر ایک ای میل بھیجا ہے۔ صارف کو ای میل میں تصدیق کے ہدایات پر عمل کرنے کی ضرورت ہوگی۔"
         success_staff: "ہم نے آپ کے موجودہ ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
+        confirm_success: "آپ کا اِی میل اپڈیٹ کر دیا کیا ہے۔"
+        confirm: "تصدیق کریں"
+        authorizing_new:
+          description: "براہ کرم تصدیق کریں کہ آپ اپنا ای میل پتہ اس میں تبدیل کرنا چاہتے ہیں:"
+          description_add: "براہ کرم تصدیق کریں کہ آپ ایک متبادل ای میل پتہ شامل کرنا چاہتے ہیں:"
+        authorizing_old:
+          old_email: "پرانا ای میل: %{email}"
+          new_email: "نیا ای میل: %{email}"
+          confirm_success: "تبدیلی کی تصدیق کے لیے ہم نے آپ کے نئے ای میل پتے پر ایک ای میل بھیجی ہے!"
       change_avatar:
         title: "اپنے پروفائل کی تصویر تبدیل کریں"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، پر مبنی"
@@ -1290,14 +1298,13 @@ ur:
           generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
       name:
         title: "نام"
-        instructions: "آپ کا پورا نام (اختیاری)"
-        instructions_required: "آپ کا پورا نام"
+        instructions: "آپ کا پورا نام (اختیاری)."
+        instructions_required: "آپ کا پورا نام."
         required: "براہ کرم ایک نام درج کریں"
         too_short: "آپ کا نام بہت چھوٹا ہے"
         ok: "آپ کا نام صحیح لگ رہا ہے"
       username:
         title: "صارف کا نام"
-        instructions: "منفرد، کوئی خالی جگہ نہیں، مختصر"
         short_instructions: "لوگ آپ کا زکر @%{username} کے طور پر کر سکتے ہیں"
         available: "آپ کا صارف نام دستیاب ہے"
         not_available: "دستیاب نہیں۔ اِستعمال کریں %{suggestion}؟"
@@ -1490,7 +1497,7 @@ ur:
         same_as_username: "آپ کا پاسورڈ وہی ہے جو آپ کا صارف نام ہے۔"
         same_as_email: "آپ کا پاسورڈ وہی ہے جو آپ کا اِی میل ہے۔"
         ok: "آپ کا پاسورڈ صحیح لگ رہا ہے"
-        instructions: "کم از کم %{count} حروف"
+        instructions: "کم از کم %{count} حروف."
         required: "براہ کرم پاس ورڈ درج کریں"
         confirm: "تصدیق کریں"
       summary:
@@ -1792,6 +1799,8 @@ ur:
       components:
         categories_admin_dropdown:
           title: "زمرے کا انتظام کریں"
+        bulk_select_topics_dropdown:
+          title: "بَلک عمل"
     date_time_picker:
       from: سے
       to: کیلئے
@@ -1835,9 +1844,6 @@ ur:
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں ایڈمنسٹریٹر کی تشکیل کردہ ذکر کی حد %{count} صارف سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
         other: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں ایڈمنسٹریٹر کی تشکیل کردہ ذکر کی حد %{count} صارفین سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
-      group_mentioned:
-        one: "%{group} کا ذکر کر کہ، آپ <a href='%{group_link}'>%{count} شخص</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
-        other: "%{group} کا ذکر کر کہ، آپ <a href='%{group_link}'>%{count} لوگوں</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
       cannot_see_mention:
         category: "آپ نے @%{username} کا ذکر کیا ہے لیکن انہیں مطلع نہیں کیا جائے گا کیونکہ انہیں اس زمرے تک رسائی نہیں ہے۔ آپ کو انہیں ایسے گروپ میں شامل کرنے کی ضرورت ہوگی جسے اس زمرے تک رسائی حاصل ہو۔"
         private: "آپ نے @%{username} کا ذکر کیا ہے لیکن انہیں مطلع نہیں کیا جائے گا کیونکہ وہ اس ذاتی پیغام کو دیکھنے سے قاصر ہیں۔ آپ کو انہیں اس ذاتی پیغام میں مدعو کرنے کی ضرورت ہوگی۔"
@@ -2030,6 +2036,7 @@ ur:
         private_message: '%{username} نے "%{topic}" میں آپ کو زاتی پیغام بھیجا - %{site_title}'
         linked: '%{username} نے "%{topic}" سے آپ کی پوسٹ کو لنک کیا - %{site_title}'
         watching_first_post: '%{username} نے ایک نیا ٹاپک "%{topic}" بنایا - %{site_title}'
+        watching_category_or_tag: '%{username} نے "%{topic}" میں پوسٹ کیا - %{site_title}'
         confirm_title: "نوٹیفکیشن فعال - %{site_title}"
         confirm_body: "کامیابی! اطلاعات فعال ہوگئی ہیں۔"
         custom: "%{username} کی طرف سے %{site_title} پر اطلاعات"
@@ -2059,6 +2066,7 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
+        admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       processing: "پروسیسنگ اپ لوڈ"
@@ -2202,6 +2210,7 @@ ur:
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
+        confirm: "تصدیق کریں"
         select_all: "تمام منتخب کریں"
         clear_all: "تمام کو صاف کریں"
         unlist_topics: "ٹاپکس کو فہرست سے ہٹائیں"
@@ -2268,6 +2277,9 @@ ur:
         tag: "مزید کوئی %{tag} کے ٹاپک موجود نہیں۔"
         top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
+    topic_bulk_actions:
+      close_topics:
+        name: "ٹاپکس بند کریں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"
@@ -2654,9 +2666,7 @@ ur:
       deleted_by_author_simple: "(مضمون مصنف نے مٹایا ہے)"
     post:
       quote_reply: "اقتباس کریں"
-      quote_reply_shortcut: "یا q دبائیں"
       quote_edit: "ترمیم"
-      quote_edit_shortcut: "یا e دبائیں"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -3385,7 +3395,6 @@ ur:
         one: "اس کا مترادف بھی مٹادیا جائے گا۔"
         other: "اس کے %{count} مترادفات بھی مٹا دیے جائیں گے۔"
       edit_tag: "ٹیگ نام اور تفصیل میں ترمیم کریں"
-      description: "تفصیل"
       sort_by: "ترتیب بہ:"
       sort_by_count: "شمار"
       sort_by_name: "نام"
@@ -3583,6 +3592,18 @@ ur:
         typeMismatch:
           default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
           email: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں."
+    table_builder:
+      modal:
+        help:
+          enter_key: "اَینٹر"
+      edit:
+        modal:
+          cancel: "منسوخ"
+          create: "محفوظ کریں"
+          reason: "آپ ترمیم کیوں کر رہے ہیں؟"
+      spreadsheet:
+        show: "دکھائیں"
+        about: "بارے میں"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     admin:
@@ -3611,9 +3632,7 @@ ur:
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         new_features:
-          title: "\U0001F381 نئی خصوصیات"
-          dismiss: "بر خاست کریں"
-          learn_more: "مزید جانیں"
+          learn_more: "مزید جانیں..."
         last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
@@ -3813,7 +3832,6 @@ ur:
             users:
               bookmarks: صارف کے بُک مارکس کی فہرست بنائیں۔ یہ ICS فارمیٹ استعمال کرتے وقت بُک مارک ریمائنڈرز لوٹاتا ہے۔
               sync_sso: DiscourseConnect کا استعمال کرتے ہوئے صارف کو سنکرونائز کریں۔
-              show: صارف کے بارے میں معلومات حاصل کریں۔
               check_emails: صارف ای میلز کی فہرست.
               update: صارف کی پروفائل کی معلومات کو اپ ڈیٹ کریں۔
               log_out: صارف کے لیے تمام سیشن لاگ آؤٹ کریں۔
@@ -3902,7 +3920,8 @@ ur:
         not_enabled: "N"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
-        official: "آفیشل پلَگ اِن"
+        author: "%{author} کی طرف سے"
+        learn_more: "مزید جانیں"
       backups:
         title: "بیک اَپس"
         menu:
@@ -3994,11 +4013,13 @@ ur:
           body: "متن"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
+        component:
+          all_filter: "تمام"
+          disabled_filter: "غیر فعال"
         theme:
           theme: "تھیم"
           component: "جزو"
           components: "اجزاء"
-          filter_placeholder: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
@@ -4157,6 +4178,9 @@ ur:
             title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"
           scss_color_variables_warning: 'تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔ براہ کرم اس کے بجائے CSS حسب ضرورت خصوصیات استعمال کریں۔ مزید تفصیلات کے لیے <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">یہ گائیڈ</a> دیکھیں۔'
           scss_warning_inline: "تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔"
+          all_filter: "تمام"
+          active_filter: "فعال"
+          inactive_filter: "غیر فعال"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
@@ -4229,7 +4253,6 @@ ur:
           instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
-        settings: "سیٹِنگ"
         templates: "ٹَیمپلیٹ"
         preview_digest: "ڈائجسٹ کا مشاہدہ کریں"
         advanced_test:
@@ -4780,7 +4803,6 @@ ur:
             other: "پچھلے %{count}دنوں میں"
           value_heading: "وَیلِیو"
           requirement_heading: "ضروریات"
-          visits: "زائرین کی تعداد"
           days: "دن"
           topics_replied_to: "جن ٹاپکس کا جواب دیا گیا"
           topics_viewed: "دیکھے گئے موضوعات"
@@ -4923,6 +4945,8 @@ ur:
         json_schema:
           edit: ایڈیٹر لانچ کریں
           modal_title: "%{name}میں ترمیم"
+        file_types_list:
+          add_image_types: "تصاویر"
       badges:
         title: بَیج
         new_badge: نیا بَیج
@@ -5054,6 +5078,7 @@ ur:
         category_title: "زمرہ"
         tag_name: "ٹیگ کا نام"
         external_url: "بیرونی یا متعلقہ URL"
+        username: "صارف نام"
         destination: "منزل"
         copy_to_clipboard: "پرمالنک کو کلپ بورڈ میں کاپی کریں"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟

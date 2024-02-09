@@ -5,7 +5,7 @@ require "rails_helper"
 describe Chat::Notifier do
   describe "#notify_new" do
     fab!(:channel) { Fabricate(:category_channel) }
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2) { Fabricate(:user) }
 
     before do
@@ -424,7 +424,6 @@ describe Chat::Notifier do
 
       context "when in a personal message" do
         let(:personal_chat_channel) do
-          Group.refresh_automatic_groups!
           result =
             Chat::CreateDirectMessageChannel.call(
               guardian: user_1.guardian,

@@ -42,7 +42,7 @@ module ChatSystemHelpers
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
           guardian: last_user.guardian,
-          message: Faker::Lorem.words(number: 5).join(" "),
+          message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
         )
 
       raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
@@ -98,6 +98,29 @@ module ChatSpecHelpers
         message_id: message.id,
         channel_id: message.chat_channel_id,
         guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def add_users_to_channel(users, channel, user: Discourse.system_user)
+    result =
+      ::Chat::AddUsersToChannel.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        usernames: Array(users).map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
+    result =
+      ::Chat::UpsertDraft.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        thread_id: thread&.id,
+        data: data.to_json,
       )
     service_failed!(result) if result.failure?
     result

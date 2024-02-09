@@ -54,6 +54,9 @@ gl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
+  components:
+    enabled_filter: "Activado"
+    disabled_filter: "Desactivado"
   themes:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Xurdiu un problema ao actualizar o tema"
@@ -75,7 +78,7 @@ gl:
       optimized_link: As ligazóns de imaxe optimizadas son efémeras e non deberían ser incluídas no código fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML proporcionado non é válido."
-      data_type_not_a_number: "Tipo de axuste `%{name}` non compatible. Os tipos compatibles son `integer`, `bool`, `list`, `enum` e `upload`"
+      data_type_inclusion: "Tipo de axuste `%{name}` non compatible. Os tipos compatibles son `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Hai un axuste cun nome demasiado longo. A lonxitude máxima é de 255 caracteres"
       default_value_missing: "O axuste '%{name}' non ten un valor predefinido"
       default_not_match_type: "O tipo de valor predefinido para o axuste `%{name}` non coincide co tipo de axuste."
@@ -182,7 +185,6 @@ gl:
       default_tags_already_selected: "Non pode seleccionar unha etiqueta utilizada noutra listaxe."
       s3_upload_bucket_is_required: "Non se poden activar as cargas a S3 a menos que proporcione un valor 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Non se pode activar o inventario a S3 a menos que active as cargas en S3."
-      page_publishing_requirements: "A publicación de páxinas non se pode activar se está activados multimedia seguros."
       s3_backup_requires_s3_settings: "Non se pode utilizar S3 como localización da copia de seguranza a menos que proporcionara '%{setting_name}'."
       s3_bucket_reused: "Non pode utilizar o mesmo contedor (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixa un contedor diferente ou utilice un camiño distinto para cada un deles."
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
@@ -294,7 +296,7 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
-  no_embedded_media_allowed_trust: "Non pode inserir elementos multimedia nunha publicación."
+  no_embedded_media_allowed_group: "Non pode inserir elementos multimedia nunha publicación."
   no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
   too_many_embedded_media:
     one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
@@ -702,26 +704,11 @@ gl:
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
   change_email:
-    wrong_account_error: "Iniciou sesión cunha conta incorrecta; saia e vólvao tentar."
-    confirmed: "O seu enderezo electrónico foi actualizado."
-    please_continue: "Continuar a %{site_name}"
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."
     error_staged: "Produciuse un erro ao cambiar o enderezo electrónico. O enderezo xa está sendo usado por un usuario transitorio."
     already_done: "Sentímolo, a ligazón de confirmación xa non está dispoñible. Cambiaría xa o seu correo electrónico?"
     confirm: "Confirmar"
-    authorizing_new:
-      title: "Confirme o seu novo correo electrónico"
-      description: "Confirme que quere cambiar o seu enderezo electrónico a:"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-    authorizing_old:
-      title: "Cambiar o seu enderezo electrónico"
-      description: "Confirme o seu cambio de enderezo electrónico"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-      old_email: "Correo electrónico antigo: %{email}"
-      new_email: "Novo correo electrónico: %{email}"
-      almost_done_title: "Confirmando o novo enderezo electrónico"
-      almost_done_description: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
   associated_accounts:
     revoke_failed: "Erro ao revogar a súa conta con %{provider_name}."
     connected: "(conectadas)"
@@ -1322,7 +1309,6 @@ gl:
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
-    enforce_second_factor: "Obriga os usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «equipo» para forzalo en usuarios do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
@@ -1390,7 +1376,6 @@ gl:
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se mostran na vista expandida ao premer en «Mostrar máis»."
     redirect_users_to_top_page: "Redirixir automaticamente á páxina de destacados aos usuarios novos e aos que estiveron ausentes durante moito tempo."
-    top_page_default_timeframe: "Período predefinido para a páxina de temas destacados."
     moderators_view_emails: "Permitir que os moderadores vexan os correos electrónicos dos usuarios"
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
     enable_rich_text_paste: "Activar conversión automática de HTML a Markdown ao pegar texto no editor. (Experimental)"
@@ -1579,14 +1564,8 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     desktop_category_page_style: "Estilo visual para a páxina de /categorías."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
-    category_style: "Estilo visual para as insignias das categorías."
     default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
     dark_mode_none: "Ningún"
-    max_image_size_kb: "O tamaño máximo dunha imaxe en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén. As imaxes cun tamaño superior e inferior ao client_max_body_size serán adaptadas para se axustar ao tamaño de subida."
-    max_attachment_size_kb: "O tamaño máximo dos ficheiros anexos en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén."
-    authorized_extensions: "Unha listaxe das extensións de ficheiro permitidas para subir (utiliza '*' para activar todos os tipos de ficheiro)"
-    authorized_extensions_for_staff: "Unha listaxe das extensións de ficheiro permitidas para subir aos membros do equipo sumada á listaxe definida na configuración `authorized_extensions` (utiliza '*' para activar todos os tipos de ficheiros)"
-    theme_authorized_extensions: "Unha listaxe das extensións de ficheiro permitidas para subir temas (utiliza '*' para activar todos os tipos de ficheiro)"
     max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros frecuentes no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
@@ -1656,6 +1635,7 @@ gl:
     forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
+    email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."
     post_excerpts_in_emails: "Nos correos de notificación, enviar sempre extractos no canto de publicacións completas"
     raw_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante."
     raw_rejected_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante rexeitado."
@@ -1758,13 +1738,11 @@ gl:
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
-    autohighlight_all_code: "Forza a aplicación do resaltado de código en todos os bloques de código preformatados, mesmo aínda que non se especificase a linguaxe de xeito explícito."
     highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_topics_list: "Admite a incorporación en HTML de listaxes de temas"
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_truncate: "Truncar as publicacións incorporadas."
-    embed_unlisted: "Os temas importados non serán listados ata que un usuario responda."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
     allowed_embed_selectors: "Unha listaxe separada por comas de elementos CSS que se permiten nas incorporacións."
     allowed_href_schemes: "Esquemas permitidos en ligazóns ademais de http e https."
@@ -1779,9 +1757,6 @@ gl:
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para disparar a xanela emerxente de autocompletar emoji"
     enable_inline_emoji_translation: "Activar a tradución de emojis en liña (sen ningún espazo nin puntuación anterior)"
     approve_post_count: "A cantidade de publicacións dun usuario novo ou básico que deba aprobarse"
-    approve_unless_trust_level: "As publicacións dirixidas a usuarios por debaixo deste nivel de confianza deben ser aprobadas"
-    approve_new_topics_unless_trust_level: "Os novos temas dirixidos a usuarios por debaixo deste nivel de confianza deben ser aprobados"
-    approve_unless_staged: "Novos temas e publicacións para usuarios transitorios que se deben aprobar"
     notify_about_queued_posts_after: "Se hai publicacións que levan máis de varias horas agardando ser revisadas, envíese unha notificación a todos os moderadores. Estabelecer en 0 para desactivar estas notificacións."
     auto_close_messages_post_count: "Número máximo de publicacións permitidas nunha mensaxe antes do peche automático (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicacións permitidas nun tema antes do peche automático (0 para desactivar)"
@@ -3645,6 +3620,9 @@ gl:
           <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
+  onebox:
+    github:
+      closed: "pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

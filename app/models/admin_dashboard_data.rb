@@ -220,7 +220,7 @@ class AdminDashboardData
                       :watched_words_check,
                       :google_analytics_version_check,
                       :translation_overrides_check,
-                      :deprecated_category_style_check
+                      :ember_version_check
 
     register_default_scheduled_problem_checks
 
@@ -446,6 +446,10 @@ class AdminDashboardData
     nil
   end
 
+  def ember_version_check
+    I18n.t("dashboard.ember_version_warning") if ENV["EMBER_VERSION"] == "3"
+  end
+
   def out_of_date_themes
     old_themes = RemoteTheme.out_of_date_themes
     return unless old_themes.present?
@@ -458,10 +462,6 @@ class AdminDashboardData
     return unless themes.present?
 
     themes_html_format(themes, "dashboard.unreachable_themes")
-  end
-
-  def deprecated_category_style_check
-    I18n.t("dashboard.category_style_deprecated") if SiteSetting.category_style != "bullet"
   end
 
   private

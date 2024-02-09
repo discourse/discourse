@@ -46,7 +46,7 @@ fr:
       invalid: |-
         Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
       not_enough_dice:
-        one: "Je n'ai que %{count} dés. C'est honteux, je sais !"
+        one: "Je n'ai que %{count} dé. C'est honteux, je sais !"
         other: "Je n'ai que %{count} dés. C'est honteux, je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
@@ -447,12 +447,12 @@ fr:
           Beau travail ! Votre attention pour les _détails_ est admirable !
       end:
         message: |-
-          Vous avez suivi ce tutoriel comme un _utiliser avancé_ :bow:
+          Vous avez suivi ce tutoriel comme un _utilisateur avancé_ :bow:
 
           %{certificate}
 
           C'est tout ce que j'ai pour vous.
 
-          Au revoir ! Si vous voulez me reparler, envoyez moi un message à tout moment :sunglasses:
+          Au revoir ! Si vous voulez me reparler, envoyez-moi un message à tout moment :sunglasses:
       certificate:
         alt: "Certificat de réussite de l'utilisateur avancé"

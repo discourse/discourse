@@ -13,6 +13,8 @@ sq:
           never: "Asnjëherë"
     chat:
       deleted_chat_username: deleted
+      dates:
+        yesterday: "Dje"
       cancel: "Anulo"
       channel_settings:
         edit: "Redakto"
@@ -53,6 +55,8 @@ sq:
         tabs:
           members: Anëtarë
           settings: Rregullimet
+      new_message_modal:
+        filter: "Filtro"
       direct_message_creator:
         title: Mesazh i ri
         prefix: "Për:"

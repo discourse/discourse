@@ -856,6 +856,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("muted_category_ids"));
   },
   set mutedCategories(categories) {
@@ -867,6 +876,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("regular_category_ids"));
   },
   set regularCategories(categories) {
@@ -878,6 +896,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get trackedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.tracked_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracked_category_ids).then(() =>
+        this.notifyPropertyChange("tracked_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("tracked_category_ids"));
   },
   set trackedCategories(categories) {
@@ -889,6 +916,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get watchedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watched_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_category_ids).then(() =>
+        this.notifyPropertyChange("watched_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watched_category_ids"));
   },
   set watchedCategories(categories) {
@@ -900,6 +936,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get watchedFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watched_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watched_first_post_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watched_first_post_category_ids"));
   },
   set watchedFirstPostCategories(categories) {

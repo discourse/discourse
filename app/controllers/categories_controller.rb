@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
                    redirect
                    find_by_slug
                    visible_groups
+                   find
                    search
                  ]
 
@@ -46,6 +47,7 @@ class CategoriesController < ApplicationController
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
+      page: params[:page],
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -194,8 +196,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
+      category_params[:email_in] = nil if category_params[:email_in].blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -299,6 +301,27 @@ class CategoriesController < ApplicationController
     render json: success_json.merge(groups: groups || [])
   end
 
+  def find
+    categories = []
+
+    if params[:ids].present?
+      categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path_with_id].present?
+      category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    end
+
+    raise Discourse::NotFound if categories.blank?
+
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+  end
+
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
@@ -334,9 +357,12 @@ class CategoriesController < ApplicationController
         ) if term.present?
 
     categories =
-      categories.where(
-        "id = :id OR parent_category_id = :id",
-        id: parent_category_id,
+      (
+        if parent_category_id != -1
+          categories.where(parent_category_id: parent_category_id)
+        else
+          categories.where(parent_category_id: nil)
+        end
       ) if parent_category_id.present?
 
     categories =
@@ -358,9 +384,11 @@ class CategoriesController < ApplicationController
       END
     SQL
 
-    categories.order(:id)
+    categories = categories.order(:id)
 
-    render json: categories, each_serializer: SiteCategorySerializer
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
   end
 
   private
@@ -380,6 +408,7 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false,
+      page: params[:page],
     }
 
     topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }

@@ -1108,7 +1108,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       class Strategy
         include OmniAuth::Strategy
         def other_phase
-          [418, {}, "I am a teapot"]
+          [418, {}, ["I am a teapot"]]
         end
       end
 
@@ -1125,12 +1125,14 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    let(:fake_auth_provider) { Auth::AuthProvider.new(authenticator: FakeAuthenticator.new) }
+
     before do
-      DiscoursePluginRegistry.register_auth_provider(
-        Auth::AuthProvider.new(authenticator: FakeAuthenticator.new),
-      )
+      DiscoursePluginRegistry.register_auth_provider(fake_auth_provider)
       OmniAuth.config.test_mode = false
     end
+
+    after { DiscoursePluginRegistry.auth_providers.delete(fake_auth_provider) }
 
     it "does not run 'other_phase' for disabled auth methods" do
       get "/auth/fake/blah"

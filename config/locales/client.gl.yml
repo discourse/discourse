@@ -123,6 +123,8 @@ gl:
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Faga este tema público o %{when}"
       private_topic: "Faga deste tema unha mensaxe privada o %{when}"
@@ -1097,8 +1099,6 @@ gl:
         title: "Autenticación de dobre paso"
         enable: "Xestionar autenticación de dobre paso"
         disable_all: "Desactivar todos"
-        forgot_password: "Esqueceu o contrasinal?"
-        confirm_password_description: "Confirme o seu contrasinal para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Agarde antes de tentalo con outro código de autenticación."
@@ -1153,6 +1153,15 @@ gl:
         success: "Enviamos un correo electrónico a ese enderezo. Siga as instrucións de confirmación."
         success_via_admin: "Enviouse unha mensaxe de correo a ese enderezo. O usuario deberá seguir as instrucións de confirmación expostas na mensaxe de correo."
         success_staff: "Enviamos un correo electrónico ao teu enderezo actual. Siga as instrucións de confirmación."
+        confirm_success: "O seu enderezo electrónico foi actualizado."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirme que quere cambiar o seu enderezo electrónico a:"
+          description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
+        authorizing_old:
+          old_email: "Correo electrónico antigo: %{email}"
+          new_email: "Novo correo electrónico: %{email}"
+          confirm_success: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
       change_avatar:
         title: "Cambie a foto do perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseado en"
@@ -1209,14 +1218,13 @@ gl:
           generic: "Usarase a súa conta de %{provider} para a autenticación."
       name:
         title: "Nome"
-        instructions: "o seu nome completo (opcional)"
-        instructions_required: "Nome completo"
+        instructions: "O seu nOme cOmpletO (OpciOnal)."
+        instructions_required: "Nome completo."
         required: "Escriba un nome"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
       username:
         title: "Nome de usuario"
-        instructions: "exclusivo, sen espazos, curto"
         short_instructions: "A xente pode mencionalo como @%{username}"
         available: "O nome de usuario está dispoñíbel"
         not_available: "Non dispoñíbel. Tentar %{suggestion}?"
@@ -1398,7 +1406,7 @@ gl:
         same_as_username: "O contrasinal é igual ao nome de usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
         ok: "O contrasinal semella bo."
-        instructions: "como mínimo %{count} caracteres"
+        instructions: "Como mínimo %{count} caracteres."
         required: "Escriba un contrasinal"
         confirm: "Confirmar"
       summary:
@@ -1696,6 +1704,8 @@ gl:
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
+        bulk_select_topics_dropdown:
+          title: "Accións en bloque"
     date_time_picker:
       from: De
       to: A
@@ -1739,9 +1749,6 @@ gl:
       group_mentioned_limit:
         one: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuario. Ninguén será avisado."
         other: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuarios. Ninguén será avisado."
-      group_mentioned:
-        one: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoa</a>. Está seguro de querelo facer?"
-        other: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoas</a>. Está seguro de querelo facer?"
       duplicate_link: "Parece que a súa ligazón a <b>%{domain}</b> xa foi publicada no tema por <b>@%{username}</b> e <a href='%{post_url}'>nunha resposta sobre %{ago}</a> Confirma que quere publicala de novo?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1914,6 +1921,7 @@ gl:
         private_message: '%{username} envioulle unha mensaxe privada sobre «%{topic}» - %{site_title}'
         linked: '%{username} ligou a súa publicación desde «%{topic}» - %{site_title}'
         watching_first_post: '%{username} creou un tema novo «%{topic}» - %{site_title}'
+        watching_category_or_tag: '%{username} publicou en "%{topic}" - %{site_title}'
         confirm_title: "Notificacións activadas - %{site_title}"
         confirm_body: "Perfecto! As notificacións están activadas."
         custom: "Notificación de %{username} en %{site_title}"
@@ -1943,6 +1951,7 @@ gl:
         membership_request_consolidated: "novas solicitudes de incorporación"
         reaction: "nova reacción"
         votes_released: "O voto foi liberado"
+        admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
       uploading: "Cargando"
       select_file: "Seleccionar ficheiro"
@@ -2052,6 +2061,7 @@ gl:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
@@ -2107,6 +2117,9 @@ gl:
         tag: "Non hai máis temas en %{tag}."
         top: "Non hai máis temas destacados."
         bookmarks: "Non hai máis temas marcados."
+    topic_bulk_actions:
+      close_topics:
+        name: "Pechar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3155,7 +3168,6 @@ gl:
       delete_confirm_synonyms:
         one: "Tamén se eliminará o seu sinónimo."
         other: "Tamén se eliminarán os seus %{count} sinónimos."
-      description: "Descrición"
       sort_by: "Ordenar por:"
       sort_by_count: "número"
       sort_by_name: "nome"
@@ -3321,6 +3333,18 @@ gl:
         typeMismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Intro"
+      edit:
+        modal:
+          cancel: "cancelar"
+          create: "Gardar"
+          reason: "por que o está editando?"
+      spreadsheet:
+        show: "Amosar"
+        about: "Verbo de"
   admin_js:
     admin:
       title: "Administrador de Discourse"
@@ -3348,9 +3372,7 @@ gl:
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         new_features:
-          title: "Novas funcionalidades"
-          dismiss: "Desbotar"
-          learn_more: "Saber máis"
+          learn_more: "Saber máis..."
         last_checked: "Última comprobación"
         refresh_problems: "Actualizar"
         no_problems: "Non se atoparon problemas."
@@ -3533,7 +3555,6 @@ gl:
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.
-              show: Obter información sobre un usuario.
               check_emails: Listar os enderezos de correo dos usuarios.
               update: Actualizar a información do perfil de usuario.
               log_out: Cerrar todas a sesións dun usuario.
@@ -3611,7 +3632,8 @@ gl:
         not_enabled: "N"
         change_settings_short: "Configuración"
         howto: "Como podo instalar un complemento?"
-        official: "Complemento oficial"
+        author: "De %{author}"
+        learn_more: "Saber máis"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3702,6 +3724,10 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+        component:
+          all_filter: "Todas"
+          enabled_filter: "Activado"
+          disabled_filter: "Desactivado"
         theme:
           theme: "Tema"
           component: "Compoñente"
@@ -3860,6 +3886,9 @@ gl:
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
+          all_filter: "Todas"
+          active_filter: "Activo"
+          inactive_filter: "Inactivo"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -3932,7 +3961,6 @@ gl:
           instructions: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS."
       email:
         title: "Mensaxes de correo"
-        settings: "Configuración"
         templates: "Modelos"
         preview_digest: "Visualización do compendio"
         advanced_test:
@@ -4458,7 +4486,6 @@ gl:
             other: "Nos últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requirimento"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas aos que respondeu"
           topics_viewed: "Temas vistos"
@@ -4597,6 +4624,9 @@ gl:
         json_schema:
           edit: Abrir o editor
           modal_title: "Editar: %{name}"
+        file_types_list:
+          add_image_types: "Imaxes"
+          add_audio_types: "Audio"
       badges:
         title: Insignias
         new_badge: Nova insignia
@@ -4723,6 +4753,7 @@ gl:
         category_title: "Categoría"
         tag_name: "Nome da etiqueta"
         external_url: "URL externo ou relativo"
+        username: "Nome de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?

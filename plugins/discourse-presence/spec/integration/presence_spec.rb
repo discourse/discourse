@@ -149,13 +149,13 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
-    it "follows the wiki edit trust level site setting" do
+    it "follows the wiki edit allowed groups site setting" do
       p = Fabricate(:post, topic: public_topic, user: user, wiki: true)
-      SiteSetting.min_trust_to_edit_wiki_post = TrustLevel.levels[:basic]
+      SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to include(Group::AUTO_GROUPS[:trust_level_1])
+      expect(c.config.allowed_group_ids).to include(Group::AUTO_GROUPS[:trust_level_3])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 

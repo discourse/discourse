@@ -10,10 +10,13 @@ de:
       title: "Styleguide"
       welcome: "Wähle einen Abschnitt aus dem linken Menü aus, um loszulegen."
       categories:
+        syntax: Syntax
         atoms: Atome
         molecules: Moleküle
         organisms: Organismen
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typografie"
           example: "Willkommen bei Discourse"
@@ -92,9 +95,9 @@ de:
         empty_state:
           title: "Empty State"
         tooltips:
-          title: "Tooltips"
+          title: "Tooltipps"
           description: "Beschreibung"
-          header: "Überschrift"
+          header: "Kopfzeile"
           hover_to_see: "Bewege den Mauszeiger darüber, um einen Tooltipp zu sehen"
         char_counter:
           title: "Zeichenzähler"

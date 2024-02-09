@@ -3,6 +3,7 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class NotAllowed < StandardError
   end
   include RateLimiter::OnCreateRecord
@@ -58,7 +59,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.to_i.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -317,13 +318,13 @@ class Topic < ActiveRecord::Base
   SQL
 
   scope :private_messages_for_user,
-        ->(user) {
+        ->(user) do
           private_messages.where(
             "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
       OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
             user_id: user.id,
           )
-        }
+        end
 
   scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
 

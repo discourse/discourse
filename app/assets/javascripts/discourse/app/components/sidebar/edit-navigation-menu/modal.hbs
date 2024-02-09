@@ -1,7 +1,8 @@
 <DModal
-  class={{concat-class "sidebar__edit-navigation-menu__modal" @class}}
   @title={{i18n @title}}
   @closeModal={{@closeModal}}
+  class="sidebar__edit-navigation-menu__modal -large"
+  ...attributes
 >
   <:belowModalTitle>
     <p class="sidebar__edit-navigation-menu__deselect-wrapper">
@@ -36,11 +37,11 @@
 
       <div class="sidebar__edit-navigation-menu__filter-dropdown-wrapper">
         <DropdownSelectBox
-          @class="sidebar__edit-navigation-menu__filter-dropdown"
           @value={{this.filterDropdownValue}}
           @content={{this.filterDropdownContent}}
           @onChange={{this.onFilterDropdownChange}}
           @options={{hash showCaret=true disabled=@loading}}
+          class="sidebar__edit-navigation-menu__filter-dropdown"
         />
       </div>
     </div>

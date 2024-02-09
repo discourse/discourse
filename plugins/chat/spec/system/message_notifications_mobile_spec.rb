@@ -80,7 +80,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
           context "when a message is created" do
             it "correctly renders notifications" do
-              visit("/chat")
+              visit("/chat/channels")
 
               create_message(channel_1, user: user_1)
 
@@ -93,7 +93,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
             it "correctly renders notifications" do
               Jobs.run_immediately!
 
-              visit("/chat")
+              visit("/chat/channels")
 
               create_message(
                 channel_1,
@@ -102,6 +102,26 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               )
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
+              expect(channel_index_page).to have_unread_channel(channel_1, count: 1)
+            end
+
+            it "shows correct count when there are multiple messages but only 1 is urgent" do
+              Jobs.run_immediately!
+
+              visit("/chat/channels")
+
+              create_message(
+                channel_1,
+                user: user_1,
+                text: "Are you busy @#{current_user.username}?",
+              )
+
+              3.times { create_message(channel_1, user: user_1) }
+
+              expect(page).to have_css(
+                ".chat-header-icon .chat-channel-unread-indicator",
+                text: "1",
+              )
               expect(channel_index_page).to have_unread_channel(channel_1, count: 1)
             end
           end
@@ -118,7 +138,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
         context "when a message is created" do
           it "correctly renders notifications" do
-            visit("/chat")
+            visit("/chat/direct-messages")
 
             create_message(dm_channel_1, user: user_1)
 
@@ -139,7 +159,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
           end
 
           it "reorders channels" do
-            visit("/chat")
+            visit("/chat/direct-messages")
 
             expect(page).to have_css(
               ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
@@ -173,12 +193,14 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
         context "when messages are created" do
           it "correctly renders notifications" do
-            visit("/chat")
+            visit("/chat/channels")
 
             create_message(channel_1, user: user_1)
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(channel_index_page).to have_unread_channel(channel_1)
+
+            visit("/chat/direct-messages")
 
             create_message(dm_channel_1, user: user_1)
 

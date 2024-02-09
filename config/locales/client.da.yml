@@ -502,12 +502,24 @@ da:
           title: "Afventende"
         approved:
           title: "Godkendt"
+        approved_flag:
+          title: "Rapportering godkendt"
         approved_user:
           title: "Bruger godkendt"
         approved_post:
           title: "Indlæg godkendt"
         rejected:
           title: "Afvist"
+        rejected_flag:
+          title: "Rapportering afvist"
+        rejected_user:
+          title: "Bruger afvist"
+        rejected_post:
+          title: "Indlæg afvist"
+        ignored:
+          title: "Rapportering ignoreret"
+        deleted:
+          title: "Emne eller indlæg slettet"
         reviewed:
           title: "Alle gennemgåede"
         all:
@@ -646,6 +658,7 @@ da:
         usernames_placeholder: "brugernavne"
         usernames_or_emails_placeholder: "brugernavne eller e-mail adresser"
         notify_users: "Giv brugerne besked"
+        set_owner: "Angiv bruger(e) som ejer(e) af denne gruppe"
       requests:
         title: "Anmodninger"
         reason: "Begrundelse"
@@ -689,7 +702,6 @@ da:
           imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
           prefill:
             title: "Forudfyld med indstillinger for:"
-            gmail: "GMail"
           credentials:
             title: "Legitimationsoplysninger"
             smtp_server: "SMTP-server"
@@ -946,6 +958,7 @@ da:
       edit: "Redigér indstillinger"
       download_archive:
         title: "Eksporter dine data"
+        button_text: "Anmod om arkiv"
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -997,6 +1010,7 @@ da:
           warning: "Er du sikker på, at du vil rydde dit fremhævede emne?"
       use_current_timezone: "Brug den aktuelle tidszone"
       profile_hidden: "Denne brugers offentlige profil er skjult."
+      inactive_user: "Denne bruger er ikke længere aktiv."
       expand_profile: "Udvid"
       sr_expand_profile: "Udvid profildetaljer"
       collapse_profile: "Fold sammen"
@@ -1194,8 +1208,6 @@ da:
         title: "To-faktor godkendelse"
         enable: "Administrer To-faktor godkendelse"
         disable_all: "Deaktiver alle"
-        forgot_password: "Glemt kodeord?"
-        confirm_password_description: "Bekræft dit kodeord for at fortsætte"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vent venligst, før du prøver en anden godkendelseskode."
@@ -1252,6 +1264,15 @@ da:
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
         success_via_admin: "Vi har sendt en e-mail til den adressen. Brugeren skal følge bekræftelsesinstruktionerne i e-mailen."
         success_staff: "Vi har sendt en email til din nuværende adresse. Følg venligst bekræftelsesinstruktionerne."
+        confirm_success: "Din e-mail-adresse er blevet opdateret."
+        confirm: "Bekræft"
+        authorizing_new:
+          description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
+          description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
+        authorizing_old:
+          old_email: "Gammel e-mail: %{email}"
+          new_email: "Ny e-mail: %{email}"
+          confirm_success: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
       change_avatar:
         title: "Skift dit profilbillede"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseret på"
@@ -1313,14 +1334,13 @@ da:
           generic: "Din %{provider}-konto vil blive brugt til godkendelse."
       name:
         title: "Navn"
-        instructions: "Dit fulde navn (valgfrit)"
-        instructions_required: "Dit fulde navn"
+        instructions: "Dit fulde navn (valgfrit)."
+        instructions_required: "Dit fulde navn."
         required: "Indtast venligst et navn"
         too_short: "Dit navn er for kort"
         ok: "Dit navn ser fint ud"
       username:
         title: "Brugernavn"
-        instructions: "unikt, ingen mellemrum, kort"
         short_instructions: "Folk kan nævne dig som @%{username}"
         available: "Dit brugernavn er tilgængeligt"
         not_available: "Ikke ledigt. Prøv %{suggestion}?"
@@ -1510,7 +1530,7 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "mindst %{count} tegn"
+        instructions: "Mindst %{count} tegn."
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
       summary:
@@ -1641,7 +1661,7 @@ da:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
-    learn_more: "lær mere…"
+    learn_more: "Lær mere…"
     mute: Ignorer
     unmute: Unmute
     last_post: Sidste indlæg
@@ -1858,10 +1878,11 @@ da:
         one: "Vælg mindst %{count} punkt."
         other: "Vælg mindst %{count} punkter."
       components:
-        tag_drop:
-          filter_for_more: Filtrer for mere…
+        filter_for_more: Filtrer for mere…
         categories_admin_dropdown:
           title: "Administrer kategorier"
+        bulk_select_topics_dropdown:
+          title: "Handlinger på flere indlæg"
     date_time_picker:
       from: Fra
       to: Til
@@ -1910,9 +1931,6 @@ da:
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
         other: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} brugere. Ingen bliver underrettet."
-      group_mentioned:
-        one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
-        other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
       cannot_see_group_mention:
         not_mentionable: "Du kan ikke nævne gruppen @%{group}."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"
@@ -2097,6 +2115,7 @@ da:
         private_message: '%{username} sendte dig en privat besked i "%{topic}" - %{site_title}'
         linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
         watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev i "%{topic}" - %{site_title}'
         confirm_title: "Notifikationer aktiveret - %{site_title}"
         confirm_body: "Succes! notifikationer er aktiveret."
         custom: "Notifikation fra %{username} på %{site_title}"
@@ -2271,6 +2290,7 @@ da:
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
+        confirm: "Bekræft"
         select_all: "Vælg alle"
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
@@ -2331,6 +2351,9 @@ da:
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
         filter: "Der er ikke flere emner."
+    topic_bulk_actions:
+      close_topics:
+        name: "Luk indlæg"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -2716,9 +2739,7 @@ da:
       deleted_by_author_simple: "(emne slettet af forfatteren)"
     post:
       quote_reply: "Citér"
-      quote_reply_shortcut: "Eller tryk på q"
       quote_edit: "Rediger"
-      quote_edit_shortcut: "Eller tryk på e"
       quote_share: "Del"
       edit_reason: "Grund: "
       post_number: "indlæg %{number}"
@@ -3455,7 +3476,6 @@ da:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
       edit_tag: "Rediger mærke navn og beskrivelse"
-      description: "Beskrivelse"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -3583,8 +3603,7 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      show_sidebar: "Vis sidebjælke"
-      hide_sidebar: "Skjul sidebjælke"
+      title: "Sidebjælke"
       unread_count:
         one: "%{count} ulæst"
         other: "%{count} ulæste"
@@ -3673,6 +3692,18 @@ da:
         typeMismatch:
           default: "Indtast venligst en gyldig værdi."
           email: "Indtast venligst en gyldig email adresse."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "annuller"
+          create: "Gem"
+          reason: "hvorfor redigerer du?"
+      spreadsheet:
+        show: "Vis"
+        about: "Om"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -3701,9 +3732,7 @@ da:
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
-          title: "\U0001F381 Nye Funktioner"
-          dismiss: "Skjul"
-          learn_more: "Lær mere"
+          learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."
@@ -3894,7 +3923,6 @@ da:
             users:
               bookmarks: Se liste over brugerbogmærker. Der returneres bogmærkepåmindelser, når du bruger ICS-format.
               sync_sso: Synkroniser en bruger ved hjælp af DiscourseConnect.
-              show: Hent oplysninger om en bruger.
               check_emails: Se liste af bruger e-mails.
               update: Opdater brugerprofiloplysninger.
               log_out: Log alle sessioner ud for en bruger.
@@ -3983,7 +4011,10 @@ da:
         not_enabled: "N"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
-        official: "Officielt plugin"
+        author: "Af %{author}"
+        learn_more: "Lær mere"
+      navigation_menu:
+        sidebar: "Sidebjælke"
       backups:
         title: "Backups"
         menu:
@@ -4081,11 +4112,14 @@ da:
           body: "Indhold"
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
+        component:
+          all_filter: "Alle"
+          enabled_filter: "Aktiveret"
+          disabled_filter: "Deaktiveret"
         theme:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
-          filter_placeholder: "skriv for at filtrere…"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"
@@ -4248,6 +4282,9 @@ da:
             title: "Definér tema indstillinger i YAML-format"
           scss_color_variables_warning: 'Brug af core SCSS-farvevariabler i temaer er forældet. Brug CSS brugerdefinerede egenskaber i stedet. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denne vejledning</a> for at få flere oplysninger.'
           scss_warning_inline: "Brug af core SCSS-farvevariabler i temaer er forældet."
+          all_filter: "Alle"
+          active_filter: "Aktiv"
+          inactive_filter: "Inaktiv"
         colors:
           select_base:
             title: "Vælg basisfarvepalet"
@@ -4320,7 +4357,6 @@ da:
           instructions: "Tilpas skabelonen, hvorfra alle html-mails dannes, og formater med CSS."
       email:
         title: "Emails"
-        settings: "Indstillinger"
         templates: "Skabeloner"
         preview_digest: "Forhåndsvisning af sammendrag"
         advanced_test:
@@ -4901,7 +4937,6 @@ da:
             other: "I de sidste %{count} dage:"
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
-          visits: "Besøg"
           days: "dage"
           topics_replied_to: "Emner med svar"
           topics_viewed: "Emner åbnet"
@@ -5053,6 +5088,9 @@ da:
         json_schema:
           edit: Start Editor
           modal_title: "Rediger %{name}"
+        file_types_list:
+          add_image_types: "Billeder"
+          add_audio_types: "Audio"
       badges:
         title: Emblemer
         new_badge: Nyt Emblem
@@ -5185,6 +5223,7 @@ da:
         category_title: "Kategori"
         tag_name: "Mærke navn"
         external_url: "Ekstern eller Relativ URL"
+        username: "Brugernavn"
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?

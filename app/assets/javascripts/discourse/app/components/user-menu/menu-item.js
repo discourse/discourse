@@ -49,6 +49,22 @@ export default class UserMenuItem extends Component {
     return this.#item.topicId;
   }
 
+  get iconComponent() {
+    return this.#item.iconComponent;
+  }
+
+  get iconComponentArgs() {
+    return this.#item.iconComponentArgs;
+  }
+
+  get endComponent() {
+    return this.#item.endComponent;
+  }
+
+  get endOutletArgs() {
+    return this.#item.endOutletArgs;
+  }
+
   get #item() {
     return this.args.item;
   }

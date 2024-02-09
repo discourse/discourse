@@ -53,22 +53,15 @@
     top: 1px;
   }
 
-  body.footer-nav-ipad & {
+  html.footer-nav-ipad & {
     top: var(--footer-nav-height);
   }
 }
 
-.loading-slider-fallback-spinner {
+.route-loading-spinner {
   padding-top: 1.8em;
-  display: none;
 }
 
-body.still-loading {
-  .loading-slider-fallback-spinner {
-    display: block;
-  }
-
-  #main-outlet {
-    display: none;
-  }
+body.has-route-loading-spinner #main-outlet {
+  display: none;
 }

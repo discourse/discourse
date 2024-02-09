@@ -28,12 +28,12 @@ RSpec.describe "Channel message selection", type: :system do
     chat.visit_channel(channel_1)
 
     find(".chat-message-collapser-button").click
-    expect(page).to have_css(".chat-message-collapser-body.hidden", visible: :false)
+    expect(page).to have_css(".chat-message-collapser-body.hidden", visible: :hidden)
     find(".chat-message-collapser-button").click
     expect(page).to have_no_css(".chat-message-collapser-body.hidden")
     find(".chat-img-upload").click
 
     # visible false is because the upload doesn’t exist but it's enough to know lightbox is working
-    expect(page).to have_css(".mfp-image-holder img[src*='#{image.url}']", visible: false)
+    expect(page).to have_css(".mfp-image-holder img[src*='#{image.url}']", visible: :hidden)
   end
 end

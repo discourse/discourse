@@ -26,15 +26,21 @@ export default {
     }
 
     this.siteSettings = container.lookup("service:site-settings");
+    this.currentUser = container.lookup("service:current-user");
 
     withPluginApi("1.8.0", (api) => {
+      const chatStateManager = container.lookup("service:chat-state-manager");
+
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
             key = CHAT_PANEL;
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
-            switchButtonDefaultUrl = getURL("/chat");
+
+            get switchButtonDefaultUrl() {
+              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+            }
           }
       );
 
@@ -42,6 +48,70 @@ export default {
     });
 
     withPluginApi("1.3.0", (api) => {
+      const isThreadEnabledInAnyChannel =
+        this.currentUser?.chat_channels?.public_channels?.some(
+          (channel) => channel.threading_enabled === true
+        );
+
+      if (isThreadEnabledInAnyChannel) {
+        api.addSidebarSection(
+          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+            const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
+              route = "chat.threads";
+              text = I18n.t("chat.my_threads.title");
+              title = I18n.t("chat.my_threads.title");
+              name = "user-threads";
+              prefixType = "icon";
+              prefixValue = "discourse-threads";
+              suffixType = "icon";
+              suffixCSSClass = "unread";
+
+              constructor() {
+                super(...arguments);
+
+                if (container.isDestroyed) {
+                  return;
+                }
+
+                this.chatChannelsManager = container.lookup(
+                  "service:chat-channels-manager"
+                );
+              }
+
+              get suffixValue() {
+                return this.chatChannelsManager.publicMessageChannels.some(
+                  (channel) => channel.unreadThreadsCount > 0
+                )
+                  ? "circle"
+                  : "";
+              }
+            };
+
+            const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
+              // we only show `My Threads` link
+              hideSectionHeader = true;
+
+              name = "user-threads";
+
+              // sidebar API doesn’t let you have undefined values
+              // even if you don't show the section’s header
+              title = "";
+
+              get links() {
+                return [new SidebarChatMyThreadsSectionLink()];
+              }
+
+              get text() {
+                return null;
+              }
+            };
+
+            return SidebarChatMyThreadsSection;
+          },
+          CHAT_PANEL
+        );
+      }
+
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
@@ -206,10 +276,18 @@ export default {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
-            constructor({ channel, chatService }) {
+            route = "chat.channel";
+            suffixType = "icon";
+            suffixCSSClass = "urgent";
+            hoverType = "icon";
+            hoverValue = "times";
+            hoverTitle = I18n.t("chat.direct_messages.close");
+
+            constructor({ channel, chatService, currentUser }) {
               super(...arguments);
               this.channel = channel;
               this.chatService = chatService;
+              this.currentUser = currentUser;
 
               if (this.oneOnOneMessage) {
                 const user = this.channel.chatable.users[0];
@@ -223,6 +301,20 @@ export default {
             willDestroy() {
               if (this.oneOnOneMessage) {
                 this.channel.chatable.users[0].stopTrackingStatus();
+              }
+            }
+
+            get oneOnOneMessage() {
+              return this.channel.chatable.users.length === 1;
+            }
+
+            get contentComponentArgs() {
+              return this.channel.chatable.users[0].get("status");
+            }
+
+            get contentComponent() {
+              if (this.oneOnOneMessage) {
+                return "user-status-message";
               }
             }
 
@@ -246,67 +338,58 @@ export default {
               return classes.join(" ");
             }
 
-            get route() {
-              return "chat.channel";
-            }
-
             get models() {
               return this.channel.routeModels;
             }
 
             get title() {
-              return I18n.t("chat.placeholder_channel", {
-                channelName: this.channel.escapedTitle,
-              });
-            }
-
-            get oneOnOneMessage() {
-              return this.channel.chatable.users.length === 1;
-            }
-
-            get contentComponentArgs() {
-              return this.channel.chatable.users[0].get("status");
-            }
-
-            get contentComponent() {
-              return "user-status-message";
+              if (this.channel.chatable.group) {
+                return I18n.t("chat.placeholder_channel", {
+                  channelName: this.channel.escapedTitle,
+                });
+              } else {
+                return I18n.t("chat.placeholder_users", {
+                  commaSeparatedNames: this.channel.escapedTitle,
+                });
+              }
             }
 
             get text() {
-              const username = this.channel.escapedTitle.replaceAll("@", "");
-              if (this.oneOnOneMessage) {
+              if (this.channel.chatable.group) {
+                return this.channel.title;
+              } else {
+                const username = this.channel.escapedTitle.replaceAll("@", "");
                 return htmlSafe(
                   `${escapeExpression(username)}${decorateUsername(
                     escapeExpression(username)
                   )}`
                 );
-              } else {
-                return username;
               }
             }
 
             get prefixType() {
-              if (this.oneOnOneMessage) {
-                return "image";
-              } else {
+              if (this.channel.chatable.group) {
                 return "text";
+              } else {
+                return "image";
               }
             }
 
             get prefixValue() {
-              if (this.channel.chatable.users.length === 1) {
+              if (this.channel.chatable.group) {
+                return this.channel.membershipsCount;
+              } else {
                 return avatarUrl(
                   this.channel.chatable.users[0].avatar_template,
                   "tiny"
                 );
-              } else {
-                return this.channel.chatable.users.length;
               }
             }
 
             get prefixCSSClass() {
               const activeUsers = this.chatService.presenceChannel.users;
               const user = this.channel.chatable.users[0];
+
               if (
                 !!activeUsers?.findBy("id", user?.id) ||
                 !!activeUsers?.findBy("username", user?.username)
@@ -316,24 +399,8 @@ export default {
               return "";
             }
 
-            get suffixType() {
-              return "icon";
-            }
-
             get suffixValue() {
               return this.channel.tracking.unreadCount > 0 ? "circle" : "";
-            }
-
-            get suffixCSSClass() {
-              return "urgent";
-            }
-
-            get hoverType() {
-              return "icon";
-            }
-
-            get hoverValue() {
-              return "times";
             }
 
             get hoverAction() {
@@ -343,16 +410,13 @@ export default {
                 this.chatService.unfollowChannel(this.channel);
               };
             }
-
-            get hoverTitle() {
-              return I18n.t("chat.direct_messages.leave");
-            }
           };
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
             @service modal;
             @service router;
+            @service currentUser;
 
             @tracked
             userCanDirectMessage = this.chatService.userCanDirectMessage;
@@ -363,6 +427,7 @@ export default {
               if (container.isDestroyed) {
                 return;
               }
+
               this.chatService = container.lookup("service:chat");
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
@@ -375,6 +440,7 @@ export default {
                   new SidebarChatDirectMessagesSectionLink({
                     channel,
                     chatService: this.chatService,
+                    currentUser: this.currentUser,
                   })
               );
             }

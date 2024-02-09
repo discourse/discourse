@@ -37,7 +37,7 @@ export default class MediaOptimizationWorkerService extends Service {
       : true;
 
     let file = data;
-    if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
+    if (!/(\.|\/)(jpe?g|png)$/i.test(file.type)) {
       return Promise.resolve();
     }
     if (
@@ -53,6 +53,7 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     await this.ensureAvailableWorker();
 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 

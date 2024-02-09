@@ -17,11 +17,11 @@
           </a>
         {{/each}}
       </div>
-      {{#if this.showAvatarUploader}}
+      {{#if this.showCustomAvatarSelector}}
         <h4>{{i18n "user.change_avatar.use_custom"}}</h4>
       {{/if}}
     {{/if}}
-    {{#if this.showAvatarUploader}}
+    {{#if this.showCustomAvatarSelector}}
       {{#if this.user.use_logo_small_as_avatar}}
         <div class="avatar-choice">
           <RadioButton
@@ -118,9 +118,9 @@
             @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
             @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
             @uploading={{this.uploading}}
-            @class="avatar-uploader"
             @id="avatar-uploader"
             @done={{this.uploadComplete}}
+            class="avatar-uploader"
           />
         </div>
       {{/if}}
@@ -128,7 +128,7 @@
   </:body>
 
   <:footer>
-    {{#if this.showAvatarUploader}}
+    {{#if this.showCustomAvatarSelector}}
       <DButton
         @action={{this.saveAvatarSelection}}
         @disabled={{this.submitDisabled}}

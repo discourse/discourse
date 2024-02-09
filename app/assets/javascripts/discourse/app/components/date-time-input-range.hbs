@@ -2,9 +2,9 @@
   @date={{this.from}}
   @onChange={{action "onChangeRanges" (hash prop="from")}}
   @showTime={{this.showFromTime}}
-  @class="from"
   @placeholder={{i18n "dates.from_placeholder"}}
   @timezone={{@timezone}}
+  class="from"
 />
 
 <DateTimeInput
@@ -14,7 +14,7 @@
   @timeFirst={{this.toTimeFirst}}
   @showTime={{this.showToTime}}
   @clearable={{this.clearable}}
-  @class="to"
   @placeholder={{i18n "dates.to_placeholder"}}
   @timezone={{@timezone}}
+  class="to"
 />

@@ -4,11 +4,11 @@
     {{#if this.showFormTemplateForm}}
       {{#if (gt @formTemplateIds.length 1)}}
         <FormTemplateChooser
-          @class="composer-select-form-template"
           @filteredIds={{@formTemplateIds}}
           @value={{this.selectedFormTemplateId}}
           @onChange={{this.updateSelectedFormTemplateId}}
           @options={{hash maximum=1}}
+          class="composer-select-form-template"
         />
       {{/if}}
       <form id="form-template-form">
@@ -27,27 +27,29 @@
         <div class="d-editor-button-bar" role="toolbar">
           {{#each this.toolbar.groups as |group|}}
             {{#each group.buttons as |b|}}
-              {{#if b.popupMenu}}
-                <ToolbarPopupMenuOptions
-                  @content={{this.popupMenuOptions}}
-                  @onChange={{this.onPopupMenuAction}}
-                  @onOpen={{action b.action b}}
-                  @class={{b.className}}
-                  @tabindex={{-1}}
-                  @onKeydown={{this.rovingButtonBar}}
-                  @options={{hash icon=b.icon focusAfterOnChange=false}}
-                />
-              {{else}}
-                <DButton
-                  @action={{fn (action b.action) b}}
-                  @translatedTitle={{b.title}}
-                  @label={{b.label}}
-                  @icon={{b.icon}}
-                  @preventFocus={{b.preventFocus}}
-                  @onKeyDown={{this.rovingButtonBar}}
-                  tabindex={{b.tabindex}}
-                  class={{b.className}}
-                />
+              {{#if (b.condition this)}}
+                {{#if b.popupMenu}}
+                  <ToolbarPopupMenuOptions
+                    @content={{this.popupMenuOptions}}
+                    @onChange={{this.onPopupMenuAction}}
+                    @onOpen={{action b.action b}}
+                    @tabindex={{-1}}
+                    @onKeydown={{this.rovingButtonBar}}
+                    @options={{hash icon=b.icon focusAfterOnChange=false}}
+                    class={{b.className}}
+                  />
+                {{else}}
+                  <DButton
+                    @action={{fn (action b.action) b}}
+                    @translatedTitle={{b.title}}
+                    @label={{b.label}}
+                    @icon={{b.icon}}
+                    @preventFocus={{b.preventFocus}}
+                    @onKeyDown={{this.rovingButtonBar}}
+                    tabindex={{b.tabindex}}
+                    class={{b.className}}
+                  />
+                {{/if}}
               {{/if}}
             {{/each}}
           {{/each}}
@@ -58,13 +60,13 @@
           @autocomplete="off"
           @tabindex={{this.tabindex}}
           @value={{this.value}}
-          @class="d-editor-input"
           @placeholder={{this.placeholderTranslated}}
           @aria-label={{this.placeholderTranslated}}
           @disabled={{this.disabled}}
           @input={{this.change}}
           @focusIn={{action "focusIn"}}
           @focusOut={{action "focusOut"}}
+          class="d-editor-input"
         />
         <PopupInputTip @validation={{this.validation}} />
         <PluginOutlet

@@ -9,14 +9,16 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
+import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
+import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const FADEOUT_CLASS = "-fade-out";
@@ -131,7 +133,7 @@ export default class ChatChannelRow extends Component {
   }
 
   get leaveDirectMessageLabel() {
-    return I18n.t("chat.direct_messages.leave");
+    return I18n.t("chat.direct_messages.close");
   }
 
   get leaveChannelLabel() {
@@ -140,6 +142,14 @@ export default class ChatChannelRow extends Component {
 
   get channelHasUnread() {
     return this.args.channel.tracking.unreadCount > 0;
+  }
+
+  get shouldRenderLastMessage() {
+    return (
+      this.site.mobileView &&
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.lastMessage
+    );
   }
 
   get #firstDirectMessageUser() {
@@ -177,6 +187,7 @@ export default class ChatChannelRow extends Component {
       <div
         class={{concatClass
           "chat-channel-row__content"
+          (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
         }}
         {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
@@ -184,8 +195,19 @@ export default class ChatChannelRow extends Component {
         {{(if this.shouldReset (modifier this.onReset))}}
         style={{this.rowStyle}}
       >
-        <ChatChannelTitle @channel={{@channel}} />
-        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
+        <ChannelIcon @channel={{@channel}} />
+        <div class="chat-channel-row__info">
+          <ChannelName @channel={{@channel}} />
+          <ChatChannelMetadata
+            @channel={{@channel}}
+            @unreadIndicator={{true}}
+          />
+          {{#if this.shouldRenderLastMessage}}
+            <div class="chat-channel__last-message">
+              {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+            </div>
+          {{/if}}
+        </div>
 
         {{#if
           (and @options.leaveButton @channel.isFollowing this.site.desktopView)

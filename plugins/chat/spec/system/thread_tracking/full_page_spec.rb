@@ -9,6 +9,7 @@ describe "Thread tracking state | full page", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:channel_threads_page) { PageObjects::Pages::ChatChannelThreads.new }
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
@@ -26,7 +27,7 @@ describe "Thread tracking state | full page", type: :system do
 
     it "shows the count of threads with unread messages on the thread list button" do
       chat_page.visit_channel(channel)
-      thread_page.close
+      channel_threads_page.close
 
       expect(channel_page).to have_unread_thread_indicator(count: 1)
     end
@@ -49,7 +50,7 @@ describe "Thread tracking state | full page", type: :system do
 
       expect(thread_page).to have_no_unread_list_indicator
 
-      thread_page.back_to_previous_route
+      thread_page.back
 
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
@@ -113,7 +114,7 @@ describe "Thread tracking state | full page", type: :system do
 
       it "clears the sidebar unread indicator for the channel when opening it but keeps the thread list unread indicator" do
         chat_page.visit_channel(channel)
-        thread_page.close
+        channel_threads_page.close
 
         expect(sidebar_page).to have_no_unread_channel(channel)
         expect(channel_page).to have_unread_thread_indicator(count: 1)

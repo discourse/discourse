@@ -473,6 +473,7 @@ te:
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
         error: "మీ ఈమెయిల్ మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఇప్పటికే ఈ సైటులో వాడుకలో ఉందేమో? "
         success: "ఆ చిరునామాకు మేము వేగు పంపాము. అందులోని సూచనలు అనుసరించండి. "
+        confirm_success: "మీ ఈమెయిల్ చిరునామా మారింది."
       change_avatar:
         title: "మీ ప్రవర బొమ్మ మార్చండి."
         letter_based: "వ్యవస్థ కేటాయించిన ప్రవర బొమ్మ"
@@ -495,8 +496,6 @@ te:
         cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
-        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
-        instructions_required: "మీ పూర్తి పేరు"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
@@ -697,6 +696,9 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     select_kit:
       delete_item: "%{name} తొలగించు"
+      components:
+        bulk_select_topics_dropdown:
+          title: "బహుళ చర్యలు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -818,6 +820,9 @@ te:
         tag: "ఇంకా %{tag} విషయాలు లేవు."
         top: "ఇంకా అగ్ర విషయాలు లేవు."
         bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
+    topic_bulk_actions:
+      close_topics:
+        name: "విషయాలు మూయు"
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"
@@ -1278,7 +1283,6 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
-      description: "వివరణ"
       sort_by_name: "పేరు"
       filters:
         without_category: "%{filter} %{tag} విషయాలు"
@@ -1373,6 +1377,15 @@ te:
       errors:
         typeMismatch:
           default: "దయచేసి చెల్లే విలువ రాయండి"
+    table_builder:
+      edit:
+        modal:
+          cancel: "రద్దు"
+          create: "భద్రపరుచు"
+          reason: "మీరెందుకు సవరిస్తున్నారు?"
+      spreadsheet:
+        show: "చూపు"
+        about: "గురించి"
   admin_js:
     admin:
       title: "డిస్కోర్సు అధికారి"
@@ -1393,6 +1406,8 @@ te:
         version_check_pending: "మీరు ఇటీవలే ఉన్నతీకరించినట్టున్నారు. అద్భుతం!"
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
+        new_features:
+          learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "తాజాపరుచు"
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
@@ -1477,6 +1492,7 @@ te:
         enabled: "చేతమైందా?"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
+        author: " %{author} రాసిన"
       backups:
         title: "బ్యాకప్పులు"
         menu:
@@ -1543,6 +1559,8 @@ te:
           title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"
           body: "శరీరం"
+        component:
+          all_filter: "అన్ని"
         theme:
           theme: "అలంకారం"
           title: "అలంకారాలు"
@@ -1568,6 +1586,8 @@ te:
             text: "ఫుటరు"
           body_tag:
             text: "శరీరం"
+          all_filter: "అన్ని"
+          active_filter: "క్రియాశీల"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"
@@ -1607,7 +1627,6 @@ te:
         email_style:
           css: "సీయస్ యస్"
       email:
-        settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
         error: "<b>దోషం</b> - %{server_error}"
         test_error: "టెస్ట్ మెయిల్ పంపడంలో ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
@@ -1868,7 +1887,6 @@ te:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"
           requirement_heading: "అవసరం"
-          visits: "సందర్శనాలు"
           days: "రోజులు"
           topics_replied_to: "విషయాలు సమాధానంగా"
           topics_viewed: "చూసిన విషయాలు "
@@ -1964,6 +1982,8 @@ te:
           navigation: "నావిగేషను"
         default_categories:
           modal_yes: "అవును"
+        file_types_list:
+          add_image_types: "బొమ్మలు"
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
@@ -2032,6 +2052,7 @@ te:
         topic_title: "విషయం"
         post_id: "టపా ఐడీ"
         category_title: "వర్గం"
+        username: "సభ్యనామం"
         form:
           label: "కొత్త:"
           add: "కలుపు"

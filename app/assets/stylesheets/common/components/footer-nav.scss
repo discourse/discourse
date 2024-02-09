@@ -8,7 +8,7 @@ $footer-nav-height: 49px;
   --footer-nav-height: #{$footer-nav-height};
 }
 
-body.footer-nav-visible {
+html.footer-nav-visible {
   #main-outlet {
     padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
@@ -70,13 +70,13 @@ body.footer-nav-visible {
 }
 
 @supports (-webkit-backdrop-filter: blur(10px)) {
-  body:not(.footer-nav-ipad) .footer-nav {
+  html:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba(var(--header_background-rgb), 0.7);
     -webkit-backdrop-filter: blur(20px);
   }
 }
 
-body.footer-nav-ipad {
+html.footer-nav-ipad {
   padding-top: var(--footer-nav-height);
   .footer-nav {
     bottom: auto;

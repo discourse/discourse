@@ -27,12 +27,12 @@ class WatchedWord < ActiveRecord::Base
   after_destroy -> { WordWatcher.clear_cache! }
 
   scope :for,
-        ->(word:) {
+        ->(word:) do
           where(
             "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
             word: word,
           )
-        }
+        end
 
   def self.actions
     @actions ||=

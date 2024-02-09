@@ -234,7 +234,7 @@ class Admin::SiteTextsController < Admin::AdminController
     translations.each do |key, value|
       next unless I18n.exists?(key, :en)
 
-      if value&.is_a?(Hash)
+      if value.is_a?(Hash)
         fix_plural_keys(key, value, locale).each do |plural|
           plural_key = plural[0]
           plural_value = plural[1]

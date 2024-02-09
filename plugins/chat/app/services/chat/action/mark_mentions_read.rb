@@ -17,7 +17,12 @@ module Chat
           .where(notification_type: Notification.types[:chat_mention])
           .where(user: user)
           .where(read: false)
-          .joins("INNER JOIN chat_mentions ON chat_mentions.notification_id = notifications.id")
+          .joins(
+            "INNER JOIN chat_mention_notifications ON chat_mention_notifications.notification_id = notifications.id",
+          )
+          .joins(
+            "INNER JOIN chat_mentions ON chat_mentions.id = chat_mention_notifications.chat_mention_id",
+          )
           .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
           .where("chat_messages.chat_channel_id IN (?)", channel_ids)
           .then do |notifications|

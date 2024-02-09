@@ -10,6 +10,15 @@ import { isiPad } from "discourse/lib/utilities";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 
+const onKeyUpCallbacks = [];
+
+export function addOnKeyUpCallback(fn) {
+  onKeyUpCallbacks.push(fn);
+}
+export function resetOnKeyUpCallbacks() {
+  onKeyUpCallbacks.clear();
+}
+
 export default class SearchTerm extends Component {
   @service search;
   @service appEvents;
@@ -41,11 +50,22 @@ export default class SearchTerm extends Component {
   }
 
   @action
-  onKeyup(e) {
+  onKeydown(e) {
     if (e.key === "Escape") {
       this.args.closeSearchMenu();
       e.preventDefault();
-      return false;
+      e.stopPropagation();
+    }
+  }
+
+  @action
+  onKeyup(e) {
+    if (
+      onKeyUpCallbacks.length &&
+      !onKeyUpCallbacks.some((fn) => fn(this, e))
+    ) {
+      // Return early if any callbacks return false
+      return;
     }
 
     this.args.openSearchMenu();

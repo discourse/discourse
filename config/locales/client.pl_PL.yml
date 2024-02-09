@@ -202,6 +202,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     word_connector:
       comma: ", "
+      last_item: "i"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
@@ -252,6 +253,12 @@ pl_PL:
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
+    broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
+    broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
+    critical_deprecation:
+      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>więcej informacji</a>)."
+      theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -337,6 +344,7 @@ pl_PL:
     related_messages:
       title: "Wiadomości powiązane"
       pill: "Wiadomości powiązane"
+      see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username}…'
     suggested_topics:
       title: "Nowe i nieprzeczytane tematy"
       pill: "Sugerowane"
@@ -349,10 +357,16 @@ pl_PL:
       our_moderators: "Moderatorzy"
       moderators: "Moderatorzy"
       stat:
+        all_time: "Cały czas"
         last_day: "24 godziny"
+        last_7_days: "7 dni"
+        last_30_days: "30 dni"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
+      user_count: "Rejestracje"
+      active_user_count: "Aktywni użytkownicy"
+      contact: "Skontaktuj się z nami"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
@@ -398,6 +412,7 @@ pl_PL:
       copied: "skopiowane!"
       copy: "skopiuj kod do schowka"
       fullscreen: "pokaż kod na pełnym ekranie"
+      view_code: "Zobacz kod"
     drafts:
       label: "Szkice"
       label_with_count: "Szkice (%{count})"
@@ -501,7 +516,12 @@ pl_PL:
           name: "bonus typu"
           title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
       revise_and_reject_post:
+        title: "Sprawdź"
         reason: "Powód"
+        send_pm: "Wyślij PW"
+        feedback: "Informacje zwrotne"
+        custom_reason: "Podaj jasny opis przyczyny"
+        other_reason: "Inny..."
         optional: "opcjonalnie"
       stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
@@ -845,7 +865,7 @@ pl_PL:
           imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
@@ -1114,6 +1134,7 @@ pl_PL:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "profil %{username}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1501,8 +1522,6 @@ pl_PL:
         title: "Uwierzytelnianie dwuskładnikowe"
         enable: "Zarządzaj uwierzytelnianiem dwuskładnikowym"
         disable_all: "Wyłącz wszystkie"
-        forgot_password: "Zapomniałeś/łaś hasła?"
-        confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         name: "Imię"
         label: "Kod"
         rate_limit: "Poczekaj, zanim spróbujesz użyć innego kodu uwierzytelniającego."
@@ -1510,6 +1529,8 @@ pl_PL:
           Zeskanuj ten kod QR w obsługiwanej aplikacji ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ) i wprowadź kod uwierzytelniający
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
         show_key_description: "Wpisz ręcznie"
+        short_description: |
+          Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa lub fizycznych kluczy bezpieczeństwa.
         extended_description: |
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
@@ -1549,9 +1570,22 @@ pl_PL:
           edit_description: "Nazwa fizycznego klucza bezpieczeństwa"
           name_required_error: "Musisz podać nazwę swojego klucza bezpieczeństwa."
       passkeys:
+        rename_passkey: "Zmień nazwę passkey"
+        add_passkey: "Dodaj Passkey"
+        confirm_delete_passkey: "Czy na pewno chcesz usunąć ten passkey?"
+        passkey_successfully_created: "Sukces! Twój nowy passkey został utworzony."
+        rename_passkey_instructions: "Wybierz nazwę klucza dostępu, która pozwoli Ci go łatwo zidentyfikować, na przykład użyj nazwy swojego menedżera haseł."
+        name:
+          default: "Główny passkey"
         save: "Zapisz"
+        title: "Passkeys"
+        short_description: "Klucze to zamienniki haseł, które potwierdzają Twoją tożsamość biometrycznie (np. dotyk, FaceID) lub za pomocą kodu PIN/hasła urządzenia."
         added_prefix: "Dodano"
         last_used_prefix: "Ostatnio używane"
+        never_used: "Nigdy nie używany"
+        not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza dostępu, został anulowany lub jest niedozwolony."
+        already_added_error: "Już zarejestrowałeś ten klucz dostępu. Nie musisz rejestrować go ponownie."
+        confirm_button: "lub użyj passkey"
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -1571,6 +1605,16 @@ pl_PL:
         success_via_admin: "Wysłaliśmy wiadomość e-mail na ten adres. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości e-mail."
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
         back_to_preferences: "Powrót do preferencji"
+        confirm_success: "Twój email został zmieniony."
+        confirm: "Potwierdź"
+        authorizing_new:
+          description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
+          description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
+        authorizing_old:
+          title: "Zweryfikuj stary adres e-mail"
+          old_email: "Stary adres e-mail: %{email}"
+          new_email: "Nowy adres e-mail: %{email}"
+          confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , na podstawie"
@@ -1634,14 +1678,14 @@ pl_PL:
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
       name:
         title: "Pełna nazwa"
-        instructions: "twoja pełna nazwa (opcjonalnie)"
-        instructions_required: "Twoja pełna nazwa"
+        instructions: "Twoja pełna nazwa (opcjonalnie)."
+        instructions_required: "Twoja pełna nazwa."
         required: "Wprowadź imię"
         too_short: "Twoja nazwa jest zbyt krótka"
         ok: "Twoja nazwa jest ok"
       username:
         title: "Nazwa użytkownika"
-        instructions: "unikalna, bez spacji, krótka"
+        instructions: "Unikalny, bez spacji, krótki."
         short_instructions: "Inni mogą o tobie wspomnieć pisząc @%{username}"
         available: "Nazwa użytkownika jest dostępna"
         not_available: "Niedostępna. Może spróbuj %{suggestion}?"
@@ -1664,6 +1708,7 @@ pl_PL:
         instructions: "Rejestracja konta wymaga kodu zaproszenia"
       auth_tokens:
         title: "Ostatnio używane urządzenia"
+        short_description: "To jest lista urządzeń, które ostatnio logowały się na Twoje konto."
         details: "Detale"
         log_out_all: "Wyloguj się wszędzie"
         not_you: "To nie ty?"
@@ -1834,6 +1879,13 @@ pl_PL:
           progress: "Przesłano %{progress}%…"
           success: "Plik został przesłany pomyślnie. Po zakończeniu procesu otrzymasz powiadomienie za pośrednictwem wiadomości."
           error: "Przykro nam, ale wymagany format pliku to CSV."
+      confirm_access:
+        title: "Potwierdź dostęp"
+        incorrect_password: "Wpisane hasło jest nieprawidłowe."
+        incorrect_passkey: "Ten passkey jest nieprawidłowy."
+        logged_in_as: "Jesteś zalogowany jako: "
+        instructions: "Aby dokończyć tę czynność, potwierdź swoją tożsamość."
+        fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
@@ -1841,9 +1893,10 @@ pl_PL:
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
-        instructions: "przynajmniej %{count} znaków"
+        instructions: "Przynajmniej %{count} znaków."
         required: "Wprowadź hasło"
         confirm: "Potwierdź"
+        incorrect_password: "Wpisane hasło jest nieprawidłowe."
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"
@@ -2009,7 +2062,7 @@ pl_PL:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
-    learn_more: "dowiedz się więcej…"
+    learn_more: "Dowiedz się więcej…"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -2091,11 +2144,13 @@ pl_PL:
       title: "Utwórz swoje konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
       associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
+      activation_title: "Aktywuj swoje konto"
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres email. Wyślemy do ciebie email z linkiem do zresetowania hasła."
       invite_no_username: "Wpisz swój adres e-mail, a wyślemy Ci wiadomość e-mail umożliwiającą zresetowanie hasła."
+      email-username: "E-mail lub nazwa użytkownika"
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
@@ -2141,6 +2196,8 @@ pl_PL:
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
+      security_key_invalid_response_error: "Proces uwierzytelniania klucza zabezpieczeń nie powiódł się z powodu nieprawidłowej odpowiedzi."
+      passkey_security_error: "Wystąpił błąd bezpieczeństwa: %{message}"
       email_placeholder: "E-mail / Nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
@@ -2194,10 +2251,15 @@ pl_PL:
         name: "Discord"
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
+      passkey:
+        name: "Zaloguj się za pomocą klucza"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
+      no_login_methods:
+        title: "Brak metod logowania"
+        description: "Nie skonfigurowano żadnych metod logowania. Administratorzy mogą odwiedzić <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a>, aby ponownie skonfigurować witrynę."
     invites:
       accept_title: "Zaproszenie"
       welcome_to: "Witaj na %{site_name}!"
@@ -2265,13 +2327,17 @@ pl_PL:
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
       components:
-        tag_drop:
-          filter_for_more: Filtruj po więcej...
+        filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
+        bulk_select_topics_dropdown:
+          title: "Operacje grupowe"
     date_time_picker:
       from: Od
       to: Do
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} jest większe niż maksymalna dozwolona wartość %{max_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
       smileys_&_emotion: Buźki i emocje
@@ -2307,12 +2373,14 @@ pl_PL:
       add_warning: "To jest oficjalne ostrzeżenie."
       toggle_whisper: "Przełącz szept"
       toggle_unlisted: "Przycisk ukrywania"
+      insert_table: "Wstaw tabelę"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
       edit_conflict: "edytuj konflikt"
       esc: "esc"
+      esc_label: "odrzuć wiadomość"
       ok_proceed: "Ok, kontynuuj."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -2320,10 +2388,11 @@ pl_PL:
         many: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         other: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
       group_mentioned:
-        one: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osobę</a> – czy jesteś pewien?"
-        few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
-        many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
-        other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
+        one: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osobę</a>."
+        few: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+        many: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+        other: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+      larger_group_mentioned: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>. Jesteś pewny/a?"
       cannot_see_mention:
         category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
         private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
@@ -2463,6 +2532,7 @@ pl_PL:
           desc: Szepty są widoczne tylko dla zespołu zarządzającego
         create_topic:
           label: "Nowy temat"
+          desc: Utwórz nowy temat
         shared_draft:
           label: "Udostępniony projekt"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
@@ -2519,6 +2589,11 @@ pl_PL:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} i %{count} inny</span> %{description}"
+        few: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
+        many: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
+        other: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} i %{count} inny"
@@ -2585,6 +2660,7 @@ pl_PL:
         private_message: '%{username} wysłał Ci osobistą wiadomość w „%{topic}” - %{site_title}'
         linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
         watching_first_post: '%{username} utworzył(a) nowy temat „%{topic}” - %{site_title}'
+        watching_category_or_tag: '%{username} pisze w "%{topic}" - %{site_title}'
         confirm_title: "Powiadomienia włączone - %{site_title}"
         confirm_body: "Powodzenie! Powiadomienia zostały włączone."
         custom: "Powiadomienie od %{username} na %{site_title}"
@@ -2615,6 +2691,7 @@ pl_PL:
         reaction: "nowa reakcja"
         votes_released: "Głos został zwolniony"
         new_features: "nowe funkcje Discourse zostały udostępnione!"
+        admin_problems: "nowe porady w panelu administratora"
     upload_selector:
       uploading: "Wgrywanie"
       processing: "Przetwarzanie przesłanego pliku"
@@ -2824,6 +2901,7 @@ pl_PL:
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
+        confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
@@ -2898,6 +2976,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
+        silent: "Wykonaj tę akcję po cichu."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -2908,6 +2987,7 @@ pl_PL:
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii %{category}."
         top: "Brak najlepszych tematów."
+        hot: "Nie ma gorących tematów."
         filter: "Brak tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
@@ -2923,8 +3003,14 @@ pl_PL:
         category: "Nie ma więcej tematów w kategorii %{category}."
         tag: "Nie ma więcej tematów z %{tag}."
         top: "Nie ma już więcej najlepszych tematów."
+        hot: "Nie ma już gorących tematów."
         bookmarks: "Nie ma więcej zakładek."
         filter: "Nie ma więcej tematów."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zamknij tematy"
+      update_category:
+        name: "Aktualizuj kategorię"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -3029,6 +3115,7 @@ pl_PL:
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
+      created_at: "Utworzono: %{date}"
       bumped_at: "Ostatnie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
@@ -3123,13 +3210,13 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
-        jump_prompt: "skocz do…"
+        jump_prompt: "przejdź do…"
         jump_prompt_of:
           one: "z %{count} postu"
           few: "z %{count} postów"
           many: "z %{count} postów"
           other: "z %{count} postów"
-        jump_prompt_long: "Skocz do…"
+        jump_prompt_long: "Przejdź do…"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
       notifications:
@@ -3186,6 +3273,7 @@ pl_PL:
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
         slow_mode: "Ustaw tryb powolny…"
+        timed_update: "Ustaw timer tematu…"
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -3193,6 +3281,7 @@ pl_PL:
         invisible: "Ukryj temat"
         visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
+        make_public: "Upublicznij temat…"
         make_private: "Utwórz osobistą wiadomość"
         reset_bump_date: "Zresetuj datę podbicia"
       feature:
@@ -3410,9 +3499,11 @@ pl_PL:
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
-      quote_reply_shortcut: "Lub naciśnij q"
+      quote_reply_shortcut: "Cytuj (lub naciśnij q)"
       quote_edit: "Edytuj"
-      quote_edit_shortcut: "Lub naciśnij e"
+      quote_edit_shortcut: "Edytuj (lub naciśnij e)"
+      quote_copy: "Skopiuj cytat"
+      quote_copied_to_clibboard: "Cytat skopiowany do schowka"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -3533,6 +3624,8 @@ pl_PL:
         delete: "usuń ten wpis"
         undelete: "przywróc ten wpis"
         share: "udostępnij odnośnik do tego wpisu"
+        copy_title: "skopiuj link do tego postu do schowka"
+        link_copied: "Link skopiowany!"
         more: "Więcej"
         delete_replies:
           confirm: "Czy chcesz również usunąć odpowiedzi do tego wpisu?"
@@ -3574,6 +3667,8 @@ pl_PL:
         delete_topic_confirm_modal_no: "Nie, zachowaj ten temat"
         delete_topic_error: "Wystąpił błąd podczas usuwania tego wątku"
         delete_topic: "usuń temat"
+        add_post_notice: "Dodaj notatkę personelu…"
+        change_post_notice: "Zmień notatkę personelu…"
         delete_post_notice: "Usuń wiadomość personelu"
         remove_timer: "usuń minutnik"
         edit_timer: "edytuj licznik czasu"
@@ -3729,6 +3824,7 @@ pl_PL:
       logo: "Grafika z logo kategorii"
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
       background_image: "Grafika z tłem kategorii"
+      background_image_dark: "Obraz tła ciemnej kategorii"
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
       foreground_color: "Kolor pierwszego planu"
@@ -3848,6 +3944,7 @@ pl_PL:
       take_action_options:
         default:
           title: "Ukryj post"
+          details: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
         suspend:
           title: "Zawieś użytkownika"
           details: "Symuluj progową liczbę flag i zawieś użytkownika."
@@ -3864,6 +3961,7 @@ pl_PL:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
       submit_tooltip: "Zapisz prywatną flagę."
+      take_action_tooltip: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
       notify_staff: "Powiadom zespół wiadomością prywatną"
       formatted_name:
@@ -3880,6 +3978,11 @@ pl_PL:
           few: "wprowadź co najmniej %{count} znaki"
           many: "wprowadź co najmniej %{count} znaków"
           other: "wprowadź co najmniej %{count} znaków"
+        more:
+          one: "Pozostał %{count}…"
+          few: "Pozostały %{count}…"
+          many: "Pozostało %{count}…"
+          other: "Pozostało %{count}…"
         left:
           one: "%{count} pozostał"
           few: "%{count} pozostało"
@@ -3941,6 +4044,7 @@ pl_PL:
         med {z bardzo wysokim stosunkiem polubień na post}
         high {z ekstremalnie wysokim stosunkiem polubień na post}
         other {}}
+    latest_poster_link: "Profil %{username}, najnowszy postujący"
     original_post: "Oryginalny wpis"
     views: "Odsłony"
     sr_views: "Sortuj według wyświetleń"
@@ -4018,6 +4122,10 @@ pl_PL:
         title: "Niewidziany"
         lower_title: "niewidziany"
         help: "nowe tematy i tematy, które aktualnie oglądasz lub śledzisz z nieprzeczytanymi postami"
+      hot:
+        title: "Gorące"
+        lower_title: "gorące"
+        help: "najpopularniejsze ostatnio tematy"
       new:
         lower_title_with_count:
           one: "%{count} nowy"
@@ -4185,6 +4293,7 @@ pl_PL:
         print: "%{shortcut} Drukuj temat"
         defer: "%{shortcut} Odrocz wątek"
         topic_admin_actions: "%{shortcut} Otwórz działania administratora tematu"
+        archive_private_message: "%{shortcut} Przełącz archiwizację prywatnych wiadomości"
       search_menu:
         title: "Menu wyszukiwania"
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
@@ -4261,6 +4370,11 @@ pl_PL:
         few: "wybierz co najmniej %{count} tagi…"
         many: "wybierz co najmniej %{count} tagów…"
         other: "wybierz co najmniej %{count} tagów…"
+      choose_for_topic_required_group:
+        one: "wybierz %{count} tag z '%{name}'…"
+        few: "wybierz %{count} tagi z '%{name}'…"
+        many: "wybierz %{count} tagi z '%{name}'…"
+        other: "wybierz %{count} tagi z '%{name}'…"
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
@@ -4302,7 +4416,7 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
-      description: "Opis"
+      description: "Opis (maks. 1000 znaków)"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -4440,11 +4554,11 @@ pl_PL:
       sr_jump_bottom_button: "Przejdź do ostatniego posta"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
+      view_table: "Zobacz tabelę"
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
-      show_sidebar: "Pokaż pasek boczny"
-      hide_sidebar: "Ukryj pasek boczny"
+      title: "Pasek boczny"
       unread_count:
         one: "%{count} nieprzeczytany"
         few: "%{count} nieprzeczytane"
@@ -4634,11 +4748,69 @@ pl_PL:
           other: "Dane wejściowe muszą być większe niż %{count}."
         patternMismatch: "Proszę dopasować żądany format."
         badInput: "Wprowadź prawidłowe dane wejściowe."
+    table_builder:
+      title: "Konstruktor tabeli"
+      modal:
+        title: "Konstruktor tabeli"
+        create: "Zbuduj tabelę"
+        help:
+          title: "Za pomocą edytora arkusza kalkulacyjnego"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "na końcu wiersza, aby wstawić nowy wiersz."
+          new_col: "na końcu kolumny, aby wstawić nową kolumnę."
+          options: "Kliknij komórki prawym przyciskiem myszy, aby uzyskać dostęp do większej liczby opcji w menu rozwijanym."
+        confirm_close: "Czy na pewno chcesz zamknąć narzędzie do tworzenia tabel? Wszelkie niezapisane zmiany zostaną utracone."
+      edit:
+        btn_edit: "Edytuj tabelę"
+        modal:
+          title: "Edytuj tabelę"
+          cancel: "anuluj"
+          create: "Zapisz"
+          reason: "dlaczego edytujesz?"
+          trigger_reason: "Dodaj powód edycji"
+        default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
+      default_header:
+        col_1: "Kolumna 1"
+        col_2: "Kolumna 2"
+        col_3: "Kolumna 3"
+        col_4: "Kolumna 4"
+      spreadsheet:
+        no_records_found: "Nie znaleziono rekordów"
+        show: "Pokaż"
+        entries: "elementy"
+        about: "O stronie"
+        prompts:
+          delete_selected_rows: "Czy na pewno chcesz usunąć wybrane wiersze?"
+          delete_selected_cols: "Czy na pewno chcesz usunąć wybrane kolumny?"
+          will_destroy_merged_cells: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
+          will_clear_search_results: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
+          conflicts_with_merged_cells: "Występuje konflikt z inną scaloną komórką"
+        invalid_merge_props: "Nieprawidłowe scalone właściwości"
+        cells_already_merged: "Komórka już scalona"
+        no_cells_selected: "Nie wybrano komórek"
+        context_menu:
+          row:
+            before: "Wstaw nowy wiersz przed"
+            after: "Wstaw nowy wiersz po"
+            delete: "Usuń wybrane wiersze"
+          col:
+            before: "Wstaw nową kolumnę przed"
+            after: "Wstaw nową kolumnę po"
+            delete: "Usuń wybrane kolumny"
+            rename: "Zmień nazwę tej kolumny"
+          order:
+            ascending: "Kolejność rosnąca"
+            descending: "Kolejność malejąca"
+          copy: "Kopiuj..."
+          paste: "Wklej..."
+          save: "Zapisz jako..."
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
+      back_to_forum: "Powrót do forum"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -4646,6 +4818,7 @@ pl_PL:
           never: "nigdy"
       reports:
         title: "Lista dostępnych zgłoszeń"
+        meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -4662,9 +4835,9 @@ pl_PL:
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         new_features:
-          title: "\U0001F381 Nowe funkcje"
-          dismiss: "Odrzuć"
-          learn_more: "Dowiedz się więcej"
+          title: "Co nowego"
+          previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -4706,6 +4879,7 @@ pl_PL:
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
         filter_reports: Filtruj zgłoszenia
+        custom_date_range: Niestandardowy zakres dat
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           today: "Dzisiaj"
@@ -4749,6 +4923,7 @@ pl_PL:
           name:
             too_short: "Nazwa grupy jest zbyt krótka"
             too_long: "Nazwa grupy jest zbyt długa"
+            checking: "Sprawdzanie dostępności nazwy grupy…"
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
@@ -4826,6 +5001,7 @@ pl_PL:
         user: "Użytkownik"
         title: "API"
         key: "Klucz"
+        keys: "Klucze"
         created: Utworzono
         updated: Zaktualizowane
         last_used: Ostatnio używane
@@ -4883,6 +5059,11 @@ pl_PL:
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             tags:
               list: Lista tagów.
+            tag_groups:
+              list: Uzyskaj listę grup tagów.
+              show: Uzyskaj pojedynczą grupę tagów według id.
+              create: Tworzy grupę tagów.
+              update: Aktualizuje grupę tagów określoną przez id.
             categories:
               list: Uzyskaj listę kategorii.
               show: Uzyskaj pojedynczą kategorię według identyfikatora.
@@ -4891,7 +5072,6 @@ pl_PL:
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
               sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
-              show: Uzyskaj informacje o użytkowniku.
               check_emails: Lista adresów e-mail użytkowników.
               update: Zaktualizuj informacje o profilu użytkownika.
               log_out: Wyloguj wszystkie sesje użytkownika.
@@ -4925,6 +5105,8 @@ pl_PL:
               commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
               discourse_connect: Niezbędne dla funkcji DiscourseConnect wtyczki WP Discourse.
               utilities: Niezbędne, jeśli korzystasz z Utilities wtyczki WP Discourse.
+            logs:
+              messages: Wyświetl listę wiadomości z /logs lub uzyskaj określony komunikat dziennika.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -4958,8 +5140,62 @@ pl_PL:
         groups_filter_instructions: "Istotne webhook'i będą uruchamiane tylko wtedy, gdy zdarzenie jest związane z określonymi grupami. Pozostaw puste, aby wywołać webhook'i dla wszystkich grup."
         groups_filter: "Wywołane grupy"
         delete_confirm: "Usunąć ten webhook?"
+        topic_event:
+          group_name: "Zdarzenia tematu"
+          topic_created: "Temat został utworzony"
+          topic_revised: "Temat został zmieniony"
+          topic_edited: "Temat został zaktualizowany"
+          topic_destroyed: "Temat został usunięty"
+          topic_recovered: "Temat został odzyskany"
+        post_event:
+          group_name: "Zdarzenia postu"
+          post_created: "Post został utworzony"
+          post_edited: "Post został zaktualizowany"
+          post_destroyed: "Post został usunięty"
+          post_recovered: "Post został odzyskany"
+        group_event:
+          group_name: "Zdarzenia grupy"
+          group_created: "Grupa została utworzona"
+          group_updated: "Grupa została zaktualizowana"
+          group_destroyed: "Grupa została usunięta"
+        tag_event:
+          group_name: "Zdarzenia tagów"
+          tag_created: "Tag został utworzony"
+          tag_updated: "Tag został zaktualizowany"
+          tag_destroyed: "Znacznik został usunięty"
+        category_event:
+          group_name: "Zdarzenia kategorii"
+          category_created: "Kategoria została utworzona"
+          category_updated: "Kategoria została zaktualizowana"
+          category_destroyed: "Kategoria została usunięta"
+        user_event:
+          group_name: "Zdarzenia użytkownika"
+          user_logged_in: "Użytkownik zalogowany"
+          user_logged_out: "Użytkownik wylogowany"
+          user_confirmed_email: "E-mail potwierdzony przez użytkownika"
+          user_created: "Użytkownik został utworzony"
+          user_approved: "Użytkownik został zatwierdzony"
+          user_updated: "Użytkownik został zaktualizowany"
+          user_destroyed: "Użytkownik został usunięty"
+          user_suspended: "Użytkownik został zawieszony"
+          user_unsuspended: "Użytkownik przestał być zawieszony"
+        reviewable_event:
+          group_name: "Zdarzenia do sprawdzenia"
+          reviewable_created: "Element do sprawdzenia jest gotowy"
+          reviewable_updated: "Element do sprawdzenia został zaktualizowany"
+        user_badge_event:
+          group_name: "Zdarzenia odznak"
+          user_badge_granted: "Odznaka użytkownika została przyznana"
+          user_badge_revoked: "Odznaka użytkownika została cofnięta"
         like_event:
+          group_name: "Zdarzenia polubień"
           post_liked: "Gdy użytkownik polubi post."
+        notification_event:
+          group_name: "Zdarzenia powiadomień"
+        group_user_event:
+          group_name: "Zdarzenia grupy użytkownika"
+        user_promoted_event:
+          group_name: "Zdarzenia promowania użytkownika"
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5002,8 +5238,11 @@ pl_PL:
         not_enabled: "N"
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
-        official: "Oficjalna wtyczka"
+        official: "Oficjalna wtyczka Discourse"
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
+        author: "Przez %{author}"
+        experimental_badge: "eksperymentalny"
+        learn_more: "Dowiedz się więcej"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5045,6 +5284,8 @@ pl_PL:
             label: "Kopia zapasowa"
             title: "Wykonaj kopię zapasową"
             confirm: "Czy chcesz wykonać kopię zapasową?"
+            include_uploads: "uwzględnij wszystkie przesłane pliki"
+            s3_upload_warning: 'Dotyczy to wyłącznie kopii zapasowych baz danych. Przesłane pliki nie zostaną uwzględnione, co oznacza, że w przypadku przywrócenia kopii zapasowej na inną konfigurację hostingu może brakować wszystkich przesłanych obrazów i innych plików. <b>Aby włączyć pełną kopię zapasową, w tym przesyłanie plików S3, zapoznaj się z <a href="https://meta.discourse.org/t/-/276535" target="_blank">tym przewodnikiem</a>.</b>'
           download:
             label: "Pobierz"
             title: "Wyślij email z linkiem do pobrania"
@@ -5095,6 +5336,9 @@ pl_PL:
         install: "Zainstaluj"
         delete: "Usuń"
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
+        bulk_delete: "Jesteś pewny/a?"
+        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
+        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Powiel"
@@ -5109,11 +5353,19 @@ pl_PL:
           body: "Treść"
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
+        component:
+          all_filter: "Wszystkie"
+          used_filter: "Używany"
+          unused_filter: "Nieużywany"
+          enabled_filter: "Włączona"
+          disabled_filter: "Wyłączone"
+          updates_available_filter: "Dostępne aktualizacje"
         theme:
+          filter_by: "Filtruj według"
           theme: "Motyw"
           component: "Komponent"
           components: "Komponenty"
-          filter_placeholder: "pisz, aby filtrować…"
+          search_placeholder: "wpisz, aby wyszukać…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
@@ -5150,6 +5402,7 @@ pl_PL:
           color_scheme_user_selectable: "Schemat kolorów może zostać wybrany przez użytkowników"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
+          edit_color_scheme: "Edytuj paletę kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           custom_sections: "Spersonalizowane sekcje:"
@@ -5164,6 +5417,7 @@ pl_PL:
           convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
           inactive_components: "Nieużywane komponenty:"
+          selected: "%{count} wybrano"
           cancel: "Anuluj"
           broken_theme_tooltip: "Ten motyw ma błędy w CSS, HTML lub YAML"
           disabled_component_tooltip: "Ten komponent został wyłączony"
@@ -5174,6 +5428,7 @@ pl_PL:
           uploads: "Pliki"
           no_uploads: "Możesz załadować zasoby do swojego motywu np. fonty lub obrazy"
           add_upload: "Dodaj plik"
+          upload_file_tip: "Wybierz zasób do przesłania (png, woff2 itp.…)"
           variable_name: "Nazwa zmiennej SCSS:"
           variable_name_invalid: "Niewłaściwa nazwa zmiennej. Dozwolone tylko nazwy alfanumeryczne. Musi zaczynać się od litery. Musi być unikatowa."
           variable_name_error:
@@ -5286,6 +5541,10 @@ pl_PL:
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
           scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
           scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
+          all_filter: "Wszystkie"
+          active_filter: "Aktywni"
+          inactive_filter: "Nieaktywny"
+          updates_available_filter: "Dostępne aktualizacje"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -5362,8 +5621,8 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "Emaile"
-        settings: "Ustawienia"
         templates: "Szablony"
+        templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
         advanced_test:
           title: "Zaawansowany test"
@@ -5430,8 +5689,12 @@ pl_PL:
             title: "Filtr"
             user_placeholder: "nazwa użytkownika"
             address_placeholder: "nazwa@example.com"
+            type_placeholder: "streszczenie, rejestracja..."
             reply_key_placeholder: "klucz odpowiedzi"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[Zobacz więcej...]"
+          post_id: "(ID postu: %{post_id})"
       moderation_history:
         performed_by: "Wykonane przez"
         no_results: "Brak dostępnej historii moderacji."
@@ -5671,6 +5934,7 @@ pl_PL:
       form_templates:
         nav_title: "Szablony"
         title: "Szablony formularzy"
+        help: "Utwórz strukturę szablonu formularza, której można używać do tworzenia nowych tematów."
         new_template: "Nowy szablon"
         list_table:
           headings:
@@ -5691,6 +5955,7 @@ pl_PL:
           cancel: "Anuluj"
           name:
             label: "Nazwa szablonu"
+            placeholder: "Wprowadź nazwę tego szablonu…"
           template:
             label: "Szablon"
             placeholder: "Utwórz tutaj szablon YAML…"
@@ -5736,6 +6001,7 @@ pl_PL:
           title: "Podgląd szablonu"
         field_placeholders:
           validations: "wprowadź walidacje tutaj"
+          id: "wpisz-id-tutaj"
           label: "Wprowadź etykietę tutaj"
           placeholder: "Wpisz tutaj symbol zastępczy"
           none_label: "Wybierz element"
@@ -6013,7 +6279,6 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
-          visits: "Odwiedziny"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"
@@ -6175,6 +6440,13 @@ pl_PL:
         json_schema:
           edit: Uruchom edytor
           modal_title: "Edytuj %{name}"
+        file_types_list:
+          add_image_types: "Obrazy"
+          add_video_types: "Filmy"
+          add_audio_types: "Dźwięk"
+          add_document_types: "Dokumenty"
+          add_types_title: "Zezwalaj na rozszerzenia %{types}"
+          add_types_toast: "%{types} dodane typy plików"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka
@@ -6316,6 +6588,7 @@ pl_PL:
         category_title: "Kategoria"
         tag_name: "Nazwa tagu"
         external_url: "Zewnętrzny lub względny adres URL"
+        username: "Nazwa użytkownika"
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?

@@ -3,10 +3,8 @@
 RSpec.describe PostSerializer do
   fab!(:post)
 
-  before { Group.refresh_automatic_groups! }
-
   context "with a post with lots of actions" do
-    fab!(:actor) { Fabricate(:user) }
+    fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     let(:acted_ids) do
       PostActionType.public_types.values.concat(
@@ -56,7 +54,9 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post with reviewable content" do
-    let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
+    let!(:reviewable) do
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+    end
 
     it "includes the reviewable data" do
       json =
@@ -94,7 +94,7 @@ RSpec.describe PostSerializer do
 
       expect(serializer[:user_suspended]).to eq(true)
 
-      freeze_time (2.months.from_now)
+      freeze_time(2.months.from_now)
 
       expect(serializer[:user_suspended]).to be_nil
     end

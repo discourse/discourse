@@ -20,4 +20,16 @@ RSpec.describe CategoryBadge do
 
     expect(html).to include("title='&#39; &lt;b id=&quot;x&quot;&gt;'")
   end
+
+  it "includes color vars" do
+    c = Fabricate(:category, color: "123456", text_color: "654321")
+    html = CategoryBadge.html_for(c)
+
+    expect(html).to have_tag(
+      "span[data-category-id]",
+      with: {
+        style: "--category-badge-color: #123456; --category-badge-text-color: #654321;",
+      },
+    )
+  end
 end

@@ -16,9 +16,11 @@ export default TextArea.extend({
   @observes("value")
   _updateAutosize() {
     this.element.value = this.value;
-    const evt = document.createEvent("Event");
-    evt.initEvent("autosize:update", true, false);
-    this.element.dispatchEvent(evt);
+    const event = new Event("autosize:update", {
+      bubbles: true,
+      cancelable: false,
+    });
+    this.element.dispatchEvent(event);
   },
 
   @on("willDestroyElement")

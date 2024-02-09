@@ -55,6 +55,9 @@ lt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
+  components:
+    enabled_filter: "Galimas"
+    disabled_filter: "Uždrausta"
   themes:
     bad_color_scheme: "Negalima atnaujinti temos, netinkama spalvų paletė"
     other_error: "Įvyko klaida atnaujinant temą"
@@ -78,7 +81,7 @@ lt:
       optimized_link: Optimizuotos vaizdo nuorodos yra trumpalaikės ir neturėtų būti įtrauktos į temos šaltinio kodą.
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."
-      data_type_not_a_number: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
+      data_type_inclusion: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
       default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės"
       default_not_match_type: "Nustatymas „%{name}“ numatytosios vertės tipas neatitinka nustatymo tipo."
@@ -167,7 +170,6 @@ lt:
       default_tags_already_selected: "Negalite pasirinkti žymos, naudojamos kitame sąraše."
       s3_upload_bucket_is_required: "Negalite įgalinti įkėlimų į S3, jei nepateikėte „s3_upload_bucket“."
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
-      page_publishing_requirements: "Puslapio publikavimo įjungti negalima, jei įjungta saugi laikmena."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."
@@ -267,7 +269,7 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_embedded_media_allowed_trust: "Deja, jūs negalite įterpti medijos elementų į įrašą."
+  no_embedded_media_allowed_group: "Deja, jūs negalite įterpti medijos elementų į įrašą."
   no_embedded_media_allowed: "Atsiprašome, nauji vartotojai negali įterpti medijos elementų į įrašus."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
@@ -707,27 +709,12 @@ lt:
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
   change_email:
-    wrong_account_error: "Esate prisijungę prie netinkamos paskyros, atsijunkite ir bandykite dar kartą."
-    confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
-    please_continue: "Tęsti į %{site_name}"
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
     error_staged: "Keičiant el. pašto adresą įvyko klaida. Adresą jau naudoja suaktyvintas naudotojas."
     already_done: "Deja, ši patvirtinimo nuoroda nebegalioja. Galbūt jūsų el. pašto adresas jau buvo pakeistas?"
     confirm: "Patvirtinti"
     max_secondary_emails_error: "Pasiekėte didžiausią leistiną antrinių el. laiškų limitą."
-    authorizing_new:
-      title: "Patvirtinkite naują el. paštą"
-      description: "Patvirtinkite, kad norite, kad jūsų el. Pašto adresas būtų pakeistas į:"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-    authorizing_old:
-      title: "Pakeisti elektroninio pašto adresą"
-      description: "Patvirtinkite savo el. pašto adreso pakeitimą"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-      old_email: "Senas el. Paštas: %{email}"
-      new_email: "Naujas el. paštas: %{email}"
-      almost_done_title: "Patvirtinamas naujas el. Pašto adresas"
-      almost_done_description: "Mes išsiuntėme laišką į jūsų naują elektroninio pašto adresą, kad patvirtintume pakeitimą!"
   associated_accounts:
     revoke_failed: "Nepavyko anuliuoti paskyros naudojant %{provider_name}."
     connected: "(prijungtas)"
@@ -1249,7 +1236,6 @@ lt:
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
-    enforce_second_factor: "Priverčia vartotojus įgalinti dviejų veiksnių autentifikavimą. Pasirinkite „viskas“, kad jis būtų taikomas visiems vartotojams. Pasirinkite „personalas“, kad jis būtų taikomas tik darbuotojams."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1375,13 +1361,14 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
-    category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
     max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
     topic_views_heat_medium: "Po tiek peržiūrų rodinių laukas vidutiniškai paryškinamas."
     topic_views_heat_high: "Po šio daugybės peržiūrų, peržiūros laukas yra stipriai paryškintas."
     privacy_policy_url: "Jei turite Privatumo politikos dokumentą, talpinamą kitur, kurį norite naudoti, pateikite visą URL čia."
+    num_flaggers_to_close_topic: "Mažiausias unikalių pranešimų skaičius, kurio reikia, kad tema būtų automatiškai sustabdyta intervencijai"
+    num_hours_to_close_topic: "Valandų skaičius pristabdyti temą intervencijai."
     incoming_email_prefer_html: "Įeinantiems el. laiškams naudokite HTML, o ne tekstą."
     display_name_on_email_from: "Rodyti visus vardus el. pašte iš laukų"
     unsubscribe_via_email: "Leiskite naudotojams atšaukti el. laiškų prenumeratą išsiųsdami el. laišką, kurio temoje arba tekste yra „atsisakyti prenumeratos“."
@@ -1428,8 +1415,6 @@ lt:
     emoji_autocomplete_min_chars: "Minimalus simbolių skaičius, reikalingas automatinio užbaigimo jaustukų iššokančiam langui suaktyvinti"
     enable_inline_emoji_translation: "Įgalinamas įterptųjų jaustukų vertimas (be tarpų ar skyrybos ženklų prieš tai)"
     approve_post_count: "Naujo arba pagrindinio naudotojo įrašų, kuriuos reikia patvirtinti, skaičius"
-    approve_unless_trust_level: "Naudotojų įrašai žemiau šio pasitikėjimo lygio turi būti patvirtinti"
-    approve_new_topics_unless_trust_level: "Naujos temos vartotojams žemiau šio patikimumo lygio turi būti patvirtintos"
     auto_close_messages_post_count: "Maksimalus pranešimų skaičius, leidžiamas pranešime prieš jį automatiškai uždarant (0 išjungti)"
     auto_close_topics_create_linked_topic: "Sukurkite naują susietą temą, kai tema automatiškai uždaroma pagal nustatymą „Automatiškai uždarytų temų įrašų skaičių“"
     returning_user_notice_tl: "Minimalus patikimumo lygis, reikalingas norint pamatyti grįžtančius vartotojo pašto pranešimus."
@@ -2682,6 +2667,9 @@ lt:
         title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
+  onebox:
+    github:
+      closed: "uždaryta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'

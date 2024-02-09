@@ -28,6 +28,5 @@ export default class EmbeddingSetting extends Component {
 
   set checked(value) {
     this.set("value", value);
-    return value;
   }
 }

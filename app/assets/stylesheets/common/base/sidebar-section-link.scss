@@ -69,11 +69,11 @@
         height: 15px;
       }
 
-      .badge-wrapper {
+      .badge-category__wrapper {
         font-size: 100%;
         width: 100%;
 
-        .category-name {
+        .badge-category__name {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;

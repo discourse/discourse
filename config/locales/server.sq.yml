@@ -49,6 +49,8 @@ sq:
   remove_posts_deleted_by_author: "Fshirë nga autori"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
+  components:
+    enabled_filter: "Aktivizuar"
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"
@@ -304,8 +306,6 @@ sq:
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   change_email:
-    confirmed: "Adresa e postës u azhornua."
-    please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
   activation:
@@ -716,10 +716,7 @@ sq:
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    category_style: "Visual style for category badges."
     dark_mode_none: "Asnjë"
-    max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
@@ -786,14 +783,12 @@ sq:
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
-    autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
-    approve_unless_trust_level: "Posts for users below this trust level must be approved"
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     default_topics_automatic_unpin: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes, e paracaktuar."
@@ -1393,6 +1388,8 @@ sq:
       replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
       posted: '%{username} postoi në "%{topic}" - %{site_title}'
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
+  staff_action_logs:
+    unknown: "i panjohur"
   reviewables:
     actions:
       agree:

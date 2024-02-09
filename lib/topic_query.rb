@@ -338,6 +338,17 @@ class TopicQuery
     create_list(:bookmarks) { |l| l.where("tu.bookmarked") }
   end
 
+  def list_hot
+    create_list(:hot, unordered: true) do |topics|
+      topics = remove_muted_topics(topics, user)
+      topics = remove_muted_categories(topics, user, exclude: options[:category])
+      TopicQuery.remove_muted_tags(topics, user, options)
+      topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
+        "topic_hot_scores.score DESC",
+      )
+    end
+  end
+
   def list_top_for(period)
     score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|
@@ -653,8 +664,20 @@ class TopicQuery
   end
 
   def apply_ordering(result, options = {})
-    sort_column = SORTABLE_MAPPING[options[:order]] || "default"
+    order_option = options[:order]
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+
+    new_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_apply_ordering_result,
+        result,
+        order_option,
+        sort_dir,
+        options,
+        self,
+      )
+    return new_result if !new_result.nil? && new_result != result
+    sort_column = SORTABLE_MAPPING[order_option] || "default"
 
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.

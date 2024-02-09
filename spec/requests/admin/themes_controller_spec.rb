@@ -73,12 +73,8 @@ RSpec.describe Admin::ThemesController do
         let(:uploaded_file) { Upload.find_by(original_filename: filename) }
         let(:response_json) { response.parsed_body }
 
-        before do
-          post "/admin/themes/upload_asset.json", params: { file: upload }
-          expect(response.status).to eq(201)
-        end
-
         it "reuses the original upload" do
+          post "/admin/themes/upload_asset.json", params: { file: upload }
           expect(response.status).to eq(201)
           expect(response_json["upload_id"]).to eq(uploaded_file.id)
         end
@@ -137,7 +133,7 @@ RSpec.describe Admin::ThemesController do
         expect do
           post "/admin/themes/import.json", params: { theme: uploaded_file }
           expect(response.status).to eq(201)
-        end.to change { Theme.count }.by (1)
+        end.to change { Theme.count }.by(1)
 
         json = response.parsed_body
 
@@ -247,6 +243,7 @@ RSpec.describe Admin::ThemesController do
             }
           JS
           )
+
         repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
 
         post "/admin/themes/import.json", params: { remote: repo_url }
@@ -323,9 +320,9 @@ RSpec.describe Admin::ThemesController do
       it "fails to import with an error if uploads are not allowed" do
         SiteSetting.theme_authorized_extensions = "nothing"
 
-        expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.to change {
-          Theme.count
-        }.by (0)
+        expect do
+          post "/admin/themes/import.json", params: { theme: theme_archive }
+        end.not_to change { Theme.count }
 
         expect(response.status).to eq(422)
       end
@@ -335,12 +332,12 @@ RSpec.describe Admin::ThemesController do
 
         expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.to change {
           Theme.count
-        }.by (1)
+        }.by(1)
         expect(response.status).to eq(201)
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
-        expect(json["theme"]["theme_fields"].length).to eq(5)
+        expect(json["theme"]["theme_fields"].length).to eq(6)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -351,28 +348,43 @@ RSpec.describe Admin::ThemesController do
         other_existing_theme = Fabricate(:theme, name: "Some other name")
 
         messages =
-          MessageBus.track_publish do
+          MessageBus.track_publish("/file-change") do
             expect do
               post "/admin/themes/import.json",
                    params: {
                      bundle: theme_archive,
                      theme_id: other_existing_theme.id,
                    }
-            end.to change { Theme.count }.by (0)
+
+              expect(response.status).to eq(201)
+            end.not_to change { Theme.count }
           end
-        expect(response.status).to eq(201)
+
         json = response.parsed_body
 
         # Ensure only one refresh message is sent.
         # More than 1 is wasteful, and can trigger unusual race conditions in the client
         # If this test fails, it probably means `theme.save` is being called twice - check any 'autosave' relations
-        file_change_messages = messages.filter { |m| m[:channel] == "/file-change" }
-        expect(file_change_messages.count).to eq(1)
+        expect(messages.count).to eq(1)
 
         expect(json["theme"]["name"]).to eq("Some other name")
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(5)
+        expect(json["theme"]["theme_fields"].length).to eq(6)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      it "does not run migrations when importing a theme from an archive and `skip_settings_migrations` params is present" do
+        other_existing_theme = Fabricate(:theme, name: "Some other name")
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: theme_archive,
+               theme_id: other_existing_theme.id,
+               skip_migrations: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(other_existing_theme.theme_settings_migrations.exists?).to eq(false)
       end
 
       it "creates a new theme when id specified as nil" do
@@ -381,13 +393,13 @@ RSpec.describe Admin::ThemesController do
 
         expect do
           post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: nil }
-        end.to change { Theme.count }.by (1)
+        end.to change { Theme.count }.by(1)
         expect(response.status).to eq(201)
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
         expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(5)
+        expect(json["theme"]["theme_fields"].length).to eq(6)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -427,6 +439,12 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(target: :common, name: :scss, value: ".body{color: black;}")
         theme.set_field(target: :desktop, name: :after_header, value: "<b>test</b>")
 
+        theme.set_field(
+          target: :migrations,
+          name: "0001-some-migration",
+          value: "export default function migrate(settings) { return settings; }",
+        )
+
         theme.remote_theme =
           RemoteTheme.new(
             remote_url: "awesome.git",
@@ -448,7 +466,14 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["extras"]["color_schemes"].length).to eq(1)
         theme_json = json["themes"].find { |t| t["id"] == theme.id }
-        expect(theme_json["theme_fields"].length).to eq(2)
+        expect(theme_json["theme_fields"].length).to eq(3)
+
+        expect(
+          theme_json["theme_fields"].find { |theme_field| theme_field["target"] == "migrations" }[
+            "migrated"
+          ],
+        ).to eq(false)
+
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
     end

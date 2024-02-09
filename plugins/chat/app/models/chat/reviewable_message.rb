@@ -40,7 +40,8 @@ module Chat
 
     def build_actions(actions, guardian, args)
       return unless pending?
-      return if chat_message.blank?
+
+      return build_action(actions, :ignore, icon: "external-link-alt") if chat_message.blank?
 
       agree =
         actions.add_bundle(

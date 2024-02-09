@@ -5,9 +5,9 @@ require "post_revisor"
 RSpec.describe PostRevisor do
   fab!(:topic)
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:coding_horror)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:moderator)
   let(:post_args) { { user: newuser, topic: topic } }
 
@@ -100,8 +100,8 @@ RSpec.describe PostRevisor do
     end
 
     it "does not revise category if incorrect amount of tags" do
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       new_category = Fabricate(:category, minimum_required_tags: 1)
 
@@ -122,8 +122,8 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic does not have minimum amount of tags that the new category requires" do
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       old_category = Fabricate(:category, minimum_required_tags: 0)
       new_category = Fabricate(:category, minimum_required_tags: 1)
@@ -136,8 +136,8 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic has tags not allowed in the new category" do
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
@@ -164,8 +164,8 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic is missing tags required from a tag group in the new category" do
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       tag1 = Fabricate(:tag)
       tag_group = Fabricate(:tag_group, tags: [tag1])
@@ -290,6 +290,17 @@ RSpec.describe PostRevisor do
             from: "##{current_category.slug}",
           ),
         )
+      end
+
+      describe "with PMs" do
+        fab!(:pm) { Fabricate(:private_message_topic) }
+        let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
+        fab!(:category) { Fabricate(:category, topic_count: 1) }
+        it "Does not create a category change small_action post when converting to a topic" do
+          expect do
+            TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+          end.to change { category.reload.topic_count }.by(1)
+        end
       end
     end
   end
@@ -843,7 +854,7 @@ RSpec.describe PostRevisor do
     end
 
     describe "admin editing a new user's post" do
-      fab!(:changed_by) { Fabricate(:admin) }
+      fab!(:changed_by) { Fabricate(:admin, refresh_auto_groups: true) }
 
       before do
         SiteSetting.newuser_max_embedded_media = 0
@@ -1221,8 +1232,8 @@ RSpec.describe PostRevisor do
 
         context "when can create tags" do
           before do
-            SiteSetting.min_trust_to_create_tag = 0
-            SiteSetting.min_trust_level_to_tag_topics = 0
+            SiteSetting.create_tag_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_0]}"
+            SiteSetting.tag_topic_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_0]}"
           end
 
           it "can create all tags if none exist" do
@@ -1479,8 +1490,8 @@ RSpec.describe PostRevisor do
 
         context "when cannot create tags" do
           before do
-            SiteSetting.min_trust_to_create_tag = 4
-            SiteSetting.min_trust_level_to_tag_topics = 0
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+            SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
           end
 
           it "only uses existing tags" do

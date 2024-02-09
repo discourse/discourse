@@ -784,13 +784,12 @@ sr:
         cancel: "Odustani"
       name:
         title: "Ime"
-        instructions: "vaše ime (opciono)"
-        instructions_required: "Vaše ime"
+        instructions: "Vaše ime (opciono)."
+        instructions_required: "Vaše ime."
         too_short: "Ime vam je prekratko"
         ok: "Vaše ime dobro izgleda"
       username:
         title: "Korisničko ime"
-        instructions: "jedinstveno, bez razmaka, kratko"
         short_instructions: "Ljudi vas mogu spominjati kao @%{username}"
         available: "Vaše korisničko ime slobodno"
         not_available: "Nije dostupno. Pokušajte %{suggestion}?"
@@ -881,7 +880,7 @@ sr:
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
         ok: "Vaša šifra izgleda dobro."
-        instructions: "najmanje %{count} karaktera"
+        instructions: "Najmanje %{count} karaktera."
       summary:
         title: "Rezime"
         stats: "Statistike"
@@ -1061,6 +1060,9 @@ sr:
       alt: "Alt"
     select_kit:
       delete_item: "Obriši %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
     emoji_picker:
       flags: Zastave
     composer:
@@ -1205,6 +1207,9 @@ sr:
         tag: "Nema više %{tag} tema."
         top: "Nema više glavnih tema."
         bookmarks: "Nema više markiranih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori Teme"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"
@@ -1738,7 +1743,6 @@ sr:
       download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
-      description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       filters:
@@ -1838,6 +1842,15 @@ sr:
         typeMismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
+    table_builder:
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Sačuvaj"
+          reason: "zašto izmenjujete?"
+      spreadsheet:
+        show: "Pokaži"
+        about: "O nama"
   admin_js:
     admin:
       title: "Administrator"
@@ -1859,8 +1872,7 @@ sr:
         installed_version: "Instalirano"
         latest_version: "Poslednje"
         new_features:
-          dismiss: "Одбаци"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
         no_problems: "Nisu pronađeni problemi."
@@ -1944,6 +1956,8 @@ sr:
         version: "Verzija"
         enabled: "Omgućeno"
         change_settings_short: "Podešavanje"
+        author: "Od %{author}"
+        learn_more: "Saznaj više"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -2006,6 +2020,8 @@ sr:
         email_templates:
           title: "E-mail"
           subject: "Predmet"
+        component:
+          all_filter: "sve"
         theme:
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
@@ -2028,6 +2044,8 @@ sr:
             text: "Header"
           footer:
             text: "Footer"
+          all_filter: "sve"
+          active_filter: "Aktivno"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"
@@ -2067,7 +2085,6 @@ sr:
         email_style:
           css: "CSS"
       email:
-        settings: "Podešavanje"
         preview_digest: "Pregled sažetka"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
@@ -2340,7 +2357,6 @@ sr:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"
           requirement_heading: "Predispozicija"
-          visits: "Poseta"
           days: "dana"
           topics_replied_to: "Teme Odgovrene U"
           topics_viewed: "Tema Pregledano"
@@ -2439,6 +2455,8 @@ sr:
           navigation: "Navigacija"
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Slike"
       badges:
         title: Značke
         new_badge: Nova Značka
@@ -2515,6 +2533,7 @@ sr:
         post_id: "ID Poruke"
         post_title: "Post"
         category_title: "Kategorija"
+        username: "Korisničko Ime"
         form:
           label: "Novo:"
           add: "Dodaj"

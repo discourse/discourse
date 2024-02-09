@@ -104,14 +104,10 @@ RSpec.describe "Chat channel", type: :system do
           chat_page.visit_channel(channel_1)
         end
 
-        using_session(:tab_1) do |session|
-          channel_page.send_message("test_message")
-          session.quit
-        end
+        using_session(:tab_1) { channel_page.send_message("test_message") }
 
-        using_session(:tab_2) do |session|
+        using_session(:tab_2) do
           expect(channel_page.messages).to have_message(text: "test_message")
-          session.quit
         end
       end
     end
@@ -136,7 +132,7 @@ RSpec.describe "Chat channel", type: :system do
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
@@ -168,7 +164,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     xit "doesn’t scroll the pane" do
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1)
 
@@ -206,8 +202,8 @@ RSpec.describe "Chat channel", type: :system do
       SiteSetting.enable_user_status = true
       current_user.set_status!("off to dentist", "tooth")
       other_user.set_status!("surfing", "surfing_man")
-      Fabricate(:chat_mention, user: current_user, chat_message: message)
-      Fabricate(:chat_mention, user: other_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: current_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: other_user, chat_message: message)
 
       chat_page.visit_channel(channel_1)
 

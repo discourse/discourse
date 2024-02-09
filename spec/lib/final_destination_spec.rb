@@ -60,6 +60,12 @@ RSpec.describe FinalDestination do
     expect(fd.ignored).to eq(%w[test.localhost google.com meta.discourse.org])
   end
 
+  it "raises an error when URL is too long to encode" do
+    expect {
+      FinalDestination.new("https://meta.discourse.org/" + "x" * UrlHelper::MAX_URL_LENGTH)
+    }.to raise_error(FinalDestination::UrlEncodingError)
+  end
+
   describe ".resolve" do
     it "has a ready status code before anything happens" do
       expect(fd("https://eviltrout.com").status).to eq(:ready)

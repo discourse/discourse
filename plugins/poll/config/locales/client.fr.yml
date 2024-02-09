@@ -85,7 +85,7 @@ fr:
           options_min_count: Saisissez au moins 1 réponse possible.
           options_max_count: Saisissez au plus %{count} réponses possibles.
           invalid_min_value: Cette valeur doit être supérieure à 1.
-          invalid_max_value: Cette valeur doit être supérieure à 1, mais inférieure ou égale au nombre de réponses possibles.
+          invalid_max_value: Le nombre maximal de réponses doit être compris entre 1 et le nombre total d'options.
           invalid_values: La valeur minimale doit être plus petite que la valeur maximale.
           min_step_value: Le valeur minimale du pas est de 1
         poll_type:

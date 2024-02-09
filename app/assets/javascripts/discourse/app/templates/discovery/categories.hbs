@@ -1,4 +1,4 @@
-<Discovery::Layout>
+<Discovery::Layout @model={{this.model}}>
   <:navigation>
     <Discovery::Navigation
       @showCategoryAdmin={{this.model.can_create_category}}
@@ -34,6 +34,8 @@
         @categories={{this.model.categories}}
         @topics={{this.model.topics}}
         @parentCategory={{this.model.parentCategory}}
+        @loadMore={{this.model.loadMore}}
+        @loadingMore={{this.model.isLoading}}
       />
     </div>
 

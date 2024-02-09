@@ -217,12 +217,14 @@ be:
         type:
           title: "тып"
         refresh: "абнавіць"
+        status: "Статус"
         category: "катэгорыя"
         orders:
           score: "кошт"
       scores:
         score: "кошт"
         type: "прычына"
+        status: "Статус"
       statuses:
         pending:
           title: "чакаецца"
@@ -552,6 +554,7 @@ be:
         taken: "Выбачайце, гэты адрас не даступны."
         error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
         success: "Мы надсилалы ліст на гэтую скрыню. Выканайце інструкцыі па пидтердження."
+        confirm_success: "Ваш электронны адрас быў абноўлены."
       change_avatar:
         letter_based: "Ваша выява дададзена сістэмай"
         uploaded_avatar: "Іншая выява"
@@ -571,7 +574,7 @@ be:
         cancel: "адмяніць"
       name:
         title: "Імя"
-        instructions_required: "Ваша поўнае імя"
+        instructions_required: "Ваша поўнае імя."
         too_short: "Ваша імя занадта кароткае"
         ok: "Ваша імя выглядае добра"
       username:
@@ -802,6 +805,9 @@ be:
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
     select_kit:
       delete_item: "Выдаліць %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "масавыя дзеянні"
     date_time_picker:
       from: ад
       to: да
@@ -875,6 +881,7 @@ be:
         custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
       titles:
         watching_first_post: "новая тэма"
+        admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     upload_selector:
       uploading: "загрузка"
       select_file: "выбраць файл"
@@ -952,6 +959,9 @@ be:
         tag: "Больш няма тым у катэгорыі %{tag}."
         top: "There are no more top topics."
         bookmarks: "Тэмы ў закладках адсутнічаюць."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыць тэму"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1312,7 +1322,6 @@ be:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
-      description: "апісанне"
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
@@ -1418,6 +1427,14 @@ be:
         typeMismatch:
           default: "Калі ласка, увядзіце карэктнае значэнне."
           email: "Калі ласка, увядзіце верны email."
+    table_builder:
+      edit:
+        modal:
+          cancel: "адмена"
+          create: "захаваць"
+          reason: "чаму Вы рэдагуеце паведамленне?"
+      spreadsheet:
+        about: "Аб тэме"
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1438,6 +1455,8 @@ be:
         version_check_pending: "Здаецца, Вы нядаўна здзейснілі абнаўлення. Выдатна!"
         installed_version: "устаноўленая"
         latest_version: "апошняя"
+        new_features:
+          learn_more: "Даведацца больш ..."
         last_checked: "апошняя праверка"
         refresh_problems: "абнавіць"
         no_problems: "Не выяўлена ніякіх праблем."
@@ -1604,6 +1623,9 @@ be:
           body: "цела"
           revert: "вярнуць змены"
           revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+        component:
+          all_filter: "Усё"
+          disabled_filter: "Адключана"
         theme:
           theme: "тэма"
           customize_desc: "Кастамізаваць:"
@@ -1629,6 +1651,8 @@ be:
             text: "Header"
           body_tag:
             text: "цела"
+          all_filter: "Усё"
+          active_filter: "актыўныя"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
@@ -1656,7 +1680,6 @@ be:
             description: "Колер кнопкі \"Падабаецца\"."
       email:
         title: "Емейлы"
-        settings: "Налады"
         templates: "шаблоны"
         preview_digest: "Кароткі выклад навін"
         sent: "Sent"
@@ -1754,6 +1777,7 @@ be:
             revoke_moderation: "адклікаць правы мадэратара"
             deleted_tag: "выдаліць тэг"
             lock_trust_level: "заблакаваць ўзровень даверу"
+            post_rejected: "публікацыя адхілена"
         screened_emails:
           title: "Схаваныя емейлы"
           description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў."
@@ -1789,7 +1813,9 @@ be:
         actions:
           block: "заблакаваць"
           flag: "Пазначыць"
+          link: "Спасылка"
         form:
+          link_label: "Спасылка"
           add: "дадаць"
           success: "поспех"
       form_templates:
@@ -1941,7 +1967,6 @@ be:
             other: "За апошнія %{count} дзён:"
           value_heading: "значэнне"
           requirement_heading: "патрабаванне"
-          visits: "наведванне"
           days: "дзён"
           topics_replied_to: "Тэмы, на якія адказаў (а)"
           topics_viewed: "прагледжана Тым"
@@ -1970,6 +1995,7 @@ be:
         field_types:
           text: "тэкставае поле"
           confirm: "пацвярджэнне"
+          dropdown: "Выпадаючы спіс"
       site_text:
         edit: "рэдагаваць"
         revert: "вярнуць змены"
@@ -2020,6 +2046,8 @@ be:
           navigation: "рух"
         default_categories:
           modal_yes: "ды"
+        file_types_list:
+          add_image_types: "Выява"
       badges:
         title: значкі
         new_badge: новы значок
@@ -2081,6 +2109,7 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
+        username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"

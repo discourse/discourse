@@ -737,7 +737,6 @@ sw:
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
         copied_to_clipboard: "Nakili"
       second_factor:
-        confirm_password_description: "Thibitisha nywila yako kuendelea"
         name: "Jina"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
@@ -767,6 +766,7 @@ sw:
         error: "Hitilafu imetokea wakati wa kubadilisha barua pepe. Labda hiyo barua pepe imeshatumika?"
         success: "Tumekutumia barua kwenye barua pepe uliyotumia. Tafadhali fuata maelezo tuliyokutumia."
         success_staff: "Tumekutumia barua kwenye barua pepe uliyotumia. Tafadhali fuata maelezo tuliyokutumia."
+        confirm_success: "Barua pepe yako imesasishwa."
       change_avatar:
         title: "Badilisha Picha yako"
         letter_based: "Mfumo imekabidhi Picha"
@@ -798,13 +798,12 @@ sw:
         not_connected: "(haijaunganishwa)"
       name:
         title: "Jina"
-        instructions: "jina lako lote (sio lazima)"
-        instructions_required: "Jina lako lote"
+        instructions: "Jina lako lote (sio lazima)."
+        instructions_required: "Jina lako lote."
         too_short: "Jina lako ni fupi"
         ok: "Jina lako liko vizuri"
       username:
         title: "Jina la mtumiaji"
-        instructions: "kipekee, hakuna nafasi, fupi"
         short_instructions: "Watu wanaweza kukutaja kwa jina la @%{jina la mtumiaji}"
         available: "Jina la mtumiaji limepatikana"
         not_available: "Haijapatikana. Jaribu %{dokezo}?"
@@ -914,7 +913,7 @@ sw:
         same_as_username: "Nywila yako ni sawa na jina lako la utumiaji."
         same_as_email: "Nywila yako ni sawa na jina lako la utumiaji."
         ok: "Nywila yako iko sawa."
-        instructions: "herufi %{count} au zaidi"
+        instructions: "Herufi %{count} au zaidi."
       summary:
         title: "Muhtasari"
         stats: "Takwimu"
@@ -1152,6 +1151,9 @@ sw:
       min_content_not_reached:
         one: " Chagua japo kitu %{count}."
         other: " Chagua japo vitu %{count}."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Vitendo za Jumla"
     date_time_picker:
       from: Kutoka
       to: Kwenda
@@ -1183,9 +1185,6 @@ sw:
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
-      group_mentioned:
-        one: "Kwa kutaja %{group}, utamjulisha <a href='%{group_link}'>mtu mmoja</a> – una uhakika?"
-        other: "Kwa kutaja %{group}, utawajulisha <a href='%{group_link}'>%{count} watu</a> – una uhakika?"
       duplicate_link: "Inaonekana linki yako <b>%{domain}</b> imechapishwa tayari kwenye topiki na <b>@%{username}</b> kwenye <a href='%{post_url}'>jibu la %{ago}</a> – una uhakina unataka kuchapisha tena?"
       error:
         title_missing: "Kichwa cha habari ni muhimu"
@@ -1451,6 +1450,9 @@ sw:
         tag: "Hakuna %{tag} mada zingine."
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
+    topic_bulk_actions:
+      close_topics:
+        name: "Funga Mada"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2149,7 +2151,6 @@ sw:
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
-      description: "Maelezo"
       sort_by: "Pangilia kwa:"
       sort_by_count: "hesabu"
       sort_by_name: "jina"
@@ -2274,6 +2275,15 @@ sw:
         typeMismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
+    table_builder:
+      edit:
+        modal:
+          cancel: "ghairi"
+          create: "Hifadhi"
+          reason: "kwa nini unahariri?"
+      spreadsheet:
+        show: "Onyesha"
+        about: "Kuhusu"
   admin_js:
     admin:
       title: "Kiongozi wa Discourse"
@@ -2297,8 +2307,7 @@ sw:
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
         new_features:
-          dismiss: "Ondosha"
-          learn_more: "Jifunze zaidi"
+          learn_more: "Jifunze zaidi..."
         last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
         no_problems: "Hakuna matatizo yaliyopatikana."
@@ -2454,7 +2463,8 @@ sw:
         not_enabled: "H"
         change_settings_short: "Mipangilio"
         howto: "Ninawekaje programu-jalizi?"
-        official: "Programu-jalizi Rasmi"
+        author: "Na %{author}"
+        learn_more: "Jifunze zaidi"
       backups:
         title: "Machelezo"
         menu:
@@ -2537,6 +2547,10 @@ sw:
           body: "Mwili"
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
+        component:
+          all_filter: "Vyote"
+          enabled_filter: "Imeruhusiwa"
+          disabled_filter: "Imezuiwa"
         theme:
           theme: "Mandhari"
           customize_desc: "Geuza Kukufaa:"
@@ -2605,6 +2619,9 @@ sw:
           yaml:
             text: "YAML"
             title: "Tambulisha mipangilio ya mpango kwenye umbiza wa YAML"
+          all_filter: "Vyote"
+          active_filter: "Mara kwa Mara"
+          inactive_filter: "Isiyo Amilifu"
         colors:
           title: "Rangi"
           copy_name_prefix: "Nakala ya"
@@ -2646,7 +2663,6 @@ sw:
           css: "CSS"
       email:
         title: "Barua Pepe"
-        settings: "Mipangilio"
         templates: "Violezo"
         preview_digest: "Kihakiki Jarida"
         error: "<b>HITILAFU</b> - %{server_error}"
@@ -3047,7 +3063,6 @@ sw:
           title: "Mahitaji ya Kiwango cha 3 cha uaminifu"
           value_heading: "Thamani"
           requirement_heading: "Kinachohitajika"
-          visits: "Waliotembelea"
           days: "siku"
           topics_replied_to: "Mada Zilizopata Majibu"
           topics_viewed: "Mada Zilizoonwa "
@@ -3166,6 +3181,8 @@ sw:
           navigation: "Abiri"
         default_categories:
           modal_yes: "Ndiyo"
+        file_types_list:
+          add_image_types: "Picha"
       badges:
         title: Beji
         new_badge: Beji Mpya
@@ -3261,6 +3278,7 @@ sw:
         post_title: "Ujumbe"
         category_id: "Utambulisho wa kikundi"
         category_title: "Kikundi"
+        username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
         form:
           label: "Mpya:"

@@ -2,7 +2,7 @@
 
 RSpec.describe ReviewableScore, type: :model do
   describe "transitions" do
-    fab!(:user) { Fabricate(:user, trust_level: 3) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[3]) }
     fab!(:post)
     fab!(:moderator)
 
@@ -46,10 +46,10 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe "overall score" do
-    fab!(:user0) { Fabricate(:user, trust_level: 1) }
-    fab!(:user1) { Fabricate(:user, trust_level: 2) }
-    fab!(:user2) { Fabricate(:user, trust_level: 3) }
-    fab!(:moderator)
+    fab!(:user0) { Fabricate(:user, trust_level: TrustLevel[1]) }
+    fab!(:user1) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:user2) { Fabricate(:user, trust_level: TrustLevel[3]) }
+    fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     fab!(:post)
     let(:topic) { post.topic }
 

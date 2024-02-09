@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupCustomField < ActiveRecord::Base
+  include CustomField
+
   belongs_to :group
 end
 

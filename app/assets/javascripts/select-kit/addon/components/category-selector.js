@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
+import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
@@ -21,20 +22,16 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.categories) {
-      this.set("categories", []);
-    }
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
   },
 
   content: computed("categories.[]", "blockedCategories.[]", function () {
-    const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
-        if (this.attrs.options?.allowUncategorized !== undefined) {
-          return this.attrs.options.allowUncategorized;
+        if (this.options?.allowUncategorized !== undefined) {
+          return this.options.allowUncategorized;
         }
 
         return this.selectKit.options.allowUncategorized;
@@ -42,7 +39,7 @@ export default MultiSelectComponent.extend({
 
       return (
         this.categories.includes(category) ||
-        !blockedCategories.includes(category)
+        !this.blockedCategories.includes(category)
       );
     });
   }),
@@ -50,28 +47,23 @@ export default MultiSelectComponent.extend({
   value: mapBy("categories", "id"),
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   async search(filter) {
-    if (!this.siteSettings.lazy_load_categories) {
+    if (!this.site.lazy_load_categories) {
       return this._super(filter);
     }
 
-    const rejectCategoryIds = new Set();
-    // Reject selected options
-    if (this.categories) {
-      this.categories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
-    // Reject blocked categories
-    if (this.blockedCategories) {
-      this.blockedCategories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
+    const rejectCategoryIds = new Set([
+      ...this.categories.map((c) => c.id),
+      ...this.blockedCategories.map((c) => c.id),
+    ]);
 
     return await Category.asyncSearch(filter, {
       includeUncategorized:
-        this.attrs.options?.allowUncategorized !== undefined
-          ? this.attrs.options.allowUncategorized
+        this.options?.allowUncategorized !== undefined
+          ? this.options.allowUncategorized
           : this.selectKit.options.allowUncategorized,
       rejectCategoryIds: Array.from(rejectCategoryIds),
     });

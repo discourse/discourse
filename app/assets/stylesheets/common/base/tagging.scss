@@ -38,10 +38,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: 0.5em;
 
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
+    gap: 0.5em;
   }
 
   .badge-wrapper {
@@ -127,9 +129,6 @@
   .discourse-tags {
     font-size: var(--font-down-1);
   }
-  .discourse-tags + .topic-featured-link {
-    margin-left: 0.5em;
-  }
 }
 
 .discourse-tags {
@@ -154,7 +153,6 @@ header .discourse-tag {
 
 .list-tags {
   display: inline-block;
-  margin-right: 3px;
   font-size: var(--font-down-1);
 }
 
@@ -336,10 +334,10 @@ section.tag-info {
     flex-wrap: wrap;
     margin-bottom: 1em;
     #edit-name {
-      flex: 1 1 auto;
-      margin-right: 0.5em;
+      width: 100%;
     }
     #edit-description {
+      height: 120px;
       flex: 10 1 auto;
     }
     .edit-controls {

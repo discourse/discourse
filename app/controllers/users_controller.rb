@@ -225,7 +225,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
@@ -716,7 +716,7 @@ class UsersController < ApplicationController
 
     # Handle associated accounts
     associations = []
-    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
       params[:external_ids].each do |provider_name, provider_uid|
         authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
         raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
@@ -1294,7 +1294,8 @@ class UsersController < ApplicationController
 
     if type.blank? || type == "system"
       upload_id = nil
-    elsif !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, user)
+    elsif !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map) &&
+          !user.is_system_user?
       return render json: failed_json, status: 422
     else
       upload_id = params[:upload_id]
@@ -1510,9 +1511,6 @@ class UsersController < ApplicationController
   end
 
   def confirm_session
-    # TODO(pmusaraj): add support for confirming via passkey, 2FA
-    params.require(:password)
-
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
@@ -1520,8 +1518,10 @@ class UsersController < ApplicationController
     if confirm_secure_session
       render json: success_json
     else
-      render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
+      render json: failed_json.merge(error: I18n.t("login.incorrect_password_or_passkey"))
     end
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render_json_error(err.message, status: 401)
   end
 
   def trusted_session
@@ -1609,7 +1609,7 @@ class UsersController < ApplicationController
   end
 
   def create_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
@@ -1624,7 +1624,7 @@ class UsersController < ApplicationController
   end
 
   def register_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:name)
     params.require(:attestation)
@@ -1644,7 +1644,7 @@ class UsersController < ApplicationController
   end
 
   def delete_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
 
@@ -1652,7 +1652,7 @@ class UsersController < ApplicationController
   end
 
   def rename_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:id)
     params.require(:name)
@@ -1898,6 +1898,9 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
+      if SiteSetting.show_user_menu_avatars
+        Notification.populate_acting_user(reminder_notifications)
+      end
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -1968,6 +1971,7 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
+      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -1979,9 +1983,17 @@ class UsersController < ApplicationController
     if messages_list
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
+      serialized_users =
+        if SiteSetting.show_user_menu_avatars
+          users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
+          serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
+        else
+          []
+        end
     end
 
     if read_notifications.present?
+      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,
@@ -1994,6 +2006,7 @@ class UsersController < ApplicationController
              unread_notifications: serialized_unread_notifications || [],
              read_notifications: serialized_read_notifications || [],
              topics: serialized_messages || [],
+             users: serialized_users || [],
            }
   end
 
@@ -2183,13 +2196,32 @@ class UsersController < ApplicationController
       SiteSetting.max_logins_per_ip_per_minute,
       1.minute,
     ).performed!
-    return false if !current_user.confirm_password?(params[:password])
 
-    secure_session["confirmed-password-#{current_user.id}"] = "true"
+    if !params[:password].present? && !params[:publicKeyCredential].present?
+      raise Discourse::InvalidParameters.new "Missing password or passkey"
+    end
+
+    if params[:password].present?
+      return false if !current_user.confirm_password?(params[:password])
+    end
+
+    if params[:publicKeyCredential].present?
+      passkey =
+        ::DiscourseWebauthn::AuthenticationService.new(
+          current_user,
+          params[:publicKeyCredential],
+          session: secure_session,
+          factor_type: UserSecurityKey.factor_types[:first_factor],
+        ).authenticate_security_key
+
+      return false if !passkey
+    end
+
+    secure_session["confirmed-session-#{current_user.id}"] = "true"
   end
 
   def secure_session_confirmed?
-    secure_session["confirmed-password-#{current_user.id}"] == "true"
+    secure_session["confirmed-session-#{current_user.id}"] == "true"
   end
 
   def summary_cache_key(user)

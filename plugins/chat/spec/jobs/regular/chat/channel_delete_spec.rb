@@ -23,10 +23,10 @@ describe Jobs::Chat::ChannelDelete do
       UploadReference.create(target: message, upload: upload)
     end
 
-    Chat::Mention.create(
+    Chat::UserMention.create(
       user: user2,
       chat_message: messages.sample,
-      notification: Fabricate(:notification),
+      notifications: [Fabricate(:notification)],
     )
 
     @incoming_chat_webhook_id = Fabricate(:incoming_chat_webhook, chat_channel: chat_channel)

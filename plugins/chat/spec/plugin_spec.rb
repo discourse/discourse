@@ -236,8 +236,8 @@ describe Chat do
     end
   end
 
-  describe "secure media compatibility" do
-    it "disables chat uploads if secure media changes from disabled to enabled" do
+  describe "secure uploads compatibility" do
+    it "disables chat uploads if secure uploads changes from disabled to enabled" do
       enable_secure_uploads
       expect(SiteSetting.chat_allow_uploads).to eq(false)
       last_history = UserHistory.last

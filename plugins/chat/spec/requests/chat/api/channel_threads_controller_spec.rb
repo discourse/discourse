@@ -9,7 +9,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    Group.refresh_automatic_groups!
+
     sign_in(current_user)
   end
 
@@ -84,9 +84,9 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   end
 
   describe "index" do
-    fab!(:thread_1) { Fabricate(:chat_thread, channel: public_channel) }
-    fab!(:thread_2) { Fabricate(:chat_thread, channel: public_channel) }
-    fab!(:thread_3) { Fabricate(:chat_thread, channel: public_channel) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: public_channel, with_replies: 1) }
+    fab!(:thread_2) { Fabricate(:chat_thread, channel: public_channel, with_replies: 1) }
+    fab!(:thread_3) { Fabricate(:chat_thread, channel: public_channel, with_replies: 1) }
     fab!(:message_1) do
       Fabricate(
         :chat_message,
@@ -111,11 +111,11 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       thread_3.add(current_user)
     end
 
-    it "returns the threads the user has sent messages in for the channel" do
+    it "returns the threads of the channel" do
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
       expect(response.parsed_body["threads"].map { |thread| thread["id"] }).to eq(
-        [thread_3.id, thread_1.id],
+        [thread_3.id, thread_2.id, thread_1.id],
       )
     end
 

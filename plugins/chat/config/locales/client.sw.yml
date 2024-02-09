@@ -13,6 +13,8 @@ sw:
           never: "Kamwe"
     chat:
       deleted_chat_username: imefutwa
+      dates:
+        yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
       channel_settings:
@@ -59,6 +61,8 @@ sw:
         tabs:
           members: Wanachama
           settings: Mipangilio
+      new_message_modal:
+        filter: "Chuja"
       direct_message_creator:
         title: Ujumbe Mpya
         prefix: "Kwenda:"

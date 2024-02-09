@@ -608,7 +608,6 @@ lv:
           imap_mailbox_not_selected: "Šai IMAP konfigurācijai ir jāizvēlas pastkaste, pretējā gadījumā neviena pastkaste netiks sinhronizēta!"
           prefill:
             title: "Iepriekš aizpildiet ar iestatījumiem:"
-            gmail: "GMail"
           credentials:
             title: "Atsauksme uz"
             smtp_server: "SMTP serveris"
@@ -1075,8 +1074,6 @@ lv:
         title: "Divu faktoru autentifikācija"
         enable: "Pārvaldiet divu faktoru autentifikāciju"
         disable_all: "Atspējot visu"
-        forgot_password: "Aizmirsi paroli?"
-        confirm_password_description: "Lai turpinātu, lūdzu, apstipriniet savu paroli"
         name: "Vārds"
         label: "Kods"
         rate_limit: "Lūdzu, uzgaidiet, pirms izmēģināt citu autentifikācijas kodu."
@@ -1180,14 +1177,13 @@ lv:
         cancel: "Atcelt"
       name:
         title: "Vārds"
-        instructions: "jūsu pilnais vārds (neobligāti)"
-        instructions_required: "Jūsu pilnais vārds"
+        instructions: "Jūsu pilnais vārds (neobligāti)."
+        instructions_required: "Jūsu pilnais vārds."
         required: "Lūdzu, ievadiet vārdu"
         too_short: "Jūsu vārds ir pārāk īss"
         ok: "Jūsu vārds izskatās labi"
       username:
         title: "Lietotājvārds"
-        instructions: "unikāls, bez atstarpēm, īss"
         short_instructions: "Cilvēki var pieminēt jūs kā @%{username}"
         available: "Jūsu lietotājvārds ir pieejams"
         not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
@@ -1340,7 +1336,7 @@ lv:
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
         ok: "Jūsu parole izskatās labi."
-        instructions: "vismaz %{count} rakstzīmes"
+        instructions: "Vismaz %{count} rakstzīmes."
         required: "Lūdzu, ievadiet paroli"
       summary:
         title: "Kopsavilkums"
@@ -1618,6 +1614,9 @@ lv:
     select_kit:
       delete_item: "Izdzēst %{name}"
       create: "Izveidot: '%{content}'"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Darbības ar vairumu"
     date_time_picker:
       from: "No"
       to: Kam
@@ -1650,10 +1649,6 @@ lv:
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"
-      group_mentioned:
-        zero: "Pieminot %{group}, neviens nesaņems paziņojumu, jo grupa ir tukša."
-        one: "Pieminot %{group}, šis cilvēks saņems paziņojumu – esat pārliecināti?"
-        other: "Pieminot %{group}, šiem <a href='%{group_link}'>%{count} cilvēki</a> saņems paziņojumu – esat pārliecināti?"
       duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
@@ -1721,6 +1716,7 @@ lv:
         replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
         posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
         linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ierakstīja "%{topic}" - %{site_title}'
         confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
       titles:
         mentioned: "minēts"
@@ -1897,6 +1893,9 @@ lv:
         tag: "Vairāk sadaļās %{tag} tēmu nav. "
         top: "Vairāk svarīgu tēmu nav. "
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
+    topic_bulk_actions:
+      close_topics:
+        name: "Slēgt tēmas"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
@@ -2654,7 +2653,6 @@ lv:
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
-      description: "Apraksts"
       sort_by: "Kārtot pēc:"
       sort_by_count: "skaita"
       sort_by_name: "vārda"
@@ -2783,6 +2781,18 @@ lv:
         typeMismatch:
           default: "Lūdzu ievadiet derīgu vērtību "
           email: "Lūdzu ievadiet derīgu e-pasta adresi."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Ievadīt"
+      edit:
+        modal:
+          cancel: "atcelt"
+          create: "Saglabāt"
+          reason: "kāpēc jūs rediģējat?"
+      spreadsheet:
+        show: "Parādīt"
+        about: "Par"
   admin_js:
     admin:
       title: "Discourse administrators"
@@ -2804,8 +2814,7 @@ lv:
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
         new_features:
-          dismiss: "Nerādīt"
-          learn_more: "Uzzināt vairāk"
+          learn_more: "Uzzināt vairāk..."
         last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
         no_problems: "Problēmas nav atrastas."
@@ -2949,6 +2958,7 @@ lv:
         not_enabled: "Nē"
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
+        learn_more: "Uzzināt vairāk"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -3025,6 +3035,10 @@ lv:
           body: "Saturs"
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
+        component:
+          all_filter: "Viss"
+          enabled_filter: "Ieslēgts"
+          disabled_filter: "Atslēgt"
         theme:
           theme: "Tēma"
           customize_desc: "Pielāgot:"
@@ -3072,6 +3086,9 @@ lv:
             text: "CSS"
           body_tag:
             text: "Ķermenis"
+          all_filter: "Viss"
+          active_filter: "Aktīvi"
+          inactive_filter: "Neaktīvs"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"
@@ -3087,7 +3104,6 @@ lv:
           reset: "Atiestatīt uz noklusējumu"
       email:
         title: "E-pasti"
-        settings: "Iestatījumi"
         templates: "Veidnes"
         error: "<b>KĻŪDA</b> - %{server_error}"
         test_error: "Sūtot testa e-pastu, notika kļūda. Lūdzu uzmanīgi pārbaudiet jūsu e-pasta iestatījumus, pārliecinieties, ka jūsu izvietotājs nebloķē e-pasta savienojumus un mēģiniet vēlreiz."
@@ -3443,7 +3459,6 @@ lv:
             other: "Pēdējās %{count} dienās:"
           value_heading: "Vērtība"
           requirement_heading: "Prasības"
-          visits: "Apmeklējumi"
           days: "dienas"
           topics_replied_to: "Tēmās atbildēts / rakstīts"
           topics_viewed: "Tēmas izskatītas"
@@ -3561,6 +3576,8 @@ lv:
           modal_description: "Vai vēlaties šīs izmaiņas piemērot vēsturiski? Tas mainīs %{count} esošo lietotāju preferences."
           modal_yes: "Jā"
           modal_no: "Nē, piemērojiet izmaiņas tikai turpmāk"
+        file_types_list:
+          add_image_types: "Attēli"
       badges:
         title: Žetoni
         new_badge: Jauns Žetons
@@ -3664,6 +3681,7 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
+        username: "Lietotājvārds"
         delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"

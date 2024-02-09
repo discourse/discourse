@@ -340,7 +340,8 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
 
     git "merge", "--no-commit", merge_ref, allow_failure: true
 
-    out, status = Open3.capture2e "git diff --binary #{merge_ref} | patch -p1 -R"
+    out, status =
+      Open3.capture2e "git diff --binary #{merge_ref} | patch -p1 -R --no-backup-if-mismatch"
     raise "Error applying diff\n#{out}}" unless status.success?
 
     git "add", "."
@@ -384,7 +385,7 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
   raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
 
-  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",").map(&:strip)
+  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
   raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?
 
   fix_refs.each do |ref|

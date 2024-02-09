@@ -5,7 +5,6 @@ import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
@@ -134,7 +133,6 @@ export default class ChatMessage {
   set deletedAt(value) {
     this._deletedAt = value;
     this.incrementVersion();
-    return this._deletedAt;
   }
 
   get cooked() {
@@ -162,33 +160,8 @@ export default class ChatMessage {
     return this.channel.currentUserMembership?.lastReadMessageId >= this.id;
   }
 
-  @cached
-  get firstMessageOfTheDayAt() {
-    if (!this.previousMessage) {
-      return this.#startOfDay(this.createdAt);
-    }
-
-    if (
-      !this.#areDatesOnSameDay(this.previousMessage.createdAt, this.createdAt)
-    ) {
-      return this.#startOfDay(this.createdAt);
-    }
-  }
-
-  @cached
-  get formattedFirstMessageDate() {
-    if (this.firstMessageOfTheDayAt) {
-      return this.#calendarDate(this.firstMessageOfTheDayAt);
-    }
-  }
-
-  #calendarDate(date) {
-    return moment(date).calendar(moment(), {
-      sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-      lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-      lastWeek: "LL",
-      sameElse: "LL",
-    });
+  get isOriginalThreadMessage() {
+    return this.thread?.originalMessage?.id === this.id;
   }
 
   @cached
@@ -370,17 +343,5 @@ export default class ChatMessage {
     }
 
     return User.create(user);
-  }
-
-  #areDatesOnSameDay(a, b) {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
-    );
-  }
-
-  #startOfDay(date) {
-    return moment(date).startOf("day").format();
   }
 }

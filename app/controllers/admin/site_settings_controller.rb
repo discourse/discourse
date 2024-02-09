@@ -34,6 +34,8 @@ class Admin::SiteSettingsController < Admin::AdminController
     case SiteSetting.type_supervisor.get_type(id)
     when :integer
       value = value.tr("^-0-9", "")
+    when :file_size_restriction
+      value = value.tr("^0-9", "").to_i
     when :uploaded_image_list
       value = Upload.get_from_urls(value.split("|")).to_a
     end

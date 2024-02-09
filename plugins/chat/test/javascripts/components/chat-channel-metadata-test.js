@@ -18,14 +18,14 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
     await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
 
-    assert.dom(".chat-channel-metadata__date").hasText("Yesterday");
+    assert.dom(".chat-channel__metadata-date").hasText("Yesterday");
 
     lastMessageSentAt = moment();
     this.channel.lastMessage.createdAt = lastMessageSentAt;
     await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
 
     assert
-      .dom(".chat-channel-metadata__date")
+      .dom(".chat-channel__metadata-date")
       .hasText(lastMessageSentAt.format("LT"));
   });
 

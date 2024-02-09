@@ -34,6 +34,29 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Flags a message in a channel.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message to flag.
+   * @param {object} params - Params of the flag.
+   * @param {integer} params.flag_type_id
+   * @param {string} [params.message]
+   * @param {boolean} [params.is_warning]
+   * @param {boolean} [params.queue_for_review]
+   * @param {boolean} [params.take_action]
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.flagMessage(5, 1);
+   */
+  flagMessage(channelId, messageId, params = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/flags`,
+      params
+    );
+  }
+
+  /**
    * Get a thread in a channel by its ID.
    * @param {number} channelId - The ID of the channel.
    * @param {number} threadId - The ID of the thread.
@@ -71,12 +94,16 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channels.then(channels => { ... })
    */
-  channels() {
-    return new Collection(`${this.#basePath}/channels`, (response) => {
-      return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+  channels(params = {}) {
+    return new Collection(
+      `${this.#basePath}/channels`,
+      (response) => {
+        return response.channels.map((channel) =>
+          this.chatChannelsManager.store(channel)
+        );
+      },
+      params
+    );
   }
 
   /**
@@ -250,7 +277,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me");
+    return this.#getRequest("/me/channels");
   }
 
   /**
@@ -270,9 +297,28 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   unfollowChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
-    );
+    return this.#deleteRequest(
+      `/channels/${channelId}/memberships/me/follows`
+    ).then((result) => UserChatChannelMembership.create(result.membership));
+  }
+
+  /**
+   * Destroys the membership of current user on a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  leaveChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  }
+
+  /**
+   * Get the list of tracked threads for the current user.
+   *
+   * @returns {Promise}
+   */
+  userThreads(handler) {
+    return new Collection(`${this.#basePath}/me/threads`, handler);
   }
 
   /**
@@ -313,11 +359,16 @@ export default class ChatApi extends Service {
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
-  saveDraft(channelId, data) {
-    return ajax("/chat/drafts", {
+  saveDraft(channelId, data, options = {}) {
+    let endpoint = `/chat/api/channels/${channelId}`;
+    if (options.threadId) {
+      endpoint += `/threads/${options.threadId}`;
+    }
+    endpoint += "/drafts";
+
+    return ajax(endpoint, {
       type: "POST",
       data: {
-        chat_channel_id: channelId,
         data,
       },
       ignoreUnsent: false,
@@ -488,6 +539,21 @@ export default class ChatApi extends Service {
    */
   summarize(channelId, options = {}) {
     return this.#getRequest(`/channels/${channelId}/summarize`, options);
+  }
+
+  /**
+   * Add members to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} targets
+   * @param {Array<string>} targets.usernames - The usernames of the users to add.
+   * @param {Array<string>} targets.groups - The groups names of the groups to add.
+   */
+  addMembersToChannel(channelId, targets) {
+    return this.#postRequest(`/channels/${channelId}/memberships`, {
+      usernames: targets.usernames,
+      groups: targets.groups,
+    });
   }
 
   get #basePath() {

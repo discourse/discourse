@@ -19,58 +19,16 @@ module TurboTests
       @output = output
     end
 
-    def exception_to_json(exception)
-      if exception
-        {
-          class_name: exception.class.name.to_s,
-          backtrace: exception.backtrace,
-          message: exception.message,
-          cause: exception_to_json(exception.cause),
-        }
-      end
-    end
-
-    def execution_result_to_json(result)
-      {
-        example_skipped?: result.example_skipped?,
-        pending_message: result.pending_message,
-        status: result.status,
-        pending_fixed?: result.pending_fixed?,
-        exception: exception_to_json(result.exception),
-        pending_exception: exception_to_json(result.pending_exception),
-      }
-    end
-
-    def stack_frame_to_json(frame)
-      { shared_group_name: frame.shared_group_name, inclusion_location: frame.inclusion_location }
-    end
-
-    def example_to_json(example)
-      {
-        execution_result: execution_result_to_json(example.execution_result),
-        location: example.location,
-        full_description: example.full_description,
-        metadata: {
-          shared_group_inclusion_backtrace:
-            example.metadata[:shared_group_inclusion_backtrace].map(&method(:stack_frame_to_json)),
-          extra_failure_lines: example.metadata[:extra_failure_lines],
-          run_duration_ms: example.metadata[:run_duration_ms],
-          process_pid: Process.pid,
-        },
-        location_rerun_argument: example.location_rerun_argument,
-      }
-    end
-
     def example_passed(notification)
-      output_row(type: :example_passed, example: example_to_json(notification.example))
+      output_row(type: :example_passed, example: JsonExample.new(notification.example).to_json)
     end
 
     def example_pending(notification)
-      output_row(type: :example_pending, example: example_to_json(notification.example))
+      output_row(type: :example_pending, example: JsonExample.new(notification.example).to_json)
     end
 
     def example_failed(notification)
-      output_row(type: :example_failed, example: example_to_json(notification.example))
+      output_row(type: :example_failed, example: JsonExample.new(notification.example).to_json)
     end
 
     def seed(notification)

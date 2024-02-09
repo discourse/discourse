@@ -62,7 +62,7 @@
           @type="badge_image"
           @onUploadDone={{action "setImage"}}
           @onUploadDeleted={{action "removeImage"}}
-          @class="no-repeat contain-image"
+          class="no-repeat contain-image"
         />
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
@@ -98,7 +98,7 @@
           @name="badge_grouping_id"
           @value={{this.buffered.badge_grouping_id}}
           @content={{this.badgeGroupings}}
-          @class="badge-selector"
+          class="badge-selector"
           @nameProperty="name"
           @onChange={{action (mut this.buffered.badge_grouping_id)}}
         />
@@ -268,6 +268,11 @@
         </label>
       </div>
     </div>
+
+    <PluginOutlet
+      @name="admin-above-badge-buttons"
+      @outletArgs={{hash badge=this.buffered}}
+    />
 
     <div class="buttons">
       <DButton

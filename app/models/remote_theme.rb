@@ -34,11 +34,11 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme, autosave: false
   scope :joined_remotes,
-        -> {
+        -> do
           joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(
             remote_url: "",
           )
-        }
+        end
 
   validates_format_of :minimum_discourse_version,
                       :maximum_discourse_version,
@@ -70,18 +70,20 @@ class RemoteTheme < ActiveRecord::Base
     original_filename,
     user: Discourse.system_user,
     theme_id: nil,
-    update_components: nil
+    update_components: nil,
+    run_migrations: true
   )
     update_theme(
       ThemeStore::ZipImporter.new(filename, original_filename),
       user:,
       theme_id:,
       update_components:,
+      run_migrations:,
     )
   end
 
-  # This is only used in the tests environment and is currently not supported for other environments
-  if Rails.env.test?
+  # This is only used in the development and test environment and is currently not supported for other environments
+  if Rails.env.test? || Rails.env.development?
     def self.import_theme_from_directory(directory)
       update_theme(ThemeStore::DirectoryImporter.new(directory))
     end
@@ -91,7 +93,8 @@ class RemoteTheme < ActiveRecord::Base
     importer,
     user: Discourse.system_user,
     theme_id: nil,
-    update_components: nil
+    update_components: nil,
+    run_migrations: true
   )
     importer.import!
 
@@ -112,8 +115,14 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme.remote_url = ""
 
     do_update_child_components = false
+
     theme.transaction do
-      remote_theme.update_from_remote(importer, skip_update: true, already_in_transaction: true)
+      remote_theme.update_from_remote(
+        importer,
+        skip_update: true,
+        already_in_transaction: true,
+        run_migrations:,
+      )
 
       if existing && update_components.present? && update_components != "none"
         child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
@@ -216,7 +225,8 @@ class RemoteTheme < ActiveRecord::Base
     importer = nil,
     skip_update: false,
     raise_if_theme_save_fails: true,
-    already_in_transaction: false
+    already_in_transaction: false,
+    run_migrations: true
   )
     cleanup = false
 
@@ -356,12 +366,14 @@ class RemoteTheme < ActiveRecord::Base
       update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
       self.save!
+
       if raise_if_theme_save_fails
         theme.save!
       else
         raise ActiveRecord::Rollback if !theme.save
       end
-      theme.migrate_settings(start_transaction: false)
+
+      theme.migrate_settings(start_transaction: false) if run_migrations
     end
 
     if already_in_transaction

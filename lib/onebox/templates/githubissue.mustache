@@ -10,12 +10,12 @@
 
     <div class="github-info">
       <div class="date">
-        opened <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+        {{i18n.opened}} <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
       </div>
 
       {{#closed_at}}
         <div class="date">
-          closed <span class="discourse-local-date" data-format="ll" data-date="{{closed_at_date}}" data-time="{{closed_at_time}}" data-timezone="UTC">{{closed_at}}</span>
+          {{i18n.closed}} <span class="discourse-local-date" data-format="ll" data-date="{{closed_at_date}}" data-time="{{closed_at_time}}" data-timezone="UTC">{{closed_at}}</span>
         </div>
       {{/closed_at}}
 

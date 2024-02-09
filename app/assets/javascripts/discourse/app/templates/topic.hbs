@@ -63,9 +63,9 @@
 
             {{#if this.showCategoryChooser}}
               <CategoryChooser
-                @class="small"
                 @value={{this.buffered.category_id}}
                 @onChange={{action "topicCategoryChanged"}}
+                class="small"
               />
             {{/if}}
 
@@ -164,7 +164,7 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} @class="topic-category" />
+          <TopicCategory @topic={{this.model}} class="topic-category" />
         {{/if}}
       </TopicTitle>
 
@@ -218,18 +218,21 @@
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
       <TopicNavigation
-        @class="topic-navigation"
         @topic={{this.model}}
         @jumpToDate={{action "jumpToDate"}}
         @jumpToIndex={{action "jumpToIndex"}}
+        class="topic-navigation"
         as |info|
       >
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @outletArgs={{hash topic=this.model}}
+          @outletArgs={{hash
+            topic=this.model
+            renderTimeline=info.renderTimeline
+            topicProgressExpanded=info.topicProgressExpanded
+          }}
         />
-
         {{#if info.renderTimeline}}
           <TopicTimeline
             @info={{info}}
@@ -539,12 +542,7 @@
           />
         {{else}}
           <div id="topic-footer-buttons">
-            <DButton
-              @icon="reply"
-              @action={{route-action "showLogin"}}
-              @label="topic.reply.title"
-              class="btn-primary pull-right"
-            />
+            <AnonymousTopicFooterButtons @topic={{this.model}} />
           </div>
         {{/if}}
       {{/if}}
@@ -596,6 +594,7 @@
   <PostTextSelection
     @quoteState={{this.quoteState}}
     @selectText={{action "selectText"}}
+    @buildQuoteMarkdown={{this.buildQuoteMarkdown}}
     @editPost={{action "editPost"}}
     @topic={{this.model}}
   />

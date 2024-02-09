@@ -66,7 +66,7 @@ RSpec.describe Chat::Api::ThreadReadsController do
         }.to_json,
       )
       .tap do |notification|
-        Chat::Mention.create!(user: user, chat_message: msg, notification: notification)
+        Chat::UserMention.create!(user: user, chat_message: msg, notifications: [notification])
       end
   end
 end

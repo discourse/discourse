@@ -6,6 +6,7 @@
 require "htmlentities"
 module Import
 end
+
 module Import::Normalize
   def self.normalize_code_blocks(code, lang = nil)
     coder = HTMLEntities.new

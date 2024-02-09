@@ -54,6 +54,9 @@ da:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} af %{username}"
+  components:
+    enabled_filter: "Aktiveret"
+    disabled_filter: "Deaktiveret"
   themes:
     bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalette"
     other_error: "Der opstod en fejl under opdatering af temaet"
@@ -75,7 +78,7 @@ da:
       optimized_link: Optimerede billedlinks er midlertidige og bør ikke indgå i tema kildekode.
     settings_errors:
       invalid_yaml: "Leveret YAML er ugyldig."
-      data_type_not_a_number: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
+      data_type_inclusion: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
       name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
       default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
       default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."
@@ -183,7 +186,6 @@ da:
       default_tags_already_selected: "Du kan ikke vælge et mærke, der bruges i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere overførsler til S3 med mindre du har angivet 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
-      page_publishing_requirements: "Sideudgivelse kan ikke aktiveres, hvis sikre medier er aktiveret."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
       s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."
@@ -306,7 +308,7 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
-  no_embedded_media_allowed_trust: "Beklager, du kan ikke integrere medieelementer i et indlæg."
+  no_embedded_media_allowed_group: "Beklager, du kan ikke integrere medieelementer i et indlæg."
   no_embedded_media_allowed: "Beklager, men nye brugere kan ikke integrere medieelementer i indlæg."
   too_many_embedded_media:
     one: "Beklager, nye brugere kan kun indsætte ét indlejret medieelement i et indlæg."
@@ -713,27 +715,12 @@ da:
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
   change_email:
-    wrong_account_error: "Du er logget ind på den forkerte konto, log venligst ud og prøv igen."
-    confirmed: "Din e-mail-adresse er blevet opdateret."
-    please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."
     error_staged: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     already_done: "Beklager, dette bekræftelseslink er ikke længere gyldigt. Måske er din email adresse allerede blevet ændret?"
     confirm: "Bekræft"
     max_secondary_emails_error: "Du har nået den maksimalt tilladte grænse for sekundære e-mails."
-    authorizing_new:
-      title: "Bekræft din nye e-mail"
-      description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-    authorizing_old:
-      title: "Skift din e-mailadresse"
-      description: "Bekræft venligst din e-mail adresse ændring"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-      old_email: "Gammel e-mail: %{email}"
-      new_email: "Ny e-mail: %{email}"
-      almost_done_title: "Bekræfter ny e-mailadresse"
-      almost_done_description: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
   associated_accounts:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
@@ -1314,7 +1301,6 @@ da:
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
-    enforce_second_factor: "Tvinger brugere til at aktivere to-faktor godkendelse. Vælg 'alle' for at håndhæve det for alle brugere. Vælg 'personale' for kun at håndhæve den til medarbejderbrugere."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
     summary_posts_required: "Minimumsopslag i et emne før 'Opsummér dette emne' er aktiveret. Ændringer af denne indstilling vil blive anvendt med tilbagevirkende kraft inden for en uge."
@@ -1494,13 +1480,8 @@ da:
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     desktop_category_page_style: "Visuel stil for siden /categories."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    category_style: "Visuel stil for kategoribadges."
     default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
-    max_image_size_kb: "Den maksimale billedupload størrelse i kB. Dette skal konfigureres i nginx (client_ max_ body_ size) / apache eller proxy. Billeder større end dette og mindre end client_max_body_size vil blive mindsket så så de opfylder betingelserne for upload."
-    max_attachment_size_kb: "Den maksimale uploadstørrelse af vedhæftede filer i kB. Dette skal konfigureres i nginx (client_ max_ body_ size) / apache eller proxy."
-    authorized_extensions: "En liste over filendelser tilladt for overførsel (brug '*' for at aktivere alle filtyper)"
-    authorized_extensions_for_staff: "En liste over filendelser, der er tilladt for overførsel for personalebrugere ud over den liste, der er defineret i webstedsindstillingen `authorized_extensions` (brug '*' for at tillade alle filtyper)"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
@@ -1579,7 +1560,6 @@ da:
     share_anonymized_statistics: "Del anonymiseret brugsstatistik."
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
-    autohighlight_all_code: "Gennemtving anvendelsen af kodefremhævning på alle præformaterede kodeblokke, selv når de ikke eksplicit angiver sproget."
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
@@ -3245,6 +3225,9 @@ da:
         title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

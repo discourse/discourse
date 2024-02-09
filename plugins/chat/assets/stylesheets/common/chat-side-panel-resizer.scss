@@ -1,7 +1,6 @@
 .chat-side-panel-resizer {
   top: 0;
   bottom: 0;
-
   position: absolute;
   z-index: z("composer", "content") - 1;
   transition: background-color 0.15s 0.15s;

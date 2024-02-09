@@ -122,11 +122,11 @@ export function performEmojiEscape(string, opts) {
 
   const replacementFunction = (m, index) => {
     if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
-      if (!!allTranslations[m]) {
+      if (allTranslations[m]) {
         return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
-      } else if (!!replacements[m]) {
+      } else if (replacements[m]) {
         return `:${replacements[m]}:`;
-      } else if (!!replacements[m[0]]) {
+      } else if (replacements[m[0]]) {
         return `:${replacements[m[0]]}:`;
       }
     }

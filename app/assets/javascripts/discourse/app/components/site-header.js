@@ -12,6 +12,8 @@ import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
+let _menuPanelClassesToForceDropdown = [];
+
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
   RerenderOnDoNotDisturbChange,
@@ -66,11 +68,7 @@ const SiteHeaderComponent = MountWidget.extend(
         fill: "forwards",
         easing: "ease-out",
       };
-      panel
-        .animate([{ transform: `translate3d(0, 0, 0)` }], timing)
-        .finished.then(() => {
-          panel.classList.remove("animating");
-        });
+      panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
       headerCloak.animate([{ opacity: 1 }], timing);
       this.pxClosed = null;
     },
@@ -351,12 +349,17 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const viewMode =
+      let viewMode =
         this.site.mobileView || this.site.narrowDesktopView
           ? "slide-in"
           : "drop-down";
 
       menuPanels.forEach((panel) => {
+        if (menuPanelContainsClass(panel)) {
+          viewMode = "drop-down";
+          this._animate = false;
+        }
+
         const headerCloak = document.querySelector(".header-cloak");
 
         panel.classList.remove("drop-down");
@@ -374,7 +377,6 @@ const SiteHeaderComponent = MountWidget.extend(
             this._swipeMenuOrigin = "left";
             finalPosition = -this._PANEL_WIDTH;
           }
-          panel.classList.add("animating");
           animationFinished = panel.animate(
             [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
             {
@@ -408,6 +410,31 @@ const SiteHeaderComponent = MountWidget.extend(
   }
 );
 
+function menuPanelContainsClass(menuPanel) {
+  if (!_menuPanelClassesToForceDropdown) {
+    return false;
+  }
+
+  // Check if any of the classNames are present in the node's classList
+  for (let className of _menuPanelClassesToForceDropdown) {
+    if (menuPanel.classList.contains(className)) {
+      // Found a matching class
+      return true;
+    }
+  }
+
+  // No matching class found
+  return false;
+}
+
+export function forceDropdownForMenuPanels(classNames) {
+  // If classNames is a string, convert it to an array
+  if (typeof classNames === "string") {
+    classNames = [classNames];
+  }
+  return _menuPanelClassesToForceDropdown.push(...classNames);
+}
+
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
   classNameBindings: ["site.mobileView::drop-down-mode"],
@@ -421,27 +448,37 @@ export default SiteHeaderComponent.extend({
 
   @bind
   updateHeaderOffset() {
-    let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+    // Safari likes overscolling the page (on both iOS and macOS).
+    // This shows up as a negative value in window.scrollY.
+    // We can use this to offset the headerWrap's top offset to avoid
+    // jitteriness and bad positioning.
+    const windowOverscroll = Math.min(0, window.scrollY);
 
-    if (headerWrapTop !== 0) {
-      headerWrapTop -= Math.max(0, document.body.getBoundingClientRect().top);
-    }
+    // The headerWrap's top offset can also be a negative value on Safari,
+    // because of the changing height of the viewport (due to the URL bar).
+    // For our use case, it's best to ensure this is clamped to 0.
+    const headerWrapTop = Math.max(
+      0,
+      Math.floor(this.headerWrap.getBoundingClientRect().top)
+    );
+    let offsetTop = headerWrapTop + windowOverscroll;
 
     if (DEBUG && isTesting()) {
-      headerWrapTop -= document
+      offsetTop -= document
         .getElementById("ember-testing-container")
         .getBoundingClientRect().top;
 
-      headerWrapTop -= 1; // For 1px border on testing container
+      offsetTop -= 1; // For 1px border on testing container
     }
 
     const documentStyle = document.documentElement.style;
 
-    const currentValue = documentStyle.getPropertyValue("--header-offset");
-    const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+    const currentValue =
+      parseInt(documentStyle.getPropertyValue("--header-offset"), 10) || 0;
+    const newValue = this.headerWrap.offsetHeight + offsetTop;
 
     if (currentValue !== newValue) {
-      documentStyle.setProperty("--header-offset", newValue);
+      documentStyle.setProperty("--header-offset", `${newValue}px`);
     }
   },
 
@@ -473,22 +510,20 @@ export default SiteHeaderComponent.extend({
       });
     }
 
-    if ("ResizeObserver" in window) {
-      this._resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          if (entry.contentRect) {
-            const headerTop = this.header?.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-top",
-              `${headerTop}px`
-            );
-            this.updateHeaderOffset();
-          }
+    this._resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        if (entry.contentRect) {
+          const headerTop = this.header?.offsetTop;
+          document.documentElement.style.setProperty(
+            "--header-top",
+            `${headerTop}px`
+          );
+          this.updateHeaderOffset();
         }
-      });
+      }
+    });
 
-      this._resizeObserver.observe(this.headerWrap);
-    }
+    this._resizeObserver.observe(this.headerWrap);
 
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {

@@ -30,10 +30,10 @@ class UploadsController < ApplicationController
     type =
       (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? &&
+    if type == "avatar" &&
          (
            SiteSetting.discourse_connect_overrides_avatar ||
-             !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, me)
+             !me.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
          )
       return render json: failed_json, status: 422
     end
@@ -168,6 +168,7 @@ class UploadsController < ApplicationController
 
   def handle_secure_upload_request(upload, path_with_ext = nil)
     if upload.access_control_post_id.present?
+      raise Discourse::InvalidAccess if current_user.nil? && SiteSetting.login_required
       raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
     else
       return render_404 if current_user.nil?

@@ -78,7 +78,7 @@ RSpec.describe InviteMailer do
     end
 
     context "when inviting to topic" do
-      let(:trust_level_2) { build(:user, trust_level: 2) }
+      fab!(:trust_level_2)
       let(:topic) do
         Fabricate(
           :topic,

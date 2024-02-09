@@ -32,7 +32,7 @@
     .d-icon {
       font-size: var(--font-down-1);
       margin-top: 2px; // vertical alignment
-      margin-right: 1rem;
+      margin-right: 0.75em;
     }
   }
 
@@ -64,9 +64,6 @@
     padding: 1.25em 0;
     &:not(:last-of-type) {
       border-bottom: 1px solid var(--primary-low);
-    }
-    .badge-wrapper {
-      margin-right: 0;
     }
     .desc {
       display: inline-block;
@@ -114,7 +111,7 @@
     max-width: 90%;
     margin: 0;
   }
-  .badge-wrapper {
+  .badge-category__wrapper {
     white-space: nowrap;
     overflow: hidden;
     max-width: 19em;

@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { cleanNullQueryParams, defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -60,11 +60,7 @@ export async function findTopicList(
   if (!list) {
     // Clean up any string parameters that might slip through
     filterParams ||= {};
-    for (const [key, val] of Object.entries(filterParams)) {
-      if (val === "undefined" || val === "null") {
-        filterParams[key] = null;
-      }
-    }
+    filterParams = cleanNullQueryParams(filterParams);
 
     list = await store.findFiltered("topicList", {
       filter,
@@ -98,17 +94,18 @@ class AbstractTopicRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service currentUser;
+  @service historyStore;
 
   queryParams = queryParams;
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  async model(data, transition) {
+  async model(data) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
-      findExtras = { cached: this.isPoppedState(transition) };
+      findExtras = { cached: this.historyStore.isPoppedState };
 
     const topicListPromise = findTopicList(
       this.store,

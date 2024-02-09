@@ -11,7 +11,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Dashboard", function (needs) {
   needs.user();
   needs.settings({
-    dashboard_visible_tabs: "moderation|security|reports",
+    dashboard_visible_tabs: "moderation|security|reports|features",
     dashboard_general_tab_activity_metrics: "page_view_total_reqs",
   });
   needs.site({
@@ -140,8 +140,15 @@ acceptance("Dashboard", function (needs) {
   test("new features", async function (assert) {
     await visit("/admin");
 
+    await click(".dashboard .navigation-item.new-features .navigation-link");
+
+    assert.ok(
+      exists(
+        ".dashboard .navigation-item.new-features .navigation-link .emoji[title='gift']"
+      )
+    );
     assert.ok(exists(".dashboard-new-features"));
-    assert.ok(exists(".dashboard-new-features .new-features-release-notes"));
+    assert.ok(exists("img.admin-new-feature-item__screenshot"));
   });
 });
 

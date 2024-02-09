@@ -35,7 +35,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
 
       expect(thread_page.messages).to have_message(text: text, persisted: true)
 
-      thread_page.back_to_previous_route
+      thread_page.back
 
       expect(channel_page).to have_thread_indicator(original_message)
     end
@@ -69,7 +69,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
       expect(thread_page.messages).to have_message(text: message_1.message)
       expect(thread_page.messages).to have_message(text: "reply to message")
 
-      thread_page.back_to_previous_route
+      thread_page.back
 
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
       expect(channel_page.messages).to have_no_message(text: "reply to message")

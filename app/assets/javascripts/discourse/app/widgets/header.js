@@ -88,7 +88,9 @@ createWidget("header-notifications", {
     }
 
     if (user.isInDoNotDisturb()) {
-      contents.push(h("div.do-not-disturb-background", iconNode("moon")));
+      contents.push(
+        h("div.do-not-disturb-background", iconNode("discourse-dnd"))
+      );
     } else {
       if (user.new_personal_messages_notifications_count) {
         contents.push(
@@ -176,7 +178,9 @@ createWidget(
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
               href: attrs.user.path,
-              title: attrs.user.name || attrs.user.username,
+              "aria-label": I18n.t("user.account_possessive", {
+                name: attrs.user.name || attrs.user.username,
+              }),
               "data-auto-route": true,
             },
           },
@@ -245,7 +249,7 @@ createWidget("header-icons", {
       icon: "search",
       iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
-      active: attrs.searchVisible || this.search.visible,
+      active: this.search.visible,
       href: getURL("/search"),
       classNames: ["search-dropdown"],
     });
@@ -326,7 +330,7 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
-createWidget("revamped-hamburger-menu-wrapper", {
+createWidget("hamburger-dropdown-wrapper", {
   buildAttributes() {
     return { "data-click-outside": true };
   },
@@ -443,14 +447,14 @@ createWidget("revamped-user-menu-wrapper", {
   },
 });
 
-createWidget("glimmer-search-menu-wrapper", {
+createWidget("search-menu-wrapper", {
   services: ["search"],
   buildAttributes() {
-    return { "data-click-outside": true, "aria-live": "polite" };
+    return { "aria-live": "polite" };
   },
 
   buildClasses() {
-    return ["search-menu glimmer-search-menu"];
+    return ["search-menu"];
   },
 
   html() {
@@ -498,7 +502,7 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let inTopicRoute = false;
-    if (this.state.inTopicContext || this.search.inTopicContext) {
+    if (this.search.inTopicContext) {
       inTopicRoute = this.router.currentRouteName.startsWith("topic.");
     }
 
@@ -506,7 +510,7 @@ export default createWidget("header", {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
-        searchVisible: state.searchVisible || this.search.visible,
+        searchVisible: this.search.visible,
         flagCount: attrs.flagCount,
         user: this.currentUser,
         sidebarEnabled: attrs.sidebarEnabled,
@@ -518,28 +522,11 @@ export default createWidget("header", {
 
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
-      if (state.searchVisible || this.search.visible) {
-        if (this.currentUser?.experimental_search_menu_groups_enabled) {
-          this.search.inTopicContext =
-            this.search.inTopicContext && inTopicRoute;
-          panels.push(this.attach("glimmer-search-menu-wrapper"));
-        } else {
-          panels.push(
-            this.attach("search-menu", {
-              inTopicContext: state.inTopicContext && inTopicRoute,
-            })
-          );
-        }
+      if (this.search.visible) {
+        this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;
+        panels.push(this.attach("search-menu-wrapper"));
       } else if (state.hamburgerVisible) {
-        if (
-          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          !attrs.sidebarEnabled ||
-          this.site.narrowDesktopView
-        ) {
-          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-        } else {
-          panels.push(this.attach("hamburger-menu"));
-        }
+        panels.push(this.attach("hamburger-dropdown-wrapper", {}));
       } else if (state.userVisible) {
         panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
@@ -574,7 +561,7 @@ export default createWidget("header", {
   },
 
   updateHighlight() {
-    if (!this.state.searchVisible || !this.search.visible) {
+    if (!this.search.visible) {
       this.search.highlightTerm = "";
     }
   },
@@ -582,7 +569,6 @@ export default createWidget("header", {
   closeAll() {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
-    this.state.searchVisible = false;
     this.search.visible = false;
     this.toggleBodyScrolling(false);
   },
@@ -623,15 +609,10 @@ export default createWidget("header", {
       }
     }
 
-    this.state.searchVisible = !this.state.searchVisible;
     this.search.visible = !this.search.visible;
     this.updateHighlight();
 
-    if (this.state.searchVisible) {
-      // only used by the widget search-menu
-      this.focusSearchInput();
-    } else {
-      this.state.inTopicContext = false;
+    if (!this.search.searchVisible) {
       this.search.inTopicContext = false;
     }
   },
@@ -668,10 +649,7 @@ export default createWidget("header", {
   },
 
   togglePageSearch() {
-    const { state } = this;
     this.search.inTopicContext = false;
-    state.inTopicContext = false;
-
     let showSearch = this.router.currentRouteName.startsWith("topic.");
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
@@ -685,13 +663,12 @@ export default createWidget("header", {
         $(".topic-post .cooked, .small-action:not(.time-gap)").length < total;
     }
 
-    if (state.searchVisible || this.search.visible) {
+    if (this.search.visible) {
       this.toggleSearchMenu();
       return showSearch;
     }
 
     if (showSearch) {
-      state.inTopicContext = true;
       this.search.inTopicContext = true;
       this.toggleSearchMenu();
       return false;
@@ -703,12 +680,7 @@ export default createWidget("header", {
   domClean() {
     const { state } = this;
 
-    if (
-      state.searchVisible ||
-      this.search.visible ||
-      state.hamburgerVisible ||
-      state.userVisible
-    ) {
+    if (this.search.visible || state.hamburgerVisible || state.userVisible) {
       this.closeAll();
     }
   },
@@ -731,31 +703,5 @@ export default createWidget("header", {
         }
         break;
     }
-  },
-
-  // only used by the widget search-menu
-  focusSearchInput() {
-    if (
-      this.state.searchVisible &&
-      !this.currentUser?.experimental_search_menu_groups_enabled
-    ) {
-      schedule("afterRender", () => {
-        const searchInput = document.querySelector("#search-term");
-        searchInput.focus();
-        searchInput.select();
-      });
-    }
-  },
-
-  // only used by the widget search-menu
-  setTopicContext() {
-    this.state.inTopicContext = true;
-    this.focusSearchInput();
-  },
-
-  // only used by the widget search-menu
-  clearContext() {
-    this.state.inTopicContext = false;
-    this.focusSearchInput();
   },
 });

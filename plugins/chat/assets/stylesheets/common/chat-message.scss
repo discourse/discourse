@@ -27,8 +27,12 @@
 [data-content][data-identifier="chat-message-reaction-tooltip"] {
   font-size: var(--font-down-1);
 
+  .fk-d-tooltip__inner-content {
+    display: block;
+  }
+
   .emoji {
-    padding-left: 0.5rem;
+    padding-left: 0.25rem;
   }
 }
 
@@ -66,15 +70,17 @@
       width: 100%;
     }
 
-    .mention.highlighted {
-      background: var(--tertiary-low);
-      color: var(--primary);
-      display: inline-block;
-      font-size: 0.93em;
-      font-weight: normal;
-      padding: 0 0.3em 0.07em;
-      border-radius: 0.6em;
-      text-decoration: none;
+    a.mention {
+      @include mention;
+
+      &.highlighted {
+        background: var(--tertiary-low);
+      }
+    }
+
+    // unlinked, invalid mention
+    span.mention {
+      color: var(--primary-high);
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping

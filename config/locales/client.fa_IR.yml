@@ -129,6 +129,8 @@ fa_IR:
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
+    word_connector:
+      comma: "، "
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -168,6 +170,7 @@ fa_IR:
       dismiss: "رد کردن"
     themes:
       default_description: "پیش‌فرض"
+    broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -260,10 +263,16 @@ fa_IR:
       our_moderators: "مدیران ما"
       moderators: "مدیران"
       stat:
+        all_time: "همیشه"
         last_day: "۲۴ ساعت"
+        last_7_days: "۷ روزه"
+        last_30_days: "۳۰ روزه"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
+      user_count: "ثبت‌نام‌ها"
+      active_user_count: "کاربران فعال"
+      contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
     bookmarked:
       title: "نشانک"
@@ -303,6 +312,7 @@ fa_IR:
       copied: "کپی شد!"
       copy: "کپی کد در کلیپ‌بورد"
       fullscreen: "نمایش کد در تمام صفحه"
+      view_code: "مشاهده کد"
     drafts:
       label: "پیش‌نویس‌ها"
       label_with_count: "پیش‌نویس «%{count}»"
@@ -367,6 +377,8 @@ fa_IR:
         search: "جستجو برای یک پیام"
         placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
     review:
+      show_more: "نمایش بیشتر"
+      show_less: "نمایش کمتر"
       order_by: "به ترتیب"
       date_filter: "ارسال شده بین"
       in_reply_to: "در پاسخ به"
@@ -391,7 +403,12 @@ fa_IR:
           name: "امتیاز را وارد کنید"
           title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
       revise_and_reject_post:
+        title: "تجدید نظر کردن"
         reason: "دلیل"
+        send_pm: "ارسال پیام"
+        feedback: "بازخورد"
+        custom_reason: "شرح واضحی از دلیل ارائه دهید"
+        other_reason: "غیره…"
         optional: "اختیاری"
       stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
@@ -490,6 +507,7 @@ fa_IR:
       scores:
         about: "این امتیاز بر اساس سطح اعتماد گزارش دهنده، دقت پرچم‌های قبلی ایشان، و اولویت مورد گزارش شده حساب میشود، "
         score: "امتیاز"
+        date: "تاریخ گزارش"
         type: "دلیل"
         status: "وضعیت"
         submitted_by: "گزارش شده توسط"
@@ -519,7 +537,9 @@ fa_IR:
         all:
           title: "همه چیز"
       context_question:
+        is_this_post: "آیا این %{reviewable_type}، %{reviewable_human_score_types} است؟"
         delimiter: "یا"
+        something_else_wrong: "آیا مشکلی در %{reviewable_type} وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -925,6 +945,7 @@ fa_IR:
     user:
       said: "%{username}:"
       profile: "نمایه"
+      profile_possessive: "نمایه‌ی %{username}"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
       new_private_message: "پیام جدید"
@@ -1152,8 +1173,6 @@ fa_IR:
         title: "ورود دو مرحله ای"
         enable: "مدیریت تایید هوییت دوعاملی"
         disable_all: "غیرفعال کردن همه"
-        forgot_password: "فراموشی گذرواژه؟"
-        confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
         name: "نام"
         label: "کد"
         rate_limit: "لطفا قبل از اینکه کد احراز هویت دیگری را تست کنید کمی صبر کنید"
@@ -1161,6 +1180,8 @@ fa_IR:
           این کد QR را در یک اپلیکیشن مورد تایید (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">آندروید</a> -- <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">IOS</a>) و کد احراز هویت خود را وارد کنید.
         disable_description: "لطفا کد احراز هویت را از اپلیکیشن خود وارد کنید"
         show_key_description: "دستی وارد کنید"
+        short_description: |
+          از حساب خود با کدهای امنیتی یکبار مصرف یا کلیدهای امنیتی فیزیکی محافظت کنید.
         extended_description: |
           احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
@@ -1190,7 +1211,15 @@ fa_IR:
           edit_description: "نام کلیدهای امنیتی فیزیکی"
           name_required_error: "شما باید یک نام برای کلید امنیتی خود انتخاب کنید."
       passkeys:
+        rename_passkey: "تغییر نام کلید عبور"
+        add_passkey: "افزودن کلید عبور"
+        confirm_delete_passkey: "آیا مطمئنید که می‌خواهید این کلید عبور را حذف کنید؟"
+        passkey_successfully_created: "موفقیت! کلید عبور جدید شما ایجاد شد."
+        rename_passkey_instructions: "یک نام کلید عبور انتخاب کنید که به راحتی آن را شناسایی کنید، به عنوان مثال، از نام مدیر کلید عبور خود استفاده کنید."
+        name:
+          default: "کلید عبور اصلی"
         save: "ذخیره"
+        title: "کلیدهای عبور"
         added_prefix: "اضافه شده"
       change_about:
         title: "تغییر «درباره‌ی من»"
@@ -1209,6 +1238,13 @@ fa_IR:
         error: "در تغییر ایمیلتان خطایی روی داد. شاید آن نشانی از پیش در حال استفاده است؟"
         success: "ما ایمیلی به آن نشانی فرستاده‌ایم. لطفاً دستورکار تأییده را در آن دنبال کنید."
         success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
+        confirm_success: "ایمیل شما به روز شد."
+        confirm: "تایید"
+        authorizing_new:
+          description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
+        authorizing_old:
+          old_email: "ایمیل قدیمی: %{email}"
+          new_email: "ایمیل جدید: %{email}"
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، بر اساس"
@@ -1255,14 +1291,13 @@ fa_IR:
           generic: "حساب کاربری%{provider} شما برای احراز‌هویت استفاده خواهد‌شد."
       name:
         title: "نام"
-        instructions: "نام و نام‌خانوادگی شما (اختیاری)"
-        instructions_required: "نام و نام خانوادگی شما"
+        instructions: "نام و نام‌خانوادگی شما (اختیاری)."
+        instructions_required: "نام و نام خانوادگی شما."
         required: "لطفاً یک نام وارد کنید"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
       username:
         title: "نام‌کاربری"
-        instructions: "یکتا، بدون فاصله، کوتاه"
         short_instructions: "کاربران دیگر می‌توانند با استفاده از @%{username} به شما اشاره کنند"
         available: "نام کاربری شما در دسترس است"
         not_available: "در دسترس نیست. این را امتحان کن %{suggestion} ؟"
@@ -1455,7 +1490,7 @@ fa_IR:
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "رمز عبور خوبی است."
-        instructions: "حداقل %{count} نویسه"
+        instructions: "حداقل %{count} نویسه."
         required: "لطفاً یک کلمه عبور وارد کنید"
         confirm: "تایید"
       summary:
@@ -1812,6 +1847,8 @@ fa_IR:
       components:
         categories_admin_dropdown:
           title: "مدیریت دسته ها"
+        bulk_select_topics_dropdown:
+          title: "عملیات گروهی"
     date_time_picker:
       from: از طرف
       to: به
@@ -1856,9 +1893,6 @@ fa_IR:
       drafts_offline: "پیش‌نویس‌های آفلاین"
       edit_conflict: "ویرایش تناقض"
       ok_proceed: "باشه، ادامه دهید"
-      group_mentioned:
-        one: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
-        other: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
       cannot_see_group_mention:
         not_mentionable: "شما نمی‌توانید به گروه @%{group} اشاره کنید."
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
@@ -2044,6 +2078,7 @@ fa_IR:
         private_message: '%{username} برای شما یک پیام خصوصی در "%{topic}" - %{site_title} ارسال کرد'
         linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
         watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
+        watching_category_or_tag: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
         confirm_title: "آگاه‌سازی فعال شد - %{site_title}"
         confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
         custom: "آگاه‌سازی از طرف %{username} در %{site_title}"
@@ -2070,6 +2105,7 @@ fa_IR:
         post_approved: "نوشته تایید شده"
         reaction: "واکنش جدید"
         new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
+        admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -2218,6 +2254,7 @@ fa_IR:
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
+        confirm: "تایید"
         select_all: "انتخاب همه"
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
@@ -2278,6 +2315,9 @@ fa_IR:
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
         filter: "هیچ موضوع بیشتری وجود ندارد."
+    topic_bulk_actions:
+      close_topics:
+        name: "بستن موضوعات"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -2620,6 +2660,7 @@ fa_IR:
     post:
       quote_reply: "نقل‌قول"
       quote_edit: "ویرایش"
+      quote_copy: "رونوشت نقل قول"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3224,7 +3265,6 @@ fa_IR:
       delete_tag: "حذف برچسب"
       delete_confirm_no_topics: "ایا از حذف این برچسب مطمعن هستید؟"
       edit_tag: "ویرایش نام و توضیحات برچسب"
-      description: "توضیحات"
       sort_by: "مرتب سازی بر اساس:"
       sort_by_count: "تعداد"
       sort_by_name: "نام"
@@ -3323,8 +3363,7 @@ fa_IR:
       no_drafts_body: "برای ارسال کاملا آماده نیستید؟ هر زمان که شروع به نوشتن موضوع، پاسخ یا پیام شخصی کنید، پیش‌نویس جدیدی را به‌طور خودکار ذخیره می‌کنیم و آن را در اینجا فهرست می‌کنیم. برای صرف‌نظر کردن، دکمه لغو را انتخاب کنید یا پیش‌نویس خود را ذخیره کنید تا بعدا ادامه دهید."
       no_likes_title_others: "%{username} هنوز هیچ موضوعی را نپسندیده."
     sidebar:
-      show_sidebar: "نمایش نوار کناری"
-      hide_sidebar: "پنهان کردن نوار کناری"
+      title: "نوار کناری"
       unread_count:
         one: "%{count} خوانده نشده"
         other: "%{count} خوانده نشده"
@@ -3424,10 +3463,23 @@ fa_IR:
         typeMismatch:
           default: "یک مقدار معتبر وارد کنید."
           email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
+    table_builder:
+      modal:
+        help:
+          enter_key: "وارد شدن "
+      edit:
+        modal:
+          cancel: "لغو"
+          create: "ذخیره"
+          reason: "چرا ویرایش می‌کنید؟"
+      spreadsheet:
+        show: "نشان دادن"
+        about: "درباره"
   admin_js:
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
+      back_to_forum: "بازگشت به انجمن"
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
@@ -3450,8 +3502,7 @@ fa_IR:
         latest_version: "آخرین"
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
         new_features:
-          dismiss: "نخواستیم"
-          learn_more: "بیشتر بدانید"
+          learn_more: "بیشتر بدانید..."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3567,6 +3618,8 @@ fa_IR:
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"
         user: "کاربر"
         title: "API"
+        key: "کلید"
+        keys: "کلیدها"
         created: ساخته شده
         updated: به روز شده
         never_used: (هرگز)
@@ -3669,7 +3722,8 @@ fa_IR:
         not_enabled: "خیر"
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
-        official: "پلاگین رسمی"
+        author: "توسط %{author}"
+        learn_more: "بیشتر بدانید"
       navigation_menu:
         sidebar: "نوار کناری"
       backups:
@@ -3692,6 +3746,7 @@ fa_IR:
         upload:
           label: "بار گذاری"
           title: "آپلود یک نسخه پشتیبان برای نمونه"
+          uploading: "در حال بارگذاری…"
           error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
         operations:
           failed: "%{operation} ناموفق شد. لطفا گزارشات را بررسی نمایید."
@@ -3762,6 +3817,9 @@ fa_IR:
           body: "متن"
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
+        component:
+          all_filter: "همه"
+          disabled_filter: "غیرفعال"
         theme:
           theme: "قالب"
           component: "کامپوننت "
@@ -3870,6 +3928,9 @@ fa_IR:
             title: "کد HTML که قبل از برچسب body درج خواهد شد"
           yaml:
             text: "YAML"
+          all_filter: "همه"
+          active_filter: "فعال"
+          inactive_filter: "غیر‌فعال"
         colors:
           title: "رنگ‌ها"
           copy_name_prefix: "کپی از"
@@ -3915,8 +3976,8 @@ fa_IR:
           save_error_with_reason: "تغییرات شما ذخیره نشده‌است. %{error}"
       email:
         title: "ایمیل‌ها"
-        settings: "تنظیمات"
         templates: "قالب‌ها"
+        templates_title: "قالب‌های ایمیل"
         preview_digest: "پیشنمایش خلاصه"
         advanced_test:
           email: "پیام اصلی"
@@ -4049,6 +4110,7 @@ fa_IR:
             backup_destroy: "حذف نسخه پشتیبان"
             post_edit: "ویرایش نوشته"
             post_approved: "نوشته تایید شده"
+            post_rejected: "نوشته رد شده"
             change_name: "تغییر دادن نام"
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"
@@ -4301,7 +4363,6 @@ fa_IR:
             other: "در %{count} روز گذشته"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
-          visits: "بازدیدها"
           days: "روز‌ها"
           topics_replied_to: "پاسخ به موضوعات"
           topics_viewed: "بازدید موضوعات"
@@ -4429,6 +4490,8 @@ fa_IR:
           modal_yes: "بله"
         simple_list:
           add_item: "اضافه کردن آیتم…"
+        file_types_list:
+          add_image_types: "تصاویر"
       badges:
         title: نشان‌ها
         new_badge: نشان جدید
@@ -4533,6 +4596,7 @@ fa_IR:
         post_title: "نوشته"
         category_id: "شناسه دسته‌بندی"
         category_title: "دسته‌بندی"
+        username: "نام‌کاربری"
         delete_confirm: آیا مطمئنید که می‌خواهید این پیوند یکتا را حذف کنید؟
         form:
           label: "جدید:"

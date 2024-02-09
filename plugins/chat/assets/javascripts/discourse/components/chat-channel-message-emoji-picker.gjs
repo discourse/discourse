@@ -60,17 +60,18 @@ export default class ChatChannelMessageEmojiPicker extends Component {
 
   @action
   willDestroy() {
+    super.willDestroy(...arguments);
     this._popper?.destroy();
   }
 
   <template>
     <ChatEmojiPicker
+      {{this.listenToBodyScroll}}
       @context="chat-channel-message"
       @didInsert={{this.didInsert}}
       @willDestroy={{this.willDestroy}}
       @didSelectEmoji={{this.didSelectEmoji}}
-      @class="hidden"
-      {{this.listenToBodyScroll}}
+      class="hidden"
     />
   </template>
 }

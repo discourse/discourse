@@ -23,7 +23,7 @@ export default class WebhookEventChooser extends Component {
 
     // add an association when not exists
     if (value === this.eventTypeExists) {
-      return value;
+      return;
     }
 
     if (value) {
@@ -33,7 +33,5 @@ export default class WebhookEventChooser extends Component {
         eventTypes.filter((eventType) => eventType.name === this.args.type.name)
       );
     }
-
-    return value;
   }
 }

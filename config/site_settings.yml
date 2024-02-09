@@ -189,19 +189,21 @@ basic:
       - read
       - posted
       - bookmarks
+      - hot
   post_menu:
     client: true
     type: list
     list_type: simple
-    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|copyLink|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
       - read
+      - copyLink
+      - share
       - like
       - edit
       - flag
       - delete
-      - share
       - bookmark
       - admin
       - reply
@@ -260,15 +262,6 @@ basic:
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
-  category_style:
-    client: true
-    default: "bullet"
-    type: enum
-    choices:
-      - bar
-      - box
-      - bullet
-      - none
   max_category_nesting:
     client: true
     default: 2
@@ -334,7 +327,6 @@ basic:
     min: 0
     max: 6
   whispers_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
@@ -404,7 +396,9 @@ basic:
     choices:
       - spinner
       - slider
-
+  show_user_menu_avatars:
+    client: true
+    default: false
 login:
   invite_only:
     refresh: true
@@ -425,6 +419,10 @@ login:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+  enable_passkeys:
+    client: true
+    default: true
+    hidden: true
   allow_new_registrations:
     client: true
     default: true
@@ -684,9 +682,8 @@ users:
     client: true
     hidden: true
   anonymous_posting_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "3|11" # auto group staff and trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -750,6 +747,9 @@ users:
     default: false
   use_name_for_username_suggestions:
     default: true
+  hide_user_activity_tab:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -863,9 +863,8 @@ posting:
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
-    default: "11" # auto group trust_level_1
+    default: "3|11" # auto group trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -883,7 +882,6 @@ posting:
   shared_drafts_allowed_groups:
     default: "3" # auto group staff
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -960,10 +958,10 @@ posting:
   min_trust_level_for_here_mention:
     default: "2"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
   here_mention_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "3|12" # auto group staff and trust_level_2
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -1069,9 +1067,23 @@ posting:
   approve_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  approve_unless_allowed_groups:
+    default: "3|10" # auto groups staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  approve_new_topics_unless_allowed_groups:
+    default: "3|10" # auto groups staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   approve_suspect_users:
     default: true
   approve_unless_staged:
@@ -1108,6 +1120,9 @@ posting:
   max_allowed_message_recipients:
     default: 30
     min: 1
+  disable_watched_word_checking_in_user_fields:
+    hidden: true
+    default: false
   watched_words_regular_expressions:
     client: true
     default: false
@@ -1115,6 +1130,9 @@ posting:
     default: false
     client: true
   enable_fast_edit:
+    default: true
+    client: true
+  enable_quote_copy:
     default: true
     client: true
   old_post_notice_days:
@@ -1133,6 +1151,13 @@ posting:
   review_media_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  skip_review_media_groups:
+    default: "3|10" # auto groups staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   blur_tl0_flagged_posts_media:
     default: true
     client: true
@@ -1244,6 +1269,13 @@ email:
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
+    hidden: true
+  email_in_allowed_groups:
+    default: "3|12" # auto group staff and trust_level_2
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
@@ -1376,6 +1408,7 @@ email:
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200
+    type: file_size_restriction
   post_excerpts_in_emails: false
   raw_email_max_length: 220000
   raw_rejected_email_max_length: 4000
@@ -1396,10 +1429,12 @@ files:
     client: true
     default: 4096
     max: 102400
+    type: file_size_restriction
   max_attachment_size_kb:
     client: true
     default: 4096
     max: 1024000
+    type: file_size_restriction
   max_image_megapixels:
     default: 40
     min: 5
@@ -1408,22 +1443,23 @@ files:
     hidden: true
     default: 50000
     max: 1024000
+    type: file_size_restriction
   theme_authorized_extensions:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
-    list_type: compact
+    list_type: file_types
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
     refresh: true
     type: list
-    list_type: compact
+    list_type: file_types
   authorized_extensions_for_staff:
     client: true
     default: ""
     refresh: true
     type: list
-    list_type: compact
+    list_type: file_types
   export_authorized_extensions:
     hidden: true
     default: "zip"
@@ -1454,7 +1490,9 @@ files:
     regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
   clean_up_uploads: true
-  clean_orphan_uploads_grace_period_hours: 48
+  clean_orphan_uploads_grace_period_hours:
+    default: 48
+    max: 168
   purge_deleted_uploads_grace_period_days:
     default: 30
     max: 36500
@@ -1470,6 +1508,7 @@ files:
     default: 1024
     min: 1
     max: 10240
+    type: file_size_restriction
   secure_uploads_pm_only:
     default: false
     hidden: true
@@ -1530,6 +1569,12 @@ files:
     client: true
     default: "0"
     enum: "TrustLevelAndStaffAndDisabledSetting"
+    hidden: true
+  uploaded_avatars_allowed_groups:
+    default: 10
+    type: group_list
+    allow_any: false
+    refresh: true
   default_avatars:
     default: ""
     type: url_list
@@ -1652,27 +1697,83 @@ trust:
   min_trust_to_create_topic:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  create_topic_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_wiki_post:
     default: 1
     enum: "TrustLevelSetting"
+    hidden: true
+  edit_wiki_post_allowed_groups:
+    default: "3|11" # auto group staff and trust_level_1
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_post:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  edit_post_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
+    hidden: true
+  self_wiki_allowed_groups:
+    default: "3|13" # auto group staff and trust_level_3
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  send_email_messages_allowed_groups:
+    default: "1|3|14" # auto group admin, staff, and trust_level_4
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
+    hidden: true
+  flag_post_allowed_groups:
+    default: "3|11" # auto group staff and trust_level_1
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  post_links_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  embedded_media_post_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_profile_background:
     default: 0
     client: true
@@ -1681,13 +1782,34 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
+  user_card_background_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"
+    hidden: true
+  invite_allowed_groups:
+    default: "3|12" # auto group staff and trust_level_2
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
     client: true
+    hidden: true
+  ignore_allowed_groups:
+    default: "3|12" # auto group staff and trust_level_2
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
@@ -1743,6 +1865,13 @@ trust:
     client: true
   tl4_delete_posts_and_topics:
     default: false
+    client: true
+    hidden: true
+  delete_all_posts_and_topics_allowed_groups:
+    default: ""
+    type: group_list
+    allow_any: false
+    refresh: true
     client: true
   edit_all_topic_groups:
     default: "13"
@@ -1881,7 +2010,7 @@ security:
   display_personal_messages_tag_counts:
     default: false
   cross_origin_opener_policy_header:
-    default: "unsafe-none"
+    default: "same-origin-allow-popups"
     type: enum
     choices:
       - "unsafe-none"
@@ -2188,16 +2317,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_passkeys:
-    client: true
-    default: false
-    hidden: true
-  experimental_search_menu_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
   max_sidebar_section_links:
     default: 50
     hidden: true
@@ -2220,9 +2339,34 @@ developer:
     refresh: true
     hidden: true
     client: true
-  lazy_load_categories:
-    default: false
+  admin_sidebar_enabled_groups:
     client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  lazy_load_categories_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+  warn_critical_js_deprecations:
+    default: true
+    client: true
+    hidden: true
+  warn_critical_js_deprecations_message:
+    default: ""
+    client: true
+    hidden: true
+  experimental_topic_bulk_actions_enabled_groups:
+    default: ""
+    hidden: true
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+  experimental_objects_type_for_theme_settings:
+    default: false
     hidden: true
 
 navigation:
@@ -2295,6 +2439,9 @@ backups:
   maximum_backups:
     client: true
     default: 5
+  remove_older_backups:
+    client: true
+    default: ""
   automatic_backups_enabled:
     default: true
   backup_frequency:
@@ -2405,11 +2552,18 @@ search:
   search_page_size:
     default: 50
     hidden: true
+  search_default_sort_order:
+    default: 0 # "relevance"
+    client: true
+    type: enum
+    enum: "SearchSortOrderSiteSetting"
 
 uncategorized:
   version_checks:
     client: true
     default: true
+  include_in_discourse_discover:
+    default: false
   new_version_emails: true
   send_welcome_message: true
 
@@ -2695,6 +2849,10 @@ uncategorized:
     default: 50000
     hidden: true
 
+  max_api_invites:
+    default: 200
+    hidden: true
+
   overridden_robots_txt:
     default: ""
     hidden: true
@@ -2847,6 +3005,13 @@ user_api:
   min_trust_level_for_user_api_key:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  user_api_key_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   allowed_user_api_push_urls:
     default: ""
     type: list
@@ -2891,11 +3056,27 @@ tags:
     client: true
   min_trust_to_create_tag:
     default: "3"
+    type: enum
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  create_tag_allowed_groups:
+    default: "1|3|13" # auto group admin, staff, and trust_level_3
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
     client: true
+    hidden: true
+  tag_topic_allowed_groups:
+    default: "1|3|10" # auto group admin, staff, and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    client: true
+    validator: "AtLeastOneGroupValidator"
   max_tag_search_results:
     client: true
     default: 5
@@ -2950,12 +3131,13 @@ dashboard:
     client: true
     type: list
     list_type: compact
-    default: "moderation|security|reports"
+    default: "moderation|security|reports|features"
     allow_any: false
     choices:
       - moderation
       - security
       - reports
+      - features
   dashboard_general_tab_activity_metrics:
     client: true
     type: list
@@ -2973,3 +3155,13 @@ dashboard:
   verbose_user_stat_count_logging:
     hidden: true
     default: false
+  experimental_hot_topics:
+    hidden: true
+    default: false
+    client: true
+  hot_topics_gravity:
+    hidden: true
+    default: 1.2
+  hot_topics_recent_days:
+    hidden: true
+    default: 7

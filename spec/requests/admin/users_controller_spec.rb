@@ -1181,7 +1181,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#destroy" do
-    fab!(:delete_me) { Fabricate(:user) }
+    fab!(:delete_me) { Fabricate(:user, refresh_auto_groups: true) }
 
     shared_examples "user deletion possible" do
       it "returns a 403 if the user doesn't exist" do
@@ -1321,11 +1321,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "does not block the urls by default" do
-          delete "/admin/users/#{delete_me.id}.json",
-                 params: {
-                   delete_posts: true,
-                   block_urls: false,
-                 }
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true }
           expect(response.status).to eq(200)
           expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
         end

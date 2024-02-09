@@ -7,9 +7,7 @@ RSpec.describe Jobs::InviteEmail do
     end
 
     context "with an invite id" do
-      let (:mailer) {
-        Mail::Message.new(to: "eviltrout@test.domain")
-      }
+      let(:mailer) { Mail::Message.new(to: "eviltrout@test.domain") }
       fab!(:invite)
 
       it "delegates to the test mailer" do

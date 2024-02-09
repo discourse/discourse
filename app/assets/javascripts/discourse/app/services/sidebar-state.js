@@ -5,11 +5,11 @@ import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
-
-const COMBINED_MODE = "combined";
-const SEPARATED_MODE = "separated";
-export const MAIN_PANEL = "main";
-export const ADMIN_PANEL = "admin";
+import {
+  COMBINED_MODE,
+  MAIN_PANEL,
+  SEPARATED_MODE,
+} from "discourse/lib/sidebar/panels";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {

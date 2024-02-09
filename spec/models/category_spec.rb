@@ -88,7 +88,7 @@ RSpec.describe Category do
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -632,7 +632,10 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
@@ -694,7 +697,7 @@ RSpec.describe Category do
     context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -1022,7 +1025,7 @@ RSpec.describe Category do
       topic = Topic.find_by_id(post1.topic_id)
 
       TopicTimer.create!(
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
         topic: topic,
         execute_at: 1.hour.from_now,
         status_type: TopicTimer.types[:bump],

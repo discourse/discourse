@@ -76,8 +76,6 @@ class Report
                 :icon,
                 :modes,
                 :prev_data,
-                :prev_start_date,
-                :prev_end_date,
                 :dates_filtering,
                 :error,
                 :primary_color,
@@ -104,7 +102,7 @@ class Report
     @average = false
     @percent = false
     @higher_is_better = true
-    @modes = %i[table chart radar]
+    @modes = %i[table chart]
     @prev_data = nil
     @dates_filtering = true
     @available_filters = {}

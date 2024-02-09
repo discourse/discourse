@@ -6,10 +6,10 @@ export default DiscourseRoute.extend({
   router: service(),
 
   model(params) {
-    if (params.slugOrId.match(ID_CONSTRAINT)) {
-      return { url: `/t/topic/${params.slugOrId}` };
+    if (params.slug_or_id.match(ID_CONSTRAINT)) {
+      return { url: `/t/topic/${params.slug_or_id}` };
     } else {
-      return Topic.idForSlug(params.slugOrId).then((data) => {
+      return Topic.idForSlug(params.slug_or_id).then((data) => {
         return { url: `/t/${data.slug}/${data.topic_id}` };
       });
     }

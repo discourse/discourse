@@ -109,7 +109,7 @@ module Chat
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        { type: :processed, chat_message: { id: chat_message.id, cooked: chat_message.cooked } },
+        serialize_message_with_type(chat_message, :processed),
       )
     end
 

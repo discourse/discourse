@@ -89,13 +89,13 @@ class Post < ActiveRecord::Base
   register_custom_field_type(NOTICE, :json)
 
   scope :private_posts_for_user,
-        ->(user) {
+        ->(user) do
           where(
             "topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
       OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
             user_id: user.id,
           )
-        }
+        end
 
   scope :by_newest, -> { order("created_at DESC, id DESC") }
   scope :by_post_number, -> { order("post_number ASC") }
@@ -111,7 +111,7 @@ class Post < ActiveRecord::Base
         ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
 
   scope :for_mailing_list,
-        ->(user, since) {
+        ->(user, since) do
           q =
             created_since(since).joins(
               "INNER JOIN (#{Topic.for_digest(user, Time.at(0)).select(:id).to_sql}) AS digest_topics ON digest_topics.id = posts.topic_id",
@@ -120,10 +120,10 @@ class Post < ActiveRecord::Base
 
           q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
           q
-        }
+        end
 
   scope :raw_match,
-        ->(pattern, type = "string") {
+        ->(pattern, type = "string") do
           type = type&.downcase
 
           case type
@@ -132,10 +132,10 @@ class Post < ActiveRecord::Base
           when "regex"
             where("raw ~* ?", "(?n)#{pattern}")
           end
-        }
+        end
 
   scope :have_uploads,
-        -> {
+        -> do
           where(
             "
           (
@@ -151,7 +151,7 @@ class Post < ActiveRecord::Base
           )",
             "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%",
           )
-        }
+        end
 
   delegate :username, to: :user
 
@@ -567,15 +567,18 @@ class Post < ActiveRecord::Base
 
   def with_secure_uploads?
     return false if !SiteSetting.secure_uploads?
+    topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
+    return false if topic_including_deleted.blank?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
     # Ideally we would want a more comprehensive way of saying that certain
     # upload types get secured which is a hybrid/mixed mode secure uploads,
     # but for now this will do the trick.
-    return topic&.private_message? if SiteSetting.secure_uploads_pm_only?
+    return topic_including_deleted.private_message? if SiteSetting.secure_uploads_pm_only?
 
-    SiteSetting.login_required? || topic&.private_message? || topic&.category&.read_restricted?
+    SiteSetting.login_required? || topic_including_deleted.private_message? ||
+      topic_including_deleted.read_restricted_category?
   end
 
   def hide!(post_action_type_id, reason = nil, custom_message: nil)
@@ -642,8 +645,12 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:acted)
   end
 
-  def full_url
-    "#{Discourse.base_url}#{url}"
+  def full_url(opts = {})
+    "#{Discourse.base_url}#{url(opts)}"
+  end
+
+  def relative_url(opts = {})
+    "#{Discourse.base_path}#{url(opts)}"
   end
 
   def url(opts = nil)
@@ -678,7 +685,11 @@ class Post < ActiveRecord::Base
     result = +"/t/"
     result << "#{slug}/" if !opts[:without_slug]
 
-    "#{result}#{topic_id}/#{post_number}"
+    if post_number == 1 && opts[:share_url]
+      "#{result}#{topic_id}"
+    else
+      "#{result}#{topic_id}/#{post_number}"
+    end
   end
 
   def self.urls(post_ids)
@@ -859,7 +870,7 @@ class Post < ActiveRecord::Base
       bypass_bump: bypass_bump,
       cooking_options: self.cooking_options,
       new_post: new_post,
-      post_id: id,
+      post_id: self.id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
 
@@ -1090,7 +1101,15 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5.fragment(self.cooked)
-    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
+    selectors =
+      fragments.css(
+        "a/@href",
+        "img/@src",
+        "source/@src",
+        "track/@src",
+        "video/@poster",
+        "div/@data-video-src",
+      )
 
     links =
       selectors

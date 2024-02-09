@@ -12,6 +12,8 @@ te:
           always: "ఎల్లప్పుడూ"
     chat:
       deleted_chat_username: తొలగించారు
+      dates:
+        yesterday: "నిన్న"
       cancel: "రద్దుచేయి"
       channel_settings:
         edit: "సవరణ"
@@ -43,6 +45,8 @@ te:
         tabs:
           members: సభ్యులు
           settings: అమరికలు
+      new_message_modal:
+        filter: "జల్లెడ"
       create_channel:
         type: "రకం"
         types:

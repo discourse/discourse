@@ -1,5 +1,5 @@
 <Discovery::Layout
-  @category={{this.model.category}}
+  @model={{this.model}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
   <:navigation>
@@ -26,7 +26,7 @@
         @parentCategory={{this.model.subcategoryList.parentCategory}}
       />
     {{/if}}
-    {{#if this.showTagInfo}}
+    {{#if (and this.showTagInfo this.model.tag)}}
       <TagInfo @tag={{this.model.tag}} @list={{this.model.list}} />
     {{/if}}
   </:header>

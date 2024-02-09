@@ -61,6 +61,7 @@ export default class ChatChannel {
   @tracked status;
   @tracked activeThread = null;
   @tracked meta;
+  @tracked chatableId;
   @tracked chatableType;
   @tracked chatableUrl;
   @tracked autoJoinUsers = false;
@@ -69,6 +70,7 @@ export default class ChatChannel {
   @tracked archive;
   @tracked tracking;
   @tracked threadingEnabled = false;
+  @tracked draft;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
@@ -89,12 +91,7 @@ export default class ChatChannel {
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
-    this.chatable = this.isDirectMessageChannel
-      ? ChatDirectMessage.create({
-          id: args.chatable?.id,
-          users: args.chatable?.users,
-        })
-      : Category.create(args.chatable);
+    this.chatable = this.#initChatable(args.chatable || []);
     this.currentUserMembership = args.current_user_membership;
 
     if (args.archive_completed || args.archive_failed) {
@@ -111,6 +108,10 @@ export default class ChatChannel {
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
     ).length;
+  }
+
+  get unreadThreadsCount() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).length;
   }
 
   updateLastViewedAt() {
@@ -208,6 +209,12 @@ export default class ChatChannel {
     message.manager = this.messagesManager;
   }
 
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this, {
+      user,
+    });
+  }
+
   canModifyMessages(user) {
     if (user.staff) {
       return !STAFF_READONLY_STATUSES.includes(this.status);
@@ -243,6 +250,25 @@ export default class ChatChannel {
       this._lastMessage = message;
     } else {
       this._lastMessage = ChatMessage.create(this, message);
+    }
+  }
+
+  #initChatable(chatable) {
+    if (
+      !chatable ||
+      chatable instanceof Category ||
+      chatable instanceof ChatDirectMessage
+    ) {
+      return chatable;
+    } else {
+      if (this.isDirectMessageChannel) {
+        return ChatDirectMessage.create({
+          users: chatable?.users,
+          group: chatable?.group,
+        });
+      } else {
+        return Category.create(chatable);
+      }
     }
   }
 }

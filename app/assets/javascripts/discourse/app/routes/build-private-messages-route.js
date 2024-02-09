@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
@@ -24,7 +25,7 @@ export default (inboxType, path, filter) => {
       ];
     },
 
-    model() {
+    model(params = {}) {
       const topicListFilter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
 
@@ -33,18 +34,25 @@ export default (inboxType, path, filter) => {
         topicListFilter
       );
 
-      return lastTopicList
-        ? lastTopicList
-        : this.store
-            .findFiltered("topicList", { filter: topicListFilter })
-            .then((model) => {
-              // andrei: we agreed that this is an anti pattern,
-              // it's better to avoid mutating a rest model like this
-              // this place we'll be refactored later
-              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-              model.set("emptyState", this.emptyState());
-              return model;
-            });
+      if (lastTopicList) {
+        return lastTopicList;
+      }
+
+      params = cleanNullQueryParams(params);
+
+      return this.store
+        .findFiltered("topicList", {
+          filter: topicListFilter,
+          params,
+        })
+        .then((model) => {
+          // andrei: we agreed that this is an anti pattern,
+          // it's better to avoid mutating a rest model like this
+          // this place we'll be refactored later
+          // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+          model.set("emptyState", this.emptyState());
+          return model;
+        });
     },
 
     setupController() {
@@ -65,6 +73,17 @@ export default (inboxType, path, filter) => {
         group: null,
         inbox: inboxType,
       });
+
+      let ascending = userTopicsListController.ascending;
+      if (ascending === "true") {
+        ascending = true;
+      } else if (ascending === "false") {
+        ascending = false;
+      }
+      userTopicsListController.setProperties({
+        ascending,
+      });
+
       userTopicsListController.bulkSelectHelper.clear();
 
       userTopicsListController.subscribe();

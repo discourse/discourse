@@ -8,9 +8,18 @@ describe Chat::MessageSerializer do
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message_poster) { Fabricate(:user) }
   fab!(:message_1) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-  fab!(:guardian_user) { Fabricate(:user) }
+  fab!(:guardian_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:guardian) { Guardian.new(guardian_user) }
+
+  describe "#mentioned_users" do
+    it "is limited by max_mentions_per_chat_message setting" do
+      Fabricate.times(2, :user_chat_mention, chat_message: message_1)
+      SiteSetting.max_mentions_per_chat_message = 1
+
+      expect(serializer.as_json[:mentioned_users].length).to eq(1)
+    end
+  end
 
   describe "#reactions" do
     fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
@@ -74,8 +83,6 @@ describe Chat::MessageSerializer do
   end
 
   describe "#available_flags" do
-    before { Group.refresh_automatic_groups! }
-
     context "when flagging on a regular channel" do
       let(:options) { { scope: guardian, root: nil, chat_channel: message_1.chat_channel } }
 
@@ -158,7 +165,6 @@ describe Chat::MessageSerializer do
 
       it "doesn't include notify_user if they are not in a PM allowed group" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-        Group.refresh_automatic_groups!
 
         serialized = described_class.new(message_1, options).as_json
 
@@ -166,9 +172,8 @@ describe Chat::MessageSerializer do
       end
 
       it "returns an empty list if the user needs a higher TL to flag" do
-        guardian.user.update!(trust_level: TrustLevel[2])
+        guardian.user.change_trust_level!(TrustLevel[2])
         SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
-        Group.refresh_automatic_groups!
 
         serialized = described_class.new(message_1, options).as_json
 
@@ -219,7 +224,7 @@ describe Chat::MessageSerializer do
           message:
             "here should be a mention, but since we're fabricating objects it doesn't matter",
         )
-      Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+      Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
 
       mentioned_user.destroy!
       message.reload

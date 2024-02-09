@@ -81,8 +81,8 @@ end
 
 RSpec.describe PostsController do
   fab!(:admin)
-  fab!(:moderator)
-  fab!(:user)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
   fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:category)
@@ -866,7 +866,7 @@ RSpec.describe PostsController do
       end
 
       it "returns a valid JSON response when the post is enqueued" do
-        SiteSetting.approve_unless_trust_level = 4
+        SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
         master_key = Fabricate(:api_key).key
 
@@ -1077,7 +1077,7 @@ RSpec.describe PostsController do
     end
 
     describe "when logged in" do
-      fab!(:user)
+      fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
       before { sign_in(user) }
 
@@ -1231,7 +1231,6 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group" do
-        Group.refresh_automatic_groups!
         group = Group.create(name: "test_group", messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1267,7 +1266,6 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group with caps" do
-        Group.refresh_automatic_groups!
         group = Group.create(name: "Test_group", messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1374,7 +1372,7 @@ RSpec.describe PostsController do
 
       it "cannot create a post with a tag without tagging permission" do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_level_to_tag_topics = 4
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         tag = Fabricate(:tag)
 
         post "/posts.json",
@@ -1488,11 +1486,6 @@ RSpec.describe PostsController do
           it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
             sign_in(user)
 
-            Discourse.expects(:deprecate).with(
-              "the :meta_data param is deprecated, use the :topic_custom_fields param instead",
-              anything,
-            )
-
             post "/posts.json",
                  params: {
                    raw: "this is the test content",
@@ -1585,7 +1578,6 @@ RSpec.describe PostsController do
         user_4 = Fabricate(:user, username: "Iyi_Iyi")
         user_4.update_attribute(:username, "İyi_İyi")
         user_4.update_attribute(:username_lower, "İyi_İyi".downcase)
-        Group.refresh_automatic_groups!
 
         post "/posts.json",
              params: {
@@ -1651,7 +1643,7 @@ RSpec.describe PostsController do
 
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
           SiteSetting.newuser_spam_host_threshold = 1
-          sign_in(Fabricate(:user, trust_level: 0))
+          sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
           post "/posts.json",
                params: {
@@ -1842,9 +1834,7 @@ RSpec.describe PostsController do
     end
 
     describe "warnings" do
-      fab!(:user_2) { Fabricate(:user) }
-
-      before { Group.refresh_automatic_groups! }
+      fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
 
       context "as a staff user" do
         before { sign_in(admin) }
@@ -2339,8 +2329,6 @@ RSpec.describe PostsController do
     include_examples "action requires login", :get, "/posts/system/deleted.json"
 
     describe "when logged in" do
-      before { Group.refresh_automatic_groups! }
-
       it "raises an error if the user doesn't have permission to see the deleted posts" do
         sign_in(user)
         get "/posts/system/deleted.json"

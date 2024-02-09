@@ -29,10 +29,7 @@ def ensure_cache_clean!
   old_hash = File.exist?(hash_file) ? File.read(hash_file) : nil
 
   if old_hash && old_hash != super_sha
-    puts "WARNING: It looks like your discourse plugins or core version have recently changed."
-    puts "The tmp/cache directory will be wiped to avoid development issues."
-    `rm -rf #{RAILS_ROOT}/tmp/cache`
-    puts
+    FileUtils.rm_rf("#{RAILS_ROOT}/tmp/cache")
   end
 
   FileUtils.mkdir_p(RAILS_ROOT + "/tmp")

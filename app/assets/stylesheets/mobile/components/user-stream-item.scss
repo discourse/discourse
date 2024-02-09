@@ -4,12 +4,6 @@
     vertical-align: middle;
   }
 
-  .notification {
-    &.unread {
-      background-color: var(--tertiary-low);
-    }
-  }
-
   .group-member-info {
     .name {
       vertical-align: inherit;

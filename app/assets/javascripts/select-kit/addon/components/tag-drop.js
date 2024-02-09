@@ -4,6 +4,7 @@ import { i18n, setting } from "discourse/lib/computed";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import FilterForMore from "select-kit/components/filter-for-more";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 import TagsMixin from "select-kit/mixins/tags";
 
@@ -15,18 +16,22 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass"],
+  classNameBindings: ["tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
-  categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
   maxTagsInFilterList: setting("max_tags_in_filter_list"),
   shouldShowMoreTags: computed(
     "maxTagsInFilterList",
     "topTags.[]",
+    "mainCollection.[]",
     function () {
-      return this.topTags.length > this.maxTagsInFilterList;
+      if (this.selectKit.filter?.length > 0) {
+        return this.mainCollection.length > this.maxTagsInFilterList;
+      } else {
+        return this.topTags.length > this.maxTagsInFilterList;
+      }
     }
   ),
 
@@ -50,14 +55,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
-      return "tag-drop/more-tags-collection";
+      return FilterForMore;
     }
   },
 
   modifyContentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
       return {
-        shouldShowMoreTags: this.shouldShowMoreTags,
+        shouldShowMoreTip: this.shouldShowMoreTags,
       };
     }
   },

@@ -1040,6 +1040,71 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#find" do
+    fab!(:category) { Fabricate(:category, name: "Foo") }
+    fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
+
+    context "with ids" do
+      it "returns the categories" do
+        get "/categories/find.json", params: { ids: [subcategory.id] }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([subcategory.id])
+      end
+
+      it "does not return hidden category" do
+        category.update!(read_restricted: true)
+
+        get "/categories/find.json", params: { ids: [123_456_789] }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "with slug path" do
+      it "returns the category" do
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{category.slug}/#{category.id}",
+            }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([category.id])
+      end
+
+      it "returns the subcategory and ancestors" do
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{subcategory.slug}/#{subcategory.id}",
+            }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+          [category.id, subcategory.id],
+        )
+      end
+
+      it "does not return hidden category" do
+        category.update!(read_restricted: true)
+
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{category.slug}/#{category.id}",
+            }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    it "returns user fields" do
+      sign_in(admin)
+
+      get "/categories/find.json", params: { slug_path_with_id: "#{category.slug}/#{category.id}" }
+
+      category = response.parsed_body["categories"].first
+      expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])
+      expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
+      expect(category["has_children"]).to eq(true)
+    end
+  end
+
   describe "#search" do
     fab!(:category) { Fabricate(:category, name: "Foo") }
     fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
@@ -1066,10 +1131,20 @@ RSpec.describe CategoriesController do
       it "returns categories" do
         get "/categories/search.json", params: { parent_category_id: category.id }
 
-        expect(response.parsed_body["categories"].size).to eq(2)
+        expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
-          "Foo",
           "Foobar",
+        )
+      end
+
+      it "can return only top-level categories" do
+        get "/categories/search.json", params: { parent_category_id: -1 }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Notfoo",
         )
       end
     end
@@ -1161,6 +1236,17 @@ RSpec.describe CategoriesController do
 
         expect(response.parsed_body["categories"].size).to eq(2)
       end
+    end
+
+    it "returns user fields" do
+      sign_in(admin)
+
+      get "/categories/search.json", params: { select_category_ids: [category.id] }
+
+      category = response.parsed_body["categories"].first
+      expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])
+      expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
+      expect(category["has_children"]).to eq(true)
     end
   end
 end

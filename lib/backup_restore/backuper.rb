@@ -57,6 +57,13 @@ module BackupRestore
       publish_completion
     end
 
+    def delete_prior_to_n_days
+      return if Rails.env.development?
+      store.delete_prior_to_n_days
+    rescue => ex
+      log "Something went wrong while deleting backups prior to n days....", ex
+    end
+
     protected
 
     def ensure_no_operation_is_running

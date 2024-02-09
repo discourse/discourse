@@ -5,8 +5,8 @@ RSpec.describe "spam rules for users" do
   describe "auto-silence users based on flagging" do
     fab!(:admin) # needed to send a system message
     fab!(:moderator)
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:disabled]

@@ -2,12 +2,14 @@ import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { setting } from "discourse/lib/computed";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import I18n from "discourse-i18n";
+import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const NO_CATEGORIES_ID = "no-categories";
@@ -15,11 +17,9 @@ export const ALL_CATEGORIES_ID = "all-categories";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
-  classNameBindings: ["categoryStyle"],
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   navigateToEdit: false,
   editingCategory: false,
@@ -40,10 +40,11 @@ export default ComboBoxComponent.extend({
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
+    allowUncategorized: setting("allow_uncategorized_topics"),
   },
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   displayCategoryDescription: computed(function () {
@@ -56,8 +57,7 @@ export default ComboBoxComponent.extend({
     return this.options.subCategory || false;
   }),
 
-  categoriesWithShortcuts: computed(
-    "categories.[]",
+  shortcuts: computed(
     "value",
     "selectKit.options.{subCategory,noSubcategories}",
     function () {
@@ -84,10 +84,14 @@ export default ComboBoxComponent.extend({
         });
       }
 
-      const results = this._filterUncategorized(this.categories || []);
-      return shortcuts.concat(results);
+      return shortcuts;
     }
   ),
+
+  categoriesWithShortcuts: computed("categories.[]", "shortcuts", function () {
+    const results = this._filterUncategorized(this.categories || []);
+    return this.shortcuts.concat(results);
+  }),
 
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
@@ -133,23 +137,28 @@ export default ComboBoxComponent.extend({
   ),
 
   async search(filter) {
+    if (this.site.lazy_load_categories) {
+      const results = await Category.asyncSearch(filter, {
+        parentCategoryId: this.options.parentCategory?.id || -1,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+        limit: 15,
+      });
+      return this.shortcuts.concat(
+        results.sort((a, b) => {
+          if (a.parent_category_id && !b.parent_category_id) {
+            return 1;
+          } else if (!a.parent_category_id && b.parent_category_id) {
+            return -1;
+          } else {
+            return 0;
+          }
+        })
+      );
+    }
+
     const opts = {
       parentCategoryId: this.options.parentCategory?.id,
-      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
-
-    if (this.siteSettings.lazy_load_categories) {
-      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
-      return results.sort((a, b) => {
-        if (a.parent_category_id && !b.parent_category_id) {
-          return 1;
-        } else if (!a.parent_category_id && b.parent_category_id) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-    }
 
     if (filter) {
       let results = Category.search(filter, opts);

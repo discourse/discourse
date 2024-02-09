@@ -375,7 +375,7 @@ es:
         instructions: |-
           ¿Sabías que puedes hacer referencia a categorías y etiquetas en tus publicaciones? Por ejemplo, ¿has visto la categoría %{category}?
 
-          Escribe `#` en cualquier lugar de una frase y selecciona cualquier categoría o etiqueta.
+          Escribe «#» en cualquier lugar de una frase y selecciona cualquier categoría o etiqueta.
         not_found: |-
           Hmm, no veo ninguna categoría por ninguna parte. ¿Puedes copiar esto en tu próxima respuesta?
 

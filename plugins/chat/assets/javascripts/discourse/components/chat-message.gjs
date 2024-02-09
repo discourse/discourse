@@ -26,8 +26,7 @@ import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/me
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import ChatMessageSeparatorDate from "discourse/plugins/chat/discourse/components/chat-message-separator-date";
-import ChatMessageSeparatorNew from "discourse/plugins/chat/discourse/components/chat-message-separator-new";
+import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -62,10 +61,9 @@ export default class ChatMessage extends Component {
   @service chatChannelsManager;
   @service router;
   @service toasts;
+  @optionalService adminTools;
 
   @tracked isActive = false;
-
-  @optionalService adminTools;
 
   toggleCheckIfPossible = modifier((element) => {
     let addedListener = false;
@@ -101,9 +99,7 @@ export default class ChatMessage extends Component {
   }
 
   get pane() {
-    return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatThreadPane
-      : this.chatChannelPane;
+    return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
   }
 
   get messageInteractor() {
@@ -461,7 +457,7 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
-      this.args.context === MESSAGE_CONTEXT_THREAD ||
+      this.threadContext ||
       this.args.message?.inReplyTo?.id ===
         this.args.message?.previousMessage?.id ||
       this.threadingEnabled
@@ -477,11 +473,15 @@ export default class ChatMessage extends Component {
 
   get showThreadIndicator() {
     return (
-      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      !this.threadContext &&
       this.threadingEnabled &&
       this.args.message?.thread &&
       this.args.message?.thread.preview.replyCount > 0
     );
+  }
+
+  get threadContext() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD;
   }
 
   #teardownMentionedUsers() {
@@ -494,13 +494,10 @@ export default class ChatMessage extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{#if this.shouldRender}}
-      {{#if (eq @context "channel")}}
-        <ChatMessageSeparatorDate
-          @fetchMessagesByDate={{@fetchMessagesByDate}}
-          @message={{@message}}
-        />
-        <ChatMessageSeparatorNew @message={{@message}} />
-      {{/if}}
+      <ChatMessageSeparator
+        @fetchMessagesByDate={{@fetchMessagesByDate}}
+        @message={{@message}}
+      />
 
       <div
         class={{concatClass
@@ -578,6 +575,7 @@ export default class ChatMessage extends Component {
                 <ChatMessageInfo
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
+                  @threadContext={{this.threadContext}}
                 />
 
                 <ChatMessageText

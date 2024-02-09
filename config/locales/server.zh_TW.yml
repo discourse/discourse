@@ -58,6 +58,9 @@ zh_TW:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} %{username}"
+  components:
+    enabled_filter: "啟用"
+    disabled_filter: "停用"
   themes:
     bad_color_scheme: "無法更新佈景主題，無效的調色盤"
     other_error: "更新佈景主題時發生了錯誤"
@@ -465,6 +468,7 @@ zh_TW:
       description_incomplete: "分類的說明貼文必須至少長於一個段落。"
       permission_conflict: "任何能夠存取一個子分類的群組必須同時也能夠存取其主要分類。以下列出有權限可以訪問子分類，但無法存取主要分類清單：%{group_names}。"
       disallowed_topic_tags: "這個話題含有此分類下被禁用的標籤：'%{tags}'"
+      is_already_in_use: "已被使用"
     cannot_delete:
       uncategorized: "此為特殊分類，僅作為沒有分類的話題暫存區，無法被刪除。"
       has_subcategories: "不能刪除該分類，因為它有子分類"
@@ -578,8 +582,6 @@ zh_TW:
       windows: "Microsoft Windows"
       unknown: "未知的運作系統"
   change_email:
-    confirmed: "你的電子郵箱已更新。"
-    please_continue: "繼續連接至 %{site_name}"
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
     error_staged: "在修改你的電子郵箱地址時出現了錯誤。這個郵箱已經被一個暫存使用者占用了。"
     already_done: "抱歉，此激活連結已經失效。可能你已經修改了郵箱？"
@@ -1180,7 +1182,6 @@ zh_TW:
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新使用者或長時間未使用的使用者自動重新導向至熱門頁面"
-    top_page_default_timeframe: "頂部查看頁面的預設時間表"
     moderators_view_emails: "允許版主瀏覽使用者 email"
     prioritize_username_in_ux: "在使用者頁、使用者卡片和貼文上優先顯示使用者名（未選時，暱稱將先顯示）"
     enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"
@@ -1328,12 +1329,7 @@ zh_TW:
     min_title_similar_length: "開始檢查相似主題的貼文標題的最少長度。"
     desktop_category_page_style: "/categories 頁面的視覺樣式。"
     category_colors: "設定分類顏色的十六進制色彩值列表。"
-    category_style: "分類圖標的視覺樣式。"
     dark_mode_none: "無"
-    max_attachment_size_kb: "允許使用者上傳的最大文件大小（以kB為單位）。確保也在nginx（client_max_body_size），apache 或代理中進行限制文件大小的設定。"
-    authorized_extensions: "允許上傳文件的副檔名列表（'*' 表示允許所有文件類型）"
-    authorized_extensions_for_staff: "除了在“authorized_extensions” 可以設定網站可允許上傳副檔名的清單之外，也允許管理員（有權限的員工）為使用者上載檔案副檔名清單。（使用 星字號 * 以啟用所有檔案類型）"
-    theme_authorized_extensions: "允許佈景主題上傳的檔案副檔名列表（使用星字號 * 啟用所有文件類型）"
     max_similar_results: "當使用者撰寫新主題時，顯示多少類似主題給使用者。比較根據標題和內容進行。"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
     topic_views_heat_low: "多少次瀏覽後，該視圖將稍稍高亮。"
@@ -1470,7 +1466,6 @@ zh_TW:
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
-    autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     highlighted_languages: "已包含語法突顯（Syntax Highlighting）規則。（警告：包含太多語言可能會影響論壇效能）請參閱：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>看更多範例。"
     embed_truncate: "截斷 embed 過的貼文"
     embed_support_markdown: "支持嵌入式討論話題的Markdown格式"
@@ -1486,9 +1481,6 @@ zh_TW:
     emoji_autocomplete_min_chars: "觸發自動填充表情符號彈出燈箱，所需的最少字數"
     enable_inline_emoji_translation: "為表情符號啟用翻譯（前提條件為：沒有任何空格或標點符號）"
     approve_post_count: "新使用者或基礎使用者需要被審核的貼文數量"
-    approve_unless_trust_level: "該信任等級之下的使用者的貼文必須被審核"
-    approve_new_topics_unless_trust_level: "低於該信任等級的使用者的新貼文需要被審核"
-    approve_unless_staged: "使用者張貼新的討論話題或貼文需要分次審核"
     notify_about_queued_posts_after: "如果有貼文等待審核階段仍超過一定的時數，將向所有版主發送通知。設定為0，將不發通知。"
     auto_close_messages_post_count: "消息中貼子數上限，達到後自動關閉消息（0 為禁用）"
     auto_close_topics_post_count: "主題中貼子數上限，達到後自動關閉主題 ( 0 為禁用 )"
@@ -2448,6 +2440,7 @@ zh_TW:
       unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上論壇近期摘要郵件。如需取消訂閱，請至 %{email_preferences_link} 或點擊 %{unsubscribe_link}。"
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
+      from: "%{site_name}"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"
@@ -2963,6 +2956,10 @@ zh_TW:
         title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
+  onebox:
+    github:
+      opened: "已打開"
+      closed: "不公開"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'

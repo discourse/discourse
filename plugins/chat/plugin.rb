@@ -66,6 +66,7 @@ after_initialize do
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
+    Group.prepend Chat::GroupExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
@@ -217,8 +218,8 @@ after_initialize do
       .where(user_id: object.id)
       .order(updated_at: :desc)
       .limit(20)
-      .pluck(:chat_channel_id, :data)
-      .map { |row| { channel_id: row[0], data: row[1] } }
+      .pluck(:chat_channel_id, :data, :thread_id)
+      .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
@@ -252,6 +253,12 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
     object.chat_separate_sidebar_mode
   end
+
+  add_to_serializer(
+    :upload,
+    :thumbnail,
+    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
+  ) { object.thumbnail }
 
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
@@ -483,10 +490,15 @@ after_initialize do
   register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
     Chat::Statistics.about_messages
   end
-
+  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
   register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
-  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
+  register_stat("chat_channel_messages") { Chat::Statistics.channel_messages }
+  register_stat("chat_direct_messages") { Chat::Statistics.direct_messages }
+  register_stat("chat_open_channels_with_threads_enabled") do
+    Chat::Statistics.open_channels_with_threads_enabled
+  end
+  register_stat("chat_threaded_messages") { Chat::Statistics.threaded_messages }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)

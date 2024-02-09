@@ -6,5 +6,5 @@
 
 pt_BR:
   site_settings:
-    enable_markdown_footnotes: ative redução de nota de rodapé neste site
-    display_footnotes_inline: ative expansão em linha das notas de rodapé
+    enable_markdown_footnotes: ativar redução de nota de rodapé neste site
+    display_footnotes_inline: ativar expansão em linha das notas de rodapé

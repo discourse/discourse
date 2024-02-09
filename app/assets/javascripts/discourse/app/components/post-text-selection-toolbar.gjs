@@ -12,8 +12,13 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import Sharing from "discourse/lib/sharing";
-import { postUrl, setCaretPosition } from "discourse/lib/utilities";
+import {
+  clipboardCopy,
+  postUrl,
+  setCaretPosition,
+} from "discourse/lib/utilities";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export function fixQuotes(str) {
   // u+201c, u+201d = “ ”
@@ -27,6 +32,7 @@ export default class PostTextSelectionToolbar extends Component {
   @service site;
   @service siteSettings;
   @service appEvents;
+  @service toasts;
 
   @tracked isFastEditing = false;
 
@@ -94,6 +100,17 @@ export default class PostTextSelectionToolbar extends Component {
   @action
   trapEvents(event) {
     event.stopPropagation();
+  }
+
+  @action
+  async copyQuoteToClipboard() {
+    const text = await this.args.data.buildQuote();
+    clipboardCopy(text);
+    this.toasts.success({
+      duration: 3000,
+      data: { message: I18n.t("post.quote_copied_to_clibboard") },
+    });
+    await this.args.data.hideToolbar();
   }
 
   @action
@@ -183,14 +200,18 @@ export default class PostTextSelectionToolbar extends Component {
     <div
       {{on "mousedown" this.trapEvents}}
       {{on "mouseup" this.trapEvents}}
-      class={{concatClass "quote-button" "visible"}}
+      class={{concatClass
+        "quote-button"
+        "visible"
+        (if this.isFastEditing "fast-editing")
+      }}
       {{this.appEventsListeners}}
     >
       <div class="buttons">
         <PluginOutlet
           @name="post-text-buttons"
           @defaultGlimmer={{true}}
-          @outletArgs={{hash data=@data}}
+          @outletArgs={{hash data=@data post=this.post}}
         >
           {{#if this.embedQuoteButton}}
             <DButton
@@ -211,6 +232,22 @@ export default class PostTextSelectionToolbar extends Component {
               {{on "click" this.toggleFastEdit}}
             />
           {{/if}}
+
+          {{#if @data.canCopyQuote}}
+            <DButton
+              @icon="copy"
+              @label="post.quote_copy"
+              @title="post.quote_copy"
+              class="btn-flat copy-quote"
+              {{on "click" this.copyQuoteToClipboard}}
+            />
+          {{/if}}
+
+          <PluginOutlet
+            @name="quote-share-buttons-before"
+            @connectorTagName="span"
+            @outletArgs={{hash data=@data}}
+          />
 
           {{#if this.quoteSharingEnabled}}
             <span class="quote-sharing">
@@ -235,6 +272,7 @@ export default class PostTextSelectionToolbar extends Component {
                 <PluginOutlet
                   @name="quote-share-buttons-after"
                   @connectorTagName="span"
+                  @outletArgs={{hash data=@data}}
                 />
               </span>
             </span>

@@ -7,7 +7,7 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      STRING = "3.2.0.beta4-dev"
+      STRING = "3.3.0.beta1-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -69,7 +69,7 @@ module Discourse
                 "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
         end
 
-        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version.to_s}")
+        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version}")
         resolved_requirement.satisfied_by?(parsed_target_version)
       end
 

@@ -7,7 +7,6 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
-import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
@@ -76,12 +75,10 @@ export default class ChatThreadList extends Component {
   // NOTE: This replicates sort logic from the server. We need this because
   // the thread unread count + last reply date + time update when new messages
   // are sent to the thread, and we want the list to react in realtime to this.
+  @cached
   get sortedThreads() {
     return this.threadsManager.threads
-      .filter(
-        (thread) =>
-          thread.currentUserMembership && !thread.originalMessage.deletedAt
-      )
+      .filter((thread) => !thread.originalMessage.deletedAt)
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
@@ -181,11 +178,8 @@ export default class ChatThreadList extends Component {
   <template>
     {{#if this.shouldRender}}
       <div class="chat-thread-list" {{this.subscribe @channel}}>
-        {{#if @includeHeader}}
-          <ChatThreadListHeader @channel={{@channel}} />
-        {{/if}}
-
         <div class="chat-thread-list__items" {{this.fill}}>
+
           {{#each this.sortedThreads key="id" as |thread|}}
             <ChatThreadListItem
               @thread={{thread}}

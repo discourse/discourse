@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "User preferences for Account", type: :system do
-  fab!(:user)
+describe "User preferences | Avatar", type: :system do
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:user_account_preferences_page) { PageObjects::Pages::UserPreferencesAccount.new }
   let(:avatar_selector_modal) { PageObjects::Modals::AvatarSelector.new }
   before { sign_in(user) }
@@ -24,6 +24,13 @@ describe "User preferences for Account", type: :system do
       avatar_selector_modal.click_primary_button
       expect(avatar_selector_modal).to be_closed
       expect(user_account_preferences_page).to have_system_avatar_image
+    end
+
+    it "does not allow for custom pictures when the user is not in uploaded_avatars_allowed_groups" do
+      SiteSetting.uploaded_avatars_allowed_groups = Group::AUTO_GROUPS[:admins]
+      user_account_preferences_page.open_avatar_selector_modal(user)
+      expect(avatar_selector_modal).to be_open
+      expect(avatar_selector_modal).to have_no_avatar_upload_button
     end
   end
 end

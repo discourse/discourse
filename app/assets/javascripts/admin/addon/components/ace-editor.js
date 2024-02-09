@@ -116,11 +116,11 @@ export default class AceEditor extends Component {
           this._skipContentChangeEvent = true;
           this.set("content", editor.getSession().getValue());
         });
-        if (this.attrs.save) {
+        if (this.save) {
           editor.commands.addCommand({
             name: "save",
             exec: () => {
-              this.attrs.save();
+              this.save();
             },
             bindKey: { mac: "cmd-s", win: "ctrl-s" },
           });

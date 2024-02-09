@@ -47,6 +47,10 @@ export function resetQuickSearchRandomTips() {
   QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
 }
 
+export function removeDefaultQuickSearchRandomTips() {
+  QUICK_TIPS = QUICK_TIPS.filter((tip) => !DEFAULT_QUICK_TIPS.includes(tip));
+}
+
 resetQuickSearchRandomTips();
 
 export default class RandomQuickTip extends Component {
@@ -60,7 +64,7 @@ export default class RandomQuickTip extends Component {
   @action
   tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
-      this.search.activeGlobalSearchTerm = this.randomTip.label;
+      this.args.searchTermChanged(this.randomTip.label);
       focusSearchInput();
 
       e.stopPropagation();

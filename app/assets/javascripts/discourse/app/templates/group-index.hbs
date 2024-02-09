@@ -4,7 +4,6 @@
 
 <section class="user-content">
   <div class="group-members-actions">
-
     {{#if this.canManageGroup}}
       <DButton
         @icon="list"
@@ -19,12 +18,11 @@
         @value={{this.filterInput}}
         @placeholderKey={{this.filterPlaceholder}}
         @autocomplete="off"
-        @class="group-username-filter no-blur"
+        class="group-username-filter no-blur"
       />
     {{/if}}
 
     {{#if this.canManageGroup}}
-
       {{#if this.isBulk}}
         <span class="bulk-select-buttons-wrap">
           {{#if this.bulkSelection}}
@@ -49,7 +47,6 @@
             @icon="check-square"
             class="bulk-select-all"
           />
-
         </span>
       {{/if}}
 
@@ -78,7 +75,6 @@
       @selector=".directory-table .directory-table__cell"
       @action={{action "loadMore"}}
     >
-
       <ResponsiveTable
         @className="group-members
           {{if this.isBulk 'sticky-header' ''}}
@@ -90,9 +86,9 @@
             @asc={{this.asc}}
             @field="username_lower"
             @labelKey="username"
-            @class="directory-table__column-header--username username"
             @automatic={{true}}
             @colspan="2"
+            class="directory-table__column-header--username username"
           />
 
           {{#if this.canManageGroup}}
@@ -103,32 +99,32 @@
 
           <PluginOutlet
             @name="group-index-table-header-after-username"
-            @outletArgs={{hash group=this.model}}
+            @outletArgs={{hash group=this.model asc=this.asc order=this.order}}
           />
 
           <TableHeaderToggle
-            @class="directory-table__column-header--added"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="added_at"
             @labelKey="groups.member_added"
             @automatic={{true}}
+            class="directory-table__column-header--added"
           />
           <TableHeaderToggle
-            @class="directory-table__column-header--last-posted"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_posted_at"
             @labelKey="last_post"
             @automatic={{true}}
+            class="directory-table__column-header--last-posted"
           />
           <TableHeaderToggle
-            @class="directory-table__column-header--last-seen"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_seen_at"
             @labelKey="last_seen"
             @automatic={{true}}
+            class="directory-table__column-header--last-seen"
           />
 
           {{#if this.canManageGroup}}
@@ -141,7 +137,6 @@
         <:body>
           {{#each this.model.members as |m|}}
             <div class="directory-table__row">
-
               <div
                 class="directory-table__cell directory-table__cell--username group-member"
                 colspan="2"
@@ -243,15 +238,12 @@
             </div>
           {{/each}}
         </:body>
-
       </ResponsiveTable>
-
     </LoadMore>
 
     <ConditionalLoadingSpinner @condition={{this.loading}} />
   {{else}}
     <br />
-
     <div>{{i18n this.emptyMessageKey}}</div>
   {{/if}}
 </section>

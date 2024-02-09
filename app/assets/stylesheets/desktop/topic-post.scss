@@ -636,21 +636,6 @@ span.highlighted {
   color: var(--primary-low-mid);
 }
 
-.read-state {
-  position: absolute;
-  // We use absolute positioning here because we want it to display in the padding
-  align-self: center;
-  color: var(--tertiary-medium);
-  right: 0;
-  font-size: 0.571em;
-}
-
-.read-state.read {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 1s, opacity ease-out 1s;
-}
-
 .topic-post.sticky-avatar {
   .topic-avatar {
     position: sticky;

@@ -236,6 +236,11 @@ class Search
     @in_title = false
 
     term = process_advanced_search!(term)
+    if !@order &&
+         SiteSetting.search_default_sort_order !=
+           SearchSortOrderSiteSetting.value_from_id(:relevance)
+      @order = SearchSortOrderSiteSetting.id_from_value(SiteSetting.search_default_sort_order)
+    end
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
@@ -1328,7 +1333,7 @@ class Search
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     # PG 14 and up default to using the followed by operator
     # this restores the old behavior
-    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
+    tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end

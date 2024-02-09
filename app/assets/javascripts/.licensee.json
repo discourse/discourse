@@ -22,7 +22,9 @@
     "messageformat": "0.1.5",
     "regenerator-transform": "0.10.1",
     "source-map": "0.1.43",
-    "sourcemap-validator": "1.1.1"
+    "sourcemap-validator": "1.1.1",
+    "jspreadsheet-ce": "4.13.4",
+    "@jspreadsheet/formula": "2.0.2"
   },
   "corrections": true,
   "ignore": [

@@ -89,6 +89,7 @@ class GlobalSetting
     @skip_redis
   end
 
+  # rubocop:disable Lint/BooleanSymbol
   def self.use_s3?
     (
       @use_s3 ||=
@@ -102,6 +103,7 @@ class GlobalSetting
         end
     ) == :true
   end
+  # rubocop:enable Lint/BooleanSymbol
 
   def self.s3_bucket_name
     @s3_bucket_name ||= s3_bucket.downcase.split("/")[0]

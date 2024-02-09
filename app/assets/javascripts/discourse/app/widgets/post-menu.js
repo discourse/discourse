@@ -5,6 +5,7 @@ import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -331,9 +332,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
 registerButton("share", () => {
   return {
     action: "share",
+    icon: "d-post-share",
     className: "share",
     title: "post.controls.share",
+  };
+});
+
+registerButton("copyLink", () => {
+  return {
+    action: "copyLink",
     icon: "d-post-share",
+    className: "post-action-menu__copy-link",
+    title: "post.controls.copy_title",
   };
 });
 
@@ -644,8 +654,36 @@ export default createWidget("post-menu", {
         if (buttonAttrs) {
           const { position, beforeButton, afterButton } = buttonAttrs;
           delete buttonAttrs.position;
+          let button;
 
-          let button = this.attach(this.settings.buttonType, buttonAttrs);
+          if (typeof buttonAttrs.action === "function") {
+            const original = buttonAttrs.action;
+            const self = this;
+
+            buttonAttrs.action = async function (post) {
+              let showFeedback = null;
+
+              if (buttonAttrs.className) {
+                showFeedback = (messageKey) => {
+                  showAlert(post.id, buttonAttrs.className, messageKey);
+                };
+              }
+
+              const postAttrs = {
+                post,
+                showFeedback,
+              };
+
+              if (
+                !buttonAttrs.className ||
+                !recentlyCopied(post.id, buttonAttrs.actionClass)
+              ) {
+                self.sendWidgetAction(original, postAttrs);
+              }
+            };
+          }
+
+          button = this.attach(this.settings.buttonType, buttonAttrs);
 
           const content = [];
           if (beforeButton) {
@@ -773,6 +811,7 @@ export default createWidget("post-menu", {
     this.menu.show(event.target, {
       identifier: "admin-post-menu",
       component: AdminPostMenu,
+      extraClassName: "popup-menu",
       data: {
         scheduleRerender: this.scheduleRerender.bind(this),
         transformedPost: this.attrs,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostCustomField < ActiveRecord::Base
+  include CustomField
+
   belongs_to :post
 end
 

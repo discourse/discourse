@@ -11,6 +11,7 @@ import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
   publishToMessageBus,
@@ -19,11 +20,15 @@ import {
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 acceptance("Topic", function (needs) {
   needs.user();
+  needs.settings({
+    post_menu: "read|like|share|flag|edit|bookmark|delete|admin|reply|copyLink",
+  });
   needs.pretender((server, helper) => {
     server.get("/c/2/visible_groups.json", () =>
       helper.response(200, {
@@ -84,6 +89,16 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:first-child button.share");
 
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+  });
+
+  test("Copy Link Button", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:first-child button.post-action-menu__copy-link");
+
+    assert.ok(
+      exists(".post-action-menu__copy-link-checkmark"),
+      "it shows the Link Copied! message"
+    );
   });
 
   test("Showing and hiding the edit controls", async function (assert) {
@@ -270,7 +285,7 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/-/299/1");
 
     const link = query(".title-wrapper .topic-featured-link");
-    assert.strictEqual(link.innerText, " example.com");
+    assert.strictEqual(link.innerText, "example.com");
     assert.strictEqual(link.getAttribute("rel"), "ugc");
   });
 
@@ -411,18 +426,22 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with replyAsNewTopic keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await triggerKeyEvent(document, "keypress", "J");
-    await triggerKeyEvent(document, "keypress", "T");
+  // Using J/K on Firefox clean the text selection, so this won't work there
+  chromeTest(
+    "Quoting a quote with replyAsNewTopic keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await triggerKeyEvent(document, "keypress", "J");
+      await triggerKeyEvent(document, "keypress", "T");
 
-    assert.ok(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
-    );
-  });
+      assert.ok(
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
+      );
+    }
+  );
 
   test("Quoting by selecting text can mark the quote as full", async function (assert) {
     await visit("/t/internationalization-localization/280");
@@ -463,8 +482,10 @@ acceptance("Topic with title decorated", function (needs) {
   needs.user();
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.40", (api) => {
-      api.decorateTopicTitle((topic, node, topicTitleType) => {
-        node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
+      withSilencedDeprecations("discourse.decorate-topic-title", () => {
+        api.decorateTopicTitle((topic, node, topicTitleType) => {
+          node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
+        });
       });
     });
   });
@@ -640,29 +661,23 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesDisplay = query("#post_1 .topic-map .likes .number");
-    const oldLikes = likesDisplay.textContent;
-
+    const likesCountSelectors = "#post_1 .topic-map .likes .number";
+    const oldLikesCount = query(likesCountSelectors).textContent;
     const likesChangedFixture = {
       id: 280,
       type: "stats",
-      like_count: 999,
+      like_count: parseInt(oldLikesCount, 10) + 42,
     };
+    const expectedLikesCount = likesChangedFixture.like_count.toString();
 
     // simulate the topic like_count being changed
     await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    const newLikes = likesDisplay.textContent;
-
+    assert.dom(likesCountSelectors).hasText(expectedLikesCount);
     assert.notEqual(
-      oldLikes,
-      newLikes,
-      "it updates the like count on the topic stats"
-    );
-    assert.equal(
-      newLikes,
-      likesChangedFixture.like_count,
-      "it updates the like count with the expected value"
+      oldLikesCount,
+      expectedLikesCount,
+      "it updates the likes count on the topic stats"
     );
   });
 
@@ -682,83 +697,70 @@ acceptance("Topic stats update automatically", function () {
   test("Replies count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const repliesDisplay = query("#post_1 .topic-map .replies .number");
-    const oldReplies = repliesDisplay.textContent;
+    const repliesCountSelectors = "#post_1 .topic-map .replies .number";
+    const oldRepliesCount = query(repliesCountSelectors).textContent;
+    const expectedRepliesCount = (
+      postsChangedFixture.posts_count - 1
+    ).toString();
 
     // simulate the topic posts_count being changed
     await publishToMessageBus("/topic/280", postsChangedFixture);
 
-    const newLikes = repliesDisplay.textContent;
-
+    assert.dom(repliesCountSelectors).hasText(expectedRepliesCount);
     assert.notEqual(
-      oldReplies,
-      newLikes,
+      oldRepliesCount,
+      expectedRepliesCount,
       "it updates the replies count on the topic stats"
-    );
-    assert.equal(
-      newLikes,
-      postsChangedFixture.posts_count - 1, // replies = posts_count - 1
-      "it updates the replies count with the expected value"
     );
   });
 
   test("Last replier avatar updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
+    const avatarSelectors = "#post_1 .topic-map .last-reply .avatar";
+    const avatarImg = query(avatarSelectors);
 
-    const avatarImg = query("#post_1 .topic-map .last-reply .avatar");
     const oldAvatarTitle = avatarImg.title;
     const oldAvatarSrc = avatarImg.src;
+    const expectedAvatarTitle = postsChangedFixture.last_poster.name;
+    const expectedAvatarSrc = postsChangedFixture.last_poster.avatar_template;
 
     // simulate the topic posts_count being changed
     await publishToMessageBus("/topic/280", postsChangedFixture);
 
-    const newAvatarTitle = avatarImg.title;
-    const newAvatarSrc = avatarImg.src;
-
+    assert.dom(avatarSelectors).hasAttribute("title", expectedAvatarTitle);
     assert.notEqual(
       oldAvatarTitle,
-      newAvatarTitle,
+      expectedAvatarTitle,
       "it updates the last poster avatar title on the topic stats"
     );
-    assert.equal(
-      newAvatarTitle,
-      postsChangedFixture.last_poster.name,
-      "it updates the last poster avatar title with the expected value"
-    );
+
+    assert.dom(avatarSelectors).hasAttribute("src", expectedAvatarSrc);
     assert.notEqual(
       oldAvatarSrc,
-      newAvatarSrc,
+      expectedAvatarSrc,
       "it updates the last poster avatar src on the topic stats"
-    );
-    assert.equal(
-      newAvatarSrc,
-      `${document.location.origin}${postsChangedFixture.last_poster.avatar_template}`,
-      "it updates the last poster avatar src with the expected value"
     );
   });
 
   test("Last replied at updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const lastRepliedAtDisplay = query(
-      "#post_1 .topic-map .last-reply .relative-date"
-    );
+    const lastRepliedAtSelectors =
+      "#post_1 .topic-map .last-reply .relative-date";
+    const lastRepliedAtDisplay = query(lastRepliedAtSelectors);
     const oldTime = lastRepliedAtDisplay.dataset.time;
+    const expectedTime = Date.parse(
+      postsChangedFixture.last_posted_at
+    ).toString();
 
     // simulate the topic posts_count being changed
     await publishToMessageBus("/topic/280", postsChangedFixture);
 
-    const newTime = lastRepliedAtDisplay.dataset.time;
-
+    assert.dom(lastRepliedAtSelectors).hasAttribute("data-time", expectedTime);
     assert.notEqual(
       oldTime,
-      newTime,
+      expectedTime,
       "it updates the last posted time on the topic stats"
-    );
-    assert.equal(
-      newTime,
-      new Date(postsChangedFixture.last_posted_at).getTime(),
-      "it updates the last posted time with the expected value"
     );
   });
 });

@@ -2,7 +2,7 @@
 
 RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:category)
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
 
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
@@ -238,8 +238,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     end
 
     context "when editing" do

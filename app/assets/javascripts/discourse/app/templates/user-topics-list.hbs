@@ -9,9 +9,9 @@
   />
 {{else}}
   <LoadMore
-    @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list .topic-list-item"
     @action={{action "loadMore"}}
+    class="paginated-topics-list"
   >
     <TopicDismissButtons
       @position="top"
@@ -50,6 +50,10 @@
       @tagsForUser={{this.tagsForUser}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
+      @changeSort={{this.changeSort}}
+      @order={{this.order}}
+      @ascending={{this.ascending}}
+      @focusLastVisitedTopic={{true}}
     />
 
     <TopicDismissButtons

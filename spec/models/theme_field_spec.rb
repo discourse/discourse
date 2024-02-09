@@ -7,6 +7,7 @@ RSpec.describe ThemeField do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     ThemeJavascriptCompiler.disable_terser!
+    SiteSetting.experimental_objects_type_for_theme_settings = true
   end
 
   after { ThemeJavascriptCompiler.enable_terser! }
@@ -385,7 +386,7 @@ HTML
   it "generates errors when invalid type is passed" do
     field = create_yaml_field(get_fixture("invalid"))
     expect(field.error).to include(
-      I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"),
+      I18n.t("#{key}.data_type_inclusion", name: "invalid_type_setting"),
     )
   end
 
@@ -594,6 +595,57 @@ HTML
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")
+      end
+
+      it "is recreated when data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
+
+      it "is recreated when fallback data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: {} }.deep_stringify_keys.to_yaml,
+        )
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
       end
     end
 

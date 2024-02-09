@@ -142,22 +142,24 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path)
+        preload_script_url(path, entrypoint: script)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url)
+  def preload_script_url(url, entrypoint: nil)
+    entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
+
     add_resource_preload_list(url, "script")
     if GlobalSetting.preload_link_header
       <<~HTML.html_safe
-        <script defer src="#{url}"></script>
+        <script defer src="#{url}" #{entrypoint_attribute}></script>
       HTML
     else
       <<~HTML.html_safe
-        <link rel="preload" href="#{url}" as="script">
-        <script defer src="#{url}"></script>
+        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute}>
+        <script defer src="#{url}" #{entrypoint_attribute}></script>
       HTML
     end
   end
@@ -299,7 +301,7 @@ module ApplicationHelper
     ) if opts[:twitter_summary_large_image].present?
 
     result = []
-    result << tag(:meta, property: "og:site_name", content: SiteSetting.title)
+    result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
     result << tag(:meta, property: "og:type", content: "website")
 
     generate_twitter_card_metadata(result, opts)
@@ -734,6 +736,10 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def escape_noscript(&block)
+    raw capture(&block).gsub(%r{<(/\s*noscript)}i, '&lt;\1')
   end
 
   def manifest_url

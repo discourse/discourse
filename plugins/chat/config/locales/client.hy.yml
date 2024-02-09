@@ -13,6 +13,8 @@ hy:
           never: "Երբեք"
     chat:
       deleted_chat_username: ջնջված
+      dates:
+        yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:
@@ -62,6 +64,7 @@ hy:
           settings: Կարգավորումներ
       new_message_modal:
         no_items: "Տարրեր չկան"
+        filter: "Ֆիլտր"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"

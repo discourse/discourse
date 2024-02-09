@@ -100,6 +100,9 @@ class PostActionType < ActiveRecord::Base
         notify_type: true,
         custom_type: true,
       )
+      @flag_settings.add(10, :illegal, topic_type: true, notify_type: true, custom_type: true)
+      # When adding a new ID here, check that it doesn't clash with any added in
+      # `ReviewableScore.types`. You can thank me later.
     end
   end
 

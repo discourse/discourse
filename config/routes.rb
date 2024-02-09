@@ -27,8 +27,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    get "/bootstrap" => "bootstrap#index"
-
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
     end
@@ -322,8 +320,7 @@ Discourse::Application.routes.draw do
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
-      get "dashboard/new-features" => "dashboard#new_features"
-      put "dashboard/mark-new-features-as-seen" => "dashboard#mark_new_features_as_seen"
+      get "dashboard/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -541,10 +538,10 @@ Discourse::Application.routes.draw do
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
 
       get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
         {
@@ -1163,6 +1160,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/find" => "categories#find"
     get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do
@@ -1219,6 +1217,7 @@ Discourse::Application.routes.draw do
 
     get "latest.rss" => "list#latest_feed", :format => :rss
     get "top.rss" => "list#top_feed", :format => :rss
+    get "hot.rss" => "list#hot_feed", :format => :rss
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
@@ -1434,6 +1433,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, only: %i[create update destroy]
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"
     post "invites/destroy-all-expired" => "invites#destroy_all_expired"
@@ -1584,6 +1584,16 @@ Discourse::Application.routes.draw do
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
     get "/theme-qunit" => "qunit#theme"
+
+    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+    # handle it here.
+    if Rails.env.development?
+      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
+          :constraints => {
+            testem_id: /\d+/,
+          }
+    end
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"

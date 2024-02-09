@@ -72,9 +72,9 @@
   </span>
 
   <LinksRedirect
-    @class="row body-diff"
     {{did-insert @calculateBodyDiff @bodyDiffHTML}}
     {{did-update @calculateBodyDiff @bodyDiffHTML}}
+    class="row body-diff"
   >
     {{html-safe @bodyDiff}}
   </LinksRedirect>

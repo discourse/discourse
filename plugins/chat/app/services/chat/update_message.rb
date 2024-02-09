@@ -81,6 +81,7 @@ module Chat
     def modify_message(contract:, message:, guardian:, uploads:, **)
       message.message = contract.message
       message.last_editor_id = guardian.user.id
+      message.cook
 
       return if uploads&.size != contract.upload_ids.to_a.size
 
@@ -110,7 +111,7 @@ module Chat
 
     def should_create_revision(new_message, prev_message, guardian)
       max_seconds = SiteSetting.chat_editing_grace_period
-      seconds_since_created = Time.now.to_i - new_message&.created_at.iso8601.to_time.to_i
+      seconds_since_created = Time.now.to_i - new_message&.created_at&.iso8601&.to_time.to_i
       return true if seconds_since_created > max_seconds
 
       max_edited_chars =
@@ -132,6 +133,9 @@ module Chat
 
     def publish(message:, guardian:, contract:, **)
       edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
+
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message)
+      DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, message.user)
 
       if contract.process_inline
         Jobs::Chat::ProcessMessage.new.execute(

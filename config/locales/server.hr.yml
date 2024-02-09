@@ -55,6 +55,9 @@ hr:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućeno"
+    disabled_filter: "Onemogućeno"
   themes:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
@@ -81,7 +84,7 @@ hr:
       optimized_link: Optimizirane veze na slike su prolazne i ne bi trebale biti uključene u izvorni kod teme.
     settings_errors:
       invalid_yaml: "Zadani YAML je nevažeći"
-      data_type_not_a_number: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
+      data_type_inclusion: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
       name_too_long: "Postoji postavka s predugim imenom. Najveća dopuštena duljina je 255"
       default_value_missing: "Postavka `%{name}` nema podrazumijevanu vrijednost."
       default_not_match_type: "Tip zadane vrijednosti postavke `%{name}` ne podudara se s postavljenom vrijednošću postavke."
@@ -199,7 +202,6 @@ hr:
       default_tags_already_selected: "Ne možete odabrati oznaku koja se koristi na drugom popisu."
       s3_upload_bucket_is_required: "Ne možete omogućiti prijenose na S3 osim ako niste naveli 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Ne možete omogućiti korištenje S3 inventara osim ako niste omogućili S3 prijenose."
-      page_publishing_requirements: "Objavljivanje stranice ne može se omogućiti ako je omogućen siguran medij."
       s3_backup_requires_s3_settings: "Ne možete koristiti S3 kao pričuvnu lokaciju osim ako niste unijeli '%{setting_name}'."
   invite:
     disabled_errors:
@@ -282,7 +284,7 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_trust: "Nažalost, ne možete ugraditi medijske stavke u post."
+  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
   no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
@@ -648,27 +650,12 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   change_email:
-    wrong_account_error: "Prijavljeni ste na krivi račun, odjavite se i pokušajte ponovo."
-    confirmed: "Email vam je ažuriran."
-    please_continue: "Nastavite na %{site_name}"
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
     error_staged: "Dogodila se greška pri promjeni vaše email adrese. Adresu već koristi drugi korisnik."
     already_done: "Žao nam je, ova poveznica za potvrdu nije više važeća. Možda je vaš email već promijenjen?"
     confirm: "Potvrdi"
     max_secondary_emails_error: "Dosegli ste maksimalno dopušteno ograničenje sekundarne e-pošte."
-    authorizing_new:
-      title: "Potvrdite svoju novu e-poštu"
-      description: "Molimo potvrdite da želite da se vaša adresa e-pošte promijeni u:"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-    authorizing_old:
-      title: "Promijenite adresu e-pošte"
-      description: "Molimo potvrdite promjenu adrese e-pošte"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-      old_email: "Stari email: %{email}"
-      new_email: "Novi email: %{email}"
-      almost_done_title: "Potvrđivanje nove adrese e-pošte"
-      almost_done_description: "Poslali smo e-poruku na vašu novu adresu e-pošte kako bismo potvrdili promjenu!"
   associated_accounts:
     connected: "(povezano)"
   activation:
@@ -1269,14 +1256,8 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     desktop_category_page_style: "Vizualni stil za stranicu /kategorije."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    category_style: "Vizualni stil za bedževe kategorije."
     default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
-    max_image_size_kb: "Maksimalna veličina slike za učitavanje u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy. Slike veće od ovoga i manje od client_max_body_size bit će promijenjene u veličini kako bi stale pri prijenosu."
-    max_attachment_size_kb: "Maksimalna veličina učitanih datoteka privitka u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy."
-    authorized_extensions: "Popis ekstenzija datoteka dopuštenih za prijenos (upotrijebite '*' da biste omogućili sve vrste datoteka)"
-    authorized_extensions_for_staff: "Popis ekstenzija datoteka dopuštenih za učitavanje za korisnike osoblja uz popis definiran u postavci web mjesta `authorized_extensions`. (koristite '*' da omogućite sve vrste datoteka)"
-    theme_authorized_extensions: "Popis ekstenzija datoteka dopuštenih za učitavanje tema (upotrijebite '*' da omogućite sve vrste datoteka)"
     max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
@@ -1372,7 +1353,6 @@ hr:
     embed_topics_list: "Podržava HTML ugradnju popisa tema"
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
     embed_truncate: "Skratite ugrađene postove."
-    embed_unlisted: "Uvezene teme neće biti navedene dok korisnik ne odgovori."
     embed_support_markdown: "Podržava Markdown formatiranje za ugrađene objave."
     allowed_embed_selectors: "Popis CSS elemenata odvojenih zarezima koji su dopušteni u ugrađivanju."
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
@@ -1391,9 +1371,6 @@ hr:
     emoji_autocomplete_min_chars: "Minimalan broj znakova potreban za pokretanje skočnog prozora s emojijima za automatsko dovršavanje"
     enable_inline_emoji_translation: "Omogućuje prijevod za ugrađene emojije (bez razmaka ili interpunkcijskih znakova prije)"
     approve_post_count: "Količina objava novog ili osnovnog korisnika koja mora biti odobrena"
-    approve_unless_trust_level: "Objave za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_new_topics_unless_trust_level: "Nove teme za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_unless_staged: "Nove teme i postovi za stupnjevite korisnike moraju biti odobreni"
     notify_about_queued_posts_after: "Ako postoje postovi koji čekaju na pregled dulje od ovog broja sati, pošaljite obavijest svim moderatorima. Postavite na 0 da biste onemogućili ove obavijesti."
     auto_close_messages_post_count: "Maksimalan broj dopuštenih postova u poruci prije nego što se automatski zatvori (0 za onemogućiti)"
     auto_close_topics_post_count: "Maksimalan broj dopuštenih postova u temi prije nego što se automatski zatvori (0 za onemogućiti)"
@@ -1402,7 +1379,6 @@ hr:
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
     watched_words_regular_expressions: "Promatrane riječi su regularni izrazi."
     enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
-    enable_fast_edit: "Omogućuje mali odabir teksta objave koji se može uređivati na liniji."
     old_post_notice_days: "Dana prije nego što obavijest o pošti postane stara"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
@@ -1445,7 +1421,6 @@ hr:
     use_name_for_username_suggestions: "Koristite puno ime korisnika kada predlažete korisnička imena."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
-    navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."
@@ -1874,6 +1849,9 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -1887,6 +1865,7 @@ hr:
       confirm_body: "Uspjeh! Obavijesti su omogućene."
       custom: "Obavijest od %{username} %{site_title}"
   staff_action_logs:
+    unknown: "nepoznato"
     api_key:
       revoked: Opoziv
   reviewables:

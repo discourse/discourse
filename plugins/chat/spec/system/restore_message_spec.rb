@@ -35,16 +35,14 @@ RSpec.describe "Restore message", type: :system do
         chat_page.visit_channel(channel_1)
       end
 
-      using_session(:regular_user) do |session|
+      using_session(:regular_user) do
         sign_in(regular_user)
         chat_page.visit_channel(channel_1)
         channel_page.messages.delete(message_1)
-        session.quit
       end
 
-      using_session(:another_user) do |session|
+      using_session(:another_user) do
         expect(channel_page.messages).to have_no_message(id: message_1.id)
-        session.quit
       end
     end
   end
@@ -58,18 +56,16 @@ RSpec.describe "Restore message", type: :system do
         chat_page.visit_channel(channel_1)
       end
 
-      using_session(:admin_user) do |session|
+      using_session(:admin_user) do
         sign_in(admin_user)
         chat_page.visit_channel(channel_1)
         channel_page.messages.delete(message_1)
-        session.quit
       end
 
-      using_session(:regular_user) do |session|
+      using_session(:regular_user) do
         expect(channel_page.messages).to have_deleted_message(message_1, count: 1)
         channel_page.messages.expand(id: message_1.id)
         expect(channel_page.messages).to have_no_action("restore", id: message_1.id)
-        session.quit
       end
     end
   end

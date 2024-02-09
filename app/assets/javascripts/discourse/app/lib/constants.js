@@ -68,3 +68,5 @@ export const AUTO_GROUPS = {
     display_name: "trust_level_4",
   },
 };
+
+export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;

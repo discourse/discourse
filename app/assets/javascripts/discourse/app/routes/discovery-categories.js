@@ -1,4 +1,4 @@
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -79,47 +79,36 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     };
   }
 
-  _findCategoriesAndTopics(filter) {
+  async _findCategoriesAndTopics(filter) {
     return hash({
-      wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
+      categoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove("topic_list"),
-    }).then((response) => {
-      let { wrappedCategoriesList, topicsList } = response;
-      let categoriesList =
-        wrappedCategoriesList && wrappedCategoriesList.category_list;
-      let store = this.store;
-
-      if (categoriesList && topicsList) {
-        if (topicsList.topic_list?.top_tags) {
-          this.site.set("top_tags", topicsList.topic_list.top_tags);
+    })
+      .then((result) => {
+        if (
+          result.categoriesList?.category_list &&
+          result.topicsList?.topic_list
+        ) {
+          return { ...result.categoriesList, ...result.topicsList };
+        } else {
+          // Otherwise, return the ajax result
+          return ajax(`/categories_and_${filter}`);
         }
-
-        return EmberObject.create({
-          categories: CategoryList.categoriesFrom(
-            this.store,
-            wrappedCategoriesList
-          ),
-          topics: TopicList.topicsFrom(this.store, topicsList),
-          can_create_category: categoriesList.can_create_category,
-          can_create_topic: categoriesList.can_create_topic,
-          loadBefore: this._loadBefore(store),
-        });
-      }
-      // Otherwise, return the ajax result
-      return ajax(`/categories_and_${filter}`).then((result) => {
+      })
+      .then((result) => {
         if (result.topic_list?.top_tags) {
           this.site.set("top_tags", result.topic_list.top_tags);
         }
 
-        return EmberObject.create({
+        return CategoryList.create({
+          store: this.store,
           categories: CategoryList.categoriesFrom(this.store, result),
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
-          loadBefore: this._loadBefore(store),
+          loadBefore: this._loadBefore(this.store),
         });
       });
-    });
   }
 
   titleToken() {

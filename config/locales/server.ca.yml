@@ -53,6 +53,9 @@ ca:
   on_another_topic: "Sobre un altre tema"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} per %{username}"
+  components:
+    enabled_filter: "Activat"
+    disabled_filter: "Desactivat"
   themes:
     bad_color_scheme: "No es pot actualitzar l'aparença, paleta de colors incorrecta"
     other_error: "S'ha produït un error mentre s'actualitzava l'aparença"
@@ -595,22 +598,10 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   change_email:
-    wrong_account_error: "Heu iniciat sessió amb un compte equivocat. Tanqueu la sessió i torneu-ho a provar."
-    confirmed: "El vostre correu electrònic ha estat actualitzat."
-    please_continue: "Continua a %{site_name}"
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
     already_done: "Aquest enllaç de confirmació ja no és vàlid. Potser s'ha canviat el vostre correu electrònic."
     confirm: "Confirma"
-    authorizing_new:
-      title: "Confirmeu la vostra nova adreça electrònica"
-    authorizing_old:
-      title: "Canvieu la vostra adreça de correu electrònic"
-      description: "Confirmeu el canvi d’adreça electrònica"
-      old_email: "Adreça electrònica antiga: %{email}"
-      new_email: "Adreça electrònica nova: %{email}"
-      almost_done_title: "Confirmant la nova adreça electrònica"
-      almost_done_description: "Hem enviat un correu electrònic a la vostra nova adreça electrònica per a confirmar el canvi."
   associated_accounts:
     revoke_failed: "No s'ha pogut revocar el vostre compte amb %{provider_name}."
     connected: "(connectat)"
@@ -1237,7 +1228,6 @@ ca:
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
     redirect_users_to_top_page: "Redirigeix automàticament els usuaris nous i absents durant molt de temps al capdamunt de la pàgina."
-    top_page_default_timeframe: "Temps predeterminat per a la pàgina més vista"
     moderators_view_emails: "Permet als moderadors veure els correus electrònics dels usuaris"
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
@@ -1389,13 +1379,7 @@ ca:
     min_title_similar_length: "Longitud mínima d'un títol abans que sigui consultat per a temes semblants."
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
-    category_style: "Estil visual per a insígnies de categoria."
     dark_mode_none: "Cap"
-    max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
-    max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
-    authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
-    authorized_extensions_for_staff: "Llista d'extensions permeses als usuaris de l'equip responsable en carregar fitxers a més de la llista definida en el paràmetre `authorized_extensions` de la configuració. (Feu servir \"*\" per a habilitar tots els tipus de fitxers.)"
-    theme_authorized_extensions: "Llista d'extensions de fitxers permeses per a càrregues d'aparences (utilitzeu '*' per a permetre tots els tipus de fitxers)"
     max_similar_results: "Quants temes semblants es mostren per damunt de l'editor quan es redacta un tema nou. La comparació es basa en el títol i el cos."
     max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge. Es rebutjaran les imatges amb un nombre més alt de megapíxels. "
     title_prettify: "Evita errades tipogràfiques freqüents en el títol, incloent-hi tot en majúscula, primer caràcter en minúscula, exclamacions i interrogants múltiples, punts extres al final, etc."
@@ -1460,6 +1444,7 @@ ca:
     forwarded_emails_behaviour: "Com s'ha de tractar un correu electrònic reenviat a Discourse"
     always_show_trimmed_content: "Mostra sempre la part retallada dels correus entrants. AVÍS: Pot revelar adreces de correu."
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
+    email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."
     post_excerpts_in_emails: "En els correus de notificació, envia sempre fragments en lloc de publicacions completes."
     raw_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant."
     raw_rejected_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant rebutjat."
@@ -1545,7 +1530,6 @@ ca:
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
     warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
-    autohighlight_all_code: "Obliga l'ús de codi ressaltat per a tots els blocs de codi preformatat, fins i tot quan no n'hagin especificat el llenguatge."
     highlighted_languages: "Regles incloses de ressaltat de sintaxi. (Advertència: incloure-hi massa llenguatges pot afectar el rendiment.) Vegeu: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per a una demostració."
     embed_any_origin: "Permet el contingut incrustable independentment de l’origen. Això és necessari per a aplicacions mòbils amb HTML estàtic."
     embed_topics_list: "Permet incrustació HTML de llistes de temes"
@@ -1563,9 +1547,6 @@ ca:
     emoji_autocomplete_min_chars: "Nombre mínim de caràcters necessaris per a activar el menú desplegable d'autocompleció d'emoji"
     enable_inline_emoji_translation: "Habilita la traducció per a emojis en línia (sense cap espai ni puntuació abans)"
     approve_post_count: "Nombre de publicacions d'un usuari nou o bàsic que cal aprovar."
-    approve_unless_trust_level: "Cal aprovar les publicacions per a usuaris amb aquest nivell de confiança"
-    approve_new_topics_unless_trust_level: "Cal aprovar els temes nous per a usuaris per sota d'aquest nivell de confiança"
-    approve_unless_staged: "Cal aprovar els temes i les publicacions noves per a usuaris ficticis"
     notify_about_queued_posts_after: "Si hi ha publicacions que han estat pendents de ser revisades durant més d'aquestes hores, envia una notificació a tots els moderadors. Poseu 0 per a inhabilitar aquestes notificacions."
     auto_close_messages_post_count: "Nombre màxim de publicacions permeses en un missatge abans no es tanqui automàticament (0 per desactivar)"
     auto_close_topics_post_count: "Nombre màxim de publicacions permeses en un tema abans no es tanqui automàticament (0 per desactivar)"
@@ -2910,6 +2891,9 @@ ca:
         title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
+  onebox:
+    github:
+      closed: "tancat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'

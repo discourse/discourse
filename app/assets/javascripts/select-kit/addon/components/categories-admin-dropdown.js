@@ -1,12 +1,10 @@
 import { computed } from "@ember/object";
-import { setting } from "discourse/lib/computed";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["categories-admin-dropdown"],
   classNames: ["categories-admin-dropdown"],
-  fixedCategoryPositions: setting("fixed_category_positions"),
 
   selectKitOptions: {
     icons: ["wrench", "caret-down"],
@@ -26,14 +24,12 @@ export default DropdownSelectBoxComponent.extend({
       },
     ];
 
-    if (this.fixedCategoryPositions) {
-      items.push({
-        id: "reorder",
-        name: I18n.t("categories.reorder.title"),
-        description: I18n.t("categories.reorder.title_long"),
-        icon: "random",
-      });
-    }
+    items.push({
+      id: "reorder",
+      name: I18n.t("categories.reorder.title"),
+      description: I18n.t("categories.reorder.title_long"),
+      icon: "random",
+    });
 
     return items;
   }),
@@ -41,8 +37,8 @@ export default DropdownSelectBoxComponent.extend({
   _onChange(value, item) {
     if (item.onChange) {
       item.onChange(value, item);
-    } else if (this.attrs.onChange) {
-      this.attrs.onChange(value, item);
+    } else if (this.onChange) {
+      this.onChange(value, item);
     }
   },
 });

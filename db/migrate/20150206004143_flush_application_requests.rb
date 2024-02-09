@@ -5,6 +5,7 @@ class FlushApplicationRequests < ActiveRecord::Migration[4.2]
     # flush as enum changed
     execute "TRUNCATE TABLE application_requests"
   end
+
   def down
   end
 end

@@ -8,5 +8,7 @@ sv:
   js:
     spoiler:
       title: Blurra spoiler
+      label:
+        show: "Visa dolt innehåll"
     composer:
       spoiler_text: "Denna text kommer att blurras"

@@ -80,7 +80,7 @@
         },
         "has_children": {
           "type": [
-            "string",
+            "boolean",
             "null"
           ]
         },

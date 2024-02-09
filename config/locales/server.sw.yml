@@ -52,6 +52,9 @@ sw:
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} za %{username}"
+  components:
+    enabled_filter: "Imeruhusiwa"
+    disabled_filter: "Imezuiwa"
   themes:
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
     import_error:
@@ -415,8 +418,6 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   change_email:
-    confirmed: "Barua pepe yako imesasishwa."
-    please_continue: "Endelea kwenye %{site_name}"
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
@@ -795,7 +796,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
-    top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
@@ -904,9 +904,6 @@ sw:
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
     approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
-    approve_unless_trust_level: "Namba za machapisho kutoka kwa mtumiaji mwenye kiwango hichi cha uaminifu lazima zipate kibali"
-    approve_new_topics_unless_trust_level: "Mada mpya za watumiaji wenge kiwango cha chini cha uaminifu lazima zipate kibali"
-    approve_unless_staged: "Mada na machapisho kwa ajili ya watumiaji waliokuwa staged lazima zipate kibali"
     notify_about_queued_posts_after: "Kama kuna machapisho ambayo yamekuwa yanasubirishwa kwa zaidi ya masaa haya, tuma taarifa kwa wasimamizi wote. Andika 0 kuzima hizi taarifa."
     auto_close_topics_post_count: "Idadi ya juu ya machapisho yanayoruhusiwa kwenye mada kabla haijafungwa (0 kuzima)"
     max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
@@ -2021,6 +2018,9 @@ sw:
         title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
+  onebox:
+    github:
+      closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
@@ -2031,6 +2031,8 @@ sw:
       linked: '%{jina la mtumiaji} ametengeneza kiungo kutoka kwenye "%{mada}" - %{jina la_tovuti}'
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+  staff_action_logs:
+    unknown: "haijulikani"
   reviewables:
     sensitivity:
       disabled: "Imezuiwa"

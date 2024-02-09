@@ -28,6 +28,7 @@ export default class PermalinkForm extends Component {
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
       { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") },
+      { id: "user_id", name: I18n.t("admin.permalink.user_id") },
     ];
   }
 

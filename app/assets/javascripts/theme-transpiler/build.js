@@ -31,12 +31,7 @@ let wasmPlugin = {
 
     build.onLoad({ filter: /.*/, namespace: "wasm-stub" }, async (args) => {
       return {
-        contents: `import wasm from ${JSON.stringify(args.path)};
-        export default (imports) => {
-          const wasmModule = new WebAssembly.Module(wasm);
-          const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
-          return wasmInstance.exports;
-        };`,
+        contents: `export { default } from ${JSON.stringify(args.path)};`,
       };
     });
 

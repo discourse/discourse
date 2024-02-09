@@ -3,7 +3,7 @@
 require "csv"
 
 RSpec.describe Jobs::ExportUserArchive do
-  fab!(:user) { Fabricate(:user, username: "john_doe") }
+  fab!(:user) { Fabricate(:user, username: "john_doe", refresh_auto_groups: true) }
   fab!(:user2) { Fabricate(:user) }
   let(:extra) { {} }
   let(:job) do
@@ -14,7 +14,7 @@ RSpec.describe Jobs::ExportUserArchive do
   end
   let(:component) { raise "component not set" }
 
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:category) { Fabricate(:category_with_definition, name: "User Archive Category") }
   fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
   fab!(:topic) { Fabricate(:topic, category: category) }

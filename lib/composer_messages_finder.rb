@@ -90,7 +90,7 @@ class ComposerMessagesFinder
     # - "allow uploaded avatars" is disabled
     if SiteSetting.disable_avatar_education_message ||
          SiteSetting.discourse_connect_overrides_avatar ||
-         !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, @user)
+         !@user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
       return
     end
 

@@ -13,6 +13,8 @@ gl:
           never: "Nunca"
     chat:
       deleted_chat_username: eliminado
+      dates:
+        yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
       channel_settings:
@@ -62,6 +64,7 @@ gl:
           settings: Configuración
       new_message_modal:
         no_items: "Sen elementos"
+        filter: "Filtro"
       direct_message_creator:
         title: Nova mensaxe
         prefix: "A:"

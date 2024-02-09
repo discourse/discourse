@@ -2,10 +2,6 @@
 
 class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
   class CustomBuilder < MiniSql::Builder
-    def initialize(connection, sql)
-      super
-    end
-
     def secure_category(secure_category_ids, category_alias = "c")
       if secure_category_ids.present?
         where(
@@ -21,7 +17,7 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
 
   class ParamEncoder
     def encode(*sql_array)
-      # use active record to avoid any discrepencies
+      # use active record to avoid any discrepancies
       ActiveRecord::Base.public_send(:sanitize_sql_array, sql_array)
     end
   end
@@ -43,8 +39,10 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
 
     def before_committed!(*)
     end
+
     def rolledback!(*)
     end
+
     def trigger_transactional_callbacks?
       true
     end

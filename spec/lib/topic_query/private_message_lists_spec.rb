@@ -2,12 +2,10 @@
 
 RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin)
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:user_3) { Fabricate(:user) }
   fab!(:user_4) { Fabricate(:user) }
-
-  before_all { Group.refresh_automatic_groups! }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
@@ -163,10 +161,8 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_unread" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2) { Fabricate(:user) }
-
-    before_all { Group.refresh_automatic_groups! }
 
     fab!(:pm) do
       create_post(
@@ -207,10 +203,8 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_new" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2) { Fabricate(:user) }
-
-    before_all { Group.refresh_automatic_groups! }
 
     fab!(:pm) do
       create_post(

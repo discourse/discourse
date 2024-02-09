@@ -61,7 +61,7 @@ RSpec.describe Reviewable, type: :model do
 
     it "will update the category if the topic category changes" do
       post = Fabricate(:post)
-      moderator = Fabricate(:moderator)
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
       reviewable = PostActionCreator.spam(moderator, post).reviewable
       expect(reviewable.category).to eq(post.topic.category)
       new_cat = Fabricate(:category)
@@ -244,8 +244,6 @@ RSpec.describe Reviewable, type: :model do
       fab!(:admin)
 
       it "respects category id on the reviewable" do
-        Group.refresh_automatic_group!(:staff)
-
         reviewable =
           ReviewableFlaggedPost.needs_review!(
             target: post,
@@ -350,7 +348,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "message bus notifications" do
-    fab!(:moderator)
+    fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
     it "triggers a notification on create" do
@@ -364,9 +362,11 @@ RSpec.describe Reviewable, type: :model do
       reviewable = PostActionCreator.create(moderator, post, :inappropriate).reviewable
       reviewable.perform(moderator, :disagree)
 
-      expect { PostActionCreator.spam(Fabricate(:user), post) }.to change {
-        reviewable.reload.status
-      }.from("rejected").to("pending").and change { Jobs::NotifyReviewable.jobs.size }.by(1)
+      expect {
+        PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+      }.to change { reviewable.reload.status }.from("rejected").to("pending").and change {
+              Jobs::NotifyReviewable.jobs.size
+            }.by(1)
     end
 
     it "triggers a notification on pending -> approve" do
@@ -424,7 +424,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "flag_stats" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
     let(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 

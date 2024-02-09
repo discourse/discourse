@@ -1,5 +1,4 @@
 <Sidebar::EditNavigationMenu::Modal
-  @class="sidebar__edit-navigation-menu__categories-modal"
   @title="sidebar.categories_form_modal.title"
   @disableSaveButton={{this.saving}}
   @save={{this.save}}
@@ -18,6 +17,7 @@
   @filterSelected={{this.filterSelected}}
   @filterUnselected={{this.filterUnselected}}
   @closeModal={{@closeModal}}
+  class="sidebar__edit-navigation-menu__categories-modal"
 >
   <form class="sidebar-categories-form">
     {{#if (gt this.filteredCategoriesGroupings.length 0)}}
@@ -59,7 +59,7 @@
                   disabled={{not
                     (includes this.filteredCategoryIds category.id)
                   }}
-                  {{on "click" (action "toggleCategory" category.id)}}
+                  {{on "click" (fn this.toggleCategory category.id)}}
                 />
               </label>
             </div>

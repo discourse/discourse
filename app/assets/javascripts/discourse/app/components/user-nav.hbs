@@ -1,7 +1,7 @@
 <section class="user-navigation user-navigation-primary">
   <HorizontalOverflowNav
-    @className="main-nav nav user-nav"
     @ariaLabel="User primary"
+    class="main-nav nav user-nav"
   >
     {{#unless @user.profile_hidden}}
       <DNavigationItem @route="user.summary" class="user-nav__summary">
@@ -9,15 +9,16 @@
         <span>{{i18n "user.summary.title"}}</span>
       </DNavigationItem>
 
-      <DNavigationItem
-        @route="userActivity"
-        @ariaCurrentContext="parentNav"
-        class="user-nav__activity"
-      >
-        {{d-icon "stream"}}
-        <span>{{i18n "user.activity_stream"}}</span>
-      </DNavigationItem>
-
+      {{#if @showActivityTab}}
+        <DNavigationItem
+          @route="userActivity"
+          @ariaCurrentContext="parentNav"
+          class="user-nav__activity"
+        >
+          {{d-icon "stream"}}
+          <span>{{i18n "user.activity_stream"}}</span>
+        </DNavigationItem>
+      {{/if}}
     {{/unless}}
 
     {{#if @showNotificationsTab}}

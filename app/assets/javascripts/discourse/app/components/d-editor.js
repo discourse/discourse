@@ -11,10 +11,8 @@ import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
-import {
-  linkSeenHashtagsInContext,
-  setupHashtagAutocomplete,
-} from "discourse/lib/hashtag-autocomplete";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
@@ -63,22 +61,26 @@ class Toolbar {
       { group: "extras", buttons: [] },
     ];
 
+    const boldLabel = getButtonLabel("composer.bold_label", "B");
+    const boldIcon = boldLabel ? null : "bold";
     this.addButton({
       id: "bold",
       group: "fontStyles",
-      icon: "bold",
-      label: getButtonLabel("composer.bold_label", "B"),
+      icon: boldIcon,
+      label: boldLabel,
       shortcut: "B",
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
     });
 
+    const italicLabel = getButtonLabel("composer.italic_label", "I");
+    const italicIcon = italicLabel ? null : "italic";
     this.addButton({
       id: "italic",
       group: "fontStyles",
-      icon: "italic",
-      label: getButtonLabel("composer.italic_label", "I"),
+      icon: italicIcon,
+      label: italicLabel,
       shortcut: "I",
       preventFocus: true,
       trimLeading: true,
@@ -88,6 +90,7 @@ class Toolbar {
     if (opts.showLink) {
       this.addButton({
         id: "link",
+        icon: "link",
         group: "insertions",
         shortcut: "K",
         preventFocus: true,
@@ -114,6 +117,7 @@ class Toolbar {
         id: "code",
         group: "insertions",
         shortcut: "E",
+        icon: "code",
         preventFocus: true,
         trimLeading: true,
         action: (...args) => this.context.send("formatCode", args),
@@ -170,12 +174,13 @@ class Toolbar {
       tabindex: button.tabindex || "-1",
       className: button.className || button.id,
       label: button.label,
-      icon: button.label ? null : button.icon || button.id,
+      icon: button.icon,
       action: button.action || ((a) => this.context.send("toolbarButton", a)),
       perform: button.perform || function () {},
       trimLeading: button.trimLeading,
       popupMenu: button.popupMenu || false,
       preventFocus: button.preventFocus || false,
+      condition: button.condition || (() => true),
     };
 
     if (button.sendAction) {

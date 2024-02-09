@@ -46,6 +46,8 @@ class SiteSerializer < ApplicationSerializer
     :denied_emojis,
     :tos_url,
     :privacy_policy_url,
+    :system_user_avatar_template,
+    :lazy_load_categories,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -237,6 +239,10 @@ class SiteSerializer < ApplicationSerializer
     object.categories.map { |c| c.to_h }
   end
 
+  def include_categories?
+    object.categories.present?
+  end
+
   def markdown_additional_options
     Site.markdown_additional_options
   end
@@ -330,6 +336,22 @@ class SiteSerializer < ApplicationSerializer
 
   def include_privacy_policy_url?
     privacy_policy_url.present?
+  end
+
+  def system_user_avatar_template
+    Discourse.system_user.avatar_template
+  end
+
+  def include_system_user_avatar_template?
+    SiteSetting.show_user_menu_avatars
+  end
+
+  def lazy_load_categories
+    true
+  end
+
+  def include_lazy_load_categories?
+    scope.can_lazy_load_categories?
   end
 
   private

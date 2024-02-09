@@ -144,6 +144,8 @@ hu:
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Téma nyilvánossá téve: %{when}"
       open_topic: "Témává alakította %{when}"
@@ -716,7 +718,6 @@ hu:
           imap_mailbox_not_selected: "Választani kell egy postaládát ehhez az IMAP-beállításhoz, különben egyetlen postafiók sem lesz szinkronizálva."
           prefill:
             title: "Beállítások előre kitöltése ehhez:"
-            gmail: "GMail"
           credentials:
             title: "Hitelesítő adatok"
             smtp_server: "SMTP-kiszolgáló"
@@ -1262,8 +1263,6 @@ hu:
         title: "Kétfaktoros hitelesítés"
         enable: "A kétfaktoros hitelesítés kezelése"
         disable_all: "Összes letiltása"
-        forgot_password: "Elfelejtette a jelszavát?"
-        confirm_password_description: "A folytatáshoz erősítse meg a jelszavát"
         name: "Név"
         label: "Kód"
         rate_limit: "Várjon, mielőtt egy másik hitelesítési kódot próbálna ki."
@@ -1330,6 +1329,15 @@ hu:
         success_via_admin: "Küldtünk egy levelet a megadott e-mail-címre. A felhasználónak követnie kell a levélben szereplő megerősítési utasításokat."
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
         back_to_preferences: "Vissza a beállításokhoz"
+        confirm_success: "Az e-mail címe frissítve lett."
+        confirm: "Megerősít"
+        authorizing_new:
+          description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
+          description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
+        authorizing_old:
+          old_email: "Régi e-mail: %{email}"
+          new_email: "Új e-mail: %{email}"
+          confirm_success: "Küldtünk egy e-mailt az új e-mail címedre, hogy megerősítsük a változást!"
       change_avatar:
         title: "Profilkép megváltoztatása"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
@@ -1390,14 +1398,13 @@ hu:
           generic: "Az Ön %{provider}-fiókját fogja használni a hitelesítéshez."
       name:
         title: "Név"
-        instructions: "a teljes neve (nem kötelező)"
-        instructions_required: "Az Ön teljes neve"
+        instructions: "A teljes neve (nem kötelező)."
+        instructions_required: "Az Ön teljes neve."
         required: "Adjon meg egy nevet"
         too_short: "A neve túl rövid"
         ok: "A neve megfelelő."
       username:
         title: "Felhasználónév"
-        instructions: "egyedi, szóközök nélkül, rövid"
         short_instructions: "A következőképpen említhetik meg: @%{username}"
         available: "A felhasználóneve elérhető"
         not_available: "Nem érhető el. Esetleg: %{suggestion}?"
@@ -1591,7 +1598,7 @@ hu:
         same_as_username: "A jelszava megegyezik a felhasználónevével."
         same_as_email: "A jelszava megegyezik az e-mail-címével."
         ok: "A jelszava megfelelőnek tűnik."
-        instructions: "legalább %{count} karakter"
+        instructions: "Legalább %{count} karakter."
         required: "Adjon meg egy jelszót"
         confirm: "Megerősít"
       summary:
@@ -1946,6 +1953,8 @@ hu:
       components:
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
+        bulk_select_topics_dropdown:
+          title: "Csoportos műveletek"
     date_time_picker:
       from: Feladó
       to: Címzett
@@ -1991,9 +2000,6 @@ hu:
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
-      group_mentioned:
-        one: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
-        other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
       cannot_see_mention:
         category: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a kategóriához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
@@ -2204,6 +2210,7 @@ hu:
         private_message: '%{username} személyes üzenetet küldött itt: „%{topic}” – %{site_title}'
         linked: '%{username} hivatkozott a bejegyzésére innen: „%{topic}” – %{site_title}'
         watching_first_post: '%{username} új témát hozott létre: „%{topic}” – %{site_title}'
+        watching_category_or_tag: '%{username} bejegyzést tett itt: „%{topic}” – %{site_title}'
         confirm_title: "Értesítések bekapcsolva – %{site_title}"
         confirm_body: "Siker! Értesítések engedélyezve."
         custom: "Értesítés %{username} felhasználótól itt: %{site_title}"
@@ -2234,6 +2241,7 @@ hu:
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
         new_features: "új Discourse funkciók jelentek meg!"
+        admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"
@@ -2424,6 +2432,7 @@ hu:
     topics:
       new_messages_marker: "utolsó látogatás"
       bulk:
+        confirm: "Megerősít"
         select_all: "Összes kiválasztása"
         clear_all: "Összes törlése"
         unlist_topics: "Témák listázásnak megszüntetése"
@@ -2492,6 +2501,9 @@ hu:
         tag: "Nincs több „%{tag}” címkéjű téma."
         top: "Nincs több népszerű téma."
         bookmarks: "Nincs több könyvjelzőzött téma."
+    topic_bulk_actions:
+      close_topics:
+        name: "Témák lezárása"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -2846,9 +2858,7 @@ hu:
     post:
       confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"
-      quote_reply_shortcut: "Vagy nyomja meg a q gombot"
       quote_edit: "Szerkesztés"
-      quote_edit_shortcut: "Vagy nyomja meg az e gombot"
       quote_share: "Megosztás"
       edit_reason: "Ok: "
       post_number: "%{number}. bejegyzés"
@@ -3446,7 +3456,6 @@ hu:
       delete_tag: "Címke törlése"
       delete_confirm_no_topics: "Biztos vagy benne hogy elakarod távolítani ezt a címkét?"
       edit_tag: "Címke nevének és leírásának szerkesztése"
-      description: "Leírás"
       sort_by: "Rendezés"
       sort_by_count: "besorol"
       sort_by_name: "név"
@@ -3559,8 +3568,7 @@ hu:
     second_factor_auth:
       redirect_after_success: "A kéttényezős hitelesítés sikeres. Átirányítás az előző oldalra…"
     sidebar:
-      show_sidebar: "Oldalsáv megjelenítése"
-      hide_sidebar: "Oldalsáv elrejtése"
+      title: "Oldalsáv"
       unread_count:
         one: "%{count} olvasatlan"
         other: "%{count} olvasatlan"
@@ -3673,6 +3681,18 @@ hu:
         typeMismatch:
           default: "Adjon meg egy érvényes dátumot."
           email: "Adjon meg egy érvényes e-mail-címet."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "mégse"
+          create: "Mentés"
+          reason: "miért szerkeszt?"
+      spreadsheet:
+        show: "Megjelenítés"
+        about: "Névjegy"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -3699,9 +3719,7 @@ hu:
         latest_version: "Legfrissebb"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         new_features:
-          title: "\U0001F381 Új funkciók"
-          dismiss: "Elvetés"
-          learn_more: "Tudjon meg többet"
+          learn_more: "Tudjon meg többet..."
         last_checked: "Utoljára ellenőrizve:"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
@@ -3886,7 +3904,6 @@ hu:
               show: Egyetlen kategória kinyerése az azonosító alapján.
             users:
               sync_sso: Felhasználó szinkronizálása a DiscourseConnect használatával.
-              show: Információk beszerzése egy felhasználóról.
               check_emails: Felhasználói e-mailek listázása.
               update: Felhasználói profil adatainak frissítése.
               log_out: Egy felhasználó összes munkamenetének kijelentkeztetése.
@@ -3960,7 +3977,8 @@ hu:
         not_enabled: "N"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
-        official: "Hivatalos bővítmény"
+        author: "Szerző %{author}"
+        learn_more: "Tudjon meg többet"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
@@ -4052,6 +4070,10 @@ hu:
           body: "Test"
           revert: "Változtatások visszavonása"
           revert_confirm: "Biztosan vissza akarod vonni a változtatásaidat?"
+        component:
+          all_filter: "Összes"
+          enabled_filter: "Engedélyezed"
+          disabled_filter: "Kikapcsolt"
         theme:
           theme: "Téma"
           component: "Összetevő"
@@ -4176,6 +4198,9 @@ hu:
           yaml:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"
+          all_filter: "Összes"
+          active_filter: "Aktív"
+          inactive_filter: "Inaktív"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"
@@ -4224,7 +4249,6 @@ hu:
           reset: "Alapértelmezés visszaállítása"
       email:
         title: "Emailek"
-        settings: "Beállítások"
         templates: "Sablonok"
         preview_digest: "Előnézet összefoglalója"
         error: "<b>HIBA</b> - %{server_error}"
@@ -4661,7 +4685,6 @@ hu:
           posts: "Bejegyzések"
         tl3_requirements:
           value_heading: "Érték"
-          visits: "Látogatások"
           days: "nap"
           topics_viewed: "Megtekintett témák"
           posts_read: "Elolvasott bejegyzések"
@@ -4765,6 +4788,9 @@ hu:
           modal_description: "Szeretné visszamenőleg alkalmazni ezt a változtatást? Ez %{count} felhasználó beállítását fogja módosítani."
           modal_yes: "Igen"
           modal_no: "Nem, csak mostantól alkalmazza a változtatást"
+        file_types_list:
+          add_image_types: "Képek"
+          add_audio_types: "Audio"
       badges:
         title: Jelvények
         new_badge: Új jelvény
@@ -4854,6 +4880,7 @@ hu:
         post_title: "Bejegyzés"
         category_id: "Kategóriaazonosító"
         category_title: "Kategória"
+        username: "Felhasználónév"
         copy_to_clipboard: "Másolja az állandó hivatkozást a vágólapra"
         delete_confirm: Biztos, hogy törli ezt az állandó hivatkozást?
         form:

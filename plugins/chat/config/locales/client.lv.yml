@@ -13,6 +13,8 @@ lv:
           never: "Nekad"
     chat:
       deleted_chat_username: dzēsts
+      dates:
+        yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
       channel_settings:
@@ -61,6 +63,8 @@ lv:
         tabs:
           members: Dalībnieki
           settings: Iestatījumi
+      new_message_modal:
+        filter: "Filtrs"
       direct_message_creator:
         title: Jauns ziņa
         prefix: "Kam:"

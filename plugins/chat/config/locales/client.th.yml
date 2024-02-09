@@ -13,6 +13,8 @@ th:
           never: "ไม่เคย"
     chat:
       deleted_chat_username: ลบ
+      dates:
+        yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
       channel_settings:

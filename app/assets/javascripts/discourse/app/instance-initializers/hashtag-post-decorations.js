@@ -1,4 +1,4 @@
-import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
+import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {

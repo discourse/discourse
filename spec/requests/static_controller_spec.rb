@@ -58,9 +58,7 @@ RSpec.describe StaticController do
   end
 
   describe "#cdn_asset" do
-    let (:site) {
-      RailsMultisite::ConnectionManagement.current_db
-    }
+    let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
       begin
@@ -166,11 +164,6 @@ RSpec.describe StaticController do
       before { SiteSetting.login_required = true }
 
       %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
-
         it "#{page_name} page redirects to login page for anon" do
           get "/#{page_name}"
           expect(response).to redirect_to "/login"

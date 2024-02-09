@@ -16,7 +16,7 @@ RSpec.describe Jobs::CorrectMissingDualstackUrls do
         url: "//custom-bucket.s3-us-east-1.amazonaws.com/somewhere/a.png",
         original_filename: "a.png",
         filesize: 100,
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
       )
 
     bad_upload =
@@ -24,7 +24,7 @@ RSpec.describe Jobs::CorrectMissingDualstackUrls do
         url: "//custom-bucket.s3-us-west-1.amazonaws.com/somewhere/a.png",
         original_filename: "a.png",
         filesize: 100,
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
       )
 
     current_optimized =
