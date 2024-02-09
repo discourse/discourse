@@ -2330,7 +2330,6 @@ developer:
     allow_any: false
     refresh: true
     hidden: true
-    client: true
   enable_experimental_admin_ui_groups:
     type: group_list
     list_type: compact
