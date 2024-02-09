@@ -134,6 +134,8 @@ en:
       string_value_not_valid_min_max: "It must be between %{min} and %{max} characters long."
       string_value_not_valid_min: "It must be at least %{min} characters long."
       string_value_not_valid_max: "It must be at most %{max} characters long."
+      objects:
+        required: "must be present"
     locale_errors:
       top_level_locale: "The top level key in a locale file must match the locale name"
       invalid_yaml: "Translation YAML invalid"
