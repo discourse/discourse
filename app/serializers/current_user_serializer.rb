@@ -128,6 +128,10 @@ class CurrentUserSerializer < BasicUserSerializer
     object.admin? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
   end
 
+  def include_user_admin_sidebar?
+    object.admin?
+  end
+
   def can_post_anonymously
     SiteSetting.allow_anonymous_posting &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))

@@ -1321,6 +1321,11 @@ RSpec.describe ApplicationController do
           DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
         )
       end
+
+      it "has correctly loaded enabledPluginAdminRoutes" do
+        get "/latest"
+        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
+      end
     end
   end
 end
