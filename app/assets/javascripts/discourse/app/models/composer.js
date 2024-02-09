@@ -1,4 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { set } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -217,12 +219,9 @@ export default class Composer extends RestModel {
   @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
   canCategorize;
 
-  _categoryId = null;
+  @tracked _categoryId = null;
 
-  get user() {
-    return this.currentUser;
-  }
-
+  @dependentKeyCompat
   get categoryId() {
     return this._categoryId;
   }
