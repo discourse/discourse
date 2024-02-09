@@ -1308,6 +1308,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
+            "enabledPluginAdminRoutes",
           ],
         )
       end
