@@ -446,8 +446,6 @@ class ApplicationController < ActionController::Base
       current_user.sync_notification_channel_position
       preload_current_user_data
     end
-
-    preload_additional_json
   end
 
   def set_mobile_view
@@ -669,12 +667,16 @@ class ApplicationController < ActionController::Base
     store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
     store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
 
-    # This is used in the wizard so we can preload fonts using the FontMap JS API.
-    store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
-  end
+    if current_user.admin?
+      # This is used in the wizard so we can preload fonts using the FontMap JS API.
+      store_preloaded("fontMap", MultiJson.dump(load_font_map))
 
-  def preload_additional_json
-    # noop, should be defined by subcontrollers
+      # Used to show plugin-specific admin routes in the sidebar.
+      store_preloaded(
+        "enabledPluginAdminRoutes",
+        MultiJson.dump(Discourse.plugins_sorted_by_name.filter_map(&:admin_route)),
+      )
+    end
   end
 
   def custom_html_json
