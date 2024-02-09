@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Notification from "discourse/models/notification";
@@ -41,7 +42,7 @@ module("Unit | Notification Types | liked", function (hooks) {
     const director = createRenderDirector(
       notification,
       "liked",
-      this.siteSettings
+      getOwner(this).lookup("service:site-settings")
     );
     notification.data.count = 2;
     assert.strictEqual(
