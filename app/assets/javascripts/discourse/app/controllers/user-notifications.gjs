@@ -25,8 +25,8 @@ export default class UserNotificationsController extends Controller {
   @service siteSettings;
 
   @tracked filter = "all";
-queryParams = ["filter"];
 
+  queryParams = ["filter"];
 
   get listContainerClassNames() {
     return `user-notifications-list ${
