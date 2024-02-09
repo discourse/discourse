@@ -249,11 +249,11 @@ export default class ChatMessage extends Component {
   @action
   initMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
-      if (user.isTrackingStatus()) {
+      if (user.statusManager.isTrackingStatus()) {
         return;
       }
 
-      user.trackStatus();
+      user.statusManager.trackStatus();
       user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
@@ -486,7 +486,7 @@ export default class ChatMessage extends Component {
 
   #teardownMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
-      user.stopTrackingStatus();
+      user.statusManager.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
   }
