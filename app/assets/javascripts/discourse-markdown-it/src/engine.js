@@ -187,7 +187,8 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
       options.discourse.previewing &&
       !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
     ) {
-      return `<div class="onebox-placeholder-container">
+      const origSrc = token.attrGet("data-orig-src");
+      return `<div class="onebox-placeholder-container" data-orig-src="${origSrc}">
         <span class="placeholder-icon video"></span>
       </div>`;
     } else {

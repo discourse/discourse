@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
+import { run } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Uppy from "@uppy/core";
 import { isVideo } from "discourse/lib/uploads";
@@ -111,6 +112,32 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
             console.error(message);
             this.uploading = false;
             callback();
+          });
+
+          this._uppyInstance.on("upload-success", (file, response) => {
+            run(() => {
+              if (!this._uppyInstance) {
+                return;
+              }
+              let upload = response.body;
+
+              // Wait for the placeholder to appear, then update it.
+              const checkExist = setInterval(function () {
+                // What if there are multiple?
+                const oneboxContainer = document.querySelector(
+                  ".onebox-placeholder-container"
+                );
+                if (oneboxContainer) {
+                  const thumbnail = new Image();
+                  thumbnail.onload = function () {
+                    oneboxContainer.style.backgroundImage =
+                      "url('" + thumbnail.src + "')";
+                  };
+                  thumbnail.src = upload.url;
+                  clearInterval(checkExist);
+                }
+              }, 100);
+            });
           });
 
           try {
