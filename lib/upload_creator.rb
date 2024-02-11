@@ -301,12 +301,12 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0 && @image_info.type.to_s != "svg"
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
+    elsif max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
           "upload.images.larger_than_x_megapixels",
-          max_image_megapixels: SiteSetting.max_image_megapixels * 2,
+          max_image_megapixels: SiteSetting.max_image_megapixels,
         ),
       )
     end
