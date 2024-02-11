@@ -2132,108 +2132,74 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_permalinks
-    puts "", "Importing permalinks for topics..."
+    puts "", "Importing permalinks..."
 
     rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM topics
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("topic_id IS NOT NULL").pluck(:topic_id).to_set
-
-    create_permalinks(rows) do |row|
-      topic_id = topic_id_from_imported_id(row["id"])
-      next if !topic_id || existing_permalinks.include?(topic_id)
-
-      { url: row["old_relative_url"], topic_id: topic_id }
-    end
-
-    rows.close
-
-    puts "", "Importing permalinks for posts..."
-
-    rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM posts
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("post_id IS NOT NULL").pluck(:post_id).to_set
-
-    create_permalinks(rows) do |row|
-      post_id = post_id_from_imported_id(row["id"])
-      next if !post_id || existing_permalinks.include?(post_id)
-
-      { url: row["old_relative_url"], post_id: post_id }
-    end
-
-    rows.close
-
-    puts "", "Importing permalinks for categories..."
-
-    rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM categories
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("category_id IS NOT NULL").pluck(:category_id).to_set
-
-    create_permalinks(rows) do |row|
-      category_id = category_id_from_imported_id(row["id"])
-      next if !category_id || existing_permalinks.include?(category_id)
-
-      { url: row["old_relative_url"], category_id: category_id }
-    end
-
-    rows.close
-
-    if @tag_mapping
-      puts "", "Importing permalinks for tags..."
-
-      rows = query(<<~SQL)
-        SELECT id, old_relative_url
-          FROM tags
-         WHERE old_relative_url IS NOT NULL
-         ORDER BY id
-      SQL
-
-      existing_permalinks = Permalink.where("tag_id IS NOT NULL").pluck(:tag_id).to_set
-
-      create_permalinks(rows) do |row|
-        tag_id = @tag_mapping[row["id"]]
-        next if !tag_id || existing_permalinks.include?(tag_id)
-
-        { url: row["old_relative_url"], tag_id: tag_id }
-      end
-
-      rows.close
-    else
-      puts "  Skipping import of topic tags because tags have not been imported."
-    end
-
-    puts "", "Importing permalinks for external/relative URLs..."
-
-    rows = query(<<~SQL)
-      SELECT url, external_url
+      SELECT *
         FROM permalinks
-       WHERE external_url IS NOT NULL
        ORDER BY url
     SQL
 
-    existing_permalinks = Permalink.where("external_url IS NOT NULL").pluck(:external_url).to_set
+    existing_permalinks = Permalink.pluck(:url).to_set
+
+    if !@tag_mapping
+      puts "Skipping import of permalinks for tags because tags have not been imported."
+    end
 
     create_permalinks(rows) do |row|
-      next if existing_permalinks.include?(row["external_url"])
+      next if existing_permalinks.include?(row["url"])
 
-      { url: row["url"], external_url: row["external_url"] }
+      if row["topic_id"]
+        topic_id = topic_id_from_imported_id(row["topic_id"])
+        next unless topic_id
+        { url: row["url"], topic_id: topic_id }
+      elsif row["post_id"]
+        post_id = post_id_from_imported_id(row["post_id"])
+        next unless post_id
+        { url: row["url"], post_id: post_id }
+      elsif row["category_id"]
+        category_id = category_id_from_imported_id(row["category_id"])
+        next unless category_id
+        { url: row["url"], category_id: category_id }
+      elsif row["tag_id"]
+        next unless @tag_mapping
+        tag_id = @tag_mapping[row["tag_id"]]
+        next unless tag_id
+        { url: row["url"], tag_id: tag_id }
+      elsif row["external_id"]
+        external_url = calculate_external_url(row)
+        next unless external_url
+        { url: row["url"], external_url: external_url }
+      end
     end
 
     rows.close
+  end
+
+  def calculate_external_url(row)
+    external_url = row["external_url"]
+    placeholders = row["external_url_placeholders"]&.then { |json| JSON.parse(json) }
+    return external_url unless placeholders
+
+    placeholders.each do |placeholder|
+      case placeholder["type"]
+      when "category_url"
+        category_id = category_id_from_imported_id(placeholder["id"])
+        category = Category.find(category_id)
+        external_url.gsub!(
+          placeholder["placeholder"],
+          "c/#{category.slug_path.join("/")}/#{category.id}",
+        )
+      when "tag_name"
+        tag_id = @tag_mapping[placeholder["id"]]
+        tag = Tag.find(tag_id)
+        external_url.gsub!(placeholder["placeholder"], tag.name)
+      else
+        raise "Unknown placeholder type: #{placeholder[:type]}"
+      end
+    end
+
+    external_url
   end
 
   def create_connection(path)
