@@ -112,4 +112,40 @@ RSpec.describe Scheduler::Defer do
 
     expect(s).to eq("good")
   end
+
+  describe "#later" do
+    let!(:ivar) { Concurrent::IVar.new }
+    let!(:responses) { Thread::Queue.new }
+
+    def later(db, current_user, request)
+      @defer.later(nil, db, current_user: current_user) do
+        ivar.value
+        responses.push([db, current_user, request])
+      end
+    end
+
+    it "runs jobs in a fair order" do
+      later("site1", 1, 1)
+      later("site1", 1, 2)
+      later("site1", 2, 3)
+      later("site2", 3, 4)
+      later("site2", 4, 5)
+      later("site2", 4, 6)
+
+      ivar.set(nil)
+
+      result = 6.times.map { responses.shift }
+
+      expect(result).to eq(
+        [
+          ["site1", 1, 1],
+          ["site2", 3, 4],
+          ["site1", 2, 3],
+          ["site2", 4, 5],
+          ["site1", 1, 2],
+          ["site2", 4, 6],
+        ],
+      )
+    end
+  end
 end

@@ -81,7 +81,7 @@ lt:
       optimized_link: Optimizuotos vaizdo nuorodos yra trumpalaikės ir neturėtų būti įtrauktos į temos šaltinio kodą.
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."
-      data_type_not_a_number: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
+      data_type_inclusion: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
       default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės"
       default_not_match_type: "Nustatymas „%{name}“ numatytosios vertės tipas neatitinka nustatymo tipo."

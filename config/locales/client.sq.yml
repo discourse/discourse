@@ -2245,7 +2245,6 @@ sq:
           css: "CSS"
       email:
         title: "Emailat"
-        settings: "Rregullimet"
         templates: "Shabllonet"
         preview_digest: "Parashiko emailin përmbledhës"
         error: "<b>ERROR</b> - %{server_error}"
@@ -2563,7 +2562,6 @@ sq:
             other: "Në %{count} ditët e fundit:"
           value_heading: "Vlera"
           requirement_heading: "Kërkesë"
-          visits: "Vizita"
           days: "ditë"
           topics_replied_to: "Përgjigje në kaq tema"
           topics_viewed: "Tema të shikuara"
@@ -2767,6 +2765,7 @@ sq:
         post_title: "Postim"
         category_id: "ID e kategorisë"
         category_title: "Kategoria"
+        username: "Emri i përdoruesit"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "E Re:"

@@ -81,7 +81,7 @@ ko:
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
       invalid_yaml: "제공된 YAML이 유효하지 않습니다."
-      data_type_not_a_number: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은 `integer` , `bool` , `list` , `enum` 및 `upload` 입니다."
+      data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은 `integer` , `bool` , `list` , `enum` 및 `upload` 입니다."
       name_too_long: "이름이 너무 긴 설정이 있습니다. 최대 길이는 255입니다"
       default_value_missing: "`%{name}` 설정에 디폴트값이 없습니다"
       default_not_match_type: "`%{name}` 디폴트값 유형 설정이 설정 유형과 일치하지 않습니다."

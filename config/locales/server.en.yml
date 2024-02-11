@@ -120,7 +120,7 @@ en:
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
-      data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
+      data_type_inclusion: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"
       default_value_missing: "Setting `%{name}` has no default value"
       default_not_match_type: "Setting `%{name}` default value's type doesn't match with the setting type."
@@ -964,6 +964,12 @@ en:
       title: "Inappropriate"
       description: 'This post contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
+    illegal:
+      title: "It's Illegal"
+      description: "This post requires staff attention because I believe it contains content that is illegal."
+      short_description: "This is illegal"
+      email_title: 'A post in "%{title}" requires staff attention'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send @%{username} a message"
       description: "I want to talk to this person directly and personally about their post."
@@ -1045,6 +1051,12 @@ en:
       long_form: "flagged this for moderator attention"
       short_description: "Requires staff attention for another reason"
       email_title: 'The topic "%{title}" requires moderator attention'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "It's Illegal"
+      description: "This topic requires staff attention because I believe it contains content that is illegal."
+      short_description: "This is illegal"
+      email_title: 'A post in "%{title}" requires staff attention'
       email_body: "%{link}\n\n%{message}"
 
   flagging:
@@ -1968,7 +1980,7 @@ en:
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
-    post_links_allowed_groups: "Groups that are allowed to include links in posts."
+    post_links_allowed_groups: "Groups that are allowed to include links in posts. Admins and moderators are always allowed to post links."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"

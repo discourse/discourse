@@ -80,7 +80,6 @@ module Chat
         .where(chatable_type: Chat::Channel.public_channel_chatable_types)
         .where("chat_channels.id IN (#{allowed_channel_ids})")
         .where("chat_channels.slug IN (:slugs)", slugs: slugs)
-        .limit(1)
     end
 
     def self.secured_public_channel_search(guardian, options = {})

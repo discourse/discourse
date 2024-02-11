@@ -4435,7 +4435,6 @@ hr:
             users:
               bookmarks: Navedite oznake korisnika. Vraća podsjetnike na oznake prilikom korištenja ICS formata.
               sync_sso: Sinkronizirajte korisnika pomoću DiscourseConnect.
-              show: Pribavite informacije o korisniku.
               check_emails: Popis e-adresa korisnika.
               update: Ažurirajte informacije korisničkog profila.
               log_out: Odjavite se sve sesije za korisnika.
@@ -4880,7 +4879,6 @@ hr:
           instructions: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a."
       email:
         title: "E-adrese"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Sažetak pregleda"
         advanced_test:
@@ -5459,7 +5457,6 @@ hr:
             other: "U zadnjih %{count} dana:"
           value_heading: "Vrijednost"
           requirement_heading: "Predispozicija"
-          visits: "Posjeta"
           days: "dana"
           topics_replied_to: "Odgovoreno u teme"
           topics_viewed: "Tema pogledano"
@@ -5742,6 +5739,7 @@ hr:
         category_title: "Kategorija"
         tag_name: "Naziv oznake"
         external_url: "Vanjski ili relativni URL"
+        username: "Korisničko ime"
         destination: "Odredište"
         copy_to_clipboard: "Kopirajte stalnu vezu u međuspremnik"
         delete_confirm: Jeste li sigurni da želite izbrisati ovu stalnu vezu?

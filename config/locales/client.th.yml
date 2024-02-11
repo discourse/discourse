@@ -2726,7 +2726,6 @@ th:
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
       email:
         title: "อีเมล"
-        settings: "การตั้งค่า"
         templates: "รูปแบบ"
         advanced_test:
           email: "ข้อความต้นฉบับ"
@@ -3007,7 +3006,6 @@ th:
             other: "ในช่วง %{count}วันที่ผ่านมา:"
           value_heading: "ค่า"
           requirement_heading: "ความต้องการ"
-          visits: "เยี่ยมชม"
           days: "วัน"
           topics_viewed: "กระทู้ที่ดู"
           posts_read: "โพสต์ที่อ่าน"
@@ -3183,6 +3181,7 @@ th:
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
         tag_name: "ชื่อแท็ก"
+        username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
         form:
           label: "ใหม่:"

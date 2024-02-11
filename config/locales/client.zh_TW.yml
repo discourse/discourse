@@ -3466,7 +3466,6 @@ zh_TW:
           reset: "重設為預設值"
       email:
         title: "電子郵件"
-        settings: "設定"
         templates: "模板"
         preview_digest: "預覽文摘"
         advanced_test:
@@ -3934,7 +3933,6 @@ zh_TW:
             other: "這最近 %{count} 天："
           value_heading: "價值"
           requirement_heading: "要求"
-          visits: "造訪"
           days: "天"
           topics_replied_to: "話題回覆"
           topics_viewed: "已讀話題"
@@ -4173,6 +4171,7 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："

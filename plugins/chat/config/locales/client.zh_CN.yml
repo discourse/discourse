@@ -115,6 +115,7 @@ zh_CN:
         direct_message_cta: "开始个人聊天"
         direct_message: "您还可以与一位或多位用户开始个人聊天。"
         title: "找不到频道"
+        my_threads: "你还没有任何对话。你参与的主题将在此处显示。"
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"

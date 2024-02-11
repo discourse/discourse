@@ -78,7 +78,7 @@ gl:
       optimized_link: As ligazóns de imaxe optimizadas son efémeras e non deberían ser incluídas no código fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML proporcionado non é válido."
-      data_type_not_a_number: "Tipo de axuste `%{name}` non compatible. Os tipos compatibles son `integer`, `bool`, `list`, `enum` e `upload`"
+      data_type_inclusion: "Tipo de axuste `%{name}` non compatible. Os tipos compatibles son `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Hai un axuste cun nome demasiado longo. A lonxitude máxima é de 255 caracteres"
       default_value_missing: "O axuste '%{name}' non ten un valor predefinido"
       default_not_match_type: "O tipo de valor predefinido para o axuste `%{name}` non coincide co tipo de axuste."

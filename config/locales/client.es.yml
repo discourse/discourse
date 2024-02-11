@@ -4636,7 +4636,6 @@ es:
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.
-              show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
               update: Actualizar información del perfil de usuario.
               log_out: Cerrar sesión todas las sesiones del usuario.
@@ -4757,14 +4756,10 @@ es:
           post_liked: "Cuando un usuario le da me gusta a una publicación."
         notification_event:
           group_name: "Eventos de notificación"
-          notification_created: "Un usuario recibe una notificación en su feed"
         group_user_event:
           group_name: "Eventos de usuario de grupo"
-          user_added_to_group: "Se ha añadido un usuario a un grupo"
-          user_removed_from_group: "Se ha eliminado un usuario de un grupo"
         user_promoted_event:
           group_name: "Eventos promovidos por el usuario"
-          user_promoted: "Se ha promocionado a un usuario"
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -5184,7 +5179,6 @@ es:
           instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
         title: "Correos electrónicos"
-        settings: "Ajustes"
         templates: "Plantillas"
         templates_title: "Plantillas de correo electrónico"
         preview_digest: "Vista previa resumen"
@@ -5831,7 +5825,6 @@ es:
             other: "En los últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas en los que ha comentado"
           topics_viewed: "Temas vistos"
@@ -6137,6 +6130,7 @@ es:
         category_title: "Categoría"
         tag_name: "Nombre de la etiqueta"
         external_url: "URL externa o relativa"
+        username: "Nombre de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar enlace permanente al portapapeles"
         delete_confirm: '¿Seguro que quieres eliminar este enlace permanente?'

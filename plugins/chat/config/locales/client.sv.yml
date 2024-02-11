@@ -117,6 +117,7 @@ sv:
         direct_message_cta: "Starta en personlig chatt"
         direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
         title: "Inga kanaler hittades"
+        my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"

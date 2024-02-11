@@ -1308,6 +1308,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
+            "enabledPluginAdminRoutes",
           ],
         )
       end
@@ -1319,6 +1320,11 @@ RSpec.describe ApplicationController do
         expect(font_map.keys).to match_array(
           DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
         )
+      end
+
+      it "has correctly loaded enabledPluginAdminRoutes" do
+        get "/latest"
+        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
       end
     end
   end

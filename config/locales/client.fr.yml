@@ -4637,7 +4637,6 @@ fr:
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
               sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
-              show: Obtenir des informations sur un utilisateur.
               check_emails: Lister les e-mails d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
               log_out: Déconnecter toutes les sessions pour un utilisateur.
@@ -4758,14 +4757,10 @@ fr:
           post_liked: "Lorsqu'un utilisateur attribue un « J'aime »"
         notification_event:
           group_name: "Événements de notification"
-          notification_created: "Un utilisateur reçoit une notification dans son fil"
         group_user_event:
           group_name: "Événements pour les utilisateurs du groupe"
-          user_added_to_group: "Un utilisateur est ajouté à un groupe"
-          user_removed_from_group: "Un utilisateur est supprimé d'un groupe"
         user_promoted_event:
           group_name: "Événements promus par l'utilisateur"
-          user_promoted: "Un utilisateur est promu"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -5185,7 +5180,6 @@ fr:
           instructions: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "E-mails"
-        settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
         preview_digest: "Prévisualisation de l'e-mail"
@@ -5832,7 +5826,6 @@ fr:
             other: "Lors des %{count} derniers jours :"
           value_heading: "Valeur"
           requirement_heading: "Prérequis"
-          visits: "Visites"
           days: "jours"
           topics_replied_to: "Sujets auxquels l'utilisateur a répondu"
           topics_viewed: "Sujets vus"
@@ -6138,6 +6131,7 @@ fr:
         category_title: "Catégorie"
         tag_name: "Nom de l'étiquette"
         external_url: "URL externe ou relative"
+        username: "Nom d'utilisateur"
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
         delete_confirm: Voulez-vous vraiment supprimer ce permalien ?

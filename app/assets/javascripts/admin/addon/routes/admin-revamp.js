@@ -14,12 +14,7 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   activate() {
-    if (
-      !this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
+    if (!this.currentUser.use_admin_sidebar) {
       return DiscourseURL.redirectTo("/admin");
     }
 

@@ -4636,7 +4636,6 @@ fi:
             users:
               bookmarks: Listaa käyttäjien kirjanmerkit. Palauttaa kirjanmerkkien muistutukset, kun käytetään ICS-muotoa.
               sync_sso: Synkronoi käyttäjä DiscourseConnectin avulla.
-              show: Nouda tietoja käyttäjästä.
               check_emails: Listaa käyttäjien sähköpostiosoitteet.
               update: Päivitä käyttäjäprofiilin tiedot.
               log_out: Kirjaa ulos kaikista käyttäjän istunnoista.
@@ -4757,14 +4756,10 @@ fi:
           post_liked: "Kun käyttäjä tykkää viestistä."
         notification_event:
           group_name: "Ilmoitustapahtumat"
-          notification_created: "Käyttäjä saa ilmoituksen syötteeseensä"
         group_user_event:
           group_name: "Ryhmän käyttäjätapahtumat"
-          user_added_to_group: "Käyttäjä lisätään ryhmään"
-          user_removed_from_group: "Käyttäjä poistetaan ryhmästä"
         user_promoted_event:
           group_name: "Käyttäjän ylennustapahtumat"
-          user_promoted: "Käyttäjä ylennetään"
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei aktiivinen"
@@ -5184,7 +5179,6 @@ fi:
           instructions: "Mukauta mallia, jossa kaikki HTML-sähköpostit hahmonnetaan, ja muotoile käyttämällä CSS:ää."
       email:
         title: "Sähköpostit"
-        settings: "Asetukset"
         templates: "Mallit"
         templates_title: "Sähköpostimallit"
         preview_digest: "Esikatsele yhteenveto"
@@ -5831,7 +5825,6 @@ fi:
             other: "Viimeisimpien %{count} päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
-          visits: "Vierailuja"
           days: "päivää"
           topics_replied_to: "Vastatut ketjut"
           topics_viewed: "Avatut ketjut"
@@ -6137,6 +6130,7 @@ fi:
         category_title: "Alue"
         tag_name: "Tunnisteen nimi"
         external_url: "Ulkoinen tai suhteellinen URL-osoite"
+        username: "Käyttäjätunnus"
         destination: "Kohde"
         copy_to_clipboard: "Kopioi pysyvä linkki leikepöydälle"
         delete_confirm: Oletko varma, että haluat poistaa tämän pysyvän linkin?

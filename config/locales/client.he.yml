@@ -1613,6 +1613,9 @@ he:
           description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
           description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
         authorizing_old:
+          title: "אימות כתובת דוא״ל ישנה"
+          description: "נא לאמת את כתובת הדוא״ל הישנה שלך כדי להמשיך ולשנות את כתובת הדוא״ל שלך:"
+          description_add: "נא לאמת את כתובת הדוא״ל הקיימת כדי להמשיך להוסיף כתובת חלופית:"
           old_email: "כתובת דוא״ל ישנה: %{email}"
           new_email: "כתובת דוא״ל חדשה: %{email}"
           confirm_success: "שלחנו הודעה לכתובת הדוא״ל החדשה שלך כדי לאשר את השינוי!"
@@ -5076,7 +5079,7 @@ he:
             users:
               bookmarks: הצגת סימניות המשתמשים. מחזירה תזכורות לסימניות בעת שימוש בתצורת ICS.
               sync_sso: סנכרון משתמש באמצעות DiscourseConnect.
-              show: קבלת מידע על משתמש.
+              show: משיכת מידע על משתמש.
               check_emails: הצגת כתובות הדוא״ל של המשתמשים.
               update: עדכון פרטי פרופיל המשתמש.
               log_out: להוציא משתמש מכל ההפעלות שלו.
@@ -5197,14 +5200,10 @@ he:
           post_liked: "כשמשתמש מצביע לייק בפוסט."
         notification_event:
           group_name: "אירועי התראה"
-          notification_created: "משתמש מקבל התראה בערוץ העדכונים שלו"
         group_user_event:
           group_name: "אירועי משתמש בקבוצה"
-          user_added_to_group: "משתמש נוסף לקבוצה"
-          user_removed_from_group: "משתמש מוסר מקבוצה"
         user_promoted_event:
           group_name: "אירועי קידום משתמש"
-          user_promoted: "משתמש מקודם"
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"
@@ -5630,7 +5629,6 @@ he:
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "הודעות דוא״ל"
-        settings: "הגדרות"
         templates: "תבניות"
         templates_title: "תבניות דוא״ל"
         preview_digest: "תצוגה מקדימה של תמצית"
@@ -6289,7 +6287,6 @@ he:
             other: "ב־%{count} הימים האחרונים:"
           value_heading: "ערך"
           requirement_heading: "דרישה"
-          visits: "ביקורים"
           days: "ימים"
           topics_replied_to: "נושאים להם הגיבו"
           topics_viewed: "נושאים שנצפו"
@@ -6599,6 +6596,7 @@ he:
         category_title: "קטגוריה"
         tag_name: "שם תגית"
         external_url: "כתובת חיצונית או יחסית"
+        username: "שם משתמש"
         destination: "יעד"
         copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: ' להסיר את הקישור הקבוע?'

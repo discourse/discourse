@@ -435,7 +435,7 @@ RSpec.describe "Navigation", type: :system do
         thread.add(current_user)
       end
 
-      it "correctly closes the panel" do
+      it "correctly shows the thread panel" do
         chat_page.visit_thread(thread)
 
         expect(side_panel_page).to have_open_thread(thread)
@@ -443,7 +443,7 @@ RSpec.describe "Navigation", type: :system do
         find("#site-logo").click
         sidebar_component.switch_to_chat
 
-        expect(page).to have_no_css(".chat-side-panel")
+        expect(side_panel_page).to have_open_thread(thread)
       end
     end
   end

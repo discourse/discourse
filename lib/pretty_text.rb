@@ -105,8 +105,8 @@ module PrettyText
 
     Discourse.plugins.each do |plugin|
       Dir
-        .glob("#{plugin.directory}/assets/javascripts/**/discourse-markdown/**/*.js")
-        .filter { |a| File.file?(a) && a.end_with?(".js", ".js.es6") }
+        .glob("#{plugin.directory}/assets/javascripts/**/discourse-markdown/**/*.{js,js.es6}")
+        .filter { |a| File.file?(a) }
         .each do |f|
           module_name =
             f.sub(%r{\A.+assets/javascripts/}, "discourse/plugins/#{plugin.name}/").sub(

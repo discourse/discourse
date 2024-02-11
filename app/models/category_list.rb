@@ -159,7 +159,7 @@ class CategoryList
           .where(parent_category_id: @categories.map { |c| c.id })
 
       @categories +=
-        Category.where(
+        Category.includes(CategoryList.included_associations).where(
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )

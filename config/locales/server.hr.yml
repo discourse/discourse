@@ -84,7 +84,7 @@ hr:
       optimized_link: Optimizirane veze na slike su prolazne i ne bi trebale biti uključene u izvorni kod teme.
     settings_errors:
       invalid_yaml: "Zadani YAML je nevažeći"
-      data_type_not_a_number: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
+      data_type_inclusion: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
       name_too_long: "Postoji postavka s predugim imenom. Najveća dopuštena duljina je 255"
       default_value_missing: "Postavka `%{name}` nema podrazumijevanu vrijednost."
       default_not_match_type: "Tip zadane vrijednosti postavke `%{name}` ne podudara se s postavljenom vrijednošću postavke."

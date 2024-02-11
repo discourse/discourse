@@ -7,6 +7,7 @@ RSpec.describe ThemeField do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     ThemeJavascriptCompiler.disable_terser!
+    SiteSetting.experimental_objects_type_for_theme_settings = true
   end
 
   after { ThemeJavascriptCompiler.enable_terser! }
@@ -385,7 +386,7 @@ HTML
   it "generates errors when invalid type is passed" do
     field = create_yaml_field(get_fixture("invalid"))
     expect(field.error).to include(
-      I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"),
+      I18n.t("#{key}.data_type_inclusion", name: "invalid_type_setting"),
     )
   end
 

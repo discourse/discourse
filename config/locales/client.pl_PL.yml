@@ -1611,6 +1611,7 @@ pl_PL:
           description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
           description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
         authorizing_old:
+          title: "Zweryfikuj stary adres e-mail"
           old_email: "Stary adres e-mail: %{email}"
           new_email: "Nowy adres e-mail: %{email}"
           confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
@@ -2975,6 +2976,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
+        silent: "Wykonaj tę akcję po cichu."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -3007,6 +3009,8 @@ pl_PL:
     topic_bulk_actions:
       close_topics:
         name: "Zamknij tematy"
+      update_category:
+        name: "Aktualizuj kategorię"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5068,7 +5072,6 @@ pl_PL:
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
               sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
-              show: Uzyskaj informacje o użytkowniku.
               check_emails: Lista adresów e-mail użytkowników.
               update: Zaktualizuj informacje o profilu użytkownika.
               log_out: Wyloguj wszystkie sesje użytkownika.
@@ -5189,14 +5192,10 @@ pl_PL:
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
-          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
         group_user_event:
           group_name: "Zdarzenia grupy użytkownika"
-          user_added_to_group: "Użytkownik zostaje dodany do grupy"
-          user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
-          user_promoted: "Użytkownik został awansowany"
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5622,7 +5621,6 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "Emaile"
-        settings: "Ustawienia"
         templates: "Szablony"
         templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -6281,7 +6279,6 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
-          visits: "Odwiedziny"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"
@@ -6591,6 +6588,7 @@ pl_PL:
         category_title: "Kategoria"
         tag_name: "Nazwa tagu"
         external_url: "Zewnętrzny lub względny adres URL"
+        username: "Nazwa użytkownika"
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?

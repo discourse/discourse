@@ -13,12 +13,7 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   activate() {
-    if (
-      this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
+    if (this.currentUser.use_admin_sidebar) {
       this.sidebarState.setPanel(ADMIN_PANEL);
       this.sidebarState.setSeparatedMode();
       this.sidebarState.hideSwitchPanelButtons();
@@ -32,12 +27,7 @@ export default class AdminRoute extends DiscourseRoute {
   deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
 
-    if (
-      this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
+    if (this.currentUser.use_admin_sidebar) {
       if (!transition?.to.name.startsWith("admin")) {
         this.sidebarState.setPanel(MAIN_PANEL);
       }

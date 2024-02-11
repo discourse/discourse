@@ -7,12 +7,9 @@ export default class AdminController extends Controller {
   @service router;
   @service currentUser;
 
-  @discourseComputed("siteSettings.admin_sidebar_enabled_groups")
+  @discourseComputed("currentUser.use_admin_sidebar")
   showAdminSidebar() {
-    return this.siteSettings.userInAnyGroups(
-      "admin_sidebar_enabled_groups",
-      this.currentUser
-    );
+    return this.currentUser.use_admin_sidebar;
   }
 
   @discourseComputed("siteSettings.enable_group_directory")

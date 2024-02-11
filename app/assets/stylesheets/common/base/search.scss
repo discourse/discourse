@@ -245,6 +245,17 @@
   margin-bottom: 1em;
 }
 
+.search-category {
+  .badge-category__wrapper,
+  .discourse-tags {
+    margin-left: 0.5em;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
 .fps-result {
   display: flex;
   padding: 0 0.5em 0 0;

@@ -3923,7 +3923,6 @@ da:
             users:
               bookmarks: Se liste over brugerbogmærker. Der returneres bogmærkepåmindelser, når du bruger ICS-format.
               sync_sso: Synkroniser en bruger ved hjælp af DiscourseConnect.
-              show: Hent oplysninger om en bruger.
               check_emails: Se liste af bruger e-mails.
               update: Opdater brugerprofiloplysninger.
               log_out: Log alle sessioner ud for en bruger.
@@ -4358,7 +4357,6 @@ da:
           instructions: "Tilpas skabelonen, hvorfra alle html-mails dannes, og formater med CSS."
       email:
         title: "Emails"
-        settings: "Indstillinger"
         templates: "Skabeloner"
         preview_digest: "Forhåndsvisning af sammendrag"
         advanced_test:
@@ -4939,7 +4937,6 @@ da:
             other: "I de sidste %{count} dage:"
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
-          visits: "Besøg"
           days: "dage"
           topics_replied_to: "Emner med svar"
           topics_viewed: "Emner åbnet"
@@ -5226,6 +5223,7 @@ da:
         category_title: "Kategori"
         tag_name: "Mærke navn"
         external_url: "Ekstern eller Relativ URL"
+        username: "Brugernavn"
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?

@@ -110,7 +110,7 @@ es:
       optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
       invalid_yaml: "El YAML provisto no es válido."
-      data_type_not_a_number: "Tipo de ajuste «%{name}» no soportado. Los tipos soportados son «integer», «bool», «list», «enum» y «upload»"
+      data_type_inclusion: "Tipo de ajuste «%{name}» no soportado. Los tipos soportados son «integer», «bool», «list», «enum» y «upload»"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
       default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
       default_not_match_type: "El tipo de valor por defecto para el ajuste «%{name}» no coincide con el tipo de ajuste."
