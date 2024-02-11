@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class VersionCheck < ::Jobs::Scheduled
+  class CallDiscourseHub < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)
@@ -27,6 +27,8 @@ module Jobs
           raise e unless Rails.env.development? # Fail version check silently in development mode
         end
       end
+
+      DiscourseHub.discover_enrollment
       true
     end
   end
