@@ -50,6 +50,8 @@ module Chat
     class Contract
       attribute :chat_channel_id, :string
       attribute :in_reply_to_id, :string
+      attribute :topic_id, :integer
+      attribute :post_ids, :array
       attribute :message, :string
       attribute :staged_id, :string
       attribute :upload_ids, :array
@@ -185,11 +187,13 @@ module Chat
 
     def process(channel:, message_instance:, contract:, **)
       ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
+
       DiscourseEvent.trigger(
         :chat_message_created,
         message_instance,
         channel,
         message_instance.user,
+        { context: { post_ids: contract.post_ids, topic_id: contract.topic_id } },
       )
 
       if contract.process_inline
