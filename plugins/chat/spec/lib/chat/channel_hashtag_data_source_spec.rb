@@ -24,6 +24,16 @@ RSpec.describe Chat::ChannelHashtagDataSource do
       messages_count: 78,
     )
   end
+  fab!(:channel3) do
+    Fabricate(
+      :chat_channel,
+      slug: "music",
+      name: "Tunes",
+      chatable: category,
+      description: "A place for music lovers",
+      messages_count: 437,
+    )
+  end
   let!(:guardian) { Guardian.new(user) }
 
   before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
@@ -85,6 +95,31 @@ RSpec.describe Chat::ChannelHashtagDataSource do
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
       expect(described_class.lookup(Guardian.new(user), ["random"])).to be_empty
+    end
+
+    it "can return multiple channels" do
+      expect(described_class.lookup(guardian, %w[music random]).map(&:to_h)).to contain_exactly(
+        {
+          description: "Just weird stuff",
+          icon: "comment",
+          id: channel1.id,
+          ref: nil,
+          relative_url: channel1.relative_url,
+          slug: "random",
+          text: "Zany Things",
+          type: "channel",
+        },
+        {
+          description: "A place for music lovers",
+          icon: "comment",
+          id: channel3.id,
+          ref: nil,
+          relative_url: channel3.relative_url,
+          slug: "music",
+          text: "Tunes",
+          type: "channel",
+        },
+      )
     end
   end
 
