@@ -2166,7 +2166,11 @@ class BulkImport::Generic < BulkImport::Base
         tag_id = @tag_mapping[row["tag_id"]]
         next unless tag_id
         { url: row["url"], tag_id: tag_id }
-      elsif row["external_id"]
+      elsif row["user_id"]
+        user_id = user_id_from_imported_id(row["user_id"])
+        next unless user_id
+        { url: row["url"], user_id: user_id }
+      elsif row["external_url"]
         external_url = calculate_external_url(row)
         next unless external_url
         { url: row["url"], external_url: external_url }
@@ -2191,9 +2195,11 @@ class BulkImport::Generic < BulkImport::Base
           "c/#{category.slug_path.join("/")}/#{category.id}",
         )
       when "tag_name"
-        tag_id = @tag_mapping[placeholder["id"]]
-        tag = Tag.find(tag_id)
-        external_url.gsub!(placeholder["placeholder"], tag.name)
+        if @tag_mapping
+          tag_id = @tag_mapping[placeholder["id"]]
+          tag = Tag.find(tag_id)
+          external_url.gsub!(placeholder["placeholder"], tag.name)
+        end
       else
         raise "Unknown placeholder type: #{placeholder[:type]}"
       end

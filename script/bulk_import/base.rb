@@ -770,6 +770,7 @@ class BulkImport::Base
     post_id
     category_id
     tag_id
+    user_id
     external_url
     created_at
     updated_at
