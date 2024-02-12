@@ -307,6 +307,14 @@ RSpec.describe HashtagAutocompleteService do
     end
   end
 
+  describe "#find_by_ids" do
+    it "can lookup and return only categories" do
+      results = service.find_by_ids({ "category" => [category1.id] })
+
+      expect(results["category"].map { |r| r[:slug] }).to eq(["the-book-club"])
+    end
+  end
+
   describe "#lookup" do
     fab!(:tag2) { Fabricate(:tag, name: "fiction-books") }
 

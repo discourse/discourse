@@ -50,6 +50,49 @@ RSpec.describe Chat::ChannelHashtagDataSource do
     end
   end
 
+  describe "#find_by_ids" do
+    it "finds a channel by ID" do
+      result = described_class.find_by_ids(guardian, [channel1.id]).first
+      expect(result.to_h).to eq(
+        {
+          relative_url: channel1.relative_url,
+          text: "Zany Things",
+          description: "Just weird stuff",
+          colors: [channel1.chatable.color],
+          icon: "comment",
+          id: channel1.id,
+          type: "channel",
+          ref: nil,
+          slug: "random",
+        },
+      )
+    end
+
+    it "does not return a channel that a user does not have permission to view" do
+      result = described_class.find_by_ids(Guardian.new, [channel2.id]).first
+      expect(result).to eq(nil)
+
+      result = described_class.find_by_ids(guardian, [channel2.id]).first
+      expect(result).to eq(nil)
+
+      GroupUser.create(user: user, group: group)
+      result = described_class.find_by_ids(Guardian.new(user), [channel2.id]).first
+      expect(result.to_h).to eq(
+        {
+          relative_url: channel2.relative_url,
+          text: "Secret Stuff",
+          description: nil,
+          colors: [channel2.chatable.color],
+          icon: "comment",
+          id: channel2.id,
+          type: "channel",
+          ref: nil,
+          slug: "secret",
+        },
+      )
+    end
+  end
+
   describe "#lookup" do
     it "finds a channel by a slug" do
       result = described_class.lookup(guardian, ["random"]).first
@@ -58,6 +101,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -78,6 +122,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
           description: nil,
+          colors: [channel2.chatable.color],
           icon: "comment",
           id: channel2.id,
           type: "channel",
@@ -137,6 +182,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -153,6 +199,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -172,6 +219,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
           description: nil,
+          colors: [channel2.chatable.color],
           icon: "comment",
           id: channel2.id,
           type: "channel",

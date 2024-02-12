@@ -228,6 +228,8 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];
         result.icon = hashtagType.generateIconHTML({
+          preloaded: true,
+          colors: result.colors,
           icon: result.icon,
           id: result.id,
         });
