@@ -438,6 +438,7 @@ RSpec.describe UsersController do
 
         before do
           simulate_localhost_webauthn_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by visiting the email login page
           get "/u/password-reset/#{email_token.token}"
@@ -5824,9 +5825,13 @@ RSpec.describe UsersController do
   end
 
   describe "#register_second_factor_security_key" do
+    before do
+      simulate_localhost_webauthn_challenge
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
+
     context "when creation parameters are valid" do
       it "creates a security key for the user" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5841,7 +5846,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow creating too many security keys" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5859,7 +5863,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow the security key name to exceed the limit" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -6076,7 +6079,10 @@ RSpec.describe UsersController do
   end
 
   describe "#register_passkey" do
-    before { SiteSetting.enable_passkeys = true }
+    before do
+      SiteSetting.enable_passkeys = true
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
 
     it "fails if user is not logged in" do
       stub_secure_session_confirmed
@@ -6445,8 +6451,12 @@ RSpec.describe UsersController do
           )
         end
 
-        it "returns a successful response for the correct user" do
+        before do
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
           simulate_localhost_passkey_challenge
+        end
+
+        it "returns a successful response for the correct user" do
           user1.create_or_fetch_secure_identifier
 
           post "/u/confirm-session.json",
@@ -6463,7 +6473,6 @@ RSpec.describe UsersController do
 
         it "returns invalid response when key belongs to a different user" do
           sign_in(user2)
-          simulate_localhost_passkey_challenge
           user2.create_or_fetch_secure_identifier
 
           post "/u/confirm-session.json",
