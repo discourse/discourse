@@ -314,7 +314,15 @@ RSpec.describe Topic do
   describe "slugless_url" do
     fab!(:topic)
 
-    it "includes subfolder install path" do
+    it "returns the correct url" do
+      expect(topic.slugless_url).to eq("/t/#{topic.id}")
+    end
+
+    it "works with post id" do
+      expect(topic.slugless_url(123)).to eq("/t/#{topic.id}/123")
+    end
+
+    it "works with subfolder install" do
       set_subfolder "/forum"
 
       expect(topic.slugless_url).to eq("/forum/t/#{topic.id}")
