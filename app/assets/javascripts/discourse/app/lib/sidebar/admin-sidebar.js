@@ -4,6 +4,7 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n from "discourse-i18n";
 
@@ -109,7 +110,7 @@ export function useAdminNavConfig(navMap) {
       links: [
         {
           name: "back_to_forum",
-          route: "discovery.latest",
+          route: `discovery.${defaultHomepage()}`,
           label: "admin.back_to_forum",
           icon: "arrow-left",
         },

@@ -2,6 +2,7 @@
 
 describe "Admin Revamp | Sidebar Navigation", type: :system do
   fab!(:admin)
+  fab!(:user_option) { Fabricate(:user_option, user: admin) }
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
@@ -22,6 +23,12 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
     expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-nav-section-root")
+  end
+
+  it "respecs the user homepage preference for the Back to Forum link" do
+    admin.user_option.update!(user_homepage: 2) # homepage_id 2 is categories
+    visit("/admin")
+    expect(page).to have_link("Back to Forum", href: "/categories")
   end
 
   context "when on mobile" do
