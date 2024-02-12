@@ -38,7 +38,7 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
     setOwner(this, owner);
   }
 
-  generateVideoThumbnail(videoFile, uploadUrl, callback) {
+  generateVideoThumbnail(videoFile, uploadUrl, shortUrl, callback) {
     if (!this.siteSettings.video_thumbnails_enabled) {
       return callback();
     }
@@ -56,8 +56,12 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
     video.muted = true;
     video.playsinline = true;
 
-    let videoSha1 = uploadUrl
+    const videoSha1 = uploadUrl
       .substring(uploadUrl.lastIndexOf("/") + 1)
+      .split(".")[0];
+
+    const origSrcId = shortUrl
+      .substring(shortUrl.lastIndexOf("/") + 1)
       .split(".")[0];
 
     // Wait for the video element to load, otherwise the canvas will be empty.
@@ -72,87 +76,104 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
       setTimeout(() => {
         ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-        // upload video thumbnail
-        canvas.toBlob((blob) => {
-          this._uppyInstance = new Uppy({
-            id: "video-thumbnail",
-            meta: {
-              videoSha1,
-              upload_type: "thumbnail",
-            },
-            autoProceed: true,
-          });
+        // Detect Empty Thumbnail
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
 
-          if (this.siteSettings.enable_upload_debug_mode) {
-            this._instrumentUploadTimings();
+        let isEmpty = true;
+        for (let i = 0; i < data.length; i += 4) {
+          // Check RGB values
+          if (data[i] !== 0 || data[i + 1] !== 0 || data[i + 2] !== 0) {
+            isEmpty = false;
+            break;
           }
+        }
 
-          if (this.siteSettings.enable_direct_s3_uploads) {
-            this._useS3MultipartUploads();
-          } else {
-            this._useXHRUploads();
-          }
+        if (!isEmpty) {
+          // upload video thumbnail
+          canvas.toBlob((blob) => {
+            this._uppyInstance = new Uppy({
+              id: "video-thumbnail",
+              meta: {
+                videoSha1,
+                upload_type: "thumbnail",
+              },
+              autoProceed: true,
+            });
 
-          this._uppyInstance.on("upload", () => {
-            this.uploading = true;
-          });
-
-          this._uppyInstance.on("upload-success", () => {
-            this.uploading = false;
-            callback();
-          });
-
-          this._uppyInstance.on("upload-error", (file, error, response) => {
-            let message = I18n.t("wizard.upload_error");
-            if (response.body.errors) {
-              message = response.body.errors.join("\n");
+            if (this.siteSettings.enable_upload_debug_mode) {
+              this._instrumentUploadTimings();
             }
 
-            // eslint-disable-next-line no-console
-            console.error(message);
-            this.uploading = false;
-            callback();
-          });
+            if (this.siteSettings.enable_direct_s3_uploads) {
+              this._useS3MultipartUploads();
+            } else {
+              this._useXHRUploads();
+            }
 
-          this._uppyInstance.on("upload-success", (file, response) => {
-            run(() => {
-              if (!this._uppyInstance) {
-                return;
+            this._uppyInstance.on("upload", () => {
+              this.uploading = true;
+            });
+
+            this._uppyInstance.on("upload-success", () => {
+              this.uploading = false;
+              callback();
+            });
+
+            this._uppyInstance.on("upload-error", (file, error, response) => {
+              let message = I18n.t("wizard.upload_error");
+              if (response.body.errors) {
+                message = response.body.errors.join("\n");
               }
-              let upload = response.body;
 
-              // Wait for the placeholder to appear, then update it.
-              const checkExist = setInterval(function () {
-                // What if there are multiple?
-                const oneboxContainer = document.querySelector(
-                  ".onebox-placeholder-container"
-                );
-                if (oneboxContainer) {
-                  const thumbnail = new Image();
-                  thumbnail.onload = function () {
-                    oneboxContainer.style.backgroundImage =
-                      "url('" + thumbnail.src + "')";
-                  };
-                  thumbnail.src = upload.url;
-                  clearInterval(checkExist);
+              // eslint-disable-next-line no-console
+              console.error(message);
+              this.uploading = false;
+              callback();
+            });
+
+            this._uppyInstance.on("upload-success", (file, response) => {
+              run(() => {
+                if (!this._uppyInstance) {
+                  return;
                 }
-              }, 100);
-            });
-          });
+                let upload = response.body;
 
-          try {
-            this._uppyInstance.addFile({
-              source: `${this.id}-video-thumbnail`,
-              name: `${videoSha1}`,
-              type: blob.type,
-              data: blob,
+                // Wait for the placeholder to appear, then update it.
+                const checkExist = setInterval(function () {
+                  const oneboxContainer = document.querySelector(
+                    `.onebox-placeholder-container[data-orig-src-id="${origSrcId}"]`
+                  );
+                  if (oneboxContainer) {
+                    const thumbnail = new Image();
+                    thumbnail.onload = function () {
+                      oneboxContainer.style.backgroundImage =
+                        "url('" + thumbnail.src + "')";
+                    };
+                    thumbnail.src = upload.url;
+                    clearInterval(checkExist);
+                  }
+                }, 100);
+              });
             });
-          } catch (err) {
-            warn(`error adding files to uppy: ${err}`, {
-              id: "discourse.upload.uppy-add-files-error",
-            });
-          }
-        });
+
+            try {
+              this._uppyInstance.addFile({
+                source: `${this.id}-video-thumbnail`,
+                name: `${videoSha1}`,
+                type: blob.type,
+                data: blob,
+              });
+            } catch (err) {
+              warn(`error adding files to uppy: ${err}`, {
+                id: "discourse.upload.uppy-add-files-error",
+              });
+            }
+          });
+        } else {
+          this.uploading = false;
+          callback();
+        }
       }, 100);
     };
   }

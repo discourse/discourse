@@ -335,6 +335,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
           file,
           upload.url,
+          upload.short_url,
           () => {
             if (this.useUploadPlaceholders) {
               this.appEvents.trigger(
