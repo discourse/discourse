@@ -147,6 +147,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
         {
           description: "Just weird stuff",
           icon: "comment",
+          colors: [category.color],
           id: channel1.id,
           ref: nil,
           relative_url: channel1.relative_url,
@@ -157,6 +158,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
         {
           description: "A place for music lovers",
           icon: "comment",
+          colors: [category.color],
           id: channel3.id,
           ref: nil,
           relative_url: channel3.relative_url,
