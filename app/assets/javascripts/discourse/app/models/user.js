@@ -172,7 +172,6 @@ function userOption(userOptionKey) {
 
 export default class User extends RestModel.extend(Evented) {
   @service appEvents;
-
   @service userTips;
 
   @userOption("mailing_list_mode") mailing_list_mode;
