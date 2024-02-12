@@ -28,7 +28,7 @@ module Jobs
         end
       end
 
-      DiscourseHub.discover_enrollment
+      DiscourseHub.discover_enrollment if SiteSetting.include_in_discourse_discover?
       true
     end
   end
