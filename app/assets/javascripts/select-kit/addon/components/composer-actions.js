@@ -137,6 +137,7 @@ export default DropdownSelectBoxComponent.extend({
       this.topic &&
       !this.topic.isPrivateMessage &&
       !this.isEditing &&
+      this.currentUser.can_create_topic &&
       _topicSnapshot
     ) {
       items.push({
@@ -222,7 +223,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    if (items.length === 0) {
+    if (items.length === 0 && this.currentUser.can_create_topic) {
       items.push({
         name: I18n.t("composer.composer_actions.create_topic.label"),
         description: I18n.t("composer.composer_actions.create_topic.desc"),
