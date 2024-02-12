@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
 import {
+  addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
@@ -138,7 +139,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import { addImageControlExtraMarkup } from "discourse-markdown-it/features/image-controls";
+import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -2700,16 +2701,23 @@ class PluginApi {
   }
 
   /**
-   * Add custom markup to the composer preview's image wrapper
+   * Adds a custom button to the composer preview's image wrapper
    *
    *
    * ```
-   * api.addImageWrapperExtraMarkup(`<span class="my-custom-button">My Button</span>`, ["my-custom-button"]);
+   * api.addComposerImageWrapperButton(
+   *   "My Custom Button",
+   *   "custom-button-class"
+   *   "lock"
+   *   (event) => { console.log("Custom button clicked", event)
+   * });
+   *
    * ```
    *
    */
-  addImageWrapperExtraMarkup(markup, allowList) {
-    addImageControlExtraMarkup(markup, allowList);
+  addComposerImageWrapperButton(label, btnClass, icon, fn) {
+    addImageWrapperButton(label, btnClass, icon);
+    addApiImageWrapperButtonClickEvent(fn);
   }
 }
 

@@ -2,11 +2,28 @@ import I18n from "discourse-i18n";
 
 const SCALES = ["100", "75", "50"];
 
-let apiExtraMarkup = [];
-let apiExtraMarkupAllowList = [];
-export function addImageControlExtraMarkup(markup, allowList) {
-  apiExtraMarkup.push(markup);
-  apiExtraMarkupAllowList.push(allowList);
+let apiExtraButton = [];
+let apiExtraButtonAllowList = [];
+
+export function addImageWrapperButton(label, btnClass, icon = null) {
+  const markup = [];
+  markup.push(`<span class="${btnClass}">`);
+  if (icon) {
+    markup.push(`
+      <svg class="fa d-icon d-icon-${icon} svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+        <use href="#${icon}"></use>
+      </svg>
+    `);
+  }
+  markup.push(label);
+  markup.push("</span>");
+
+  apiExtraButton.push(markup.join(""));
+  apiExtraButtonAllowList.push(`span.${btnClass}`);
+  apiExtraButtonAllowList.push(
+    `svg[class=fa d-icon d-icon-${icon} svg-icon svg-string]`
+  );
+  apiExtraButtonAllowList.push(`use[href=#${icon}]`);
 }
 
 function isUpload(token) {
@@ -163,7 +180,8 @@ function ruleWithImageControls(oldRule) {
       ).join("");
       result += `</span>`;
       result += buildImageDeleteButton();
-      result += apiExtraMarkup.join("");
+
+      result += apiExtraButton.join("");
 
       result += "</span></span>";
 
@@ -214,7 +232,7 @@ export function setup(helper) {
       "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
       "use[href=#th]",
 
-      ...apiExtraMarkupAllowList,
+      ...apiExtraButtonAllowList,
     ]);
 
     helper.registerPlugin((md) => {

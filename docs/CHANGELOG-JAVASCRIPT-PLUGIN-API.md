@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.25.0] - 2024-02-05
 
-- Added `addImageWrapperExtraMarkup` which is used to add any additional markup, such as a button to the composer's image preview wrapper.
+- Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper that appears on hover of an uploaded image.
 
 ## [1.24.0] - 2024-01-08
 
