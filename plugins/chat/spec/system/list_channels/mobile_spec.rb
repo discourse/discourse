@@ -77,7 +77,6 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
           created_at: 5.minutes.ago,
           use_service: true,
         )
-
         Fabricate(
           :chat_message_with_service,
           chat_channel: channel_4,
@@ -85,15 +84,15 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
           user: Fabricate(:user),
         )
 
-        # channel 3 has most recent message but it's not unread for current_user
         Fabricate(:chat_message, chat_channel: channel_3, user: current_user, use_service: true)
 
         visit("/chat/channels")
 
-        # both channels have unread messages, so they're sorted by last message date
+        # channel with mentions should be first
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_4.id.to_s,
         )
+        # channels with unread messages are next, sorted by title
         expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_1.id.to_s,
         )
