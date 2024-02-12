@@ -2194,6 +2194,10 @@ class BulkImport::Generic < BulkImport::Base
           placeholder["placeholder"],
           "c/#{category.slug_path.join("/")}/#{category.id}",
         )
+      when "category_slug_ref"
+        category_id = category_id_from_imported_id(placeholder["id"])
+        category = Category.find(category_id)
+        external_url.gsub!(placeholder["placeholder"], category.slug_ref)
       when "tag_name"
         if @tag_mapping
           tag_id = @tag_mapping[placeholder["id"]]
