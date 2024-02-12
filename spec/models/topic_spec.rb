@@ -311,6 +311,16 @@ RSpec.describe Topic do
     end
   end
 
+  describe "slugless_url" do
+    fab!(:topic)
+
+    it "includes subfolder install path" do
+      set_subfolder "/forum"
+
+      expect(topic.slugless_url).to eq("/forum/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
