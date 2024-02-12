@@ -57,6 +57,16 @@ export default Component.extend({
     this.renderTopicListItem();
   },
 
+  // Already-rendered topic is marked as highlighted
+  // Ideally this should be a modifier... but we can't do that
+  // until this component has its tagName removed.
+  @observes("topic.highlight")
+  topicHighlightChanged() {
+    if (this.topic.highlight) {
+      this._highlightIfNeeded();
+    }
+  },
+
   @observes("topic.pinned", "expandGloballyPinned", "expandAllPinned")
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
