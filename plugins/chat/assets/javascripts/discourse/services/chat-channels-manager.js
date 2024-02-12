@@ -127,7 +127,7 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get directMessageChannels() {
-    return this.#sortChannelsByActivity(
+    return this.#sortDirectMessageChannels(
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership.following;
@@ -183,6 +183,27 @@ export default class ChatChannelsManager extends Service {
       }
 
       return a.title?.localeCompare?.(b.title);
+    });
+  }
+
+  #sortDirectMessageChannels(channels) {
+    return channels.sort((a, b) => {
+      if (!a.lastMessage.id) {
+        return 1;
+      }
+
+      if (!b.lastMessage.id) {
+        return -1;
+      }
+
+      if (a.tracking.unreadCount === b.tracking.unreadCount) {
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
+          ? -1
+          : 1;
+      } else {
+        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
+      }
     });
   }
 }
