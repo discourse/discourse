@@ -1406,10 +1406,10 @@
   dependencies:
     "@floating-ui/utils" "^0.2.1"
 
-"@floating-ui/dom@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.2.tgz#08eb5dd8da69582eeff26144f366b96f131fbd18"
-  integrity sha512-xymkSSowKdGqo0SRr2Mp4czH5A8o2Pum35PAD0ftb3gCcPacWzwhvtUeUqmVXm9EVtm2hThD/lRrFNcahMOaSQ==
+"@floating-ui/dom@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.3.tgz#954e46c1dd3ad48e49db9ada7218b0985cee75ef"
+  integrity sha512-RnDthu3mzPlQ31Ss/BTwQ1zjzIhr3lk1gZB1OC56h/1vEtaXkESrOqL5fQVMfXpwGtRwX+YsZBdyHtJMQnkArw==
   dependencies:
     "@floating-ui/core" "^1.0.0"
     "@floating-ui/utils" "^0.2.0"
