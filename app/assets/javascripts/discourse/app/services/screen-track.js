@@ -33,7 +33,7 @@ export default class ScreenTrack extends Service {
   _lastScrolled = null;
   _lastFlush = 0;
   _timings = new Map();
-  _totalTimings = {};
+  _totalTimings = new Map();
   _topicTime = 0;
   _onscreen = null;
   _readOnscreen = null;
@@ -98,7 +98,7 @@ export default class ScreenTrack extends Service {
     this._lastScrolled = now;
     this._lastFlush = 0;
     this._timings.clear();
-    this._totalTimings = {};
+    this._totalTimings.clear();
     this._topicTime = 0;
     this._onscreen = null;
     this._readOnscreen = null;
@@ -235,10 +235,13 @@ export default class ScreenTrack extends Service {
     const newTimings = {};
 
     for (const [postNumber, time] of this._timings) {
-      this._totalTimings[postNumber] ??= 0;
+      if (!this._totalTimings.has(postNumber)) {
+        this._totalTimings.set(postNumber, 0);
+      }
 
-      if (time > 0 && this._totalTimings[postNumber] < MAX_TRACKING_TIME) {
-        this._totalTimings[postNumber] += time;
+      const totalTiming = this._totalTimings.get(postNumber);
+      if (time > 0 && totalTiming < MAX_TRACKING_TIME) {
+        this._totalTimings.set(postNumber, totalTiming + time);
         newTimings[postNumber] = time;
       }
 
@@ -341,7 +344,7 @@ export default class ScreenTrack extends Service {
     const rush = this._timings.keys().some((postNumber) => {
       return (
         this._timings.get(postNumber) > 0 &&
-        !this._totalTimings[postNumber] &&
+        !this._totalTimings.get(postNumber) &&
         !this._readPosts.has(postNumber)
       );
     });
