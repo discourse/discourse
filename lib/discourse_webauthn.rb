@@ -92,10 +92,8 @@ module DiscourseWebauthn
       # you might need to change this and the rp_id above
       # if you are using a non-default port/hostname locally
       "http://localhost:4200"
-    when "test"
-      "http://localhost:3000"
     else
-      Discourse.base_url
+      Discourse.base_url_no_prefix
     end
   end
 

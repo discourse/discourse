@@ -2339,7 +2339,6 @@ developer:
     hidden: true
     client: true
   admin_sidebar_enabled_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""

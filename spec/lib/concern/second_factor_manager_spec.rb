@@ -183,6 +183,7 @@ RSpec.describe SecondFactorManager do
         disable_totp
         simulate_localhost_webauthn_challenge
         DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
       context "when security key params are valid" do
@@ -265,6 +266,7 @@ RSpec.describe SecondFactorManager do
       before do
         simulate_localhost_webauthn_challenge
         DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
       context "when method selected is invalid" do

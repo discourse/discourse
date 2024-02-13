@@ -63,7 +63,10 @@ function _findAndReplaceSeenHashtagPlaceholder(
     // Replace raw span for the hashtag with a cooked one
     const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
-      generatePlaceholderHashtagHTML(type, hashtagSpan, matchingSeenHashtag);
+      generatePlaceholderHashtagHTML(type, hashtagSpan, {
+        preloaded: true,
+        ...matchingSeenHashtag,
+      });
     }
   });
 }

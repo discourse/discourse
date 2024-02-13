@@ -20,10 +20,21 @@ module Chat
         item.description = channel.description
         item.slug = channel.slug
         item.icon = icon
+        item.colors = [channel.category.color] if channel.category_channel?
         item.relative_url = channel.relative_url
         item.type = "channel"
         item.id = channel.id
       end
+    end
+
+    def self.find_by_ids(guardian, ids)
+      allowed_channel_ids_sql =
+        Chat::ChannelFetcher.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+
+      Chat::Channel
+        .where(id: ids)
+        .where("id IN (#{allowed_channel_ids_sql})")
+        .map { |channel| channel_to_hashtag_item(guardian, channel) }
     end
 
     def self.lookup(guardian, slugs)

@@ -1207,6 +1207,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#lookup"
+    get "hashtags/by-ids" => "hashtags#by_ids"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
