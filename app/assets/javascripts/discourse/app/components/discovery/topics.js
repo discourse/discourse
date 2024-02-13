@@ -105,6 +105,11 @@ export default class DiscoveryTopics extends Component {
   @action
   async showInserted(event) {
     event?.preventDefault();
+
+    if (this.args.model.loadingBefore) {
+      return; // Already loading
+    }
+
     const { topicTrackingState } = this;
 
     try {
