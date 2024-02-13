@@ -3011,6 +3011,7 @@ pl_PL:
         name: "Zamknij tematy"
       update_category:
         name: "Aktualizuj kategorię"
+        description: "Wybierz nową kategorię dla wybranych tematów"
     topic:
       filter_to:
         one: "%{count} post w temacie"

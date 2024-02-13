@@ -1021,6 +1021,7 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
+      account_possessive: "%{name}'in hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -1462,6 +1463,9 @@ tr_TR:
           description: "Lütfen e-posta adresinizin şu şekilde değiştirilmesini istediğinizi onaylayın:"
           description_add: "Lütfen alternatif bir e-posta adresi eklemek istediğinizi onaylayın:"
         authorizing_old:
+          title: "Eski e-posta adresini doğrulayın"
+          description: "E-postanızı değiştirmeye devam etmek için lütfen eski e-posta adresinizi doğrulayın:"
+          description_add: "Alternatif bir adres eklemeye devam etmek için lütfen mevcut e-posta adresinizi doğrulayın:"
           old_email: "Eski e-posta: %{email}"
           new_email: "Yeni e-posta: %{email}"
           confirm_success: "Değişikliği onaylamak için yeni e-posta adresinize bir e-posta gönderdik!"
@@ -2143,7 +2147,7 @@ tr_TR:
         one: "En az %{count} öge seçin."
         other: "En az %{count} öge seçin."
       components:
-        filter_for_more: Daha fazlası için filtreleyin…
+        filter_for_more: Daha fazlası için filtrele…
         categories_admin_dropdown:
           title: "Kategorileri yönetin"
         bulk_select_topics_dropdown:
@@ -2716,6 +2720,7 @@ tr_TR:
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
+        silent: "Bu eylemi sessizce gerçekleştirin."
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -2726,6 +2731,7 @@ tr_TR:
         bookmarks: "Henüz hiçbir konuya yer imi eklemediniz."
         category: "%{category} konusu yok."
         top: "Popüler konu yok."
+        hot: "Popüler bir konu bulunmuyor."
         filter: "Konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
@@ -2741,11 +2747,15 @@ tr_TR:
         category: "Başka %{category} konusu yok."
         tag: "Başka %{tag} konusu yok."
         top: "Başka popüler konu yok."
+        hot: "Daha fazla popüler konu yok."
         bookmarks: "Başka yer imli konu yok."
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
       close_topics:
         name: "Konuları Kapat"
+      update_category:
+        name: "Kategoriyi Güncelle"
+        description: "Seçilen konular için yeni kategoriyi seçin"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3747,6 +3757,10 @@ tr_TR:
         title: "Görülmemiş"
         lower_title: "görülmemiş"
         help: "yeni konular ve şu anda izlediğiniz veya okunmamış gönderilerle takip ettiğiniz konular"
+      hot:
+        title: "Popüler"
+        lower_title: "popüler"
+        help: "en yeni konular"
       new:
         lower_title_with_count:
           one: "%{count} yeni"

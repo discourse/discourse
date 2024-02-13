@@ -1534,6 +1534,7 @@ pl_PL:
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
     category_style_deprecated: "Twój Discourse używa obecnie przestarzałego stylu kategorii, który zostanie usunięty przed ostateczną wersją beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a>."
+    ember_version_warning: "Twoja witryna działa z nieobsługiwaną konfiguracją EMBER_VERSION=3. Może to prowadzić do nieoczekiwanych problemów z motywami/wtyczkami. Usuń konfigurację EMBER_VERSION z pliku app.yml i zrób rebuild Discourse. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"

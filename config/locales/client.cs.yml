@@ -1059,6 +1059,7 @@ cs:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil uživatele %{username}"
+      account_possessive: "Účet uživatele %{name}"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive:
