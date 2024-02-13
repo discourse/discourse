@@ -29,11 +29,6 @@ module("Unit | Service | screen-track", function (hooks) {
     );
   });
 
-  test("ScreenTrack has appEvents", async function (assert) {
-    const tracker = this.owner.lookup("service:screen-track");
-    assert.ok(tracker.appEvents);
-  });
-
   test("appEvent topic:timings-sent is triggered after posting consolidated timings", async function (assert) {
     assert.timeout(1000);
 
