@@ -35,7 +35,7 @@ export default class ScreenTrack extends Service {
   _timings = {};
   _totalTimings = {};
   _topicTime = 0;
-  _onscreen = [];
+  _onscreen = null;
   _readOnscreen = null;
   _readPosts = new Set();
   _inProgress = false;
@@ -100,7 +100,7 @@ export default class ScreenTrack extends Service {
     this._timings = {};
     this._totalTimings = {};
     this._topicTime = 0;
-    this._onscreen = [];
+    this._onscreen = null;
     this._readOnscreen = null;
     this._readPosts.clear();
     this._inProgress = false;
@@ -358,7 +358,7 @@ export default class ScreenTrack extends Service {
     if (this.session.hasFocus) {
       this._topicTime += diff;
 
-      this._onscreen.forEach(
+      this._onscreen?.forEach(
         (postNumber) =>
           (this._timings[postNumber] = (this._timings[postNumber] || 0) + diff)
       );

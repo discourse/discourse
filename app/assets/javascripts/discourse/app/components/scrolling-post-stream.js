@@ -252,7 +252,7 @@ export default MountWidget.extend({
       this._currentPercent = null;
     }
 
-    const onscreenPostNumbers = [];
+    const onscreenPostNumbers = new Set();
     const readPostNumbers = new Set();
 
     const prev = this._previouslyNearby;
@@ -264,7 +264,7 @@ export default MountWidget.extend({
       delete prev[postNumber];
 
       if (onscreen.includes(idx)) {
-        onscreenPostNumbers.push(postNumber);
+        onscreenPostNumbers.add(postNumber);
         if (post.read) {
           readPostNumbers.add(postNumber);
         }
