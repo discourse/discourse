@@ -253,7 +253,7 @@ export default MountWidget.extend({
     }
 
     const onscreenPostNumbers = [];
-    const readPostNumbers = [];
+    const readPostNumbers = new Set();
 
     const prev = this._previouslyNearby;
     const newPrev = {};
@@ -266,7 +266,7 @@ export default MountWidget.extend({
       if (onscreen.includes(idx)) {
         onscreenPostNumbers.push(postNumber);
         if (post.read) {
-          readPostNumbers.push(postNumber);
+          readPostNumbers.add(postNumber);
         }
       }
       newPrev[postNumber] = post;
