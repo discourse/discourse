@@ -120,7 +120,7 @@ export default class ChatChannelsManager extends Service {
     if (this.site.mobileView) {
       return this.#sortChannelsByActivity(channels);
     } else {
-      return channels.sort((a, b) => a?.title?.localeCompare?.(b?.title));
+      return channels.sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
     }
   }
 
@@ -161,27 +161,27 @@ export default class ChatChannelsManager extends Service {
 
   #sortChannelsByActivity(channels) {
     return channels.sort((a, b) => {
-      // if both channels have mention count, sort by aplhabetical order
+      // if both channels have mention count, sort by slug
       // otherwise prioritize channel with mention count
       if (a.tracking.mentionCount > 0 && b.tracking.mentionCount > 0) {
-        return a.title?.localeCompare?.(b.title);
+        return a.slug?.localeCompare?.(b.slug);
       }
 
       if (a.tracking.mentionCount > 0 || b.tracking.mentionCount > 0) {
         return a.tracking.mentionCount > b.tracking.mentionCount ? -1 : 1;
       }
 
-      // if both channels have unread count, sort by aplhabetical order
+      // if both channels have unread count, sort by slug
       // otherwise prioritize channel with unread count
       if (a.tracking.unreadCount > 0 && b.tracking.unreadCount > 0) {
-        return a.title?.localeCompare?.(b.title);
+        return a.slug?.localeCompare?.(b.slug);
       }
 
       if (a.tracking.unreadCount > 0 || b.tracking.unreadCount > 0) {
         return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
       }
 
-      return a.title?.localeCompare?.(b.title);
+      return a.slug?.localeCompare?.(b.slug);
     });
   }
 
