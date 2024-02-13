@@ -116,7 +116,7 @@ RSpec.describe Chat::CreateMessage do
             instance_of(Chat::Message),
             channel,
             user,
-            { context: { post_ids: post_ids, topic_id: topic_id } },
+            { context: { post_ids: context_post_ids, topic_id: context_topic_id } },
           )
 
           result
