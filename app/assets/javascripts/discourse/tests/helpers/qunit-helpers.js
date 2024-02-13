@@ -344,7 +344,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().trackStatus();
+        User.current().statusManager.trackStatus();
       }
 
       if (settingChanges) {
@@ -372,7 +372,7 @@ export function acceptance(name, optionsOrCallback) {
       let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
-        User.current().stopTrackingStatus();
+        User.current().statusManager.stopTrackingStatus();
       }
       testCleanup(this.container, app);
 

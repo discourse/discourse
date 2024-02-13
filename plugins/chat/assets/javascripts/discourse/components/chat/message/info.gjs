@@ -20,12 +20,12 @@ export default class ChatMessageInfo extends Component {
 
   @bind
   trackStatus() {
-    this.#user?.trackStatus?.();
+    this.#user?.statusManager.trackStatus();
   }
 
   @bind
   stopTrackingStatus() {
-    this.#user?.stopTrackingStatus?.();
+    this.#user?.statusManager.stopTrackingStatus();
   }
 
   get usernameClasses() {
