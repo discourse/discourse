@@ -236,8 +236,7 @@ export default class ScreenTrack extends Service {
   flush() {
     const newTimings = {};
 
-    Object.keys(this._timings).forEach((postNumber) => {
-      const time = this._timings[postNumber];
+    for (const [postNumber, time] of Object.entries(this._timings)) {
       this._totalTimings[postNumber] ??= 0;
 
       if (time > 0 && this._totalTimings[postNumber] < MAX_TRACKING_TIME) {
@@ -246,10 +245,9 @@ export default class ScreenTrack extends Service {
       }
 
       this._timings[postNumber] = 0;
-    });
+    }
 
     const topicId = parseInt(this._topicId, 10);
-    let highestSeen = 0;
 
     // Workaround to avoid ignored posts being "stuck unread"
     const stream = this._topicController?.get("model.postStream");
@@ -273,10 +271,9 @@ export default class ScreenTrack extends Service {
       ] = 1;
     }
 
-    const newTimingsKeys = Object.keys(newTimings);
-    newTimingsKeys.forEach((postNumber) => {
-      highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
-    });
+    const highestSeen = Object.keys(newTimings)
+      .map((postNumber) => parseInt(postNumber, 10))
+      .reduce((a, b) => Math.max(a, b), 0);
 
     const highestSeenByTopic = this.session.get("highestSeenByTopic");
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
@@ -285,7 +282,7 @@ export default class ScreenTrack extends Service {
 
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
-    if (newTimingsKeys.length > 0) {
+    if (highestSeen > 0) {
       if (this.currentUser) {
         this.consolidateTimings(newTimings, this._topicTime, topicId);
 
