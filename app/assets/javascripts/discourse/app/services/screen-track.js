@@ -131,10 +131,9 @@ export default class ScreenTrack extends Service {
         this._consolidatedTimings[lastIndex - 1] = last;
       }
 
-      const oldTimings = found.timings;
-      Object.keys(oldTimings).forEach((id) => {
+      Object.keys(found.timings).forEach((id) => {
         if (timings[id]) {
-          oldTimings[id] += timings[id];
+          found.timings[id] += timings[id];
         }
       });
       found.topicTime += topicTime;
