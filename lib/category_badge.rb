@@ -91,6 +91,6 @@ module CategoryBadge
     result << ERB::Util.html_escape(category.name)
     result << "</span></span>"
 
-    wrap_in_link(result, data[:category_url], "")
+    wrap_in_link(result, data[:category_url])
   end
 end
