@@ -10,7 +10,7 @@
 >
   <:body>
     <div class="bookmark-context">
-      <div class="bookmark-context-user-avatar">
+      <div class="bookmark-context__user-avatar">
         <div
           role="button"
           class="clickable"
@@ -19,10 +19,17 @@
           {{avatar @model.context imageSize="small"}}
         </div>
 
-        <span>{{@model.context.user.username}}</span>
+        <span
+          class="bookmark-context__username"
+        >{{@model.context.user.username}}</span>
+
+        {{#if @model.contextTitle}}
+          <span class="bookmark-context__title">{{@model.contextTitle}}</span>
+        {{/if}}
       </div>
 
-      <div class="bookmark-context-excerpt">{{html-safe this.excerpt}}</div>
+      {{! TODO (martin) We need to decorate the #hashtags here so they get their colours }}
+      <div class="bookmark-context__excerpt">{{html-safe this.excerpt}}</div>
     </div>
 
     <div class="control-group bookmark-name-wrap">
@@ -73,7 +80,7 @@
   <:footer>
     <DButton
       id="save-bookmark"
-      @label={{i18n "bookmarks.bookmark"}}
+      @label="bookmarked.title"
       class="btn-primary"
       @action={{this.saveAndClose}}
     />

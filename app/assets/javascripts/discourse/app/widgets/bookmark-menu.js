@@ -4,5 +4,5 @@ import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 registerWidgetShim(
   "bookmark-menu-shim",
   "div.bookmark-menu-shim",
-  hbs`<BookmarkMenu @post={{@data}} />`
+  hbs`<BookmarkMenu @bookmarkManager={{@data.bookmarkManager}} />`
 );

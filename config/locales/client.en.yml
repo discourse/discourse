@@ -350,6 +350,7 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
+      also_set_reminder: "Also set a reminder?"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"

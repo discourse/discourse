@@ -1,23 +1,17 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { inject as controller } from "@ember/controller";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import {
-  CLOSE_INITIATED_BY_BUTTON,
-  CLOSE_INITIATED_BY_ESC,
-} from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import Bookmark from "discourse/models/bookmark";
 import dIcon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import DMenu from "float-kit/components/d-menu";
 import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
 
@@ -25,8 +19,7 @@ export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
 
-  @controller("topic") topicController;
-
+  bookmarkManager = this.args.bookmarkManager;
   timeShortcuts = timeShortcuts(this.currentUser.timezone || moment.tz.guess());
 
   reminderAtOptions = [
@@ -37,11 +30,9 @@ export default class BookmarkMenu extends Component {
   ];
 
   get existingBookmark() {
-    return this.topicController.model.bookmarks.find(
-      (bookmark) =>
-        bookmark.bookmarkable_id === this.args.post.id &&
-        bookmark.bookmarkable_type === "Post"
-    );
+    return this.bookmarkManager.bookmark.id
+      ? this.bookmarkManager.bookmark
+      : null;
   }
 
   @action
@@ -82,12 +73,7 @@ export default class BookmarkMenu extends Component {
   }
 
   _openBookmarkModal() {
-    // TODO (martin) This will need to be changed when using the bookmark menu
-    // with chat.
-    const post = this.args.post;
-    const bookmark =
-      this.existingBookmark ||
-      Bookmark.createFor(this.currentUser, "Post", post.id);
+    const bookmark = this.bookmarkManager.bookmark;
 
     // TODO (martin) Really all this needs to be redone/cleaned up, it's only
     // here to launch the new modal so it can be seen.
@@ -95,34 +81,20 @@ export default class BookmarkMenu extends Component {
       .show(BookmarkRedesignModal, {
         model: {
           bookmark: new BookmarkFormData(bookmark),
-          context: post,
+          context: this.bookmarkManager.model,
+          // TODO: Maybe find a nicer way of doing this -- for post it will be topic title,
+          // for chat message it will be channel.
+          contextTitle: this.bookmarkManager.contextTitle,
           afterSave: (savedData) => {
-            this._syncBookmarks(savedData);
-            this.model.set("bookmarking", false);
-            post.createBookmark(savedData);
-            this.model.afterPostBookmarked(post, savedData);
-            return [post.id];
+            return this.bookmarkManager.afterSave(savedData);
           },
           afterDelete: (topicBookmarked, bookmarkId) => {
-            this.model.removeBookmark(bookmarkId);
-            post.deleteBookmark(topicBookmarked);
+            this.bookmarkManager.afterDelete(topicBookmarked, bookmarkId);
           },
         },
       })
       .then((closeData) => {
-        if (!closeData) {
-          return;
-        }
-
-        if (
-          closeData.closeWithoutSaving ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
-        ) {
-          post.appEvents.trigger("post-stream:refresh", {
-            id: bookmark.bookmarkable_id,
-          });
-        }
+        this.bookmarkManager.afterModalClose(closeData);
       });
   }
 
@@ -133,11 +105,11 @@ export default class BookmarkMenu extends Component {
       {{on "click" this.onBookmark}}
       class={{concatClass
         "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
-        (if @post.bookmarked "-bookmarked")
+        (if this.bookmarkManager.model.bookmarked "-bookmarked")
       }}
     >
       <:trigger>
-        {{#if @post.bookmarkReminderAt}}
+        {{#if this.bookmarkManager.model.bookmarkReminderAt}}
           {{dIcon "discourse-bookmark-clock"}}
         {{else}}
           {{dIcon "bookmark"}}
@@ -161,7 +133,7 @@ export default class BookmarkMenu extends Component {
 	--}}
 
         <div class="bookmark-menu__body">
-          {{#if @post.bookmarked}}
+          {{#if this.bookmarkManager.model.bookmarked}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit">
                 <DButton
@@ -186,7 +158,9 @@ export default class BookmarkMenu extends Component {
               </li>
             </ul>
           {{else}}
-            <span class="bookmark-menu__row-title">Also set a reminder?</span>
+            <span class="bookmark-menu__row-title">{{i18n
+                "bookmarks.also_set_reminder"
+              }}</span>
             <ul class="bookmark-menu__actions">
               {{#each this.reminderAtOptions as |option|}}
                 <li class={{concatClass "bookmark-menu__row" option.class}}>
