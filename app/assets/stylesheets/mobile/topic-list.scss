@@ -576,5 +576,9 @@ td .main-link {
 }
 
 #list-area .show-more .alert {
-  gap: 0.65em;
+  align-items: center;
+  gap: 0.5em;
+  &.loading {
+    color: var(--primary-medium);
+  }
 }

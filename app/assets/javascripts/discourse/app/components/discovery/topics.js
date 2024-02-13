@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DismissNew from "discourse/components/modal/dismiss-new";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
@@ -102,13 +103,17 @@ export default class DiscoveryTopics extends Component {
 
   // Show newly inserted topics
   @action
-  showInserted(event) {
+  async showInserted(event) {
     event?.preventDefault();
-    const tracker = this.topicTrackingState;
+    const { topicTrackingState } = this;
 
-    // Move inserted into topics
-    this.args.model.loadBefore(tracker.get("newIncoming"), true);
-    tracker.resetTracking();
+    try {
+      const topicIds = [...topicTrackingState.newIncoming];
+      await this.args.model.loadBefore(topicIds, true);
+      topicTrackingState.clearIncoming(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   get showTopicsAndRepliesToggle() {

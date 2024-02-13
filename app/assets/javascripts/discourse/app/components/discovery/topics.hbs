@@ -48,7 +48,8 @@
           tabindex="0"
           href
           {{on "click" this.showInserted}}
-          class="alert alert-info clickable"
+          class="alert alert-info clickable
+            {{if @model.loadingBefore 'loading'}}"
         >
           <CountI18n
             @key="topic_count_"
