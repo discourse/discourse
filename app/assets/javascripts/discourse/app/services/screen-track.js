@@ -27,6 +27,7 @@ export default class ScreenTrack extends Service {
   @service siteSettings;
   @service topicTrackingState;
 
+  _ajaxFailures = 0;
   _consolidatedTimings = [];
   _lastTick = null;
   _lastScrolled = null;
@@ -174,8 +175,6 @@ export default class ScreenTrack extends Service {
       return;
     }
 
-    this._ajaxFailures = this._ajaxFailures || 0;
-
     const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
     const data = {
       timings,
@@ -199,10 +198,9 @@ export default class ScreenTrack extends Service {
         }
 
         this._ajaxFailures = 0;
-        const topicController = this._topicController;
-        if (topicController) {
+        if (this._topicController) {
           const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
-          topicController.readPosts(topicId, postNumbers);
+          this._topicController.readPosts(topicId, postNumbers);
 
           const cachedHighestRead = this.highestReadFromCache(topicId);
           if (
@@ -241,26 +239,24 @@ export default class ScreenTrack extends Service {
 
   flush() {
     const newTimings = {};
-    const totalTimings = this._totalTimings;
 
-    const timings = this._timings;
     Object.keys(this._timings).forEach((postNumber) => {
-      const time = timings[postNumber];
-      totalTimings[postNumber] = totalTimings[postNumber] || 0;
+      const time = this._timings[postNumber];
+      this._totalTimings[postNumber] ??= 0;
 
-      if (time > 0 && totalTimings[postNumber] < MAX_TRACKING_TIME) {
-        totalTimings[postNumber] += time;
+      if (time > 0 && this._totalTimings[postNumber] < MAX_TRACKING_TIME) {
+        this._totalTimings[postNumber] += time;
         newTimings[postNumber] = time;
       }
-      timings[postNumber] = 0;
+
+      this._timings[postNumber] = 0;
     });
 
     const topicId = parseInt(this._topicId, 10);
     let highestSeen = 0;
 
     // Workaround to avoid ignored posts being "stuck unread"
-    const controller = this._topicController;
-    const stream = controller ? controller.get("model.postStream") : null;
+    const stream = this._topicController?.get("model.postStream");
     if (
       this.currentUser && // Logged in
       this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
@@ -301,15 +297,15 @@ export default class ScreenTrack extends Service {
           this.sendNextConsolidatedTiming();
         }
       } else if (this._anonCallback) {
-        // Anonymous viewer - save to localStorage
-        const storage = this.keyValueStore;
-
         // Save total time
-        const existingTime = storage.getInt("anon-topic-time");
-        storage.setItem("anon-topic-time", existingTime + this._topicTime);
+        const existingTime = this.keyValueStore.getInt("anon-topic-time");
+        this.keyValueStore.setItem(
+          "anon-topic-time",
+          existingTime + this._topicTime
+        );
 
         // Save unique topic IDs up to a max
-        let topicIds = storage.get("anon-topic-ids");
+        let topicIds = this.keyValueStore.get("anon-topic-ids");
         if (topicIds) {
           topicIds = topicIds.split(",").map((e) => parseInt(e, 10));
         } else {
@@ -321,7 +317,7 @@ export default class ScreenTrack extends Service {
           topicIds.length < ANON_MAX_TOPIC_IDS
         ) {
           topicIds.push(topicId);
-          storage.setItem("anon-topic-ids", topicIds.join(","));
+          this.keyValueStore.setItem("anon-topic-ids", topicIds.join(","));
         }
 
         // Inform the observer
@@ -349,14 +345,12 @@ export default class ScreenTrack extends Service {
     this._lastFlush += diff;
     this._lastTick = now;
 
-    const totalTimings = this._totalTimings;
-    const timings = this._timings;
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.keys(timings).some((postNumber) => {
+    const rush = Object.keys(this._timings).some((postNumber) => {
       return (
-        timings[postNumber] > 0 &&
-        !totalTimings[postNumber] &&
+        this._timings[postNumber] > 0 &&
+        !this._totalTimings[postNumber] &&
         !this._readPosts[postNumber]
       );
     });
@@ -375,7 +369,7 @@ export default class ScreenTrack extends Service {
 
       this._onscreen.forEach(
         (postNumber) =>
-          (timings[postNumber] = (timings[postNumber] || 0) + diff)
+          (this._timings[postNumber] = (this._timings[postNumber] || 0) + diff)
       );
 
       this._readOnscreen.forEach((postNumber) => {
