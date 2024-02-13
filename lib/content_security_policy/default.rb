@@ -60,14 +60,17 @@ class ContentSecurityPolicy
     end
 
     def script_src
-      [
-        "#{base_url}/logs/",
-        "#{base_url}/sidekiq/",
-        "#{base_url}/mini-profiler-resources/",
-        *script_assets,
-      ].tap do |sources|
-        sources << :report_sample if SiteSetting.content_security_policy_collect_reports
-        sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
+      sources = []
+
+      if SiteSetting.content_security_policy_strict_dynamic
+        sources << "'strict-dynamic'"
+      else
+        sources.push(
+          "#{base_url}/logs/",
+          "#{base_url}/sidekiq/",
+          "#{base_url}/mini-profiler-resources/",
+          *script_assets,
+        )
 
         # Support Ember CLI Live reload
         if Rails.env.development?
@@ -85,10 +88,11 @@ class ContentSecurityPolicy
         if SiteSetting.gtm_container_id.present?
           sources << "https://www.googletagmanager.com/gtm.js"
         end
-
-        sources << "'#{SplashScreenHelper.fingerprint}'" if SiteSetting.splash_screen
-        sources << "'#{DeferScriptHelper.fingerprint}'"
       end
+
+      sources << :report_sample if SiteSetting.content_security_policy_collect_reports
+
+      sources
     end
 
     def worker_src

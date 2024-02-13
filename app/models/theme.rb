@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 78
+  BASE_COMPILER_VERSION = 79
 
   class SettingsMigrationError < StandardError
   end
@@ -356,11 +356,13 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.lookup_field(theme_id, target, field, skip_transformation: false)
+  def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    (resolve_baked_field(theme_ids, target.to_sym, field) || "").html_safe
+    resolved = (resolve_baked_field(theme_ids, target.to_sym, field) || "")
+    resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
+    resolved.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)

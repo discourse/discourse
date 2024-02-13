@@ -699,7 +699,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -716,7 +716,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("true")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =

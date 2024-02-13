@@ -81,7 +81,7 @@ function updateScriptReferences({
         element.tagName.toLowerCase() === "script"
       ) {
         newElements.unshift(
-          `<script async src="${baseURL}ember-cli-live-reload.js"></script>`
+          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${element.attributes["nonce"]}"></script>`
         );
       }
 
@@ -159,7 +159,7 @@ async function handleRequest(proxy, baseURL, req, res, outputPath) {
   }
 
   const csp = response.headers.get("content-security-policy");
-  if (csp) {
+  if (csp && !csp.includes("'strict-dynamic'")) {
     const emberCliAdditions = [
       `http://${originalHost}${baseURL}assets/`,
       `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
