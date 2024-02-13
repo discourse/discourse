@@ -32,7 +32,7 @@ export default class ScreenTrack extends Service {
   _lastTick = null;
   _lastScrolled = null;
   _lastFlush = 0;
-  _timings = {};
+  _timings = new Map();
   _totalTimings = {};
   _topicTime = 0;
   _onscreen = null;
@@ -97,7 +97,7 @@ export default class ScreenTrack extends Service {
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
-    this._timings = {};
+    this._timings.clear();
     this._totalTimings = {};
     this._topicTime = 0;
     this._onscreen = null;
@@ -234,7 +234,7 @@ export default class ScreenTrack extends Service {
   flush() {
     const newTimings = {};
 
-    for (const [postNumber, time] of Object.entries(this._timings)) {
+    for (const [postNumber, time] of this._timings) {
       this._totalTimings[postNumber] ??= 0;
 
       if (time > 0 && this._totalTimings[postNumber] < MAX_TRACKING_TIME) {
@@ -242,7 +242,7 @@ export default class ScreenTrack extends Service {
         newTimings[postNumber] = time;
       }
 
-      this._timings[postNumber] = 0;
+      this._timings.set(postNumber, 0);
     }
 
     const topicId = parseInt(this._topicId, 10);
@@ -338,9 +338,9 @@ export default class ScreenTrack extends Service {
 
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.keys(this._timings).some((postNumber) => {
+    const rush = this._timings.keys().some((postNumber) => {
       return (
-        this._timings[postNumber] > 0 &&
+        this._timings.get(postNumber) > 0 &&
         !this._totalTimings[postNumber] &&
         !this._readPosts.has(postNumber)
       );
@@ -358,9 +358,11 @@ export default class ScreenTrack extends Service {
     if (this.session.hasFocus) {
       this._topicTime += diff;
 
-      this._onscreen?.forEach(
-        (postNumber) =>
-          (this._timings[postNumber] = (this._timings[postNumber] || 0) + diff)
+      this._onscreen?.forEach((postNumber) =>
+        this._timings.set(
+          postNumber,
+          (this._timings.get(postNumber) || 0) + diff
+        )
       );
 
       this._readOnscreen?.forEach((postNumber) => {
