@@ -62,7 +62,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
         channel_4.add(current_user)
       end
 
-      it "sorts them by mentions, unread, then alphabetical order" do
+      it "sorts them by mentions, unread, then by slug" do
         Jobs.run_immediately!
 
         Fabricate(
@@ -92,13 +92,31 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_4.id.to_s,
         )
-        # channels with unread messages are next, sorted by title
+        # channels with unread messages are next
         expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_1.id.to_s,
         )
         expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
         )
+      end
+
+      context "with emojis in title" do
+        before do
+          channel_1.update!(name: ":pear: a channel")
+          channel_2.update!(name: ":apple: b channel")
+        end
+
+        it "sorts them by slug" do
+          visit("/chat/channels")
+
+          expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
+            channel_1.id.to_s,
+          )
+          expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
+            channel_2.id.to_s,
+          )
+        end
       end
     end
 
