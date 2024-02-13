@@ -336,6 +336,19 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   /**
+   * Removes the given topic IDs from the list of incoming topics.
+   *
+   * @method clearIncoming
+   */
+  clearIncoming(topicIds) {
+    const toRemove = new Set(topicIds);
+    this.newIncoming = this.newIncoming.filter(
+      (topicId) => !toRemove.has(topicId)
+    );
+    this.set("incomingCount", this.newIncoming.length);
+  }
+
+  /**
    * Track how many new topics came for the specified filter.
    *
    * Related/intertwined with notifyIncoming; the filter and filterCategory
