@@ -1,20 +1,26 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
+import { array, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
+import concatClass from "discourse/helpers/concatClass";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import Bookmark from "discourse/models/bookmark";
+import dIcon from "discourse-common/helpers/dIcon";
 import discourseLater from "discourse-common/lib/later";
+import DMenu from "float-kit/components/d-menu";
 import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
 
-export default class DiscourseBookmarkMenu extends Component {
+export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
 
@@ -139,4 +145,82 @@ export default class DiscourseBookmarkMenu extends Component {
         }
       });
   }
+
+  <template>
+    <DMenu
+      @triggers={{array "click"}}
+      @arrow="true"
+      {{on "click" this.onBookmark}}
+      class={{concatClass
+        "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
+        (if @post.bookmarked "-bookmarked")
+      }}
+    >
+      <:trigger>
+        {{#if @post.bookmarkReminderAt}}
+          {{dIcon "discourse-bookmark-clock"}}
+        {{else}}
+          {{dIcon "bookmark"}}
+        {{/if}}
+      </:trigger>
+      <:content>
+        {{!--
+		TODO: This will be a Toast now instead
+    {{#if this.bookmarkedNotice}}
+      <span
+        class={{concatClass
+          "bookmark-menu__notice"
+          (if this.slideOutBookmarkNotice "-slide-out")
+        }}
+        {{this.scheduleSlideOut}}
+        {{this.scheduleRemove}}
+      >
+        Bookmarked!
+      </span>
+    {{/if}}
+	--}}
+
+        <div class="bookmark-menu__body">
+          {{#if @post.bookmarked}}
+            <ul class="bookmark-menu__actions">
+              <li class="bookmark-menu__row -edit">
+                <DButton
+                  @icon="pencil-alt"
+                  @translatedLabel="Edit"
+                  @action={{this.onEditReminder}}
+                  @class="bookmark-menu__row-btn btn-flat"
+                />
+              </li>
+              <li
+                class="bookmark-menu__row -remove"
+                role="button"
+                tabindex="0"
+                {{on "click" this.onRemoveBookmark}}
+              >
+                <DButton
+                  @icon="trash-alt"
+                  @translatedLabel="Delete"
+                  @action={{this.onRemoveBookmark}}
+                  @class="bookmark-menu__row-btn btn-flat"
+                />
+              </li>
+            </ul>
+          {{else}}
+            <span class="bookmark-menu__row-title">Also set a reminder?</span>
+            <ul class="bookmark-menu__actions">
+              {{#each this.reminderAtOptions as |option|}}
+                <li class={{concatClass "bookmark-menu__row" option.class}}>
+                  <DButton
+                    @translatedLabel={{option.name}}
+                    @action={{fn this.onChooseOption option}}
+                    @class="bookmark-menu__row-btn btn-flat"
+                  />
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+      </:content>
+    </DMenu>
+  </template>
 }
