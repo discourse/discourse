@@ -797,6 +797,42 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
+    if (links = placeholders&.fetch("links", nil))
+      links.each do |link|
+        text = link["text"]
+        original_url = link["url"]
+
+        markdown =
+          if link["topic_id"]
+            topic_id = topic_id_from_imported_id(link["topic_id"])
+            url = topic_id ? "#{Discourse.base_url}/t/#{topic_id}" : original_url
+            text ? "[#{text}](#{url})" : url
+          elsif link["post_id"]
+            topic_id = topic_id_from_imported_post_id(link["post_id"])
+            post_number = post_number_from_imported_id(link["post_id"])
+            url =
+              (
+                if topic_id && post_number
+                  "#{Discourse.base_url}/t/#{topic_id}/#{post_number}"
+                else
+                  original_url
+                end
+              )
+            text ? "[#{text}](#{url})" : url
+          else
+            text ? "[#{text}](#{original_url})" : original_url
+          end
+
+        # ensure that the placeholder is surrounded by whitespace unless it's at the beginning or end of the string
+        placeholder = link["placeholder"]
+        escaped_placeholder = Regexp.escape(placeholder)
+        raw.gsub!(/(?<!\s)#{escaped_placeholder}/, " #{placeholder}")
+        raw.gsub!(/#{escaped_placeholder}(?!\s)/, "#{placeholder} ")
+
+        raw.gsub!(placeholder, markdown)
+      end
+    end
+
     if row["upload_ids"].present? && @uploads_db
       upload_ids = JSON.parse(row["upload_ids"])
       upload_ids_placeholders = (["?"] * upload_ids.size).join(",")
