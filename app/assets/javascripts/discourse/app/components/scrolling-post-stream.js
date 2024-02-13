@@ -255,25 +255,24 @@ export default MountWidget.extend({
     const onscreenPostNumbers = new Set();
     const readPostNumbers = new Set();
 
-    const prev = this._previouslyNearby;
-    const newPrev = {};
+    const newPrev = new Set();
     nearby.forEach((idx) => {
       const post = posts.objectAt(idx);
-      const postNumber = post.post_number;
 
-      delete prev[postNumber];
+      this._previouslyNearby.delete(post.post_number);
 
       if (onscreen.includes(idx)) {
-        onscreenPostNumbers.add(postNumber);
+        onscreenPostNumbers.add(post.post_number);
         if (post.read) {
-          readPostNumbers.add(postNumber);
+          readPostNumbers.add(post.post_number);
         }
       }
-      newPrev[postNumber] = post;
+
+      newPrev.add(post.post_number, post);
       uncloak(post, this);
     });
 
-    Object.values(prev).forEach((node) => cloak(node, this));
+    Object.values(this._previouslyNearby).forEach((node) => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
@@ -323,7 +322,7 @@ export default MountWidget.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this._previouslyNearby = {};
+    this._previouslyNearby = new Set();
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     const opts = {
