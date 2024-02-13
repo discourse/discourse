@@ -116,12 +116,12 @@ export default class ScreenTrack extends Service {
   }
 
   consolidateTimings(timings, topicTime, topicId) {
-    let foundIndex = this._consolidatedTimings.findIndex(
+    const foundIndex = this._consolidatedTimings.findIndex(
       (elem) => elem.topicId === topicId
     );
 
     if (foundIndex > -1) {
-      let found = this._consolidatedTimings[foundIndex];
+      const found = this._consolidatedTimings[foundIndex];
 
       const lastIndex = this._consolidatedTimings.length - 1;
 
