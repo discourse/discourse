@@ -17,7 +17,7 @@ $max_image_height: 150px;
     overflow: hidden;
   }
 
-  .onebox {
+  .onebox:not(img) {
     container-type: inline-size;
 
     .thumbnail {
