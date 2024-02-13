@@ -46,9 +46,7 @@ export default class ScreenTrack extends Service {
   }
 
   start(topicId, topicController) {
-    const currentTopicId = this._topicId;
-
-    if (currentTopicId && currentTopicId !== topicId) {
+    if (this._topicId && this._topicId !== topicId) {
       this.tick();
       this.flush();
     }
