@@ -35,8 +35,8 @@ export default class extends Component {
   ];
 
   @action
-  onFilterInput(value) {
-    this.args.onFilterInput(value);
+  onFilterInput(input) {
+    this.args.onFilterInput(input.target.value);
   }
 
   @action
@@ -89,7 +89,7 @@ export default class extends Component {
               placeholder={{@inputFilterPlaceholder}}
               @type="text"
               @value={{this.filter}}
-              {{on "input" (action @onFilterInput value="target.value")}}
+              {{on "input" this.onFilterInput}}
               autofocus="true"
             />
           </div>
