@@ -1,5 +1,6 @@
 import {
   fourMonths,
+  inNDays,
   LATER_TODAY_CUTOFF_HOUR,
   laterThisWeek,
   laterToday,
@@ -123,6 +124,15 @@ export function timeShortcuts(timezone) {
         icon: "angle-right",
         label: "time_shortcut.two_days",
         time: twoDays(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
+    },
+    threeDays() {
+      return {
+        id: "three_days",
+        icon: "angle-right",
+        label: "time_shortcut.three_days",
+        time: inNDays(timezone, 3),
         timeFormatKey: "dates.time_short_day",
       };
     },

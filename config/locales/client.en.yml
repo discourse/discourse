@@ -700,6 +700,7 @@ en:
       in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
+      three_days: "In three days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"

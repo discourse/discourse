@@ -4,19 +4,20 @@ import { inject as controller } from "@ember/controller";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import concatClass from "discourse/helpers/concatClass";
+import concatClass from "discourse/helpers/concat-class";
 import { BookmarkFormData } from "discourse/lib/bookmark";
+import {
+  TIME_SHORTCUT_TYPES,
+  timeShortcuts,
+} from "discourse/lib/time-shortcut";
 import Bookmark from "discourse/models/bookmark";
-import dIcon from "discourse-common/helpers/dIcon";
-import discourseLater from "discourse-common/lib/later";
+import dIcon from "discourse-common/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
 import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
 
@@ -26,35 +27,13 @@ export default class BookmarkMenu extends Component {
 
   @controller("topic") topicController;
 
-  @tracked bookmarkedNotice = false;
-  @tracked slideOutBookmarkNotice = false;
+  timeShortcuts = timeShortcuts(this.currentUser.timezone || moment.tz.guess());
 
-  scheduleSlideOut = modifier(() => {
-    const handler = discourseLater(() => {
-      this.slideOutBookmarkNotice = true;
-    }, 1000);
-
-    return () => {
-      cancel(handler);
-    };
-  });
-
-  scheduleRemove = modifier(() => {
-    const handler = discourseLater(() => {
-      this.bookmarkedNotice = false;
-    }, 2500);
-
-    return () => {
-      cancel(handler);
-    };
-  });
-
-  // TODO Replace these (except none/custom) with time shortcuts from time-shortcut
   reminderAtOptions = [
-    { id: 1, name: "In two hours" },
-    { id: 2, name: "Tomorrow" },
-    { id: 3, name: "in three days" },
-    { id: 4, name: "Custom..." },
+    this.timeShortcuts.twoHours(),
+    this.timeShortcuts.tomorrow(),
+    this.timeShortcuts.threeDays(),
+    this.timeShortcuts.custom(),
   ];
 
   get existingBookmark() {
@@ -72,17 +51,18 @@ export default class BookmarkMenu extends Component {
     event.target.blur();
 
     if (this.existingBookmark) {
-      // handle remove bookmark, maybe?
+      // this should do nothing if existing...
     } else {
-      this.slideOutBookmarkNotice = false;
-      this.bookmarkedNotice = true;
+      // handle create bookmark
     }
   }
 
   @action
-  onEditReminder() {
+  onEditBookmark() {
     // eslint-disable-next-line no-console
     console.log("on edit reminder");
+
+    this._openBookmarkModal();
   }
 
   @action
@@ -92,11 +72,11 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  onChooseOption(option) {
+  onChooseReminderOption(option) {
     // eslint-disable-next-line no-console
     console.log(option);
 
-    if (option.id === 4) {
+    if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     }
   }
@@ -165,7 +145,7 @@ export default class BookmarkMenu extends Component {
       </:trigger>
       <:content>
         {{!--
-		TODO: This will be a Toast now instead
+		TODO: This will be a Toast now instead or alternatively reuse the post-copy Link copied! popup
     {{#if this.bookmarkedNotice}}
       <span
         class={{concatClass
@@ -187,7 +167,7 @@ export default class BookmarkMenu extends Component {
                 <DButton
                   @icon="pencil-alt"
                   @translatedLabel="Edit"
-                  @action={{this.onEditReminder}}
+                  @action={{this.onEditBookmark}}
                   @class="bookmark-menu__row-btn btn-flat"
                 />
               </li>
@@ -211,8 +191,8 @@ export default class BookmarkMenu extends Component {
               {{#each this.reminderAtOptions as |option|}}
                 <li class={{concatClass "bookmark-menu__row" option.class}}>
                   <DButton
-                    @translatedLabel={{option.name}}
-                    @action={{fn this.onChooseOption option}}
+                    @label={{option.label}}
+                    @action={{fn this.onChooseReminderOption option}}
                     @class="bookmark-menu__row-btn btn-flat"
                   />
                 </li>
