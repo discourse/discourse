@@ -31,16 +31,16 @@ RSpec.describe Chat::CreateMessage do
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
-    let(:topic_id) { nil }
-    let(:post_ids) { nil }
+    let(:context_topic_id) { nil }
+    let(:context_post_ids) { nil }
     let(:params) do
       {
         guardian: guardian,
         chat_channel_id: channel.id,
         message: content,
         upload_ids: [upload.id],
-        topic_id: topic_id,
-        post_ids: post_ids,
+        context_topic_id: context_topic_id,
+        context_post_ids: context_post_ids,
       }
     end
     let(:message) { result[:message_instance].reload }
@@ -107,8 +107,8 @@ RSpec.describe Chat::CreateMessage do
       end
 
       context "when context given" do
-        let(:post_ids) { [1, 2] }
-        let(:topic_id) { 3 }
+        let(:context_post_ids) { [1, 2] }
+        let(:context_topic_id) { 3 }
 
         it "triggers a Discourse event with context if given" do
           DiscourseEvent.expects(:trigger).with(

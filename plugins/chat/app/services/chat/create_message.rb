@@ -16,6 +16,8 @@ module Chat
     #   @param in_reply_to_id [Integer] ID of a message to reply to
     #   @param thread_id [Integer] ID of a thread to reply to
     #   @param upload_ids [Array<Integer>] IDs of uploaded documents
+    #   @param context_topic_id [Integer] ID of the currently visible topic in drawer mode
+    #   @param context_post_ids [Array<Integer>] IDs of the currently visible posts in drawer mode
     #   @param staged_id [String] arbitrary string that will be sent back to the client
     #   @param incoming_chat_webhook [Chat::IncomingWebhook]
 
@@ -50,8 +52,8 @@ module Chat
     class Contract
       attribute :chat_channel_id, :string
       attribute :in_reply_to_id, :string
-      attribute :topic_id, :integer
-      attribute :post_ids, :array
+      attribute :context_topic_id, :integer
+      attribute :context_post_ids, :array
       attribute :message, :string
       attribute :staged_id, :string
       attribute :upload_ids, :array
@@ -193,7 +195,7 @@ module Chat
         message_instance,
         channel,
         message_instance.user,
-        { context: { post_ids: contract.post_ids, topic_id: contract.topic_id } },
+        { context: { post_ids: contract.context_post_ids, topic_id: contract.context_topic_id } },
       )
 
       if contract.process_inline
