@@ -189,7 +189,6 @@ sr:
     topic_admin_menu: "радње око теме"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
-      message: "Ажурирали смо сајт. <span>Освежите страницу</span> да бисте избегли непријатности."
       dismiss: "Одбаци"
     themes:
       default_description: "Подразумевано"

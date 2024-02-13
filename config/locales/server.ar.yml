@@ -1105,6 +1105,9 @@ ar:
       title: "غير لائق"
       description: 'يتضمَّن هذا المنشور محتوًى قد يعتبره شخص عاقل هجوميًا أو مسيئًا أو يتضمَّن سلوكًا ينمُّ عن كراهية أو يمثِّل انتهاكًا <a href="%{base_path}/guidelines">لإرشادات مجتمعنا</a>.'
       short_description: 'ينتهك <a href="%{base_path}/guidelines">إرشادات مجتمعنا</a>.'
+    illegal:
+      email_title: 'يستدعي منشور في "%{title}" انتباه فريق العمل'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "مراسلة @%{username}"
       description: "أريد التحدث إلى هذا الشخص بشكلٍ مباشر وشخصي عن منشوره."
@@ -1183,6 +1186,9 @@ ar:
       long_form: "أبلغ عن هذا الموضوع لتنبيه المشرفين"
       short_description: "يتطلب انتباه فريق العمل لسبب آخر"
       email_title: 'يستدعي الموضوع "%{title}" انتباه المشرفين'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'يستدعي منشور في "%{title}" انتباه فريق العمل'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>تم الإبلاغ عن منشورك بواسطة المجتمع. يُرجى <a href="%{path}">الاطِّلاع على رسائلك</a>.</p>'
@@ -4139,7 +4145,6 @@ ar:
     images:
       too_large: "عذرًا، الصورة التي تحاول تحميلها كبيرة جدًا (الحجم الأقصى هو %{max_size_kb} ك.ب)، يُرجى تغيير حجمها وإعادة المحاولة."
       too_large_humanized: "عذرًا، الصورة التي تحاول تحميلها كبيرة جدًا (الحجم الأقصى هو %{max_size})، يُرجى تغيير حجمها وإعادة المحاولة."
-      larger_than_x_megapixels: "عذرًا، الصورة التي تحاول تحميلها كبيرة جدًا (الحد الأقصى للأبعاد هو %{max_image_megapixels} ميغابكسل)، يُرجى تغيير حجمها وإعادة المحاولة."
       size_not_found: "عذرًا، لكننا لم نتمكَّن من تحديد حجم الصورة. قد تكون صورتك تالفة؟"
     placeholders:
       too_large: "(الصورة أكبر من %{max_size_kb} كيلوبايت)"

@@ -210,7 +210,6 @@ hr:
     emails_are_disabled: "Svi emailovi prema van su blokirani od strane administratora. Ni jedna vrsta obavijesti putem emaila neće biti poslana."
     emails_are_disabled_non_staff: "Odlazna e-pošta onemogućena je za korisnike koji nisu zaposleni."
     software_update_prompt:
-      message: "Ažurirali smo ovu stranicu, <span>osvježite</span>ili ćete možda doživjeti neočekivano ponašanje."
       dismiss: "Skloni"
     themes:
       default_description: "Zadano"

@@ -628,6 +628,8 @@ cs:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+    illegal:
+      email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
       title: "Poslat @%{username} zprávu"
       email_title: 'Váš příspěvek v „%{title}“'
@@ -663,6 +665,8 @@ cs:
       description: 'Toto téma vyžaduje obecnou pozornost redakce na základě <a href="%{base_path}/guidelines">pokynů</a>, <a href="%{tos_url}">podmínek použití</a>nebo z jiného důvodu, který není uveden výše.'
       long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
+      email_body: "%{link}\\n\\n%{message}\n"
+    illegal:
       email_body: "%{link}\\n\\n%{message}\n"
   archetypes:
     regular:

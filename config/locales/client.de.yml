@@ -188,7 +188,7 @@ de:
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
-      message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
+      message: "Wir haben diese Seite aktualisiert. <span>Bitte aktualisiere</span> , damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
     bootstrap_mode: "Erste Schritte"
     themes:
@@ -3363,6 +3363,7 @@ de:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
           inappropriate: "Du hast das als „unangemessen“ gemeldet"
+          illegal: "Sie haben dies als illegal gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
       delete:
@@ -3627,10 +3628,12 @@ de:
         off_topic: "Am Thema vorbei"
         inappropriate: "Unangemessen"
         spam: "Spam"
+        illegal: "Es ist illegal"
       custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
       notify_user_textarea_label: "Nachricht für den Benutzer"
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       notify_moderators_textarea_label: "Nachricht für die Moderatoren"
+      custom_placeholder_illegal: "Gib uns genau an, warum du glaubst, dass diese Inhalte illegal sind, und füge nach Möglichkeit relevante Links und Beispiele bei."
       custom_message:
         at_least:
           one: "gib mindestens %{count} Zeichen ein"
@@ -4772,10 +4775,14 @@ de:
           post_liked: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
         notification_event:
           group_name: "Benachrichtigungsereignisse"
+          notification_created: "Ein Benutzer erhält eine Benachrichtigung in seinem Feed"
         group_user_event:
           group_name: "Gruppenbenutzerereignisse"
+          user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
+          user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
         user_promoted_event:
           group_name: "Benutzerbeförderungsereignisse"
+          user_promoted: "Ein Benutzer wird befördert"
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -5195,6 +5202,7 @@ de:
           instructions: "Passe die Vorlage an, mit der alle HTML-E-Mails erstellt werden, und den Stil per CSS."
       email:
         title: "E-Mails"
+        settings: "E-Mail-Einstellungen"
         templates: "Vorlagen"
         templates_title: "E-Mail-Vorlagen"
         preview_digest: "Vorschau der Zusammenfassung"
@@ -5841,6 +5849,7 @@ de:
             other: "In den letzten %{count} Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
+          posts_read_days: "Gelesene Beiträge: einzigartige Tage"
           days: "Tage"
           topics_replied_to: "Auf Themen geantwortet"
           topics_viewed: "Betrachtete Themen"
@@ -6146,6 +6155,7 @@ de:
         category_title: "Kategorie"
         tag_name: "Name des Schlagworts"
         external_url: "Externe oder relative URL"
+        user_id: "Benutzer-ID"
         username: "Benutzername"
         destination: "Ziel"
         copy_to_clipboard: "Permalink in die Zwischenablage kopieren"

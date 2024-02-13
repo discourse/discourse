@@ -188,7 +188,6 @@ it:
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
-      message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     bootstrap_mode: "Per iniziare"
     themes:

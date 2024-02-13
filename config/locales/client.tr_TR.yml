@@ -188,7 +188,7 @@ tr_TR:
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
     software_update_prompt:
-      message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
+      message: "Bu siteyi güncelledik, <span>lütfen yenileyin</span> ki işler sorunsuz bir şekilde devam etsin."
       dismiss: "Kapat"
     bootstrap_mode: "Başlarken"
     themes:
@@ -1021,6 +1021,7 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
+      account_possessive: "%{name}'in hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -1462,6 +1463,9 @@ tr_TR:
           description: "Lütfen e-posta adresinizin şu şekilde değiştirilmesini istediğinizi onaylayın:"
           description_add: "Lütfen alternatif bir e-posta adresi eklemek istediğinizi onaylayın:"
         authorizing_old:
+          title: "Eski e-posta adresini doğrulayın"
+          description: "E-postanızı değiştirmeye devam etmek için lütfen eski e-posta adresinizi doğrulayın:"
+          description_add: "Alternatif bir adres eklemeye devam etmek için lütfen mevcut e-posta adresinizi doğrulayın:"
           old_email: "Eski e-posta: %{email}"
           new_email: "Yeni e-posta: %{email}"
           confirm_success: "Değişikliği onaylamak için yeni e-posta adresinize bir e-posta gönderdik!"
@@ -2143,7 +2147,7 @@ tr_TR:
         one: "En az %{count} öge seçin."
         other: "En az %{count} öge seçin."
       components:
-        filter_for_more: Daha fazlası için filtreleyin…
+        filter_for_more: Daha fazlası için filtrele…
         categories_admin_dropdown:
           title: "Kategorileri yönetin"
         bulk_select_topics_dropdown:
@@ -2716,6 +2720,7 @@ tr_TR:
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
+        silent: "Bu eylemi sessizce gerçekleştirin."
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -2726,6 +2731,7 @@ tr_TR:
         bookmarks: "Henüz hiçbir konuya yer imi eklemediniz."
         category: "%{category} konusu yok."
         top: "Popüler konu yok."
+        hot: "Popüler bir konu bulunmuyor."
         filter: "Konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
@@ -2741,11 +2747,15 @@ tr_TR:
         category: "Başka %{category} konusu yok."
         tag: "Başka %{tag} konusu yok."
         top: "Başka popüler konu yok."
+        hot: "Daha fazla popüler konu yok."
         bookmarks: "Başka yer imli konu yok."
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
       close_topics:
         name: "Konuları Kapat"
+      update_category:
+        name: "Kategoriyi Güncelle"
+        description: "Seçilen konular için yeni kategoriyi seçin"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3353,6 +3363,7 @@ tr_TR:
           off_topic: "Buna konu dışı bayrağı eklediniz"
           spam: "Buna spam bayrağı eklediniz"
           inappropriate: "Buna uygunsuz bayrağı eklediniz"
+          illegal: "Bunu yasa dışı olarak işaretledin"
           notify_moderators: "Buna moderasyon için bayrak eklediniz"
           notify_user: "Bu kullanıcıya bir mesaj gönderdiniz"
       delete:
@@ -3617,10 +3628,12 @@ tr_TR:
         off_topic: "Konu Dışı"
         inappropriate: "Uygunsuz"
         spam: "Spam"
+        illegal: "Bu Yasa dışı"
       custom_placeholder_notify_user: "Spesifik, yapıcı ve her zaman kibar olun."
       notify_user_textarea_label: "Kullanıcı için mesaj"
       custom_placeholder_notify_moderators: "Bize özellikle ne konuda endişe duyduğunuzu bildirin ve mümkünse ilgili bağlantı ve örnekler ekleyin."
       notify_moderators_textarea_label: "Moderatörler için mesaj"
+      custom_placeholder_illegal: "Bu içeriğin neden yasa dışı olduğuna inandığınızı bize özellikle bildirin ve mümkünse ilgili bağlantılar ve örnekler sağlayın."
       custom_message:
         at_least:
           one: "en az %{count} karakter girin"
@@ -3747,6 +3760,10 @@ tr_TR:
         title: "Görülmemiş"
         lower_title: "görülmemiş"
         help: "yeni konular ve şu anda izlediğiniz veya okunmamış gönderilerle takip ettiğiniz konular"
+      hot:
+        title: "Popüler"
+        lower_title: "popüler"
+        help: "en yeni konular"
       new:
         lower_title_with_count:
           one: "%{count} yeni"
@@ -4637,6 +4654,7 @@ tr_TR:
             users:
               bookmarks: Kullanıcı yer imlerini listeleyin. ICS formatını kullanırken yer imi anımsatıcılarını getirir.
               sync_sso: DiscourseConnect kullanan bir kullanıcıyı senkronize edin.
+              show: Bir kullanıcı hakkında bilgi alın.
               check_emails: Kullanıcı e-postalarını listeleyin.
               update: Kullanıcı profili bilgilerini güncelleyin.
               log_out: Bir kullanıcı için tüm oturumları kapatın.
@@ -4757,10 +4775,14 @@ tr_TR:
           post_liked: "Bir kullanıcı bir gönderiyi beğendiğinde."
         notification_event:
           group_name: "Bildirim Olayları"
+          notification_created: "Bir kullanıcı akışında bir bildirim alır"
         group_user_event:
           group_name: "Grup Kullanıcısı Olayları"
+          user_added_to_group: "Bir kullanıcı bir gruba eklendi"
+          user_removed_from_group: "Bir kullanıcı bir gruptan çıkarıldı"
         user_promoted_event:
           group_name: "Kullanıcı Terfisi Olayları"
+          user_promoted: "Bir kullanıcı terfi ettirildi"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Aktif Değil"
@@ -5180,6 +5202,7 @@ tr_TR:
           instructions: "Tüm html e-postalarının oluşturulduğu şablonu özelleştirin ve CSS kullanarak stil verin."
       email:
         title: "E-postalar"
+        settings: "e-posta ayarları"
         templates: "Şablonlar"
         templates_title: "E-posta Şablonları"
         preview_digest: "Ön İzleme Özeti"
@@ -5826,6 +5849,7 @@ tr_TR:
             other: "Son %{count} günde:"
           value_heading: "Değer"
           requirement_heading: "Gereklilik"
+          posts_read_days: "Okunan Mesajlar: benzersiz günler"
           days: "gün"
           topics_replied_to: "Yanıtlanan Konular"
           topics_viewed: "Görüntülenen Konular"
@@ -6131,6 +6155,7 @@ tr_TR:
         category_title: "Kategori"
         tag_name: "Etiket adı"
         external_url: "Harici veya Göreli URL"
+        user_id: "Kullanıcı Kimliği"
         username: "Kullanıcı Adı"
         destination: "Hedef"
         copy_to_clipboard: "Kalıcı Bağlantıyı Panoya Kopyala"

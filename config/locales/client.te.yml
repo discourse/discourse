@@ -21,17 +21,27 @@ te:
             kb: కేబీ
             mb: యంబీ
             tb: టీబీ
+      short:
+        thousands: "%{number} వేల"
+        millions: "%{number}0 ల"
     dates:
       time: "h:mm a"
+      time_with_zone: "hh:mm a (z)"
+      time_short_day: "ddd, h:mm a"
+      timeline_date: "MMM YYYY"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} క్రితం"
+      wrap_on: "%{date} న"
       tiny:
         half_a_minute: "< 1ని"
         less_than_x_seconds:
@@ -73,9 +83,24 @@ te:
         x_hours:
           one: "%{count} గంట"
           other: "%{count} గంటలు"
+        about_x_hours:
+          one: "సుమారు %{count} గంట"
+          other: "సుమారు %{count} గంటలు"
         x_days:
           one: "%{count} రోజు"
           other: "%{count} రోజులు"
+        x_months:
+          one: "%{count} నెల"
+          other: "%{count} నెలలు"
+        about_x_years:
+          one: "సుమారు %{count} సంవత్సరం"
+          other: "సుమారు %{count} సంవత్సరాలు"
+        over_x_years:
+          one: "%{count} సంవత్సరానికి పైగా"
+          other: "%{count} సంవత్సరాలకు పైగా"
+        almost_x_years:
+          one: "దాదాపు %{count} సంవత్సరం"
+          other: "దాదాపు %{count} సంవత్సరాలు"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
@@ -90,27 +115,128 @@ te:
         x_months:
           one: "ఒక మాసం ముందు"
           other: "%{count} నెలల వెనుక"
+        x_years:
+          one: "%{count} సంవత్సరం క్రితం"
+          other: "%{count} సంవత్సరాల క్రితం"
       later:
         x_days:
           one: "%{count} రోజు తర్వాత"
           other: "%{count} రోజుల తర్వాత"
+        x_months:
+          one: "%{count} నెల తర్వాత"
+          other: "%{count} నెలల తర్వాత"
+        x_years:
+          one: "%{count} సంవత్సరం తర్వాత"
+          other: "%{count} సంవత్సరాల తర్వాత"
       previous_month: "గత నెల"
       next_month: "తరువాత నెల"
       placeholder: తేదీ
+      from_placeholder: "తేదీ నుండి"
+      to_placeholder: "ఇప్పటి వరకు"
     share:
+      topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
+      post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"
       close: "మూసివేయి"
+      twitter: "ట్విట్టర్లో షేర్ చేయండి"
+      facebook: "ఫేస్బుక్లో షేర్ చేయండి"
+      email: "ఇమెయిల్ ద్వారా పంపండి"
+      url: "లింక్ ని కాపీ చేసి షేర్ చేయండి"
+    word_connector:
+      comma: ", "
+      last_item: "మరియు"
+    action_codes:
+      public_topic: "%{when} ఈ విషయాన్ని పబ్లిక్ చేశారు"
+      open_topic: "%{when} దీన్ని విషయం గా మార్చారు"
+      private_topic: "%{when} ఈ విషయాన్ని వ్యక్తిగత సందేశం గా మార్చారు"
+      split_topic: "%{when} ఈ విషయాన్ని విభజించండి"
+      invited_user: "%{who} %{when} న ఆహ్వానించబడ్డారు"
+      invited_group: "%{who} %{when} న ఆహ్వానించబడ్డారు"
+      user_left: "%{who} %{when} న ఈ సందేశం నుండి తమను తాము తొలగించుకున్నారు"
+      removed_user: "%{who} %{when} న తొలగించబడ్డారు"
+      removed_group: "%{who} %{when} న తొలగించబడ్డారు"
+      autobumped: "%{when} స్వయంచాలకంగా ముందుకి దూసుకెళ్లింది"
+      tags_changed: "%{when} ట్యాగ్‌లు నవీకరించబడ్డాయి"
+      category_changed: "%{when} వర్గం నవీకరించబడింది"
+      autoclosed:
+        enabled: "%{when} మూసివేయబడింది"
+        disabled: "%{when} తెరవబడింది"
+      closed:
+        enabled: "%{when} మూసివేయబడింది"
+        disabled: "%{when} తెరవబడింది"
+      archived:
+        enabled: "%{when} నిల్వ చేయబడింది"
+        disabled: "%{when} పునరుద్ధరించబడింది"
+      pinned:
+        enabled: "%{when} పైకి పిన్ చేయబడింది"
+        disabled: "%{when} పైన నుండి తొలగించబడింది"
+      pinned_globally:
+        enabled: "%{when} సైట్ అంతటా పైకి పిన్ చేయబడింది"
+        disabled: "%{when} పైన నుండి తొలగించబడింది"
+      visible:
+        enabled: "%{when} జాబితా చేయబడింది"
+        disabled: "%{when} జాబితా నుండి తొలగించబడింది"
+      banner:
+        enabled: "%{when} ఈ విషయం బ్యానర్‌గా మారింది. సభ్యునిచే తొలగించబడే వరకు ఇది ప్రతి పేజీ ఎగువన కనిపిస్తుంది."
+        disabled: "%{when} ఈ బ్యానర్ తీసివేయబడింది. ఇది ఇకపై ప్రతి పేజీ ఎగువన కనిపించదు."
+      forwarded: "పై ఇమెయిల్ ఫార్వార్డ్ చేయబడింది"
+    topic_admin_menu: "విషయం చర్యలు"
+    skip_to_main_content: "ప్రధాన కంటెంట్కు దాటండి"
+    skip_user_nav: "ప్రొఫైల్ కంటెంట్కు దాటండి"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
+    emails_are_disabled_non_staff: "సిబ్బంది కాని సభ్యుల కోసం ఇమెయిల్ పంపే చర్య నిలిపివేయబడింది."
+    software_update_prompt:
+      message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
+      dismiss: "రద్దుచేయండి"
+    bootstrap_mode: "ప్రారంభించడం"
     themes:
       default_description: "అప్రమేయ"
+      broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
+      error_caused_by: "'%{name}' వల్ల ఏర్పడింది. నవీకరించడానికి, మళ్లీ కాన్ఫిగర్ చేయడానికి లేదా నిలిపివేయడానికి <a target='blank' href='%{path}'>ఇక్కడ క్లిక్ చేయండి</a>."
+      only_admins: "(ఈ సందేశం సైట్ నిర్వాహకులకు మాత్రమే చూపబడుతుంది)"
+    broken_decorator_alert: "మీ సైట్‌లోని ఒక పోస్ట్ కంటెంట్ డెకరేటర్ లోపాన్ని కలిగించినందున పోస్ట్‌లు సరిగ్గా ప్రదర్శించబడకపోవచ్చు."
+    broken_page_change_alert: "onPageChange హ్యాండ్లర్ లోపాన్ని లేవనెత్తింది. మరింత సమాచారం కోసం బ్రౌజర్ డెవలపర్ సాధనాలను తనిఖీ చేయండి."
+    broken_plugin_alert: "'%{name}' ప్లగిన్ వల్ల ఏర్పడింది"
+    critical_deprecation:
+      notice: "<b>[అడ్మిన్ నోటీసు]</b> రాబోయే డిస్కోర్స్ కోర్ మార్పులకు అనుకూలత కోసం థీమ్‌లు లేదా ప్లగ్ఇన్‌ని నవీకరించడం అవసరం (<a target='_blank' href='https://meta.discourse.org/t/287211'> మరింత సమాచారం</a>)."
+      theme_source: "గుర్తించబడిన థీమ్: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "గుర్తించబడిన ప్లగిన్: '%{name}'"
+    s3:
+      regions:
+        ap_northeast_1: "ఆసియా పసిఫిక్ (టోక్యో)"
+        ap_northeast_2: "ఆసియా పసిఫిక్ (సియోల్)"
+        ap_east_1: "ఆసియా పసిఫిక్ (హాంకాంగ్)"
+        ap_south_1: "ఆసియా పసిఫిక్ (ముంబై)"
+        ap_southeast_1: "ఆసియా పసిఫిక్ (సింగపూర్)"
+        ap_southeast_2: "ఆసియా పసిఫిక్ (సిడ్నీ)"
+        ca_central_1: "కెనడా (సెంట్రల్)"
+        cn_north_1: "చైనా (బీజింగ్)"
+        cn_northwest_1: "చైనా (నింగ్జియా)"
+        eu_central_1: "EU (ఫ్రాంక్‌ఫర్ట్)"
+        eu_north_1: "EU (స్టాక్‌హోమ్)"
+        eu_south_1: "EU (మిలన్)"
+        eu_west_1: "EU (ఐర్లాండ్)"
+        eu_west_2: "EU (లండన్)"
+        eu_west_3: "EU (పారిస్)"
+        sa_east_1: "దక్షిణ అమెరికా (సావో పాలో)"
+        us_east_1: "యుఎస్ ఈస్ట్ (నార్త్ వర్జీనియా)"
+        us_east_2: "యుఎస్ ఈస్ట్ (ఒహియో)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (US-వెస్ట్)"
+        us_west_1: "యుఎస్ వెస్ట్ (నార్త్ కాలిఫోర్నియా)"
+        us_west_2: "యుఎస్ వెస్ట్ (ఒరెగాన్)"
+    clear_input: "ఖాళీ"
     edit: "ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు"
+    expand: "విస్తరించండి"
     not_implemented: "ఈ ఫీచరు ఇంకా ఇంప్లిమెటు చేయలేదు. క్షమాపణలు!"
     no_value: "లేదు"
     yes_value: "అవును"
     ok_value: "సరే"
     cancel_value: "రద్దుచేయి"
+    submit: "పంపండి"
     delete: "తొలగించు"
     generic_error: "క్షమించాలి, ఒక దోషం తలెత్తింది"
     generic_error_with_reason: "ఒక దోషం జరిగింది: %{error}"
+    multiple_errors: "అనేక లోపాలు సంభవించాయి: %{errors}"
     sign_up: "సైన్ అప్"
     log_in: "లాగిన్"
     age: "వయసు"
@@ -127,19 +253,37 @@ te:
     privacy_policy: "అంతరంగికతా విధానం"
     privacy: "అంతరంగికత"
     tos: "సేవా నిబంధనలు"
+    rules: "నియమాలు"
+    conduct: "ప్రవర్తనా నియమావళిని"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
+    x_more:
+      one: "మరో %{count}"
+      other: "మరో %{count}"
     never: "ఎప్పటికీ వద్దు"
+    every_30_minutes: "ప్రతి 30 నిమిషాలకు"
     every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
+    every_month: "ప్రతి నెలా"
+    every_six_months: "ప్రతి ఆరు నెలలకు"
     max_of_count: "%{count} గరిష్టం"
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
+    period_chooser:
+      aria_label: "కాలపరిమితి ప్రకారం ఫిల్టర్ చేయండి"
+    related_messages:
+      title: "సంబంధిత సందేశాలు"
+      pill: "సంబంధిత సందేశాలు"
+      see_all: '@%{username} నుండి <a href="%{path}">అన్ని సందేశాలు</a> చూడండి…'
+    suggested_topics:
+      title: "కొత్త & చదవని విషయాలు"
+      pill: "సూచించినవి"
+      pm_title: "సూచించిన సందేశాలు"
     about:
       simple_title: "గురించి"
       title: "%{title} గురించి"
@@ -147,23 +291,96 @@ te:
       our_admins: "మా అధికారులు"
       our_moderators: "మా నిర్వాహకులు"
       moderators: "నిర్వాహకులు"
+      stat:
+        all_time: "ఎప్పటికీ"
+        last_day: "24 గంటలు"
+        last_7_days: "7 రోజులు"
+        last_30_days: "30 రోజులు"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
+      user_count: "మంది చేరారు"
+      active_user_count: "క్రియాశీల సభ్యులు"
+      contact: "మమ్మల్ని సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
     bookmarked:
       title: "పేజీక"
+      edit_bookmark: "బుక్‌మార్క్‌ని సవరించండి"
       clear_bookmarks: "పేజీక లను తుడిచివేయి"
       help:
+        bookmark: "ఈ విషయాన్ని బుక్‌మార్క్ చేయడానికి క్లిక్ చేయండి"
+        edit_bookmark: "ఈ విషయంలోని పోస్ట్‌పై బుక్‌మార్క్‌ని సవరించడానికి క్లిక్ చేయండి"
+        edit_bookmark_for_topic: "ఈ విషయం యొక్క బుక్‌మార్క్‌ని సవరించడానికి క్లిక్ చేయండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
+        unbookmark_with_reminder: "ఈ విషయంలోని అన్ని బుక్‌మార్క్‌లు మరియు రిమైండర్‌లను తీసివేయడానికి క్లిక్ చేయండి"
     bookmarks:
+      created: "మీరు ఈ పోస్ట్‌ను బుక్‌మార్క్ చేసారు. %{name}"
+      created_generic: "మీరు దీన్ని బుక్‌మార్క్ చేసారు. %{name}"
+      create: "బుక్‌మార్క్‌ని సృష్టించండి"
+      edit: "బుక్‌మార్క్‌ని సవరించండి"
       not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"
+      remove_reminder_keep_bookmark: "రిమైండర్‌ని తీసివేసి, బుక్‌మార్క్ ఉంచండి"
+      created_with_reminder: "మీరు ఈ పోస్ట్‌ను రిమైండర్‌తో బుక్‌మార్క్ చేసారు %{date}. %{name}"
+      created_with_reminder_generic: "మీరు దీన్ని రిమైండర్‌తో బుక్‌మార్క్ చేసారు %{date}. %{name}"
+      delete: "బుక్‌మార్క్‌ను తొలగించండి"
+      confirm_delete: "మీరు ఖచ్చితంగా ఈ బుక్‌మార్క్‌ని తొలగించాలనుకుంటున్నారా? రిమైండర్ కూడా తొలగించబడుతుంది."
+      confirm_clear: "మీరు ఈ విషయం నుండి మీ అన్ని బుక్‌మార్క్‌లను ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?"
       save: "భద్రపరచు"
+      no_timezone: 'మీరు ఇంకా సమయ మండలిని సిద్ధం చేయలేదు. మీరు రిమైండర్‌లను సిద్ధం చేయలేరు. <a href="%{basePath}/my/preferences/profile">మీ ప్రొఫైల్లో సెటప్ చేయండి</a>.'
+      invalid_custom_datetime: "మీరు అందించిన తేదీ మరియు సమయం చెల్లదు, దయచేసి మళ్లీ ప్రయత్నించండి."
+      list_permission_denied: "ఈ సభ్యుని బుక్‌మార్క్‌లను వీక్షించడానికి మీకు అనుమతి లేదు."
+      no_user_bookmarks: "మీకు బుక్‌మార్క్ చేసిన పోస్ట్‌లు లేవు; నిర్దిష్ట పోస్ట్‌లను త్వరగా సూచించడానికి బుక్‌మార్క్‌లు మిమ్మల్ని అనుమతిస్తాయి."
+      auto_delete_preference:
+        label: "మీకు తెలియజేసిన తర్వాత"
+        never: "బుక్‌మార్క్ ఉంచండి"
+        when_reminder_sent: "బుక్‌మార్క్‌ను తొలగించండి"
+        on_owner_reply: "నేను ప్రత్యుత్తరం ఇచ్చిన తర్వాత, బుక్‌మార్క్‌ను తొలగించండి"
+        clear_reminder: "బుక్‌మార్క్ ఉంచండి మరియు రిమైండర్‌ను తొలగించండి"
+      search_placeholder: "పేరు, విషయం శీర్షిక లేదా పోస్ట్ కంటెంట్ ద్వారా బుక్‌మార్క్‌లను శోధించండి"
       search: "వెతుకు"
+      reminders:
+        today_with_time: "ఈరోజు %{time} కి"
+        tomorrow_with_time: "రేపు %{time} కి"
+        at_time: "%{date_time} వద్ద"
+        existing_reminder: "మీరు ఈ బుక్‌మార్క్ కోసం రిమైండర్ సెట్ చేసారు, అది %{at_date_time} పంపబడుతుంది"
+    copy_codeblock:
+      copied: "కాపీ చేయబడింది!"
+      copy: "కోడ్‌ను క్లిప్‌బోర్డ్‌కి కాపీ చేయండి"
+      fullscreen: "పూర్తి స్క్రీన్‌లో కోడ్‌ని చూడండి"
+      view_code: "కోడ్ చూడండి"
     drafts:
+      label: "చిత్తుప్రతులు"
+      label_with_count: "చిత్తుప్రతులు (%{count})"
+      resume: "పునఃప్రారంభం"
       remove: "తొలగించు"
+      remove_confirmation: "మీరు ఖచ్చితంగా ఈ చిత్తుప్రతిని తొలగించాలనుకుంటున్నారా?"
+      new_topic: "కొత్త విషయం చిత్తుప్రతి"
+      new_private_message: "కొత్త వ్యక్తిగత సందేశ చిత్తుప్రతి"
+      abandon:
+        confirm: "మీకు ఇప్పటికే చిత్తుప్రతి పురోగతిలో ఉంది. మీరు దానితో ఏమి చేయాలనుకుంటున్నారు?"
+        yes_value: "విస్మరించండి"
+        no_value: "సవరణను కొనసాగించండి"
+    topic_count_all:
+      one: "%{count} కొత్త విషయం చూడండి"
+      other: "%{count} కొత్త విషయాలను చూడండి"
+    topic_count_categories:
+      one: "%{count} కొత్త లేదా నవీకరించబడిన విషయాన్ని చూడండి"
+      other: "%{count} కొత్త లేదా నవీకరించబడిన విషయాలను చూడండి"
+    topic_count_latest:
+      one: "%{count} కొత్త లేదా నవీకరించబడిన విషయాన్ని చూడండి"
+      other: "%{count} కొత్త లేదా నవీకరించబడిన విషయాలను చూడండి"
+    topic_count_unseen:
+      one: "%{count} కొత్త లేదా నవీకరించబడిన విషయాన్ని చూడండి"
+      other: "%{count} కొత్త లేదా నవీకరించబడిన విషయాలను చూడండి"
+    topic_count_unread:
+      one: "%{count} చదవని విషయాన్ని చూడండి"
+      other: "%{count} చదవని విషయాలను చూడండి"
+    topic_count_new:
+      one: "%{count} కొత్త విషయం చూడండి"
+      other: "%{count} కొత్త విషయాలను చూడండి"
     preview: "మునుజూపు"
     cancel: "రద్దు"
+    deleting: "తొలగించబడుతోంది…"
     save: "మార్పులు భద్రపరచండి"
     saved: "భద్రం!"
     upload: "ఎగుమతించు"
@@ -189,43 +406,142 @@ te:
         email: "ఈమెయిల్"
         name: "పేరు"
         reject_reason: "కారణం"
+      user_percentage:
+        agreed:
+          one: "%{count}% అంగీకరిస్తున్నారు"
+          other: "%{count}% అంగీకరిస్తున్నారు"
+        disagreed:
+          one: "%{count}% విభేదిస్తున్నారు"
+          other: "%{count}% విభేదిస్తున్నారు"
+        ignored:
+          one: "%{count} విస్మరిస్తున్నారు"
+          other: "%{count} విస్మరిస్తున్నారు"
       topics:
         topic: "విషయం"
+        reviewable_count: "సంఖ్య"
+        reported_by: "నివేదించారు"
+        deleted: "[విషయం తొలగించబడింది]"
+        original: "(అసలు విషయం)"
         details: "వివరాలు"
+        unique_users:
+          one: "%{count} సభ్యుడు"
+          other: "%{count} సభ్యులు"
+      replies:
+        one: "%{count} ప్రత్యుత్తరం"
+        other: "%{count} ప్రత్యుత్తరాలు"
       edit: "సవరించు"
       save: "భద్రపరచు"
       cancel: "రద్దుచేయి"
+      new_topic: "ఈ విషయాన్ని ఆమోదించడం వలన కొత్త విషయం సృష్టించబడుతుంది"
       filters:
         all_categories: "(అన్ని వర్గాలు)"
         type:
           title: "రకం"
+          all: "(అన్ని రకాలు)"
+        minimum_score: "కనిష్ట స్కోరు:"
         refresh: "తాజా పరుచు"
+        status: "స్థితి"
         category: "వర్గం"
+        orders:
+          score: "స్కోర్"
+          score_asc: "స్కోర్ (రివర్స్)"
       scores:
         type: "కారణం"
       statuses:
         pending:
           title: "పెండింగు"
+        approved:
+          title: "ఆమోదించబడింది"
+        approved_flag:
+          title: "ఫిర్యాదు ఆమోదించబడింది"
+        approved_user:
+          title: "సభ్యుడు ఆమోదించబడ్డారు"
+        approved_post:
+          title: "పోస్ట్ ఆమోదించబడింది"
+        rejected:
+          title: "తిరస్కరించబడింది"
+        rejected_flag:
+          title: "ఫిర్యాదు తిరస్కరించబడింది"
+        rejected_user:
+          title: "సభ్యుడు తిరస్కరించబడ్డారు"
+        rejected_post:
+          title: "పోస్ట్ తిరస్కరించబడింది"
+        ignored:
+          title: "ఫిర్యాదు విస్మరించబడింది"
+        deleted:
+          title: "విషయం లేదా పోస్ట్ తొలగించబడింది"
+        reviewed:
+          title: "అన్నీ సమీక్షించబడినవి"
+        all:
+          title: "అన్ని"
       context_question:
+        is_this_post: "ఇది %{reviewable_type} %{reviewable_human_score_types} కాదా?"
         delimiter: "లేదా"
+        something_else_wrong: "ఈ %{reviewable_type} లో ఏదైనా తప్పు ఉందా?"
       types:
+        reviewable_flagged_post:
+          title: "ఫిర్యాదుతో ఉన్న పోస్ట"
+          flagged_by: "ద్వారా ఫిర్యాదు చేయబడింది"
+          noun: "పోస్ట్"
         reviewable_queued_topic:
+          title: "క్యూలో ఉన్న విషయం"
           noun: "విషయం"
+        reviewable_queued_post:
+          title: "క్యూలో ఉన్న పోస్ట్"
+          noun: "పోస్ట్"
         reviewable_user:
           title: "సభ్యుడు"
           noun: "సభ్యుడు"
+        reviewable_post:
+          title: "పోస్ట్"
+          noun: "పోస్ట్"
       approval:
+        title: "పోస్ట్ కు ఆమోదం అవసరం"
+        description: "మేము మీ కొత్త పోస్ట్‌ను స్వీకరించాము కానీ అది కనిపించడానికి ముందు దానిని మోడరేటర్ ఆమోదించాలి. దయచేసి ఓపిక పట్టండి."
+        pending_posts:
+          one: "మీకు <strong>%{count}</strong> పోస్ట్ పెండింగ్‌లో ఉంది."
+          other: "మీకు <strong>%{count}</strong> పోస్ట్‌లు పెండింగ్‌లో ఉన్నాయి."
         ok: "సరే"
       example_username: "సభ్యనామం"
+      reject_reason:
+        title: "మీరు ఈ సభ్యుడిని ఎందుకు తిరస్కరిస్తున్నారు?"
+        send_email: "తిరస్కరణ ఇమెయిల్ పంపండి"
     relative_time_picker:
+      minutes:
+        one: "నిమిషం"
+        other: "నిమిషాలు"
+      hours:
+        one: "గంట"
+        other: "గంటలు"
       days:
         one: "రోజు"
         other: "రోజులు"
+      relative: "సాపేక్ష"
     time_shortcut:
+      now: "ఇప్పుడు"
+      in_one_hour: "ఒక గంటలో"
+      in_two_hours: "రెండు గంటల్లో"
+      later_today: "తరువాత, ఈ రోజు"
+      two_days: "రెండు రోజులు"
+      next_business_day: "తదుపరి వ్యాపార రోజు"
       tomorrow: "రేపు"
+      post_local_date: "పోస్ట్‌లో తేదీ"
+      later_this_week: "తరువాత, ఈ వారం"
       this_weekend: "ఈ వారాంతం"
+      start_of_next_business_week: "సోమవారం"
+      start_of_next_business_week_alt: "తదుపరి సోమవారం"
       next_week: "వచ్చే వారం"
+      two_weeks: "రెండు వారాలు"
       next_month: "వచ్చే నెల"
+      two_months: "రెండు నెలలు"
+      three_months: "మూడు నెలలు"
+      four_months: "నాలుగు నెలలు"
+      six_months: "ఆరు నెలలు"
+      one_year: "ఒక సంవత్సరం"
+      forever: "ఎప్పటికీ"
+      relative: "సాపేక్ష సమయం"
+      none: "ఏదీ అవసరం లేదు"
+      never: "ఎప్పటికీ వద్దు"
     user_action:
       user_posted_topic: "<a href='%{topicUrl}'>విషయాన్ని</a> <a href='%{userUrl}'>%{user}</a> రాసారు "
       you_posted_topic: "<a href='%{userUrl}'>మీరు</a> <a href='%{topicUrl}'>విషయాన్ని</a> రాసారు"

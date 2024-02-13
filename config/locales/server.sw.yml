@@ -451,6 +451,9 @@ sw:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Haifai"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
@@ -484,6 +487,9 @@ sw:
       long_form: "imeripotiwa na itapitiwa na msimamizi"
       short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
       email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Chapisho lako limeripotiwa na jumuiya. Tafadhali <a href="%{path}">ona ujumbe wako</a>.</p>'
@@ -1747,7 +1753,6 @@ sw:
       too_large: "Samahani, faili unalojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb})."
     images:
       too_large: "Samahani, picha unayojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb}),tafadhali badilisha ukubwa na jaribu tena."
-      larger_than_x_megapixels: "Samahani, picha unayojaribu kupakia ni kubwa sana (kipimo cha juu ni %{max_image_megapixels} - megapixels),t afadhali badilisha ukubwa na jaribu tena."
       size_not_found: "Samahani ila hatujaweza kujua kipimo cha picha. Labda picha yako ina tatizo?"
     placeholders:
       too_large: "(picha kubwa zaidi ya KB %{max_size_kb})"
