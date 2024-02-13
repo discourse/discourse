@@ -22,7 +22,7 @@ module("Unit | Service | screen-track", function (hooks) {
 
     await tracker.sendNextConsolidatedTiming();
 
-    assert.equal(
+    assert.strictEqual(
       tracker.highestReadFromCache(2),
       4,
       "caches highest read post number for second topic"
@@ -30,19 +30,16 @@ module("Unit | Service | screen-track", function (hooks) {
   });
 
   test("appEvent topic:timings-sent is triggered after posting consolidated timings", async function (assert) {
-    assert.timeout(1000);
-
     const tracker = this.owner.lookup("service:screen-track");
     const appEvents = this.owner.lookup("service:app-events");
 
-    const done = assert.async();
-
     appEvents.on("topic:timings-sent", () => {
-      assert.ok(true);
-      done();
+      assert.step("sent");
     });
 
     tracker.consolidateTimings({ 1: 10, 2: 5 }, 10, 1);
     await tracker.sendNextConsolidatedTiming();
+
+    await assert.verifySteps(["sent"]);
   });
 });
