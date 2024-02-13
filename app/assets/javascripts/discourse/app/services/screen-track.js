@@ -37,7 +37,7 @@ export default class ScreenTrack extends Service {
   _topicTime = 0;
   _onscreen = [];
   _readOnscreen = [];
-  _readPosts = {};
+  _readPosts = new Set();
   _inProgress = false;
 
   constructor() {
@@ -104,7 +104,7 @@ export default class ScreenTrack extends Service {
     this._topicTime = 0;
     this._onscreen = [];
     this._readOnscreen = [];
-    this._readPosts = {};
+    this._readPosts.clear();
     this._inProgress = false;
   }
 
@@ -344,7 +344,7 @@ export default class ScreenTrack extends Service {
       return (
         this._timings[postNumber] > 0 &&
         !this._totalTimings[postNumber] &&
-        !this._readPosts[postNumber]
+        !this._readPosts.has(postNumber)
       );
     });
 
@@ -366,7 +366,7 @@ export default class ScreenTrack extends Service {
       );
 
       this._readOnscreen.forEach((postNumber) => {
-        this._readPosts[postNumber] = true;
+        this._readPosts.add(postNumber);
       });
     }
   }
