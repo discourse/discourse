@@ -166,7 +166,6 @@ fa_IR:
     skip_to_main_content: "رفتن به محتوای اصلی"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
-      message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
       dismiss: "رد کردن"
     themes:
       default_description: "پیش‌فرض"
@@ -3976,6 +3975,7 @@ fa_IR:
           save_error_with_reason: "تغییرات شما ذخیره نشده‌است. %{error}"
       email:
         title: "ایمیل‌ها"
+        settings: "تنظیمات ایمیل"
         templates: "قالب‌ها"
         templates_title: "قالب‌های ایمیل"
         preview_digest: "پیشنمایش خلاصه"

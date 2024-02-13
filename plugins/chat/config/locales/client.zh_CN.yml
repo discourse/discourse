@@ -56,6 +56,7 @@ zh_CN:
       cancel_reply: "取消回复"
       chat_channels: "频道"
       browse_all_channels: "浏览所有频道"
+      see_in: "参见"
       move_to_channel:
         title: "将消息移至频道"
         instructions:

@@ -110,7 +110,7 @@ de:
       optimized_link: Optimierte Bildlinks sind flüchtig und sollten nicht in den Theme-Quellcode eingebunden werden.
     settings_errors:
       invalid_yaml: "Der YAML-Code ist ungültig."
-      data_type_inclusion: "Typ der Einstellung `%{name}` wird nicht unterstützt. Unterstützte Typen sind `integer`, `bool`, `list`, `enum` und `upload`"
+      data_type_inclusion: "Die Einstellung des Typs \"%{name}\" wird nicht unterstützt. Unterstützte Typen sind `integer`, `bool`, `list`, `enum` und `upload`."
       name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
       default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
       default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
@@ -893,6 +893,12 @@ de:
       title: "Unangemessen"
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend, hasserfüllt oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
+    illegal:
+      title: "Es ist illegal"
+      description: "Dieser Beitrag erfordert die Aufmerksamkeit der Mitarbeiter, da er meiner Meinung nach illegale Inhalte enthält."
+      short_description: "Das ist illegal"
+      email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
       description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
@@ -971,6 +977,12 @@ de:
       long_form: "hast dies den Moderatoren gemeldet"
       short_description: "Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams"
       email_title: 'Das Thema „%{title}“ erfordert die Aufmerksamkeit eines Moderators'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Es ist illegal"
+      description: "Dieses Thema erfordert die Aufmerksamkeit der Mitarbeiter, weil es meiner Meinung nach illegale Inhalte enthält."
+      short_description: "Das ist illegal"
+      email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="%{path}">überprüfe deine Nachrichten</a>.</p>'
@@ -1826,7 +1838,7 @@ de:
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
     flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen."
     min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
-    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen."
+    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Admins und Moderatoren dürfen immer Links posten."
     min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
     embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten"
     min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
@@ -2024,6 +2036,7 @@ de:
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
+    hide_user_activity_tab: "Blende die Registerkarte \"Aktivität\" in Benutzerprofilen aus, außer für Admin und dich selbst."
     allow_featured_topic_on_user_profiles: "Erlaube Benutzern, ihrer Benutzerkarte und ihrem Profil einen Link zu einem Thema hinzuzufügen."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."

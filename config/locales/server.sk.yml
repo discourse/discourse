@@ -550,6 +550,9 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Poslať @%{username} správu"
       email_title: 'Váš príspevok v "%{title}"'
@@ -589,6 +592,9 @@ sk:
       title: "Niečo iné"
       long_form: "označené do pozornosti moderátora"
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>"

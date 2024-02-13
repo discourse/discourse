@@ -31,7 +31,7 @@ ro:
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
-      long_no_year_no_time: "DD MMM"
+      long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM "
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
@@ -178,7 +178,7 @@ ro:
     action_codes:
       public_topic: "A făcut acest subiect public %{when}"
       open_topic: "A convertit aceasta într-un subiect %{when}"
-      private_topic: "A făcut acest subiect un mesaj personal %{when}"
+      private_topic: "Fă acest subiect un mesaj personal %{when}"
       split_topic: "A împărțit acest subiect %{when}"
       invited_user: "A invitat pe %{who} %{when}"
       invited_group: "A invitat pe %{who} %{when}"
@@ -216,7 +216,7 @@ ro:
     emails_are_disabled: "Trimiterea de e-mailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări e-mail de niciun fel."
     emails_are_disabled_non_staff: "Mesajele de e-mail de ieșire au fost dezactivate pentru utilizatorii care nu fac parte din echipă."
     software_update_prompt:
-      message: "Am actualizat acest site, <span>te rugăm să reîmprospătezi</span>, altfel s-ar putea să ai un comportament neașteptat."
+      message: "Am actualizat acest site, <span>te rugăm să reîmprospătezi</span> pentru ca lucrurile să funcționeze fără probleme."
       dismiss: "Respinge"
     bootstrap_mode: "Începe"
     themes:
@@ -228,12 +228,12 @@ ro:
     broken_page_change_alert: "Un gestionar onPageChange a ridicat o eroare. Verifică instrumentele de dezvoltare ale navigatorului pentru mai multe informații."
     critical_deprecation:
       notice: "<b>[Notificare de administrare]</b> Una dintre temele sau modulele tale necesită actualizare pentru compatibilitate cu modificările viitoare de nucleu ale Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>mai multe informații</a>)."
-      theme_source: "Temă identificată: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      theme_source: "Temă identificată: <a target='_blank' href='%{path}'>„%{name}”</a>."
       plugin_source: "Modul identificat: „%{name}”"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
-        ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_northeast_2: "Asia Pacific (Seul)"
         ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
@@ -2681,6 +2681,7 @@ ro:
       notify_user_textarea_label: "Mesaj pentru utilizator"
       custom_placeholder_notify_moderators: "Spune-ne exact ceea ce te preocupă, și dă-ne și legături relevante și exemple de câte ori este posibil."
       notify_moderators_textarea_label: "Mesaj pentru moderatori"
+      custom_placeholder_illegal: "Spune-ne în mod specific de ce crezi că acest conținut este ilegal și furnizează legături și exemple relevante acolo unde este posibil."
       custom_message:
         at_least:
           one: "introdu cel puțin %{count} caracter"

@@ -278,6 +278,8 @@ te:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "అసమంజసమైనది"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: '"%{title}" లో మీ టపా'
       email_body: "%{link}\n\n%{message}"
@@ -304,6 +306,8 @@ te:
       title: "వేరే ఏదో"
       long_form: "దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
       email_title: '"%{title}" విషయం నిర్వాహకుల దృష్టిలో ఉంది.'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>ఈ టపా కమ్యునిటీ కేతనించింది. తాత్కాలికంగా దాచబడింది</p>"

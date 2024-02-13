@@ -840,6 +840,9 @@ ja:
       title: "不適切"
       description: 'この投稿には一般的な人が攻撃的、虐待的、ヘイト行為、または<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれています。'
       short_description: '<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>の違反'
+    illegal:
+      email_title: '"%{title}" の投稿にはスタッフの注意が必要です'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} にメッセージを送る"
       description: "この投稿についてこのユーザーと直接話すことを希望します。"
@@ -918,6 +921,9 @@ ja:
       long_form: "モデレーターの注意要として通報"
       short_description: "その他の理由でスタッフの注意が必要"
       email_title: 'トピック "%{title}" はモデレーターの注意が必要です'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}" の投稿にはスタッフの注意が必要です'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>あなたの投稿はコミュニティーから通報されました。<a href="%{path}">投稿したメッセージを確認</a>してください。</p>'
@@ -3777,7 +3783,6 @@ ja:
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
       too_large_humanized: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size} です)。サイズを変更してもう一度お試しください。"
-      larger_than_x_megapixels: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
     placeholders:
       too_large: "(%{max_size_kb}KB を超える画像)"

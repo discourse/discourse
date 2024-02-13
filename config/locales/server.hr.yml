@@ -688,6 +688,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
       email_title: 'Vaša objava u "%{title}"'
@@ -716,6 +718,8 @@ hr:
       title: "Nešto drugo"
       long_form: "označio za moderatorsku pozornost"
       email_title: 'Tema "%{title}" zahtjeva moderatorsku pozornost'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Ovu je objavu zajednica označila zastavicom i privremeno je skrivena.</p>"

@@ -616,6 +616,9 @@ vi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Gửi tin nhắn cho @%{username}."
       email_title: 'Bài đăng của bạn trong "%{title}"'
@@ -658,6 +661,9 @@ vi:
       long_form: "đã đánh dấu cho điều hành viên xem xét"
       short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>"

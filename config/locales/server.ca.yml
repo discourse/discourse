@@ -637,6 +637,9 @@ ca:
     inappropriate:
       title: "Inapropiat"
       short_description: 'Una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>'
+    illegal:
+      email_title: 'Una publicació en "%{title}" necessita la supervisió de l''equip responsable'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envia un missatge a @%{username}"
       description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
@@ -694,6 +697,9 @@ ca:
       long_form: "marcat amb bandera per a moderació"
       short_description: "Requereix l'atenció de l'equip responsable per un altre motiu"
       email_title: 'El tema "%{title}" necessita moderació'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Una publicació en "%{title}" necessita la supervisió de l''equip responsable'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p> La comunitat ha marcat la vostra publicació amb bandera. Consulteu <a href="%{path}">els vostres missatges</a> . </p>'
@@ -2500,7 +2506,6 @@ ca:
       too_large: "El fitxer que intenteu carregar és massa gran (la mida màxima és %{max_size_kb}KB)."
     images:
       too_large: "La imatge que proveu de carregar és massa gran (la mida màxima és %{max_size_kb}KB). Redimensioneu-la i torneu a provar-ho."
-      larger_than_x_megapixels: "La imatge que intenteu carregar és massa gran (la mida màxima és %{max_image_megapixels}-megapixels). Redimensioneu-la i torneu a provar-ho."
       size_not_found: "Ho sentim, però no podem determinar la mida de la imatge. Potser la imatge està malmesa."
     placeholders:
       too_large: "(imatge més gran de %{max_size_kb}KB)"

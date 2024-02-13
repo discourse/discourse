@@ -893,6 +893,9 @@ nl:
       title: "Ongepast"
       description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend, hatelijk gedrag of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} een bericht sturen"
       description: "I wil rechtstreeks en persoonlijk met deze persoon over diens bericht praten."
@@ -971,6 +974,9 @@ nl:
       long_form: "heeft dit gemarkeerd voor aandacht van een moderator"
       short_description: "Dit bericht vereist aandacht van een medewerker om een andere reden"
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Je bericht is gemarkeerd door de community. <a href="%{path}">Bekijk je berichten</a>.</p>'
@@ -1824,7 +1830,6 @@ nl:
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     flag_post_allowed_groups: "Groepen die topics mogen markeren."
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
-    post_links_allowed_groups: "Groepen die links in berichten mogen opnemen."
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
     embedded_media_post_allowed_groups: "De gebruikers in deze groepen mogen media-items opnemen in een bericht"
     min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
@@ -3888,7 +3893,6 @@ nl:
     images:
       too_large: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size_kb} KB). Verklein de afbeelding en probeer het opnieuw."
       too_large_humanized: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size}). Verklein de afbeelding en probeer het opnieuw."
-      larger_than_x_megapixels: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale afmeting is %{max_image_megapixels} megapixels). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
     placeholders:
       too_large: "(afbeelding groter dan %{max_size_kb} KB)"

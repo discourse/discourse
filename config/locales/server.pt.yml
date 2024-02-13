@@ -627,6 +627,9 @@ pt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
       email_title: 'A sua mensagem em "%{title}"'
@@ -659,6 +662,9 @@ pt:
       long_form: "sinalizou isto para obter a atenção do moderador"
       short_description: "Requer a atenção da equipa por outra razão"
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>"

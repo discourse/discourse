@@ -334,6 +334,8 @@ bs_BA:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -361,6 +363,8 @@ bs_BA:
       description: 'Ova tema zahtijeva opću pažnju administratora na osnovu <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">TOS</a> ili iz drugog razloga koji nije gore naveden.'
       long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"

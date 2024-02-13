@@ -188,7 +188,6 @@ sv:
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
-      message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
     themes:
@@ -3363,6 +3362,7 @@ sv:
           off_topic: "Du flaggade detta som irrelevant"
           spam: "Du flaggade detta som skräppost"
           inappropriate: "Du flaggade detta som olämpligt"
+          illegal: "Du flaggade detta som olagligt"
           notify_moderators: "Du flaggade det för moderation."
           notify_user: "Du skickade ett meddelande till denna användare"
       delete:
@@ -3627,10 +3627,12 @@ sv:
         off_topic: "Det är irrelevant"
         inappropriate: "Det är olämpligt"
         spam: "Det är skräppost"
+        illegal: "Det är olagligt"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
       notify_user_textarea_label: "Meddelande till användaren"
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka om möjligt med relevanta länkar och exempel."
       notify_moderators_textarea_label: "Meddelande till moderatorerna"
+      custom_placeholder_illegal: "Låt oss veta i detalj varför du tycker detta innehåll är olagligt, och skicka om möjligt med relevanta länkar och exempel."
       custom_message:
         at_least:
           one: "skriv åtminstone %{count} tecken"
@@ -4772,10 +4774,14 @@ sv:
           post_liked: "När en användare gillar ett inlägg."
         notification_event:
           group_name: "Aviseringshändelser"
+          notification_created: "En användare får en avisering i sitt flöde"
         group_user_event:
           group_name: "Gruppanvändarhändelser"
+          user_added_to_group: "En användare läggs till i en grupp"
+          user_removed_from_group: "En användare tas bort från en grupp"
         user_promoted_event:
           group_name: "Användarfrämjande händelser"
+          user_promoted: "En användare befordras"
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -5195,6 +5201,7 @@ sv:
           instructions: "Anpassa mallen där alla e-post renderas, samt stil genom CSS."
       email:
         title: "E-post"
+        settings: "E-postinställningar"
         templates: "Mallar"
         templates_title: "E-postmallar"
         preview_digest: "Förhandsgranska sammandrag"
@@ -5841,6 +5848,7 @@ sv:
             other: "De senaste %{count} dagarna:"
           value_heading: "Värde"
           requirement_heading: "Krav"
+          posts_read_days: "Lästa inlägg: unika dagar"
           days: "dagar"
           topics_replied_to: "Besvarade ämnen"
           topics_viewed: "Besökta ämnen"
@@ -6146,6 +6154,7 @@ sv:
         category_title: "Kategori"
         tag_name: "Namn på tagg"
         external_url: "Extern eller relativ URL"
+        user_id: "Användar-ID"
         username: "Användarnamn"
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"

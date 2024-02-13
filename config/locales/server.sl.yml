@@ -506,6 +506,9 @@ sl:
     inappropriate:
       title: "Neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
+    illegal:
+      email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
@@ -535,6 +538,9 @@ sl:
       long_form: "prijavljeno za pregled moderatorja"
       short_description: "Potrebuje pregled osebja iz drugega razloga"
       email_title: 'Tema "%{title}" potrebuje pregled moderatorja'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Vaš prispevek je bil prijavljen s strani skupnosti. <a href="%{path}">Preverite vaša sporočila</a>.</p>'

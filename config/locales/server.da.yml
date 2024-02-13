@@ -756,6 +756,9 @@ da:
     inappropriate:
       title: "Upassende"
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
+    illegal:
+      email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send @%{username} en besked"
       description: "Jeg vil gerne tale med denne person direkte og personligt om deres indlæg."
@@ -823,6 +826,9 @@ da:
       long_form: "anmeldte dette til moderator gennemsyn"
       short_description: "Kræver personalets opmærksomhed af en anden grund"
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dit indlæg blev anmeldt af fællesskabet. Venligst <a href="%{path}">se dine beskeder</a>.</p>'
@@ -2814,7 +2820,6 @@ da:
       too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:
       too_large: "Beklager, men billedet som du forsøger at overføre er for stort (den maksimale størrelse er %{max_size_kb}KB). Gør det venligst mindre og prøv igen."
-      larger_than_x_megapixels: "Beklager, det billede, du prøver at overføre, er for stort (maks. Dimension er %{max_image_megapixels}-megapixels), du bedes ændre størrelsen på det og prøve igen."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
     placeholders:
       too_large: "(Billede større end %{max_size_kb}KB)"

@@ -56,6 +56,7 @@ pl_PL:
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
+      see_in: "Zobacz w"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:

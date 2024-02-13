@@ -744,6 +744,9 @@ gl:
     inappropriate:
       title: "Inapropiado"
       short_description: 'Unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>'
+    illegal:
+      email_title: 'Unha publicación en «%{title}» require a atención do equipo'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviarlle unha mensaxe a @%{username}"
       description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
@@ -802,6 +805,9 @@ gl:
       long_form: "denunciou isto para que sexa estudado polos moderadores"
       short_description: "Require a atención do equipo por outro motivo"
       email_title: 'O tema "%{title}" require a atención do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Unha publicación en «%{title}» require a atención do equipo'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>A súa publicación foi denunciada pola comunidade. Por favor, <a href="%{path}">revise as súas mensaxes</a>.</p>'
@@ -3198,7 +3204,6 @@ gl:
       too_large: "Sentímolo, o ficheiro que tenta subir é grande de máis (o tamaño máximo é de %{max_size_kb} KB)."
     images:
       too_large: "Sentímolo, a imaxe que tenta subir é grande de máis (o tamaño máximo é de %{max_size_kb} KB); redimensiónea e vólvao tentar."
-      larger_than_x_megapixels: "Sentímolo, a imaxe que tenta subir é grande de máis (o tamaño máximo é de %{max_image_megapixels} megapíxeles); redimensiónea e vólvao tentar."
       size_not_found: "Sentímolo, mais non puidemos determinar o tamaño da imaxe. Estará se cadra danada?"
     placeholders:
       too_large: "(imaxe máis grande que %{max_size_kb} KB)"

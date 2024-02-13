@@ -547,6 +547,9 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
@@ -581,6 +584,9 @@ nb_NO:
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
       email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
