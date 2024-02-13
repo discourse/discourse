@@ -25,6 +25,7 @@ class MigrateMinTrustLevelForHereMentionToGroup < ActiveRecord::Migration[7.0]
       DB.exec(<<~SQL, setting: here_mention_allowed_groups)
         INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
         VALUES('here_mention_allowed_groups', :setting, 20, NOW(), NOW())
+        ON CONFLICT (name) DO NOTHING
       SQL
     end
   end
