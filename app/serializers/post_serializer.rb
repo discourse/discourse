@@ -88,7 +88,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_pending_count,
              :user_suspended,
              :user_status,
-             :mentioned_users
+             :mentioned_users,
+             :mentions
 
   def initialize(object, opts)
     super(object, opts)
@@ -591,6 +592,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_mentioned_users?
     SiteSetting.enable_user_status
+  end
+
+  def mentions
+    object.post_mentions.map { |mention| { id: mention.mention_id, type: mention.mention_type } }
+  end
+
+  def include_mentions?
+    scope.can_lazy_load_categories?
   end
 
   private

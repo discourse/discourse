@@ -49,6 +49,7 @@ class CookedPostProcessor
       enforce_nofollow
       grant_badges
       @post.link_post_uploads(fragments: @doc)
+      @post.link_post_mentions(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end

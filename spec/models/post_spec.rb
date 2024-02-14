@@ -2273,4 +2273,19 @@ RSpec.describe Post do
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
     end
   end
+
+  describe "#link_post_mentions" do
+    fab!(:category)
+
+    it "should link category" do
+      post = Fabricate(:post, raw: "##{category.slug}")
+
+      post.link_post_mentions(fragments: Loofah.html5_fragment(post.cooked))
+
+      expect(PostMention.where(post: post).count).to eq(1)
+      post_mention = PostMention.where(post: post).first
+      expect(post_mention.mention_type).to eq("Category")
+      expect(post_mention.mention_id).to eq(category.id)
+    end
+  end
 end

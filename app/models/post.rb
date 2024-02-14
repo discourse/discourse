@@ -63,6 +63,8 @@ class Post < ActiveRecord::Base
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
   has_many :reviewables, as: :target, dependent: :destroy
 
+  has_many :post_mentions, dependent: :destroy
+
   validates_with PostValidator, unless: :skip_validation
   validates :edit_reason, length: { maximum: 1000 }
 
@@ -1100,6 +1102,50 @@ class Post < ActiveRecord::Base
           .update_all(access_control_post_id: self.id)
       end
     end
+  end
+
+  def link_post_mentions(fragments: nil)
+    hashtags_by_type = Hash.new { |h, k| h[k] = [] }
+
+    # Users
+    mentioned_usernames = []
+    fragments.css(".mention").each { |mention| mentioned_usernames << mention.text[1..] }
+    if mentioned_usernames.present?
+      hashtags_by_type[User.name] = User.where(
+        username_lower: mentioned_usernames.map(&:downcase),
+      ).pluck(:id)
+    end
+
+    # Groups
+    mentioned_groups = []
+    fragments.css(".mention-group").each { |mention| mentioned_groups << mention.text[1..] }
+    if mentioned_groups.present?
+      hashtags_by_type[Group.name] = Group.where(name: mentioned_groups).pluck(:id)
+    end
+
+    # Hashtags
+    fragments
+      .css(".hashtag-cooked")
+      .each do |hashtag_element|
+        hashtag_type = hashtag_element.attributes["data-type"].value
+        hashtag_id = hashtag_element.attributes["data-id"].value.to_i
+
+        hashtag_type =
+          case hashtag_type.downcase
+          when "category"
+            Category.name
+          when "channel"
+            Chat::Channel.name
+          when "tag"
+            Tag.name
+          else
+            next
+          end
+
+        hashtags_by_type[hashtag_type] << hashtag_id
+      end
+
+    PostMention.ensure_exist!(post_id: self.id, ids_by_type: hashtags_by_type)
   end
 
   def update_uploads_secure_status(source:)
