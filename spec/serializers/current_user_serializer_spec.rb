@@ -163,7 +163,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     context "when user is a staff member" do
-      let(:user) { Fabricate(:admin) }
+      let(:user) { Fabricate(:moderator) }
 
       it "returns true" do
         expect(payload[:can_ignore_users]).to eq(true)
