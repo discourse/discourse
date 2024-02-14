@@ -490,23 +490,26 @@ export default class ComposerService extends Service {
     "model.post.username"
   )
   ariaLabel(modelAction, isWhispering, privateMessage, postUsername) {
-    const getLabel = {
-      createSharedDraft: () => I18n.t("composer.create_shared_draft"),
-      editSharedDraft: () => I18n.t("composer.edit_shared_draft"),
-      createTopic: () => I18n.t("composer.composer_actions.create_topic.label"),
-      privateMessage: () => I18n.t("user.new_private_message"),
-      edit: () => I18n.t("composer.composer_actions.edit"),
-      reply: () => {
+    switch (modelAction) {
+      case "createSharedDraft":
+        return I18n.t("composer.create_shared_draft");
+      case "editSharedDraft":
+        return I18n.t("composer.edit_shared_draft");
+      case "createTopic":
+        return I18n.t("composer.composer_actions.create_topic.label");
+      case "privateMessage":
+        return I18n.t("user.new_private_message");
+      case "edit":
+        return I18n.t("composer.composer_actions.edit");
+      case "reply":
         if (isWhispering) {
           return `${I18n.t("composer.create_whisper")} ${this.site.get(
             "whispers_allowed_groups_names"
           )}`;
         }
-
         if (privateMessage) {
           return I18n.t("composer.create_pm");
         }
-
         if (postUsername) {
           return I18n.t("composer.composer_actions.reply_to_post.label", {
             postUsername,
@@ -514,14 +517,9 @@ export default class ComposerService extends Service {
         } else {
           return I18n.t("composer.composer_actions.reply_to_topic.label");
         }
-      },
-    };
-
-    if (getLabel[modelAction]) {
-      return getLabel[modelAction]();
+      default:
+        return I18n.t("keyboard_shortcuts_help.composing.title");
     }
-
-    return I18n.t("keyboard_shortcuts_help.composing.title");
   }
 
   // Use this to open the composer when you are not sure whether it is
