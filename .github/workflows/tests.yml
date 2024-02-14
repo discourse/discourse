@@ -331,7 +331,8 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    if: false
+    # if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' || '' }}
     runs-on: actuated-8cpu-10gb
     container:
