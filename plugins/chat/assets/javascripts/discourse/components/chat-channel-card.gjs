@@ -61,9 +61,6 @@ export default class ChatChannelCard extends Component {
         <div class="chat-channel-card__cta">
           {{#if @channel.isFollowing}}
             <div class="chat-channel-card__tags">
-              <span class="chat-channel-card__tag -joined">
-                {{i18n "chat.joined"}}
-              </span>
 
               <ToggleChannelMembershipButton
                 @channel={{@channel}}
