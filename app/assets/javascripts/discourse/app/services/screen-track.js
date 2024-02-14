@@ -340,10 +340,10 @@ export default class ScreenTrack extends Service {
 
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.entries(this._timings).some(([postNumber, timing]) => {
+    const rush = [...this._timings.entries()].some(([postNumber, timing]) => {
       return (
         timing > 0 &&
-        !this._totalTimings.get(postNumber) > 0 &&
+        !this._totalTimings.get(postNumber) &&
         !this._readPosts.has(postNumber)
       );
     });
@@ -363,7 +363,7 @@ export default class ScreenTrack extends Service {
       this._onscreen?.forEach((postNumber) =>
         this._timings.set(
           postNumber,
-          (this._timings.get(postNumber) || 0) + diff
+          (this._timings.get(postNumber) ?? 0) + diff
         )
       );
 
