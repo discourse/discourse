@@ -1,5 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   count,
@@ -373,6 +374,36 @@ acceptance("Composer - Image Preview", function (needs) {
       query(".d-editor-input").value.includes("image_example_1"),
       true,
       "It should have the second image"
+    );
+  });
+});
+
+acceptance("Composer - Image Preview - Plugin API", function (needs) {
+  needs.user({});
+
+  needs.hooks.beforeEach(() => {
+    withPluginApi("1.25.0", (api) => {
+      api.addComposerImageWrapperButton(
+        "My Custom Button",
+        "custom-button-class",
+        "lock",
+        () => {}
+      );
+    });
+  });
+
+  test("extra API button is added to image preivew wrapper", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await fillIn(
+      ".d-editor-input",
+      "![image_example_0|666x500](upload://q4iRxcuSAzfnbUaCsbjMXcGrpaK.jpeg)"
+    );
+
+    assert.ok(
+      exists(".image-wrapper .custom-button-class"),
+      "The custom button is added to the image preview wrapper"
     );
   });
 });
