@@ -394,12 +394,17 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
         "My Custom Button",
         "custom-button-class",
         "lock",
-        () => {}
+        (event) => {
+          if (event.target.classList.contains("custom-button-class")) {
+            document.querySelector(".d-editor-input").value =
+              "custom button change";
+          }
+        }
       );
     });
   });
 
-  test("extra API button is added to image preivew wrapper", async function (assert) {
+  test("image wrapper includes extra API button and is functional", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
@@ -411,6 +416,14 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
     assert.ok(
       exists(".image-wrapper .custom-button-class"),
       "The custom button is added to the image preview wrapper"
+    );
+
+    await click(".custom-button-class");
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      "custom button change",
+      "The custom button changes the editor input"
     );
   });
 });
