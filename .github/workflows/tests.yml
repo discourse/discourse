@@ -84,8 +84,17 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v4
+        uses: tespkg/actions-cache@v1
         with:
+          endpoint: "192.168.128.1"
+          port: 8333
+          insecure: true
+          accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
+          secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
+          bucket: actuated-runners
+          region: local
+          use-fallback: true
+
           path: vendor/bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
@@ -103,9 +112,18 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v4
+        uses: tespkg/actions-cache@v1
         id: yarn-cache
         with:
+          endpoint: "192.168.128.1"
+          port: 8333
+          insecure: true
+          accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
+          secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
+          bucket: actuated-runners
+          region: local
+          use-fallback: true
+
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
@@ -121,8 +139,17 @@ jobs:
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache
-        uses: actions/cache@v4
+        uses: tespkg/actions-cache@v1
         with:
+          endpoint: "192.168.128.1"
+          port: 8333
+          insecure: true
+          accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
+          secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
+          bucket: actuated-runners
+          region: local
+          use-fallback: true
+
           path: plugins/*/gems
           key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
 
@@ -137,9 +164,18 @@ jobs:
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Fetch app state cache
-        uses: actions/cache@v4
+        uses: tespkg/actions-cache@v1
         id: app-cache
         with:
+          endpoint: "192.168.128.1"
+          port: 8333
+          insecure: true
+          accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
+          secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
+          bucket: actuated-runners
+          region: local
+          use-fallback: true
+
           path: tmp/app-cache
           key: >-
             ${{ runner.os }}-
@@ -179,10 +215,19 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v4
+        uses: tespkg/actions-cache@v1
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
+          endpoint: "192.168.128.1"
+          port: 8333
+          insecure: true
+          accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
+          secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
+          bucket: actuated-runners
+          region: local
+          use-fallback: true
+
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
