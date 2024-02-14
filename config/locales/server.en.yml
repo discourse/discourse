@@ -1521,6 +1521,7 @@ en:
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
     ember_version_warning: "Your site is running with the unsupported EMBER_VERSION=3 configuration. This may lead to unexpected issues with themes/plugins. Please remove the EMBER_VERSION configuration from your app.yml file and rebuild. See <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> for more information."
+    back_from_logster_text: "Back to site"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
