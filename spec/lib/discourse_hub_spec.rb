@@ -17,6 +17,22 @@ RSpec.describe DiscourseHub do
     end
   end
 
+  describe ".discover_enrollment" do
+    it "should trigger a POST request to hub" do
+      stub_request(
+        :post,
+        (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/discover/enroll",
+      ).with(body: JSON[DiscourseHub.discover_enrollment_payload]).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      DiscourseHub.discover_enrollment
+    end
+  end
+
   describe ".version_check_payload" do
     describe "when Discourse Hub has not fetched stats since past 7 days" do
       it "should include stats" do
