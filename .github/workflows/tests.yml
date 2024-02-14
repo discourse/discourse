@@ -23,7 +23,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' || '' }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
+    runs-on: ${{ (matrix.build_type == 'annotations') && 'actuated-4cpu-8gb' || 'actuated-8cpu-10gb' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
 
@@ -333,7 +333,7 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' || '' }}
-    runs-on: ubuntu-20.04-8core
+    runs-on: actuated-8cpu-10gb
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
