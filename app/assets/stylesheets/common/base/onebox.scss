@@ -935,6 +935,8 @@ aside.onebox.mixcloud-preview {
   }
 }
 .video-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
@@ -1000,6 +1002,8 @@ iframe.vimeo-onebox {
 }
 
 .onebox-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;
