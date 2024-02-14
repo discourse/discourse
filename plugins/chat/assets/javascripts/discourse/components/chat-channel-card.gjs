@@ -49,15 +49,6 @@ export default class ChatChannelCard extends Component {
                 {{i18n "chat.muted"}}
               </LinkTo>
             {{/if}}
-
-            <LinkTo
-              @route="chat.channel.info.settings"
-              @models={{@channel.routeModels}}
-              class="chat-channel-card__setting"
-              tabindex="-1"
-            >
-              {{dIcon "cog"}}
-            </LinkTo>
           </div>
         </div>
 

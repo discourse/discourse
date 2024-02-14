@@ -109,12 +109,6 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     );
   });
 
-  test("Settings button", async function (assert) {
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
-    assert.true(exists(".chat-channel-card__setting"));
-  });
-
   test("Read restricted chatable", async function (assert) {
     this.channel.chatable.read_restricted = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
