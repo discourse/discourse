@@ -380,6 +380,13 @@ acceptance("Composer - Image Preview", function (needs) {
 
 acceptance("Composer - Image Preview - Plugin API", function (needs) {
   needs.user({});
+  needs.settings({ allow_uncategorized_topics: true });
+  needs.site({ can_tag_topics: true });
+  needs.pretender((server, helper) => {
+    server.post("/uploads/lookup-urls", () => {
+      return helper.response([]);
+    });
+  });
 
   needs.hooks.beforeEach(() => {
     withPluginApi("1.25.0", (api) => {
