@@ -80,8 +80,11 @@ function updateScriptReferences({
         entrypointName === "discourse" &&
         element.tagName.toLowerCase() === "script"
       ) {
+        const nonce = [...element.attributes].find(
+          ([attr]) => attr === "nonce"
+        )[1];
         newElements.unshift(
-          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${element.attributes["nonce"]}"></script>`
+          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${nonce}"></script>`
         );
       }
 
