@@ -1498,8 +1498,8 @@ var bar = 'bar';
     assert.cookedOptions(
       `![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)`,
       { previewing: true },
-      `<p><div class=\"onebox-placeholder-container\">
-        <span class=\"placeholder-icon video\"></span>
+      `<p><div class="onebox-placeholder-container" data-orig-src-id="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
+        <span class="placeholder-icon video"></span>
       </div></p>`
     );
   });
