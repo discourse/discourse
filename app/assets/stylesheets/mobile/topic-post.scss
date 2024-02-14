@@ -387,12 +387,11 @@ span.highlighted {
   // contained within the padding to prevent vertical overflow
   max-width: var(--d-wrap-padding-h);
   right: calc(var(--d-wrap-padding-h) * -1);
-  font-size: var(--font-down-2);
-  overflow: hidden;
-  margin-top: 0.15em;
+  font-size: var(--font-down-5);
+  margin-top: 0.45em;
 
   svg {
-    right: calc(var(--d-wrap-padding-h) / 2.5 * -1);
+    right: 0.25em;
   }
 }
 
