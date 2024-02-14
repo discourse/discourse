@@ -17,7 +17,7 @@ task periodical_updates: :environment do
 end
 
 task version_check: :environment do
-  Jobs::VersionCheck.new.execute(nil)
+  Jobs::CallDiscourseHub.new.execute(nil)
 end
 
 desc "run every task the scheduler knows about in that order, use only for debugging"
