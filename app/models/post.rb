@@ -1076,7 +1076,7 @@ class Post < ActiveRecord::Base
 
     UploadReference.transaction do
       UploadReference.where(target: self).delete_all
-      result = UploadReference.insert_all(upload_references) if upload_references.size > 0
+      UploadReference.insert_all(upload_references) if upload_references.size > 0
 
       if SiteSetting.secure_uploads?
         Upload
