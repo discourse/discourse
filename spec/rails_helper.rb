@@ -538,6 +538,26 @@ RSpec.configure do |config|
   end
 
   if ENV["GITHUB_ACTIONS"]
+    config.around :each do |example|
+      begin
+        example.run
+      rescue ActiveRecord::ConnectionTimeoutError => e
+        db_config = ActiveRecord::Base.connection_pool.db_config.configuration_hash
+        raw_connection = ActiveRecord::Base.postgresql_connection(db_config)
+
+        result =
+          raw_connection.execute("SELECT query FROM pg_stat_activity WHERE state = 'active';")
+
+        RSpec.current_example.metadata[:active_postgres_query_logs] = result
+          .map { |row| row["query"] }
+          .join("\n")
+
+        raw_connection.disconnect!
+
+        raise e
+      end
+    end
+
     config.around :each, capture_log: true do |example|
       original_logger = ActiveRecord::Base.logger
       io = StringIO.new

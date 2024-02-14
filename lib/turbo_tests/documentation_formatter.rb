@@ -41,11 +41,18 @@ module TurboTests
     private
 
     def output_activerecord_debug_logs(output, example)
-      if ENV["GITHUB_ACTIONS"] &&
-           active_record_debug_logs = example.metadata[:active_record_debug_logs]
-        output.puts "::group::ActiveRecord Debug Logs"
-        output.puts active_record_debug_logs
-        output.puts "::endgroup::"
+      if ENV["GITHUB_ACTIONS"]
+        if active_record_debug_logs = example.metadata[:active_record_debug_logs]
+          output.puts "::group::ActiveRecord Debug Logs"
+          output.puts active_record_debug_logs
+          output.puts "::endgroup::"
+        end
+
+        if active_postgres_query_logs = example.metadata[:active_postgres_query_logs]
+          output.puts "::group::Active Postgres Query Logs"
+          output.puts active_postgres_query_logs
+          output.puts "::endgroup::"
+        end
       end
     end
 
