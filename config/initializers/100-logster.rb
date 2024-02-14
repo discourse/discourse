@@ -18,7 +18,7 @@ if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
       original_logger.extend(ActiveSupport::Logger.broadcast(console))
     end
 
-    Logster.config.back_to_site_link_path = "/admin"
+    Logster.config.back_to_site_link_path = "#{Discourse.base_path}/admin"
     Logster.config.back_to_site_link_text = I18n.t("dashboard.back_from_logster_text")
   end
 end
