@@ -65,13 +65,7 @@ export default class Chat extends Service {
       return false;
     }
 
-    return (
-      this.currentUser.staff ||
-      this.siteSettings.userInAnyGroups(
-        "direct_message_enabled_groups",
-        this.currentUser
-      )
-    );
+    return this.currentUser.staff || this.currentUser.can_direct_message;
   }
 
   @computed("chatChannelsManager.directMessageChannels")

@@ -96,17 +96,10 @@ export default {
         },
       });
 
-      const summarizationAllowedGroups =
-        this.siteSettings.custom_summarization_allowed_groups
-          .split("|")
-          .map((id) => parseInt(id, 10));
-
       const canSummarize =
         this.siteSettings.summarization_strategy &&
         this.currentUser &&
-        this.currentUser.groups.some((g) =>
-          summarizationAllowedGroups.includes(g.id)
-        );
+        this.currentUser.can_summarize;
 
       if (canSummarize) {
         api.registerChatComposerButton({

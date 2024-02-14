@@ -1872,7 +1872,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    client: true
   edit_all_topic_groups:
     default: "13"
     type: group_list
@@ -2325,14 +2324,6 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  enable_experimental_admin_ui_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    hidden: true
-    client: true
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
@@ -2607,7 +2598,6 @@ uncategorized:
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3
@@ -3087,7 +3077,6 @@ tags:
     client: true
     default: false
   pm_tags_allowed_for_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""

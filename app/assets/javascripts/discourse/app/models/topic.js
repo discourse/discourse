@@ -735,12 +735,7 @@ export default class Topic extends RestModel {
             !deleted_by.groups.some(
               (group) => group.name === this.category?.reviewable_by_group_name
             ) &&
-            !(
-              this.siteSettings.delete_all_posts_and_topics_allowed_groups &&
-              deleted_by.isInAnyGroups(
-                this.siteSettings.delete_all_posts_and_topics_allowed_groups
-              )
-            ))
+            !deleted_by.can_delete_all_posts_and_topics)
         ) {
           DiscourseURL.redirectTo("/");
         }
