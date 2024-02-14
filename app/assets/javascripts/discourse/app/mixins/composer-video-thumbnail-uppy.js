@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import Uppy from "@uppy/core";
 import { isVideo } from "discourse/lib/uploads";
@@ -31,9 +31,11 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
   uploadRootPath = "/uploads";
   uploadTargetBound = false;
   useUploadPlaceholders = true;
+  capabilities = null;
 
   constructor(owner) {
     super(...arguments);
+    this.capabilities = owner.lookup("service:capabilities");
     setOwner(this, owner);
   }
 
@@ -60,8 +62,12 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
       .split(".")[0];
 
     // Wait for the video element to load, otherwise the canvas will be empty.
-    // iOS Safari prefers onloadedmetadata over oncanplay.
-    video.onloadedmetadata = () => {
+    // iOS Safari prefers onloadedmetadata over oncanplay. System tests running in Chrome
+    // prefer oncanplaythrough.
+    const eventName = this.capabilities.isIOS
+      ? "onloadedmetadata"
+      : "oncanplaythrough";
+    video[eventName] = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = video.videoWidth;
@@ -70,7 +76,6 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
       // A timeout is needed on mobile.
       setTimeout(() => {
         ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
         // Detect Empty Thumbnail
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
