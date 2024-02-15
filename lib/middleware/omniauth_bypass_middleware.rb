@@ -11,6 +11,7 @@ class Middleware::OmniauthBypassMiddleware
   def initialize(app, options = {})
     @app = app
 
+    OmniAuth.config.request_validation_phase = nil # We handle CSRF checks in before_request_phase
     OmniAuth.config.before_request_phase do |env|
       request = ActionDispatch::Request.new(env)
 
