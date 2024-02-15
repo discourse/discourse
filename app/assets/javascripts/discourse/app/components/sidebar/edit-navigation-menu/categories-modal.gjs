@@ -18,126 +18,148 @@ import gt from "truth-helpers/helpers/gt";
 import includes from "truth-helpers/helpers/includes";
 import not from "truth-helpers/helpers/not";
 
+function uniqBy(elements, f) {
+  return Array.from(new Map(elements.map((el) => [f(el), el])).values());
+}
+
+// Given a list, break into chunks starting a new chunk whenever the predicate
+// is true for an element.
+function splitWhere(elements, f) {
+  return elements.reduce((acc, el, i) => {
+    if (i === 0 || f(el)) {
+      acc.push([]);
+    }
+    acc[acc.length - 1].push(el);
+    return acc;
+  }, []);
+}
+
+function findAncestors(categories) {
+  let categoriesToCheck = categories;
+  const ancestors = [];
+
+  for (let i = 0; i < 3; i++) {
+    categoriesToCheck = uniqBy(
+      categoriesToCheck
+        .map((c) => Category.findById(c.parent_category_id))
+        .filter(Boolean),
+      (c) => c.id
+    );
+
+    ancestors.push(...categoriesToCheck);
+  }
+
+  return ancestors;
+}
+
 export default class extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
 
-  @tracked filter = "";
-  @tracked filteredCategoryIds;
-  @tracked onlySelected = false;
-  @tracked onlyUnselected = false;
+  @tracked filteredCategoriesGroupings = [];
+  @tracked filteredCategoryIds = [];
 
   @tracked
   selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
 
-  categoryGroupings = [];
-
   constructor() {
     super(...arguments);
 
-    let categories = [...this.site.categories];
-
-    if (!this.siteSettings.fixed_category_positions) {
-      categories.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    Category.sortCategories(categories).reduce(
-      (categoryGrouping, category, index, arr) => {
-        if (category.isUncategorizedCategory) {
-          return categoryGrouping;
-        }
-
-        categoryGrouping.push(category);
-
-        const nextCategory = arr[index + 1];
-
-        if (!nextCategory || nextCategory.level === 0) {
-          this.categoryGroupings.push(categoryGrouping);
-          return [];
-        }
-
-        return categoryGrouping;
-      },
-      []
-    );
+    this.processing = false;
+    this.setFilterAndMode("", "everything");
   }
 
-  get filteredCategoriesGroupings() {
-    const filteredCategoryIds = new Set();
+  setFilteredCategories(categories) {
+    const ancestors = findAncestors(categories);
+    const allCategories = uniqBy(categories.concat(ancestors), (c) => c.id);
 
-    const groupings = this.categoryGroupings.reduce((acc, categoryGrouping) => {
-      const filteredCategories = new Set();
+    if (this.siteSettings.fixed_category_positions) {
+      allCategories.sort((a, b) => a.position - b.position);
+    } else {
+      allCategories.sort((a, b) => a.name.localeCompare(b.name));
+    }
 
-      const addCategory = (category) => {
-        if (this.#matchesFilter(category)) {
-          if (category.parentCategory?.parentCategory) {
-            filteredCategories.add(category.parentCategory.parentCategory);
-          }
+    this.filteredCategoriesGroupings = splitWhere(
+      Category.sortCategories(allCategories),
+      (category) => category.parent_category_id === undefined
+    );
 
-          if (category.parentCategory) {
-            filteredCategories.add(category.parentCategory);
-          }
+    this.filteredCategoryIds = categories.map((c) => c.id);
+  }
 
-          filteredCategoryIds.add(category.id);
-          filteredCategories.add(category);
-        }
-      };
+  async searchCategories(filter, mode) {
+    if (filter === "" && mode === "only-selected") {
+      this.setFilteredCategories(
+        await Category.asyncFindByIds(this.selectedSidebarCategoryIds)
+      );
+    } else {
+      const { categories } = await Category.asyncSearch(filter, {
+        includeAncestors: true,
+        includeUncategorized: false,
+      });
 
-      categoryGrouping.forEach((category) => {
-        if (this.onlySelected) {
-          if (this.selectedSidebarCategoryIds.includes(category.id)) {
-            addCategory(category);
-          }
-        } else if (this.onlyUnselected) {
-          if (!this.selectedSidebarCategoryIds.includes(category.id)) {
-            addCategory(category);
-          }
-        } else {
-          addCategory(category);
+      const filteredFetchedCategories = categories.filter((c) => {
+        switch (mode) {
+          case "everything":
+            return true;
+          case "only-selected":
+            return this.selectedSidebarCategoryIds.includes(c.id);
+          case "only-unselected":
+            return !this.selectedSidebarCategoryIds.includes(c.id);
         }
       });
 
-      if (filteredCategories.size > 0) {
-        acc.push(Array.from(filteredCategories));
-      }
-
-      return acc;
-    }, []);
-
-    this.filteredCategoryIds = Array.from(filteredCategoryIds);
-    return groupings;
+      this.setFilteredCategories(filteredFetchedCategories);
+    }
   }
 
-  #matchesFilter(category) {
-    return this.filter.length === 0 || category.nameLower.includes(this.filter);
+  async setFilterAndMode(newFilter, newMode) {
+    this.filter = newFilter;
+    this.mode = newMode;
+
+    if (!this.processing) {
+      this.processing = true;
+
+      try {
+        while (true) {
+          const filter = this.filter;
+          const mode = this.mode;
+
+          await this.searchCategories(filter, mode);
+
+          if (filter === this.filter && mode === this.mode) {
+            break;
+          }
+        }
+      } finally {
+        this.processing = false;
+      }
+    }
+  }
+
+  debouncedSetFilterAndMode(filter, mode) {
+    discourseDebounce(this, this.setFilterAndMode, filter, mode, INPUT_DELAY);
   }
 
   @action
   resetFilter() {
-    this.onlySelected = false;
-    this.onlyUnselected = false;
+    this.debouncedSetFilterAndMode(this.filter, "everything");
   }
 
   @action
   filterSelected() {
-    this.onlySelected = true;
-    this.onlyUnselected = false;
+    this.debouncedSetFilterAndMode(this.filter, "only-selected");
   }
 
   @action
   filterUnselected() {
-    this.onlySelected = false;
-    this.onlyUnselected = true;
+    this.debouncedSetFilterAndMode(this.filter, "only-unselected");
   }
 
   @action
   onFilterInput(filter) {
-    discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
-  }
-
-  #performFiltering(filter) {
-    this.filter = filter.toLowerCase();
+    this.debouncedSetFilterAndMode(filter.toLowerCase().trim(), this.mode);
   }
 
   @action

@@ -21,6 +21,14 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
+  before_all do
+    category2.index_search
+    category2_subcategory.index_search
+
+    category_subcategory2.index_search
+    category_subcategory.index_search
+  end
+
   before { sign_in(user) }
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
