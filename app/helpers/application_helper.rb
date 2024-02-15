@@ -153,8 +153,7 @@ module ApplicationHelper
 
   def preload_script_url(url, entrypoint: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
-    nonce_attribute =
-      SiteSetting.content_security_policy_strict_dynamic ? "nonce=\"#{csp_nonce_placeholder}\"" : ""
+    nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
     if GlobalSetting.preload_link_header
