@@ -77,8 +77,6 @@ module Chat
 
       notify_mentioned_users(to_notify)
       notify_watching_users(except: all_mentioned_user_ids << @user.id)
-
-      to_notify
     end
 
     def notify_edit
@@ -100,8 +98,6 @@ module Chat
 
       notify_creator_of_inaccessible_mentions(inaccessible)
       notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
-
-      to_notify
     end
 
     private
