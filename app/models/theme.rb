@@ -471,8 +471,8 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="preload" href="#{c.url}" as="script">
-          <script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>
+          <link rel="preload" href="#{c.url}" as="script" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
+          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
       end
     when :translations
