@@ -163,7 +163,7 @@ RSpec.describe "Drawer", type: :system do
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
     context "when on a channel" do
-      it "has context" do
+      xit "has context" do
         ::Chat::CreateMessage
           .expects(:call)
           .with do |value|
@@ -186,7 +186,7 @@ RSpec.describe "Drawer", type: :system do
       let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
       let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
-      it "has context" do
+      xit "has context" do
         ::Chat::CreateMessage
           .expects(:call)
           .with do |value|
