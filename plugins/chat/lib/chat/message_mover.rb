@@ -164,8 +164,6 @@ module Chat
               cooked: source_message.cooked,
               cooked_version: source_message.cooked_version,
               thread_id: new_thread_id,
-              created_at: source_message.created_at,
-              updated_at: source_message.updated_at,
             )
 
           DB.exec(
