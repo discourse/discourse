@@ -18,8 +18,8 @@ export default class ChatChannelCard extends Component {
       <div
         class={{concatClass
           "chat-channel-card"
-          (if @channel.isClosed "-closed")
-          (if @channel.isArchived "-archived")
+          (if @channel.isClosed "--closed")
+          (if @channel.isArchived "--archived")
         }}
         style={{borderColor @channel.chatable.color}}
         data-channel-id={{@channel.id}}
@@ -38,6 +38,7 @@ export default class ChatChannelCard extends Component {
             {{/if}}
             {{#if @channel.currentUserMembership.muted}}
               <span
+                class="chat-channel-card__muted"
                 aria-label="Channel is muted."
                 title="Channel is muted."
               >{{dIcon "d-muted"}}</span>
