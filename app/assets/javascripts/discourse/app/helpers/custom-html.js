@@ -11,8 +11,7 @@ export function getCustomHTML(key) {
 
   const html = PreloadStore.get("customHTML");
   if (html && html[key] && html[key].length) {
-    let thisHtml = html[key];
-    return htmlSafe(thisHtml);
+    return htmlSafe(html[key]);
   }
 }
 
