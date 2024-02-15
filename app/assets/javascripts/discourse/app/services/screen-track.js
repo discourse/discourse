@@ -122,7 +122,6 @@ export default class ScreenTrack extends Service {
 
     if (foundIndex > -1) {
       const found = this._consolidatedTimings[foundIndex];
-
       const lastIndex = this._consolidatedTimings.length - 1;
 
       if (foundIndex !== lastIndex) {
@@ -136,6 +135,7 @@ export default class ScreenTrack extends Service {
           found.timings[id] += timings[id];
         }
       });
+
       found.topicTime += topicTime;
       found.timings = { ...timings, ...found.timings };
     } else {
