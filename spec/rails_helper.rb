@@ -151,6 +151,7 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
+    BlockRequestsMiddleware.allow_requests!
   end
 end
 
@@ -608,7 +609,6 @@ RSpec.configure do |config|
     driven_by driver.join("_").to_sym
 
     setup_system_test
-    BlockRequestsMiddleware.allow_requests!
   end
 
   config.after(:each, type: :system) do |example|
