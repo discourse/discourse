@@ -66,6 +66,10 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has webauthn 2fa" do
+    # enforced 2FA flow needs a user created > 5 minutes ago
+    user.created_at = 6.minutes.ago
+    user.save!
+
     sign_in user
 
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
