@@ -663,7 +663,7 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          command = ["identify", "-format", "%n\\n", @file.path]
+          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
           frames =
             begin
               Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i
