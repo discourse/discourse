@@ -25,6 +25,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
+             :can_ignore_users,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,

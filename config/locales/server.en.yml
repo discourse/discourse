@@ -965,7 +965,7 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     illegal:
-      title: "It's Illegal"
+      title: "Illegal"
       description: "This post requires staff attention because I believe it contains content that is illegal."
       short_description: "This is illegal"
       email_title: 'A post in "%{title}" requires staff attention'
@@ -1053,7 +1053,7 @@ en:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "It's Illegal"
+      title: "Illegal"
       description: "This topic requires staff attention because I believe it contains content that is illegal."
       short_description: "This is illegal"
       email_title: 'A post in "%{title}" requires staff attention'
@@ -1521,6 +1521,7 @@ en:
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
     ember_version_warning: "Your site is running with the unsupported EMBER_VERSION=3 configuration. This may lead to unexpected issues with themes/plugins. Please remove the EMBER_VERSION configuration from your app.yml file and rebuild. See <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> for more information."
+    back_from_logster_text: "Back to site"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -3013,6 +3014,7 @@ en:
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
+    illegal: "Your post was flagged as  **illegal**: the community thinks it might be breaking the law."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
     responder:

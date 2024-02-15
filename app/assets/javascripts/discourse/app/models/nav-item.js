@@ -249,7 +249,7 @@ export default class NavItem extends EmberObject {
     let count = this.count || 0;
 
     if (
-      name === "latest" &&
+      this.name === "latest" &&
       (!Site.currentProp("mobileView") || this.tagId !== undefined)
     ) {
       count = 0;

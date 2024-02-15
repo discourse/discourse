@@ -64,6 +64,15 @@
 
   .show-mores {
     width: 100%;
+
+    .alert-info.clickable {
+      gap: 0.5em;
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+    }
   }
 
   .d-icon-heart {
