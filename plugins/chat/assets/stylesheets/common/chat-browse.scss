@@ -56,10 +56,6 @@
     &:before {
       content: none; //there is a strange thing applied on nav-pills and this resets it
     }
-
-    @include breakpoint(mobile-large) {
-      justify-content: space-between;
-    }
   }
 
   &__filter {
