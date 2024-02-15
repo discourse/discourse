@@ -563,6 +563,16 @@ RSpec.describe InviteRedeemer do
           )
         end
       end
+
+      it "raises an error if the email is already being used by an existing user" do
+        email = "tomtom@test.com"
+        Fabricate(:invited_user, invite: invite, user: Fabricate(:user, email: email))
+        redeemer = InviteRedeemer.new(invite: invite, email: email, username: username, name: name)
+        expect { redeemer.redeem }.to raise_error(
+          Invite::UserExists,
+          I18n.t("invite.existing_user_already_redemeed"),
+        )
+      end
     end
 
     context "with invite_link" do
