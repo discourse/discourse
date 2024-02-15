@@ -1858,13 +1858,21 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at
+  def reset_bumped_at(post_id = nil)
     post =
-      ordered_posts.where(
-        user_deleted: false,
-        hidden: false,
-        post_type: Post.types[:regular],
-      ).last || first_post
+      (
+        if post_id
+          Post.find_by(id: post_id)
+        else
+          ordered_posts.where(
+            user_deleted: false,
+            hidden: false,
+            post_type: Post.types[:regular],
+          ).last || first_post
+        end
+      )
+
+    return if !post
 
     self.bumped_at = post.created_at
     self.save(validate: false)
