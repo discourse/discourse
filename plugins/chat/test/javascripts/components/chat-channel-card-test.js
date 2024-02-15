@@ -35,14 +35,14 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.status = "closed";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.-closed"));
+    assert.true(exists(".chat-channel-card.--closed"));
   });
 
   test("Archived channel", async function (assert) {
     this.channel.status = "archived";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.-archived"));
+    assert.true(exists(".chat-channel-card.--archived"));
   });
 
   test("Muted channel", async function (assert) {
@@ -50,16 +50,12 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.strictEqual(
-      query(".chat-channel-card__tag.-muted").textContent.trim(),
-      I18n.t("chat.muted")
-    );
+    assert.true(exists(".chat-channel-card__muted"));
   });
 
   test("Joined channel", async function (assert) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
     assert.true(exists(".toggle-channel-membership-button.-leave"));
   });
 
