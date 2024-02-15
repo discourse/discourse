@@ -39,8 +39,8 @@ export default class ChatChannelCard extends Component {
             {{#if @channel.currentUserMembership.muted}}
               <span
                 class="chat-channel-card__muted"
-                aria-label="Channel is muted."
-                title="Channel is muted."
+                aria-label={{i18n "chat.muted"}}
+                title={{i18n "chat.muted"}}
               >{{dIcon "d-muted"}}</span>
             {{/if}}
           </LinkTo>
