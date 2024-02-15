@@ -33,7 +33,7 @@ describe Jobs::Chat::ProcessMessage do
   end
 
   context "with notifications (former notifier_spec.rb)" do
-    # andrei fixme text edited messages too
+    # andrei fixme test edited messages too
     describe "with new messages" do
       fab!(:channel) { Fabricate(:category_channel) }
       fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
