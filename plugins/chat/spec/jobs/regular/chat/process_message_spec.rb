@@ -420,7 +420,7 @@ describe Jobs::Chat::ProcessMessage do
           right_mention =
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: second_msg)
 
-          Chat::Notifier.new(second_msg, second_msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: second_msg.id)
 
           expect(left_mention.notifications.count).to be(2)
           expect(right_mention.notifications.count).to be(0)
