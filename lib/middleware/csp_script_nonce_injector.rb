@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Middleware
-  class GtmScriptNonceInjector
+  class CspScriptNonceInjector
     def initialize(app, settings = {})
       @app = app
     end
