@@ -10,7 +10,7 @@ module Middleware
       status, headers, response = @app.call(env)
 
       if nonce_placeholder = headers.delete("Discourse-CSP-Nonce-Placeholder")
-        nonce = SecureRandom.hex
+        nonce = SecureRandom.alphanumeric(25)
         parts = []
         response.each { |part| parts << part.to_s.gsub(nonce_placeholder, nonce) }
         %w[Content-Security-Policy Content-Security-Policy-Report-Only].each do |name|
