@@ -716,6 +716,12 @@ acceptance("Search - Authenticated", function (needs) {
       "blue",
       "shows second recent search"
     );
+
+    await click(
+      ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+    );
+
+    assert.dom("input#search-term").hasValue("yellow");
   });
 
   test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
