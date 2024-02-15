@@ -36,40 +36,27 @@ export default class ChatChannelCard extends Component {
             {{#if @channel.chatable.read_restricted}}
               {{dIcon "lock" class="chat-channel-card__read-restricted"}}
             {{/if}}
+            {{#if @channel.currentUserMembership.muted}}
+              <span
+                aria-label="Channel is muted."
+                title="Channel is muted."
+              >{{dIcon "d-muted"}}</span>
+            {{/if}}
           </LinkTo>
 
-          <div class="chat-channel-card__header-actions">
-            {{#if @channel.currentUserMembership.muted}}
-              <LinkTo
-                @route="chat.channel.info.settings"
-                @models={{@channel.routeModels}}
-                class="chat-channel-card__tag -muted"
-                tabindex="-1"
-              >
-                {{i18n "chat.muted"}}
-              </LinkTo>
-            {{/if}}
-          </div>
         </div>
-
-        {{#if @channel.description}}
-          <div class="chat-channel-card__description">
-            {{replaceEmoji @channel.description}}
-          </div>
-        {{/if}}
 
         <div class="chat-channel-card__cta">
           {{#if @channel.isFollowing}}
-            <div class="chat-channel-card__tags">
 
-              <ToggleChannelMembershipButton
-                @channel={{@channel}}
-                @options={{hash
-                  leaveClass="btn-link btn-small chat-channel-card__leave-btn"
-                  labelType="short"
-                }}
-              />
-            </div>
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash
+                leaveClass="btn-transparent btn-danger chat-channel-card__leave-btn"
+                labelType="short"
+              }}
+            />
+
           {{else if @channel.isJoinable}}
             <ToggleChannelMembershipButton
               @channel={{@channel}}
@@ -79,21 +66,28 @@ export default class ChatChannelCard extends Component {
               }}
             />
           {{/if}}
-
-          {{#if (gt @channel.membershipsCount 0)}}
-            <LinkTo
-              @route="chat.channel.info.members"
-              @models={{@channel.routeModels}}
-              class="chat-channel-card__members"
-              tabindex="-1"
-            >
-              {{i18n
-                "chat.channel.memberships_count"
-                count=@channel.membershipsCount
-              }}
-            </LinkTo>
-          {{/if}}
         </div>
+
+        {{#if (gt @channel.membershipsCount 0)}}
+          <LinkTo
+            @route="chat.channel.info.members"
+            @models={{@channel.routeModels}}
+            class="chat-channel-card__members"
+            tabindex="-1"
+          >
+            {{i18n
+              "chat.channel.memberships_count"
+              count=@channel.membershipsCount
+            }}
+          </LinkTo>
+        {{/if}}
+
+        {{#if @channel.description}}
+          <div class="chat-channel-card__description">
+            {{replaceEmoji @channel.description}}
+          </div>
+        {{/if}}
+
       </div>
     {{/if}}
   </template>

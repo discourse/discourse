@@ -1,8 +1,13 @@
 .chat-channel-card {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "title cta"
+    "membercount ."
+    "description description";
+  grid-template-rows: auto auto 1fr;
+  align-items: center;
   position: relative;
-  padding: 1.25rem;
+  padding: 0.75rem 1rem;
   background-color: var(--primary-very-low);
   border-radius: var(--d-border-radius);
   min-height: 0;
@@ -10,15 +15,16 @@
   border-left: 5px solid transparent;
 
   &__header {
+    @include ellipsis;
     align-items: center;
     display: flex;
+    grid-area: title;
+    height: min-content;
   }
 
-  &__header-actions {
-    align-items: center;
-    display: flex;
-    margin-left: auto;
-  }
+  // &__header-actions {
+
+  // }
 
   &__read-restricted {
     color: var(--primary-medium);
@@ -29,7 +35,8 @@
   &__description {
     @include line-clamp(2);
     color: var(--primary-medium);
-    padding-top: 1rem;
+    padding-top: 0.5rem;
+    grid-area: description;
 
     .-closed &,
     .-archived & {
@@ -37,19 +44,9 @@
     }
   }
 
-  &__setting {
-    svg {
-      fill: var(--primary-medium);
-    }
-
-    .-archived & {
-      opacity: 0.5;
-    }
-  }
-
   &__members {
-    margin-left: auto;
-    font-size: 0.875rem;
+    font-size: var(--font-down-1-rem);
+    grid-area: membercount;
   }
 
   &__name {
@@ -63,7 +60,6 @@
     font-size: 1.15rem;
     text-decoration: none;
     min-width: 0;
-    margin-right: 2rem;
 
     &:visited,
     &:hover {
@@ -76,23 +72,27 @@
     }
   }
 
-  &__tag {
-    border-radius: 10px;
-    margin-right: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    font-weight: bold;
-    background-color: var(--secondary);
+  &__leave-btn {
+    padding-right: 0;
+  }
 
-    &.-muted {
-      color: var(--primary-medium);
-      border: 1px solid var(--primary-low-mid);
-    }
-    &.-joined {
-      color: var(--success);
-      border: 1px solid var(--success);
-    }
+  &__tag {
+    // border-radius: 10px;
+    // margin-right: 0.5rem;
+    // padding: 0.25rem 0.5rem;
+    // text-transform: uppercase;
+    // font-size: 0.7rem;
+    // font-weight: bold;
+    // background-color: var(--secondary);
+
+    // &.-muted {
+    //   color: var(--primary-medium);
+    //   border: 1px solid var(--primary-low-mid);
+    // }
+    // &.-joined {
+    //   color: var(--success);
+    //   border: 1px solid var(--success);
+    // }
 
     &.-closed,
     &.-archived {
@@ -103,10 +103,8 @@
   }
 
   &__cta {
-    flex-grow: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: end;
-    margin-top: 1rem;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
