@@ -4,7 +4,9 @@ require "rotp"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user1) { Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago) }
+  fab!(:user1) do
+    Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago)
+  end
   fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
