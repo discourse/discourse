@@ -622,11 +622,13 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
-          expect(messages).to be_empty
+          expect(
+            messages.filter { |m| m.data.with_indifferent_access[:type] == "notice" },
+          ).to be_empty
         end
 
         it "cannot invite chat user without channel membership if they are muting the user who created the message" do
