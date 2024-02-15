@@ -1211,6 +1211,37 @@ RSpec.describe Search do
         expect(result(admin).posts).to be_present
       end
     end
+
+    context "with categories" do
+      fab!(:group)
+
+      fab!(:parent_category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category, parent_category: parent_category) }
+      fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
+
+      before do
+        SiteSetting.lazy_load_categories_groups = "#{group.id}"
+        group.add(admin)
+      end
+
+      it "returns categories and parent categories" do
+        topic = Fabricate(:topic, category: category)
+        Fabricate(:post, topic: topic, raw: "hello world. first topic")
+
+        other_topic = Fabricate(:topic, category: other_category)
+        Fabricate(:post, topic: other_topic, raw: "hello world. second topic")
+
+        results =
+          Search.execute(
+            "hello world",
+            type_filter: "topic",
+            search_type: :full_page,
+            guardian: admin.guardian,
+          )
+
+        expect(results.categories).to contain_exactly(parent_category, category, other_category)
+      end
+    end
   end
 
   describe "cyrillic topic" do

@@ -9,6 +9,7 @@ import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
@@ -56,6 +57,7 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
+      Site.current().updateCategory(category);
       return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();

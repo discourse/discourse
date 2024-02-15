@@ -337,9 +337,27 @@ class Search
 
     find_grouped_results if @results.posts.blank?
 
-    if preloaded_topic_custom_fields.present? && @results.posts.present?
+    if @results.posts.present?
       topics = @results.posts.map(&:topic)
-      Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
+
+      if preloaded_topic_custom_fields.present?
+        Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
+      end
+
+      if @guardian.can_lazy_load_categories?
+        topics.each do |topic|
+          if topic.category.present?
+            # Adding categories directly to the internal list to avoid
+            # per_facets / per_limits limits
+            if topic.category.parent_category.present?
+              @results.categories << topic.category.parent_category
+            end
+            @results.categories << topic.category
+          end
+        end
+
+        @results.categories.uniq!
+      end
     end
 
     Search.preload(@results, self)
@@ -1447,7 +1465,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category]
+    topic_eager_loads = [:category, { category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 
