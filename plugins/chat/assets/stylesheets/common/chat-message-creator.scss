@@ -224,6 +224,7 @@
 
   &.-group {
     .chat-message-creator__group-name {
+      flex-shrink: 0;
       padding-left: 0.5rem;
     }
 
