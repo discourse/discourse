@@ -39,7 +39,7 @@ export default class AdminThemeSettingSchema extends Component {
     }
 
     const tree = new Tree();
-    const idProperty = this.findIdentifierPropertyName(schema.properties);
+    const idProperty = schema.identifier;
     const childObjectsProperties = this.findChildObjectsProperties(
       schema.properties
     );
@@ -69,21 +69,11 @@ export default class AdminThemeSettingSchema extends Component {
     return tree;
   }
 
-  findIdentifierPropertyName(properties) {
-    for (const [name, spec] of Object.entries(properties)) {
-      if (spec.identifier) {
-        return name;
-      }
-    }
-  }
-
   findChildObjectsProperties(properties) {
     const list = [];
     for (const [name, spec] of Object.entries(properties)) {
       if (spec.type === "objects") {
-        const subIdProperty = this.findIdentifierPropertyName(
-          spec.schema.properties
-        );
+        const subIdProperty = spec.schema.identifier;
         list.push({
           name,
           idProperty: subIdProperty,

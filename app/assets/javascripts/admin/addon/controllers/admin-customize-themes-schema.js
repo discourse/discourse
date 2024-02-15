@@ -48,28 +48,28 @@ export default class AdminCustomizeThemesSchemaController extends Controller {
 
   schema = {
     name: "item",
+    identifier: "name",
     properties: {
       name: {
         type: "string",
-        identifier: true,
       },
       children: {
         type: "objects",
         schema: {
           name: "child",
+          identifier: "name",
           properties: {
             name: {
               type: "string",
-              identifier: true,
             },
             grandchildren: {
               type: "objects",
               schema: {
                 name: "grandchild",
+                identifier: "name",
                 properties: {
                   name: {
                     type: "string",
-                    identifier: true,
                   },
                 },
               },

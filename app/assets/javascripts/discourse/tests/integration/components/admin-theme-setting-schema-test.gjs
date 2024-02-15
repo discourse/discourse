@@ -6,28 +6,28 @@ import AdminThemeSettingSchema from "admin/components/admin-theme-setting-schema
 
 const schema = {
   name: "level1",
+  identifier: "name",
   properties: {
     name: {
       type: "string",
-      identifier: true,
     },
     children: {
       type: "objects",
       schema: {
         name: "level2",
+        identifier: "name",
         properties: {
           name: {
             type: "string",
-            identifier: true,
           },
           grandchildren: {
             type: "objects",
             schema: {
               name: "level3",
+              identifier: "name",
               properties: {
                 name: {
                   type: "string",
-                  identifier: true,
                 },
               },
             },
