@@ -42,6 +42,7 @@ module Chat
       @source_message_ids = message_ids
       @source_messages = find_messages(@source_message_ids, source_channel)
       @ordered_source_message_ids = @source_messages.map(&:id)
+      @source_thread_ids = @source_messages.map(&:thread_id).uniq.compact
     end
 
     def move_to_channel(destination_channel)
@@ -56,18 +57,19 @@ module Chat
       moved_messages = nil
 
       Chat::Message.transaction do
-        create_temp_table
+        create_temp_table_for_messages
+        create_temp_table_for_threads
+        moved_thread_ids = create_destination_threads_in_channel(destination_channel)
         moved_messages =
           find_messages(
-            create_destination_messages_in_channel(destination_channel),
+            create_destination_messages_in_channel(destination_channel, moved_thread_ids),
             destination_channel,
           )
-        bulk_insert_movement_metadata
-        update_references
+        bulk_insert_movement_metadata_for_messages
+        update_message_references
         delete_source_messages
         update_reply_references
-        update_tracking_state
-        update_thread_references
+        update_thread_references(moved_thread_ids)
       end
 
       add_moved_placeholder(destination_channel, moved_messages.first)
@@ -79,11 +81,15 @@ module Chat
     def find_messages(message_ids, channel)
       Chat::Message
         .includes(thread: %i[original_message original_message_user])
-        .where(id: message_ids, chat_channel_id: channel.id)
+        .where(chat_channel_id: channel.id)
+        .where(
+          "id IN (:message_ids) OR thread_id IN (SELECT thread_id FROM chat_messages WHERE id IN (:message_ids))",
+          message_ids: message_ids,
+        )
         .order("created_at ASC, id ASC")
     end
 
-    def create_temp_table
+    def create_temp_table_for_messages
       DB.exec("DROP TABLE IF EXISTS moved_chat_messages") if Rails.env.test?
 
       DB.exec <<~SQL
@@ -96,41 +102,78 @@ module Chat
     SQL
     end
 
-    def bulk_insert_movement_metadata
+    def create_temp_table_for_threads
+      DB.exec("DROP TABLE IF EXISTS moved_chat_threads") if Rails.env.test?
+
+      DB.exec <<~SQL
+      CREATE TEMPORARY TABLE moved_chat_threads (
+        old_thread_id INTEGER,
+        new_thread_id INTEGER
+      ) ON COMMIT DROP;
+
+      CREATE INDEX moved_chat_threads_old_thread_id ON moved_chat_threads(old_thread_id);
+    SQL
+    end
+
+    def bulk_insert_movement_metadata_for_messages
       values_sql = @movement_metadata.map { |mm| "(#{mm[:old_id]}, #{mm[:new_id]})" }.join(",\n")
       DB.exec(
         "INSERT INTO moved_chat_messages(old_chat_message_id, new_chat_message_id) VALUES #{values_sql}",
       )
     end
 
+    def create_destination_threads_in_channel(destination_channel)
+      moved_thread_ids = {}
+
+      Chat::Message.transaction do
+        @source_thread_ids.each do |old_thread_id|
+          old_thread = Chat::Thread.find(old_thread_id)
+          original_message_user_id = old_thread.original_message_user_id
+
+          new_thread =
+            Chat::Thread.create!(
+              channel_id: destination_channel.id,
+              original_message_id: old_thread.original_message_id, # Placeholder, will be updated later
+              original_message_user_id: original_message_user_id,
+              replies_count: old_thread.replies_count,
+              status: old_thread.status,
+              title: old_thread.title,
+            )
+
+          moved_thread_ids[old_thread_id] = new_thread.id
+        end
+      end
+
+      moved_thread_ids
+    end
+
     ##
     # We purposefully omit in_reply_to_id when creating the messages in the
     # new channel, because it could be pointing to a message that has not
     # been moved.
-    def create_destination_messages_in_channel(destination_channel)
-      query_args = {
-        message_ids: @ordered_source_message_ids,
-        destination_channel_id: destination_channel.id,
-      }
+    def create_destination_messages_in_channel(destination_channel, moved_thread_ids)
+      moved_message_ids =
+        @source_messages.map do |source_message|
+          new_thread_id = moved_thread_ids[source_message.thread_id]
 
-      moved_message_ids = DB.query_single(<<~SQL, query_args)
-      INSERT INTO chat_messages(
-        chat_channel_id, user_id, last_editor_id, message, cooked, cooked_version, created_at, updated_at
-      )
-      SELECT :destination_channel_id,
-             user_id,
-             last_editor_id,
-             message,
-             cooked,
-             cooked_version,
-             CLOCK_TIMESTAMP(),
-             CLOCK_TIMESTAMP()
-      FROM chat_messages
-      WHERE id IN (:message_ids)
-      ORDER BY created_at ASC, id ASC
-      RETURNING id
-    SQL
+          new_message =
+            Chat::Message.create!(
+              chat_channel_id: destination_channel.id,
+              user_id: source_message.user_id,
+              message: source_message.message,
+              cooked: source_message.cooked,
+              cooked_version: source_message.cooked_version,
+              thread_id: new_thread_id,
+              created_at: source_message.created_at,
+              updated_at: source_message.updated_at,
+            )
 
+          DB.exec(
+            "INSERT INTO moved_chat_messages (old_chat_message_id, new_chat_message_id) VALUES (#{source_message.id}, #{new_message.id})",
+          )
+
+          new_message.id
+        end
       @movement_metadata =
         moved_message_ids.map.with_index do |chat_message_id, idx|
           { old_id: @ordered_source_message_ids[idx], new_id: chat_message_id }
@@ -138,7 +181,7 @@ module Chat
       moved_message_ids
     end
 
-    def update_references
+    def update_message_references
       DB.exec(<<~SQL)
       UPDATE chat_message_reactions cmr
       SET chat_message_id = mm.new_chat_message_id
@@ -210,43 +253,30 @@ module Chat
     SQL
     end
 
-    def update_tracking_state
-      ::Chat::Action::ResetUserLastReadChannelMessage.call(@source_message_ids, @source_channel.id)
-    end
+    def update_thread_references(moved_thread_ids)
+      Chat::Message.transaction do
+        moved_thread_ids.each do |old_thread_id, new_thread_id|
+          thread = Chat::Thread.find(new_thread_id)
 
-    def update_thread_references
-      threads_to_update = []
-      @source_messages
-        .select { |message| message.in_thread? }
-        .each do |message_with_thread|
-          # If one of the messages we are moving is the original message in a thread,
-          # then all the remaining messages for that thread must be moved to a new one,
-          # otherwise they will be pointing to a thread in a different channel.
-          if message_with_thread.thread.original_message_id == message_with_thread.id
-            threads_to_update << message_with_thread.thread
-          end
-        end
+          new_original_message_id, new_last_message_id =
+            DB.query_single(<<-SQL, new_thread_id: new_thread_id)
+          SELECT MIN(id), MAX(id)
+          FROM chat_messages
+          WHERE thread_id = :new_thread_id
+        SQL
 
-      threads_to_update.each do |thread|
-        # NOTE: We may want to do something different with the old empty thread at some
-        # point when we add an explicit thread move UI, for now we can just delete it,
-        # since it will not contain any important data.
-        if thread.chat_messages.empty?
-          thread.destroy!
-          next
-        end
+          thread.update!(
+            original_message_id: new_original_message_id,
+            last_message_id: new_last_message_id,
+          )
 
-        Chat::Thread.transaction do
-          original_message = thread.chat_messages.first
-          new_thread =
-            Chat::Thread.create!(
-              original_message: original_message,
-              original_message_user: original_message.user,
-              channel: @source_channel,
-            )
-          thread.chat_messages.update_all(thread_id: new_thread.id)
+          thread.set_replies_count_cache(thread.replies_count)
         end
       end
+    end
+
+    def update_tracking_state
+      ::Chat::Action::ResetUserLastReadChannelMessage.call(@source_message_ids, @source_channel.id)
     end
   end
 end
