@@ -67,7 +67,7 @@ describe Jobs::Chat::ProcessMessage do
       shared_examples "channel-wide mentions" do
         it "doesn't create notifications when the message doesn't include a channel mention" do
           msg = build_cooked_msg(mention.gsub("@", ""), user_1)
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
           expect(Notification.count).to be(0)
         end
 
@@ -76,7 +76,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg(mention, user_1)
           Fabricate(mention_type, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.count).to be(0)
         end
@@ -86,7 +86,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg(mention, user_1)
           Fabricate(mention_type, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.count).to be(0)
         end
@@ -98,7 +98,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
             end
 
           global_mentions_disabled_message = messages.first
@@ -113,7 +113,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg(mention, user_1)
           Fabricate(mention_type, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_1).count).to be(0)
           expect(Notification.where(user: user_2).count).to be(1)
@@ -134,7 +134,7 @@ describe Jobs::Chat::ProcessMessage do
             Fabricate(mention_type, chat_message: msg)
           end
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_3).count).to be(0)
         end
@@ -156,7 +156,7 @@ describe Jobs::Chat::ProcessMessage do
             Fabricate(mention_type, chat_message: msg)
           end
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_3).count).to be(0)
         end
@@ -178,7 +178,7 @@ describe Jobs::Chat::ProcessMessage do
             Fabricate(mention_type, chat_message: msg)
           end
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_3).count).to be(0)
         end
@@ -204,8 +204,7 @@ describe Jobs::Chat::ProcessMessage do
               message: "hello @all",
             )
 
-            # fixme andrei this actually goes into the edit rspec context
-            Chat::Notifier.new(msg, msg.created_at).notify_edit
+            described_class.new.execute(chat_message_id: msg.id)
 
             notifications = Notification.where(user: user_2)
             notifications.each do |notification|
@@ -220,7 +219,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg(mention, user_1)
             Fabricate(:all_chat_mention, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -235,7 +234,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg(mention, user_1)
             Fabricate(:all_chat_mention, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -256,7 +255,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg(mention, user_1)
           Fabricate(:here_chat_mention, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_2).count).to be(1)
         end
@@ -266,7 +265,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg(mention, user_1)
           Fabricate(:here_chat_mention, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_2).count).to be(0)
         end
@@ -276,7 +275,7 @@ describe Jobs::Chat::ProcessMessage do
           Fabricate(:here_chat_mention, chat_message: msg)
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_2).count).to be(1)
         end
@@ -287,7 +286,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg(mention, user_1)
             Fabricate(:here_chat_mention, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -302,7 +301,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg(mention, user_1)
             Fabricate(:here_chat_mention, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -319,7 +318,7 @@ describe Jobs::Chat::ProcessMessage do
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
           Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_2).count).to be(1)
         end
@@ -328,7 +327,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg("Hello @all and @#{user_2.username}", user_1)
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.where(user: user_2).count).to be(1)
         end
@@ -340,7 +339,7 @@ describe Jobs::Chat::ProcessMessage do
             Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
             Chat::Publisher.expects(:publish_new_mention).never
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -350,7 +349,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg("hey @#{user_2.username} stop muting me!", user_1)
             Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -365,7 +364,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg("hey @#{user_2.username} stop ignoring me!", user_1)
             Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
           end
@@ -397,7 +396,7 @@ describe Jobs::Chat::ProcessMessage do
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
           Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
         end
 
         it "establishes a far-left precedence among group mentions" do
@@ -411,7 +410,7 @@ describe Jobs::Chat::ProcessMessage do
           left_mention = Fabricate(:group_chat_mention, group: @chat_group, chat_message: msg)
           right_mention = Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(left_mention.notifications.count).to be(2)
           expect(right_mention.notifications.count).to be(0)
@@ -433,7 +432,7 @@ describe Jobs::Chat::ProcessMessage do
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
           Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.count).to be(0)
         end
@@ -445,7 +444,7 @@ describe Jobs::Chat::ProcessMessage do
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
           Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.count).to be(0)
         end
@@ -463,7 +462,7 @@ describe Jobs::Chat::ProcessMessage do
           Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
           Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          Chat::Notifier.new(msg, msg.created_at).notify_new
+          described_class.new.execute(chat_message_id: msg.id)
 
           expect(Notification.count).to be(0)
         end
@@ -476,7 +475,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg("Hello @#{group.name}", user_1)
             Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
             expect(Notification.where(user: user_3).count).to be(1)
@@ -494,7 +493,7 @@ describe Jobs::Chat::ProcessMessage do
             msg = build_cooked_msg("Hello @#{group.name}", user_1)
             Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-            Chat::Notifier.new(msg, msg.created_at).notify_new
+            described_class.new.execute(chat_message_id: msg.id)
 
             expect(Notification.where(user: user_2).count).to be(0)
             expect(Notification.where(user: user_3).count).to be(1)
@@ -511,7 +510,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
@@ -547,7 +546,7 @@ describe Jobs::Chat::ProcessMessage do
 
             messages =
               MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-                Chat::Notifier.new(msg, msg.created_at).notify_new
+                described_class.new.execute(chat_message_id: msg.id)
                 expect(Notification.count).to be(0)
               end
 
@@ -572,7 +571,7 @@ describe Jobs::Chat::ProcessMessage do
 
             messages =
               MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-                Chat::Notifier.new(msg, msg.created_at).notify_new
+                described_class.new.execute(chat_message_id: msg.id)
                 expect(Notification.where(user: user_2).count).to be(1)
               end
 
@@ -597,7 +596,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
@@ -656,7 +655,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
@@ -687,7 +686,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
             end
 
           not_participating_msg = messages.first
@@ -763,7 +762,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
@@ -782,7 +781,7 @@ describe Jobs::Chat::ProcessMessage do
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              Chat::Notifier.new(msg, msg.created_at).notify_new
+              described_class.new.execute(chat_message_id: msg.id)
               expect(Notification.count).to be(0)
             end
 
