@@ -663,6 +663,7 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+    Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Discourse.redis.flushdb
   end

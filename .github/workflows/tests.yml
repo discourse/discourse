@@ -244,6 +244,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
         env:
           CHECKOUT_TIMEOUT: 10
+          DEBUG_AR_CONNECTION_QUEUE: 1
         run: |
           GLOBIGNORE="plugins/chat/*";
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
@@ -254,6 +255,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
+          DEBUG_AR_CONNECTION_QUEUE: 1
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
         timeout-minutes: 30
 
