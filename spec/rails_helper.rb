@@ -608,6 +608,7 @@ RSpec.configure do |config|
     driven_by driver.join("_").to_sym
 
     setup_system_test
+    BlockRequestsMiddleware.allow_requests!
   end
 
   config.after(:each, type: :system) do |example|
@@ -663,6 +664,10 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+
+    # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
+    BlockRequestsMiddleware.block_requests!
+
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Discourse.redis.flushdb
