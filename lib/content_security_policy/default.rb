@@ -96,6 +96,7 @@ class ContentSecurityPolicy
     end
 
     def worker_src
+      return ["'strict-dynamic'"] if SiteSetting.content_security_policy_strict_dynamic
       [
         "'self'", # For service worker
         *script_assets(worker: true),
