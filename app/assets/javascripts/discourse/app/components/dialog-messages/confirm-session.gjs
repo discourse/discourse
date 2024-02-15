@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -19,10 +20,12 @@ export default class ConfirmSession extends Component {
   @service siteSettings;
 
   @tracked errorMessage;
+  @tracked resetEmailSent = null;
 
   passwordLabel = I18n.t("user.password.title");
   instructions = I18n.t("user.confirm_access.instructions");
   loggedInAs = I18n.t("user.confirm_access.logged_in_as");
+  forgotPassword = I18n.t("user.confirm_access.forgot_password");
   finePrint = I18n.t("user.confirm_access.fine_print");
 
   get canUsePasskeys() {
@@ -82,6 +85,32 @@ export default class ConfirmSession extends Component {
     }
   }
 
+  @action
+  async sendPasswordResetEmail(event) {
+    event.preventDefault();
+    try {
+      const result = await ajax("/session/forgot_password.json", {
+        data: { login: this.currentUser.username },
+        type: "POST",
+      });
+
+      if (result.success) {
+        this.errorMessage = null;
+        this.resetEmailSent = I18n.t(
+          "user.confirm_access.password_reset_email_sent"
+        );
+      } else {
+        this.errorMessage = I18n.t(
+          "user.confirm_access.cannot_send_password_reset_email"
+        );
+      }
+    } catch (e) {
+      this.errorMessage = I18n.t(
+        "user.confirm_access.cannot_send_password_reset_email"
+      );
+    }
+  }
+
   <template>
     {{#if this.errorMessage}}
       <div class="alert alert-error">
@@ -119,12 +148,20 @@ export default class ConfirmSession extends Component {
               @label="user.password.confirm"
             />
           </div>
+          <div class="confirm-session__reset">
+            <a href {{on "click" this.sendPasswordResetEmail}}>
+              {{this.forgotPassword}}
+            </a>
+            <span class="confirm-session__reset-email-sent">
+              {{this.resetEmailSent}}
+            </span>
+          </div>
           {{#if this.canUsePasskeys}}
             <div class="confirm-session__passkey">
               <DButton
-                class="btn-flat"
                 @action={{this.confirmWithPasskey}}
                 @label="user.passkeys.confirm_button"
+                @icon="user"
               />
             </div>
           {{/if}}

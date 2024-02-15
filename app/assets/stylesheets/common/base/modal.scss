@@ -713,22 +713,26 @@
 
 .confirm-session {
   &__instructions {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
   }
 
   form {
     margin: 1.5em 0;
   }
 
-  &__passkey .btn {
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+  &__passkey {
+    margin-top: 1em;
   }
 
   &__fine-print {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-    max-width: 500px;
+    max-width: 600px;
+  }
+
+  &__reset {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 }
 
