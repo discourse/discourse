@@ -40,6 +40,7 @@
 
   &__description {
     @include line-clamp(2);
+    align-self: flex-start;
     color: var(--primary-medium);
     padding-top: 0.5rem;
     grid-area: description;
