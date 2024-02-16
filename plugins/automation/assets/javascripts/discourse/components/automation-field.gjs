@@ -6,6 +6,7 @@ import DaCategoryField from "./fields/da-category-field";
 import DaCategoryNotificationlevelField from "./fields/da-category-notification-level-field";
 import DaChoicesField from "./fields/da-choices-field";
 import DaCustomField from "./fields/da-custom-field";
+import DaCustomFields from "./fields/da-custom-fields";
 import DaDateTimeField from "./fields/da-date-time-field";
 import DaEmailGroupUserField from "./fields/da-email-group-user-field";
 import DaGroupField from "./fields/da-group-field";
@@ -19,6 +20,7 @@ import DaTextField from "./fields/da-text-field";
 import DaTextListField from "./fields/da-text-list-field";
 import DaTrustLevelsField from "./fields/da-trust-levels-field";
 import DaUserField from "./fields/da-user-field";
+import DaUserProfileField from "./fields/da-user-profile-field";
 import DaUsersField from "./fields/da-users-field";
 
 const FIELD_COMPONENTS = {
@@ -31,6 +33,7 @@ const FIELD_COMPONENTS = {
   categories: DaCategoriesField,
   user: DaUserField,
   users: DaUsersField,
+  user_profile: DaUserProfileField,
   post: DaPostField,
   tags: DaTagsField,
   "key-value": DaKeyValueField,
@@ -42,6 +45,7 @@ const FIELD_COMPONENTS = {
   category_notification_level: DaCategoryNotificationlevelField,
   email_group_user: DaEmailGroupUserField,
   custom_field: DaCustomField,
+  custom_fields: DaCustomFields,
 };
 
 export default class AutomationField extends Component {

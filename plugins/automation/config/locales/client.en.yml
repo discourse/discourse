@@ -164,6 +164,20 @@ en:
               description: Will trigger only if the topic is the first topic a user created
           created: Created
           edited: Edited
+        user_updated:
+          fields:
+            user_profile: 
+              label: User profile fields
+              description: Will trigger only if the user has filled this profile data
+            custom_fields: 
+              label: User custom fields
+              description: Will trigger only if the user has filled this custom field
+            first_post_only:
+              label: First post only
+              description: Will trigger only if this post is the first post a user created
+            automation_name:
+              label: Name of the automation trigger
+              description: Allows to have different user automations. Using the same name might cause issues.
         category_created_edited:
           fields:
             restricted_category:

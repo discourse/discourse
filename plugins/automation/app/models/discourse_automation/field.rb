@@ -130,9 +130,20 @@ module DiscourseAutomation
           "type" => "integer",
         },
       },
+      "custom_fields" => {
+        "value" => {
+          "type" => [{ type: "string" }],
+        },
+      },
       "user" => {
         "value" => {
           "type" => "string",
+        },
+      },
+      "user_profile" => {
+        "value" => {
+          "type" => "array",
+          "items" => [{ type: "string" }],
         },
       },
       "users" => {

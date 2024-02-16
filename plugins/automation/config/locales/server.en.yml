@@ -54,6 +54,9 @@ en:
       after_post_cook:
         title: After post cook
         description: When a post content is cooked the automation will be triggered
+      user_updated:
+        title: After user update
+        description: When a user updates any information the automation will be triggered
     scriptables:
       post:
         title: Create a post

@@ -71,6 +71,7 @@ after_initialize do
     lib/discourse_automation/triggers/user_promoted
     lib/discourse_automation/triggers/user_removed_from_group
     lib/discourse_automation/triggers/user_first_logged_in
+    lib/discourse_automation/triggers/user_updated
   ].each { |path| require_relative path }
 
   reloadable_patch { Post.prepend DiscourseAutomation::PostExtension }
@@ -197,6 +198,9 @@ after_initialize do
     DiscourseAutomation::Scriptable::AUTO_RESPONDER_TRIGGERED_IDS,
     [:integer],
   )
+
+  on(:user_updated) { |user| DiscourseAutomation::EventHandlers.handle_user_updated(user) }
+
   register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type("stalled_wiki_triggered_at", :string)
