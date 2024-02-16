@@ -1273,7 +1273,7 @@ describe Jobs::Chat::ProcessMessage do
           end
 
           it "includes the thread ID in the core notification data" do
-            message = create_chat_message(thread: thread, message: "Hey #{user_2.username}")
+            message = create_chat_message(thread: thread, message: "Hey @#{user_2.username}")
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             created_notification =
               track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -1286,7 +1286,7 @@ describe Jobs::Chat::ProcessMessage do
             message =
               create_chat_message(
                 channel: @personal_chat_channel,
-                message: "Hey #{user_2.username}",
+                message: "Hey @#{user_2.username}",
               )
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
@@ -1350,7 +1350,7 @@ describe Jobs::Chat::ProcessMessage do
             message =
               create_chat_message(
                 channel: @personal_chat_channel,
-                message: "Hey #{@chat_group.name}",
+                message: "Hey @#{@chat_group.name}",
               )
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
