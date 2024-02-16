@@ -850,14 +850,12 @@ describe Jobs::Chat::ProcessMessage do
       messages.first
     end
 
-    def run_job_and_get_last_core_notification(user: user_2, message:, to_notify_ids_map:)
+    def run_job_and_get_last_core_notification(user: user_2, message:)
       described_class.new.execute(chat_message_id: message.id)
       Notification.where(user: user, notification_type: Notification.types[:chat_mention]).last
     end
 
     describe "scenarios where we should skip sending notifications" do
-      let(:to_notify_ids_map) { { here_mentions: [user_2.id] } }
-
       it "does nothing if there is a newer version of the message" do
         message = create_chat_message(message: "Hey @here")
         Fabricate(:here_chat_mention, chat_message: message)
@@ -919,7 +917,6 @@ describe Jobs::Chat::ProcessMessage do
       it "does nothing if user is not participating in a private channel" do
         user_3 = Fabricate(:user)
         @chat_group.add(user_3)
-        to_notify_map = { direct_mentions: [user_3.id] }
 
         message = create_chat_message(channel: personal_chat_channel, message: "Hey @here")
         Fabricate(:here_chat_mention, chat_message: message)
@@ -1025,11 +1022,7 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       it "works for core notifications" do
-        created_notification =
-          run_job_and_get_last_core_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        created_notification = run_job_and_get_last_core_notification(message: message)
 
         expect(created_notification).to be_present
         expect(created_notification.high_priority).to eq(true)
@@ -1048,8 +1041,6 @@ describe Jobs::Chat::ProcessMessage do
 
     describe "#execute" do
       describe "global mention notifications" do
-        let(:to_notify_ids_map) { { global_mentions: [user_2.id] } }
-
         let(:payload_translated_title) do
           I18n.t(
             "discourse_push_notifications.popup.chat_mention.other_type",
@@ -1066,11 +1057,7 @@ describe Jobs::Chat::ProcessMessage do
         include_examples "creates different notifications with basic data"
 
         it "includes global mention specific data to core notifications" do
-          created_notification =
-            run_job_and_get_last_core_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          created_notification = run_job_and_get_last_core_notification(message: message)
 
           data_hash = created_notification.data_hash
 
@@ -1103,8 +1090,6 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       describe "here mention notifications" do
-        let(:to_notify_ids_map) { { here_mentions: [user_2.id] } }
-
         let(:payload_translated_title) do
           I18n.t(
             "discourse_push_notifications.popup.chat_mention.other_type",
@@ -1124,11 +1109,7 @@ describe Jobs::Chat::ProcessMessage do
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          created_notification =
-            run_job_and_get_last_core_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          created_notification = run_job_and_get_last_core_notification(message: message)
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to eq("here")
@@ -1160,8 +1141,6 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       describe "direct mention notifications" do
-        let(:to_notify_ids_map) { { direct_mentions: [user_2.id] } }
-
         let(:payload_translated_title) do
           I18n.t(
             "discourse_push_notifications.popup.chat_mention.direct",
@@ -1178,11 +1157,7 @@ describe Jobs::Chat::ProcessMessage do
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          created_notification =
-            run_job_and_get_last_core_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          created_notification = run_job_and_get_last_core_notification(message: message)
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to be_nil
@@ -1209,11 +1184,7 @@ describe Jobs::Chat::ProcessMessage do
           it "includes the thread ID in the core notification data" do
             message = create_chat_message(thread: thread, message: "Hey @#{user_2.username}")
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-            created_notification =
-              run_job_and_get_last_core_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            created_notification = run_job_and_get_last_core_notification(message: message)
             expect(created_notification.data_hash[:chat_thread_id]).to eq(thread.id)
           end
         end
@@ -1242,8 +1213,6 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       describe "group mentions" do
-        let(:to_notify_ids_map) { { @chat_group.name.to_sym => [user_2.id] } }
-
         let(:payload_translated_title) do
           I18n.t(
             "discourse_push_notifications.popup.chat_mention.other_type",
@@ -1260,11 +1229,7 @@ describe Jobs::Chat::ProcessMessage do
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          created_notification =
-            run_job_and_get_last_core_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          created_notification = run_job_and_get_last_core_notification(message: message)
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to eq(@chat_group.name)
