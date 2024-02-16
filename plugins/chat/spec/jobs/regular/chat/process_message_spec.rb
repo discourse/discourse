@@ -819,15 +819,9 @@ describe Jobs::Chat::ProcessMessage do
           users: [user_1, user_2],
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
         )
-      result =
-        Chat::CreateDirectMessageChannel.call(
-          guardian: user_1.guardian,
-          target_usernames: [user_1.username, user_2.username],
-        )
 
-      service_failed!(result) if result.failure?
-
-      @personal_chat_channel = result.channel
+      @personal_chat_channel =
+        Fabricate(:direct_message_channel, users: [user_1, user_2], with_membership: true)
 
       [user_1, user_2].each do |u|
         Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
