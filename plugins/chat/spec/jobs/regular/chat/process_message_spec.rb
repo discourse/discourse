@@ -813,7 +813,12 @@ describe Jobs::Chat::ProcessMessage do
       user_1.reload
       user_2.reload
 
-      @chat_group = Fabricate(:group, users: [user_1, user_2])
+      @chat_group =
+        Fabricate(
+          :group,
+          users: [user_1, user_2],
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+        )
       result =
         Chat::CreateDirectMessageChannel.call(
           guardian: user_1.guardian,
