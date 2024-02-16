@@ -808,6 +808,9 @@ describe Jobs::Chat::ProcessMessage do
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:public_channel) { Fabricate(:category_channel) }
+    fab!(:personal_chat_channel) do
+      Fabricate(:direct_message_channel, users: [user_1, user_2], with_membership: true)
+    end
 
     before do
       user_1.reload
@@ -819,9 +822,6 @@ describe Jobs::Chat::ProcessMessage do
           users: [user_1, user_2],
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
         )
-
-      @personal_chat_channel =
-        Fabricate(:direct_message_channel, users: [user_1, user_2], with_membership: true)
 
       [user_1, user_2].each do |u|
         Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
@@ -949,7 +949,7 @@ describe Jobs::Chat::ProcessMessage do
         @chat_group.add(user_3)
         to_notify_map = { direct_mentions: [user_3.id] }
 
-        message = create_chat_message(channel: @personal_chat_channel, message: "Hey @here")
+        message = create_chat_message(channel: personal_chat_channel, message: "Hey @here")
         Fabricate(:here_chat_mention, chat_message: message)
 
         PostAlerter.expects(:push_notification).never
@@ -1139,7 +1139,7 @@ describe Jobs::Chat::ProcessMessage do
 
         context "with private channels" do
           it "users a different translated title" do
-            message = create_chat_message(channel: @personal_chat_channel, message: "Hey @all")
+            message = create_chat_message(channel: personal_chat_channel, message: "Hey @all")
             Fabricate(:all_chat_mention, chat_message: message)
 
             desktop_notification =
@@ -1201,7 +1201,7 @@ describe Jobs::Chat::ProcessMessage do
 
         context "with private channels" do
           it "uses a different translated title" do
-            message = create_chat_message(channel: @personal_chat_channel, message: "Hey @here")
+            message = create_chat_message(channel: personal_chat_channel, message: "Hey @here")
             Fabricate(:here_chat_mention, chat_message: message)
 
             desktop_notification =
@@ -1287,7 +1287,7 @@ describe Jobs::Chat::ProcessMessage do
           it "users a different translated title" do
             message =
               create_chat_message(
-                channel: @personal_chat_channel,
+                channel: personal_chat_channel,
                 message: "Hey @#{user_2.username}",
               )
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
@@ -1351,7 +1351,7 @@ describe Jobs::Chat::ProcessMessage do
           it "uses a different translated title" do
             message =
               create_chat_message(
-                channel: @personal_chat_channel,
+                channel: personal_chat_channel,
                 message: "Hey @#{@chat_group.name}",
               )
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
