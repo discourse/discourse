@@ -851,12 +851,7 @@ describe Jobs::Chat::ProcessMessage do
     end
 
     def run_job_and_get_last_core_notification(user: user_2, message:, to_notify_ids_map:)
-      Jobs::Chat::NotifyMentioned.new.execute(
-        chat_message_id: message.id,
-        timestamp: message.created_at.to_s,
-        to_notify_ids_map: to_notify_ids_map,
-      )
-
+      described_class.new.execute(chat_message_id: message.id)
       Notification.where(user: user, notification_type: Notification.types[:chat_mention]).last
     end
 
@@ -963,11 +958,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        Jobs::Chat::NotifyMentioned.new.execute(
-          chat_message_id: message.id,
-          timestamp: message.created_at.to_s,
-          to_notify_ids_map: to_notify_ids_map,
-        )
+        described_class.new.execute(chat_message_id: message.id)
       end
 
       it "skips desktop notifications based on user muting preferences" do
@@ -993,11 +984,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        Jobs::Chat::NotifyMentioned.new.execute(
-          chat_message_id: message.id,
-          timestamp: message.created_at.to_s,
-          to_notify_ids_map: to_notify_ids_map,
-        )
+        described_class.new.execute(chat_message_id: message.id)
       end
     end
 
@@ -1034,11 +1021,7 @@ describe Jobs::Chat::ProcessMessage do
           },
         )
 
-        Jobs::Chat::NotifyMentioned.new.execute(
-          chat_message_id: message.id,
-          timestamp: message.created_at.to_s,
-          to_notify_ids_map: to_notify_ids_map,
-        )
+        described_class.new.execute(chat_message_id: message.id)
       end
 
       it "works for core notifications" do
