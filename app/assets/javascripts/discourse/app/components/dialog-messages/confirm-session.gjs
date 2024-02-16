@@ -7,7 +7,7 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import UserLink from "discourse/components/user-link";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
   getPasskeyCredential,
   isWebauthnSupported,
@@ -25,7 +25,6 @@ export default class ConfirmSession extends Component {
   passwordLabel = I18n.t("user.password.title");
   instructions = I18n.t("user.confirm_access.instructions");
   loggedInAs = I18n.t("user.confirm_access.logged_in_as");
-  forgotPassword = I18n.t("user.confirm_access.forgot_password");
   finePrint = I18n.t("user.confirm_access.fine_print");
 
   get canUsePasskeys() {
@@ -86,9 +85,9 @@ export default class ConfirmSession extends Component {
   }
 
   @action
-  async sendPasswordResetEmail(event) {
-    event.preventDefault();
+  async sendPasswordResetEmail() {
     try {
+      console.log(this.currentUser.username);
       const result = await ajax("/session/forgot_password.json", {
         data: { login: this.currentUser.username },
         type: "POST",
@@ -105,8 +104,9 @@ export default class ConfirmSession extends Component {
         );
       }
     } catch (e) {
-      this.errorMessage = I18n.t(
-        "user.confirm_access.cannot_send_password_reset_email"
+      this.errorMessage = extractError(
+        e,
+        I18n.t("user.confirm_access.cannot_send_password_reset_email")
       );
     }
   }
@@ -149,13 +149,11 @@ export default class ConfirmSession extends Component {
             />
           </div>
           <div class="confirm-session__reset">
-            <a
-              href
-              {{on "click" this.sendPasswordResetEmail}}
-              class="confirm-session__reset-link"
-            >
-              {{this.forgotPassword}}
-            </a>
+            <DButton
+              @label="user.confirm_access.forgot_password"
+              @action={{this.sendPasswordResetEmail}}
+              @class="btn-link btn-flat confirm-session__reset-btn"
+            />
             {{#if this.resetEmailSent}}
               <span class="confirm-session__reset-email-sent">
                 {{this.resetEmailSent}}

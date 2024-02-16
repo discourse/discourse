@@ -152,7 +152,7 @@ acceptance("User Preferences - Security", function (needs) {
       .dom(".dialog-body .confirm-session__reset")
       .exists("dialog includes a link to reset the password");
 
-    await click(".dialog-body .confirm-session__reset-link");
+    await click(".dialog-body .confirm-session__reset-btn");
 
     assert
       .dom(".confirm-session__reset-email-sent")
