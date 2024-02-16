@@ -40,7 +40,7 @@ export default class GlimmerSiteHeader extends Component {
     super(...arguments);
     this.docking.initializeDockCheck(this.dockCheck);
 
-    if (this.currentUser.staff) {
+    if (this.currentUser?.staff) {
       document.body.classList.add("staff");
     }
 
