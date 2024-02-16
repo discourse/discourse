@@ -18,10 +18,6 @@ import gt from "truth-helpers/helpers/gt";
 import includes from "truth-helpers/helpers/includes";
 import not from "truth-helpers/helpers/not";
 
-function uniqBy(elements, f) {
-  return Array.from(new Map(elements.map((el) => [f(el), el])).values());
-}
-
 // Given a list, break into chunks starting a new chunk whenever the predicate
 // is true for an element.
 function splitWhere(elements, f) {
@@ -39,12 +35,11 @@ function findAncestors(categories) {
   const ancestors = [];
 
   for (let i = 0; i < 3; i++) {
-    categoriesToCheck = uniqBy(
+    categoriesToCheck =
       categoriesToCheck
         .map((c) => Category.findById(c.parent_category_id))
-        .filter(Boolean),
-      (c) => c.id
-    );
+        .filter(Boolean)
+        .uniqBy((c) => c.id);
 
     ancestors.push(...categoriesToCheck);
   }
@@ -72,7 +67,7 @@ export default class extends Component {
 
   setFilteredCategories(categories) {
     const ancestors = findAncestors(categories);
-    const allCategories = uniqBy(categories.concat(ancestors), (c) => c.id);
+    const allCategories = categories.concat(ancestors).uniqBy((c) => c.id);
 
     if (this.siteSettings.fixed_category_positions) {
       allCategories.sort((a, b) => a.position - b.position);
