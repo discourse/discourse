@@ -102,7 +102,7 @@ RSpec.describe Guardian do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
 
-    describe "an anonymous user" do
+    describe "an authenticated user posting anonymously" do
       before { SiteSetting.allow_anonymous_posting = true }
 
       context "when allow_anonymous_likes is enabled" do
@@ -2504,7 +2504,7 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "#can_delete_post_action" do
+  describe "#can_delete_post_action?" do
     before do
       SiteSetting.allow_anonymous_posting = true
       Guardian.any_instance.stubs(:anonymous?).returns(true)
@@ -2512,7 +2512,8 @@ RSpec.describe Guardian do
 
     context "with allow_anonymous_likes enabled" do
       before { SiteSetting.allow_anonymous_likes = true }
-      describe "an anonymous user" do
+
+      describe "an authenticated anonymous user" do
         let(:post_action) do
           user.id = anonymous_user.id
           post.id = 1
@@ -2552,6 +2553,10 @@ RSpec.describe Guardian do
 
         it "returns true if the post belongs to the anonymous user" do
           expect(Guardian.new(anonymous_user).can_delete_post_action?(post_action)).to be_truthy
+        end
+
+        it "returns false if the user is an unauthenticated anonymous user" do
+          expect(Guardian.new.can_delete_post_action?(post_action)).to be_falsey
         end
 
         it "return false if the post belongs to another user" do
