@@ -827,6 +827,8 @@ describe Jobs::Chat::ProcessMessage do
       [user_1, user_2].each do |u|
         Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
       end
+
+      Jobs.run_immediately!
     end
 
     def create_chat_message(channel: public_channel, author: user_1, thread: nil, message:)
@@ -846,17 +848,18 @@ describe Jobs::Chat::ProcessMessage do
       to_notify_ids_map:,
       already_notified_user_ids: []
     )
-      MessageBus
-        .track_publish("/chat/notification-alert/#{user.id}") do
-          # described_class.new.execute(chat_message_id: message.id)
-          Jobs::Chat::NotifyMentioned.new.execute(
-            chat_message_id: message.id,
-            timestamp: message.created_at.to_s,
-            to_notify_ids_map: to_notify_ids_map,
-            already_notified_user_ids: already_notified_user_ids,
-          )
+      messages =
+        MessageBus.track_publish("/chat/notification-alert/#{user.id}") do
+          described_class.new.execute(chat_message_id: message.id)
+          # Jobs::Chat::NotifyMentioned.new.execute(
+          #   chat_message_id: message.id,
+          #   timestamp: message.created_at.to_s,
+          #   to_notify_ids_map: to_notify_ids_map,
+          #   already_notified_user_ids: already_notified_user_ids,
+          # )
         end
-        .first
+
+      messages.first
     end
 
     def track_core_notification(user: user_2, message:, to_notify_ids_map:)
