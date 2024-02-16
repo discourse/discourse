@@ -28,7 +28,7 @@ module Jobs
           # we dont process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
 
-          Jobs.enqueue(Jobs::Chat::NotifyMentioned, { chat_message_id: chat_message.id })
+          Jobs.enqueue(Jobs::Chat::NotifyMentioned, { message_id: chat_message.id })
 
           ::Chat::Publisher.publish_processed!(chat_message)
         end

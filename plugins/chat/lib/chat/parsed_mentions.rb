@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Chat
+  # fixme andrei this actually contains not only parsed mentions but also
+  # a lot of information from the database, this have to be split into two classes
   class ParsedMentions
     def initialize(message)
       @message = message
