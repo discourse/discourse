@@ -1058,12 +1058,6 @@ describe Jobs::Chat::ProcessMessage do
       let(:expected_channel_title) { public_channel.title(user_2) }
 
       it "works for desktop notifications" do
-        message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-        Fabricate(:all_chat_mention, chat_message: message)
-        Fabricate(:here_chat_mention, chat_message: message)
-        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
-
         desktop_notification =
           run_job_and_get_first_desktop_notification(
             message: message,
@@ -1085,12 +1079,6 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       it "works for push notifications" do
-        message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-        Fabricate(:all_chat_mention, chat_message: message)
-        Fabricate(:here_chat_mention, chat_message: message)
-        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
-
         PostAlerter.expects(:push_notification).with(
           user_2,
           {
@@ -1111,12 +1099,6 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       it "works for core notifications" do
-        message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-        Fabricate(:all_chat_mention, chat_message: message)
-        Fabricate(:here_chat_mention, chat_message: message)
-        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
-
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
 
