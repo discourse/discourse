@@ -8,4 +8,14 @@ describe "Content security policy", type: :system do
     visit "/"
     expect(page).to have_css("#site-logo")
   end
+
+  it "can boot logster in strict_dynamic mode" do
+    expect(SiteSetting.content_security_policy).to eq(true)
+    sign_in Fabricate(:admin)
+    SiteSetting.content_security_policy_strict_dynamic = true
+
+    visit "/logs"
+    pause_test
+    expect(page).to have_css("#log-table")
+  end
 end
