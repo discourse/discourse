@@ -829,22 +829,14 @@ describe Jobs::Chat::ProcessMessage do
       end
     end
 
-    def create_chat_message(
-      channel: public_channel,
-      author: user_1,
-      mentioned_user: user_2,
-      thread: nil
-    )
-      message =
-        Fabricate(
-          :chat_message,
-          chat_channel: channel,
-          user: author,
-          created_at: 10.minutes.ago,
-          thread: thread,
-        )
-      Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
-      message
+    def create_chat_message(channel: public_channel, author: user_1, thread: nil)
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: author,
+        created_at: 10.minutes.ago,
+        thread: thread,
+      )
     end
 
     def run_job_and_get_first_desktop_notification(
@@ -880,6 +872,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing if there is a newer version of the message" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Fabricate(:chat_message_revision, chat_message: message, old_message: "a", new_message: "b")
 
         PostAlerter.expects(:push_notification).never
@@ -901,6 +894,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing when user is not following the channel" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
         Chat::UserChatChannelMembership.where(chat_channel: public_channel, user: user_2).update!(
           following: false,
@@ -925,6 +919,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing when user doesn't have a membership record" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).destroy!
 
@@ -947,6 +942,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing if user is included in the already_notified_user_ids" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
         PostAlerter.expects(:push_notification).never
 
@@ -972,6 +968,7 @@ describe Jobs::Chat::ProcessMessage do
         to_notify_map = { direct_mentions: [user_3.id] }
 
         message = create_chat_message(channel: @personal_chat_channel)
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
         PostAlerter.expects(:push_notification).never
 
@@ -992,6 +989,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips desktop notifications based on user preferences" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
         )
@@ -1007,6 +1005,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips push notifications based on user preferences" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
         )
@@ -1022,6 +1021,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips desktop notifications based on user muting preferences" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
           muted: true,
@@ -1038,6 +1038,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips push notifications based on user muting preferences" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
           muted: true,
@@ -1058,6 +1059,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "works for desktop notifications" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Fabricate(:all_chat_mention, chat_message: message)
         Fabricate(:here_chat_mention, chat_message: message)
         Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
@@ -1084,6 +1086,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "works for push notifications" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Fabricate(:all_chat_mention, chat_message: message)
         Fabricate(:here_chat_mention, chat_message: message)
         Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
@@ -1109,6 +1112,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "works for core notifications" do
         message = create_chat_message
+        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
         Fabricate(:all_chat_mention, chat_message: message)
         Fabricate(:here_chat_mention, chat_message: message)
         Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
@@ -1148,6 +1152,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes global mention specific data to core notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:all_chat_mention, chat_message: message)
 
           created_notification =
@@ -1160,6 +1165,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes global mention specific data to desktop notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:all_chat_mention, chat_message: message)
 
           desktop_notification =
@@ -1174,6 +1180,7 @@ describe Jobs::Chat::ProcessMessage do
         context "with private channels" do
           it "users a different translated title" do
             message = create_chat_message(channel: @personal_chat_channel)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             Fabricate(:all_chat_mention, chat_message: message)
 
             desktop_notification =
@@ -1210,6 +1217,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:here_chat_mention, chat_message: message)
 
           created_notification =
@@ -1221,6 +1229,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to desktop notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:here_chat_mention, chat_message: message)
 
           desktop_notification =
@@ -1235,6 +1244,7 @@ describe Jobs::Chat::ProcessMessage do
         context "with private channels" do
           it "uses a different translated title" do
             message = create_chat_message(channel: @personal_chat_channel)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             Fabricate(:here_chat_mention, chat_message: message)
 
             desktop_notification =
@@ -1271,6 +1281,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
           created_notification =
             track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -1281,6 +1292,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to desktop notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
           desktop_notification =
             run_job_and_get_first_desktop_notification(
@@ -1298,6 +1310,7 @@ describe Jobs::Chat::ProcessMessage do
 
           it "uses the thread URL for the post_url in the desktop notification" do
             message = create_chat_message(thread: thread)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             desktop_notification =
               run_job_and_get_first_desktop_notification(
                 message: message,
@@ -1308,6 +1321,7 @@ describe Jobs::Chat::ProcessMessage do
 
           it "includes the thread ID in the core notification data" do
             message = create_chat_message(thread: thread)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             created_notification =
               track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
             expect(created_notification.data_hash[:chat_thread_id]).to eq(thread.id)
@@ -1317,6 +1331,7 @@ describe Jobs::Chat::ProcessMessage do
         context "with private channels" do
           it "users a different translated title" do
             message = create_chat_message(channel: @personal_chat_channel)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
             desktop_notification =
               run_job_and_get_first_desktop_notification(
@@ -1352,6 +1367,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           created_notification =
@@ -1364,6 +1380,7 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to desktop notifications" do
           message = create_chat_message
+          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           desktop_notification =
@@ -1378,6 +1395,7 @@ describe Jobs::Chat::ProcessMessage do
         context "with private channels" do
           it "uses a different translated title" do
             message = create_chat_message(channel: @personal_chat_channel)
+            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
             desktop_notification =
