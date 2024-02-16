@@ -1180,7 +1180,10 @@ describe Jobs::Chat::ProcessMessage do
 
         let(:message) { create_chat_message(message: "Hey @here") }
 
-        before { Fabricate(:here_chat_mention, chat_message: message) }
+        before do
+          Fabricate(:here_chat_mention, chat_message: message)
+          user_2.update!(last_seen_at: 4.minutes.ago)
+        end
 
         include_examples "creates different notifications with basic data"
 
