@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -87,7 +86,6 @@ export default class ConfirmSession extends Component {
   @action
   async sendPasswordResetEmail() {
     try {
-      console.log(this.currentUser.username);
       const result = await ajax("/session/forgot_password.json", {
         data: { login: this.currentUser.username },
         type: "POST",
