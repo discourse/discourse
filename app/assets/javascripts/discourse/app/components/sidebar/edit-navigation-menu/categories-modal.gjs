@@ -35,11 +35,10 @@ function findAncestors(categories) {
   const ancestors = [];
 
   for (let i = 0; i < 3; i++) {
-    categoriesToCheck =
-      categoriesToCheck
-        .map((c) => Category.findById(c.parent_category_id))
-        .filter(Boolean)
-        .uniqBy((c) => c.id);
+    categoriesToCheck = categoriesToCheck
+      .map((c) => Category.findById(c.parent_category_id))
+      .filter(Boolean)
+      .uniqBy((c) => c.id);
 
     ancestors.push(...categoriesToCheck);
   }
