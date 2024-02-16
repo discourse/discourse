@@ -12,11 +12,12 @@ module Jobs
 
         return if (message = ::Chat::Message.find_by(id: args[:chat_message_id])).nil?
 
-        if reason == "new"
-          ::Chat::Notifier.new(message, timestamp).notify_new
-        elsif reason == "edit"
-          ::Chat::Notifier.new(message, timestamp).notify_edit
-        end
+        # fixme andrei call the new code here
+        # if reason == "new"
+        #   ::Chat::Notifier.new(message, timestamp).notify_new
+        # elsif reason == "edit"
+        #   ::Chat::Notifier.new(message, timestamp).notify_edit
+        # end
       end
     end
   end

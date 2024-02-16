@@ -28,12 +28,13 @@ module Jobs
           # we dont process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
 
+          # fixme andrei call the new code here
           # notifier should be idempotent and not re-notify
-          if args[:edit_timestamp]
-            ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
-          else
-            ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
-          end
+          # if args[:edit_timestamp]
+          #   ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
+          # else
+          #   ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+          # end
 
           ::Chat::Publisher.publish_processed!(chat_message)
         end
