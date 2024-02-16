@@ -66,12 +66,9 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    @csp_nonce_placeholder ||=
-      begin
-        placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-        response.headers["Discourse-CSP-Nonce-Placeholder"] = placeholder
-        placeholder
-      end
+    response.headers[
+      ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
+    ] ||= "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
   end
 
   def shared_session_key

@@ -2,6 +2,8 @@
 
 module Middleware
   class CspScriptNonceInjector
+    PLACEHOLDER_HEADER = "Discourse-CSP-Nonce-Placeholder"
+
     def initialize(app, settings = {})
       @app = app
     end
@@ -9,7 +11,7 @@ module Middleware
     def call(env)
       status, headers, response = @app.call(env)
 
-      if nonce_placeholder = headers.delete("Discourse-CSP-Nonce-Placeholder")
+      if nonce_placeholder = headers.delete(PLACEHOLDER_HEADER)
         nonce = SecureRandom.alphanumeric(25)
         parts = []
         response.each { |part| parts << part.to_s.gsub(nonce_placeholder, nonce) }
