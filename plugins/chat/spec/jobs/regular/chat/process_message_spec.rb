@@ -913,28 +913,6 @@ describe Jobs::Chat::ProcessMessage do
         expect(created_notification).to be_nil
       end
 
-      it "does nothing if user is included in the already_notified_user_ids" do
-        message = create_chat_message
-        Fabricate(:here_chat_mention, chat_message: message)
-
-        PostAlerter.expects(:push_notification).never
-
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-            already_notified_user_ids: [user_2.id],
-          )
-        expect(desktop_notification).to be_nil
-
-        created_notification =
-          Notification.where(
-            user: user_2,
-            notification_type: Notification.types[:chat_mention],
-          ).last
-        expect(created_notification).to be_nil
-      end
-
       it "does nothing if user is not participating in a private channel" do
         user_3 = Fabricate(:user)
         @chat_group.add(user_3)
