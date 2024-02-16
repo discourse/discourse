@@ -136,6 +136,12 @@ en:
       string_value_not_valid_max: "It must be at most %{max} characters long."
       objects:
         required: "must be present"
+        invalid_type: "%{type} is not a valid type"
+        not_valid_string_value: "must be a string"
+        not_valid_integer_value: "must be an integer"
+        not_valid_float_value: "must be a float"
+        not_valid_boolean_value: "must be a boolean"
+        not_valid_enum_value: "must be one of the following: %{choices}"
     locale_errors:
       top_level_locale: "The top level key in a locale file must match the locale name"
       invalid_yaml: "Translation YAML invalid"
