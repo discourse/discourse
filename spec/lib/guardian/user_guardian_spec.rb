@@ -451,15 +451,15 @@ RSpec.describe UserGuardian do
       expect(guardian.can_upload_profile_header?(admin)).to eq(true)
     end
 
-    it "returns true if the trust level of user matches site setting" do
+    it "returns true if the group of user matches site setting" do
       guardian = Guardian.new(trust_level_2)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_profile_header?(trust_level_2)).to eq(true)
     end
 
-    it "returns false if the trust level of user does not matches site setting" do
+    it "returns false if the group of user does not matches site setting" do
       guardian = Guardian.new(trust_level_1)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_profile_header?(trust_level_1)).to eq(false)
     end
   end
