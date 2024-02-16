@@ -841,21 +841,10 @@ describe Jobs::Chat::ProcessMessage do
       )
     end
 
-    def run_job_and_get_first_desktop_notification(
-      user: user_2,
-      message:,
-      to_notify_ids_map:,
-      already_notified_user_ids: []
-    )
+    def run_job_and_get_first_desktop_notification(user: user_2, message:)
       messages =
         MessageBus.track_publish("/chat/notification-alert/#{user.id}") do
           described_class.new.execute(chat_message_id: message.id)
-          # Jobs::Chat::NotifyMentioned.new.execute(
-          #   chat_message_id: message.id,
-          #   timestamp: message.created_at.to_s,
-          #   to_notify_ids_map: to_notify_ids_map,
-          #   already_notified_user_ids: already_notified_user_ids,
-          # )
         end
 
       messages.first
@@ -881,11 +870,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -906,11 +891,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -929,11 +910,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -954,11 +931,7 @@ describe Jobs::Chat::ProcessMessage do
 
         PostAlerter.expects(:push_notification).never
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -976,11 +949,7 @@ describe Jobs::Chat::ProcessMessage do
           desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
         )
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
         expect(desktop_notification).to be_nil
       end
@@ -1009,11 +978,7 @@ describe Jobs::Chat::ProcessMessage do
           muted: true,
         )
 
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
         expect(desktop_notification).to be_nil
       end
@@ -1040,11 +1005,7 @@ describe Jobs::Chat::ProcessMessage do
       let(:expected_channel_title) { public_channel.title(user_2) }
 
       it "works for desktop notifications" do
-        desktop_notification =
-          run_job_and_get_first_desktop_notification(
-            message: message,
-            to_notify_ids_map: to_notify_ids_map,
-          )
+        desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
         expect(desktop_notification).to be_present
         expect(desktop_notification.data[:notification_type]).to eq(
@@ -1128,11 +1089,7 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes global mention specific data to desktop notifications" do
-          desktop_notification =
-            run_job_and_get_first_desktop_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
           expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
         end
@@ -1142,11 +1099,7 @@ describe Jobs::Chat::ProcessMessage do
             message = create_chat_message(channel: personal_chat_channel, message: "Hey @all")
             Fabricate(:all_chat_mention, chat_message: message)
 
-            desktop_notification =
-              run_job_and_get_first_desktop_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
             expected_title =
               I18n.t(
@@ -1190,11 +1143,7 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          desktop_notification =
-            run_job_and_get_first_desktop_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
           expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
         end
@@ -1204,11 +1153,7 @@ describe Jobs::Chat::ProcessMessage do
             message = create_chat_message(channel: personal_chat_channel, message: "Hey @here")
             Fabricate(:here_chat_mention, chat_message: message)
 
-            desktop_notification =
-              run_job_and_get_first_desktop_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
             expected_title =
               I18n.t(
@@ -1249,11 +1194,7 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          desktop_notification =
-            run_job_and_get_first_desktop_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
           expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
         end
@@ -1266,11 +1207,7 @@ describe Jobs::Chat::ProcessMessage do
           it "uses the thread URL for the post_url in the desktop notification" do
             message = create_chat_message(thread: thread, message: "Hey @#{user_2.username}")
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-            desktop_notification =
-              run_job_and_get_first_desktop_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            desktop_notification = run_job_and_get_first_desktop_notification(message: message)
             expect(desktop_notification.data[:post_url]).to eq(thread.relative_url)
           end
 
@@ -1292,11 +1229,7 @@ describe Jobs::Chat::ProcessMessage do
               )
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
 
-            desktop_notification =
-              run_job_and_get_first_desktop_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
             expected_title =
               I18n.t(
@@ -1338,11 +1271,7 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          desktop_notification =
-            run_job_and_get_first_desktop_notification(
-              message: message,
-              to_notify_ids_map: to_notify_ids_map,
-            )
+          desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
           expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
         end
@@ -1356,11 +1285,7 @@ describe Jobs::Chat::ProcessMessage do
               )
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
-            desktop_notification =
-              run_job_and_get_first_desktop_notification(
-                message: message,
-                to_notify_ids_map: to_notify_ids_map,
-              )
+            desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
             expected_title =
               I18n.t(
