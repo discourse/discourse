@@ -15,7 +15,6 @@ describe "Content security policy", type: :system do
     SiteSetting.content_security_policy_strict_dynamic = true
 
     visit "/logs"
-    pause_test
     expect(page).to have_css("#log-table")
   end
 end
