@@ -56,38 +56,40 @@ class ContentSecurityPolicy
         ThemeModifierHelper.new(theme_ids: theme_ids).csp_extensions,
       )
 
-      html_fields =
-        ThemeField.where(
-          theme_id: theme_ids,
-          target_id: ThemeField.basic_targets.map { |target| Theme.targets[target.to_sym] },
-          name: ThemeField.html_fields,
-        )
+      if !SiteSetting.content_security_policy_strict_dynamic
+        html_fields =
+          ThemeField.where(
+            theme_id: theme_ids,
+            target_id: ThemeField.basic_targets.map { |target| Theme.targets[target.to_sym] },
+            name: ThemeField.html_fields,
+          )
 
-      auto_script_src_extension = { script_src: [] }
-      html_fields.each(&:ensure_baked!)
-      doc = html_fields.map(&:value_baked).join("\n")
+        auto_script_src_extension = { script_src: [] }
+        html_fields.each(&:ensure_baked!)
+        doc = html_fields.map(&:value_baked).join("\n")
 
-      Nokogiri::HTML5
-        .fragment(doc)
-        .css("script[src]")
-        .each do |node|
-          src = node["src"]
-          uri = URI(src)
+        Nokogiri::HTML5
+          .fragment(doc)
+          .css("script[src]")
+          .each do |node|
+            src = node["src"]
+            uri = URI(src)
 
-          next if GlobalSetting.cdn_url && src.starts_with?(GlobalSetting.cdn_url) # Ignore CDN urls (theme-javascripts)
-          next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
-          next if uri.path.nil? # Ignore raw hosts
+            next if GlobalSetting.cdn_url && src.starts_with?(GlobalSetting.cdn_url) # Ignore CDN urls (theme-javascripts)
+            next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
+            next if uri.path.nil? # Ignore raw hosts
 
-          uri.query = nil # CSP should not include query part of url
+            uri.query = nil # CSP should not include query part of url
 
-          uri_string = uri.to_s.sub(%r{\A//}, "") # Protocol-less CSP should not have // at beginning of URL
+            uri_string = uri.to_s.sub(%r{\A//}, "") # Protocol-less CSP should not have // at beginning of URL
 
-          auto_script_src_extension[:script_src] << uri_string
-        rescue URI::Error
-          # Ignore invalid URI
-        end
+            auto_script_src_extension[:script_src] << uri_string
+          rescue URI::Error
+            # Ignore invalid URI
+          end
 
-      extensions << auto_script_src_extension
+        extensions << auto_script_src_extension
+      end
 
       extensions
     end
