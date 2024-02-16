@@ -290,6 +290,10 @@ module Chat
       @parsed_mentions = nil
     end
 
+    def has_been_seen_by?(membership)
+      (membership.last_read_message_id || 0) >= id
+    end
+
     private
 
     def delete_mentions(mention_type, target_ids)
