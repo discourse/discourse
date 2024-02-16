@@ -266,6 +266,7 @@ class Search
         search_context: @search_context,
         blurb_length: @blurb_length,
         is_header_search: !use_full_page_limit,
+        can_lazy_load_categories: @guardian.can_lazy_load_categories?,
       )
   end
 
@@ -342,21 +343,6 @@ class Search
 
       if preloaded_topic_custom_fields.present?
         Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
-      end
-
-      if @guardian.can_lazy_load_categories?
-        topics.each do |topic|
-          if topic.category.present?
-            # Adding categories directly to the internal list to avoid
-            # per_facets / per_limits limits
-            if topic.category.parent_category.present?
-              @results.categories << topic.category.parent_category
-            end
-            @results.categories << topic.category
-          end
-        end
-
-        @results.categories.uniq!
       end
     end
 
@@ -1465,7 +1451,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category, { category: :parent_category }]
+    topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 

@@ -14,6 +14,7 @@ class Search
       :type_filter,
       :posts,
       :categories,
+      :topic_categories,
       :users,
       :tags,
       :groups,
@@ -38,7 +39,8 @@ class Search
       blurb_length: nil,
       blurb_term: nil,
       is_header_search: false,
-      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt
+      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt,
+      can_lazy_load_categories: false
     )
       @type_filter = type_filter
       @term = term
@@ -47,12 +49,14 @@ class Search
       @blurb_length = blurb_length || BLURB_LENGTH
       @posts = []
       @categories = []
+      @topic_categories = []
       @users = []
       @tags = []
       @groups = []
       @error = nil
       @is_header_search = is_header_search
       @use_pg_headlines_for_excerpt = use_pg_headlines_for_excerpt
+      @can_lazy_load_categories = can_lazy_load_categories
     end
 
     def error=(error)
@@ -101,6 +105,15 @@ class Search
       else
         (self.public_send(type)) << object
       end
+
+      case type
+      when "posts"
+        add_topic_category(object.topic.category&.parent_category)
+        add_topic_category(object.topic.category)
+      when "topics"
+        add_topic_category(object.category&.parent_category)
+        add_topic_category(object.category)
+      end
     end
 
     def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
@@ -132,6 +145,12 @@ class Search
 
       blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
+    end
+
+    private
+
+    def add_topic_category(category)
+      topic_categories << category if category && !topic_categories.include?(category)
     end
   end
 end

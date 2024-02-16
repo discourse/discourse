@@ -1212,17 +1212,10 @@ RSpec.describe Search do
       end
     end
 
-    context "with categories" do
-      fab!(:group)
-
+    context "with topic categories" do
       fab!(:parent_category) { Fabricate(:category) }
       fab!(:category) { Fabricate(:category, parent_category: parent_category) }
       fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
-
-      before do
-        SiteSetting.lazy_load_categories_groups = "#{group.id}"
-        group.add(admin)
-      end
 
       it "returns categories and parent categories" do
         topic = Fabricate(:topic, category: category)
@@ -1237,9 +1230,15 @@ RSpec.describe Search do
             type_filter: "topic",
             search_type: :full_page,
             guardian: admin.guardian,
+            can_lazy_load_categories: true,
           )
 
-        expect(results.categories).to contain_exactly(parent_category, category, other_category)
+        expect(results.categories).to eq([])
+        expect(results.topic_categories).to contain_exactly(
+          parent_category,
+          category,
+          other_category,
+        )
       end
     end
   end

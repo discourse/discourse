@@ -4,6 +4,7 @@ class GroupedSearchResultSerializer < ApplicationSerializer
   has_many :posts, serializer: SearchPostSerializer
   has_many :users, serializer: SearchResultUserSerializer
   has_many :categories, serializer: BasicCategorySerializer
+  has_many :topic_categories, serializer: BasicCategorySerializer
   has_many :tags, serializer: TagSerializer
   has_many :groups, serializer: BasicGroupSerializer
   attributes :more_posts,
@@ -21,6 +22,10 @@ class GroupedSearchResultSerializer < ApplicationSerializer
 
   def include_search_log_id?
     search_log_id.present?
+  end
+
+  def include_topic_categories?
+    object.topic_categories.present?
   end
 
   def include_tags?
