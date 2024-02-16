@@ -1361,7 +1361,6 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           message = create_chat_message
-          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           created_notification =
@@ -1374,7 +1373,6 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to desktop notifications" do
           message = create_chat_message
-          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
           Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           desktop_notification =
@@ -1389,7 +1387,6 @@ describe Jobs::Chat::ProcessMessage do
         context "with private channels" do
           it "uses a different translated title" do
             message = create_chat_message(channel: @personal_chat_channel)
-            Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
             desktop_notification =
