@@ -872,7 +872,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing if there is a newer version of the message" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
         Fabricate(:chat_message_revision, chat_message: message, old_message: "a", new_message: "b")
 
         PostAlerter.expects(:push_notification).never
@@ -894,7 +894,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing when user is not following the channel" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
 
         Chat::UserChatChannelMembership.where(chat_channel: public_channel, user: user_2).update!(
           following: false,
@@ -919,7 +919,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing when user doesn't have a membership record" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
 
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).destroy!
 
@@ -942,7 +942,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "does nothing if user is included in the already_notified_user_ids" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
 
         PostAlerter.expects(:push_notification).never
 
@@ -968,7 +968,7 @@ describe Jobs::Chat::ProcessMessage do
         to_notify_map = { direct_mentions: [user_3.id] }
 
         message = create_chat_message(channel: @personal_chat_channel)
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
 
         PostAlerter.expects(:push_notification).never
 
@@ -989,7 +989,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips desktop notifications based on user preferences" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
         )
@@ -1005,7 +1005,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips push notifications based on user preferences" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
         )
@@ -1021,7 +1021,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips desktop notifications based on user muting preferences" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
           muted: true,
@@ -1038,7 +1038,7 @@ describe Jobs::Chat::ProcessMessage do
 
       it "skips push notifications based on user muting preferences" do
         message = create_chat_message
-        Fabricate(:user_chat_mention, chat_message: message, user: user_2)
+        Fabricate(:here_chat_mention, chat_message: message)
         Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
           mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
           muted: true,
