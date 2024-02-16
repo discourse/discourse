@@ -152,9 +152,11 @@ export default class ConfirmSession extends Component {
             <a href {{on "click" this.sendPasswordResetEmail}}>
               {{this.forgotPassword}}
             </a>
-            <span class="confirm-session__reset-email-sent">
-              {{this.resetEmailSent}}
-            </span>
+            {{#if this.resetEmailSent}}
+              <span class="confirm-session__reset-email-sent">
+                {{this.resetEmailSent}}
+              </span>
+            {{/if}}
           </div>
           {{#if this.canUsePasskeys}}
             <div class="confirm-session__passkey">
