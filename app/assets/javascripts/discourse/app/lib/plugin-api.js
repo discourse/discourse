@@ -100,12 +100,7 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import {
-  addToHeaderIcons,
-  attachAdditionalPanel,
-} from "discourse/widgets/header";
-// todo, add glimmer version
-// import { attachAdditionalPanel as attachAdditionalGlimmerPanel } from "discourse/widgets/header";
+import { addToHeaderIcons } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -918,27 +913,6 @@ class PluginApi {
       "addFlagProperty has been removed. Use the reviewable API instead.",
       { id: "discourse.add-flag-property" }
     );
-  }
-
-  /**
-   * Adds a panel to the header
-   *
-   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
-   * Example:
-   * ```javascript
-   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
-   *   return { name: attrs.name, description: state.description };
-   * });
-   * ```
-   * 'toggle' is an attribute on the state of the header widget,
-   *
-   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
-   * and returns a hash of values to pass to attach
-   *
-   **/
-  addHeaderPanel(name, toggle, transformAttrs) {
-    attachAdditionalPanel(name, toggle, transformAttrs);
-    // attachAdditionalGlimmerPanel(name, toggle, transformAttrs);
   }
 
   /**
