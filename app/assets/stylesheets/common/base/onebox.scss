@@ -957,6 +957,17 @@ aside.onebox.mixcloud-preview {
       width: 2em;
       transition: width 0.15s, height 0.15s;
     }
+
+    .d-icon-play {
+      cursor: pointer;
+      padding: 1em;
+      margin: 0.5em;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--secondary-or-primary);
+    }
   }
 
   &:hover .video-placeholder-overlay .d-icon {
