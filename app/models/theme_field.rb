@@ -3,6 +3,9 @@
 class ThemeField < ActiveRecord::Base
   MIGRATION_NAME_PART_MAX_LENGTH = 150
 
+  # This string is not 'secret'. It's just randomized to avoid accidental clashes with genuine theme field content.
+  CSP_NONCE_PLACEHOLDER = "__CSP__NONCE__PLACEHOLDER__f72bff1b1768168a34ee092ce759f192__"
+
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
@@ -168,12 +171,15 @@ class ThemeField < ActiveRecord::Base
     doc
       .css("script")
       .each_with_index do |node, index|
-        next unless inline_javascript?(node)
-        js_compiler.append_raw_script(
-          "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
-          node.inner_html,
-        )
-        node.remove
+        if inline_javascript?(node)
+          js_compiler.append_raw_script(
+            "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
+            node.inner_html,
+          )
+          node.remove
+        else
+          node["nonce"] = CSP_NONCE_PLACEHOLDER
+        end
       end
 
     settings_hash = theme.build_settings_hash
@@ -185,9 +191,9 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
 
     doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-          <link rel="preload" href="#{javascript_cache.url}" as="script">
-          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
-        HTML
+      <link rel="preload" href="#{javascript_cache.url}" as="script" nonce="#{CSP_NONCE_PLACEHOLDER}">
+      <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
+    HTML
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -294,8 +300,8 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <link rel="preload" href="#{javascript_cache.url}" as="script">
-          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+          <link rel="preload" href="#{javascript_cache.url}" as="script" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
+          <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
   end
