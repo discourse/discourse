@@ -244,6 +244,18 @@ module Chat
       SQL
     end
 
+    def members
+      User.includes(:user_chat_channel_memberships).where(
+        user_chat_channel_memberships: {
+          following: true,
+        },
+      )
+    end
+
+    def members_here
+      members.where("last_seen_at > ?", 5.minutes.ago)
+    end
+
     private
 
     def change_status(acting_user, target_status)

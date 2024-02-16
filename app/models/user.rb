@@ -620,8 +620,21 @@ class User < ActiveRecord::Base
     @ignored_user_ids ||= ignored_users.pluck(:id)
   end
 
+  def ignores?(user)
+    ignored_user_ids.include?(user.id)
+  end
+
   def muted_user_ids
     @muted_user_ids ||= muted_users.pluck(:id)
+  end
+
+  def mutes?(user)
+    muted_user_ids.include?(user.id)
+  end
+
+  def doesnt_want_to_hear_from(user)
+    # fixme andrei take care of n + 1's
+    ignores?(user) || mutes?(user)
   end
 
   def unread_notifications_of_type(notification_type, since: nil)

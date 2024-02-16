@@ -54,6 +54,10 @@ class PostAlerter
     end
   end
 
+  def self.desktop_notification(user, payload)
+    ::MessageBus.publish("/chat/notification-alert/#{user.id}", payload, user_ids: [user.id])
+  end
+
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
 

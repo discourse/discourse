@@ -4,6 +4,8 @@ module Chat
   class ParsedMentions
     def initialize(message)
       @message = message
+      @channel = message.chat_channel
+      @sender = message.user
 
       mentions = parse_mentions(message)
       group_mentions = parse_group_mentions(message)
@@ -31,7 +33,12 @@ module Chat
 
     def global_mentions
       return User.none unless @has_global_mention
-      channel_members.where.not(username_lower: @parsed_direct_mentions)
+      @channel.members
+    end
+
+    def here_mentions
+      return User.none unless @has_here_mention
+      @channel.members_here
     end
 
     def direct_mentions
@@ -44,12 +51,8 @@ module Chat
       chat_users.where(id: group_user_ids)
     end
 
-    def here_mentions
-      return User.none unless @has_here_mention
-
-      channel_members
-        .where("last_seen_at > ?", 5.minutes.ago)
-        .where.not(username_lower: @parsed_direct_mentions)
+    def has_mass_mention
+      @has_global_mention || @has_here_mention
     end
 
     def groups_to_mention
@@ -69,20 +72,31 @@ module Chat
         mentionable_groups.where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
     end
 
-    def visible_groups
-      @visible_groups ||=
-        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@message.user)
+    def users_who_cannot_join_channel
+      @users_who_cannot_join_channel ||=
+        all_users_reached_by_mentions.filter do |user|
+          !user.guardian.can_join_chat_channel?(@channel)
+        end
+    end
+
+    def users_to_send_invitation_to_channel
+      @users_to_send_invitation_to_channel ||=
+        users_who_can_join_channel.filter do |user|
+          !user.following?(@channel) && !user.doesnt_want_to_hear_from(@sender)
+        end
     end
 
     private
 
-    def channel_members
-      chat_users.includes(:user_chat_channel_memberships).where(
-        user_chat_channel_memberships: {
-          following: true,
-          chat_channel_id: @message.chat_channel.id,
-        },
-      )
+    def all_users_reached_by_mentions
+      @all_users_reached_by_mentions ||=
+        begin
+          users = direct_mentions.to_a
+          users.concat(group_mentions.to_a)
+          users.concat(here_mentions.to_a)
+          users.concat(global_mentions.to_a)
+          users
+        end
     end
 
     def chat_users
@@ -91,7 +105,7 @@ module Chat
 
     def mentionable_groups
       @mentionable_groups ||=
-        Group.mentionable(@message.user, include_public: false).where(id: visible_groups.map(&:id))
+        Group.mentionable(@sender, include_public: false).where(id: visible_groups.map(&:id))
     end
 
     def parse_mentions(message)
@@ -114,6 +128,18 @@ module Chat
       mentions.reduce([]) do |memo, mention|
         %w[@here @all].include?(mention.downcase) ? memo : (memo << mention[1..-1].downcase)
       end
+    end
+
+    def users_who_can_join_channel
+      @users_who_can_join_channel ||=
+        all_users_reached_by_mentions.filter do |user|
+          user.guardian.can_join_chat_channel?(@channel)
+        end
+    end
+
+    def visible_groups
+      @visible_groups ||=
+        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@sender).to_a
     end
   end
 end

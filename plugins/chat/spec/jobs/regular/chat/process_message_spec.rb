@@ -999,7 +999,7 @@ describe Jobs::Chat::ProcessMessage do
         )
         expect(desktop_notification.data[:username]).to eq(user_1.username)
         expect(desktop_notification.data[:tag]).to eq(
-          Chat::Notifier.push_notification_tag(:mention, public_channel.id),
+          Chat::PushNotificationTag.for_mention(public_channel.id),
         )
         expect(desktop_notification.data[:excerpt]).to eq(message.push_notification_excerpt)
         expect(desktop_notification.data[:post_url]).to eq(
@@ -1011,7 +1011,7 @@ describe Jobs::Chat::ProcessMessage do
         expected_payload = {
           notification_type: Notification.types[:chat_mention],
           username: user_1.username,
-          tag: Chat::Notifier.push_notification_tag(:mention, public_channel.id),
+          tag: Chat::PushNotificationTag.for_mention(public_channel.id),
           excerpt: message.push_notification_excerpt,
           post_url: "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
           translated_title: payload_translated_title,
