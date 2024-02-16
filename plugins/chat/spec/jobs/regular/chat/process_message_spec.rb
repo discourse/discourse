@@ -850,7 +850,7 @@ describe Jobs::Chat::ProcessMessage do
       messages.first
     end
 
-    def track_core_notification(user: user_2, message:, to_notify_ids_map:)
+    def run_job_and_get_last_core_notification(user: user_2, message:, to_notify_ids_map:)
       Jobs::Chat::NotifyMentioned.new.execute(
         chat_message_id: message.id,
         timestamp: message.created_at.to_s,
@@ -1043,7 +1043,10 @@ describe Jobs::Chat::ProcessMessage do
 
       it "works for core notifications" do
         created_notification =
-          track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          run_job_and_get_last_core_notification(
+            message: message,
+            to_notify_ids_map: to_notify_ids_map,
+          )
 
         expect(created_notification).to be_present
         expect(created_notification.high_priority).to eq(true)
@@ -1081,7 +1084,10 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes global mention specific data to core notifications" do
           created_notification =
-            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            run_job_and_get_last_core_notification(
+              message: message,
+              to_notify_ids_map: to_notify_ids_map,
+            )
 
           data_hash = created_notification.data_hash
 
@@ -1136,7 +1142,10 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           created_notification =
-            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            run_job_and_get_last_core_notification(
+              message: message,
+              to_notify_ids_map: to_notify_ids_map,
+            )
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to eq("here")
@@ -1187,7 +1196,10 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           created_notification =
-            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            run_job_and_get_last_core_notification(
+              message: message,
+              to_notify_ids_map: to_notify_ids_map,
+            )
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to be_nil
@@ -1215,7 +1227,10 @@ describe Jobs::Chat::ProcessMessage do
             message = create_chat_message(thread: thread, message: "Hey @#{user_2.username}")
             Fabricate(:user_chat_mention, chat_message: message, user: user_2)
             created_notification =
-              track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+              run_job_and_get_last_core_notification(
+                message: message,
+                to_notify_ids_map: to_notify_ids_map,
+              )
             expect(created_notification.data_hash[:chat_thread_id]).to eq(thread.id)
           end
         end
@@ -1263,7 +1278,10 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes here mention specific data to core notifications" do
           created_notification =
-            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            run_job_and_get_last_core_notification(
+              message: message,
+              to_notify_ids_map: to_notify_ids_map,
+            )
           data_hash = created_notification.data_hash
 
           expect(data_hash[:identifier]).to eq(@chat_group.name)
