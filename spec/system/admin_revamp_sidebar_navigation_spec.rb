@@ -24,7 +24,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("admin-nav-section-root")
   end
 
-  it "respecs the user homepage preference for the Back to Forum link" do
+  it "respects the user homepage preference for the Back to Forum link" do
     admin.user_option.update!(
       homepage_id: UserOption::HOMEPAGES.find { |id, value| value == "categories" }.first,
     )
