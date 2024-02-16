@@ -1148,12 +1148,13 @@ describe Jobs::Chat::ProcessMessage do
           )
         end
 
+        let(:message) { create_chat_message }
+
+        before { Fabricate(:all_chat_mention, chat_message: message) }
+
         include_examples "creates different notifications with basic data"
 
         it "includes global mention specific data to core notifications" do
-          message = create_chat_message
-          Fabricate(:all_chat_mention, chat_message: message)
-
           created_notification =
             track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
 
@@ -1163,9 +1164,6 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes global mention specific data to desktop notifications" do
-          message = create_chat_message
-          Fabricate(:all_chat_mention, chat_message: message)
-
           desktop_notification =
             run_job_and_get_first_desktop_notification(
               message: message,
@@ -1210,12 +1208,13 @@ describe Jobs::Chat::ProcessMessage do
           )
         end
 
+        let(:message) { create_chat_message }
+
+        before { Fabricate(:here_chat_mention, chat_message: message) }
+
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          message = create_chat_message
-          Fabricate(:here_chat_mention, chat_message: message)
-
           created_notification =
             track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
           data_hash = created_notification.data_hash
@@ -1224,9 +1223,6 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          message = create_chat_message
-          Fabricate(:here_chat_mention, chat_message: message)
-
           desktop_notification =
             run_job_and_get_first_desktop_notification(
               message: message,
@@ -1271,12 +1267,13 @@ describe Jobs::Chat::ProcessMessage do
           )
         end
 
+        let(:message) { create_chat_message }
+
+        before { Fabricate(:user_chat_mention, chat_message: message, user: user_2) }
+
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          message = create_chat_message
-          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-
           created_notification =
             track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
           data_hash = created_notification.data_hash
@@ -1285,9 +1282,6 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          message = create_chat_message
-          Fabricate(:user_chat_mention, chat_message: message, user: user_2)
-
           desktop_notification =
             run_job_and_get_first_desktop_notification(
               message: message,
@@ -1357,12 +1351,13 @@ describe Jobs::Chat::ProcessMessage do
           )
         end
 
+        let(:message) { create_chat_message }
+
+        before { Fabricate(:group_chat_mention, group: @chat_group, chat_message: message) }
+
         include_examples "creates different notifications with basic data"
 
         it "includes here mention specific data to core notifications" do
-          message = create_chat_message
-          Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
-
           created_notification =
             track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
           data_hash = created_notification.data_hash
@@ -1372,9 +1367,6 @@ describe Jobs::Chat::ProcessMessage do
         end
 
         it "includes here mention specific data to desktop notifications" do
-          message = create_chat_message
-          Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
-
           desktop_notification =
             run_job_and_get_first_desktop_notification(
               message: message,
