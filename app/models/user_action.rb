@@ -227,6 +227,7 @@ class UserAction < ActiveRecord::Base
       LEFT JOIN categories c on c.id = t.category_id
       LEFT JOIN post_custom_fields pc ON pc.post_id = a.target_post_id AND pc.name = 'action_code_who'
       LEFT JOIN post_custom_fields pc2 ON pc2.post_id = a.target_post_id AND pc2.name = 'action_code_path'
+      /*left_join*/
       /*where*/
       /*order_by*/
       /*offset*/
@@ -256,6 +257,8 @@ class UserAction < ActiveRecord::Base
 
       builder.order_by("a.created_at desc").offset(offset.to_i).limit(limit.to_i)
     end
+
+    DiscoursePluginRegistry.apply_modifier(:user_action_stream_builder, builder)
 
     builder.query
   end
