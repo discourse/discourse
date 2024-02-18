@@ -832,17 +832,18 @@ export default {
   },
 
   _changeSection(direction) {
-    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
-    const active = document.querySelector(".nav.nav-pills li.active");
-    const index = sections.indexOf(active) + direction;
-
-    if (index >= 0 && index < sections.length) {
-      sections[index].querySelector("a")?.click();
-    }
-
-    if (sections.length === 0) {
-      // use for in post navigation
+    if (document.querySelector(".post-stream")) {
       this._moveSelection({ direction, scrollWithinPosts: false });
+    } else {
+      const sections = Array.from(
+        document.querySelectorAll(".nav.nav-pills li")
+      );
+      const active = document.querySelector(".nav.nav-pills li.active");
+      const index = sections.indexOf(active) + direction;
+
+      if (index >= 0 && index < sections.length) {
+        sections[index].querySelector("a, button")?.click();
+      }
     }
   },
 
