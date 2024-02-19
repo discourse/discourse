@@ -21,9 +21,9 @@ export default class BulkTopicActions extends Component {
   @tracked tags = [];
 
   categoryId = 0;
-notificationLevelId = null;
-@empty("notificationLevelId") disabled;
-constructor() {
+  notificationLevelId = null;
+  @empty("notificationLevelId") disabled;
+  constructor() {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
