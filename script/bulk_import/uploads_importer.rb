@@ -3,8 +3,21 @@ puts "Loading application..."
 require_relative "../../config/environment"
 
 require "etc"
-require "sqlite3"
 require "colored2"
+
+begin
+  require "sqlite3"
+rescue LoadError
+  STDERR.puts "",
+              "ERROR: Failed to load required gems.",
+              "",
+              "You need to enable the `generic_import` group in your Gemfile.",
+              "Execute the following command to do so:",
+              "",
+              "\tbundle config set --local with generic_import && bundle install",
+              ""
+  exit 1
+end
 
 module BulkImport
   class UploadsImporter
@@ -626,6 +639,22 @@ module BulkImport
       SiteSetting.authorized_extensions = settings[:authorized_extensions]
       SiteSetting.max_attachment_size_kb = settings[:max_attachment_size_kb]
       SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
+
+      if settings[:multisite]
+        # rubocop:disable Discourse/NoDirectMultisiteManipulation
+        Rails.configuration.multisite = true
+        # rubocop:enable Discourse/NoDirectMultisiteManipulation
+
+        RailsMultisite::ConnectionManagement.class_eval do
+          def self.current_db_override=(value)
+            @current_db_override = value
+          end
+          def self.current_db
+            @current_db_override
+          end
+        end
+        RailsMultisite::ConnectionManagement.current_db_override = settings[:multisite_db_name]
+      end
 
       if settings[:enable_s3_uploads]
         SiteSetting.s3_access_key_id = settings[:s3_access_key_id]
