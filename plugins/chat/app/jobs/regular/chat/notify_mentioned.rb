@@ -9,21 +9,21 @@ module Jobs
         @message = ::Chat::Message.find(args[:message_id])
         @parsed_mentions = @message.parsed_mentions
 
-        @parsed_mentions.direct_mentions.each do |user|
-          mention = @message.user_mentions.where(target_id: user.id).first
-          create_notification!(mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, user)
+        @parsed_mentions.direct_mentions.each do |mentioned_user|
+          mention = @message.user_mentions.where(target_id: mentioned_user.id).first
+          create_notification!(mention, mentioned_user)
+          ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
         end
 
-        @parsed_mentions.group_mentions.each do |user|
-          mention = choose_group_mention(user)
-          create_notification!(mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, user)
+        @parsed_mentions.group_mentions.each do |mentioned_user|
+          mention = choose_group_mention(mentioned_user)
+          create_notification!(mention, mentioned_user)
+          ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
         end
 
-        @parsed_mentions.global_mentions.each do |user|
-          create_notification!(@message.all_mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(@message.all_mention, user)
+        @parsed_mentions.global_mentions.each do |mentioned_user|
+          create_notification!(@message.all_mention, mentioned_user)
+          ::Chat::DesktopNotifier.notify_mentioned(@message.all_mention, mentioned_user)
         end
 
         @parsed_mentions.here_mentions.each do |user|
