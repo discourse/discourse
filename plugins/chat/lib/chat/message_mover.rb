@@ -42,7 +42,7 @@ module Chat
       @source_message_ids = message_ids
       @source_messages = find_messages(@source_message_ids, source_channel)
       @ordered_source_message_ids = @source_messages.map(&:id)
-      @source_thread_ids = @source_messages.map(&:thread_id).uniq.compact
+      @source_thread_ids = @source_messages.pluck(:thread_id).uniq.compact
     end
 
     def move_to_channel(destination_channel)
@@ -69,7 +69,9 @@ module Chat
         update_message_references
         delete_source_messages
         update_reply_references
+        update_tracking_state
         update_thread_references(moved_thread_ids)
+        delete_source_threads
       end
 
       add_moved_placeholder(destination_channel, moved_messages.first)
@@ -123,26 +125,20 @@ module Chat
     end
 
     def create_destination_threads_in_channel(destination_channel)
-      moved_thread_ids = {}
-
-      Chat::Message.transaction do
-        @source_thread_ids.each do |old_thread_id|
+      moved_thread_ids =
+        @source_thread_ids.each_with_object({}) do |old_thread_id, hash|
           old_thread = Chat::Thread.find(old_thread_id)
-          original_message_user_id = old_thread.original_message_user_id
-
           new_thread =
             Chat::Thread.create!(
               channel_id: destination_channel.id,
+              original_message_user_id: old_thread.original_message_user_id,
               original_message_id: old_thread.original_message_id, # Placeholder, will be updated later
-              original_message_user_id: original_message_user_id,
               replies_count: old_thread.replies_count,
               status: old_thread.status,
               title: old_thread.title,
             )
-
-          moved_thread_ids[old_thread_id] = new_thread.id
+          hash[old_thread_id] = new_thread.id
         end
-      end
 
       moved_thread_ids
     end
@@ -219,11 +215,17 @@ module Chat
     def delete_source_messages
       # We do this so @source_messages is not nulled out, which is the
       # case when using update_all here.
-      DB.exec(<<~SQL, source_message_ids: @source_message_ids, deleted_by_id: @acting_user.id)
+      DB.exec(
+        <<~SQL,
       UPDATE chat_messages
       SET deleted_at = NOW(), deleted_by_id = :deleted_by_id
       WHERE id IN (:source_message_ids)
+      OR thread_id IN (:source_thread_ids)
     SQL
+        source_message_ids: @source_message_ids,
+        deleted_by_id: @acting_user.id,
+        source_thread_ids: @source_thread_ids,
+      )
       Chat::Publisher.publish_bulk_delete!(@source_channel, @source_message_ids)
     end
 
@@ -252,7 +254,7 @@ module Chat
     end
 
     def update_thread_references(moved_thread_ids)
-      Chat::Message.transaction do
+      Chat::Thread.transaction do
         moved_thread_ids.each do |old_thread_id, new_thread_id|
           thread = Chat::Thread.find(new_thread_id)
 
@@ -270,6 +272,13 @@ module Chat
 
           thread.set_replies_count_cache(thread.replies_count)
         end
+      end
+    end
+
+    def delete_source_threads
+      @source_thread_ids.each do |thread_id|
+        thread = Chat::Thread.find_by(id: thread_id)
+        thread.destroy if thread.present?
       end
     end
 
