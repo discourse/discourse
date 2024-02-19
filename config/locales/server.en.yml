@@ -303,6 +303,7 @@ en:
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
     max_invite_emails_limit_exceeded: "Request failed because number of emails exceeded the maximum (%{max})."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
+    domain_not_allowed_admin: "This domain cannot be used for invites."
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
