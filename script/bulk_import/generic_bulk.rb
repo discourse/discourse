@@ -1413,11 +1413,12 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_histories(user_histories) do |row|
       user_id = user_id_from_imported_id(row["id"])
+      acting_user_id = user_id_from_imported_id(row["acting_user_id"])
       next if user_id && existing_user_ids.include?(user_id)
 
       {
         action: action_id,
-        acting_user_id: Discourse::SYSTEM_USER_ID,
+        acting_user_id: acting_user_id || Discourse::SYSTEM_USER_ID,
         target_user_id: user_id,
         details: row["reason"],
       }
