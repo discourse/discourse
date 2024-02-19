@@ -206,7 +206,7 @@ module BulkImport
                   end
 
                 if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
-                  upload_path = store.get_path_for_upload(upload)
+                  upload_path = add_multisite_prefix(store.get_path_for_upload(upload))
 
                   file_exists =
                     if store.external?
@@ -326,7 +326,7 @@ module BulkImport
             begin
               upload = JSON.parse(row["upload"])
               fake_upload.url = upload["url"]
-              path = store.get_path_for_upload(fake_upload)
+              path = add_multisite_prefix(store.get_path_for_upload(fake_upload))
 
               file_exists =
                 if store.external?
@@ -517,7 +517,8 @@ module BulkImport
                 if optimized_images.present?
                   optimized_images.map! do |optimized_image|
                     next unless optimized_image.present?
-                    optimized_image_path = store.get_path_for_optimized_image(optimized_image)
+                    optimized_image_path =
+                      add_multisite_prefix(store.get_path_for_optimized_image(optimized_image))
 
                     file_exists =
                       if store.external?
@@ -682,6 +683,14 @@ module BulkImport
 
           upload.destroy
         end
+      end
+    end
+
+    def add_multisite_prefix(path)
+      if Rails.configuration.multisite
+        File.join("uploads", RailsMultisite::ConnectionManagement.current_db, path)
+      else
+        path
       end
     end
   end
