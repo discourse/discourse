@@ -21,7 +21,7 @@ RSpec.describe Chat::StopMessageStreaming do
       it { is_expected.to be_a_success }
 
       it "updates the streaming attribute to false" do
-        expect { result }.to change { message_1.reload.streaming }.to (false)
+        expect { result }.to change { message_1.reload.streaming }.to eq(false)
       end
 
       it "publishes an event" do

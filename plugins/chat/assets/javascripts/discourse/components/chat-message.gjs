@@ -15,7 +15,6 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import optionalService from "discourse/lib/optional-service";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
