@@ -14,7 +14,7 @@ class Search
       :type_filter,
       :posts,
       :categories,
-      :topic_categories,
+      :extra_categories,
       :users,
       :tags,
       :groups,
@@ -26,6 +26,7 @@ class Search
       :more_full_page_results,
       :error,
       :use_pg_headlines_for_excerpt,
+      :can_lazy_load_categories,
     )
 
     attr_accessor :search_log_id
@@ -49,7 +50,7 @@ class Search
       @blurb_length = blurb_length || BLURB_LENGTH
       @posts = []
       @categories = []
-      @topic_categories = []
+      @extra_categories = Set.new
       @users = []
       @tags = []
       @groups = []
@@ -106,13 +107,19 @@ class Search
         (self.public_send(type)) << object
       end
 
-      case type
-      when "posts"
-        add_topic_category(object.topic.category&.parent_category)
-        add_topic_category(object.topic.category)
-      when "topics"
-        add_topic_category(object.category&.parent_category)
-        add_topic_category(object.category)
+      if can_lazy_load_categories
+        category =
+          case type
+          when "posts"
+            object.topic.category
+          when "topics"
+            object.category
+          end
+
+        if category
+          extra_categories << category.parent_category if category.parent_category
+          extra_categories << category
+        end
       end
     end
 
@@ -145,12 +152,6 @@ class Search
 
       blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
-    end
-
-    private
-
-    def add_topic_category(category)
-      topic_categories << category if category && !topic_categories.include?(category)
     end
   end
 end

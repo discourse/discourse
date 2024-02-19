@@ -338,12 +338,9 @@ class Search
 
     find_grouped_results if @results.posts.blank?
 
-    if @results.posts.present?
+    if preloaded_topic_custom_fields.present? && @results.posts.present?
       topics = @results.posts.map(&:topic)
-
-      if preloaded_topic_custom_fields.present?
-        Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
-      end
+      Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
     end
 
     Search.preload(@results, self)

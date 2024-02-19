@@ -1211,36 +1211,6 @@ RSpec.describe Search do
         expect(result(admin).posts).to be_present
       end
     end
-
-    context "with topic categories" do
-      fab!(:parent_category) { Fabricate(:category) }
-      fab!(:category) { Fabricate(:category, parent_category: parent_category) }
-      fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
-
-      it "returns categories and parent categories" do
-        topic = Fabricate(:topic, category: category)
-        Fabricate(:post, topic: topic, raw: "hello world. first topic")
-
-        other_topic = Fabricate(:topic, category: other_category)
-        Fabricate(:post, topic: other_topic, raw: "hello world. second topic")
-
-        results =
-          Search.execute(
-            "hello world",
-            type_filter: "topic",
-            search_type: :full_page,
-            guardian: admin.guardian,
-            can_lazy_load_categories: true,
-          )
-
-        expect(results.categories).to eq([])
-        expect(results.topic_categories).to contain_exactly(
-          parent_category,
-          category,
-          other_category,
-        )
-      end
-    end
   end
 
   describe "cyrillic topic" do

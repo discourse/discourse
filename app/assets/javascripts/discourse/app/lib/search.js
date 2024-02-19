@@ -57,11 +57,12 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
+      Site.current().updateCategory(category);
       return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();
 
-  results.topic_categories?.forEach((category) =>
+  results.grouped_search_result?.extra?.categories?.forEach((category) =>
     Site.current().updateCategory(category)
   );
 
