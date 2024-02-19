@@ -87,7 +87,7 @@ jobs:
         uses: tespkg/actions-cache@v1
         with:
           endpoint: "192.168.128.1"
-          port: 8333
+          port: 9000
           insecure: true
           accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
           secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
@@ -116,7 +116,7 @@ jobs:
         id: yarn-cache
         with:
           endpoint: "192.168.128.1"
-          port: 8333
+          port: 9000
           insecure: true
           accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
           secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
@@ -142,7 +142,7 @@ jobs:
         uses: tespkg/actions-cache@v1
         with:
           endpoint: "192.168.128.1"
-          port: 8333
+          port: 9000
           insecure: true
           accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
           secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
@@ -168,7 +168,7 @@ jobs:
         id: app-cache
         with:
           endpoint: "192.168.128.1"
-          port: 8333
+          port: 9000
           insecure: true
           accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
           secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
@@ -220,7 +220,7 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           endpoint: "192.168.128.1"
-          port: 8333
+          port: 9000
           insecure: true
           accessKey: ${{ secrets.ACTIONS_CACHE_ACCESS_KEY }}
           secretKey: ${{ secrets.ACTIONS_CACHE_SECRET_KEY }}
