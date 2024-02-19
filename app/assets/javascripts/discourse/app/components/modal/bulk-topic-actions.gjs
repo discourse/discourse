@@ -144,7 +144,10 @@ export default class BulkTopicActions extends Component {
         this.performAndRefresh({ type: "destroy_post_timing" });
         break;
       case "update-notifications":
-        this.performAndRefresh({ type: "change_notification_level", notification_level_id: this.notificationLevelId });
+        this.performAndRefresh({
+          type: "change_notification_level",
+          notification_level_id: this.notificationLevelId,
+        });
         break;
       case "update-category":
         this.forEachPerformed(
@@ -179,19 +182,22 @@ export default class BulkTopicActions extends Component {
     this.args.model.bulkSelectHelper.toggleBulkSelect();
   }
 
-  @computed('action')
+  @computed("action")
   get isTagAction() {
-    return this.args.model.action === 'append-tags' || this.args.model.action === 'replace-tags';
+    return (
+      this.args.model.action === "append-tags" ||
+      this.args.model.action === "replace-tags"
+    );
   }
 
-  @computed('action')
+  @computed("action")
   get isNotificationAction() {
-    return this.args.model.action === 'update-notifications';
+    return this.args.model.action === "update-notifications";
   }
 
-  @computed('action')
+  @computed("action")
   get isCategoryAction() {
-    return this.args.model.action === 'update-category';
+    return this.args.model.action === "update-category";
   }
 
   categoryId = 0;
@@ -235,9 +241,7 @@ export default class BulkTopicActions extends Component {
         {{/if}} --}}
         {{#if this.isCategoryAction}}
           <p>
-            <CategoryChooser
-              @value={{this.categoryId}}
-            />
+            <CategoryChooser @value={{this.categoryId}} />
           </p>
         {{/if}}
 
