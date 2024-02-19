@@ -83,7 +83,7 @@ RSpec.describe ThemeField do
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -120,7 +120,7 @@ HTML
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(field.javascript_cache.content).to include("[THEME 1 'Default'] Compile error")
 
@@ -147,7 +147,7 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
@@ -590,7 +590,7 @@ HTML
       it "is generated correctly" do
         fr1.ensure_baked!
         expect(fr1.value_baked).to include(
-          "<script defer src='#{fr1.javascript_cache.url}' data-theme-id='#{fr1.theme_id}'></script>",
+          "<script defer src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
         )
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")
