@@ -68,6 +68,7 @@ module Jobs
         mention
       end
 
+      # fixme andrei make it user.participate_in?(@channel)
       def user_participate_in_channel?(user)
         @channel.membership_for(user).present?
       end
