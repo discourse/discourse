@@ -1778,6 +1778,11 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+  profile_background_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
   min_trust_level_to_allow_user_card_background:
     default: 0
     client: true
@@ -1788,7 +1793,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"

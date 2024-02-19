@@ -1988,6 +1988,7 @@ en:
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
+    profile_background_allowed_groups: "Groups that are allowed to upload a profile background."
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
@@ -2598,6 +2599,7 @@ en:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
 
     placeholder:
       discourse_connect_provider_secrets:
