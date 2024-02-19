@@ -11,6 +11,7 @@ module Chat
              foreign_key: :chat_mention_id
     has_many :notifications, through: :mention_notifications, dependent: :destroy
 
+    # fixme andrei actually move it to notification (but leave polymorphic parts in mentions)
     def notification_data
       message = self.chat_message
       channel = message.chat_channel
