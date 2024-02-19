@@ -9,6 +9,11 @@ module Jobs
         @message = ::Chat::Message.find(args[:message_id])
         parsed_mentions = @message.parsed_mentions
 
+        parsed_mentions.direct_mentions.each do |user|
+          mention = @message.chat_mentions.where(target_id: user.id).first
+          create_notification!(mention, user)
+        end
+
         parsed_mentions.global_mentions.each do |user|
           create_notification!(@message.all_mention, user)
         end
