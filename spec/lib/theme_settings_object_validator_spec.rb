@@ -303,5 +303,76 @@ RSpec.describe ThemeSettingsObjectValidator do
         ).to eq(string_property: ["must be at most 10 characters long"])
       end
     end
+
+    context "for category properties" do
+      it "should not return any error message when the value of the property is a valid id of a category record" do
+        category = Fabricate(:category)
+
+        schema = { name: "section", properties: { category_property: { type: "category" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { category_property: category.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { category_property: { type: "category" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { category_property: "string" }).validate,
+        ).to eq(category_property: ["must be a valid category id"])
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a category record" do
+        category = Fabricate(:category)
+
+        schema = {
+          name: "section",
+          properties: {
+            category_property: {
+              type: "category",
+            },
+            category_property_2: {
+              type: "category",
+            },
+            child_categories: {
+              type: "objects",
+              schema: {
+                name: "child_category",
+                properties: {
+                  category_property_3: {
+                    type: "category",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            expect(
+              described_class.new(
+                schema: schema,
+                object: {
+                  category_property: 99_999_999,
+                  category_property_2: 99_999_999,
+                  child_categories: [
+                    { category_property_3: 99_999_999 },
+                    { category_property_3: category.id },
+                  ],
+                },
+              ).validate,
+            ).to eq(
+              category_property: ["must be a valid category id"],
+              category_property_2: ["must be a valid category id"],
+              child_categories: [{ category_property_3: ["must be a valid category id"] }, {}],
+            )
+          end
+
+        # only 1 SQL query should be executed to check if category ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
   end
 end
