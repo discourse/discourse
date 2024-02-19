@@ -28,6 +28,7 @@ module Jobs
 
       private
 
+      # fixme andrei move into Notification
       def create_notification!(mention, mentioned_user)
         # fixme andrei shouldn't this be already excluded from parsed_mentions?
         return if mentioned_user.id == @message.user_id
