@@ -240,7 +240,11 @@ class Category < ActiveRecord::Base
 
     # Categories with children
     with_children =
-      Category.where(parent_category_id: category_ids).pluck(:parent_category_id).to_set
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: category_ids)
+        .pluck(:parent_category_id)
+        .to_set
 
     # Update category attributes
     categories.each do |category|

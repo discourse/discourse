@@ -164,7 +164,6 @@ da:
     topic_admin_menu: "emnehandlinger"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     software_update_prompt:
-      message: "Vi har opdateret dette websted, <span>genindlæs venligst siden</span>, ellers vil du kunne opleve uventet opførsel eller begrændset funktionalitet."
       dismiss: "Ignorer Alle"
     themes:
       default_description: "Standard"

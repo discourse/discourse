@@ -154,7 +154,6 @@ ko:
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
-      message: "사이트가 업데이트되어 <span>새로고침</span>이 필요합니다. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
       dismiss: "무시"
     themes:
       default_description: "기본"

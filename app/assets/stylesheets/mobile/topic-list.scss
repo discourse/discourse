@@ -574,3 +574,11 @@ td .main-link {
     }
   }
 }
+
+#list-area .show-more .alert {
+  align-items: center;
+  gap: 0.5em;
+  &.loading {
+    color: var(--primary-medium);
+  }
+}

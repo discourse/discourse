@@ -893,6 +893,9 @@ fr:
       title: "Répréhensible"
       description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envoyer un message à @%{username}"
       description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
@@ -971,6 +974,9 @@ fr:
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
@@ -3882,7 +3888,6 @@ fr:
     images:
       too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
       too_large_humanized: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size}). Veuillez la redimensionner, puis réessayez."
-      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner puis réessayez."
       size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
       too_large: "(image plus grande que %{max_size_kb} Ko)"

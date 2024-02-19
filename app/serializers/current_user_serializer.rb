@@ -25,6 +25,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
+             :can_ignore_users,
+             :can_delete_all_posts_and_topics,
+             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -139,6 +142,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_ignore_users
     !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+  end
+
+  def can_delete_all_posts_and_topics
+    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
+
+  def can_summarize
+    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
   end
 
   def can_upload_avatar

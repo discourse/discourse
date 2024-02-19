@@ -582,6 +582,8 @@ hu:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -610,6 +612,8 @@ hu:
     notify_moderators:
       title: "Valami más"
       email_title: 'A(z) „%{title}” téma moderátori figyelmet igényel'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Letiltott tartalom</p>"

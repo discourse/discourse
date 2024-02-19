@@ -7,7 +7,7 @@
 ro:
   js:
     details:
-      title: Ascunde detaliile
+      title: Ascunde detalii
     composer:
-      details_title: Sumar
+      details_title: Rezumat
       details_text: "Acest text va fi ascuns"

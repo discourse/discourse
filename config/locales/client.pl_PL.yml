@@ -244,7 +244,7 @@ pl_PL:
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
-      message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+      message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
     themes:
@@ -3011,6 +3011,7 @@ pl_PL:
         name: "Zamknij tematy"
       update_category:
         name: "Aktualizuj kategorię"
+        description: "Wybierz nową kategorię dla wybranych tematów"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5194,8 +5195,11 @@ pl_PL:
           group_name: "Zdarzenia powiadomień"
         group_user_event:
           group_name: "Zdarzenia grupy użytkownika"
+          user_added_to_group: "Użytkownik zostaje dodany do grupy"
+          user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
+          user_promoted: "Użytkownik zostaje awansowany"
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5621,6 +5625,7 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "Emaile"
+        settings: "Ustawienia e-mail"
         templates: "Szablony"
         templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"

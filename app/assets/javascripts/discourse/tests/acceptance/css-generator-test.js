@@ -24,7 +24,11 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#category-color-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      ":root {\n--category-1-color: #ff0000;\n--category-2-color: #333;\n--category-4-color: #2B81AF;\n}"
+      ":root {\n" +
+        "--category-1-color: #ff0000;\n" +
+        "--category-2-color: #333;\n" +
+        "--category-4-color: #2B81AF;\n" +
+        "}"
     );
   });
 
@@ -33,7 +37,10 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#hashtag-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      ".hashtag-color--category-1 {\n  background: linear-gradient(-90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(-90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(-90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}"
+      ".hashtag-category-badge { background-color: var(--primary-medium); }\n" +
+        ".hashtag-color--category-1 { background-color: #ff0000; }\n" +
+        ".hashtag-color--category-2 { background-color: #333; }\n" +
+        ".hashtag-color--category-4 { background-color: #2B81AF; }"
     );
   });
 
@@ -42,7 +49,9 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#category-badge-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
+      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n' +
+        '.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n' +
+        '.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
     );
   });
 });

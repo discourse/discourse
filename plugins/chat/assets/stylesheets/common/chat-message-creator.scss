@@ -217,6 +217,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  flex-wrap: wrap;
 
   &.-user .chat-user-display-name {
     padding-left: 0.5rem;
@@ -224,6 +225,7 @@
 
   &.-group {
     .chat-message-creator__group-name {
+      flex-shrink: 0;
       padding-left: 0.5rem;
     }
 

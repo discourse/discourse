@@ -893,6 +893,9 @@ es:
       title: "Inapropiado"
       description: 'Esta publicación tiene contenido que una persona razonable podría considerar ofensivo, abusivo, ser una conducta de odio o una violación de <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>.'
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
+    illegal:
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar un mensaje a @%{username}"
       description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
@@ -971,6 +974,9 @@ es:
       long_form: "denunciado para ser atendido por los moderadores"
       short_description: "Requiere atención del personal por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu publicación fue denunciada por la comunidad. Por favor, <a href="%{path}">revisa tus mensajes</a>.</p>'
@@ -3869,7 +3875,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
-      larger_than_x_megapixels: "Lo sentimos, la imagen que estas intentando subir es demasiado grande (tamaño máximo %{max_image_megapixels}-megapixels). Hazla mas pequeña e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"

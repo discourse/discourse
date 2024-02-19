@@ -417,6 +417,9 @@ bg:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Неприлично"
+    illegal:
+      email_title: 'Постът "%{title}" изисква вниманието на човек от екипа'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Изпрати съобщение до @%{username}"
       email_title: 'Вашата публикация в "%{title}"'
@@ -445,6 +448,9 @@ bg:
       title: "Нещо друго"
       long_form: "сигнал до модератор"
       email_title: 'Постът "%{title}" изисква вниманието на модератор'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Постът "%{title}" изисква вниманието на човек от екипа'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p> За тази публикация беше сигнализирано от общността и е временно скрита. .</p>"

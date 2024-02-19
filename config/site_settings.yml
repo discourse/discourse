@@ -1778,6 +1778,11 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+  profile_background_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
   min_trust_level_to_allow_user_card_background:
     default: 0
     client: true
@@ -1788,7 +1793,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"
@@ -1872,7 +1876,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    client: true
   edit_all_topic_groups:
     default: "13"
     type: group_list
@@ -1985,6 +1988,8 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
+  content_security_policy_strict_dynamic:
+    default: false
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2323,14 +2328,6 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  enable_experimental_admin_ui_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    hidden: true
-    client: true
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
@@ -2605,7 +2602,6 @@ uncategorized:
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3
@@ -3085,7 +3081,6 @@ tags:
     client: true
     default: false
   pm_tags_allowed_for_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""

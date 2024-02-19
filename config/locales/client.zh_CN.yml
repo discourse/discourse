@@ -160,7 +160,7 @@ zh_CN:
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
-      message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
+      message: "我们已经更新了网站， <span>请刷新</span> 以保持一切顺利进行。"
       dismiss: "忽略"
     bootstrap_mode: "使用入门"
     themes:
@@ -3192,6 +3192,7 @@ zh_CN:
           off_topic: "您将此帖子举报为偏离话题"
           spam: "您将此帖子举报为垃圾信息"
           inappropriate: "您将此帖子举报为不当言论"
+          illegal: "你把它标记为非法"
           notify_moderators: "您将此帖子举报为需要由版主审核"
           notify_user: "您向此用户发送了一条消息"
       delete:
@@ -3454,10 +3455,12 @@ zh_CN:
         off_topic: "偏离话题"
         inappropriate: "不当言论"
         spam: "垃圾信息"
+        illegal: "这是非法的"
       custom_placeholder_notify_user: "具体，有建设性，并始终保持友善。"
       notify_user_textarea_label: "给用户的消息"
       custom_placeholder_notify_moderators: "让我们具体了解您关心的问题，并尽可能提供相关的链接和示例。"
       notify_moderators_textarea_label: "给版主的消息"
+      custom_placeholder_illegal: "请向我们说明你认为这些内容违法的具体原因，并尽可能提供相关链接和示例。"
       custom_message:
         at_least:
           other: "至少输入 %{count} 个字符"
@@ -4559,10 +4562,14 @@ zh_CN:
           post_liked: "当用户点赞一篇帖子时。"
         notification_event:
           group_name: "通知事件"
+          notification_created: "用户在其 Feed 中收到通知"
         group_user_event:
           group_name: "群组用户事件"
+          user_added_to_group: "用户被添加到群组"
+          user_removed_from_group: "用户从群组中删除"
         user_promoted_event:
           group_name: "用户信任级别提升事件"
+          user_promoted: "用户信任级别被提升"
         delivery_status:
           title: "传送状态"
           inactive: "停用"
@@ -4979,6 +4986,7 @@ zh_CN:
           instructions: "自定义呈现所有 HTML 电子邮件的模板，并使用 CSS 设置样式。"
       email:
         title: "电子邮件"
+        settings: "电子邮件设置"
         templates: "模板"
         templates_title: "电子邮件模板"
         preview_digest: "预览总结"
@@ -5619,6 +5627,7 @@ zh_CN:
             other: "在过去 %{count} 天内："
           value_heading: "值"
           requirement_heading: "要求"
+          posts_read_days: "帖子读取：唯一日期"
           days: "天数"
           topics_replied_to: "回复的话题"
           topics_viewed: "浏览的话题"
@@ -5922,6 +5931,7 @@ zh_CN:
         category_title: "类别"
         tag_name: "标签名称"
         external_url: "外部或相关 URL"
+        user_id: "用户 ID"
         username: "用户名"
         destination: "目标"
         copy_to_clipboard: "将永久链接复制到剪贴板"

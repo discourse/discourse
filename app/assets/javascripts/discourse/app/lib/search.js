@@ -237,6 +237,10 @@ export function applySearchAutocomplete($input, siteSettings) {
 }
 
 export function updateRecentSearches(currentUser, term) {
+  if (!term) {
+    return;
+  }
+
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {

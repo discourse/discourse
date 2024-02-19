@@ -98,10 +98,7 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-
-  > .btn {
-    height: var(--chat-header-offset);
-  }
+  height: var(--chat-header-offset);
 }
 
 .c-navbar__back-button ~ .c-navbar__title {

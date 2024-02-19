@@ -81,7 +81,7 @@ ko:
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
       invalid_yaml: "제공된 YAML이 유효하지 않습니다."
-      data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은 `integer` , `bool` , `list` , `enum` 및 `upload` 입니다."
+      data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은`integer`,`bool`,`list`,`enum` 및`upload`입니다."
       name_too_long: "이름이 너무 긴 설정이 있습니다. 최대 길이는 255입니다"
       default_value_missing: "`%{name}` 설정에 디폴트값이 없습니다"
       default_not_match_type: "`%{name}` 디폴트값 유형 설정이 설정 유형과 일치하지 않습니다."
@@ -741,6 +741,9 @@ ko:
     inappropriate:
       title: "부적절함"
       short_description: '<a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반'
+    illegal:
+      email_title: '"%{title}"에 운영진의 확인이 필요한 게시글이 있습니다'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} 님에게 메시지 전송"
       description: "이 사용자와 게시물에 대해 직접 개인적으로 이야기하고 싶습니다."
@@ -811,6 +814,9 @@ ko:
       long_form: "운영자의 확인을 위해 신고됨"
       short_description: "기타 이유로 운영진의 확인이 필요합니다"
       email_title: '"%{title}" 주제는 운영자의 확인이 필요합니다'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}"에 운영진의 확인이 필요한 게시글이 있습니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>커뮤니티에서 게시물을 신고했습니다. <a href="%{path}">메시지를 참조</a>하세요.</p>'
@@ -3310,7 +3316,6 @@ ko:
     images:
       too_large: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_size_kb}KB). 크기를 조정하고 다시 시도하세요."
       too_large_humanized: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_size}KB). 크기를 조정하고 다시 시도하세요."
-      larger_than_x_megapixels: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_image_megapixels}메가픽셀). 크기를 조정하고 다시 시도하세요."
       size_not_found: "이미지 크기를 확인할 수 없습니다. 이미지가 손상되었을 수 있습니다."
     placeholders:
       too_large: "(%{max_size_kb}KB보다 큰 이미지)"

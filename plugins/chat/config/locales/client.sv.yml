@@ -56,6 +56,7 @@ sv:
       cancel_reply: "Avbryt svar"
       chat_channels: "Kanaler"
       browse_all_channels: "Bläddra bland alla kanaler"
+      see_in: "Se i"
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:

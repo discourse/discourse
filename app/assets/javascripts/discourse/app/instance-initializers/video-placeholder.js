@@ -80,6 +80,15 @@ export default {
         );
 
         containers.forEach((container) => {
+          // Add video thumbnail image
+          if (container.dataset.thumbnailSrc) {
+            const thumbnail = new Image();
+            thumbnail.onload = function () {
+              container.style.backgroundImage = "url('" + thumbnail.src + "')";
+            };
+            thumbnail.src = container.dataset.thumbnailSrc;
+          }
+
           const wrapper = document.createElement("div"),
             overlay = document.createElement("div");
 

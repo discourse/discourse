@@ -308,7 +308,7 @@ en:
         back: "Back"
         title: Channels
         filter_all: All
-        filter_open: Opened
+        filter_open: Open
         filter_closed: Closed
         filter_archived: Archived
         filter_input_placeholder: Search channel by name

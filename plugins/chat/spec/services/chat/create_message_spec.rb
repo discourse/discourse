@@ -31,8 +31,17 @@ RSpec.describe Chat::CreateMessage do
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
+    let(:context_topic_id) { nil }
+    let(:context_post_ids) { nil }
     let(:params) do
-      { guardian: guardian, chat_channel_id: channel.id, message: content, upload_ids: [upload.id] }
+      {
+        guardian: guardian,
+        chat_channel_id: channel.id,
+        message: content,
+        upload_ids: [upload.id],
+        context_topic_id: context_topic_id,
+        context_post_ids: context_post_ids,
+      }
     end
     let(:message) { result[:message_instance].reload }
 
@@ -91,8 +100,27 @@ RSpec.describe Chat::CreateMessage do
           instance_of(Chat::Message),
           channel,
           user,
+          anything,
         )
+
         result
+      end
+
+      context "when context given" do
+        let(:context_post_ids) { [1, 2] }
+        let(:context_topic_id) { 3 }
+
+        it "triggers a Discourse event with context if given" do
+          DiscourseEvent.expects(:trigger).with(
+            :chat_message_created,
+            instance_of(Chat::Message),
+            channel,
+            user,
+            { context: { post_ids: context_post_ids, topic_id: context_topic_id } },
+          )
+
+          result
+        end
       end
 
       it "processes the direct message channel" do

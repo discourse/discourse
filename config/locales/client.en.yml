@@ -42,15 +42,15 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "MMM D, 'YY LT"
+      long_date_with_year: "MMM D, YYYY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
 
       wrap_ago: "%{date} ago"
       wrap_on: "on %{date}"
@@ -90,7 +90,7 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "MMM D"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "less than %{count} min"
@@ -120,7 +120,7 @@ en:
           one: "almost %{count} year"
           other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM D, 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min ago"
@@ -209,7 +209,7 @@ en:
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
-      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
@@ -1869,6 +1869,9 @@ en:
         incorrect_password: "The entered password is incorrect."
         incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
+        forgot_password: "Forgot your password?"
+        password_reset_email_sent: "Password reset email sent."
+        cannot_send_password_reset_email: "Could not send password reset email."
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:

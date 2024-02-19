@@ -999,6 +999,12 @@ he:
       title: "לא ראוי"
       description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
+    illegal:
+      title: "זה לא חוקי"
+      description: "הפוסט הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
+      short_description: "זה לא חוקי"
+      email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
       description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
@@ -1077,6 +1083,12 @@ he:
       long_form: "סומן לתשומת לב של מפקח"
       short_description: "דורש תשומת לב של הצוות מסיבה אחרת"
       email_title: 'הנושא „%{title}” דורש תשומת לב של מנחה'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "זה לא חוקי"
+      description: "הנושא הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
+      short_description: "זה לא חוקי"
+      email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>הפוסט שלך סומן בדגל על ידי הקהילה. נא <a href="%{path}">לעיין בהודעות שלך</a>.</p>'
@@ -1934,7 +1946,7 @@ he:
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
     flag_post_allowed_groups: "קבוצות שמורשות לסמן פוסטים."
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
-    post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים."
+    post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים. מנהלים ומפקחים תמיד מורשים לפרסם קישורים."
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
     embedded_media_post_allowed_groups: "למשתמשים בקבוצות האלה מותר להטמיע פריטי מדיה בפוסט"
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
@@ -2132,6 +2144,7 @@ he:
     anonymous_account_duration_minutes: "כדי להגן על האלמוניות יש ליצור חשבון אלמוני חדש כל N דקות עבור כל משתמש. למשל: אם ההגדרה היא 600, בחלוף 600 דקות מהפוסט האחרון וגם אם המשתמש עבר למצב אלמוני, ייווצר חשבון אלמוני חדש."
     hide_user_profiles_from_public: "להשבית כרטיסי משתמשים, פרופילי משתמשים וספריית משתמשים עבור משתמשים אלמוניים."
     allow_users_to_hide_profile: "לאפשר למשתמשים להחביא את הפרופיל והנוכחות שלהם"
+    hide_user_activity_tab: "להסתיר את לשונית הפעילות בפרופילי משתמש למעט למנהלים ולעצמי."
     allow_featured_topic_on_user_profiles: "לאפשר למשתמשים להציג קישור לנושא בכרטיס המשתמש ובפרופיל שלהם."
     show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
     hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
@@ -4040,7 +4053,7 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
       too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
-      larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
+      larger_than_x_megapixels: "התמונה שניסית להעלות גדולה מדי (הגודל המרבי הוא %{max_image_megapixels} מגה-פיקסלים), נא לשנות את גודלה ולנסות שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"

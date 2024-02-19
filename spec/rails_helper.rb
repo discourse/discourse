@@ -151,6 +151,7 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
+    BlockRequestsMiddleware.allow_requests!
   end
 end
 
@@ -663,6 +664,11 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+
+    # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
+    BlockRequestsMiddleware.block_requests!
+
+    Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Discourse.redis.flushdb
   end

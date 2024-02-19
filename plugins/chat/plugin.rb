@@ -145,6 +145,15 @@ after_initialize do
 
   add_to_serializer(
     :current_user,
+    :can_direct_message,
+    include_condition: -> do
+      return @can_direct_message if defined?(@can_direct_message)
+      @can_direct_message = SiteSetting.chat_enabled && scope.can_direct_message?
+    end,
+  ) { true }
+
+  add_to_serializer(
+    :current_user,
     :has_chat_enabled,
     include_condition: -> do
       return @has_chat_enabled if defined?(@has_chat_enabled)

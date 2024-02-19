@@ -244,7 +244,7 @@ he:
     emails_are_disabled: "כל הדוא״ל היוצא הושבת באופן גורף על ידי הנהלת באתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תישלח."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
-      message: "עדכנו את האתר הזה, <span>נא לרענן</span> או שיתכן שתופענה כל מיני תופעות בלתי מוסברות."
+      message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
       dismiss: "התעלמות"
     bootstrap_mode: "איך מתחילים"
     themes:
@@ -3707,6 +3707,7 @@ he:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
           inappropriate: "דיגלתם את זה כלא ראוי"
+          illegal: "סימנת את זה כבלתי חוקי"
           notify_moderators: "סימנת זאת בדגל לפיקוח"
           notify_user: "שלחתם הודעה למשתמש זה"
       delete:
@@ -3975,10 +3976,12 @@ he:
         off_topic: "אוף-טופיק"
         inappropriate: "לא ראוי"
         spam: "זהו ספאם"
+        illegal: "זה לא חוקי"
       custom_placeholder_notify_user: "היו ממוקדים, חיובים ותמיד אדיבים."
       notify_user_textarea_label: "הודעה למשתמש"
       custom_placeholder_notify_moderators: "נשמח לשמוע בדיוק מה מטריד אותך ולספק קישורים מתאימים ודוגמאות היכן שניתן."
       notify_moderators_textarea_label: "הודעה למפקחים"
+      custom_placeholder_illegal: "נשמח לשמוע בדיוק למה לדעתך התוכן הזה לא חוקי ולספק קישורים מתאימים ודוגמאות היכן שניתן."
       custom_message:
         at_least:
           one: "הכניסו לפחות תו אחד"
@@ -5200,10 +5203,14 @@ he:
           post_liked: "כשמשתמש מצביע לייק בפוסט."
         notification_event:
           group_name: "אירועי התראה"
+          notification_created: "משתמש מקבל התראה בערוץ העדכונים שלו"
         group_user_event:
           group_name: "אירועי משתמש בקבוצה"
+          user_added_to_group: "משתמש נוסף לקבוצה"
+          user_removed_from_group: "משתמש מוסר מקבוצה"
         user_promoted_event:
           group_name: "אירועי קידום משתמש"
+          user_promoted: "משתמש מקודם"
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"
@@ -5629,6 +5636,7 @@ he:
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "הודעות דוא״ל"
+        settings: "הגדרות דוא״ל"
         templates: "תבניות"
         templates_title: "תבניות דוא״ל"
         preview_digest: "תצוגה מקדימה של תמצית"
@@ -6287,6 +6295,7 @@ he:
             other: "ב־%{count} הימים האחרונים:"
           value_heading: "ערך"
           requirement_heading: "דרישה"
+          posts_read_days: "פוסטים שנקראו: ייחודי לימים"
           days: "ימים"
           topics_replied_to: "נושאים להם הגיבו"
           topics_viewed: "נושאים שנצפו"
@@ -6596,6 +6605,7 @@ he:
         category_title: "קטגוריה"
         tag_name: "שם תגית"
         external_url: "כתובת חיצונית או יחסית"
+        user_id: "מזהה משתמש"
         username: "שם משתמש"
         destination: "יעד"
         copy_to_clipboard: "העתקת קישור קבוע ללוח"

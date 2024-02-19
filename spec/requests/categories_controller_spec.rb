@@ -1041,6 +1041,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#find" do
+    fab!(:group)
     fab!(:category) { Fabricate(:category, name: "Foo") }
     fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
 
@@ -1049,6 +1050,17 @@ RSpec.describe CategoriesController do
         get "/categories/find.json", params: { ids: [subcategory.id] }
 
         expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([subcategory.id])
+      end
+
+      it "preloads user-specific fields" do
+        subcategory.update!(read_restricted: true)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+
+        serialized = response.parsed_body["categories"].first
+        expect(serialized["notification_level"]).to eq(CategoryUser.default_notification_level)
+        expect(serialized["permission"]).to eq(nil)
+        expect(serialized["has_children"]).to eq(false)
       end
 
       it "does not return hidden category" do

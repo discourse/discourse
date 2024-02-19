@@ -439,6 +439,9 @@ et:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ebasünnis"
+    illegal:
+      email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Saada kasutajale @%{username} sõnum"
       email_title: 'Sinu postitus teemas "%{title}"'
@@ -469,6 +472,9 @@ et:
       title: "Miski muu"
       long_form: "tähistasin selle kui moderaatori tähelepanu vajava"
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
   archetypes:
     regular:
