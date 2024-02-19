@@ -12,28 +12,29 @@ module Jobs
         # fixme andrei dry up
         @parsed_mentions.direct_mentions.each do |mentioned_user|
           mention = @message.user_mentions.where(target_id: mentioned_user.id).first
-          create_notification!(mention, mentioned_user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
+          notify(mention, mentioned_user)
         end
 
         @parsed_mentions.group_mentions.each do |mentioned_user|
           mention = choose_group_mention(mentioned_user)
-          create_notification!(mention, mentioned_user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
+          notify(mention, mentioned_user)
         end
 
         @parsed_mentions.global_mentions.each do |mentioned_user|
-          create_notification!(@message.all_mention, mentioned_user)
-          ::Chat::DesktopNotifier.notify_mentioned(@message.all_mention, mentioned_user)
+          notify(@message.all_mention, mentioned_user)
         end
 
-        @parsed_mentions.here_mentions.each do |user|
-          create_notification!(@message.here_mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(@message.here_mention, user)
+        @parsed_mentions.here_mentions.each do |mentioned_user|
+          notify(@message.here_mention, mentioned_user)
         end
       end
 
       private
+
+      def notify(mention, mentioned_user)
+        create_notification!(mention, mentioned_user)
+        ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
+      end
 
       # fixme andrei move into Notification
       def create_notification!(mention, mentioned_user)
