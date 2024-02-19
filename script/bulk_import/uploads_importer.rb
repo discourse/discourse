@@ -196,9 +196,11 @@ module BulkImport
                 upload =
                   copy_to_tempfile(path) do |file|
                     begin
-                      UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
-                        Discourse::SYSTEM_USER_ID,
-                      )
+                      UploadCreator.new(
+                        file,
+                        row["display_filename"] || row["filename"],
+                        type: row["type"],
+                      ).create_for(Discourse::SYSTEM_USER_ID)
                     rescue StandardError => e
                       error_message = e.message
                       nil
