@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -14,6 +15,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import optionalService from "discourse/lib/optional-service";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -484,6 +486,19 @@ export default class ChatMessage extends Component {
     return this.args.context === MESSAGE_CONTEXT_THREAD;
   }
 
+  get shouldRenderStopMessageStreamingButton() {
+    return (
+      this.args.message.streaming &&
+      (this.currentUser.admin ||
+        this.args.message.user.id === this.currentUser.id)
+    );
+  }
+
+  @action
+  stopMessageStreaming(message) {
+    this.chatApi.stopMessageStreaming(message.channel.id, message.id);
+  }
+
   #teardownMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
       user.stopTrackingStatus();
@@ -504,6 +519,7 @@ export default class ChatMessage extends Component {
           "chat-message-container"
           (if this.pane.selectingMessages "-selectable")
           (if @message.highlighted "-highlighted")
+          (if @message.streaming "-streaming")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
           (if @message.staged "-staged" "-persisted")
           (if @message.processed "-processed" "-not-processed")
@@ -606,6 +622,18 @@ export default class ChatMessage extends Component {
                     </div>
                   {{/if}}
                 </ChatMessageText>
+
+                {{#if this.shouldRenderStopMessageStreamingButton}}
+                  <div class="stop-streaming-btn-container">
+                    <DButton
+                      @class="stop-streaming-btn"
+                      @icon="stop-circle"
+                      @label="cancel"
+                      @action={{fn this.stopMessageStreaming @message}}
+                    />
+
+                  </div>
+                {{/if}}
 
                 <ChatMessageError
                   @message={{@message}}

@@ -54,6 +54,7 @@ module Chat
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
+      attribute :streaming, :boolean, default: false
       attribute :incoming_chat_webhook
       attribute :process_inline, :boolean, default: Rails.env.test?
 
@@ -134,6 +135,7 @@ module Chat
         thread: thread,
         cooked: ::Chat::Message.cook(contract.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
+        streaming: contract.streaming,
       )
     end
 

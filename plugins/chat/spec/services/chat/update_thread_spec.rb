@@ -17,9 +17,7 @@ RSpec.describe Chat::UpdateThread do
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { "some new title :D" }
-    let(:params) do
-      { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id, title: title }
-    end
+    let(:params) { { guardian: guardian, thread_id: thread.id, title: title } }
 
     context "when all steps pass" do
       it "sets the service result as successful" do
