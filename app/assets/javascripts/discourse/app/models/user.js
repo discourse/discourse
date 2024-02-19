@@ -702,20 +702,6 @@ export default class User extends RestModel.extend(Evented) {
     return groups.length === 0 ? null : groups;
   }
 
-  // NOTE: This only includes groups *visible* to the user via the serializer,
-  // so be wary when using this.
-  isInAnyGroups(groupIds) {
-    if (!this.groups) {
-      return;
-    }
-
-    // auto group ID 0 is "everyone"
-    return (
-      groupIds.includes(0) ||
-      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
-    );
-  }
-
   // The user's stat count, excluding PMs.
   @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
