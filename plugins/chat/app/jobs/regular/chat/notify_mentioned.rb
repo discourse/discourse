@@ -10,8 +10,7 @@ module Jobs
         @parsed_mentions = @message.parsed_mentions
 
         @parsed_mentions.direct_mentions.each do |user|
-          # fixme call user_mentions here
-          mention = @message.chat_mentions.where(target_id: user.id).first
+          mention = @message.user_mentions.where(target_id: user.id).first
           create_notification!(mention, user)
           ::Chat::DesktopNotifier.notify_mentioned(mention, user)
         end
