@@ -1,12 +1,8 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import ChangeCategory from "discourse/components/bulk-actions/change-category";
-import NotificationLevel from "discourse/components/bulk-actions/notification-level";
 import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-topics-dropdown"],
@@ -21,6 +17,7 @@ export default DropdownSelectBoxComponent.extend({
   modal: service(),
   router: service(),
   currentUser: service(),
+  siteSettings: service(),
 
   computeContent() {
     let options = [];
@@ -67,36 +64,43 @@ export default DropdownSelectBoxComponent.extend({
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
         visible: ({ topics }) =>
-        topics.some((t) => t.visible) &&
-        !topics.some((t) => t.isPrivateMessage),
+          topics.some((t) => t.visible) &&
+          !topics.some((t) => t.isPrivateMessage),
       },
       {
         id: "relist-topics",
         icon: "far-eye",
         name: i18n("topic_bulk_actions.relist_topics.name"),
         visible: ({ topics }) =>
-        topics.some((t) => !t.visible) &&
-        !topics.some((t) => t.isPrivateMessage),
+          topics.some((t) => !t.visible) &&
+          !topics.some((t) => t.isPrivateMessage),
       },
       {
         id: "append-tags",
         icon: "tag",
         name: i18n("topic_bulk_actions.append_tags.name"),
+        visible: ({ currentUser, siteSettings }) =>
+          siteSettings.tagging_enabled && currentUser.canManageTopic,
       },
       {
         id: "replace-tags",
         icon: "tag",
         name: i18n("topic_bulk_actions.replace_tags.name"),
+        visible: ({ currentUser, siteSettings }) =>
+          siteSettings.tagging_enabled && currentUser.canManageTopic,
       },
       {
         id: "remove-tags",
         icon: "tag",
         name: i18n("topic_bulk_actions.remove_tags.name"),
+        visible: ({ currentUser, siteSettings }) =>
+          siteSettings.tagging_enabled && currentUser.canManageTopic,
       },
       {
         id: "delete-topics",
         icon: "trash-alt",
         name: i18n("topic_bulk_actions.delete_topics.name"),
+        visible: ({ currentUser }) => currentUser.staff,
       },
     ]);
 
@@ -106,7 +110,7 @@ export default DropdownSelectBoxComponent.extend({
           topics: this.bulkSelectHelper.selected,
           // category: this.args.model.category,
           currentUser: this.currentUser,
-          // siteSettings: this.siteSettings,
+          siteSettings: this.siteSettings,
         });
       } else {
         return true;
@@ -118,43 +122,23 @@ export default DropdownSelectBoxComponent.extend({
   onSelect(id) {
     switch (id) {
       case "update-category":
-        // Temporary: just use the existing modal & action
-        // this.modal.show(TopicBulkActions, {
-        //   model: {
-        //     topics: this.bulkSelectHelper.selected,
-        //     category: this.category,
-        //     refreshClosure: () => this.router.refresh(),
-        //     initialAction: "set-component",
-        //     initialComponent: ChangeCategory,
-        //   },
-        // });
         this.modal.show(BulkTopicActions, {
           model: {
             action: "update-category",
             title: i18n("topics.bulk.change_category"),
             bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
-          }
+          },
         });
         break;
       case "update-notifications":
-        // Temporary: just use the existing modal & action
-        // this.modal.show(TopicBulkActions, {
-        //   model: {
-        //     topics: this.bulkSelectHelper.selected,
-        //     category: this.category,
-        //     refreshClosure: () => this.router.refresh(),
-        //     initialAction: "set-component",
-        //     initialComponent: NotificationLevel,
-        //   },
-        // });
         this.modal.show(BulkTopicActions, {
           model: {
             action: "update-notifications",
             title: i18n("topics.bulk.notification_level"),
             bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
-          }
+          },
         });
         break;
       case "close-topics":

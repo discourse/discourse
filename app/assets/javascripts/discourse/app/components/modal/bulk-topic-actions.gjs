@@ -9,11 +9,8 @@ import DModal from "discourse/components/d-modal";
 import Topic from "discourse/models/topic";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-//import AppendTags from "../bulk-actions/append-tags";
-//import ChangeCategory from "../bulk-actions/change-category";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import RadioButton from "discourse/components/radio-button";
-//import NotificationLevel from "../bulk-actions/notification-level";
 import TagChooser from "select-kit/components/tag-chooser";
 import CategoryChooser from "select-kit/components/category-chooser";
 import { topicLevels } from "discourse/lib/notification-levels";
@@ -150,13 +147,13 @@ export default class BulkTopicActions extends Component {
         this.performAndRefresh({ type: "change_notification_level", notification_level_id: this.notificationLevelId });
         break;
       case "update-category":
-        // this.forEachPerformed(
-        //   {
-        //     type: "change_category",
-        //     category_id: this.categoryId,
-        //   },
-        //   (t) => t.set("category_id", this.categoryId)
-        // );
+        this.forEachPerformed(
+          {
+            type: "change_category",
+            category_id: this.categoryId,
+          },
+          (t) => t.set("category_id", this.categoryId)
+        );
         break;
     }
   }
@@ -198,8 +195,6 @@ export default class BulkTopicActions extends Component {
   }
 
   categoryId = 0;
-
-  // NotificationLevel
   notificationLevelId = null;
 
   @empty("notificationLevelId") disabled;
@@ -228,7 +223,6 @@ export default class BulkTopicActions extends Component {
           }}
         </div>
 
-        {{log this.activeComponent}}
         {{!-- {{#if this.activeComponent}}
           <this.activeComponent
             @loading={{this.loading}}
@@ -243,10 +237,10 @@ export default class BulkTopicActions extends Component {
           <p>
             <CategoryChooser
               @value={{this.categoryId}}
-              {{!-- @onChange={{action (mut this.categoryId)}} --}}
             />
           </p>
         {{/if}}
+
         {{#if this.isNotificationAction}}
           <div class="bulk-notification-list">
             {{#each this.notificationLevels as |level|}}
