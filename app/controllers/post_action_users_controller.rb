@@ -49,6 +49,8 @@ class PostActionUsersController < ApplicationController
     render_json_dump(data)
   end
 
+  private
+
   def current_user_muting_or_ignoring_users(user_ids)
     return [] if current_user.blank?
     UserCommScreener.new(
