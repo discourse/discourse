@@ -4,23 +4,26 @@ import { action, computed } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
+import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import RadioButton from "discourse/components/radio-button";
+import { topicLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
-import RadioButton from "discourse/components/radio-button";
-import TagChooser from "select-kit/components/tag-chooser";
 import CategoryChooser from "select-kit/components/category-chooser";
-import { topicLevels } from "discourse/lib/notification-levels";
+import TagChooser from "select-kit/components/tag-chooser";
 
 export default class BulkTopicActions extends Component {
   @service router;
   @tracked activeComponent = null;
   @tracked tags = [];
 
-  constructor() {
+  categoryId = 0;
+notificationLevelId = null;
+@empty("notificationLevelId") disabled;
+constructor() {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
@@ -200,16 +203,11 @@ export default class BulkTopicActions extends Component {
     return this.args.model.action === "update-category";
   }
 
-  categoryId = 0;
-  notificationLevelId = null;
-
-  @empty("notificationLevelId") disabled;
-
   get notificationLevels() {
     return topicLevels.map((level) => ({
       id: level.id.toString(),
-      name: I18n.t(`topic.notifications.${level.key}.title`),
-      description: I18n.t(`topic.notifications.${level.key}.description`),
+      name: i18n.t(`topic.notifications.${level.key}.title`),
+      description: i18n.t(`topic.notifications.${level.key}.description`),
     }));
   }
 
@@ -229,16 +227,6 @@ export default class BulkTopicActions extends Component {
           }}
         </div>
 
-        {{!-- {{#if this.activeComponent}}
-          <this.activeComponent
-            @loading={{this.loading}}
-            @topics={{@model.topics}}
-            @category={{@model.category}}
-            @setComponent={{this.setComponent}}
-            @forEachPerformed={{this.forEachPerformed}}
-            @performAndRefresh={{this.performAndRefresh}}
-          />
-        {{/if}} --}}
         {{#if this.isCategoryAction}}
           <p>
             <CategoryChooser @value={{this.categoryId}} />
