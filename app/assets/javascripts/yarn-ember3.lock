@@ -1952,30 +1952,22 @@
     nanoid "^4.0.0"
     preact "^10.5.13"
 
-"@uppy/drop-target@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@uppy/drop-target/-/drop-target-2.0.3.tgz#5890f6ba24d607588b14d327ee0f9fe57ee77d17"
-  integrity sha512-/hfy6oX5CtNBR13/HjavGbk6DJzwijmAb6KukGapkG8oaQBGzOIxUdahWuORPQZKjmHziG2erCOYrRVSC2bImA==
+"@uppy/drop-target@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@uppy/drop-target/-/drop-target-2.0.1.tgz#94e106056a846d9de12b0d12231f66c9718a6778"
+  integrity sha512-FMO8wj+0dx4mlwXKxFWSTUF+irgr0BVXadyc4qaoBBtZ3vEcwc3jP7SQfwk3JizV/D5MYG8MRICRbPAIrY9M8w==
   dependencies:
-    "@uppy/utils" "^5.7.1"
+    "@uppy/utils" "^5.0.2"
 
 "@uppy/store-default@^3.0.2":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.3.tgz#37d0e95c8fd360b3283bca7fdf94cce7400008e7"
   integrity sha512-/zlvQNj4HjkthI+7dNdj/8mOlTg1Zb1gJ/ZsOxof0g3xXD+OAwm7asRnOwpfj2dos+lExdW/zMn8XsRGsuvb6Q==
 
-"@uppy/utils@5.4.3":
+"@uppy/utils@5.4.3", "@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.4.3.tgz#5d8c238805a35dec5b0d3cd4bea4e0a1b7e54584"
   integrity sha512-ewQTWQ5Wu1/ocz/lLCkhoXQwHLRktFK4CxrOsZmeCLK9LxjD1GOwSFjOuL199WDQKXiCle6SVlAJGQ3SDlXVkg==
-  dependencies:
-    lodash "^4.17.21"
-    preact "^10.5.13"
-
-"@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0", "@uppy/utils@^5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.7.1.tgz#a2013b7e7eff2b4638595ceb02da6411b18d669a"
-  integrity sha512-o4WXNDEmldCvxek6O9QaafKdimy5C0dcxE/Bo/EaY4UMqeQeGovNBeQzwxFvyiojXQcqJzjKw0oYM7+jLiqhEQ==
   dependencies:
     lodash "^4.17.21"
     preact "^10.5.13"
