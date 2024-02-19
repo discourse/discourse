@@ -17,12 +17,12 @@ module Jobs
 
         parsed_mentions.global_mentions.each do |user|
           create_notification!(@message.all_mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, user)
+          ::Chat::DesktopNotifier.notify_mentioned(@message.all_mention, user)
         end
 
         parsed_mentions.here_mentions.each do |user|
           create_notification!(@message.here_mention, user)
-          ::Chat::DesktopNotifier.notify_mentioned(mention, user)
+          ::Chat::DesktopNotifier.notify_mentioned(@message.here_mention, user)
         end
       end
 
