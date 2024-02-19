@@ -5,10 +5,11 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
   @service chat;
   @service router;
 
-  beforeModel() {
+  beforeModel(transition) {
     const recipients = this.paramsFor(this.routeName).recipients?.split(",");
 
     if (!recipients) {
+      transition.abort();
       return this.router.transitionTo("chat");
     }
 
