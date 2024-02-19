@@ -12,7 +12,7 @@ module Chat
     has_many :notifications, through: :mention_notifications, dependent: :destroy
 
     # fixme andrei actually move it to notification (but leave polymorphic parts in mentions)
-    def notification_data
+    def notification_data(mentioned_user)
       message = self.chat_message
       channel = message.chat_channel
 
@@ -26,7 +26,7 @@ module Chat
       data[:chat_thread_id] = message.thread_id if message.in_thread?
 
       if channel.direct_message_channel?
-        data[:chat_channel_title] = channel.title(self.user)
+        data[:chat_channel_title] = channel.title(mentioned_user)
         data[:chat_channel_slug] = channel.slug
       end
 

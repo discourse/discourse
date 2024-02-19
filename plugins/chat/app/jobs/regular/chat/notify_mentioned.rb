@@ -44,7 +44,7 @@ module Jobs
             notification_type: ::Notification.types[:chat_mention],
             user_id: mentioned_user.id,
             high_priority: true,
-            data: mention.notification_data.to_json,
+            data: mention.notification_data(mentioned_user).to_json,
           )
         mention.notifications << notification
       end
