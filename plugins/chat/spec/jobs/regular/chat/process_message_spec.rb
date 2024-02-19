@@ -1236,7 +1236,7 @@ describe Jobs::Chat::ProcessMessage do
           expect(data_hash[:is_group_mention]).to eq(true)
         end
 
-        it "includes here mention specific data to desktop notifications" do
+        it "includes group mention specific data into desktop notifications" do
           desktop_notification = run_job_and_get_first_desktop_notification(message: message)
 
           expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
