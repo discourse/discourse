@@ -433,6 +433,18 @@ RSpec.describe InvitesController do
         end
       end
 
+      context "when email address is too long" do
+        let(:email) { "a" * 495 + "@example.com" }
+
+        it "fails" do
+          create_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(response.parsed_body["errors"]).to be_present
+          error_message = response.parsed_body["errors"].first
+          expect(error_message).to eq("Email is too long (maximum is 500 characters)")
+        end
+      end
+
       context "when providing an email belonging to an existing user" do
         let(:email) { user.email }
 
@@ -457,6 +469,46 @@ RSpec.describe InvitesController do
             expect(body).to match(/There was a problem with your request./)
           end
         end
+      end
+    end
+
+    context "with domain invite" do
+      it "works" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "example.com" }
+        expect(response).to have_http_status :ok
+      end
+
+      it "fails when domain is invalid" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "example" }
+
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq(I18n.t("invite.domain_not_allowed_admin"))
+      end
+
+      it "fails when domain is too long" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "a" * 500 + ".ca" }
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq("Domain is too long (maximum is 500 characters)")
+      end
+
+      it "fails when custom message is too long" do
+        sign_in(admin)
+
+        post "/invites.json", params: { custom_message: "b" * 1001, domain: "example.com" }
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq("Custom message is too long (maximum is 1000 characters)")
       end
     end
 
