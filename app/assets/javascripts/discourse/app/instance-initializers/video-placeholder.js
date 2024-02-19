@@ -67,7 +67,7 @@ export default {
           wrapper.remove();
           video.style.display = "";
           parentDiv.classList.remove("video-placeholder-container");
-          parentDiv.style = "background: black";
+          parentDiv.style.backgroundImage = "none";
         });
       }
 
