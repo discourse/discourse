@@ -41,6 +41,7 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
+  "command+/": { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
@@ -467,6 +468,15 @@ export default {
       event.stopPropagation();
     }
     composer.focusComposer(event);
+  },
+
+  filterSidebar() {
+    const filterInput = document.querySelector(".sidebar-filter input");
+
+    if (filterInput) {
+      this._scrollTo(0);
+      filterInput.focus();
+    }
   },
 
   fullscreenComposer() {

@@ -255,4 +255,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       return defineAdminSection(adminNavSectionData);
     });
   }
+
+  get filterable() {
+    return true;
+  }
 }

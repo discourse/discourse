@@ -83,6 +83,10 @@ export default class KeyboardShortcutsHelp extends Component {
             keys2: [CTRL, ALT, "f"],
             keysDelimiter: PLUS,
           }),
+          filter_sidebar: buildShortcut("application.filter_sidebar", {
+            keys1: [CTRL, "/"],
+            keysDelimiter: PLUS,
+          }),
           help: buildShortcut("application.help", { keys1: ["?"] }),
           dismiss_new: buildShortcut("application.dismiss_new", {
             keys1: ["x", "r"],

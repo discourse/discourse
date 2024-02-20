@@ -4243,6 +4243,7 @@ en:
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
+        filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
         dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
@@ -4677,6 +4678,11 @@ en:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description: "We couldn’t find anything matching ‘%{filter}’"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
