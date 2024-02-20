@@ -72,6 +72,9 @@ be:
       string_value_not_valid_min_max: "Яно павінна быць паміж% {мін} і {% макс} знакаў."
       string_value_not_valid_min: "Яна павінна быць не менш% {мін} знакаў."
       string_value_not_valid_max: "Яно павінна быць не больш% {макс} знакаў."
+      objects:
+        required: "павінны прысутнічаць"
+        not_valid_integer_value: "павінна быць цэлым лікам"
     locale_errors:
       top_level_locale: "Ключ верхняга ўзроўню ў файле лякаль павінен адпавядаць лакалі імя"
       invalid_yaml: "Пераклад YAML несапраўдны"

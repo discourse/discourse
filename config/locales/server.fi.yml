@@ -124,6 +124,9 @@ fi:
       string_value_not_valid_min_max: "Sen täytyy olla %{min}–%{max} merkin pituinen."
       string_value_not_valid_min: "Sen täytyy olla vähintään %{min} merkkiä pitkä."
       string_value_not_valid_max: "Sen täytyy olla enintään %{max} merkkiä pitkä"
+      objects:
+        required: "pakollinen kenttä"
+        not_valid_integer_value: "täytyy olla kokonaisluku"
     locale_errors:
       top_level_locale: "Lokalisaatiotiedoston ylimmän tason avaimen täytyy olla sama kuin lokalisaation nimi"
       invalid_yaml: "Käännös-YAML ei kelpaa"

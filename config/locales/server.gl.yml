@@ -92,6 +92,9 @@ gl:
       string_value_not_valid_min_max: "Debe ter entre %{min} e %{max} caracteres de lonxitude."
       string_value_not_valid_min: "Debe ter polo menos %{min} caracteres."
       string_value_not_valid_max: "Debe ter un máximo de %{max} caracteres."
+      objects:
+        required: "debe estar presente"
+        not_valid_integer_value: "debe ser un número enteiro"
     locale_errors:
       top_level_locale: "A chave de nivel superior nun ficheiro local debe coincidir co nome local"
       invalid_yaml: "YAML de tradución non válido"

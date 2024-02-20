@@ -126,6 +126,9 @@ uk:
       string_value_not_valid_min_max: "Він має містити від %{min} до %{max} символів."
       string_value_not_valid_min: "Має складатись принаймні з %{min} символів."
       string_value_not_valid_max: "Має містити не більше %{max} символів."
+      objects:
+        required: "має бути присутнім"
+        not_valid_integer_value: "має бути цілим числом"
     locale_errors:
       top_level_locale: "Ключ верхнього рівня у файлі локалі має відповідати назві локалі"
       invalid_yaml: "Переклад YAML пошкоджено"
@@ -1000,7 +1003,6 @@ uk:
       description: 'Ця публікація містить вміст, який розумна людина вважатиме образливим, таким, що розпалює ненависть, або таким, що порушує <a href="%{base_path}/guidelines">наші правила спільноти</a>.'
       short_description: 'Порушення наших <a href="%{base_path}/guidelines">принципів спільноти</a>'
     illegal:
-      title: "Це незаконно."
       description: "Ця публікація вимагає уваги персоналу, оскільки я вважаю, що вона містить незаконний вміст."
       short_description: "Це незаконно"
       email_title: 'Допис у темі "%{title}"потребує модерації'
@@ -1085,7 +1087,6 @@ uk:
       email_title: 'Тема "%{title}" потребує уваги модератора'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "Це незаконно"
       description: "Ця тема вимагає уваги персоналу, оскільки я вважаю, що вона містить незаконний контент."
       short_description: "Це незаконно"
       email_title: 'Допис у темі "%{title}"потребує модерації'

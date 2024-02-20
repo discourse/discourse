@@ -32,11 +32,8 @@ sw:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM S, MMMM"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} iliyopita"
       tiny:
         half_a_minute: "< dakika 1"
@@ -71,7 +68,7 @@ sw:
           one: "%{count}y"
           other: "%{count}y"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "dakika %{count}"
@@ -82,7 +79,6 @@ sw:
         x_days:
           one: "siku %{count}"
           other: "siku %{count}"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "dakika %{count} iliyopita"

@@ -66,6 +66,10 @@ fa_IR:
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
       ssh_key_gone: "شما برای نصب پوسته بیش از حد طولانی صبر کردید و کلید SSH منقضی شده است. لطفا دوباره امتحان کنید."
+    settings_errors:
+      objects:
+        required: "باید حاضر باشد"
+        not_valid_integer_value: "باید یک عدد صحیح باشد"
   emails:
     incoming:
       default_subject: "این موضوع نیاز به عنوان دارد"

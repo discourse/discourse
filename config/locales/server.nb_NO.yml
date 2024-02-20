@@ -77,6 +77,9 @@ nb_NO:
       string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
       string_value_not_valid_min: "Den må være minst %{min} tegn lang."
       string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
+      objects:
+        required: "Må være til stede"
+        not_valid_integer_value: "må være ett heltall"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"

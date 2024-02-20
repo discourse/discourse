@@ -125,7 +125,7 @@ zh_TW:
         back: "上一步"
         title: 頻道
         filter_all: 全部
-        filter_open: 已打開
+        filter_open: 開啟
         filter_closed: 不公開
         filter_archived: 已封存
       chat_message_separator:

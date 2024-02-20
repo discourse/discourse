@@ -126,6 +126,9 @@ ru:
       string_value_not_valid_min_max: "Допустимый размер — от %{min} до %{max} символов."
       string_value_not_valid_min: "Значение должно быть не менее %{min} символов."
       string_value_not_valid_max: "Значение должно быть не более %{max} символов."
+      objects:
+        required: "не может быть пустым"
+        not_valid_integer_value: "должно быть целым"
     locale_errors:
       top_level_locale: "Ключ верхнего уровня в файле локали должен соответствовать имени локали"
       invalid_yaml: "Неверный перевод YAML-файла"

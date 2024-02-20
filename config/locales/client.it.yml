@@ -35,11 +35,9 @@ it:
       long_with_year: "D MMM YYYY h:mm a"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} fa"
       wrap_on: "il %{date}"
       tiny:
@@ -75,7 +73,7 @@ it:
           one: "%{count} anno"
           other: "%{count} anni"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "meno di %{count} minuto"
@@ -104,7 +102,7 @@ it:
         almost_x_years:
           one: "quasi %{count} anno"
           other: "quasi %{count} anni"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto fa"

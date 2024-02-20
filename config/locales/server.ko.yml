@@ -95,6 +95,9 @@ ko:
       string_value_not_valid_min_max: "%{min} ~ %{max}자 사이여야 합니다."
       string_value_not_valid_min: "%{min}자 이상이어야 합니다."
       string_value_not_valid_max: "%{max}자 이하여야 합니다."
+      objects:
+        required: "공백이 없어야 합니다."
+        not_valid_integer_value: "정수여야 함"
     locale_errors:
       top_level_locale: "로캘 파일의 최상위 키는 로캘 이름과 일치해야 합니다."
       invalid_yaml: "YAML 번역이 유효하지 않습니다"

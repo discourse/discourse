@@ -107,6 +107,7 @@ cs:
         back: "Zpět"
         title: Kanály
         filter_all: Celkem
+        filter_open: Otevřít
         filter_closed: Uzavřeno
       chat_message_separator:
         today: Dnes

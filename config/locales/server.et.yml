@@ -54,6 +54,10 @@ et:
     enabled_filter: "Sisse lülitatud"
     disabled_filter: "Välja lülitatud"
     updates_available_filter: "Uuendused on saadaval"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "peab olema täisarv"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"

@@ -84,6 +84,9 @@ el:
       string_value_not_valid_min_max: "Πρέπει να είναι μεταξύ %{min} και %{max} χαρακτήρες."
       string_value_not_valid_min: "Πρέπει να είναι τουλάχιστον %{min} χαρακτήρες."
       string_value_not_valid_max: "Πρέπει να είναι το πολύ %{max} χαρακτήρες."
+      objects:
+        required: "πρέπει να υπάρχει"
+        not_valid_integer_value: "πρέπει να είναι ακέραιος αριθμός"
     locale_errors:
       top_level_locale: "Το κλειδί ανώτατου επιπέδου σε ένα αρχείο τοπικών ρυθμίσεων πρέπει να συμφωνεί με το όνομα της τοπικής ρύθμισης"
       invalid_yaml: "Η μετάφραση YAML δεν είναι έγκυρη"

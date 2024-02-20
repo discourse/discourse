@@ -34,11 +34,11 @@ zh_CN:
       long_with_year: "YYYY 年 M 月 D 日 HH:mm"
       long_with_year_no_time: "YYYY 年 M 月 D 日"
       full_with_year_no_time: "YYYY 年 M 月 D 日"
-      long_date_with_year: "YY 年 M 月 D 日 LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "M 月 D 日 LT"
-      long_date_with_year_without_time: "YY 年 M 月 D 日"
+      long_date_with_year_without_time: "YYYY 年 M 月 D 日"
       long_date_without_year_with_linebreak: "M 月 D 日<br/>LT"
-      long_date_with_year_with_linebreak: "YY 年 M 月 D 日<br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} 前"
       wrap_on: "%{date}"
       tiny:
@@ -64,7 +64,7 @@ zh_CN:
         almost_x_years:
           other: "%{count} 年"
         date_month: "M 月 D 日"
-        date_year: "YY 年 M 月"
+        date_year: "YYYY 年 M 月"
       medium:
         less_than_x_minutes:
           other: "小于 %{count} 分钟"
@@ -84,7 +84,7 @@ zh_CN:
           other: "超过 %{count} 年"
         almost_x_years:
           other: "将近 %{count} 年"
-        date_year: "YY 年 MMM D 日"
+        date_year: "YYYY 年 M 月 D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -1657,6 +1657,9 @@ zh_CN:
         incorrect_password: "输入的密码不正确。"
         incorrect_passkey: "该通行密钥不正确。"
         logged_in_as: "您的登录身份为："
+        forgot_password: "忘记密码了?"
+        password_reset_email_sent: "已发送密码重置邮件。"
+        cannot_send_password_reset_email: "无法发送密码重置邮件。"
         instructions: "请确认您的身份以完成此操作。"
         fine_print: "我们要求您确认您的身份，因为这是一项潜在的敏感操作。一旦通过身份验证，只有在几个小时不活动后才会要求重新进行身份验证。"
       password:

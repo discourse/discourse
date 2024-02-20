@@ -126,6 +126,9 @@ pl_PL:
       string_value_not_valid_min_max: "Wartość musi mieć długość pomiędzy %{min} a %{max} znaków."
       string_value_not_valid_min: "Wartość musi mieć co najmniej %{min} znaków."
       string_value_not_valid_max: "Wartość musi mieć co najwyżej %{max} znaków."
+      objects:
+        required: "musi zostać podana"
+        not_valid_integer_value: "musi być liczbą całkowitą"
     locale_errors:
       top_level_locale: "Klucz najwyższego poziomu w pliku ustawień regionalnych musi być zgodny z nazwą ustawień regionalnych"
       invalid_yaml: "Nieprawidłowy plik YAML z tłumaczeniem"
@@ -1001,7 +1004,7 @@ pl_PL:
       description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     illegal:
-      title: "To nielegalne"
+      title: "Nielegalne"
       short_description: "To jest nielegalne"
       email_title: 'Wpis "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -1085,7 +1088,8 @@ pl_PL:
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "To nielegalne"
+      title: "Nielegalne"
+      short_description: "To jest nielegalne"
       email_title: 'Wpis "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1544,6 +1548,7 @@ pl_PL:
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
     category_style_deprecated: "Twój Discourse używa obecnie przestarzałego stylu kategorii, który zostanie usunięty przed ostateczną wersją beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a>."
     ember_version_warning: "Twoja witryna działa z nieobsługiwaną konfiguracją EMBER_VERSION=3. Może to prowadzić do nieoczekiwanych problemów z motywami/wtyczkami. Usuń konfigurację EMBER_VERSION z pliku app.yml i zrób rebuild Discourse. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
+    back_from_logster_text: "Powrót do strony"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"

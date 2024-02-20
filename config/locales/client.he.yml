@@ -37,11 +37,11 @@ he:
       long_with_year: "D בMMM ‏YYYY ‏HH:mm"
       long_with_year_no_time: "D בMMM ‏YYYY"
       full_with_year_no_time: "D בMMMM ‏YYYY"
-      long_date_with_year: "D בMMM‏ YY‏ LT"
+      long_date_with_year: "D בMMM ‏YYYY LT"
       long_date_without_year: "D בMMM‏ LT"
-      long_date_with_year_without_time: "D בMMM ‏YY"
+      long_date_with_year_without_time: "D בMMM ‏YYYY"
       long_date_without_year_with_linebreak: "D בMMM‏ <br/>LT"
-      long_date_with_year_with_linebreak: "D בMMM‏ YY‏ <br/>LT"
+      long_date_with_year_with_linebreak: "D בMMM ‏YYYY <br/>LT"
       wrap_ago: "לפני %{date}"
       wrap_on: "ב־%{date}"
       tiny:
@@ -97,7 +97,7 @@ he:
           many: "%{count} שנים"
           other: "%{count} שנים"
         date_month: "D בMMM"
-        date_year: "MMM YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "פחות מדקה (%{count})"
@@ -144,7 +144,7 @@ he:
           two: "כמעט שנתיים (%{count})"
           many: "כמעט %{count} שנה"
           other: "כמעט %{count} שנים"
-        date_year: "D בMMM‏ YY"
+        date_year: "D בMMM ‏YYYY"
       medium_with_ago:
         x_minutes:
           one: "לפני דקה"
@@ -1890,6 +1890,9 @@ he:
         incorrect_password: "הסיסמה שמילאת שגויה."
         incorrect_passkey: "מפתח הגישה הזה שגוי."
         logged_in_as: "נכנסת בשם: "
+        forgot_password: "שכחת את הסיסמה שלך?"
+        password_reset_email_sent: "נשלח דוא״ל לאיפוס סיסמה."
+        cannot_send_password_reset_email: "לא ניתן לשלוח את הודעת איפוס הסיסמה בדוא״ל."
         instructions: "נא לאשר את הזהות שלך כדי להשלים את הפעולה הזאת."
         fine_print: "אנו מבקשים ממך לאשר את הזהות שלך כיוון שזאת פעולה שעלולה להיות רגישה. לאחר האימות, נבקש ממך לעבור אימות שוב רק כעבור כמה שעות של חוסר פעילות."
       password:
@@ -5560,6 +5563,8 @@ he:
           active_filter: "פעיל"
           inactive_filter: "לא פעיל"
           updates_available_filter: "עדכונים זמינים"
+          schema:
+            back_button: "חזרה אל %{name}"
         colors:
           select_base:
             title: "בחירת לוח צבעים בסיסי"

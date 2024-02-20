@@ -84,6 +84,8 @@ bs_BA:
       string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
       string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
       string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
+      objects:
+        required: "must be present"
     locale_errors:
       top_level_locale: "Ključ gornjeg nivoa u datoteci locale mora odgovarati nazivu jezika"
       invalid_yaml: "Prevod YAML invalid"

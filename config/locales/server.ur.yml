@@ -94,6 +94,9 @@ ur:
       string_value_not_valid_min_max: "اِس کا %{min} اور %{max} حروف لمبائی کے درمیان ہونا لازمی ہے۔"
       string_value_not_valid_min: "کم از کم %{min} حروف لمبا ہونا لازمی ہے۔"
       string_value_not_valid_max: "یہ زیادہ سے زیادہ %{max} حروف کا ہونا چاہیے۔"
+      objects:
+        required: "موجود ہونا لازمی ہے"
+        not_valid_integer_value: "اِنٹیجَر ہونا لازمی ہے"
     locale_errors:
       top_level_locale: "ایک لوکیل فائل میں سب سے اوپر کی سطح کی کِی کا نام لوکیل نام سے ملنا چاہیے"
       invalid_yaml: "ترجمہ YAML غلط"

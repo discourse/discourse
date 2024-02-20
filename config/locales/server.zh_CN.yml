@@ -123,6 +123,9 @@ zh_CN:
       string_value_not_valid_min_max: "它的字符长度必须介于 %{min} 和 %{max} 之间。"
       string_value_not_valid_min: "它必须至少为 %{min} 个字符。"
       string_value_not_valid_max: "它必须至多为 %{max} 个字符。"
+      objects:
+        required: "必须存在"
+        not_valid_integer_value: "必须是整数"
     locale_errors:
       top_level_locale: "区域设置文件中的顶级键必须与区域设置名称匹配"
       invalid_yaml: "翻译 YAML 文件无效"
@@ -841,7 +844,7 @@ zh_CN:
       description: '这篇帖子包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     illegal:
-      title: "这是非法的"
+      title: "非法"
       description: "本帖需要工作人员注意，因为我认为其中包含非法内容。"
       short_description: "这是非法的"
       email_title: '“%{title}”中的一个帖子需要管理人员注意'
@@ -926,7 +929,7 @@ zh_CN:
       email_title: '话题“%{title}”需要版主注意'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "这是非法的"
+      title: "非法"
       description: "本话题需要管理人员关注，因为我认为其中包含非法内容。"
       short_description: "这是非法的"
       email_title: '“%{title}”中的一个帖子需要管理人员注意'
@@ -2282,6 +2285,7 @@ zh_CN:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "允许配置个人资料背景的最小信任等级"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2650,6 +2654,7 @@ zh_CN:
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
+    illegal: "你的帖子被标记为**非法**：社区认为这可能触犯了法律。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
     responder:

@@ -43,6 +43,7 @@ sq:
       browse:
         back: "Kthehu mbrapa"
         filter_all: Të Gjithë
+        filter_open: Fillo
       chat_message_separator:
         today: Sot
         yesterday: Dje

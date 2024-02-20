@@ -116,6 +116,7 @@ pt:
         back: "Retroceder"
         title: Canais
         filter_all: Tudo
+        filter_open: Abrir
         filter_closed: Fechado
       chat_message_separator:
         today: Hoje

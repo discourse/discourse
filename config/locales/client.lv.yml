@@ -36,11 +36,8 @@ lv:
       long_with_year: "MMM D, YYYY hh:mm"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "pirms %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -82,7 +79,7 @@ lv:
           one: "%{count} g"
           other: "%{count} g"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           zero: "0 minūtes"
@@ -96,7 +93,6 @@ lv:
           zero: "0 dienas"
           one: "%{count} diena"
           other: "%{count} dienas"
-        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           zero: "pirms 0 minūtēm"

@@ -39,11 +39,9 @@ ar:
       long_with_year: "D ‏MMMM ‏YYYY، ‏h:mm ‏a"
       long_with_year_no_time: "D ‏MMMM ‏YYYY"
       full_with_year_no_time: "D ‏MMMM ‏YYYY"
-      long_date_with_year: "D ‏MMMM ‏YYYY، ‏LT"
       long_date_without_year: "D ‏MMMM، LT"
       long_date_with_year_without_time: "D ‏MMMM ‏YYYY"
       long_date_without_year_with_linebreak: "D MMMM <br/>LT"
-      long_date_with_year_with_linebreak: "D ‏MMMM ‏YYYY <br/>LT"
       wrap_ago: "منذ %{date}"
       wrap_on: "في %{date}"
       tiny:
