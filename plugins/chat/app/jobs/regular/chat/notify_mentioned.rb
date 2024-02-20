@@ -11,6 +11,12 @@ module Jobs
         @channel = @message.chat_channel
         @parsed_mentions = @message.parsed_mentions
 
+        notify_mentioned
+      end
+
+      private
+
+      def notify_mentioned
         # fixme andrei dry up
         @parsed_mentions.direct_mentions.each do |mentioned_user|
           mention = @message.user_mentions.where(target_id: mentioned_user.id).first
@@ -30,8 +36,6 @@ module Jobs
           notify(@message.here_mention, mentioned_user)
         end
       end
-
-      private
 
       def notify(mention, mentioned_user)
         return unless user_participate_in_channel?(mentioned_user)
