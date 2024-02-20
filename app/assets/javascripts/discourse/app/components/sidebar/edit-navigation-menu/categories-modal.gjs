@@ -9,6 +9,7 @@ import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigatio
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
 import dirSpan from "discourse/helpers/dir-span";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -51,6 +52,7 @@ export default class extends Component {
   @service site;
   @service siteSettings;
 
+  @tracked initialLoad = true;
   @tracked filteredCategoriesGroupings = [];
   @tracked filteredCategoryIds = [];
 
@@ -121,6 +123,8 @@ export default class extends Component {
           const mode = this.mode;
 
           await this.searchCategories(filter, mode);
+
+          this.initialLoad = false;
 
           if (filter === this.filter && mode === this.mode) {
             break;
@@ -225,7 +229,11 @@ export default class extends Component {
       class="sidebar__edit-navigation-menu__categories-modal"
     >
       <form class="sidebar-categories-form">
-        {{#if (gt this.filteredCategoriesGroupings.length 0)}}
+        {{#if this.initialLoad}}
+          <div class="sidebar-categories-form__loading">
+            {{loadingSpinner size="small"}}
+          </div>
+        {{else if (gt this.filteredCategoriesGroupings.length 0)}}
           {{#each this.filteredCategoriesGroupings as |categories|}}
             <div
               class="sidebar-categories-form__row"
