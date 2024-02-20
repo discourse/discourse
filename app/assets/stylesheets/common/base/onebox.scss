@@ -965,23 +965,6 @@ aside.onebox.mixcloud-preview {
         transition: transform 0s;
       }
     }
-
-    .spinner {
-      border-color: #fff;
-      border-right-color: rgba(0, 0, 0, 0);
-      margin: 0;
-    }
-
-    .d-icon-play {
-      cursor: pointer;
-      padding: 1em;
-      margin: 0.5em;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--secondary-or-primary);
-    }
   }
 
   @include hover {
