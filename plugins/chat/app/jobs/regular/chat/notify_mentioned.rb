@@ -7,13 +7,12 @@ module Jobs
         # fixme andrei preload user on mentions
         # fixme preload chat_channel and other stuff?
         @message = ::Chat::Message.find(args[:message_id])
+        @parsed_mentions = @message.parsed_mentions
+        return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
+
         @sender = @message.user
         @channel = @message.chat_channel
-        @parsed_mentions = @message.parsed_mentions
-        # fixme andrei make sure to be efficient with this
-        @all_mentioned_users = User.where(id: @parsed_mentions.all_mentioned_users_ids)
-
-        return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
+        @all_mentioned_users = User.where(id: @parsed_mentions.all_mentioned_users_ids).to_a # fixme andrei make sure to be efficient with this
 
         notify_mentioned_users
         notify_about_users_not_participating_in_channel
