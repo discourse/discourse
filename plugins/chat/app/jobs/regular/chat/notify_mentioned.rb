@@ -10,8 +10,11 @@ module Jobs
         @sender = @message.user
         @channel = @message.chat_channel
         @parsed_mentions = @message.parsed_mentions
+        # fixme andrei make sure to be efficient with this
+        @all_mentioned_users = User.where(id: @parsed_mentions.all_mentioned_users_ids)
 
         notify_mentioned_users
+        notify_about_users_not_participating_in_channel
         notify_about_groups_with_to_many_members
         notify_about_groups_with_disabled_mentions
       end
@@ -32,6 +35,37 @@ module Jobs
 
         notice = ::Chat::Notices.groups_have_too_many_members_for_being_mentioned(groups.to_a)
         publish_notice(notice)
+      end
+
+      def notify_about_users_not_participating_in_channel
+        users = @all_mentioned_users.filter { |user| !user_participate_in_channel?(user) }
+        return if users.empty?
+
+        users_do_not_participate_in_channel(users)
+      end
+
+      def users_do_not_participate_in_channel(users)
+        ::Chat::Publisher.publish_notice(
+          user_id: @sender.id,
+          channel_id: @channel.id,
+          type: "mention_without_membership",
+          data: {
+            user_ids: users.map(&:id),
+            text:
+              warning_text(
+                single: "chat.mention_warning.without_membership",
+                multiple: "chat.mention_warning.without_membership_multiple",
+                first_identifier: users.first.username,
+                count: users.count,
+              ),
+            message_id: @message.id,
+          },
+        )
+      end
+
+      def warning_text(single:, multiple:, first_identifier:, count:)
+        translation_key = count == 1 ? single : multiple
+        I18n.t(translation_key, first_identifier: first_identifier, count: count - 1)
       end
 
       def notify_mentioned_users
