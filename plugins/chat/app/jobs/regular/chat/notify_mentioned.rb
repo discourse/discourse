@@ -12,9 +12,24 @@ module Jobs
         @parsed_mentions = @message.parsed_mentions
 
         notify_mentioned
+        notify_about_groups_with_to_many_members
       end
 
       private
+
+      def notify_about_groups_with_to_many_members
+        groups_with_too_many_members = @parsed_mentions.groups_with_too_many_members
+        return if groups_with_too_many_members.empty?
+
+        ::Chat::Publisher.publish_notice(
+          user_id: @sender.id,
+          channel_id: @channel.id,
+          text_content:
+            ::Chat::Notices.groups_have_too_many_members_for_being_mentioned(
+              groups_with_too_many_members.to_a,
+            ),
+        )
+      end
 
       def notify_mentioned
         # fixme andrei dry up
