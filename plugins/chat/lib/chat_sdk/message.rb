@@ -13,6 +13,7 @@ module ChatSDK
     # @param thread_id [Integer, nil] The ID of the thread this message belongs to (optional).
     # @param upload_ids [Array<Integer>, nil] The IDs of any uploads associated with the message (optional).
     # @param streaming [Boolean] Whether the message is part of a streaming operation (default: false).
+    # @param enforce_membership [Boolean] Allows to ensure the guardian will be allowed in the channel (default: false).
     # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
     # @yieldparam helper [Helper] The helper object for streaming operations.
     # @yieldparam message [Message] The newly created message object.
@@ -47,6 +48,7 @@ module ChatSDK
       thread_id: nil,
       upload_ids: nil,
       streaming: false,
+      enforce_membership: false,
       &block
     )
       message =
@@ -59,16 +61,17 @@ module ChatSDK
           thread_id: thread_id,
           upload_ids: upload_ids,
           streaming: streaming,
+          enforce_membership: enforce_membership,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
           on_model_not_found(:channel_membership) do
-            raise "User with id: `#{guardian.user.id}}` has no membership to this channel"
+            raise "User with id: `#{guardian.user.id}` has no membership to this channel"
           end
           on_failed_policy(:ensure_valid_thread_for_channel) do
             raise "Couldn't find thread with id: `#{thread_id}`"
           end
           on_failed_policy(:allowed_to_join_channel) do
-            raise "User with id: `#{guardian.user.id}}` can't join this channel"
+            raise "User with id: `#{guardian.user.id}` can't join this channel"
           end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
           on_success { result.message_instance }
@@ -85,7 +88,7 @@ module ChatSDK
 
       message
     ensure
-      if streaming
+      if message && streaming
         message.update!(streaming: false)
         ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
       end

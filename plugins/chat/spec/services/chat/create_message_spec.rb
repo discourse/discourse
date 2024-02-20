@@ -32,7 +32,13 @@ RSpec.describe Chat::CreateMessage do
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
     let(:params) do
-      { guardian: guardian, chat_channel_id: channel.id, message: content, upload_ids: [upload.id] }
+      {
+        enforce_membership: false,
+        guardian: guardian,
+        chat_channel_id: channel.id,
+        message: content,
+        upload_ids: [upload.id],
+      }
     end
     let(:message) { result[:message_instance].reload }
 
@@ -180,6 +186,14 @@ RSpec.describe Chat::CreateMessage do
 
           context "when user is system" do
             fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
+          end
+
+          context "when membership is enforced" do
+            fab!(:user) { Fabricate(:user) }
+
+            before { params[:enforce_membership] = true }
 
             it { is_expected.to be_a_success }
           end
