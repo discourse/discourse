@@ -91,6 +91,16 @@ module PageObjects
         PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
+      def visit_new_message(recipients)
+        if recipients.is_a?(Array)
+          recipients = recipients.map(&:username).join(",")
+        elsif recipients.respond_to?(:username)
+          recipients = recipients.username
+        end
+
+        visit("/chat/new-message?recipients=#{recipients}")
+      end
+
       def has_finished_loading?
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")

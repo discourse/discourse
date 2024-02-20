@@ -11,10 +11,8 @@ module Chat
     include Service::Base
 
     # @!method call(guardian:)
-    #   @param [Integer] channel_id
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
-    #   @option optional_params [Integer] channel_id
     #   @return [Service::Base::Context]
 
     contract

@@ -24,6 +24,7 @@ register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
+register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"

@@ -142,6 +142,11 @@ en:
         not_valid_float_value: "must be a float"
         not_valid_boolean_value: "must be a boolean"
         not_valid_enum_value: "must be one of the following: %{choices}"
+        string_value_not_valid_min: "must be at least %{min} characters long"
+        string_value_not_valid_max: "must be at most %{max} characters long"
+        number_value_not_valid_min: "must be larger than or equal to %{min}"
+        number_value_not_valid_max: "must be smaller than or equal to %{max}"
+        string_value_not_valid_url: "must be a valid URL"
     locale_errors:
       top_level_locale: "The top level key in a locale file must match the locale name"
       invalid_yaml: "Translation YAML invalid"

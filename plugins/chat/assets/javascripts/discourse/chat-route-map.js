@@ -15,6 +15,8 @@ export default function () {
     this.route("channels");
     this.route("threads");
 
+    this.route("new-message");
+
     this.route(
       "channel.info",
       { path: "/c/:channelTitle/:channelId/info" },
