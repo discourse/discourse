@@ -3,7 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import I18n from "discourse-i18n";
 
 class Node {
   text = null;
@@ -22,9 +23,9 @@ class Tree {
   nodes = [];
 }
 
-@tagName("")
 export default class AdminThemeSettingSchema extends Component {
   @tracked activeIndex = 0;
+  @tracked backButtonText;
   history = [];
 
   get tree() {
@@ -32,10 +33,8 @@ export default class AdminThemeSettingSchema extends Component {
     let data = this.args.data;
 
     for (const point of this.history) {
-      data = data[point];
-      if (typeof point === "string") {
-        schema = schema.properties[point].schema;
-      }
+      data = data[point.node.index][point.propertyName];
+      schema = schema.properties[point.propertyName].schema;
     }
 
     const tree = new Tree();
@@ -89,13 +88,40 @@ export default class AdminThemeSettingSchema extends Component {
   }
 
   @action
-  onChildClick(node, tree) {
-    this.history.push(this.activeIndex, tree.propertyName);
+  onChildClick(node, tree, parentNode) {
+    this.history.push({
+      propertyName: tree.propertyName,
+      node: parentNode,
+    });
+    this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
+      name: parentNode.text,
+    });
     this.activeIndex = node.index;
+  }
+
+  @action
+  backButtonClick() {
+    const historyPoint = this.history.pop();
+    this.activeIndex = historyPoint.node.index;
+    if (this.history.length > 0) {
+      this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
+        name: this.history[this.history.length - 1].node.text,
+      });
+    } else {
+      this.backButtonText = null;
+    }
   }
 
   <template>
     <div class="schema-editor-navigation">
+      {{#if this.backButtonText}}
+        <DButton
+          @action={{this.backButtonClick}}
+          @icon="chevron-left"
+          @translatedLabel={{this.backButtonText}}
+          class="back-button"
+        />
+      {{/if}}
       <ul class="tree">
         {{#each this.tree.nodes as |node|}}
           <div class="item-container">
@@ -112,7 +138,10 @@ export default class AdminThemeSettingSchema extends Component {
                   <li
                     role="link"
                     class="child node"
-                    {{on "click" (fn this.onChildClick childNode nestedTree)}}
+                    {{on
+                      "click"
+                      (fn this.onChildClick childNode nestedTree node)
+                    }}
                   >{{childNode.text}}</li>
                 {{/each}}
               </ul>

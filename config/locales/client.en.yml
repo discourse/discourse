@@ -5504,6 +5504,8 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
+          schema:
+            back_button: "Back to %{name}"
         colors:
           select_base:
             title: "Select base color palette"
