@@ -17,7 +17,7 @@ module ChatSDK
     # @yield [helper, message] Offers a block with a helper and the message for streaming operations.
     # @yieldparam helper [Helper] The helper object for streaming operations.
     # @yieldparam message [Message] The newly created message object.
-    # @return [ChMessage] The created message object.
+    # @return [Chat::Message] The created message object.
     #
     # @example Creating a simple message
     #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
@@ -38,6 +38,59 @@ module ChatSDK
     # @see #create
     def self.create_with_stream(**params, &block)
       self.create(**params, streaming: true, &block)
+    end
+
+    # Initiates streaming for a specific chat message.
+    #
+    # @param message_id [Integer] the ID of the message to stream.
+    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+    # @yieldparam block [Block] the block to execute with the streaming helper and message.
+    # @yield [helper, message] Gives a helper object and the message being streamed to the block.
+    # @return [Chat::Message] the message that was streamed.
+    # @example Streaming a message
+    #   ChatMessage.stream(message_id: 42, guardian: guardian) do |helper, message|
+    #     # Streaming logic here
+    #   end
+    def self.stream(message_id:, guardian:, &block)
+      new.stream(message_id: message_id, guardian: guardian, &block)
+    end
+
+    # Stops streaming for a specific chat message.
+    #
+    # @param message_id [Integer] the ID of the message for which streaming should be stopped.
+    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+    # @return [void]
+    # @example Stopping the streaming of a message
+    #   ChatMessage.stop_stream(message_id: 42, guardian: guardian)
+    def self.stop_stream(message_id:, guardian:)
+      new.stop_stream(message_id: message_id, guardian: guardian)
+    end
+
+    def stop_stream(message_id:, guardian:)
+      with_service(Chat::StopMessageStreaming, message_id: message_id, guardian: guardian) do
+        on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
+        on_failed_policy(:can_join_channel) do
+          raise "User with id: `#{guardian.user.id}` can't join this channel"
+        end
+        on_failed_policy(:can_stop_streaming) do
+          raise "User with id: `#{guardian.user.id}` can't stop streaming this message"
+        end
+        on_failure do
+          p Chat::StepsInspector.new(result)
+          raise "Unexpected error"
+        end
+      end
+    end
+
+    def stream(message_id:, guardian:, &block)
+      message = Chat::Message.find(message_id)
+      message.update!(streaming: true)
+      helper = Helper.new(message, guardian)
+      block.call(helper, message)
+      message
+    ensure
+      message.update!(streaming: false)
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
     end
 
     def create(
@@ -82,7 +135,7 @@ module ChatSDK
         end
 
       if streaming && block_given?
-        helper = Helper.new(message)
+        helper = Helper.new(message, guardian)
         block.call(helper, message)
       end
 
@@ -99,9 +152,11 @@ module ChatSDK
     include Chat::WithServiceHelper
 
     attr_reader :message
+    attr_reader :guardian
 
-    def initialize(message)
+    def initialize(message, guardian)
       @message = message
+      @guardian = guardian
     end
 
     def stream(raw: nil)
@@ -111,7 +166,7 @@ module ChatSDK
         Chat::UpdateMessage,
         message_id: self.message.id,
         message: raw ? self.message.reload.message + " " + raw : self.message.message,
-        guardian: self.message.user.guardian,
+        guardian: self.guardian,
         streaming: true,
       ) do
         on_failure do
