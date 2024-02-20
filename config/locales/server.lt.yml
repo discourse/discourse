@@ -95,6 +95,8 @@ lt:
       string_value_not_valid_min_max: "Turi būti tarp %{min} ir %{max} simbolių ilgio."
       string_value_not_valid_min: "Turi sudaryti mažiausia %{min} simbolių."
       string_value_not_valid_max: "Turi sudaryti daugiausia %{max} simbolių."
+      objects:
+        not_valid_integer_value: "privalo buti integruotas"
     locale_errors:
       top_level_locale: "Aukščiausio lygio raktas lokalės faile turi atitikti lokalės pavadinimą"
       invalid_yaml: "Vertimas YAML negaliojantis"

@@ -20,6 +20,11 @@ te:
   anonymous: "అనామక"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
+  themes:
+    settings_errors:
+      objects:
+        required: "తప్పనిసరిగా ఉండాలి"
+        not_valid_integer_value: "తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:

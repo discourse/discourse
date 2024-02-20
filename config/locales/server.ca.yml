@@ -85,6 +85,9 @@ ca:
       string_value_not_valid_min_max: "Ha de ser d'entre %{min} i %{max} caràcters de longitud."
       string_value_not_valid_min: "Ha de tenir almenys %{min} caràcters de longitud."
       string_value_not_valid_max: "Ha de ser com a màxim de %{max} caràcters de longitud."
+      objects:
+        required: "ha de ser-hi present"
+        not_valid_integer_value: "ha de ser un nombre enter "
     locale_errors:
       top_level_locale: "La clau del nivell més alt en un fitxer de localització ha de coincidir amb el nom de la localització (locale)."
       invalid_yaml: "Traducció YAML no vàlida"

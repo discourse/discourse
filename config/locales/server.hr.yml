@@ -98,6 +98,9 @@ hr:
       string_value_not_valid_min_max: "Mora biti duga barem %{min} i najviše %{max} znakova."
       string_value_not_valid_min: "Mora biti duga barem %{min} znakova."
       string_value_not_valid_max: "Mora imati najviše %{max} znakova."
+      objects:
+        required: "mora biti prisutan"
+        not_valid_integer_value: "mora biti cijeli broj"
     locale_errors:
       top_level_locale: "Ključ najviše razine u datoteci jezika mora odgovarati nazivu jezika"
       invalid_yaml: "Nevažeći YAML s prijevodom."

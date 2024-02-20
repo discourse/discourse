@@ -34,11 +34,8 @@ et:
       long_with_year: "D. MMMM, YYYY hh:mm"
       long_with_year_no_time: "D. MMMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D. MMMM, 'YY LT"
       long_date_without_year: "D. MMMM, LT"
-      long_date_with_year_without_time: "D. MMMM, 'YY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMMM, 'YY <br/>LT"
       wrap_ago: "%{date} tagasi"
       tiny:
         half_a_minute: "< 1m"
@@ -73,7 +70,7 @@ et:
           one: "%{count}a"
           other: "%{count}a"
         date_month: "D. MMMM"
-        date_year: "MMMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "vähem kui %{count} minut tagasi"
@@ -96,7 +93,6 @@ et:
         about_x_years:
           one: "umbes %{count} aastat"
           other: "umbes %{count} aastat"
-        date_year: "D. MMMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min tagasi"

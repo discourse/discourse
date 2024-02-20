@@ -70,6 +70,10 @@ cs:
       asset_too_big: "Soubor %{filename} je větší než limit %{limit}"
       theme_too_big: "Motiv je větší než limit %{limit}"
       too_many_files: "Počet souborů (%{count}) v motivu překročil maximální povolený počet souborů (%{limit})"
+    settings_errors:
+      objects:
+        required: "nesmí být prázdný"
+        not_valid_integer_value: "musí být celé číslo"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"

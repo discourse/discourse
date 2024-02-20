@@ -90,6 +90,9 @@ zh_TW:
       string_value_not_valid_min_max: "它必須介於%{min}與%{max}個字元。"
       string_value_not_valid_min: "它最少必須比%{min}個字元長。"
       string_value_not_valid_max: "它最多必須比%{max}個字元短。"
+      objects:
+        required: "必須存在"
+        not_valid_integer_value: "必須是整數"
     locale_errors:
       top_level_locale: "本地檔案的最高階金鑰必須與本地名稱相符"
       invalid_yaml: "YAML 翻譯無效"

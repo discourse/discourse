@@ -37,11 +37,8 @@ cs:
       long_with_year: "D. M. YYYY, H:mm"
       long_with_year_no_time: "D. M. YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D. M. YYYY, H:mm"
       long_date_without_year: "D. MMMM, H:mm"
-      long_date_with_year_without_time: "D. M. YYYY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>H:mm"
-      long_date_with_year_with_linebreak: "D. M. YYYY <br/>H:mm"
       wrap_ago: "před %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ cs:
           many: "%{count}let"
           other: "%{count}let"
         date_month: "D. MMMM"
-        date_year: "MMMM YYYY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "méně než %{count} minuta"
@@ -124,7 +121,6 @@ cs:
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
-        date_year: "D. M. YYYY"
       medium_with_ago:
         x_minutes:
           one: "před %{count} minutou"

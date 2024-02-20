@@ -341,7 +341,7 @@ ar:
         back: "العودة"
         title: القنوات
         filter_all: الكل
-        filter_open: مفتوحة
+        filter_open: فتح
         filter_closed: مغلقة
         filter_archived: مؤرشفة
         filter_input_placeholder: البحث عن القناة بالاسم

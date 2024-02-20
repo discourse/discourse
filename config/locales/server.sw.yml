@@ -70,6 +70,9 @@ sw:
       number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
       string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
       string_value_not_valid_max: "Isizidi maneno %{max}."
+      objects:
+        required: "lazima iwepo"
+        not_valid_integer_value: "lazima iwe namba"
   emails:
     incoming:
       default_subject: "Hii mada inaitaji kichwa cha maneno"

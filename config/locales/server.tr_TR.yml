@@ -124,6 +124,19 @@ tr_TR:
       string_value_not_valid_min_max: "En az %{min} en fazla %{max} karakter uzunluğunda olmalı."
       string_value_not_valid_min: "En az %{min} karakter uzunluğunda olmalı."
       string_value_not_valid_max: "En fazla %{max} karakter uzunluğunda olmalı."
+      objects:
+        required: "mevcut olmalı"
+        invalid_type: "%{type} geçerli bir tür değil"
+        not_valid_string_value: "bir dize olmalıdır"
+        not_valid_integer_value: "bir tam sayı olmalı"
+        not_valid_float_value: "kayan noktalı sayı olmalıdır"
+        not_valid_boolean_value: "boolean olmalıdır"
+        not_valid_enum_value: "aşağıdakilerden biri olmalıdır: %{choices}"
+        string_value_not_valid_min: "En az %{min} karakter uzunluğunda olmalı"
+        string_value_not_valid_max: "En fazla %{max} karakter uzunluğunda olmalı"
+        number_value_not_valid_min: "%{min} değerine eşit veya bu değerden daha büyük olmalı"
+        number_value_not_valid_max: "%{max} değerine eşit veya bu değerden daha küçük olmalı"
+        string_value_not_valid_url: "geçerli bir URL olmalıdır"
     locale_errors:
       top_level_locale: "Bir yerel ayar dosyasındaki en üst seviye anahtar, yerel ayar adıyla eşleşmelidir"
       invalid_yaml: "Çeviri YAML geçersiz"
@@ -887,7 +900,7 @@ tr_TR:
       description: 'Bu gönderi, makul bir kişinin saldırganca, küfür içerikli, nefret dolu davranış veya <a href="%{base_path}/guidelines">topluluk yönergelerimizin</a> ihlali olarak değerlendireceği içerikler içeriyor.'
       short_description: '<a href="%{base_path}/guidelines">Topluluk kılavuzumuzun</a> ihlali'
     illegal:
-      title: "İllegal durum"
+      title: "Yasadışı"
       description: "Bu gönderi yetkililerin dikkatini çekmesi gerekiyor çünkü illegal içerikler içeriyor."
       short_description: "Bu illegal"
       email_title: '"%{title}" konusundaki bir gönderi personelin dikkatini gerektiriyor'
@@ -972,7 +985,7 @@ tr_TR:
       email_title: '"%{title}" başlıklı konu moderatörün dikkatini gerektiriyor'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "İllegal"
+      title: "Yasadışı"
       description: "Bu içerik yetkililerin dikkatini çekmesi gerekiyor çünkü illegal içerikler içeriyor."
       short_description: "Bu yasa dışı"
       email_title: '"%{title}" konusundaki bir gönderi personelin dikkatini gerektiriyor'
@@ -1431,6 +1444,7 @@ tr_TR:
     v3_analytics_deprecated: "Discourse'unuz şu anda Temmuz 2023'ten sonra artık desteklenmeyecek olan Google Analytics 3'ü kullanıyor. Web sitenizin performansı hakkında değerli bilgiler ve analizler almaya devam etmek için hemen <a href='https://meta.discourse.org/t/260498'>Google Analytics 4'e yükseltin</a>."
     category_style_deprecated: "Discourse'unuz şu anda Discourse 3.2'nin son beta sürümünden önce kaldırılacak olan kullanımdan kaldırılmış bir kategori stili kullanıyor. Seçtiğiniz kategori stilini nasıl koruyacağınıza ilişkin talimatlar için lütfen <a href='https://meta.discourse.org/t/282441'>Tek Kategori Stili Site Ayarına Geçme</a> bölümüne bakın."
     ember_version_warning: "Siteniz desteklenmeyen EMBER_VERSION=3 yapılandırmasıyla çalışıyor. Bu, temalar/eklentilerle ilgili beklenmeyen sorunlara yol açabilir. Lütfen EMBER_VERSION yapılandırmasını app.yml dosyanızdan kaldırın ve yeniden oluşturun. Daha fazla bilgi için <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> adresine bakın."
+    back_from_logster_text: "Siteye geri dön"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"
@@ -1605,6 +1619,7 @@ tr_TR:
     content_security_policy_collect_reports: "CSP ihlal raporu toplamayı /csp_reports adresinde etkinleştir"
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
     content_security_policy_script_src: "İzin verilenler listesine eklenen ek komut dosyası kaynakları. Geçerli sunucu ve CDN varsayılan olarak dahil edilmiştir. Bkz. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği Politikası ile XSS Saldırılarını Azaltın.</a> (CSP)"
+    content_security_policy_strict_dynamic: "DENEYSEL: Katı-dinamik bir içerik güvenlik ilkesi kullanın. Bu, varsayılan CSP yapılandırmasından daha modern ve daha esnektir. Bu tamamen işlevseldir, ancak henüz tüm temalar ve eklentilerle test edilmemiştir."
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
@@ -1835,6 +1850,7 @@ tr_TR:
     min_trust_to_post_embedded_media: "Medya ögelerini bir gönderiye yerleştirmek için gereken minimum güven seviyesi"
     embedded_media_post_allowed_groups: "Bu gruplardaki kullanıcıların bir gönderiye medya yerleştirmesine izin verilir"
     min_trust_level_to_allow_profile_background: "Profil arka planı yüklemek için gereken minimum güven seviyesi"
+    profile_background_allowed_groups: "Profil arka planı yüklemesine izin verilen gruplar."
     min_trust_level_to_allow_user_card_background: "Kullanıcı kartı arka planı yüklemek için gereken minimum güven seviyesi"
     user_card_background_allowed_groups: "Kullanıcı kartı arka planı yüklemesine izin verilen gruplar."
     min_trust_level_to_allow_invite: "Kullanıcı davet etmek için gereken minimum güven seviyesi"
@@ -2329,6 +2345,7 @@ tr_TR:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -2707,6 +2724,7 @@ tr_TR:
   flag_reasons:
     off_topic: "Gönderinize **konu dışı** bayrağı eklendi: Topluluk, şu anda başlık ve ilk gönderi tarafından tanımlandığı şekliyle konuya uygun olmadığını düşünüyor."
     inappropriate: "Gönderinize **uygunsuz** bayrağı eklendi: Topluluk, bunun saldırganca, taciz içerikli, nefret söylemli olduğunu veya [topluluk kılavuzumuzu] (%{base_path}/guidelines) ihlal ettiğini düşünüyor."
+    illegal: "Gönderiniz **yasa dışı** olarak işaretlendi: Topluluk bunun yasayı ihlal ediyor olabileceğini düşünüyor."
     spam: "Gönderinize **spam** bayrağı eklendi: Topluluk, bunun bir reklam olduğunu düşünüyor, beklendiği gibi yararlı veya konuyla ilgili olmak yerine doğası gereği aşırı tanıtım amaçlı."
     notify_moderators: "Gönderinize **moderatörün dikkatine** bayrağı eklendi: Topluluk, gönderi hakkında bir personelin manuel müdahalesini gerektiren bir şey olduğunu düşünüyor."
     responder:

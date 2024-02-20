@@ -83,6 +83,9 @@ hy:
       string_value_not_valid_min_max: "Այն պետք է լինի %{min} -ից %{max} սիմվոլ երկարությամբ:"
       string_value_not_valid_min: "Այն պետք է ունենա առնվազն %{min} սիմվոլ երկարություն:"
       string_value_not_valid_max: "Այն պետք է ունենա ամենաշատը%{max} սիմվոլ երկարություն:"
+      objects:
+        required: "պետք է լինի ներկա"
+        not_valid_integer_value: "պետք է լինի ամբողջ թիվ"
     locale_errors:
       top_level_locale: "Լոկալի ֆայլի թոփ մակարդակի key-ը պետք է համընկնի լոկալի անվանը:"
       invalid_yaml: "Թարգմանության YAML -ը անվավեր է:"

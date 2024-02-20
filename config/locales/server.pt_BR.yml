@@ -124,6 +124,9 @@ pt_BR:
       string_value_not_valid_min_max: "Precisa ter entre %{min} e %{max} caracteres."
       string_value_not_valid_min: "Deve ser pelo menos %{min} caracteres."
       string_value_not_valid_max: "Deve ser no máximo %{max} caracteres."
+      objects:
+        required: "tem que ser preenchido"
+        not_valid_integer_value: "deve ser um inteiro"
     locale_errors:
       top_level_locale: "A chave de nível superior em um arquivo local deve corresponder ao nome do local"
       invalid_yaml: "Tradução YAML inválida"

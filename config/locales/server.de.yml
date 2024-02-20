@@ -124,6 +124,9 @@ de:
       string_value_not_valid_min_max: "Er muss zwischen %{min} und %{max} Zeichen lang sein."
       string_value_not_valid_min: "Er muss mindestens %{min} Zeichen lang sein."
       string_value_not_valid_max: "Er darf maximal %{max} Zeichen lang sein."
+      objects:
+        required: "muss angegeben werden"
+        not_valid_integer_value: "muss eine Ganzzahl sein"
     locale_errors:
       top_level_locale: "Der Top-Level-Schlüssel in einer Locale-Datei muss mit dem Locale-Namen übereinstimmen"
       invalid_yaml: "Das YAML der Übersetzung ist ungültig."
@@ -894,8 +897,8 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend, hasserfüllt oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     illegal:
-      title: "Es ist illegal"
-      description: "Dieser Beitrag erfordert die Aufmerksamkeit der Mitarbeiter, da er meiner Meinung nach illegale Inhalte enthält."
+      title: "Illegal"
+      description: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach illegale Inhalte enthält."
       short_description: "Das ist illegal"
       email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
       email_body: "%{link}\n\n%{message}"
@@ -979,7 +982,7 @@ de:
       email_title: 'Das Thema „%{title}“ erfordert die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "Es ist illegal"
+      title: "Illegal"
       description: "Dieses Thema erfordert die Aufmerksamkeit der Mitarbeiter, weil es meiner Meinung nach illegale Inhalte enthält."
       short_description: "Das ist illegal"
       email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
@@ -1438,6 +1441,7 @@ de:
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
     category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
     ember_version_warning: "Deine Website läuft mit der nicht unterstützten Konfiguration EMBER_VERSION=3. Dies kann zu unerwarteten Problemen mit Themes/Plugins führen. Bitte entferne die EMBER_VERSION-Konfiguration aus deiner app.yml-Datei und erstelle sie neu. Siehe <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> für weitere Informationen."
+    back_from_logster_text: "Zurück zur Seite"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1612,6 +1616,7 @@ de:
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen (Positivliste). Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-Attacken mit Content Security Policy entschärfen</a> (CSP)."
+    content_security_policy_strict_dynamic: "EXPERIMENTELL: Verwende eine strikt dynamische Inhaltssicherheitsrichtlinie (CSP). Diese ist moderner und flexibler als unsere Standard-CSP-Konfiguration. Sie ist voll funktionsfähig, wurde aber noch nicht mit allen Themes und Plugins getestet."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
@@ -2036,7 +2041,7 @@ de:
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
-    hide_user_activity_tab: "Blende die Registerkarte \"Aktivität\" in Benutzerprofilen aus, außer für Admin und dich selbst."
+    hide_user_activity_tab: "Blende die Registerkarte \"Aktivität\" in Benutzerprofilen, außer für Administratoren und den Benutzer selbst, aus."
     allow_featured_topic_on_user_profiles: "Erlaube Benutzern, ihrer Benutzerkarte und ihrem Profil einen Link zu einem Thema hinzuzufügen."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
@@ -2728,6 +2733,7 @@ de:
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
     inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig, beleidigend oder hasserfüllt ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
+    illegal: "Dein Beitrag wurde als **illegal** gemeldet: Die Community denkt, dass er möglicherweise gegen das Gesetz verstößt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
     notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
     responder:

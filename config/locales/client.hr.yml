@@ -36,11 +36,8 @@ hr:
       long_with_year: "D MMM, YYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "prije %{date} "
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ hr:
           few: "%{count} godine"
           other: "%{count}godina"
         date_month: "D MMM"
-        date_year: "MMM, 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "manje od %{count} min"
@@ -124,7 +121,6 @@ hr:
           one: "skoro %{count} godina"
           few: "skoro %{count} godina"
           other: "skoro %{count} godina"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"

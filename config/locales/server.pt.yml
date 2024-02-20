@@ -94,6 +94,9 @@ pt:
       string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
       string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
       string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
+      objects:
+        required: "tem que estar preenchido"
+        not_valid_integer_value: "tem que ser um inteiro"
     locale_errors:
       top_level_locale: "A chave base de um ficheiro de locale deve coincidir com o nome do locale"
       invalid_yaml: "YAML de traduçaõ é inválido"

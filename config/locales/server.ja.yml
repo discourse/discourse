@@ -123,6 +123,9 @@ ja:
       string_value_not_valid_min_max: "%{min} 文字以上 %{max} 文字以下である必要があります。"
       string_value_not_valid_min: "%{min} 文字以上である必要があります。"
       string_value_not_valid_max: "%{max} 文字以下である必要があります。"
+      objects:
+        required: "は空にできません"
+        not_valid_integer_value: "は整数である必要があります"
     locale_errors:
       top_level_locale: "ロケールファイルのトップレベルキーはロケール名と一致している必要があります"
       invalid_yaml: "翻訳 YAML が無効です"

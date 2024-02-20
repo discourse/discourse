@@ -58,6 +58,10 @@ bg:
     other_error: "Нещо се обърка при актуализирането на стила"
     import_error:
       unpack_failed: "Неуспешно разопаковане на файла"
+    settings_errors:
+      objects:
+        required: "Трябва да присъства"
+        not_valid_integer_value: "трябва да бъде число"
   emails:
     incoming:
       default_subject: "Тази тема има нужда от заглавие"

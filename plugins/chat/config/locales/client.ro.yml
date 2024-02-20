@@ -75,10 +75,11 @@ ro:
       exit: "înapoi"
       channel_status:
         closed: "Închis"
-        open: "Deschide sondajul"
+        open: "Deschis"
       browse:
         back: "Înapoi"
         filter_all: Toate
+        filter_open: Deschide
         filter_closed: Închis
       chat_message_separator:
         today: Astăzi

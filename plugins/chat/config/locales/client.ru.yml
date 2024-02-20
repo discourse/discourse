@@ -333,7 +333,7 @@ ru:
         back: "Назад"
         title: Каналы
         filter_all: Все
-        filter_open: Открытые
+        filter_open: Открыт
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию

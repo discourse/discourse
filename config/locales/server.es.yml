@@ -124,6 +124,9 @@ es:
       string_value_not_valid_min_max: "Debe tener entre %{min} y %{max} caracteres de longitud."
       string_value_not_valid_min: "Debe tener al menos de %{min} caracteres de longitud."
       string_value_not_valid_max: "Debe tener un máximo de %{max} caracteres de longitud."
+      objects:
+        required: "debe estar presente"
+        not_valid_integer_value: "debe ser un valor entero"
     locale_errors:
       top_level_locale: "La clave de nivel superior en un archivo local debe coincidir con el nombre local"
       invalid_yaml: "YAML de traducción no válido"

@@ -35,11 +35,9 @@ da:
       long_with_year: "D. MMM YYYY HH:mm"
       long_with_year_no_time: "D. MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D. MMM 'YY, kl. LT"
       long_date_without_year: "D. MMM, kl. LT"
-      long_date_with_year_without_time: "D. MMM 'YY"
+      long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D. MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       tiny:
         half_a_minute: "< 1m"
@@ -74,7 +72,7 @@ da:
           one: "%{count}år"
           other: "%{count}år"
         date_month: "D. MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -85,7 +83,7 @@ da:
         x_days:
           one: "%{count} dag"
           other: "%{count} dage"
-        date_year: "D. MMM 'YY"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min siden"

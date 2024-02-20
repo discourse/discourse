@@ -92,6 +92,9 @@ da:
       string_value_not_valid_min_max: "Det skal være mellem %{min} og %{max} tegn langt."
       string_value_not_valid_min: "Det skal være mindst %{min} tegn langt."
       string_value_not_valid_max: "Den skal højst være %{max} tegn langt."
+      objects:
+        required: "skal udfyldes"
+        not_valid_integer_value: "skal være et heltal"
     locale_errors:
       top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
       invalid_yaml: "Oversættelse YAML ugyldig"
