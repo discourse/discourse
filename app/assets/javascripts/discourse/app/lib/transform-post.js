@@ -117,6 +117,7 @@ export default function transformPost(
 
   const createdBy = details.created_by || {};
 
+  postAtts.topic = topic;
   postAtts.topicId = topic.id;
   postAtts.topicOwner = createdBy.id === post.user_id;
   postAtts.topicCreatedById = createdBy.id;
