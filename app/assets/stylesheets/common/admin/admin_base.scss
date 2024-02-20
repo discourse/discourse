@@ -690,7 +690,7 @@ $mobile-breakpoint: 700px;
     background-color: inherit;
 
     a.active {
-      color: initial;
+      color: var(--primary);
       background-color: initial;
       font-weight: 700;
       border-right: 4px solid var(--quaternary);
