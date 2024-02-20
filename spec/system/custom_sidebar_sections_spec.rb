@@ -190,6 +190,27 @@ describe "Custom sidebar sections", type: :system do
     )
   end
 
+  it "does not allow to drag on mobile" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+
+    visit("/latest?mobile_view=1")
+
+    sidebar.open_on_mobile
+    sidebar.edit_custom_section("My section")
+
+    expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+  end
+
   it "does not allow the user to edit public section" do
     sidebar_section = Fabricate(:sidebar_section, title: "Public section", public: true)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
