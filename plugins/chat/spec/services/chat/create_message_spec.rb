@@ -216,7 +216,10 @@ RSpec.describe Chat::CreateMessage do
           context "when membership is enforced" do
             fab!(:user) { Fabricate(:user) }
 
-            before { params[:enforce_membership] = true }
+            before do
+              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+              params[:enforce_membership] = true
+            end
 
             it { is_expected.to be_a_success }
           end
