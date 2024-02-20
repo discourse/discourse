@@ -3,15 +3,15 @@
 module Jobs
   module Chat
     class NotifyMentioned < ::Jobs::Base
-      # fixme andrei preload user on mentions
-      # fixme preload chat_channel and other stuff?
       def execute(args)
+        # fixme andrei preload user on mentions
+        # fixme preload chat_channel and other stuff?
         @message = ::Chat::Message.find(args[:message_id])
         @sender = @message.user
         @channel = @message.chat_channel
         @parsed_mentions = @message.parsed_mentions
 
-        notify_mentioned
+        notify_mentioned_users
         notify_about_groups_with_to_many_members
         notify_about_groups_with_disabled_mentions
       end
@@ -34,7 +34,7 @@ module Jobs
         publish_notice(notice)
       end
 
-      def notify_mentioned
+      def notify_mentioned_users
         # fixme andrei dry up
         @parsed_mentions.direct_mentions.each do |mentioned_user|
           mention = @message.user_mentions.where(target_id: mentioned_user.id).first
