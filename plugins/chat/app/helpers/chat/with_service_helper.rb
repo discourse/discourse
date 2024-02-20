@@ -19,7 +19,10 @@ module Chat
     end
 
     def run_service(service, dependencies)
-      @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **dependencies))
+      params = self.try(:params) || ActionController::Parameters.new
+
+      @_result =
+        service.call(params.to_unsafe_h.merge(guardian: self.try(:guardian) || nil, **dependencies))
     end
 
     def default_actions_for_service
