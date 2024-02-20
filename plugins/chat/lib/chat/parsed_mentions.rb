@@ -75,7 +75,7 @@ module Chat
     end
 
     def groups_with_disabled_mentions
-      @groups_with_disabled_mentions ||= visible_groups - mentionable_groups
+      @groups_with_disabled_mentions ||= (visible_groups - mentionable_groups).to_a
     end
 
     def groups_with_too_many_members
@@ -85,7 +85,7 @@ module Chat
 
     def visible_groups
       @visible_groups ||=
-        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@message.user)
+        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@message.user).to_a
     end
 
     private
