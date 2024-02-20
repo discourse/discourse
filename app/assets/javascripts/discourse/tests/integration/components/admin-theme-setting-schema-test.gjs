@@ -142,7 +142,7 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.equal(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes.length, 2);
       assert.true(tree.nodes[0].active, "the first node is active");
       assert.false(tree.nodes[1].active, "other nodes are not active");
     });
@@ -155,14 +155,14 @@ module(
       const tree = new TreeFromDOM();
 
       assert.true(tree.nodes[0].active);
-      assert.equal(
+      assert.strictEqual(
         tree.nodes[0].children.length,
         2,
         "the children of the active node are shown"
       );
 
       assert.false(tree.nodes[1].active);
-      assert.equal(
+      assert.strictEqual(
         tree.nodes[1].children.length,
         0,
         "thie children of an active node aren't shown"
@@ -173,14 +173,14 @@ module(
       tree.refresh();
 
       assert.false(tree.nodes[0].active);
-      assert.equal(
+      assert.strictEqual(
         tree.nodes[0].children.length,
         0,
         "thie children of an active node aren't shown"
       );
 
       assert.true(tree.nodes[1].active);
-      assert.equal(
+      assert.strictEqual(
         tree.nodes[1].children.length,
         3,
         "the children of the active node are shown"
@@ -194,73 +194,73 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.equal(tree.nodes.length, 2);
-      assert.equal(tree.nodes[0].text, "item 1");
-      assert.equal(tree.nodes[0].children.length, 2);
-      assert.equal(tree.nodes[0].children[0].text, "child 1-1");
-      assert.equal(tree.nodes[0].children[1].text, "child 1-2");
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+      assert.strictEqual(tree.nodes[0].children[0].text, "child 1-1");
+      assert.strictEqual(tree.nodes[0].children[1].text, "child 1-2");
 
-      assert.equal(tree.nodes[1].text, "item 2");
-      assert.equal(tree.nodes[1].children.length, 0);
+      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.strictEqual(tree.nodes[1].children.length, 0);
 
       await click(tree.nodes[1].element);
 
       tree.refresh();
 
-      assert.equal(tree.nodes.length, 2);
-      assert.equal(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes[0].text, "item 1");
       assert.false(tree.nodes[0].active);
-      assert.equal(tree.nodes[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree.nodes[1].text, "item 2");
+      assert.strictEqual(tree.nodes[1].text, "item 2");
       assert.true(tree.nodes[1].active);
-      assert.equal(tree.nodes[1].children.length, 3);
-      assert.equal(tree.nodes[1].children[0].text, "child 2-1");
-      assert.equal(tree.nodes[1].children[1].text, "child 2-2");
-      assert.equal(tree.nodes[1].children[2].text, "child 2-3");
+      assert.strictEqual(tree.nodes[1].children.length, 3);
+      assert.strictEqual(tree.nodes[1].children[0].text, "child 2-1");
+      assert.strictEqual(tree.nodes[1].children[1].text, "child 2-2");
+      assert.strictEqual(tree.nodes[1].children[2].text, "child 2-3");
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
-      assert.equal(tree.nodes.length, 3);
+      assert.strictEqual(tree.nodes.length, 3);
 
-      assert.equal(tree.nodes[0].text, "child 2-1");
+      assert.strictEqual(tree.nodes[0].text, "child 2-1");
       assert.false(tree.nodes[0].active);
-      assert.equal(tree.nodes[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree.nodes[1].text, "child 2-2");
+      assert.strictEqual(tree.nodes[1].text, "child 2-2");
       assert.true(tree.nodes[1].active);
-      assert.equal(tree.nodes[1].children.length, 4);
-      assert.equal(tree.nodes[1].children[0].text, "grandchild 2-2-1");
-      assert.equal(tree.nodes[1].children[1].text, "grandchild 2-2-2");
-      assert.equal(tree.nodes[1].children[2].text, "grandchild 2-2-3");
-      assert.equal(tree.nodes[1].children[3].text, "grandchild 2-2-4");
+      assert.strictEqual(tree.nodes[1].children.length, 4);
+      assert.strictEqual(tree.nodes[1].children[0].text, "grandchild 2-2-1");
+      assert.strictEqual(tree.nodes[1].children[1].text, "grandchild 2-2-2");
+      assert.strictEqual(tree.nodes[1].children[2].text, "grandchild 2-2-3");
+      assert.strictEqual(tree.nodes[1].children[3].text, "grandchild 2-2-4");
 
-      assert.equal(tree.nodes[2].text, "child 2-3");
+      assert.strictEqual(tree.nodes[2].text, "child 2-3");
       assert.false(tree.nodes[2].active);
-      assert.equal(tree.nodes[2].children.length, 0);
+      assert.strictEqual(tree.nodes[2].children.length, 0);
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
 
-      assert.equal(tree.nodes.length, 4);
+      assert.strictEqual(tree.nodes.length, 4);
 
-      assert.equal(tree.nodes[0].text, "grandchild 2-2-1");
+      assert.strictEqual(tree.nodes[0].text, "grandchild 2-2-1");
       assert.false(tree.nodes[0].active);
-      assert.equal(tree.nodes[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree.nodes[1].text, "grandchild 2-2-2");
+      assert.strictEqual(tree.nodes[1].text, "grandchild 2-2-2");
       assert.true(tree.nodes[1].active);
-      assert.equal(tree.nodes[1].children.length, 0);
+      assert.strictEqual(tree.nodes[1].children.length, 0);
 
-      assert.equal(tree.nodes[2].text, "grandchild 2-2-3");
+      assert.strictEqual(tree.nodes[2].text, "grandchild 2-2-3");
       assert.false(tree.nodes[2].active);
-      assert.equal(tree.nodes[2].children.length, 0);
+      assert.strictEqual(tree.nodes[2].children.length, 0);
 
-      assert.equal(tree.nodes[3].text, "grandchild 2-2-4");
+      assert.strictEqual(tree.nodes[3].text, "grandchild 2-2-4");
       assert.false(tree.nodes[3].active);
-      assert.equal(tree.nodes[3].children.length, 0);
+      assert.strictEqual(tree.nodes[3].children.length, 0);
     });
 
     test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
@@ -275,24 +275,24 @@ module(
 
       assert.dom(".back-button").exists();
       tree.refresh();
-      assert.equal(tree.nodes[0].text, "child 1-1");
+      assert.strictEqual(tree.nodes[0].text, "child 1-1");
 
       await click(tree.nodes[0].children[0].element);
 
       tree.refresh();
-      assert.equal(tree.nodes[0].text, "grandchild 1-1-1");
+      assert.strictEqual(tree.nodes[0].text, "grandchild 1-1-1");
       assert.dom(".back-button").exists();
 
       await click(".back-button");
 
       tree.refresh();
-      assert.equal(tree.nodes[0].text, "child 1-1");
+      assert.strictEqual(tree.nodes[0].text, "child 1-1");
       assert.dom(".back-button").exists();
 
       await click(".back-button");
 
       tree.refresh();
-      assert.equal(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes[0].text, "item 1");
       assert.dom(".back-button").doesNotExist();
     });
 
@@ -310,15 +310,15 @@ module(
       await click(".back-button");
       tree.refresh();
 
-      assert.equal(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes.length, 2);
 
-      assert.equal(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes[0].text, "item 1");
       assert.false(tree.nodes[0].active);
-      assert.equal(tree.nodes[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree.nodes[1].text, "item 2");
+      assert.strictEqual(tree.nodes[1].text, "item 2");
       assert.true(tree.nodes[1].active);
-      assert.equal(tree.nodes[1].children.length, 3);
+      assert.strictEqual(tree.nodes[1].children.length, 3);
     });
 
     test("the back button label includes the name of the item at the previous level", async function (assert) {

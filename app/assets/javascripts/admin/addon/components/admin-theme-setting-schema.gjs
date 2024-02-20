@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import I18n from "discourse-i18n";
 
@@ -24,10 +23,9 @@ class Tree {
   nodes = [];
 }
 
-@tagName("")
 export default class AdminThemeSettingSchema extends Component {
   @tracked activeIndex = 0;
-  @tracked backButtonText = null;
+  @tracked backButtonText;
   history = [];
 
   get tree() {
