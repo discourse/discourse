@@ -620,6 +620,10 @@ class User < ActiveRecord::Base
     @ignored_user_ids ||= ignored_users.pluck(:id)
   end
 
+  def ignores?(user)
+    ignored_user_ids.include?(user.id)
+  end
+
   def muted_user_ids
     @muted_user_ids ||= muted_users.pluck(:id)
   end
