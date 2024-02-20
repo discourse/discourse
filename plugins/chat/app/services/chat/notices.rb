@@ -2,6 +2,15 @@
 
 module Chat
   class Notices
+    def self.groups_have_mentions_disabled(groups)
+      warning_text(
+        single: "chat.mention_warning.group_mentions_disabled",
+        multiple: "chat.mention_warning.group_mentions_disabled_multiple",
+        first_identifier: groups.first.name,
+        count: groups.count,
+      )
+    end
+
     def self.groups_have_too_many_members_for_being_mentioned(groups)
       warning_text(
         single: "chat.mention_warning.too_many_members",

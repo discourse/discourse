@@ -13,9 +13,18 @@ module Jobs
 
         notify_mentioned
         notify_about_groups_with_to_many_members
+        notify_about_groups_with_disabled_mentions
       end
 
       private
+
+      def notify_about_groups_with_disabled_mentions
+        groups = @parsed_mentions.groups_with_disabled_mentions
+        return if groups.empty?
+
+        notice = ::Chat::Notices.groups_have_mentions_disabled(groups)
+        publish_notice(notice)
+      end
 
       def notify_about_groups_with_to_many_members
         groups = @parsed_mentions.groups_with_too_many_members
