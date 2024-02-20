@@ -935,6 +935,7 @@ aside.onebox.mixcloud-preview {
     height: 100%;
   }
 }
+
 .video-placeholder-container {
   background-size: cover;
   background-position: center;
@@ -966,8 +967,10 @@ aside.onebox.mixcloud-preview {
     }
   }
 
-  &:hover .video-placeholder-overlay .d-icon-play {
-    transform: scale(1.2);
+  @include hover {
+    .video-placeholder-overlay .d-icon-play {
+      transform: scale(1.2);
+    }
   }
 }
 
