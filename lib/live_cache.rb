@@ -86,14 +86,17 @@ class LiveCache
   end
 
   def delete(key)
-    raise TypeError unless String === key
+    @data.delete(get_site_id, key)
 
-    clear_regex(/\A#{key}\z/)
+    Scheduler::Defer.later("#{@hash_key}_clear_site") do
+      @manager.publish(
+        { "hash_key" => @hash_key, "identity" => identity, "op" => "delete", "key" => key },
+      )
+    end
   end
 
   def clear_regex(regex)
-    site_id = get_site_id
-    @data.clear_site_regex(site_id, regex)
+    @data.clear_site_regex(get_site_id, regex)
 
     Scheduler::Defer.later("#{@hash_key}_clear_site") do
       @manager.publish(
@@ -120,25 +123,24 @@ class LiveCache
   end
 
   def process_message(message)
-    site_id = message.site_id
-    message_data = message.data
-    return if message_data["identity"] == identity
+    return if message.data["identity"] == identity
 
-    case message_data["op"]
+    case message.data["op"]
     when "clear_all"
       @data.clear
     when "clear_site"
-      @data.clear_site(site_id)
+      @data.clear_site(message.site_id)
     when "clear_site_regex"
-      @data.clear_site_regex(site_id, Regexp.new(message_data["regex"]))
+      @data.clear_site_regex(message.site_id, Regexp.new(message.data["regex"]))
+    when "delete"
+      @data.delete(message.site_id, message.data["key"])
     end
   end
 
   private
 
   def clear_now
-    site_id = get_site_id
-    @data.clear_site(site_id)
+    @data.clear_site(get_site_id)
 
     Scheduler::Defer.later("#{@hash_key}_clear_site") do
       @manager.publish({ "hash_key" => @hash_key, "identity" => identity, "op" => "clear_site" })
