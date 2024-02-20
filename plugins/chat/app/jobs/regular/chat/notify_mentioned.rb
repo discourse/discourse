@@ -16,6 +16,7 @@ module Jobs
 
         notify_mentioned_users
         notify_about_users_not_participating_in_channel
+        notify_about_users_who_cannot_join_chanel
         notify_about_groups_with_to_many_members
         notify_about_groups_with_disabled_mentions
       end
@@ -39,10 +40,22 @@ module Jobs
       end
 
       def notify_about_users_not_participating_in_channel
-        users = @all_mentioned_users.filter { |user| !user_participate_in_channel?(user) }
+        users =
+          @all_mentioned_users.filter do |user|
+            user.guardian.can_join_chat_channel?(@channel) && !user_participate_in_channel?(user)
+          end
         return if users.empty?
 
         notice = ::Chat::MentionNotices.users_do_not_participate_in_channel(users, @message.id)
+        publish_notice(notice)
+      end
+
+      def notify_about_users_who_cannot_join_chanel
+        users =
+          @all_mentioned_users.filter { |user| !user.guardian.can_join_chat_channel?(@channel) }
+        return if users.empty?
+
+        notice = ::Chat::MentionNotices.users_cannot_join_channel(users)
         publish_notice(notice)
       end
 

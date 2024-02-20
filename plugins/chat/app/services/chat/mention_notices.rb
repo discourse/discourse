@@ -26,6 +26,18 @@ module Chat
       { text_content: warning }
     end
 
+    def self.users_cannot_join_channel(users)
+      warning =
+        warning_text(
+          single: "chat.mention_warning.cannot_see",
+          multiple: "chat.mention_warning.cannot_see_multiple",
+          first_identifier: users.first.username,
+          count: users.count,
+        )
+
+      { text_content: warning }
+    end
+
     def self.users_do_not_participate_in_channel(users, message_id)
       warning =
         warning_text(
