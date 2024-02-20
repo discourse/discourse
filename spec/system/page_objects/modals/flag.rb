@@ -20,6 +20,14 @@ module PageObjects
         select_kit.expand
         select_kit.select_row_by_value(action)
       end
+
+      def fill_message(message)
+        body.fill_in("message", with: message)
+      end
+
+      def check_confirmation
+        body.check("confirmation")
+      end
     end
   end
 end

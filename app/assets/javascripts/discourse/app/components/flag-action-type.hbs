@@ -69,6 +69,16 @@
           {{/if}}
         </div>
       </label>
+      {{#if this.showConfirmation}}
+        <label class="checkbox-label flag-confirmation">
+          <Input
+            name="confirmation"
+            @type="checkbox"
+            @checked={{this.isConfirmed}}
+          />
+          <span>{{i18n "flagging.confirmation_illegal"}}</span>
+        </label>
+      {{/if}}
     </div>
   {{/if}}
 </div>
