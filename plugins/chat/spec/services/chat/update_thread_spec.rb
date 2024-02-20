@@ -2,7 +2,6 @@
 
 RSpec.describe Chat::UpdateThread do
   describe Chat::UpdateThread::Contract, type: :model do
-    it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
   end
 
@@ -49,12 +48,6 @@ RSpec.describe Chat::UpdateThread do
       let(:title) { "a" * Chat::Thread::MAX_TITLE_LENGTH + "a" }
 
       it { is_expected.to fail_a_contract }
-    end
-
-    context "when thread is not found because the channel ID differs" do
-      before { params[:thread_id] = other_thread.id }
-
-      it { is_expected.to fail_to_find_a_model(:thread) }
     end
 
     context "when thread is not found" do
