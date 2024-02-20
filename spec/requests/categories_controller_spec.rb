@@ -1127,6 +1127,30 @@ RSpec.describe CategoriesController do
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
     end
 
+    context "without include_ancestors" do
+      it "doesn't return ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo" }
+
+        expect(response.parsed_body).not_to have_key("ancestors")
+      end
+    end
+
+    context "with include_ancestors=false" do
+      it "returns ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: false }
+
+        expect(response.parsed_body).not_to have_key("ancestors")
+      end
+    end
+
+    context "with include_ancestors=true" do
+      it "returns ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: true }
+
+        expect(response.parsed_body).to have_key("ancestors")
+      end
+    end
+
     context "with term" do
       it "returns categories" do
         get "/categories/search.json", params: { term: "Foo" }

@@ -257,6 +257,23 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.ancestors_of(category_ids)
+    ancestor_ids = []
+
+    SiteSetting.max_category_nesting.times do
+      category_ids =
+        where(id: category_ids)
+          .where.not(parent_category_id: nil)
+          .pluck("DISTINCT parent_category_id")
+
+      ancestor_ids.concat(category_ids)
+
+      break if category_ids.empty?
+    end
+
+    where(id: ancestor_ids)
+  end
+
   def self.topic_id_cache
     @topic_id_cache ||= DistributedCache.new("category_topic_ids")
   end

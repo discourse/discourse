@@ -341,6 +341,12 @@ class CategoriesController < ApplicationController
       else
         true
       end
+    include_ancestors =
+      if params[:include_ancestors].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_ancestors])
+      else
+        false
+      end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
@@ -388,7 +394,18 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
-    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    if include_ancestors
+      ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
+
+      render_json_dump(
+        {
+          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+          ancestors: serialize_data(ancestors, SiteCategorySerializer, scope: guardian),
+        },
+      )
+    else
+      render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    end
   end
 
   private
