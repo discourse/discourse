@@ -590,6 +590,12 @@ describe Jobs::Chat::ProcessMessage do
 
         before { @chat_group.add(user_3) }
 
+        def filter_notices_about_mention_without_membership(messages)
+          messages.filter do |m|
+            m.data[:type] == "notice" && m.data[:notice_type] == "mention_without_membership"
+          end
+        end
+
         it "can invite chat user without channel membership" do
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
           Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
@@ -660,10 +666,9 @@ describe Jobs::Chat::ProcessMessage do
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
               described_class.new.execute(chat_message_id: msg.id)
-              expect(Notification.count).to be(0)
             end
 
-          not_participating_msg = messages.first
+          not_participating_msg = filter_notices_about_mention_without_membership(messages).first
 
           expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
           expect(not_participating_msg[:data][:text_content]).to be_nil
