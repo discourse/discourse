@@ -628,6 +628,10 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
+  def mutes?(user)
+    muted_user_ids.include?(user.id)
+  end
+
   def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL

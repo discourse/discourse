@@ -87,7 +87,7 @@ module Jobs
 
       def notify(mention, mentioned_user)
         return unless user_participate_in_channel?(mentioned_user)
-        return if mentioned_user.ignores?(@sender) # fixme andrei take care of n + 1's
+        return if mentioned_user.ignores?(@sender) || mentioned_user.mutes?(@sender) # fixme andrei take care of n + 1's
 
         create_notification!(mention, mentioned_user)
         ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
