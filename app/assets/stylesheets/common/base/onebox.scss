@@ -935,6 +935,7 @@ aside.onebox.mixcloud-preview {
     height: 100%;
   }
 }
+
 .video-placeholder-container {
   background-size: cover;
   background-position: center;
@@ -944,36 +945,32 @@ aside.onebox.mixcloud-preview {
   background-color: black;
 
   .video-placeholder-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 1rem;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: 150ms;
-    background-repeat: no-repeat;
-    background-position: center;
-    max-width: 30%;
-    .d-icon {
-      color: white;
-      height: 2em;
-      width: 2em;
-      transition: width 0.15s, height 0.15s;
-    }
 
     .d-icon-play {
-      cursor: pointer;
-      padding: 1em;
-      margin: 0.5em;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--secondary-or-primary);
+      border-radius: var(--d-border-radius);
+      color: #fff;
+      display: flex;
+      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      height: 2.3rem;
+      transition: transform 0.15s;
+      width: 2.3rem;
+
+      @media (prefers-reduced-motion) {
+        transition: transform 0s;
+      }
     }
   }
 
-  &:hover .video-placeholder-overlay .d-icon {
-    height: 3em;
-    width: 3em;
+  @include hover {
+    .video-placeholder-overlay .d-icon-play {
+      transform: scale(1.2);
+    }
   }
 }
 
