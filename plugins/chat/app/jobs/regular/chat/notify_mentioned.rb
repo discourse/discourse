@@ -18,17 +18,11 @@ module Jobs
       private
 
       def notify_about_groups_with_to_many_members
-        groups_with_too_many_members = @parsed_mentions.groups_with_too_many_members
-        return if groups_with_too_many_members.empty?
+        groups = @parsed_mentions.groups_with_too_many_members
+        return if groups.empty?
 
-        ::Chat::Publisher.publish_notice(
-          user_id: @sender.id,
-          channel_id: @channel.id,
-          text_content:
-            ::Chat::Notices.groups_have_too_many_members_for_being_mentioned(
-              groups_with_too_many_members.to_a,
-            ),
-        )
+        notice = ::Chat::Notices.groups_have_too_many_members_for_being_mentioned(groups.to_a)
+        publish_notice(notice)
       end
 
       def notify_mentioned
@@ -87,6 +81,14 @@ module Jobs
         end
 
         mention
+      end
+
+      def publish_notice(content)
+        ::Chat::Publisher.publish_notice(
+          user_id: @sender.id,
+          channel_id: @channel.id,
+          text_content: content,
+        )
       end
 
       # fixme andrei make it user.participate_in?(@channel)
