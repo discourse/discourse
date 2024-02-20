@@ -25,7 +25,7 @@ module Jobs
         groups = @parsed_mentions.groups_with_disabled_mentions
         return if groups.empty?
 
-        notice = ::Chat::Notices.groups_have_mentions_disabled(groups)
+        notice = ::Chat::MentionNotices.groups_have_mentions_disabled(groups)
         publish_notice(notice)
       end
 
@@ -33,7 +33,7 @@ module Jobs
         groups = @parsed_mentions.groups_with_too_many_members
         return if groups.empty?
 
-        notice = ::Chat::Notices.groups_have_too_many_members_for_being_mentioned(groups.to_a)
+        notice = ::Chat::MentionNotices.groups_have_too_many_members(groups.to_a)
         publish_notice(notice)
       end
 
@@ -41,7 +41,7 @@ module Jobs
         users = @all_mentioned_users.filter { |user| !user_participate_in_channel?(user) }
         return if users.empty?
 
-        notice = ::Chat::Notices.users_do_not_participate_in_channel(users, @message.id)
+        notice = ::Chat::MentionNotices.users_do_not_participate_in_channel(users, @message.id)
         publish_notice(notice)
       end
 

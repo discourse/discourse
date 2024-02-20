@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class Notices
+  class MentionNotices
     def self.groups_have_mentions_disabled(groups)
       warning =
         warning_text(
@@ -14,7 +14,7 @@ module Chat
       { text_content: warning }
     end
 
-    def self.groups_have_too_many_members_for_being_mentioned(groups)
+    def self.groups_have_too_many_members(groups)
       warning =
         warning_text(
           single: "chat.mention_warning.too_many_members",
