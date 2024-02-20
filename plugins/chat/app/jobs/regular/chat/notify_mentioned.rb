@@ -13,6 +13,8 @@ module Jobs
         # fixme andrei make sure to be efficient with this
         @all_mentioned_users = User.where(id: @parsed_mentions.all_mentioned_users_ids)
 
+        return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
+
         notify_mentioned_users
         notify_about_users_not_participating_in_channel
         notify_about_groups_with_to_many_members
