@@ -13,9 +13,11 @@
   {{on "drop" this.dropItem}}
   role="row"
 >
-  <div class="draggable" data-link-name={{@link.name}}>
-    {{d-icon "grip-lines"}}
-  </div>
+  {{#unless this.site.mobileView}}
+    <div class="draggable" data-link-name={{@link.name}}>
+      {{d-icon "grip-lines"}}
+    </div>
+  {{/unless}}
   <div class="input-group" role="cell">
     <IconPicker
       @name="icon"
