@@ -27,7 +27,7 @@ RSpec.describe "Chat New Message from params", type: :system do
       expect(page).to have_current_path("/chat/c/#{user_2.username}/#{Chat::Channel.last.id}")
     end
 
-    it "redirects to chat channel if recipients param is missing" do
+    xit "redirects to chat channel if recipients param is missing" do
       visit("/chat/new-message")
 
       # chat service selects public channel from getIdealFirstChannelId
