@@ -31,32 +31,6 @@ class ThemeSetting < ActiveRecord::Base
     TYPES_ENUM
   end
 
-  def self.acceptable_value_for_type?(value, type)
-    case type
-    when self.types[:integer]
-      value.is_a?(Integer)
-    when self.types[:float]
-      value.is_a?(Integer) || value.is_a?(Float)
-    when self.types[:bool]
-      value.is_a?(TrueClass) || value.is_a?(FalseClass)
-    when self.types[:list]
-      value.is_a?(String)
-    when self.types[:objects]
-      # TODO: This is a simple check now but we want to validate the default objects agianst the schema as well.
-      value.is_a?(Array)
-    else
-      true
-    end
-  end
-
-  def self.value_in_range?(value, range, type)
-    if type == self.types[:integer] || type == self.types[:float]
-      range.include? value
-    elsif type == self.types[:string]
-      range.include? value.to_s.length
-    end
-  end
-
   def self.guess_type(value)
     case value
     when Integer

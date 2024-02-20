@@ -392,9 +392,23 @@ HTML
 
   it "generates errors when default value is not within allowed range" do
     field = create_yaml_field(get_fixture("invalid"))
-    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "default_out_of_range"))
+
     expect(field.error).to include(
-      I18n.t("#{key}.default_out_range", name: "string_default_out_of_range"),
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "default_out_of_range",
+        error_messages: [I18n.t("#{key}.number_value_not_valid_min_max", min: 1, max: 20)].join(
+          " ",
+        ),
+      ),
+    )
+
+    expect(field.error).to include(
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "string_default_out_of_range",
+        error_messages: [I18n.t("#{key}.string_value_not_valid_min", min: 20)].join(" "),
+      ),
     )
   end
 

@@ -7,10 +7,6 @@ class ThemeSettingsManager::Enum < ThemeSettingsManager
     match || val
   end
 
-  def is_valid_value?(new_value)
-    choices.include?(new_value) || choices.map(&:to_s).include?(new_value)
-  end
-
   def choices
     @opts[:choices]
   end
