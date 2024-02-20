@@ -128,7 +128,8 @@ module Jobs
 
       # fixme andrei make it user.participate_in?(@channel)
       def user_participate_in_channel?(user)
-        @channel.membership_for(user).present?
+        membership = @channel.membership_for(user)
+        membership.present? && membership.following
       end
     end
   end
