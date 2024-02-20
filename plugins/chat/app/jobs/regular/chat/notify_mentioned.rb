@@ -41,26 +41,8 @@ module Jobs
         users = @all_mentioned_users.filter { |user| !user_participate_in_channel?(user) }
         return if users.empty?
 
-        users_do_not_participate_in_channel(users)
-      end
-
-      def users_do_not_participate_in_channel(users)
-        ::Chat::Publisher.publish_notice(
-          user_id: @sender.id,
-          channel_id: @channel.id,
-          type: "mention_without_membership",
-          data: {
-            user_ids: users.map(&:id),
-            text:
-              warning_text(
-                single: "chat.mention_warning.without_membership",
-                multiple: "chat.mention_warning.without_membership_multiple",
-                first_identifier: users.first.username,
-                count: users.count,
-              ),
-            message_id: @message.id,
-          },
-        )
+        notice = ::Chat::Notices.users_do_not_participate_in_channel(users, @message.id)
+        publish_notice(notice)
       end
 
       def warning_text(single:, multiple:, first_identifier:, count:)
@@ -126,12 +108,8 @@ module Jobs
         mention
       end
 
-      def publish_notice(content)
-        ::Chat::Publisher.publish_notice(
-          user_id: @sender.id,
-          channel_id: @channel.id,
-          text_content: content,
-        )
+      def publish_notice(params)
+        ::Chat::Publisher.publish_notice(user_id: @sender.id, channel_id: @channel.id, **params)
       end
 
       # fixme andrei make it user.participate_in?(@channel)
