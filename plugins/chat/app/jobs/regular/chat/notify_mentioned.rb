@@ -7,6 +7,7 @@ module Jobs
       # fixme preload chat_channel and other stuff?
       def execute(args)
         @message = ::Chat::Message.find(args[:message_id])
+        @sender = @message.user
         @channel = @message.chat_channel
         @parsed_mentions = @message.parsed_mentions
 
@@ -34,7 +35,7 @@ module Jobs
 
       def notify(mention, mentioned_user)
         return unless user_participate_in_channel?(mentioned_user)
-        return if mentioned_user.ignores?(@message.user) # fixme andrei take care of n + 1's
+        return if mentioned_user.ignores?(@sender) # fixme andrei take care of n + 1's
 
         create_notification!(mention, mentioned_user)
         ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
