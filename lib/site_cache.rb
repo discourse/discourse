@@ -2,6 +2,21 @@
 
 require "monitor"
 
+# This is an LRU cache in two dimensions. There are limits on:
+#
+# * The global size of the cache,
+# * The per-site size of the cache,
+#
+# In order to enforce these limits, we need be able to efficiently get the next
+# least recently used item globally and per site. To do this, there are two
+# structures:
+#
+# `@flattened' is a Hash from [site, key] -> value
+# `@nested' is a Hash from site -> Hash from key -> value
+#
+# In both cases, we exploit the ordered property of ruby hashes. `#shift` on a
+# hash pops the least recently inserted key-value pair. If all accesses delete
+# the item and reinsert it, this gives us LRU order.
 class SiteCache
   include MonitorMixin
 
