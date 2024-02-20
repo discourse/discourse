@@ -472,6 +472,9 @@ be:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "неадпаведныя"
+    illegal:
+      email_title: 'Запіс ў "%{title}" патрабуе ўвагі персаналу'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Адправіць паведамленне @%{username}"
       description: "Я хачу пагаварыць з гэтым чалавекам асабіста і непасрэдна аб іх пасады."
@@ -505,6 +508,9 @@ be:
       title: "Something Else"
       long_form: "заўважана гэта для мадэратара увагі"
       short_description: "Патрабуе ўвагі персаналу па іншай прычыне"
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Запіс ў "%{title}" патрабуе ўвагі персаналу'
       email_body: "%{link}\n\n%{message}"
   archetypes:
     regular:
@@ -1978,7 +1984,6 @@ be:
       too_large: "На жаль, файл, які вы ўкладаеце занадта вялікі (максімальны памер% {max_size_kb} КБ)."
     images:
       too_large: "На жаль, малюнак, якое вы ўкладаеце занадта вялікі (максімальны памер% {} max_size_kb KB), калі ласка, зменіце яго і паспрабуйце яшчэ раз."
-      larger_than_x_megapixels: "На жаль, малюнак, якое вы ўкладаеце занадта вялікі (максімальны памер складае% {max_image_megapixels} -megapixels), калі ласка, зменіце яго і паспрабуйце яшчэ раз."
       size_not_found: "Выбачайце, але мы не змаглі вызначыць памер малюнка. Можа быць, ваш вобраз пашкоджаны?"
     placeholders:
       too_large: "(Выява больш, чым {% max_size_kb} КБ)"

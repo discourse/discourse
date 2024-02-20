@@ -328,6 +328,8 @@ sq:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "i papërshtatshëm"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Dërgoji @%{username} një mesazh"
       email_title: 'Postimi juaj në "%{title}"'
@@ -356,6 +358,8 @@ sq:
       title: "Diçka Tjetër"
       long_form: "shënoje për vëmendjen e moderatorëve"
       email_title: 'Tema "%{title}" kërkon redaktimin e një moderatori'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>"

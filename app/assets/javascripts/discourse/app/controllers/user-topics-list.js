@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { or, reads } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
@@ -120,10 +121,20 @@ export default class UserTopicsListController extends Controller {
   }
 
   @action
-  showInserted(event) {
+  async showInserted(event) {
     event?.preventDefault();
-    this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
-    this.pmTopicTrackingState.resetIncomingTracking();
+
+    if (this.model.loadingBefore) {
+      return;
+    }
+
+    try {
+      const topicIds = [...this.pmTopicTrackingState.newIncoming];
+      await this.model.loadBefore(topicIds);
+      this.pmTopicTrackingState.resetIncomingTracking(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action

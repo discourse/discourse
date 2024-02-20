@@ -748,6 +748,9 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -806,6 +809,9 @@ lt:
       long_form: "pažymėjo tai moderatoriaus dėmesiui"
       short_description: "Reikia darbuotojų dėmesio dėl kitos priežasties"
       email_title: 'Tema "%{title}" reikalauja moderatoriaus dėmesio'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Jūsų įrašą pažymėjo bendruomenė. Prašome <a href="%{path}">pamatyti savo pranešimus</a>.</p>'
@@ -2295,7 +2301,6 @@ lt:
     images:
       too_large: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB), pakeiskite jo dydį ir bandykite dar kartą."
       too_large_humanized: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (maksimalus dydis yra %{max_size}), pakeiskite jo dydį ir bandykite dar kartą."
-      larger_than_x_megapixels: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias matmuo yra %{max_image_megapixels}megapikselių), pakeiskite jo dydį ir bandykite dar kartą."
       size_not_found: "Atsiprašome, bet mes negalėjome nustatyti vaizdo dydžio. Gal jūsų vaizdas yra sugadintas?"
     placeholders:
       too_large: "(vaizdas didesnis nei %{max_size_kb}KB)"

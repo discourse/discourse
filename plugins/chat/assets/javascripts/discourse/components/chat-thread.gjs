@@ -25,6 +25,7 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
+import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -429,15 +430,17 @@ export default class ChatThread extends Component {
     }
 
     try {
+      const params = {
+        message: message.message,
+        in_reply_to_id: null,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
+        thread_id: message.thread.id,
+      };
+
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
-        {
-          message: message.message,
-          in_reply_to_id: null,
-          staged_id: message.id,
-          upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.id,
-        }
+        Object.assign({}, params, extractCurrentTopicInfo(this))
       );
 
       this.args.thread.currentUserMembership ??=

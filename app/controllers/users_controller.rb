@@ -1525,7 +1525,7 @@ class UsersController < ApplicationController
   end
 
   def trusted_session
-    render json: secure_session_confirmed? ? success_json : failed_json
+    render json: secure_session_confirmed? || user_just_created ? success_json : failed_json
   end
 
   def list_second_factors
@@ -1746,12 +1746,17 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def user_just_created
+    current_user.created_at > 5.minutes.ago
+  end
+
   def check_confirmed_session
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
 
-    raise Discourse::InvalidAccess.new unless current_user && secure_session_confirmed?
+    raise Discourse::InvalidAccess.new if !current_user
+    raise Discourse::InvalidAccess.new unless user_just_created || secure_session_confirmed?
   end
 
   def revoke_account

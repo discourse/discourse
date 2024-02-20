@@ -28,8 +28,35 @@ if Rails.env.test?
       super(env)
     end
   end
+
   Rails.configuration.middleware.unshift TestMultisiteMiddleware,
                                          RailsMultisite::DiscoursePatches.config
+
+  class BlockRequestsMiddleware
+    @@block_requests = false
+
+    def self.block_requests!
+      @@block_requests = true
+    end
+
+    def self.allow_requests!
+      @@block_requests = false
+    end
+
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      if @@block_requests
+        [503, { "Content-Type" => "text/plain" }, ["Blocked by BlockRequestsMiddleware"]]
+      else
+        @app.call(env)
+      end
+    end
+  end
+
+  Rails.configuration.middleware.unshift BlockRequestsMiddleware
 elsif Rails.configuration.multisite
   assets_hostnames = GlobalSetting.cdn_hostnames
 

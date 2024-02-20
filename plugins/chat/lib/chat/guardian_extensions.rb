@@ -16,6 +16,10 @@ module Chat
       @user.staff? || @user.in_any_groups?(Chat.allowed_group_ids)
     end
 
+    def can_direct_message?
+      @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
+    end
+
     def can_create_chat_message?
       !SpamRule::AutoSilence.prevent_posting?(@user)
     end

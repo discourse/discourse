@@ -55,6 +55,9 @@ ro:
   components:
     enabled_filter: "Activat"
     disabled_filter: "Dezactivat"
+  themes:
+    settings_errors:
+      data_type_inclusion: "Setarea tipului `%{name}` nu este acceptată. Tipurile acceptate sunt `integer`, `bool`, `list`, `enum` și `upload`"
   emails:
     incoming:
       default_subject: "Acest subiect are nevoie de un titlu"
@@ -493,6 +496,9 @@ ro:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Necorespunzător"
+    illegal:
+      email_title: 'O postare din "%{title}" necesită atenția echipei'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Trimite-i un mesaj lui @%{username}"
       email_title: 'Postarea ta din "%{title}"'
@@ -523,6 +529,12 @@ ro:
       description: 'Acest subiect necesită atenția generală a personalului pe baza regulilor <a href="%{base_path}/guidelines"></a>, <a href="%{tos_url}">TOS</a>, sau dintr-un alt motiv care nu este enumerat mai sus.'
       long_form: "marcat cu marcaj de avertizare în atenția moderatorilor"
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Este ilegal"
+      description: "Acest subiect necesită atenția echipei, deoarece cred că are conținut care este ilegal."
+      short_description: "Acest lucru este ilegal"
+      email_title: 'Un articol din „%{title}” necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Această postare a fost marcată de către comunitate cu marcaj de avertizare și a fost ascunsă temporar.</p>"
@@ -963,6 +975,7 @@ ro:
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
     self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
     flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
+    post_links_allowed_groups: "Grupuri cărora li se permite să includă legături în articole. Administratorii și moderatorii au voie să publice legături întotdeauna."
     user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
     invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
     ignore_allowed_groups: "Grupuri au voie să ignore alți utilizatori."
@@ -1713,6 +1726,7 @@ ro:
       too_large: "Ne pare rău, dar fișierul pe care încerci să îl încarci este prea mare (mărimea maximă este de %{max_size_kb}KB)."
     images:
       too_large: "Ne pare rău, dar imaginea pe care încerci să o încarci este prea mare (mărimea maximă este de %{max_size_kb}KB), te rugăm să o redimensionezi și apoi să încerci din nou."
+      larger_than_x_megapixels: "Ne pare rău, imaginea pe care încerci să o încarci este prea mare (dimensiunea maximă este %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
       size_not_found: "Ne pare rău, nu am putut determina mărimea imaginii. Poate este coruptă?"
   avatar:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"

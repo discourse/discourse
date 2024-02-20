@@ -686,6 +686,20 @@ $mobile-breakpoint: 700px;
   @media (max-width: 500px) {
     width: 50%;
   }
+  .nav-stacked {
+    background-color: inherit;
+
+    a.active {
+      color: var(--primary);
+      background-color: initial;
+      font-weight: 700;
+      border-right: 4px solid var(--quaternary);
+
+      &::after {
+        display: none; // Hides the arrow
+      }
+    }
+  }
 }
 
 .admin-detail {

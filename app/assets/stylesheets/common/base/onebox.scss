@@ -927,6 +927,7 @@ aside.onebox.mixcloud-preview {
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
+  background-color: black;
 
   video {
     position: absolute;
@@ -935,6 +936,8 @@ aside.onebox.mixcloud-preview {
   }
 }
 .video-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
@@ -954,6 +957,17 @@ aside.onebox.mixcloud-preview {
       height: 2em;
       width: 2em;
       transition: width 0.15s, height 0.15s;
+    }
+
+    .d-icon-play {
+      cursor: pointer;
+      padding: 1em;
+      margin: 0.5em;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--secondary-or-primary);
     }
   }
 
@@ -1000,6 +1014,8 @@ iframe.vimeo-onebox {
 }
 
 .onebox-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;

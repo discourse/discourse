@@ -120,25 +120,25 @@ module("Unit | Model | user", function (hooks) {
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
-    assert.strictEqual(user._subscribersCount, 0);
+    assert.strictEqual(user.statusManager._subscribersCount, 0);
 
-    user.trackStatus();
-    assert.strictEqual(user._subscribersCount, 1);
+    user.statusManager.trackStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 1);
 
-    user.trackStatus();
-    assert.strictEqual(user._subscribersCount, 2);
+    user.statusManager.trackStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 2);
 
-    user.stopTrackingStatus();
-    assert.strictEqual(user._subscribersCount, 1);
+    user.statusManager.stopTrackingStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 1);
 
-    user.stopTrackingStatus();
-    assert.strictEqual(user._subscribersCount, 0);
+    user.statusManager.stopTrackingStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 0);
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
-    user.stopTrackingStatus();
+    user.statusManager.stopTrackingStatus();
     assert.ok(true);
   });
 
@@ -160,8 +160,8 @@ module("Unit | Model | user", function (hooks) {
     const appEvents = user1.appEvents;
 
     try {
-      user1.trackStatus();
-      user2.trackStatus();
+      user1.statusManager.trackStatus();
+      user2.statusManager.trackStatus();
       assert.strictEqual(user1.status, status1);
       assert.strictEqual(user2.status, status2);
 
@@ -173,8 +173,8 @@ module("Unit | Model | user", function (hooks) {
       assert.strictEqual(user1.status, null);
       assert.strictEqual(user2.status, null);
     } finally {
-      user1.stopTrackingStatus();
-      user2.stopTrackingStatus();
+      user1.statusManager.stopTrackingStatus();
+      user2.statusManager.stopTrackingStatus();
     }
   });
 

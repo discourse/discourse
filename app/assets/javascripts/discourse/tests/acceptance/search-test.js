@@ -697,7 +697,7 @@ acceptance("Search - Authenticated", function (needs) {
     );
   });
 
-  test("initial options - recent search results", async function (assert) {
+  test("initial options - search history - no context", async function (assert) {
     await visit("/");
     await click("#search-button");
 
@@ -716,6 +716,12 @@ acceptance("Search - Authenticated", function (needs) {
       "blue",
       "shows second recent search"
     );
+
+    await click(
+      ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+    );
+
+    assert.dom("input#search-term").hasValue("yellow");
   });
 
   test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
@@ -738,6 +744,24 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     assert.strictEqual(query("#search-term").value, "hijacked!");
+  });
+
+  test("initial options - search history - category context", async function (assert) {
+    await visit("/c/bug");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .exists("shows search history");
+  });
+
+  test("initial options - search history - user context", async function (assert) {
+    await visit("/u/eviltrout");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .exists("shows search history");
   });
 });
 
@@ -841,6 +865,15 @@ acceptance("Search - with tagging enabled", function (needs) {
     assert.strictEqual(firstTag, "monkey");
   });
 
+  test("initial options - search history - tag context", async function (assert) {
+    await visit("/tags/c/bug/dev");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .exists("shows search history");
+  });
+
   test("initial options - tag search scope - shows category / tag combination shortcut when both are present", async function (assert) {
     await visit("/tags/c/bug/dev");
     await click("#search-button");
@@ -887,6 +920,15 @@ acceptance("Search - with tagging enabled", function (needs) {
       "dev",
       "Tag is displayed"
     );
+  });
+
+  test("initial options - search history - tag intersection context", async function (assert) {
+    await visit("/tags/intersection/dev/foo");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .exists("shows search history");
   });
 
   test("initial options - tag intersection search scope - shows tag combination shortcut when visiting tag intersection", async function (assert) {
@@ -1163,6 +1205,24 @@ acceptance("Search - assistant", function (needs) {
     assert
       .dom(".search-input .btn.search-context")
       .doesNotExist("'in this topic' button is not shown");
+  });
+
+  test("initial options - search history - topic context", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .exists("shows search history");
+  });
+
+  test("initial options - search history - private message context", async function (assert) {
+    await visit("/u/charlie/messages");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu .search-menu-recent")
+      .doesNotExist("does not show search history");
   });
 
   test("initial options - private message search scope - shows 'in messages' button when in an inbox", async function (assert) {

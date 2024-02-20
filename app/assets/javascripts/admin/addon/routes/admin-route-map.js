@@ -59,6 +59,7 @@ export default function () {
           function () {
             this.route("show", { path: "/:theme_id" });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
+            this.route("schema", { path: "/:theme_id/schema/:setting_name" });
           }
         );
 
@@ -220,7 +221,7 @@ export default function () {
     );
   });
 
-  // EXPERIMENTAL: These admin routes are hidden behind an `enable_experimental_admin_ui_groups`
+  // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`
   // site setting and are subject to constant change.
   this.route("admin-revamp", { resetNamespace: true }, function () {
     this.route("lobby", { path: "/" }, function () {});

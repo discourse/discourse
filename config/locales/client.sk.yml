@@ -208,7 +208,6 @@ sk:
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     emails_are_disabled_non_staff: "Odchádzajúci e-mail bol zakázaný pre používateľov, ktorí nie sú zamestnancami."
     software_update_prompt:
-      message: "Aktualizovali sme túto stránku, <span>obnovte</span>, inak sa môže vyskytnúť neočakávané správanie."
       dismiss: "Zahodiť"
     bootstrap_mode: "Začíname"
     themes:

@@ -134,6 +134,19 @@ en:
       string_value_not_valid_min_max: "It must be between %{min} and %{max} characters long."
       string_value_not_valid_min: "It must be at least %{min} characters long."
       string_value_not_valid_max: "It must be at most %{max} characters long."
+      objects:
+        required: "must be present"
+        invalid_type: "%{type} is not a valid type"
+        not_valid_string_value: "must be a string"
+        not_valid_integer_value: "must be an integer"
+        not_valid_float_value: "must be a float"
+        not_valid_boolean_value: "must be a boolean"
+        not_valid_enum_value: "must be one of the following: %{choices}"
+        string_value_not_valid_min: "must be at least %{min} characters long"
+        string_value_not_valid_max: "must be at most %{max} characters long"
+        number_value_not_valid_min: "must be larger than or equal to %{min}"
+        number_value_not_valid_max: "must be smaller than or equal to %{max}"
+        string_value_not_valid_url: "must be a valid URL"
     locale_errors:
       top_level_locale: "The top level key in a locale file must match the locale name"
       invalid_yaml: "Translation YAML invalid"
@@ -965,7 +978,7 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     illegal:
-      title: "It's Illegal"
+      title: "Illegal"
       description: "This post requires staff attention because I believe it contains content that is illegal."
       short_description: "This is illegal"
       email_title: 'A post in "%{title}" requires staff attention'
@@ -1053,7 +1066,7 @@ en:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "It's Illegal"
+      title: "Illegal"
       description: "This topic requires staff attention because I believe it contains content that is illegal."
       short_description: "This is illegal"
       email_title: 'A post in "%{title}" requires staff attention'
@@ -1521,6 +1534,7 @@ en:
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
     ember_version_warning: "Your site is running with the unsupported EMBER_VERSION=3 configuration. This may lead to unexpected issues with themes/plugins. Please remove the EMBER_VERSION configuration from your app.yml file and rebuild. See <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> for more information."
+    back_from_logster_text: "Back to site"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1707,6 +1721,7 @@ en:
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
+    content_security_policy_strict_dynamic: "EXPERIMENTAL: Use a strict-dynamic content security policy. This is more modern and more flexible than our default CSP configuration. This is fully functional, but not yet tested with all themes and plugins."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -1984,6 +1999,7 @@ en:
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
+    profile_background_allowed_groups: "Groups that are allowed to upload a profile background."
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
@@ -2594,6 +2610,7 @@ en:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3013,6 +3030,7 @@ en:
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
+    illegal: "Your post was flagged as  **illegal**: the community thinks it might be breaking the law."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
     responder:
@@ -4345,7 +4363,7 @@ en:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       too_large_humanized: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size}), please resize it and try again."
-      larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."
+      larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels} megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
     placeholders:
       too_large: "(image larger than %{max_size_kb}KB)"

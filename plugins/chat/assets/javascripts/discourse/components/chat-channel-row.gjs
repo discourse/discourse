@@ -158,12 +158,12 @@ export default class ChatChannelRow extends Component {
 
   @action
   startTrackingStatus() {
-    this.#firstDirectMessageUser?.trackStatus();
+    this.#firstDirectMessageUser?.statusManager.trackStatus();
   }
 
   @action
   stopTrackingStatus() {
-    this.#firstDirectMessageUser?.stopTrackingStatus();
+    this.#firstDirectMessageUser?.statusManager.stopTrackingStatus();
   }
 
   <template>

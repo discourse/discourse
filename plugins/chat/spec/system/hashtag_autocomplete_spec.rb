@@ -159,13 +159,15 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
     it "shows a default color and css class for the channel icon in a post" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
       expect(page).to have_css(".hashtag-cooked")
-      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+      css_class = ".hashtag-color--channel--#{management_channel.id}"
+      expect(find("#hashtag-css-generator", visible: false).text(:all)).not_to include(css_class)
     end
 
     it "shows a default color and css class for the channel icon in a channel" do
       chat_page.visit_channel(channel1)
       expect(page).to have_css(".hashtag-cooked")
-      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+      css_class = ".hashtag-color--channel-#{management_channel.id}"
+      expect(find("#hashtag-css-generator", visible: false).text(:all)).not_to include(css_class)
     end
   end
 end

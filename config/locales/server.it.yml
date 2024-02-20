@@ -893,6 +893,9 @@ it:
       title: "Inappropriato"
       description: 'Questo messaggio presenta contenuti che una persona ragionevole potrebbe ritenere offensivi, aggressivi, oppure di incitamento all''odio o in violazione delle nostre <a href="%{base_path}/guidelines">linee guida della community</a>.'
       short_description: 'Una violazione delle <a href="%{base_path}/guidelines">linee guida della nostra comunità</a>'
+    illegal:
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Invia un messaggio a @%{username}"
       description: "Voglio parlare direttamente con questa persona a proposito del suo messaggio."
@@ -971,6 +974,9 @@ it:
       long_form: "segnalato all'attenzione dei moderatori"
       short_description: "Richiede l'attenzione dello staff per un altro motivo"
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. Per favore <a href="%{path}">controlla i tuoi messaggi</a>.</p>'
@@ -3726,7 +3732,6 @@ it:
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
       too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
-      larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"

@@ -426,4 +426,55 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert.notOk(exists(".topic-timer-heading"));
   });
+
+  test("Close timer removed after manual close", async function (assert) {
+    updateCurrentUser({ moderator: true, trust_level: 4 });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+    await click("#tap_tile_tomorrow");
+    await click(".edit-topic-timer-modal button.btn-primary");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-close button");
+
+    assert.notOk(exists(".topic-timer-heading"));
+  });
+
+  test("Open timer removed after manual open", async function (assert) {
+    updateCurrentUser({ moderator: true, trust_level: 4 });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-close button");
+
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+    await click("#tap_tile_tomorrow");
+    await click(".edit-topic-timer-modal button.btn-primary");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-open button");
+
+    assert.notOk(exists(".topic-timer-heading"));
+  });
+
+  test("timer removed after manual toggle close and open", async function (assert) {
+    updateCurrentUser({ moderator: true, trust_level: 4 });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+    await click("#tap_tile_tomorrow");
+    await click(".edit-topic-timer-modal button.btn-primary");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-close button");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-open button");
+
+    assert.notOk(exists(".topic-timer-heading"));
+  });
 });

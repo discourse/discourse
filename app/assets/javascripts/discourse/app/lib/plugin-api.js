@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
 import {
+  addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
@@ -132,6 +133,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
+import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -140,7 +142,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.24.0";
+export const PLUGIN_API_VERSION = "1.25.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2686,6 +2688,26 @@ class PluginApi {
     this.container
       .lookup("service:admin-custom-user-fields")
       .addProperty(userFieldProperty);
+  }
+
+  /**
+   * Adds a custom button to the composer preview's image wrapper
+   *
+   *
+   * ```
+   * api.addComposerImageWrapperButton(
+   *   "My Custom Button",
+   *   "custom-button-class"
+   *   "lock"
+   *   (event) => { console.log("Custom button clicked", event)
+   * });
+   *
+   * ```
+   *
+   */
+  addComposerImageWrapperButton(label, btnClass, icon, fn) {
+    addImageWrapperButton(label, btnClass, icon);
+    addApiImageWrapperButtonClickEvent(fn);
   }
 }
 
