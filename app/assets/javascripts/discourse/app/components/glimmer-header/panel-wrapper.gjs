@@ -1,9 +1,9 @@
+import ConditionalInElement from "../conditional-in-element";
+
 const PanelWrapper = <template>
-  {{#if @panelElement}}
-    {{#in-element @panelElement}}
-      {{yield}}
-    {{/in-element}}
-  {{/if}}
+  <ConditionalInElement @element={{@panelElement}}>
+    {{yield}}
+  </ConditionalInElement>
 </template>;
 
 export default PanelWrapper;

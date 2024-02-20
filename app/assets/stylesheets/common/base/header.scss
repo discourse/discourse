@@ -447,4 +447,5 @@ $mobile-avatar-height: 1.532em;
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: 80vh;
   border-radius: var(--d-border-radius-large);
+  overflow: scroll;
 }

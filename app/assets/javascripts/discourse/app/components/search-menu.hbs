@@ -67,7 +67,7 @@
       @clearSearch={{this.clearSearch}}
     />
   {{else if this.displayMenuPanelResults}}
-    <MenuPanel>
+    <MenuPanel @panelClass="search-menu-panel">
       <SearchMenu::Results
         @loading={{this.loading}}
         @noResults={{this.noResults}}
