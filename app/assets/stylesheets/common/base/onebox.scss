@@ -945,7 +945,7 @@ aside.onebox.mixcloud-preview {
   background-color: black;
 
   .video-placeholder-overlay {
-    background-color: rgba(0, 0, 0, 0.33);
+    background-color: rgba(0, 0, 0, 0.25);
     padding: 1rem;
     position: absolute;
     left: 50%;
@@ -956,10 +956,10 @@ aside.onebox.mixcloud-preview {
       border-radius: var(--d-border-radius);
       color: #fff;
       display: flex;
-      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.33));
-      height: 2.25rem;
+      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      height: 2.3rem;
       transition: transform 0.15s;
-      width: 2.25rem;
+      width: 2.3rem;
 
       @media (prefers-reduced-motion) {
         transition: transform 0s;
