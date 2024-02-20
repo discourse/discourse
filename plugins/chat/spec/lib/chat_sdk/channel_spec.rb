@@ -31,5 +31,13 @@ describe ChatSDK::Channel do
         expect { described_class.messages(**params) }.to raise_error("Guardian can't view channel")
       end
     end
+
+    context "when target_message doesn’t exist" do
+      it "fails" do
+        expect { described_class.messages(**params, target_message_id: -999) }.to raise_error(
+          "Target message doesn't exist",
+        )
+      end
+    end
   end
 end

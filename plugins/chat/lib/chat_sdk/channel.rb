@@ -30,8 +30,8 @@ module ChatSDK
           p Chat::StepsInspector.new(result)
           raise "Unexpected error"
         end
-        on_failed_policy(:can_view_channel) { |contract| raise "Guardian can't view channel" }
-        on_failed_policy(:target_message_exists) { |contract| raise "Target message doesn't exist" }
+        on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }
+        on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
       end
     end
   end

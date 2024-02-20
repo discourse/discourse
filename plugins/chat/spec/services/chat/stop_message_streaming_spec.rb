@@ -28,7 +28,7 @@ RSpec.describe Chat::StopMessageStreaming do
         messages = MessageBus.track_publish { result }
 
         expect(messages.find { |m| m.channel == "/chat/#{channel_1.id}" }.data).to include(
-          { "type" => "edit", "streaming" => false },
+          { "type" => "edit" },
         )
       end
     end

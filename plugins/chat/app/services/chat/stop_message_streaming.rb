@@ -46,7 +46,7 @@ module Chat
     end
 
     def publish_message_streaming_state(guardian:, message:, contract:, **)
-      ::Chat::Publisher.publish_edit!(message.chat_channel, message, streaming: false)
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message)
     end
   end
 end

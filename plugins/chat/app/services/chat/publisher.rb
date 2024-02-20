@@ -113,12 +113,12 @@ module Chat
       )
     end
 
-    def self.publish_edit!(chat_channel, chat_message, streaming: false)
+    def self.publish_edit!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        serialize_message_with_type(chat_message, :edit).merge(streaming: streaming),
+        serialize_message_with_type(chat_message, :edit),
       )
     end
 

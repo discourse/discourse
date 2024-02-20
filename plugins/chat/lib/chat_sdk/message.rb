@@ -64,10 +64,10 @@ module ChatSDK
           on_model_not_found(:channel_membership) do
             raise "User with id: `#{guardian.user.id}}` has no membership to this channel"
           end
-          on_failed_policy(:ensure_valid_thread_for_channel) do |contract|
+          on_failed_policy(:ensure_valid_thread_for_channel) do
             raise "Couldn't find thread with id: `#{thread_id}`"
           end
-          on_failed_policy(:allowed_to_join_channel) do |contract|
+          on_failed_policy(:allowed_to_join_channel) do
             raise "User with id: `#{guardian.user.id}}` can't join this channel"
           end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
@@ -87,7 +87,7 @@ module ChatSDK
     ensure
       if streaming
         message.update!(streaming: false)
-        ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload, streaming: false)
+        ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
       end
     end
   end

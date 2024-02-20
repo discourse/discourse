@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
     end
 
     context "when the message doesnt exist" do
-      it "return a 400 error" do
+      it "returns a 404 error" do
         delete "/chat/api/channels/#{channel_1.id}/messages/-999/streaming"
 
         expect(response.status).to eq(404)
@@ -45,7 +45,7 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
     context "when the user can’t stop" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-      it "return a 400 error" do
+      it "returns a 403 error" do
         delete "/chat/api/channels/#{channel_1.id}/messages/#{message_1.id}/streaming"
 
         expect(response.status).to eq(403)
@@ -56,7 +56,7 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
       fab!(:current_user) { Fabricate(:admin) }
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-      it "return a 400 error" do
+      it "returns a 200" do
         delete "/chat/api/channels/#{channel_1.id}/messages/#{message_1.id}/streaming"
 
         expect(response.status).to eq(200)
