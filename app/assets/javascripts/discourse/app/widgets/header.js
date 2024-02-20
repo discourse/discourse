@@ -325,6 +325,11 @@ createWidget("header-cloak", {
   scheduleRerender() {},
 });
 
+let additionalPanels = [];
+export function attachAdditionalPanel(name, toggle, transformAttrs) {
+  additionalPanels.push({ name, toggle, transformAttrs });
+}
+
 createWidget("hamburger-dropdown-wrapper", {
   buildAttributes() {
     return { "data-click-outside": true };
@@ -526,16 +531,16 @@ export default createWidget("header", {
         panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
 
-      // additionalPanels.map((panel) => {
-      //   if (this.state[panel.toggle]) {
-      //     panels.push(
-      //       this.attach(
-      //         panel.name,
-      //         panel.transformAttrs.call(this, attrs, state)
-      //       )
-      //     );
-      //   }
-      // });
+      additionalPanels.map((panel) => {
+        if (this.state[panel.toggle]) {
+          panels.push(
+            this.attach(
+              panel.name,
+              panel.transformAttrs.call(this, attrs, state)
+            )
+          );
+        }
+      });
 
       if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));

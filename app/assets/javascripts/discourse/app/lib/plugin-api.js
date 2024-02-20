@@ -100,7 +100,10 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addToHeaderIcons } from "discourse/widgets/header";
+import {
+  addToHeaderIcons,
+  attachAdditionalPanel,
+} from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -916,6 +919,30 @@ class PluginApi {
   }
 
   /**
+   * Adds a panel to the header
+   *
+   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
+   * Example:
+   * ```javascript
+   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
+   *   return { name: attrs.name, description: state.description };
+   * });
+   * ```
+   * 'toggle' is an attribute on the state of the header widget,
+   *
+   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
+   * and returns a hash of values to pass to attach
+   *
+   **/
+  addHeaderPanel(name, toggle, transformAttrs) {
+    deprecated(
+      "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+      { id: "discourse.add-header-panel" }
+    );
+    attachAdditionalPanel(name, toggle, transformAttrs);
+  }
+
+  /**
    * Adds a pluralization to the store
    *
    * Example:
@@ -1703,12 +1730,30 @@ class PluginApi {
     addExtraIconRenderer(renderer);
   }
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * Adds a widget or a component to the header-icon ul.
+   *
+   * If adding a widget it must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
    * api.addToHeaderIcons(
-   *  createWidget('some-widget')
+   *  createWidget("some-widget")
+   * ```
+   *
+   * If adding a component you can pass the component directly. Additionally, you can
+   * utilize the `@panelWrapper` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * api.addToHeaderIcons(
+      <template>
+        <span>Icon</span>
+
+        <@panelWrapper>
+          <div>Panel</div>
+        </@panelWrapper>
+      </template>
+    );
    * ```
    *
    **/
