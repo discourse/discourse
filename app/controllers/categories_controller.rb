@@ -345,7 +345,7 @@ class CategoriesController < ApplicationController
       if params[:include_ancestors].present?
         ActiveModel::Type::Boolean.new.cast(params[:include_ancestors])
       else
-        true
+        false
       end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
