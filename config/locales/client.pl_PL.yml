@@ -1612,6 +1612,8 @@ pl_PL:
           description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
         authorizing_old:
           title: "Zweryfikuj stary adres e-mail"
+          description: "Zweryfikuj swój stary adres e-mail, aby kontynuować zmianę adresu e-mail:"
+          description_add: "Zweryfikuj istniejący adres e-mail, aby kontynuować dodawanie alternatywnego adresu:"
           old_email: "Stary adres e-mail: %{email}"
           new_email: "Nowy adres e-mail: %{email}"
           confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"

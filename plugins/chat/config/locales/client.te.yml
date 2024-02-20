@@ -33,6 +33,7 @@ te:
       browse:
         back: "వెనుకకు"
         filter_all: అన్ని
+        filter_open: తెరిచినవి
       chat_message_separator:
         today: ఈరోజు
         yesterday: నిన్న

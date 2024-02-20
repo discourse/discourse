@@ -7,8 +7,8 @@
 ro:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    short_date: "D-MMM-YYYY"
+    long_date: "D MMMM YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -917,7 +917,6 @@ ro:
     suggested_topics: "Numărul de subiecte sugerate în partea de jos a unui subiect."
     limit_suggested_to_category: "Arată doar subiectele din aceeași categorie, în subiecte sugerate."
     suggested_topics_max_days_old: "Subiectele sugerate nu trebuie să fie mai vechi de n zile."
-    clean_up_uploads: "șterge încărcările ne-referențiate orfane pentru a preveni găzduirea ilegală. ATENȚIE: înainte de a activa această setare faceți un backup la directorul /uploads ."
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncărcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3. IMPORTANT: necesită un acces valid (atât identificatorul cheii de acces cât și cheia secretă)."
@@ -1150,7 +1149,7 @@ ro:
       invalid_integer_min_max: "Valoarea trebuie să fie între %{min} și %{max}."
       invalid_integer_min: "Valoarea trebuie să fie %{min} sau mai mare."
       invalid_integer_max: "Valoarea nu poate fi mai mare de %{max}."
-      invalid_integer: "Valoarea trebuie să fie un întreg."
+      invalid_integer: "Valoarea trebuie să fie un număr întreg."
       regex_mismatch: "Valoare nu se potrivește formatului cerut."
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
