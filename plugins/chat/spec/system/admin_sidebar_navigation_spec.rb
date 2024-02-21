@@ -14,4 +14,31 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
     visit("/admin")
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat")
   end
+
+  describe "admin sidebar respects separated and combined sidebar modes" do
+    it "reverts to always (separated) mode after entering and leaving admin section" do
+      admin.user_option.update!(
+        chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:always],
+      )
+      visit("/")
+      expect(sidebar).to have_switch_button("chat")
+      sidebar.click_link_in_section("community", "admin")
+      expect(sidebar).to have_no_switch_button("chat")
+      find("#site-logo").click
+      expect(sidebar).to have_switch_button("chat")
+    end
+
+    it "reverts to the never (combined) mode after entering and leaving admin section" do
+      admin.user_option.update!(
+        chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:never],
+      )
+      visit("/")
+      expect(sidebar).to have_section("chat-channels")
+      expect(sidebar).to have_no_switch_button("chat")
+      sidebar.click_link_in_section("community", "admin")
+      expect(sidebar).to have_no_section("chat-channels")
+      find("#site-logo").click
+      expect(sidebar).to have_section("chat-channels")
+    end
+  end
 end
