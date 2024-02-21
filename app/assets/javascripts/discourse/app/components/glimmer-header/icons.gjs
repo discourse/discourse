@@ -27,16 +27,16 @@ export default class Icons extends Component {
 
   <template>
     <ul class="icons d-header-icons">
-      {{#each _extraHeaderIcons as |icon|}}
-        {{#if (this._isStringType icon)}}
-          <MountWidget @widget={{icon}} />
+      {{#each _extraHeaderIcons as |Icon|}}
+        {{#if (this._isStringType Icon)}}
+          <MountWidget @widget={{Icon}} />
         {{else}}
-          {{#with
+          {{#let
             (component PanelWrapper panelElement=@panelElement)
             as |panelWrapper|
           }}
-            <icon @panelWrapper={{panelWrapper}} />
-          {{/with}}
+            <Icon @panelWrapper={{panelWrapper}} />
+          {{/let}}
         {{/if}}
       {{/each}}
 

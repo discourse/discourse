@@ -15,11 +15,11 @@ export default class LegacyHeaderIconShim extends Component {
   }
 
   <template>
-    {{#with
+    {{#let
       (component PanelWrapper panelElement=this.panelElement)
       as |panelWrapper|
     }}
       <@component @panelWrapper={{panelWrapper}} />
-    {{/with}}
+    {{/let}}
   </template>
 }
