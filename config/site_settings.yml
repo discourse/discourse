@@ -2874,6 +2874,10 @@ uncategorized:
     client: true
     default: true
 
+  use_live_caches:
+    default: false
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
