@@ -23,19 +23,19 @@ class Stylesheet::Manager
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/theme/)
   end
 
   def self.clear_color_scheme_cache!
-    cache.hash.keys.select { |k| k =~ /color_definitions/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/color_definitions/)
   end
 
   def self.clear_core_cache!(targets)
-    cache.hash.keys.select { |k| k =~ /#{targets.join("|")}/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/#{targets.join("|")}/)
   end
 
   def self.clear_plugin_cache!(plugin)
-    cache.hash.keys.select { |k| k =~ /#{plugin}/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/#{plugin}/)
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)
