@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 class ThemeSettingsObjectValidator
+  class ThemeSettingsObjectErrors
+    def initialize
+      @errors = []
+    end
+
+    def add_error(key, i18n_opts = {})
+      @errors << ThemeSettingsObjectError.new(key, i18n_opts)
+    end
+
+    def full_messages
+      @errors.map(&:error_message)
+    end
+  end
+
+  class ThemeSettingsObjectError
+    def initialize(key, i18n_opts = {})
+      @key = key
+      @i18n_opts = i18n_opts
+    end
+
+    def error_message
+      I18n.t("themes.settings_errors.objects.#{@key}", @i18n_opts)
+    end
+  end
+
   def initialize(schema:, object:, valid_category_ids: nil)
     @object = object
     @schema_name = schema[:name]
@@ -60,17 +85,14 @@ class ThemeSettingsObjectValidator
       when "enum"
         property_attributes[:choices].include?(value)
       else
-        add_error(property_name, I18n.t("themes.settings_errors.objects.invalid_type", type:))
+        add_error(property_name, :invalid_type, type:)
         return false
       end
 
     if is_value_valid
       true
     else
-      add_error(
-        property_name,
-        I18n.t("themes.settings_errors.objects.not_valid_#{type}_value", property_attributes),
-      )
+      add_error(property_name, "not_valid_#{type}_value", property_attributes)
       false
     end
   end
@@ -83,52 +105,32 @@ class ThemeSettingsObjectValidator
     case type
     when "category"
       if !valid_category_ids.include?(value)
-        add_error(property_name, I18n.t("themes.settings_errors.objects.not_valid_category_value"))
+        add_error(property_name, :not_valid_category_value)
         return false
       end
     when "string"
       if (min = validations&.dig(:min_length)) && value.length < min
-        add_error(
-          property_name,
-          I18n.t("themes.settings_errors.objects.string_value_not_valid_min", min:),
-        )
-
+        add_error(property_name, :string_value_not_valid_min, min:)
         return false
       end
 
       if (max = validations&.dig(:max_length)) && value.length > max
-        add_error(
-          property_name,
-          I18n.t("themes.settings_errors.objects.string_value_not_valid_max", max: max),
-        )
-
+        add_error(property_name, :string_value_not_valid_max, max:)
         return false
       end
 
       if validations&.dig(:url) && !value.match?(URI.regexp)
-        add_error(
-          property_name,
-          I18n.t("themes.settings_errors.objects.string_value_not_valid_url"),
-        )
-
+        add_error(property_name, :string_value_not_valid_url)
         return false
       end
     when "integer", "float"
       if (min = validations&.dig(:min)) && value < min
-        add_error(
-          property_name,
-          I18n.t("themes.settings_errors.objects.number_value_not_valid_min", min:),
-        )
-
+        add_error(property_name, :number_value_not_valid_min, min:)
         return false
       end
 
       if (max = validations&.dig(:max)) && value > max
-        add_error(
-          property_name,
-          I18n.t("themes.settings_errors.objects.number_value_not_valid_max", max:),
-        )
-
+        add_error(property_name, :number_value_not_valid_max, max:)
         return false
       end
     end
@@ -138,16 +140,16 @@ class ThemeSettingsObjectValidator
 
   def is_property_present?(property_name)
     if @object[property_name].nil?
-      add_error(property_name, I18n.t("themes.settings_errors.objects.required"))
+      add_error(property_name, :required)
       false
     else
       true
     end
   end
 
-  def add_error(property_name, error)
-    @errors[property_name] ||= []
-    @errors[property_name] << error
+  def add_error(property_name, key, i18n_opts = {})
+    @errors[property_name] ||= ThemeSettingsObjectErrors.new
+    @errors[property_name].add_error(key, i18n_opts)
   end
 
   def valid_category_ids
