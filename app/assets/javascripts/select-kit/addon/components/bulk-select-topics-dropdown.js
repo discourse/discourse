@@ -108,7 +108,6 @@ export default DropdownSelectBoxComponent.extend({
       if (visible) {
         return visible({
           topics: this.bulkSelectHelper.selected,
-          // category: this.args.model.category,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
         });
@@ -118,130 +117,62 @@ export default DropdownSelectBoxComponent.extend({
     });
   },
 
+  showBulkTopicActionsModal(actionName, title, opts = {}) {
+    let allowSilent = false;
+    if (opts.allowSilent === true) {
+      allowSilent = true;
+    }
+    this.modal.show(BulkTopicActions, {
+      model: {
+        action: actionName,
+        title: i18n(`topics.bulk.${title}`),
+        bulkSelectHelper: this.bulkSelectHelper,
+        refreshClosure: () => this.router.refresh(),
+        allowSilent,
+      },
+    });
+  },
+
   @action
   onSelect(id) {
     switch (id) {
       case "update-category":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "update-category",
-            title: i18n("topics.bulk.change_category"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "change_category");
         break;
       case "update-notifications":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "update-notifications",
-            title: i18n("topics.bulk.notification_level"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "notification_level");
         break;
       case "close-topics":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "close",
-            title: i18n("topics.bulk.close_topics"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-            allowSilent: true,
-          },
+        this.showBulkTopicActionsModal("close", "close_topics", {
+          allowSilent: true,
         });
         break;
       case "archive-topics":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "archive",
-            title: i18n("topics.bulk.archive_topics"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal("archive", "archive_topics");
         break;
       case "unlist-topics":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "unlist",
-            title: i18n("topics.bulk.unlist_topics"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal("unlist", "unlist_topics");
         break;
       case "relist-topics":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "relist",
-            title: i18n("topics.bulk.relist_topics"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal("relist", "relist_topics");
         break;
       case "append-tags":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "append-tags",
-            title: i18n("topics.bulk.choose_append_tags"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "choose_append_tags");
         break;
       case "replace-tags":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "replace-tags",
-            title: i18n("topics.bulk.change_tags"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-            initialAction: "set-component",
-          },
-        });
+        this.showBulkTopicActionsModal(id, "change_tags");
         break;
       case "remove-tags":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "remove-tags",
-            title: i18n("topics.bulk.remove_tags"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "remove_tags");
         break;
       case "delete-topics":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "delete",
-            title: i18n("topics.bulk.delete"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal("delete", "delete");
         break;
       case "reset-bump-dates":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "reset-bump-dates",
-            title: i18n("topics.bulk.reset_bump_dates"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "reset_bump_dates");
         break;
       case "defer":
-        this.modal.show(BulkTopicActions, {
-          model: {
-            action: "defer",
-            title: i18n("topics.bulk.defer"),
-            bulkSelectHelper: this.bulkSelectHelper,
-            refreshClosure: () => this.router.refresh(),
-          },
-        });
+        this.showBulkTopicActionsModal(id, "defer");
         break;
     }
   },

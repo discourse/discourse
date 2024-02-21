@@ -19,10 +19,10 @@ export default class BulkTopicActions extends Component {
   @service router;
   @tracked activeComponent = null;
   @tracked tags = [];
+  @tracked categoryId
 
-  categoryId = 0;
   notificationLevelId = null;
-  @empty("notificationLevelId") disabled;
+
   constructor() {
     super(...arguments);
 
@@ -41,7 +41,7 @@ export default class BulkTopicActions extends Component {
     try {
       return this._processChunks(operation);
     } catch {
-      this.dialog.alert(i18n.t("generic_error"));
+      this.dialog.alert(i18n("generic_error"));
     } finally {
       this.loading = false;
       this.processedTopicCount = 0;
@@ -206,9 +206,14 @@ export default class BulkTopicActions extends Component {
   get notificationLevels() {
     return topicLevels.map((level) => ({
       id: level.id.toString(),
-      name: i18n.t(`topic.notifications.${level.key}.title`),
-      description: i18n.t(`topic.notifications.${level.key}.description`),
+      name: i18n(`topic.notifications.${level.key}.title`),
+      description: i18n(`topic.notifications.${level.key}.description`),
     }));
+  }
+
+  @action
+  onCategoryChange(categoryId) {
+    this.categoryId = categoryId;
   }
 
   <template>
@@ -229,7 +234,7 @@ export default class BulkTopicActions extends Component {
 
         {{#if this.isCategoryAction}}
           <p>
-            <CategoryChooser @value={{this.categoryId}} />
+            <CategoryChooser @value={{this.categoryId}}  @onChange={{this.onCategoryChange}}/>
           </p>
         {{/if}}
 
