@@ -61,7 +61,6 @@ after_initialize do
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
 
     Guardian.prepend Chat::GuardianExtensions
-    Notification.prepend Chat::NotificationExtension
     UserNotifications.prepend Chat::UserNotificationsExtension
     UserOption.prepend Chat::UserOptionExtension
     Category.prepend Chat::CategoryExtension
