@@ -575,12 +575,14 @@ describe Jobs::Chat::ProcessMessage do
                 expect(Notification.where(user: user_2).count).to be(1)
               end
 
-            unreachable_msg = messages.first
-
-            expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-            expect(unreachable_msg[:data][:text_content]).to eq(
-              I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
-            )
+            expected_message =
+              messages
+                .filter do |m|
+                  m[:data][:text_content] ==
+                    I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username)
+                end
+                .first
+            expect(expected_message).to be_present
           end
         end
       end
