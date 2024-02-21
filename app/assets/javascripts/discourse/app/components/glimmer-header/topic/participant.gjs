@@ -3,8 +3,8 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import icon from "discourse-common/helpers/d-icon";
 import avatar from "discourse/helpers/bound-avatar-template";
+import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import eq from "truth-helpers/helpers/eq";
 
