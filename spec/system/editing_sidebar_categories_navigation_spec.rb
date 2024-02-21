@@ -55,7 +55,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_no_reset_to_defaults_button
 
       expect(modal).to have_categories(
-        [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
       )
 
       modal
@@ -165,13 +165,13 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal.filter("subcategory")
 
     expect(modal).to have_categories(
-      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+      [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
     )
 
     modal.filter("2")
 
     expect(modal).to have_categories(
-      [category, category_subcategory2, category2, category2_subcategory],
+      [category2, category2_subcategory, category, category_subcategory2],
     )
 
     modal.filter("someinvalidterm")
@@ -190,7 +190,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal = sidebar.click_edit_categories_button
     modal.filter_by_selected
 
-    expect(modal).to have_categories([category, category_subcategory, category2])
+    expect(modal).to have_categories([category2, category, category_subcategory])
     expect(modal).to have_checkbox(category, disabled: true)
     expect(modal).to have_checkbox(category_subcategory)
     expect(modal).to have_checkbox(category2)
@@ -215,7 +215,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal.filter_by_all
 
     expect(modal).to have_categories(
-      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+      [category, category_subcategory2, category_subcategory, category2, category2_subcategory],
     )
 
     expect(modal).to have_checkbox(category)
@@ -294,13 +294,13 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
       expect(modal).to have_categories(
         [
-          category,
-          category_subcategory,
-          category_subcategory_subcategory2,
-          category_subcategory2,
           category2,
           category2_subcategory,
           category2_subcategory_subcategory,
+          category,
+          category_subcategory2,
+          category_subcategory,
+          category_subcategory_subcategory2,
         ],
       )
     end

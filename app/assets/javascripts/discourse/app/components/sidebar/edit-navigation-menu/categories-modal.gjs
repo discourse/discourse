@@ -72,8 +72,6 @@ export default class extends Component {
 
     if (this.siteSettings.fixed_category_positions) {
       allCategories.sort((a, b) => a.position - b.position);
-    } else {
-      allCategories.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     this.filteredCategoriesGroupings = splitWhere(
