@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
+  # fixme andrei drop
   module NotificationExtension
     extend ActiveSupport::Concern
 

@@ -93,6 +93,7 @@ module Jobs
       end
 
       def notify(mention, mentioned_user)
+        return if @sender == mentioned_user
         return if mentioned_user.suspended?
         return unless user_participate_in_channel?(mentioned_user)
         return if mentioned_user.ignores?(@sender) || mentioned_user.mutes?(@sender) # fixme andrei take care of n + 1's
@@ -100,6 +101,14 @@ module Jobs
 
         create_notification!(mention, mentioned_user)
         ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
+
+        # fixme andrei take care of N + 1
+        # fixme andrei introduce MobileNotifier?
+        payload = ::Chat::Mention.notification_payload(mention, mentioned_user)
+        membership = mention.chat_message.chat_channel.membership_for(mentioned_user)
+        if !membership.mobile_notifications_never? && !membership.muted?
+          ::PostAlerter.push_notification(mentioned_user, payload)
+        end
       end
 
       # fixme andrei move into Notification
