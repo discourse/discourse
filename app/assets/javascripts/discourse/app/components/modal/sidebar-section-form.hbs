@@ -122,10 +122,14 @@
         <label class="checkbox-label">
           {{#if this.transformedModel.sectionType}}
             <DTooltip
-              @icon="check-square"
               @content={{i18n "sidebar.sections.custom.always_public"}}
               class="always-public-tooltip"
-            />
+            >
+              <:trigger>
+                {{d-icon "check-square"}}
+                <span>{{i18n "sidebar.sections.custom.public"}}</span>
+              </:trigger>
+            </DTooltip>
           {{else}}
             <Input
               @type="checkbox"
@@ -133,8 +137,8 @@
               class="mark-public"
               disabled={{this.transformedModel.sectionType}}
             />
+            <span>{{i18n "sidebar.sections.custom.public"}}</span>
           {{/if}}
-          <span>{{i18n "sidebar.sections.custom.public"}}</span>
         </label>
       </div>
     {{/if}}
