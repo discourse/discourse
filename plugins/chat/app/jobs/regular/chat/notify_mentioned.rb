@@ -42,7 +42,8 @@ module Jobs
       def notify_about_users_not_participating_in_channel
         users =
           @all_mentioned_users.filter do |user|
-            user.guardian.can_join_chat_channel?(@channel) && !user_participate_in_channel?(user)
+            user.guardian.can_join_chat_channel?(@channel) && !user_participate_in_channel?(user) &&
+              !user.mutes?(@sender) && !user.ignores?(@sender)
           end
         return if users.empty?
 
