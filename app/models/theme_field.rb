@@ -310,6 +310,7 @@ class ThemeField < ActiveRecord::Base
     return unless self.name == "yaml"
 
     errors = []
+
     begin
       ThemeSettingsParser
         .new(self)
@@ -325,16 +326,21 @@ class ThemeField < ActiveRecord::Base
             end
           end
 
-          errors << I18n.t("#{translation_key}.default_value_missing", name: name) if default.nil?
-
-          if (min = opts[:min]) && (max = opts[:max])
-            unless ThemeSetting.value_in_range?(default, (min..max), type)
-              errors << I18n.t("#{translation_key}.default_out_range", name: name)
-            end
+          unless ThemeSettingsValidator.is_value_present?(default)
+            errors << I18n.t("#{translation_key}.default_value_missing", name: name)
+            next
           end
 
-          unless ThemeSetting.acceptable_value_for_type?(default, type)
+          unless ThemeSettingsValidator.is_valid_value_type?(default, type)
             errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
+          end
+
+          if (setting_errors = ThemeSettingsValidator.validate_value(default, type, opts)).present?
+            errors << I18n.t(
+              "#{translation_key}.default_value_not_valid",
+              name: name,
+              error_messages: setting_errors.join(" "),
+            )
           end
         end
     rescue ThemeSettingsParser::InvalidYaml => e

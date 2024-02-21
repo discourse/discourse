@@ -78,29 +78,11 @@ class ThemeSettingsManager
     record
   end
 
-  def is_valid_value?(new_value)
-    true
-  end
-
-  def invalid_value_error_message
-    name = type == @types[:integer] || type == @types[:float] ? "number" : type_name
-    primary_key = "themes.settings_errors.#{name}_value_not_valid"
-
-    secondary_key = primary_key
-    secondary_key += "_min" if has_min?
-    secondary_key += "_max" if has_max?
-
-    translation = I18n.t(primary_key)
-    return translation if secondary_key == primary_key
-
-    translation += " #{I18n.t(secondary_key, min: @opts[:min], max: @opts[:max])}"
-    translation
-  end
-
   def ensure_is_valid_value!(new_value)
-    unless is_valid_value?(new_value)
-      raise Discourse::InvalidParameters.new invalid_value_error_message
-    end
+    return if new_value.nil?
+
+    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts)
+    raise Discourse::InvalidParameters.new error_messages.join(" ") if error_messages.present?
   end
 
   def has_min?
