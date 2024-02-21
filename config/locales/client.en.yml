@@ -226,7 +226,7 @@ en:
     broken_plugin_alert: "Caused by plugin '%{name}'"
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes (<a target='_blank' href='https://meta.discourse.org/t/287211'>more info</a>)."
+      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes (<em>%{id}</em>)."
       theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identified plugin: '%{name}'"
 
