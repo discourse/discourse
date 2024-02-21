@@ -131,7 +131,7 @@ class AdminDashboardData
 
   def self.register_default_scheduled_problem_checks
     add_scheduled_problem_check(:group_smtp_credentials, ProblemCheck::GroupEmailCredentials) do
-      problems = ProblemCheck::GroupEmailCredentials.run
+      problems = ProblemCheck::GroupEmailCredentials.call
       problems.map do |p|
         problem_message =
           I18n.t(

@@ -8,11 +8,11 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
   fab!(:group2) { Fabricate(:smtp_group) }
   fab!(:group3) { Fabricate(:imap_group) }
 
-  describe "#run" do
+  describe "#call" do
     it "does nothing if SMTP is disabled for the site" do
       expect_no_validate_any
       SiteSetting.enable_smtp = false
-      expect(described_class.run).to eq([])
+      expect(described_class.new.call).to eq([])
     end
 
     context "with smtp and imap enabled for the site" do
@@ -25,7 +25,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
         expect_no_validate_any
         group2.update!(smtp_enabled: false)
         group3.update!(smtp_enabled: false, imap_enabled: false)
-        expect(described_class.run).to eq([])
+        expect(described_class.new.call).to eq([])
       end
 
       it "returns an error message and the group ID if the group's SMTP settings error" do
@@ -37,7 +37,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .at_least_once
         EmailSettingsValidator.stubs(:validate_imap).returns(true)
 
-        expect(described_class.run).to eq(
+        expect(described_class.new.call).to eq(
           [
             {
               group_full_name: group2.full_name,
@@ -56,7 +56,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .raises(Net::IMAP::NoResponseError.new(stub(data: stub(text: "Invalid credentials"))))
           .once
 
-        expect(described_class.run).to eq(
+        expect(described_class.new.call).to eq(
           [
             {
               group_full_name: group3.full_name,
@@ -73,7 +73,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
         EmailSettingsValidator.stubs(:validate_smtp).returns(true)
         EmailSettingsValidator.expects(:validate_imap).never
 
-        expect(described_class.run).to eq([])
+        expect(described_class.new.call).to eq([])
       end
     end
   end
