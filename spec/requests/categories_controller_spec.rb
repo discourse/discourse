@@ -1274,6 +1274,27 @@ RSpec.describe CategoriesController do
       end
     end
 
+    context "with order" do
+      fab!(:category1) { Fabricate(:category, name: "Category Ordered", parent_category: category) }
+      fab!(:category2) { Fabricate(:category, name: "Ordered Category", parent_category: category) }
+      fab!(:category3) { Fabricate(:category, name: "Category Ordered") }
+      fab!(:category4) { Fabricate(:category, name: "Ordered Category") }
+
+      before do
+        [category1, category2, category3, category4].each do |c|
+          SearchIndexer.index(c, force: true)
+        end
+      end
+
+      it "returns in correct order" do
+        get "/categories/search.json", params: { term: "ordered" }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+          [category4.id, category2.id, category3.id, category1.id],
+        )
+      end
+    end
+
     it "returns user fields" do
       sign_in(admin)
 

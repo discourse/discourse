@@ -394,6 +394,16 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
+    # Prioritize categories that start with the term, then top-level
+    # categories, then subcategories
+    categories =
+      categories.to_a.sort_by do |category|
+        [
+          category.name.downcase.starts_with?(term) ? 0 : 1,
+          category.parent_category_id.blank? ? 0 : 1,
+        ]
+      end
+
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
 
