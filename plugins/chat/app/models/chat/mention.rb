@@ -25,7 +25,7 @@ module Chat
 
       data[:chat_thread_id] = message.thread_id if message.in_thread?
 
-      if channel.direct_message_channel?
+      unless channel.direct_message_channel?
         data[:chat_channel_title] = channel.title(mentioned_user)
         data[:chat_channel_slug] = channel.slug
       end
