@@ -120,6 +120,60 @@ class AdminDashboardData
     end
   end
 
+<<<<<<< HEAD
+=======
+  def self.register_default_scheduled_problem_checks
+    add_scheduled_problem_check(:group_smtp_credentials, ProblemCheck::GroupEmailCredentials) do
+      problems = ProblemCheck::GroupEmailCredentials.call
+      problems.map do |p|
+        problem_message =
+          I18n.t(
+            "dashboard.group_email_credentials_warning",
+            {
+              base_path: Discourse.base_path,
+              group_name: p[:group_name],
+              group_full_name: p[:group_full_name],
+              error: p[:message],
+            },
+          )
+        Problem.new(
+          problem_message,
+          priority: "high",
+          identifier: "group_#{p[:group_id]}_email_credentials",
+        )
+      end
+    end
+  end
+
+  def self.execute_scheduled_checks
+    problem_scheduled_check_blocks.keys.each do |check_identifier|
+      Jobs.enqueue(:problem_check, check_identifier: check_identifier.to_s)
+    end
+  end
+
+  def self.execute_scheduled_check(identifier)
+    check = problem_scheduled_check_blocks[identifier]
+
+    problems = instance_exec(&check)
+
+    yield(problems) if block_given? && problems.present?
+
+    Array
+      .wrap(problems)
+      .compact
+      .each do |problem|
+        next if !problem.is_a?(Problem)
+
+        add_found_scheduled_check_problem(problem)
+      end
+  rescue StandardError => err
+    Discourse.warn_exception(
+      err,
+      message: "A scheduled admin dashboard problem check (#{identifier}) errored.",
+    )
+  end
+
+>>>>>>> 11ee557358 (DEV: Introduce a ProblemCheck base class)
   ##
   # We call this method in the class definition below
   # so all of the problem checks in this class are registered on

@@ -37,6 +37,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .at_least_once
         EmailSettingsValidator.stubs(:validate_imap).returns(true)
 
+<<<<<<< HEAD
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
             identifier: "group_#{group2.id}_email_credentials",
@@ -44,6 +45,17 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
             message:
               "There was an issue with the email credentials for the group <a href=\"/g/#{group2.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the SMTP credentials provided, check the username and password and try again.",
           ),
+=======
+        expect(described_class.new.call).to eq(
+          [
+            {
+              group_full_name: group2.full_name,
+              group_name: group2.name,
+              group_id: group2.id,
+              message: I18n.t("email_settings.smtp_authentication_error"),
+            },
+          ],
+>>>>>>> 11ee557358 (DEV: Introduce a ProblemCheck base class)
         )
       end
 
@@ -54,6 +66,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .raises(Net::IMAP::NoResponseError.new(stub(data: stub(text: "Invalid credentials"))))
           .once
 
+<<<<<<< HEAD
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
             identifier: "group_#{group3.id}_email_credentials",
@@ -61,6 +74,17 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
             message:
               "There was an issue with the email credentials for the group <a href=\"/g/#{group3.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the IMAP credentials provided, check the username and password and try again.",
           ),
+=======
+        expect(described_class.new.call).to eq(
+          [
+            {
+              group_full_name: group3.full_name,
+              group_name: group3.name,
+              group_id: group3.id,
+              message: I18n.t("email_settings.imap_authentication_error"),
+            },
+          ],
+>>>>>>> 11ee557358 (DEV: Introduce a ProblemCheck base class)
         )
       end
 
