@@ -2,6 +2,11 @@
 
 module Chat
   class MentionNotices
+    def self.global_mentions_disabled
+      warning = I18n.t("chat.mention_warning.global_mentions_disallowed")
+      { text_content: warning }
+    end
+
     def self.groups_have_mentions_disabled(groups)
       warning =
         warning_text(

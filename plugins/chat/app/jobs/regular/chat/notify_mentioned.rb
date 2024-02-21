@@ -19,6 +19,7 @@ module Jobs
         notify_about_users_who_cannot_join_chanel
         notify_about_groups_with_to_many_members
         notify_about_groups_with_disabled_mentions
+        notify_if_global_mentions_are_disabled
       end
 
       private
@@ -58,6 +59,14 @@ module Jobs
 
         notice = ::Chat::MentionNotices.users_cannot_join_channel(users)
         publish_notice(notice)
+      end
+
+      def notify_if_global_mentions_are_disabled
+        return if !@parsed_mentions.has_global_mention && !@parsed_mentions.has_here_mention
+
+        unless @channel.allow_channel_wide_mentions
+          publish_notice(::Chat::MentionNotices.global_mentions_disabled)
+        end
       end
 
       def notify_mentioned_users
