@@ -108,7 +108,9 @@ export default class SearchMenu extends Component {
 
   @action
   close() {
-    this.args?.onClose?.();
+    if (this.args?.onClose) {
+      return this.args.onClose();
+    }
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
