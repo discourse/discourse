@@ -145,9 +145,12 @@ module Jobs
       end
 
       # fixme andrei make it user.participate_in?(@channel)
+      # fixme andrei make logic clearer
       def user_participate_in_channel?(user)
         membership = @channel.membership_for(user)
-        membership.present? && membership.following
+        return false if membership.blank?
+        return true if @channel.direct_message_channel?
+        membership.following
       end
     end
   end
