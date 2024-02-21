@@ -7,6 +7,11 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2024-02-21
+
+- Added `renderBeforeWrapperOutlet` which is used for rendering components before the content of wrapper plugin outlets 
+- Added `renderAfterWrapperOutlet` which is used for rendering components after the content of wrapper plugin outlets 
+
 ## [1.25.0] - 2024-02-05
 
 - Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper that appears on hover of an uploaded image.
