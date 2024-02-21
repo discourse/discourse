@@ -5,8 +5,8 @@ import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
 import MountWidget from "../mount-widget";
 import Dropdown from "./dropdown";
-import UserDropdown from "./user-dropdown";
 import PanelWrapper from "./panel-wrapper";
+import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
 export function addToHeaderIcons(icon) {
