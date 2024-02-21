@@ -72,7 +72,6 @@ module Jobs
           notify(mention, mentioned_user)
         end
 
-        # fixme andrei also take care of the ignore_channel_wide_mention user option
         return unless @channel.allow_channel_wide_mentions
 
         @parsed_mentions.global_mentions.each do |mentioned_user|
@@ -87,6 +86,7 @@ module Jobs
       def notify(mention, mentioned_user)
         return unless user_participate_in_channel?(mentioned_user)
         return if mentioned_user.ignores?(@sender) || mentioned_user.mutes?(@sender) # fixme andrei take care of n + 1's
+        return if mentioned_user.user_option.ignore_channel_wide_mention # fixme andrei take care of N + 1
 
         create_notification!(mention, mentioned_user)
         ::Chat::DesktopNotifier.notify_mentioned(mention, mentioned_user)
