@@ -1003,17 +1003,15 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       it "works for push notifications" do
-        PostAlerter.expects(:push_notification).with(
-          user_2,
-          {
-            notification_type: Notification.types[:chat_mention],
-            username: user_1.username,
-            tag: Chat::Notifier.push_notification_tag(:mention, public_channel.id),
-            excerpt: message.push_notification_excerpt,
-            post_url: "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
-            translated_title: payload_translated_title,
-          },
-        )
+        expected_payload = {
+          notification_type: Notification.types[:chat_mention],
+          username: user_1.username,
+          tag: Chat::Notifier.push_notification_tag(:mention, public_channel.id),
+          excerpt: message.push_notification_excerpt,
+          post_url: "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
+          translated_title: payload_translated_title,
+        }
+        PostAlerter.expects(:push_notification).with(user_2, expected_payload)
 
         described_class.new.execute(chat_message_id: message.id)
       end
