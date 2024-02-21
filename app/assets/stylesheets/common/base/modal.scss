@@ -38,9 +38,12 @@
     padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
-    .modal-close .d-icon {
-      font-size: var(--font-up-2);
-      color: var(--primary-high);
+    .modal-close {
+      margin-left: auto;
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-high);
+      }
     }
   }
 
