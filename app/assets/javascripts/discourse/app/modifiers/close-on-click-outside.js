@@ -8,15 +8,11 @@ export default class CloseOnClickOutside extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(
-    element,
-    [closeFn, { targetHTML, targetSelector, secondaryTargetSelector }]
-  ) {
+  modify(element, [closeFn, { targetSelector, secondaryTargetSelector }]) {
     this.closeFn = closeFn;
     this.element = element;
     this.targetSelector = targetSelector;
     this.secondaryTargetSelector = secondaryTargetSelector;
-    this.targetHTML = targetHTML;
 
     document.addEventListener("pointerdown", this.check, {
       passive: true,
@@ -26,13 +22,6 @@ export default class CloseOnClickOutside extends Modifier {
   @bind
   check(event) {
     if (this.element.contains(event.target)) {
-      return;
-    }
-
-    if (
-      this.targetHTML instanceof HTMLElement &&
-      this.targetHTML.contains(event.target)
-    ) {
       return;
     }
 
