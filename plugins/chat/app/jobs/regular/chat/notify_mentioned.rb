@@ -72,6 +72,9 @@ module Jobs
           notify(mention, mentioned_user)
         end
 
+        # fixme andrei also take care of the ignore_channel_wide_mention user option
+        return unless @channel.allow_channel_wide_mentions
+
         @parsed_mentions.global_mentions.each do |mentioned_user|
           notify(@message.all_mention, mentioned_user)
         end
