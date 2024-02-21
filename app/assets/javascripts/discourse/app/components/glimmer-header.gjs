@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
@@ -148,11 +147,6 @@ export default class GlimmerHeader extends Component {
     this.header.userVisible = !this.header.userVisible;
     this.toggleBodyScrolling(this.header.userVisible);
     this.args.animateMenu();
-
-    // auto focus on first button in dropdown
-    schedule("afterRender", () =>
-      document.querySelector(".user-menu button")?.focus()
-    );
   }
 
   @action
@@ -164,11 +158,6 @@ export default class GlimmerHeader extends Component {
       this.header.hamburgerVisible = !this.header.hamburgerVisible;
       this.toggleBodyScrolling(this.header.hamburgerVisible);
       this.args.animateMenu();
-
-      schedule("afterRender", () => {
-        // Remove focus from hamburger toggle button
-        document.querySelector("#toggle-hamburger-menu")?.blur();
-      });
     }
   }
 
