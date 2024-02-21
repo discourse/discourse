@@ -1153,7 +1153,7 @@ describe Jobs::Chat::ProcessMessage do
 
         include_examples "creates different notifications with basic data"
 
-        it "includes here mention specific data to core notifications" do
+        it "includes direct mention specific data to core notifications" do
           created_notification = run_job_and_get_last_core_notification(message: message)
           data_hash = created_notification.data_hash
 
