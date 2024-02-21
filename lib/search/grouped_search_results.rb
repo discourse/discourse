@@ -14,6 +14,7 @@ class Search
       :type_filter,
       :posts,
       :categories,
+      :extra_categories,
       :users,
       :tags,
       :groups,
@@ -25,6 +26,7 @@ class Search
       :more_full_page_results,
       :error,
       :use_pg_headlines_for_excerpt,
+      :can_lazy_load_categories,
     )
 
     attr_accessor :search_log_id
@@ -38,7 +40,8 @@ class Search
       blurb_length: nil,
       blurb_term: nil,
       is_header_search: false,
-      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt
+      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt,
+      can_lazy_load_categories: false
     )
       @type_filter = type_filter
       @term = term
@@ -47,12 +50,14 @@ class Search
       @blurb_length = blurb_length || BLURB_LENGTH
       @posts = []
       @categories = []
+      @extra_categories = Set.new
       @users = []
       @tags = []
       @groups = []
       @error = nil
       @is_header_search = is_header_search
       @use_pg_headlines_for_excerpt = use_pg_headlines_for_excerpt
+      @can_lazy_load_categories = can_lazy_load_categories
     end
 
     def error=(error)
@@ -100,6 +105,21 @@ class Search
         instance_variable_set("@more_#{type}".to_sym, true)
       else
         (self.public_send(type)) << object
+      end
+
+      if can_lazy_load_categories
+        category =
+          case type
+          when "posts"
+            object.topic.category
+          when "topics"
+            object.category
+          end
+
+        if category
+          extra_categories << category.parent_category if category.parent_category
+          extra_categories << category
+        end
       end
     end
 
