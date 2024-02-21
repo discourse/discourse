@@ -140,7 +140,7 @@ export default class Info extends Component {
                 {{#if @topic.category.parentCategory}}
                   {{#if
                     (and
-                      (gt this.siteSettings.max_category_nesting 2)
+                      (@topic.parentCategory.parentCategory)
                       (not this.site.mobileView)
                     )
                   }}
