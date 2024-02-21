@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import icon from "discourse-common/helpers/d-icon";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
+import avatar from "discourse/helpers/bound-avatar-template";
 import getURL from "discourse-common/lib/get-url";
 import eq from "truth-helpers/helpers/eq";
 
@@ -19,16 +19,6 @@ export default class Participant extends Component {
 
   get typeClass() {
     return `trigger-${this.args.type}-card`;
-  }
-
-  get avatarImage() {
-    return htmlSafe(
-      avatarImg({
-        avatarTemplate: this.args.user.avatar_template,
-        size: "tiny",
-        title: this.args.username,
-      })
-    );
   }
 
   @action
@@ -51,7 +41,7 @@ export default class Participant extends Component {
         title={{@username}}
       >
         {{#if (eq @type "user")}}
-          {{this.avatarImage}}
+          {{avatar @user.avatar_template "tiny" (hash title=@username)}}
         {{else}}
           <span>
             {{icon "users"}}
