@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { empty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
@@ -19,7 +18,7 @@ export default class BulkTopicActions extends Component {
   @service router;
   @tracked activeComponent = null;
   @tracked tags = [];
-  @tracked categoryId
+  @tracked categoryId;
 
   notificationLevelId = null;
 
@@ -234,7 +233,10 @@ export default class BulkTopicActions extends Component {
 
         {{#if this.isCategoryAction}}
           <p>
-            <CategoryChooser @value={{this.categoryId}}  @onChange={{this.onCategoryChange}}/>
+            <CategoryChooser
+              @value={{this.categoryId}}
+              @onChange={{this.onCategoryChange}}
+            />
           </p>
         {{/if}}
 
