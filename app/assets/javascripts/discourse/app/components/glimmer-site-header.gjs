@@ -3,8 +3,7 @@ import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { cancel } from "@ember/runloop";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
@@ -28,6 +27,7 @@ export default class GlimmerSiteHeader extends Component {
   @tracked headerWrap = null;
   @tracked pxClosed = null;
   @tracked headerElement = null;
+  docking;
   @tracked _dockedHeader = false;
   @tracked _swipeMenuOrigin = null;
   @tracked _swipeEvents = null;
@@ -35,7 +35,6 @@ export default class GlimmerSiteHeader extends Component {
   @tracked _resizeObserver = null;
   @tracked _docAt = null;
   @tracked _animate = false;
-  docking;
 
   constructor() {
     super(...arguments);

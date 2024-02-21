@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class SidebarToggle extends Component {
-  @action toggleWithBlur(e) {
+  @action
+  toggleWithBlur(e) {
     this.args.toggleHamburger();
     // remove the focus of the header dropdown button after clicking
     e.target.tagName.toLowerCase() === "button"
