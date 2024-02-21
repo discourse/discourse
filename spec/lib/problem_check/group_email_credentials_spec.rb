@@ -3,7 +3,7 @@
 require "net/smtp"
 require "net/imap"
 
-RSpec.describe GroupEmailCredentialsCheck do
+RSpec.describe ProblemCheck::GroupEmailCredentials do
   fab!(:group1) { Fabricate(:group) }
   fab!(:group2) { Fabricate(:smtp_group) }
   fab!(:group3) { Fabricate(:imap_group) }
