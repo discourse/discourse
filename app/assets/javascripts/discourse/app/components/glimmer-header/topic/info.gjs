@@ -19,12 +19,6 @@ import FeaturedLink from "./featured-link";
 import Participant from "./participant";
 import Status from "./status";
 
-let _additionalFancyTitleClasses = [];
-
-export function addHeaderFancyTitleClass(className) {
-  _additionalFancyTitleClasses.push(className);
-}
-
 export default class Info extends Component {
   @service currentUser;
   @service site;
