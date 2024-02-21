@@ -12,6 +12,7 @@ import I18n from "discourse-i18n";
 // not being triggered by core or official themes/plugins.
 export const CRITICAL_DEPRECATIONS = [
   /^discourse.modal-controllers$/,
+  /^discourse.bootbox$/,
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
