@@ -3,6 +3,7 @@ import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { cancel } from "@ember/runloop";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
@@ -12,7 +13,7 @@ import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind, debounce } from "discourse-common/utils/decorators";
 import GlimmerHeader from "./glimmer-header";
 
 let _menuPanelClassesToForceDropdown = [];
@@ -22,7 +23,6 @@ export default class GlimmerSiteHeader extends Component {
   @service appEvents;
   @service currentUser;
   @service site;
-  @service docking;
   @service header;
 
   @tracked headerWrap = null;
@@ -35,10 +35,11 @@ export default class GlimmerSiteHeader extends Component {
   @tracked _resizeObserver = null;
   @tracked _docAt = null;
   @tracked _animate = false;
+  docking;
 
   constructor() {
     super(...arguments);
-    this.docking.initializeDockCheck(this.dockCheck);
+    this.docking = new Docking(this.dockCheck);
 
     if (this.currentUser?.staff) {
       document.body.classList.add("staff");
@@ -407,6 +408,7 @@ export default class GlimmerSiteHeader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.docking.destroy();
     this.appEvents.off("user-menu:rendered", this, this.animateMenu);
 
     if (this.dropDownHeaderEnabled) {
@@ -450,6 +452,49 @@ export default class GlimmerSiteHeader extends Component {
       />
     </div>
   </template>
+}
+
+const INITIAL_DELAY_MS = 50;
+const DEBOUNCE_MS = 5;
+class Docking {
+  dockCheck = null;
+  _initialTimer = null;
+  _queuedTimer = null;
+
+  constructor(dockCheck) {
+    this.dockCheck = dockCheck;
+    window.addEventListener("scroll", this.queueDockCheck, { passive: true });
+
+    // dockCheck might happen too early on full page refresh
+    this._initialTimer = discourseLater(
+      this,
+      this._safeDockCheck,
+      INITIAL_DELAY_MS
+    );
+  }
+
+  @debounce(DEBOUNCE_MS)
+  queueDockCheck() {
+    this._queuedTimer = this._safeDockCheck;
+  }
+
+  @action
+  _safeDockCheck() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+    this.dockCheck?.();
+  }
+
+  @action
+  destroy() {
+    if (this._queuedTimer) {
+      cancel(this._queuedTimer);
+    }
+
+    cancel(this._initialTimer);
+    window.removeEventListener("scroll", this.queueDockCheck);
+  }
 }
 
 function menuPanelContainsClass(menuPanel) {
