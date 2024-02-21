@@ -61,14 +61,13 @@ export default class HamburgerDropdownWrapper extends Component {
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}
-      {{(modifier
-        CloseOnClickOutside
+      {{CloseOnClickOutside
         this.clickOutside
         (hash
           targetSelector=".hamburger-panel"
           secondaryTargetSelector=".hamburger-dropdown"
         )
-      )}}
+      }}
     >
       <HamburgerDropdown />
     </div>
