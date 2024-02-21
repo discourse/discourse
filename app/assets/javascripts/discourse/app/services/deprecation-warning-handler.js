@@ -82,7 +82,9 @@ export default class DeprecationWarningHandler extends Service {
   notifyAdmin(id, source) {
     this.#adminWarned = true;
 
-    let notice = I18n.t("critical_deprecation.notice");
+    let notice = I18n.t("critical_deprecation.notice", {
+      id: escapeExpression(id),
+    });
 
     if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
