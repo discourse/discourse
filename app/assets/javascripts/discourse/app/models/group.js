@@ -223,6 +223,7 @@ export default class Group extends RestModel {
   get watchingCategories() {
     if (
       this.site.lazy_load_categories &&
+      this.watching_category_ids &&
       !Category.hasAsyncFoundAll(this.watching_category_ids)
     ) {
       Category.asyncFindByIds(this.watching_category_ids).then(() =>
@@ -244,6 +245,7 @@ export default class Group extends RestModel {
   get trackingCategories() {
     if (
       this.site.lazy_load_categories &&
+      this.tracking_category_ids &&
       !Category.hasAsyncFoundAll(this.tracking_category_ids)
     ) {
       Category.asyncFindByIds(this.tracking_category_ids).then(() =>
@@ -265,6 +267,7 @@ export default class Group extends RestModel {
   get watchingFirstPostCategories() {
     if (
       this.site.lazy_load_categories &&
+      this.watching_first_post_category_ids &&
       !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
     ) {
       Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
@@ -286,6 +289,7 @@ export default class Group extends RestModel {
   get regularCategories() {
     if (
       this.site.lazy_load_categories &&
+      this.regular_category_ids &&
       !Category.hasAsyncFoundAll(this.regular_category_ids)
     ) {
       Category.asyncFindByIds(this.regular_category_ids).then(() =>
@@ -307,6 +311,7 @@ export default class Group extends RestModel {
   get mutedCategories() {
     if (
       this.site.lazy_load_categories &&
+      this.muted_category_ids &&
       !Category.hasAsyncFoundAll(this.muted_category_ids)
     ) {
       Category.asyncFindByIds(this.muted_category_ids).then(() =>
