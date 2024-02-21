@@ -632,9 +632,7 @@ describe Jobs::Chat::ProcessMessage do
               expect(Notification.count).to be(0)
             end
 
-          expect(
-            messages.filter { |m| m.data.with_indifferent_access[:type] == "notice" },
-          ).to be_empty
+          expect(filter_notices_about_mention_without_membership(messages)).to be_empty
         end
 
         it "cannot invite chat user without channel membership if they are muting the user who created the message" do
@@ -648,9 +646,7 @@ describe Jobs::Chat::ProcessMessage do
               expect(Notification.count).to be(0)
             end
 
-          expect(
-            messages.filter { |m| m.data.with_indifferent_access[:type] == "notice" },
-          ).to be_empty
+          expect(filter_notices_about_mention_without_membership(messages)).to be_empty
         end
 
         it "can invite chat user who no longer follows the channel" do
@@ -730,9 +726,7 @@ describe Jobs::Chat::ProcessMessage do
               expect(Notification.where(user: user_3).count).to be(0)
             end
 
-          expect(
-            messages.filter { |m| m.data.with_indifferent_access[:type] == "notice" },
-          ).to be_empty
+          expect(filter_notices_about_mention_without_membership(messages)).to be_empty
         end
 
         it "cannot invite a member of a group who is muting the user who created the message" do
@@ -752,9 +746,7 @@ describe Jobs::Chat::ProcessMessage do
               expect(Notification.where(user: user_3).count).to be(0)
             end
 
-          expect(
-            messages.filter { |m| m.data.with_indifferent_access[:type] == "notice" },
-          ).to be_empty
+          expect(filter_notices_about_mention_without_membership(messages)).to be_empty
         end
       end
 
