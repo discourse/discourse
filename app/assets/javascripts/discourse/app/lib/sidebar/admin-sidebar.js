@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -213,6 +214,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
 
+  @cached
   get sections() {
     const currentUser = getOwnerWithFallback().lookup("service:current-user");
     const siteSettings = getOwnerWithFallback().lookup("service:site-settings");

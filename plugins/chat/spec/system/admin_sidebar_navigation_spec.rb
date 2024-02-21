@@ -14,6 +14,14 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
     visit("/admin")
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat")
   end
+  
+  it "does not duplicate links to enabled plugin admin routes when showing and hiding sidebar" do
+    visit("/admin")
+    expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat", count: 1)
+    find(".header-sidebar-toggle").click
+    find(".header-sidebar-toggle").click
+    expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat", count: 1)
+  end
 
   describe "admin sidebar respects separated and combined sidebar modes" do
     it "reverts to always (separated) mode after entering and leaving admin section" do
