@@ -59,11 +59,6 @@ module Jobs
         publish_notice(notice)
       end
 
-      def warning_text(single:, multiple:, first_identifier:, count:)
-        translation_key = count == 1 ? single : multiple
-        I18n.t(translation_key, first_identifier: first_identifier, count: count - 1)
-      end
-
       def notify_mentioned_users
         # fixme andrei dry up
         @parsed_mentions.direct_mentions.each do |mentioned_user|
