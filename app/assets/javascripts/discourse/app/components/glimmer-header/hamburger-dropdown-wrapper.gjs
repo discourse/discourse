@@ -9,12 +9,12 @@ import HamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 export default class HamburgerDropdownWrapper extends Component {
   @action
-  click(event) {
-    event.preventDefault();
+  click(e) {
+    e.preventDefault();
     if (
-      event.target.closest(".sidebar-section-header-button") ||
-      event.target.closest(".sidebar-section-link-button") ||
-      event.target.closest(".sidebar-section-link")
+      e.target.closest(".sidebar-section-header-button") ||
+      e.target.closest(".sidebar-section-link-button") ||
+      e.target.closest(".sidebar-section-link")
     ) {
       this.args.toggleHamburger();
     }

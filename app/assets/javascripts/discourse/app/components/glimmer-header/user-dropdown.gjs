@@ -19,6 +19,11 @@ export default class UserDropdown extends Component {
     }
     e.preventDefault();
     this.args.toggleUserMenu();
+
+    // remove the focus of the header dropdown button after clicking
+    e.target.tagName.toLowerCase() === "button"
+      ? e.target.blur()
+      : e.target.closest("button").blur();
   }
 
   <template>

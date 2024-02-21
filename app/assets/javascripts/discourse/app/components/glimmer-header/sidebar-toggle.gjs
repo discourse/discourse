@@ -1,20 +1,32 @@
-import DButton from "discourse/components/d-button";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
+import { on } from "@ember/modifier";
+import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 
-const SidebarToggle = <template>
-  <span class="header-sidebar-toggle">
-    <DButton
-      @title="sidebar.title"
-      @icon="bars"
-      class={{concatClass
-        "btn btn-flat btn-sidebar-toggle"
-        (if this.site.narrowDesktopView "narrow-desktop")
-      }}
-      aria-expanded={{if @showSidebar "true" "false"}}
-      aria-controls="d-sidebar"
-      @action={{@toggleHamburger}}
-    />
-  </span>
-</template>;
-
-export default SidebarToggle;
+export default class SidebarToggle extends Component {
+  @action toggleWithBlur(e) {
+    this.args.toggleHamburger();
+    // remove the focus of the header dropdown button after clicking
+    e.target.tagName.toLowerCase() === "button"
+      ? e.target.blur()
+      : e.target.closest("button").blur();
+  }
+  <template>
+    <span class="header-sidebar-toggle">
+      <button
+        title={{i18n "sidebar.title"}}
+        class={{concatClass
+          "btn btn-flat btn-sidebar-toggle no-text btn-icon"
+          (if this.site.narrowDesktopView "narrow-desktop")
+        }}
+        aria-expanded={{if @showSidebar "true" "false"}}
+        aria-controls="d-sidebar"
+        {{on "click" this.toggleWithBlur}}
+      >
+        {{icon "bars"}}
+      </button>
+    </span>
+  </template>
+}
