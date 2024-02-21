@@ -46,46 +46,47 @@
         </span>
 
         <div class="reply-to">
-          {{#unless this.composer.model.viewFullscreen}}
-            <div class="reply-details">
-              <ComposerActionTitle
-                @model={{this.composer.model}}
-                @canWhisper={{this.composer.canWhisper}}
-              />
 
+          <div class="reply-details">
+            <ComposerActionTitle
+              @model={{this.composer.model}}
+              @canWhisper={{this.composer.canWhisper}}
+            />
+
+            {{#unless this.composer.model.viewFullscreen}}
               <PluginOutlet
                 @name="composer-action-after"
                 @outletArgs={{hash model=this.composer.model}}
               />
+            {{/unless}}
 
-              {{#unless this.composer.site.mobileView}}
-                {{#if this.composer.model.unlistTopic}}
-                  <span class="unlist">({{i18n "composer.unlist"}})</span>
-                {{/if}}
-                {{#if this.composer.isWhispering}}
-                  {{#if this.composer.model.noBump}}
-                    <span class="no-bump">{{d-icon "anchor"}}</span>
-                  {{/if}}
-                {{/if}}
-              {{/unless}}
-
-              {{#if this.composer.canEdit}}
-                <LinkToInput
-                  @onClick={{this.composer.displayEditReason}}
-                  @showInput={{this.composer.showEditReason}}
-                  @icon="info-circle"
-                  class="display-edit-reason"
-                >
-                  <TextField
-                    @value={{this.composer.editReason}}
-                    @id="edit-reason"
-                    @maxlength="255"
-                    @placeholderKey="composer.edit_reason_placeholder"
-                  />
-                </LinkToInput>
+            {{#unless this.composer.site.mobileView}}
+              {{#if this.composer.model.unlistTopic}}
+                <span class="unlist">({{i18n "composer.unlist"}})</span>
               {{/if}}
-            </div>
-          {{/unless}}
+              {{#if this.composer.isWhispering}}
+                {{#if this.composer.model.noBump}}
+                  <span class="no-bump">{{d-icon "anchor"}}</span>
+                {{/if}}
+              {{/if}}
+            {{/unless}}
+
+            {{#if this.composer.canEdit}}
+              <LinkToInput
+                @onClick={{this.composer.displayEditReason}}
+                @showInput={{this.composer.showEditReason}}
+                @icon="info-circle"
+                class="display-edit-reason"
+              >
+                <TextField
+                  @value={{this.composer.editReason}}
+                  @id="edit-reason"
+                  @maxlength="255"
+                  @placeholderKey="composer.edit_reason_placeholder"
+                />
+              </LinkToInput>
+            {{/if}}
+          </div>
 
           <PluginOutlet
             @name="before-composer-controls"
@@ -98,7 +99,7 @@
             @toggleComposer={{this.composer.toggle}}
             @toggleToolbar={{this.composer.toggleToolbar}}
             @toggleFullscreen={{this.composer.fullscreenComposer}}
-            @disableTextarea={{this.composer.disableTextarea}}
+            {{!-- @disableTextarea={{this.composer.disableTextarea}} --}}
           />
         </div>
 
@@ -127,7 +128,7 @@
           @showToolbar={{this.composer.showToolbar}}
           @afterRefresh={{this.composer.afterRefresh}}
           @focusTarget={{this.composer.focusTarget}}
-          @disableTextarea={{this.composer.disableTextarea}}
+          {{!-- @disableTextarea={{this.composer.disableTextarea}} --}}
           @formTemplateIds={{this.composer.formTemplateIds}}
           @formTemplateInitialValues={{this.composer.formTemplateInitialValues}}
           @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
