@@ -2,5 +2,8 @@
 
 module Chat
   class HereMention < Mention
+    def identifier
+      "here"
+    end
   end
 end

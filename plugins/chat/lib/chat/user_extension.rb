@@ -16,5 +16,12 @@ module Chat
       has_many :direct_message_users, class_name: "Chat::DirectMessageUser"
       has_many :direct_messages, through: :direct_message_users, class_name: "Chat::DirectMessage"
     end
+
+    def following?(channel)
+      channel_membership = channel.membership_for(self) # fixme andrei take care of N + 1
+      return false if channel_membership.blank?
+      return true if channel.direct_message_channel?
+      channel_membership.following
+    end
   end
 end

@@ -2,5 +2,8 @@
 
 module Chat
   class AllMention < Mention
+    def identifier
+      "all"
+    end
   end
 end

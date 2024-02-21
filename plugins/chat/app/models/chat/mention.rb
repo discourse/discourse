@@ -11,62 +11,56 @@ module Chat
              foreign_key: :chat_mention_id
     has_many :notifications, through: :mention_notifications, dependent: :destroy
 
-    # fixme andrei actually move it to notification (but leave polymorphic parts in mentions)
+    def create_notification_for(mentioned_user)
+      notification =
+        ::Notification.create!(
+          notification_type: notification_type,
+          user_id: mentioned_user.id,
+          high_priority: true,
+          data: notification_data(mentioned_user).to_json,
+        )
+      notifications << notification
+    end
+
+    def identifier
+      raise "Not Implemented"
+    end
+
+    def is_group_mention
+      false
+    end
+
     def notification_data(mentioned_user)
-      message = self.chat_message
-      channel = message.chat_channel
+      channel = chat_message.chat_channel
 
       data = {
-        chat_message_id: message.id,
+        chat_message_id: chat_message.id,
         chat_channel_id: channel.id,
         is_direct_message_channel: channel.direct_message_channel?,
-        mentioned_by_username: message.user.username,
+        mentioned_by_username: chat_message.user.username,
+        is_group_mention: is_group_mention,
+        identifier: identifier,
       }
 
-      data[:chat_thread_id] = message.thread_id if message.in_thread?
+      data[:chat_thread_id] = chat_message.thread_id if chat_message.in_thread?
 
       unless channel.direct_message_channel?
         data[:chat_channel_title] = channel.title(mentioned_user)
         data[:chat_channel_slug] = channel.slug
       end
 
-      # fixme andrei handle this in subclasses
-      return data if self.is_a?(::Chat::UserMention)
-
-      case self
-      when ::Chat::HereMention
-        data[:identifier] = "here"
-      when ::Chat::AllMention
-        data[:identifier] = "all"
-      when ::Chat::GroupMention
-        data[:identifier] = self.group.name
-        data[:is_group_mention] = true
-      else
-        raise "Unknown chat mention type"
-      end
-
       data
     end
 
-    # fixme andrei a better place for this?
-    def self.notification_payload(chat_mention, mentioned_user)
-      message = chat_mention.chat_message
-      channel = message.chat_channel
+    def notification_payload(mentioned_user)
+      channel = chat_message.chat_channel
 
       post_url =
-        if message.in_thread?
-          message.thread.relative_url
+        if chat_message.in_thread?
+          chat_message.thread.relative_url
         else
-          "#{channel.relative_url}/#{message.id}"
+          "#{channel.relative_url}/#{chat_message.id}"
         end
-
-      payload = {
-        notification_type: ::Notification.types[:chat_mention],
-        username: message.user.username,
-        tag: ::Chat::Notifier.push_notification_tag(:mention, channel.id),
-        excerpt: message.push_notification_excerpt,
-        post_url: post_url,
-      }
 
       translation_prefix =
         (
@@ -77,30 +71,28 @@ module Chat
           end
         )
 
-      translation_suffix = chat_mention.is_a?(::Chat::UserMention) ? "direct" : "other_type"
+      {
+        notification_type: notification_type,
+        username: chat_message.user.username,
+        tag: ::Chat::Notifier.push_notification_tag(:mention, channel.id),
+        excerpt: chat_message.push_notification_excerpt,
+        post_url: post_url,
+        translated_title:
+          ::I18n.t(
+            "#{translation_prefix}.#{translation_suffix}",
+            username: chat_message.user.username,
+            identifier: "@#{identifier}",
+            channel: channel.title(mentioned_user),
+          ),
+      }
+    end
 
-      identifier_text =
-        case chat_mention
-        when ::Chat::HereMention
-          "@here"
-        when ::Chat::AllMention
-          "@all"
-        when ::Chat::UserMention
-          ""
-        when ::Chat::GroupMention
-          "@#{chat_mention.group.name}"
-        else
-          raise "Unknown mention type"
-        end
+    def notification_type
+      ::Notification.types[:chat_mention]
+    end
 
-      payload[:translated_title] = ::I18n.t(
-        "#{translation_prefix}.#{translation_suffix}",
-        username: message.user.username,
-        identifier: identifier_text,
-        channel: channel.title(mentioned_user),
-      )
-
-      payload
+    def translation_suffix
+      "other_type"
     end
   end
 end

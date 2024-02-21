@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Chat
-  # fixme andrei this actually contains not only parsed mentions but also
-  # a lot of information from the database, this have to be split into two classes
   class ParsedMentions
     def initialize(message)
       @message = message
+      @channel = message.chat_channel
+      @sender = message.user
 
       mentions = parse_mentions(message)
       group_mentions = parse_group_mentions(message)
@@ -21,18 +21,6 @@ module Chat
                   :parsed_direct_mentions,
                   :parsed_group_mentions
 
-    def all_mentioned_users_ids
-      @all_mentioned_users_ids ||=
-        begin
-          user_ids = global_mentions.pluck(:id)
-          user_ids.concat(direct_mentions.pluck(:id))
-          user_ids.concat(group_mentions.pluck(:id))
-          user_ids.concat(here_mentions.pluck(:id))
-          user_ids.uniq!
-          user_ids
-        end
-    end
-
     def count
       @count ||=
         begin
@@ -44,8 +32,11 @@ module Chat
     end
 
     def global_mentions
-      return User.none unless @has_global_mention
-      channel_members.where.not(username_lower: @parsed_direct_mentions)
+      return User.none unless @has_global_mention && @channel.allow_channel_wide_mentions
+      channel_members
+        .where.not(username_lower: @sender.username)
+        .where.not(username_lower: @parsed_direct_mentions)
+        .where(user_options: { ignore_channel_wide_mention: [false, nil] })
     end
 
     def direct_mentions
@@ -53,17 +44,21 @@ module Chat
     end
 
     def group_mentions
-      group_ids = groups_to_mention.pluck(:id)
-      group_user_ids = GroupUser.where(group_id: group_ids).pluck(:user_id)
-      chat_users.where(id: group_user_ids)
+      users_reached_by_group_mentions_info.map { |info| info[:user] }
+    end
+
+    def has_mass_mention
+      @has_global_mention || @has_here_mention
     end
 
     def here_mentions
-      return User.none unless @has_here_mention
+      return User.none unless @has_here_mention && @channel.allow_channel_wide_mentions
 
       channel_members
         .where("last_seen_at > ?", 5.minutes.ago)
+        .where.not(username_lower: @sender.username)
         .where.not(username_lower: @parsed_direct_mentions)
+        .where(user_options: { ignore_channel_wide_mention: [false, nil] })
     end
 
     def groups_to_mention
@@ -80,32 +75,90 @@ module Chat
 
     def groups_with_too_many_members
       @groups_with_too_many_members ||=
-        mentionable_groups.where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
+        mentionable_groups.where(
+          "user_count > ?",
+          SiteSetting.max_users_notified_per_group_mention,
+        ).to_a
     end
 
     def visible_groups
       @visible_groups ||=
-        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@message.user).to_a
+        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@sender).to_a
+    end
+
+    def users_who_can_join_channel
+      @users_who_can_join_channel ||=
+        all_users_reached_by_mentions.filter do |user|
+          user.guardian.can_join_chat_channel?(@channel)
+        end
+    end
+
+    def users_who_cannot_join_channel
+      @users_who_cannot_join_channel ||=
+        all_users_reached_by_mentions.filter do |user|
+          !user.guardian.can_join_chat_channel?(@channel)
+        end
+    end
+
+    def users_to_send_invitation_to_channel
+      @users_to_send_invitation_to_channel ||=
+        users_who_can_join_channel.filter do |user|
+          !user.following?(@channel) && !user.doesnt_want_to_hear_from(@sender)
+        end
+    end
+
+    def all_users_reached_by_mentions_info
+      @all_users_reached_by_mentions_info ||=
+        begin
+          users = global_mentions.to_a.map { |user| { user: user, type: "Chat::AllMention" } }
+          users.concat(
+            direct_mentions.to_a.map do |user|
+              { user: user, type: "Chat::UserMention", target_id: user.id }
+            end,
+          )
+          users.concat(
+            users_reached_by_group_mentions_info.to_a.map do |info|
+              { user: info[:user], type: "Chat::GroupMention", target_id: info[:group_id] }
+            end,
+          )
+          users.concat(here_mentions.to_a.map { |info| { user: info, type: "Chat::HereMention" } })
+          users
+        end
     end
 
     private
+
+    def all_users_reached_by_mentions
+      @all_users_reached_by_mentions ||=
+        all_users_reached_by_mentions_info.map { |info| info[:user] }
+    end
+
+    def users_reached_by_group_mentions_info
+      group_ids = groups_to_mention.pluck(:id)
+      group_users = GroupUser.where(group_id: group_ids).pluck(:user_id, :group_id).to_h
+
+      chat_users
+        .where(id: group_users.keys)
+        .where.not(username_lower: @sender.username)
+        .map { |user| { user: user, group_id: group_users[user.id] } }
+    end
 
     def channel_members
       chat_users.includes(:user_chat_channel_memberships).where(
         user_chat_channel_memberships: {
           following: true,
-          chat_channel_id: @message.chat_channel.id,
+          chat_channel_id: @channel.id,
         },
       )
     end
 
     def chat_users
-      User.distinct.joins(:user_option).real.where(user_options: { chat_enabled: true })
+      User.distinct.includes(:user_option).real.where(user_options: { chat_enabled: true })
     end
 
     def mentionable_groups
       @mentionable_groups ||=
-        Group.mentionable(@message.user, include_public: false).where(id: visible_groups.map(&:id))
+        Group.mentionable(@sender, include_public: false).where(id: visible_groups.map(&:id))
     end
 
     def parse_mentions(message)

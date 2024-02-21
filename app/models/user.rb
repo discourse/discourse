@@ -632,6 +632,11 @@ class User < ActiveRecord::Base
     muted_user_ids.include?(user.id)
   end
 
+  def doesnt_want_to_hear_from(user)
+    # fixme andrei take care of n + 1's
+    ignores?(user) || mutes?(user)
+  end
+
   def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
