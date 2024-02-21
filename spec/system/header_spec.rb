@@ -1,11 +1,37 @@
 # frozen_string_literal: true
 
-RSpec.describe "Glimmer Site Header", type: :system do
+RSpec.describe "Glimmer Header", type: :system do
   fab!(:current_user) { Fabricate(:user) }
+  before { SiteSetting.experimental_glimmer_header_groups = Group::AUTO_GROUPS[:everyone] }
 
-  before do
-    SiteSetting.experimental_glimmer_header_groups = Group::AUTO_GROUPS[:everyone]
-    sign_in(current_user)
+  it "renders basics" do
+    visit "/"
+    expect(page).to have_css("header.d-header")
+    expect(page).to have_css("#site-logo")
+  end
+
+  it "displays sign up / login buttons" do
+    visit "/"
+    expect(page).to have_css("button.sign-up-button")
+    expect(page).to have_css("button.login-button")
+
+    find("button.sign-up-button").click
+    expect(page).to have_css(".d-modal.create-account")
+
+    click_outside
+
+    find("button.login-button").click
+    expect(page).to have_css(".d-modal.login-modal")
+  end
+
+  it "shows login button when login required" do
+    SiteSetting.login_required = true
+
+    visit "/"
+    expect(page).to have_css("button.login-button")
+    expect(page).to have_css("button.sign-up-button")
+    expect(page).not_to have_css("#search-button")
+    expect(page).not_to have_css("button.btn-sidebar-toggle")
   end
 
   it "renders unread notifications count when user's notifications count is updated" do
@@ -16,6 +42,8 @@ RSpec.describe "Glimmer Site Header", type: :system do
       read: false,
       created_at: 8.minutes.ago,
     )
+
+    sign_in(current_user)
     visit "/"
     expect(page).to have_selector(
       ".header-dropdown-toggle.current-user .unread-notifications",
@@ -28,11 +56,13 @@ RSpec.describe "Glimmer Site Header", type: :system do
     current_user.update!(admin: true)
     Fabricate(:reviewable)
 
+    sign_in(current_user)
     visit "/"
     expect(page).not_to have_selector(".hamburger-dropdown .badge-notification")
   end
 
   it "closes revamped menu when clicking outside" do
+    sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click
     expect(page).to have_selector(".user-menu.revamped")
@@ -41,6 +71,7 @@ RSpec.describe "Glimmer Site Header", type: :system do
   end
 
   it "sets header's height css property" do
+    sign_in(current_user)
     visit "/"
     resize_element(".d-header", 90)
     wait_for(timeout: 100) { get_computed_style_value(".d-header", "--header-offset") == "90px" }
@@ -52,6 +83,7 @@ RSpec.describe "Glimmer Site Header", type: :system do
   end
 
   it "moves focus between tabs using arrow keys" do
+    sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click
     expect(active_element_id).to eq("user-menu-button-all-notifications")
@@ -79,6 +111,7 @@ RSpec.describe "Glimmer Site Header", type: :system do
       created_at: 8.minutes.ago,
     )
 
+    sign_in(current_user)
     visit "/"
     expect(page).not_to have_selector(
       ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
@@ -100,6 +133,7 @@ RSpec.describe "Glimmer Site Header", type: :system do
     current_user.update!(admin: true)
     Fabricate(:reviewable)
 
+    sign_in(current_user)
     visit "/"
     expect(page).not_to have_selector(
       ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
@@ -123,6 +157,7 @@ RSpec.describe "Glimmer Site Header", type: :system do
       )
     end
 
+    sign_in(current_user)
     visit "/"
     expect(page).to have_selector(
       ".header-dropdown-toggle.current-user .badge-notification.unread-notifications",
@@ -139,6 +174,22 @@ RSpec.describe "Glimmer Site Header", type: :system do
     )
   end
 
+  context "when logged in and login required" do
+    fab!(:current_user) { Fabricate(:user) }
+
+    it "displays current user when logged in and login required" do
+      SiteSetting.login_required = true
+      sign_in(current_user)
+
+      visit "/"
+      expect(page).not_to have_css("button.login-button")
+      expect(page).not_to have_css("button.sign-up-button")
+      expect(page).to have_css("#search-button")
+      expect(page).to have_css("button.btn-sidebar-toggle")
+      expect(page).to have_css("#current-user")
+    end
+  end
+
   private
 
   def get_computed_style_value(selector, property)
@@ -153,5 +204,9 @@ RSpec.describe "Glimmer Site Header", type: :system do
 
   def active_element_id
     page.evaluate_script("document.activeElement.id")
+  end
+
+  def click_outside
+    find(".d-modal").click(x: 0, y: 0)
   end
 end
