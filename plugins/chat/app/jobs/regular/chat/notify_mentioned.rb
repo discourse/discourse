@@ -93,6 +93,7 @@ module Jobs
       end
 
       def notify(mention, mentioned_user)
+        return if mentioned_user.suspended?
         return unless user_participate_in_channel?(mentioned_user)
         return if mentioned_user.ignores?(@sender) || mentioned_user.mutes?(@sender) # fixme andrei take care of n + 1's
         return if mentioned_user.user_option.ignore_channel_wide_mention # fixme andrei take care of N + 1
