@@ -5,6 +5,10 @@
   }
   &__outer-container {
     padding: 0;
+
+    .chat-composer.is-disabled {
+      opacity: 0.5;
+    }
   }
   &__inner-container {
     min-height: unset;
