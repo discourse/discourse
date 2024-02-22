@@ -217,7 +217,7 @@ module Chat
     end
 
     def can_edit_chat?(message)
-      (message.user_id == @user.id && !@user.silenced?)
+      (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 
     def can_react?
