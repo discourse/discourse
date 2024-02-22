@@ -29,7 +29,8 @@
       }
 
       &.-member {
-        .chat-user-avatar {
+        .chat-user-avatar,
+        .chat-user-display-name {
           margin-right: 0.5rem;
         }
       }

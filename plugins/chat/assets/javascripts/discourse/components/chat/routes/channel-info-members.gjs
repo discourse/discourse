@@ -176,6 +176,8 @@ export default class ChatRouteChannelInfoMembers extends Component {
                 @user={{membership.user}}
                 @avatarSize="tiny"
                 @interactive={{false}}
+                @showStatus={{true}}
+                @showStatusDescription={{true}}
               />
             </li>
           {{else}}
