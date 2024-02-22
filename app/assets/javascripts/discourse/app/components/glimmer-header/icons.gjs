@@ -58,7 +58,6 @@ export default class Icons extends Component {
           @iconId="toggle-hamburger-menu"
           @active={{this.header.hamburgerVisible}}
           @onClick={{@toggleHamburger}}
-          @href=""
           @className="hamburger-dropdown"
         />
       {{/if}}

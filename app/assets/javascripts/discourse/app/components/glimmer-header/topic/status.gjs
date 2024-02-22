@@ -6,6 +6,7 @@ import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import { escapeExpression } from "discourse/lib/utilities";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import concatClass from "discourse/helpers/concat-class";
 
 export default class Status extends Component {
   @service currentUser;
@@ -23,9 +24,10 @@ export default class Status extends Component {
       const attributes = {
         title: escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
       };
-      let klass = "topic-status";
+      let klass = ["topic-status"];
       if (key === "unpinned" || key === "pinned") {
-        klass += `.pin-toggle-button.${key}`;
+        klass.push("pin-toggle-button", key);
+        klass = klass.join(" ");
       }
       topicStatuses.push({ attributes, klass, icon: statusIcon });
     });
@@ -35,6 +37,9 @@ export default class Status extends Component {
 
   @action
   togglePinnedForUser(e) {
+    if (!this.canAct) {
+      return;
+    }
     const parent = e.target.closest(".topic-statuses");
     if (parent?.querySelector(".pin-toggle-button")?.contains(e.target)) {
       this.args.topic.togglePinnedForUser();
@@ -42,18 +47,14 @@ export default class Status extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    <span class="topic-statuses" {{on "click" this.togglePinnedForUser}}>
+    <span class="topic-statuses">
       {{#each this.topicStatuses as |status|}}
-        {{#if this.canAct}}
-          <a class="topic-status {{status.klass}}">
-            {{icon status.icon.name class=status.icon.iconArgs.class}}
-          </a>
-        {{else}}
-          <span class="topic-status {{status.klass}}">
-            {{icon status.icon.name class=status.icon.iconArgs.class}}
-          </span>
-        {{/if}}
+        <span
+          class={{concatClass status.klass "topic-status"}}
+          {{on "click" this.togglePinnedForUser}}
+        >
+          {{icon status.icon.name class=status.icon.iconArgs.class}}
+        </span>
       {{/each}}
     </span>
   </template>
