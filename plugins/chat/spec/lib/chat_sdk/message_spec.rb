@@ -87,7 +87,7 @@ describe ChatSDK::Message do
 
           edit =
             MessageBus
-              .track_publish("/chat/#{channel_1.id}") { helper.stream(raw: "test") }
+              .track_publish("/chat/#{channel_1.id}") { helper.stream(raw: " test") }
               .find { |m| m.data["type"] == "edit" }
 
           expect(edit.data["chat_message"]["message"]).to eq("something test")
@@ -138,24 +138,47 @@ describe ChatSDK::Message do
     end
   end
 
-  describe ".stream" do
+  describe ".start_stream" do
     fab!(:message_1) { Fabricate(:chat_message, message: "first") }
 
-    it "streams the message" do
+    it "enables streaming" do
       initial_message = message_1.message
 
-      described_class.stream(
-        message_id: message_1.id,
-        guardian: message_1.user.guardian,
-      ) do |helper|
-        edit =
-          MessageBus
-            .track_publish("/chat/#{message_1.chat_channel.id}") { helper.stream(raw: "test") }
-            .find { |m| m.data["type"] == "edit" }
-      end
+      edit =
+        MessageBus
+          .track_publish("/chat/#{message_1.chat_channel.id}") do
+            described_class.start_stream(
+              message_id: message_1.id,
+              guardian: message_1.user.guardian,
+            )
+          end
+          .find { |m| m.data["type"] == "edit" }
 
-      expect(message_1.reload.message).to eq(initial_message + " test")
-      expect(message_1.streaming).to eq(false)
+      expect(edit.data["chat_message"]["message"]).to eq("first")
+      expect(message_1.reload.streaming).to eq(true)
+    end
+  end
+
+  describe ".stream" do
+    fab!(:message_1) { Fabricate(:chat_message, message: "first") }
+    before { message_1.update!(streaming: true) }
+
+    it "streams" do
+      initial_message = message_1.message
+
+      edit =
+        MessageBus
+          .track_publish("/chat/#{message_1.chat_channel.id}") do
+            described_class.stream(
+              raw: " test",
+              message_id: message_1.id,
+              guardian: message_1.user.guardian,
+            )
+          end
+          .find { |m| m.data["type"] == "edit" }
+
+      expect(edit.data["chat_message"]["message"]).to eq("first test")
+      expect(message_1.reload.streaming).to eq(true)
     end
   end
 end

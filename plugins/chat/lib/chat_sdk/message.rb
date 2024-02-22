@@ -23,7 +23,7 @@ module ChatSDK
     #   ChatSDK::Message.create(raw: "Hello, world!", channel_id: 1, guardian: Guardian.new)
     #
     # @example Creating a message with a block for streaming
-    #   Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
+    #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
     #     helper.stream(raw: "Continuation of the message")
     #   end
     def self.create(**params, &block)
@@ -40,34 +40,58 @@ module ChatSDK
       self.create(**params, streaming: true, &block)
     end
 
-    # Initiates streaming for a specific chat message.
+    # Streams to a specific chat message.
     #
+    # @param raw [String] text to append to the existing message.
     # @param message_id [Integer] the ID of the message to stream.
     # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
-    # @yieldparam block [Block] the block to execute with the streaming helper and message.
-    # @yield [helper, message] Gives a helper object and the message being streamed to the block.
-    # @return [Chat::Message] the message that was streamed.
+    # @return [Chat::Message] The message object.
     # @example Streaming a message
-    #   ChatMessage.stream(message_id: 42, guardian: guardian) do |helper, message|
-    #     # Streaming logic here
-    #   end
-    def self.stream(message_id:, guardian:, &block)
-      new.stream(message_id: message_id, guardian: guardian, &block)
+    #   ChatSDK::Message.stream(message_id: 42, guardian: guardian, raw: "text")
+    def self.stream(raw:, message_id:, guardian:, &block)
+      new.stream(raw: raw, message_id: message_id, guardian: guardian, &block)
+    end
+
+    # Starts streaming for a specific chat message.
+    #
+    # @param message_id [Integer] the ID of the message for which streaming should be stopped.
+    # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
+    # @return [Chat::Message] The message object.
+    # @example Starting the streaming of a message
+    #   ChatSDK::Message.start_stream(message_id: 42, guardian: guardian)
+    def self.start_stream(message_id:, guardian:)
+      new.start_stream(message_id: message_id, guardian: guardian)
     end
 
     # Stops streaming for a specific chat message.
     #
     # @param message_id [Integer] the ID of the message for which streaming should be stopped.
     # @param guardian [Guardian] an instance of the guardian class, representing the user's permissions.
-    # @return [void]
+    # @return [Chat::Message] The message object.
     # @example Stopping the streaming of a message
-    #   ChatMessage.stop_stream(message_id: 42, guardian: guardian)
+    #   ChatSDK::Message.stop_stream(message_id: 42, guardian: guardian)
     def self.stop_stream(message_id:, guardian:)
       new.stop_stream(message_id: message_id, guardian: guardian)
     end
 
+    def start_stream(message_id:, guardian:)
+      message = Chat::Message.find(message_id)
+      message.update!(streaming: true)
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
+      message
+    end
+
+    def stream(message_id:, raw:, guardian:, &block)
+      message = Chat::Message.find(message_id)
+      helper = Helper.new(message, guardian)
+      helper.stream(raw: raw)
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
+      message
+    end
+
     def stop_stream(message_id:, guardian:)
       with_service(Chat::StopMessageStreaming, message_id: message_id, guardian: guardian) do
+        on_success { result.message }
         on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
         on_failed_policy(:can_join_channel) do
           raise "User with id: `#{guardian.user.id}` can't join this channel"
@@ -80,17 +104,6 @@ module ChatSDK
           raise "Unexpected error"
         end
       end
-    end
-
-    def stream(message_id:, guardian:, &block)
-      message = Chat::Message.find(message_id)
-      message.update!(streaming: true)
-      helper = Helper.new(message, guardian)
-      block.call(helper, message)
-      message
-    ensure
-      message.update!(streaming: false)
-      ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
     end
 
     def create(
@@ -155,17 +168,18 @@ module ChatSDK
     attr_reader :guardian
 
     def initialize(message, guardian)
-      @message = message
+      @message = message.reload
       @guardian = guardian
     end
 
     def stream(raw: nil)
-      return false unless self.message.reload.streaming
+      return false if !self.message.streaming
+      return false if !raw
 
       with_service(
         Chat::UpdateMessage,
         message_id: self.message.id,
-        message: raw ? self.message.reload.message + " " + raw : self.message.message,
+        message: self.message.message + raw,
         guardian: self.guardian,
         streaming: true,
       ) do
