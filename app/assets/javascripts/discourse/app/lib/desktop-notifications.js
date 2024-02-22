@@ -187,7 +187,7 @@ async function onNotification(data, siteSettings, user, appEvents) {
   });
   notification.onclick = () => {
     DiscourseURL.routeTo(data.post_url);
-    appEvents.trigger("desktop-notification-clicked", { url: data.post_url });
+    appEvents.trigger("desktop-notification-opened", { url: data.post_url });
     notification.close();
   };
 

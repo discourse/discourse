@@ -74,7 +74,7 @@ export function register(user, router, appEvents) {
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
       router.transitionTo(event.data.url);
-      appEvents.trigger("push-notification-clicked", { url: event.data.url });
+      appEvents.trigger("push-notification-opened", { url: event.data.url });
     }
   });
 }
