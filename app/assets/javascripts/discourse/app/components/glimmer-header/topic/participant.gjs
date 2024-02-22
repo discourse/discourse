@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -17,10 +17,6 @@ export default class Participant extends Component {
       : getURL(`/g/${this.args.username}`);
   }
 
-  get typeClass() {
-    return `trigger-${this.args.type}-card`;
-  }
-
   @action
   click(e) {
     this.appEvents.trigger(
@@ -32,7 +28,7 @@ export default class Participant extends Component {
   }
 
   <template>
-    <span class={{this.typeClass}}>
+    <span class={{concat "trigger-" @type "-card"}}>
       <a
         class="icon"
         {{on "click" this.click}}
