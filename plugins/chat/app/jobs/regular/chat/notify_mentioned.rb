@@ -19,6 +19,10 @@ module Jobs
 
       private
 
+      def already_notified?(mention, mentioned_user)
+        mention.notifications.where(user_id: mentioned_user.id).present?
+      end
+
       def get_mention(type, target_id = nil)
         @message.chat_mentions.where(type: type, target_id: target_id).first
       end
@@ -26,11 +30,10 @@ module Jobs
       def notify_mentioned_users
         @parsed_mentions.all_users_reached_by_mentions_info.each do |info|
           mentioned_user = info[:user]
-          next if should_not_notify?(mentioned_user)
-
           mention = get_mention(info[:type], info[:target_id])
-          mention.create_notification_for(mentioned_user)
 
+          next if already_notified?(mention, mentioned_user) || should_not_notify?(mentioned_user)
+          mention.create_notification_for(mentioned_user)
           notify(mention, mentioned_user)
         end
       end
