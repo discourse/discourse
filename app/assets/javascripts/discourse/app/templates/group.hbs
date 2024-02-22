@@ -32,11 +32,7 @@
 
       <div class="group-info-names">
         <span class="group-info-name">
-          {{#if this.model.full_name}}
-            {{this.model.full_name}}
-          {{else}}
-            {{this.model.name}}
-          {{/if}}
+          {{or this.model.full_name this.model.name}}
         </span>
 
         {{#if this.model.full_name}}
