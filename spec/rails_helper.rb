@@ -593,8 +593,9 @@ RSpec.configure do |config|
         ActiveRecord::Base.connection.schema_cache.add(table)
       end
 
-      ApplicationController.before_action do
-        if BlockRequestsMiddleware.current_example_location
+      ApplicationController.before_action(prepend: true) do
+        if BlockRequestsMiddleware.current_example_location && !request.xhr? &&
+             request.format == "html"
           cookies[
             BlockRequestsMiddleware::RSPEC_CURRENT_EXAMPLE_COOKIE_STRING
           ] = BlockRequestsMiddleware.current_example_location
