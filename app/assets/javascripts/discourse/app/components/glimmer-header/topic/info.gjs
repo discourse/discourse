@@ -19,12 +19,6 @@ import FeaturedLink from "./featured-link";
 import Participant from "./participant";
 import Status from "./status";
 
-let _additionalFancyTitleClasses = [];
-
-export function addHeaderFancyTitleClass(className) {
-  _additionalFancyTitleClasses.push(className);
-}
-
 export default class Info extends Component {
   @service currentUser;
   @service site;
@@ -43,10 +37,6 @@ export default class Info extends Component {
 
   get maxExtraItems() {
     return this.args.topic.tags?.length > 0 ? 5 : 10;
-  }
-
-  get additionalFancyTitleClasses() {
-    return _additionalFancyTitleClasses.join(" ");
   }
 
   get twoRows() {
@@ -106,10 +96,7 @@ export default class Info extends Component {
               <Status @topic={{@topic}} @disableActions={{@disableActions}} />
 
               <a
-                class={{concatClass
-                  "topic-link"
-                  this.additionalFancyTitleClasses
-                }}
+                class="topic-link"
                 {{on "click" this.jumpToTopPost}}
                 href={{@topic.url}}
                 data-topic-id={{@topic.id}}
