@@ -17,9 +17,10 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink }) {
+  constructor({ adminSidebarNavLink, router }) {
     super(...arguments);
     this.adminSidebarNavLink = adminSidebarNavLink;
+    this.router = router;
   }
 
   get name() {
@@ -59,9 +60,26 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   get title() {
     return this.adminSidebarNavLink.text;
   }
+
+  get currentWhen() {
+    // NOTE: This is weird, but since our admin plugin routes starting with adminPlugins.
+    // are nested beneath /admin/plugins, Ember tries to highlight both the Installed Plugins
+    // and relevant plugin link.
+    //
+    // We only want to highlight the top level Installed Plugins link if we are on that page,
+    // not if we are on e.g. the chat plugin admin route.
+    if (
+      this.route === "adminPlugins.index" &&
+      this.router.currentRoute.name === "adminPlugins.index"
+    ) {
+      return "adminPlugins.index";
+    } else {
+      return this.route;
+    }
+  }
 }
 
-function defineAdminSection(adminNavSectionData) {
+function defineAdminSection(adminNavSectionData, router) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
@@ -90,7 +108,10 @@ function defineAdminSection(adminNavSectionData) {
     get links() {
       return this.sectionLinks.map(
         (sectionLinkData) =>
-          new SidebarAdminSectionLink({ adminSidebarNavLink: sectionLinkData })
+          new SidebarAdminSectionLink({
+            adminSidebarNavLink: sectionLinkData,
+            router,
+          })
       );
     }
 
@@ -216,8 +237,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   @cached
   get sections() {
-    const currentUser = getOwnerWithFallback().lookup("service:current-user");
-    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
+    const router = getOwnerWithFallback(this).lookup("service:router");
     if (!currentUser.use_admin_sidebar) {
       return [];
     }
@@ -243,7 +269,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      return defineAdminSection(adminNavSectionData);
+      return defineAdminSection(adminNavSectionData, router);
     });
   }
 }
