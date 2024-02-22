@@ -1,7 +1,10 @@
 .chat-composer {
   &__wrapper {
-    padding-top: 0;
+    padding-top: 0.75rem;
     background: none;
+    .chat-replying-indicator {
+      padding-left: calc(1rem + (2 * 5px) + 0.2rem + (2 * 0.65rem));
+    }
   }
   &__outer-container {
     padding: 0;
