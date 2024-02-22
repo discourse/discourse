@@ -3,7 +3,7 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_syms, :problem_blocks, :problem_messages, :problem_scheduled_check_blocks
+  cattr_reader :problem_syms, :problem_blocks, :problem_messages
 
   class Problem
     VALID_PRIORITIES = %w[low high].freeze
@@ -80,10 +80,6 @@ class AdminDashboardData
     @@problem_blocks << blk if blk
   end
 
-  def self.add_scheduled_problem_check(check_identifier, &blk)
-    @@problem_scheduled_check_blocks[check_identifier] = blk
-  end
-
   def self.add_found_scheduled_check_problem(problem)
     problems = load_found_scheduled_check_problems
     if problem.identifier.present?
@@ -124,51 +120,6 @@ class AdminDashboardData
     end
   end
 
-  def self.register_default_scheduled_problem_checks
-    add_scheduled_problem_check(:group_smtp_credentials) do
-      problems = ProblemCheck::GroupEmailCredentials.call
-      problems.map do |p|
-        problem_message =
-          I18n.t(
-            "dashboard.group_email_credentials_warning",
-            {
-              base_path: Discourse.base_path,
-              group_name: p[:group_name],
-              group_full_name: p[:group_full_name],
-              error: p[:message],
-            },
-          )
-        Problem.new(
-          problem_message,
-          priority: "high",
-          identifier: "group_#{p[:group_id]}_email_credentials",
-        )
-      end
-    end
-  end
-
-  def self.execute_scheduled_check(identifier)
-    check = problem_scheduled_check_blocks[identifier]
-
-    problems = instance_exec(&check)
-
-    yield(problems) if block_given? && problems.present?
-
-    Array
-      .wrap(problems)
-      .compact
-      .each do |problem|
-        next if !problem.is_a?(Problem)
-
-        add_found_scheduled_check_problem(problem)
-      end
-  rescue StandardError => err
-    Discourse.warn_exception(
-      err,
-      message: "A scheduled admin dashboard problem check (#{identifier}) errored.",
-    )
-  end
-
   ##
   # We call this method in the class definition below
   # so all of the problem checks in this class are registered on
@@ -181,7 +132,6 @@ class AdminDashboardData
   def self.reset_problem_checks
     @@problem_syms = []
     @@problem_blocks = []
-    @@problem_scheduled_check_blocks = {}
 
     @@problem_messages = %w[
       dashboard.bad_favicon_url
@@ -209,8 +159,6 @@ class AdminDashboardData
                       :google_analytics_version_check,
                       :translation_overrides_check,
                       :ember_version_check
-
-    register_default_scheduled_problem_checks
 
     add_problem_check { sidekiq_check || queue_size_check }
   end

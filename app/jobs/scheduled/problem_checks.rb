@@ -2,8 +2,8 @@
 
 module Jobs
   # This job runs all of the scheduled problem checks for the admin dashboard
-  # on a regular basis. To add a problem check for this scheduled job run
-  # call AdminDashboardData.add_scheduled_problem_check
+  # on a regular basis. To add a problem check, add a new class that inherits
+  # the `ProblemCheck` base class.
   class ProblemChecks < ::Jobs::Scheduled
     sidekiq_options retry: false
 
@@ -14,7 +14,7 @@ module Jobs
       # not be re-added by the relevant checker, and will be cleared.
       AdminDashboardData.clear_found_scheduled_check_problems
 
-      ::ProblemCheck.checks.each do |check|
+      ::ProblemCheck.scheduled.each do |check|
         Jobs.enqueue(:problem_check, check_identifier: check.identifier.to_s)
       end
     end
