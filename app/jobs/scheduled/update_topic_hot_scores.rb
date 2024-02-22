@@ -5,7 +5,7 @@ module Jobs
     every 10.minutes
 
     def execute(args)
-      TopicHotScore.update_scores if SiteSetting.experimental_hot_topics
+      TopicHotScore.update_scores if SiteSetting.top_menu_map.include? "hot"
     end
   end
 end

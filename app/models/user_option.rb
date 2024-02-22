@@ -182,7 +182,17 @@ class UserOption < ActiveRecord::Base
   def homepage
     return HOMEPAGES[homepage_id] if HOMEPAGES.keys.include?(homepage_id)
 
-    return SiteSetting.experimental_hot_topics ? "hot" : SiteSetting.homepage if homepage_id == 8
+    if homepage_id == 8
+      return(
+        (
+          if SiteSetting.top_menu_map.include?("hot")
+            "hot"
+          else
+            SiteSetting.homepage
+          end
+        )
+      )
+    end
 
     SiteSetting.homepage
   end
