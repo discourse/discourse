@@ -52,7 +52,7 @@
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "yarn lttf:output && npx html-pages ./lint-progress --no-cache",
-    "postinstall": "yarn --cwd app/assets/javascripts $(node -e 'const argv = JSON.parse(process.env.npm_config_argv).original; const passthrough = [`--frozen-lockfile`, `-s`].filter(arg => argv.includes(arg)); console.log(passthrough.join(` `));')"
+    "postinstall": "yarn --cwd app/assets/javascripts $(node -e 'const argv = JSON.parse(process.env.npm_config_argv).original; const passthrough = [`--frozen-lockfile`, `-s`, `--prefer-offline`].filter(arg => argv.includes(arg)); console.log(passthrough.join(` `));')"
   },
   "engines": {
     "node": "16.* || >= 18",
