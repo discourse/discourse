@@ -13,7 +13,7 @@ module Jobs
       retry_count = args[:retry_count].to_i
       identifier = args[:check_identifier].to_sym
 
-      check = AdminDashboardData.problem_scheduled_check_klasses[identifier]
+      check = ::ProblemCheck[identifier]
 
       AdminDashboardData.execute_scheduled_check(identifier) do |problems|
         raise RetrySignal if retry_count < check.max_retries

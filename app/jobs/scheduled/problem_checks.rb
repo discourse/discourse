@@ -13,7 +13,10 @@ module Jobs
       # This way if the problems have been solved in the meantime, then they will
       # not be re-added by the relevant checker, and will be cleared.
       AdminDashboardData.clear_found_scheduled_check_problems
-      AdminDashboardData.execute_scheduled_checks
+
+      ::ProblemCheck.checks.each do |check|
+        Jobs.enqueue(:problem_check, check_identifier: check.identifier.to_s)
+      end
     end
   end
 end

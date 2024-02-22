@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ProblemChecks do
-  before { Jobs.run_immediately! }
+  before { ProblemCheck::FooBar = Class.new(ProblemCheck) }
 
   after do
     Discourse.redis.flushdb
     AdminDashboardData.reset_problem_checks
+
+    ProblemCheck.send(:remove_const, "FooBar")
   end
 
   class TestCheck
@@ -27,5 +29,11 @@ RSpec.describe Jobs::ProblemChecks do
     expect(AdminDashboardData.load_found_scheduled_check_problems.count).to eq(1)
     described_class.new.execute(nil)
     expect(AdminDashboardData.load_found_scheduled_check_problems.count).to eq(0)
+  end
+
+  it "schedules the individual checks" do
+    expect_enqueued_with(job: :problem_check, args: { check_identifier: "foo_bar" }) do
+      described_class.new.execute([])
+    end
   end
 end

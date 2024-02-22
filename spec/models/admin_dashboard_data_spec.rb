@@ -82,19 +82,6 @@ RSpec.describe AdminDashboardData do
     include_examples "stats cacheable"
   end
 
-  describe ".execute_scheduled_checks" do
-    let(:blk) { -> {} }
-
-    before { AdminDashboardData.add_scheduled_problem_check(:foo, &blk) }
-    after { AdminDashboardData.reset_problem_checks }
-
-    it do
-      expect_enqueued_with(job: :problem_check, args: { check_identifier: :foo }) do
-        AdminDashboardData.execute_scheduled_checks
-      end
-    end
-  end
-
   describe ".execute_scheduled_check" do
     context "when problems are found" do
       let(:blk) { -> { self::Problem.new("Problem") } }
