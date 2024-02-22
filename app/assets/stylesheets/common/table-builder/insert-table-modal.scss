@@ -39,10 +39,7 @@
     margin: 0;
   }
 
-  .d-modal__footer,
-  .modal-footer {
-    display: flex;
-    align-items: center;
+  .d-modal__footer {
     justify-content: space-between;
 
     .primary-actions {

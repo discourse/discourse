@@ -8,20 +8,6 @@ body.invite-page {
 
 .invites-show,
 .admin-invite-page {
-  .modal-inner-container {
-    position: relative;
-  }
-  .modal-body {
-    padding: 0;
-  }
-  .modal-header {
-    border-bottom: none;
-    padding: 0;
-    position: absolute;
-    top: 0.75em;
-    right: 0.75em;
-    z-index: z("max");
-  }
   #modal-alert {
     box-sizing: border-box;
     display: inline-block;
@@ -37,11 +23,6 @@ body.invite-page {
     padding: 0px;
     overflow: hidden;
     display: inline;
-  }
-  .modal-footer {
-    .inline-spinner {
-      display: inline-flex;
-    }
   }
 }
 
