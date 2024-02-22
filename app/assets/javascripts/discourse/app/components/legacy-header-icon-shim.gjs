@@ -19,7 +19,7 @@ export default class LegacyHeaderIconShim extends Component {
       (component PanelWrapper panelElement=this.panelElement)
       as |panelWrapper|
     }}
-      <@component @panelWrapper={{panelWrapper}} />
+      <@component @panelPortal={{panelWrapper}} />
     {{/let}}
   </template>
 }

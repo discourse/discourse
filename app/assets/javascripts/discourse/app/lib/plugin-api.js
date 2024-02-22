@@ -935,10 +935,10 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
-    deprecated(
-      "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
-      { id: "discourse.add-header-panel" }
-    );
+    // deprecated(
+    //   "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+    //   { id: "discourse.add-header-panel" }
+    // );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1741,7 +1741,7 @@ class PluginApi {
    * ```
    *
    * If adding a component you can pass the component directly. Additionally, you can
-   * utilize the `@panelWrapper` argument to create a dropdown panel. This can be useful when
+   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
    * you want create a button in the header that opens a dropdown panel with additional content.
    *
    * ```
@@ -1749,9 +1749,9 @@ class PluginApi {
       <template>
         <span>Icon</span>
 
-        <@panelWrapper>
+        <@panelPortal>
           <div>Panel</div>
-        </@panelWrapper>
+        </@panelPortal>
       </template>
     );
    * ```

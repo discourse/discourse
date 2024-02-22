@@ -35,7 +35,7 @@ export default class Icons extends Component {
             (component PanelWrapper panelElement=@panelElement)
             as |panelWrapper|
           }}
-            <Icon @panelWrapper={{panelWrapper}} />
+            <Icon @panelPortal={{panelWrapper}} />
           {{/let}}
         {{/if}}
       {{/each}}
