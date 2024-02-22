@@ -29,7 +29,7 @@ export default class SwitchPanelButtons extends Component {
 
     if (this.destination) {
       try {
-        await this.router.transitionTo(this.destination);
+        await this.router.transitionTo(this.destination).followRedirects();
         this.sidebarState.setPanel(this.currentPanel.key);
       } finally {
         this.isSwitching = false;
