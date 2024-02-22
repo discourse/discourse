@@ -90,7 +90,9 @@ function defineAdminSection(adminNavSectionData) {
     get links() {
       return this.sectionLinks.map(
         (sectionLinkData) =>
-          new SidebarAdminSectionLink({ adminSidebarNavLink: sectionLinkData })
+          new SidebarAdminSectionLink({
+            adminSidebarNavLink: sectionLinkData,
+          })
       );
     }
 
@@ -216,8 +218,12 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   @cached
   get sections() {
-    const currentUser = getOwnerWithFallback().lookup("service:current-user");
-    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     if (!currentUser.use_admin_sidebar) {
       return [];
     }
