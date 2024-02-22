@@ -83,7 +83,7 @@ module ChatSDK
 
     def stream(message_id:, raw:, guardian:, &block)
       message = Chat::Message.find(message_id)
-      helper = Helper.new(message, guardian)
+      helper = StreamHelper.new(message)
       helper.stream(raw: raw)
       ::Chat::Publisher.publish_edit!(message.chat_channel, message.reload)
       message
@@ -148,7 +148,7 @@ module ChatSDK
         end
 
       if streaming && block_given?
-        helper = Helper.new(message, guardian)
+        helper = StreamHelper.new(message)
         block.call(helper, message)
       end
 
@@ -161,15 +161,13 @@ module ChatSDK
     end
   end
 
-  class Helper
+  class StreamHelper
     include Chat::WithServiceHelper
 
     attr_reader :message
-    attr_reader :guardian
 
-    def initialize(message, guardian)
+    def initialize(message)
       @message = message.reload
-      @guardian = guardian
     end
 
     def stream(raw: nil)
@@ -180,7 +178,7 @@ module ChatSDK
         Chat::UpdateMessage,
         message_id: self.message.id,
         message: self.message.message + raw,
-        guardian: self.guardian,
+        guardian: self.message.user.guardian,
         streaming: true,
       ) do
         on_failure do
