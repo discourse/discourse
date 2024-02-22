@@ -26,24 +26,24 @@ ja:
       multiple:
         help:
           at_least_min_options:
-            other: "少なくともオプションを <strong>%{count}</strong> 個を選択してください。"
+            other: "少なくとも <strong>%{count} 個のオプション</strong>を選択してください。"
           up_to_max_options:
-            other: "オプションを <strong>%{count}</strong> 個まで選択してください。"
+            other: "最大 <strong>%{count} 個のオプション</strong>を選択してください。"
           x_options:
-            other: "オプションを <strong>%{count}</strong> 個選択してください。"
-          between_min_and_max_options: "<strong>%{min}</strong>～<strong>%{max}</strong> 個のオプションを選択してください。"
+            other: "<strong>%{count} 個のオプション</strong>を選択してください。"
+          between_min_and_max_options: "<strong>%{min} 個から %{max} 個までのオプション</strong>を選択してください。"
       cast-votes:
         title: "投票する"
         label: "今すぐ投票！"
       show-results:
         title: "投票結果を表示する"
-        label: "結果を表示する"
+        label: "結果"
       remove-vote:
         title: "投票の削除"
-        label: "投票を削除"
+        label: "投票を取り消す"
       hide-results:
         title: "自分の投票に戻る"
-        label: "投票を表示する"
+        label: "投票"
       group-results:
         title: "ユーザーフィールド別に投票をグループ化"
         label: "内訳を表示する"
@@ -67,6 +67,8 @@ ja:
         breakdown: "内訳"
         percentage: "割合"
         count: "票数"
+      options:
+        label: "オプション"
       error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"
       error_while_casting_votes: "投票の際にエラーが発生しました。"
       error_while_fetching_voters: "投票者を表示する際にエラーが発生しました。"

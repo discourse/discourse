@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import I18n from "I18n";
 import { computed } from "@ember/object";
 import { not, readOnly } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tokenSeparator: "|",
@@ -12,7 +12,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.trustLevelOptions = [
+    this.set("trustLevelOptions", [
       {
         name: I18n.t("admin.groups.manage.membership.trust_levels_none"),
         value: 0,
@@ -21,7 +21,7 @@ export default Component.extend({
       { name: 2, value: 2 },
       { name: 3, value: 3 },
       { name: 4, value: 4 },
-    ];
+    ]);
 
     if (this.showAssociatedGroups) {
       this.loadAssociatedGroups();

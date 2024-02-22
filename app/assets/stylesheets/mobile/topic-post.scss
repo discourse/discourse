@@ -199,6 +199,16 @@ a.reply-to-tab {
     background: var(--blend-primary-secondary-5);
     width: 100%;
   }
+
+  .toggle-summary {
+    .summarization-buttons {
+      flex-direction: column;
+
+      .top-replies {
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 #topic-footer-buttons {
@@ -227,9 +237,13 @@ a.reply-to-tab {
     align-items: center;
 
     .reason {
+      display: flex;
+      flex-direction: column;
       align-items: flex-start;
-      .select-kit {
-        max-width: 40%;
+
+      .text {
+        margin-left: 0;
+        margin-top: 0.25rem;
       }
     }
     @include breakpoint(mobile-medium) {
@@ -239,24 +253,6 @@ a.reply-to-tab {
         margin: 0.5em 0 0 0;
       }
     }
-  }
-}
-
-.suggested-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
-  th.views,
-  td.views,
-  td.activity,
-  th.activity,
-  th.likes,
-  td.likes {
-    display: none;
-  }
-  a.badge-category,
-  a.badge-category-parent {
-    font-size: var(--font-down-1);
-    vertical-align: top;
   }
 }
 
@@ -274,10 +270,6 @@ span.post-count {
 
 .quote-button.visible {
   z-index: z("tooltip");
-}
-
-iframe {
-  max-width: 100%;
 }
 
 .btn-group {
@@ -392,7 +384,15 @@ span.highlighted {
 }
 
 .read-state {
-  display: none;
+  // contained within the padding to prevent vertical overflow
+  max-width: var(--d-wrap-padding-h);
+  right: calc(var(--d-wrap-padding-h) * -1);
+  font-size: var(--font-down-5);
+  margin-top: 0.45em;
+
+  svg {
+    right: 0.25em;
+  }
 }
 
 .post-notice {

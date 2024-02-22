@@ -1,5 +1,5 @@
-import { classNames } from "@ember-decorators/component";
 import { computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import FilterComponent from "admin/components/report-filters/filter";
 
 @classNames("group-filter")

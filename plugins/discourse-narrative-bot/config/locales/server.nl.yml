@@ -45,6 +45,9 @@ nl:
       trigger: "gooien"
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
+      not_enough_dice:
+        one: "Ik heb maar %{count} dobbelsteen. Beschamend, ik weet het!"
+        other: "Ik heb maar %{count} dobbelstenen. Beschamend, ik weet het!"
       out_of_range: |-
         Wist je dat [het maximale aantal zijden](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-Sided-dice) voor een wiskundig eerlijke dobbelstenen 120 is?
       results: |-
@@ -373,9 +376,9 @@ nl:
         instructions: |-
           Wist je dat je in je bericht kunt verwijzen naar categorieën en tags? Heb je bijvoorbeeld categorie %{category} gezien?
 
-          Typ '#' middenin een zin en selecteer een categorie of tag.
+          Typ '#' ergens in een zin en selecteer een categorie of tag.
         not_found: |-
-          Hmm, ik zie nergens een categorie. Merk op dat '#' mag niet het eerste teken zijn. Kun je dit kopiëren in je volgende antwoord?
+          Hmm, ik zie nergens een categorie. Kun je dit kopiëren in je volgende antwoord?
 
           ```tekst
           Ik kan een categorielink maken met #

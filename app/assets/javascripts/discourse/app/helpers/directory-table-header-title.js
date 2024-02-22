@@ -1,9 +1,8 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
-export default registerUnbound("directory-table-header-title", function (args) {
+export default function directoryTableHeaderTitle(args) {
   // Args should include key/values { field, labelKey, icon, translated }
 
   let html = "";
@@ -16,4 +15,4 @@ export default registerUnbound("directory-table-header-title", function (args) {
     ? args.field
     : I18n.t(labelKey + "_long", { defaultValue: I18n.t(labelKey) });
   return htmlSafe(html);
-});
+}

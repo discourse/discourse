@@ -1,16 +1,19 @@
-import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import highlightSearch from "discourse/lib/highlight-search";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { isValidLink } from "discourse/lib/click-track";
-import { number, until } from "discourse/lib/formatter";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { escape } from "pretty-text/sanitizer";
+import { ajax } from "discourse/lib/ajax";
+import { isValidLink } from "discourse/lib/click-track";
+import { number } from "discourse/lib/formatter";
+import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
+import highlightSearch from "discourse/lib/highlight-search";
+import {
+  destroyUserStatusOnMentions,
+  updateUserStatusOnMention,
+} from "discourse/lib/update-user-status-on-mention";
 import domFromString from "discourse-common/lib/dom-from-string";
+import escape from "discourse-common/lib/escape";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -77,6 +80,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
+    destroyUserStatusOnMentions();
   }
 
   _decorateAndAdopt(cooked) {
@@ -382,6 +386,7 @@ export default class PostCooked {
   }
 
   _rerenderUserStatusOnMentions() {
+    destroyUserStatusOnMentions();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
@@ -392,53 +397,24 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      this._updateUserStatus(mention, user.status);
+      updateUserStatusOnMention(
+        getOwnerWithFallback(this._post()),
+        mention,
+        user.status
+      );
     });
-  }
-
-  _updateUserStatus(mention, status) {
-    this._removeUserStatus(mention);
-    if (status) {
-      this._insertUserStatus(mention, status);
-    }
-  }
-
-  _insertUserStatus(mention, status) {
-    const emoji = escapeExpression(`:${status.emoji}:`);
-    const statusHtml = emojiUnescape(emoji, {
-      class: "user-status",
-      title: this._userStatusTitle(status),
-    });
-    mention.insertAdjacentHTML("beforeend", statusHtml);
-  }
-
-  _removeUserStatus(mention) {
-    mention.querySelector("img.user-status")?.remove();
-  }
-
-  _userStatusTitle(status) {
-    if (!status.ends_at) {
-      return status.description;
-    }
-
-    const timezone = this.currentUser
-      ? this.currentUser.user_option?.timezone
-      : moment.tz.guess();
-
-    const until_ = until(status.ends_at, timezone, this.currentUser?.locale);
-    return escapeExpression(`${status.description} ${until_}`);
   }
 
   _trackMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.trackStatus?.();
+      user.statusManager?.trackStatus?.();
       user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.stopTrackingStatus?.();
+      user.statusManager?.stopTrackingStatus?.();
       user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }

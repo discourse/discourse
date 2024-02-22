@@ -1,17 +1,20 @@
-import { and, readOnly } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import PermissionType from "discourse/models/permission-type";
-import { extractError } from "discourse/lib/ajax-error";
-import { underscore } from "@ember/string";
+import { and, readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
+  site: service(),
+  router: service(),
+
   selectedTab: "general",
   saving: false,
   deleting: false,
@@ -94,6 +97,7 @@ export default Controller.extend({
       );
 
       this.set("saving", true);
+      const previousParentCategory = model.get("parentCategory");
       model.set("parentCategory", parentCategory);
 
       model
@@ -109,12 +113,14 @@ export default Controller.extend({
               notification_level: NotificationLevels.REGULAR,
             });
             this.site.updateCategory(model);
-            this.transitionToRoute("editCategory", Category.slugFor(model));
+            this.router.transitionTo("editCategory", Category.slugFor(model));
           }
         })
         .catch((error) => {
-          this.dialog.alert(extractError(error));
+          popupAjaxError(error);
           this.set("saving", false);
+          model.set("parent_category_id", undefined);
+          model.set("parentCategory", previousParentCategory);
         });
     },
 
@@ -126,7 +132,7 @@ export default Controller.extend({
           this.model
             .destroy()
             .then(() => {
-              this.transitionToRoute("discovery.categories");
+              this.router.transitionTo("discovery.categories");
             })
             .catch(() => {
               this.displayErrors([I18n.t("category.delete_error")]);

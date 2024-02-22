@@ -18,7 +18,7 @@ pt:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - Janeiro
     - Fevereiro
     - Março
@@ -54,6 +54,9 @@ pt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
+  components:
+    enabled_filter: "Ativado"
+    disabled_filter: "Desativado"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
@@ -77,7 +80,7 @@ pt:
       optimized_link: Os links de imagens otimizadas são efémeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
-      data_type_not_a_number: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
+      data_type_inclusion: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
       default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
@@ -91,6 +94,9 @@ pt:
       string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
       string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
       string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
+      objects:
+        required: "tem que estar preenchido"
+        not_valid_integer_value: "tem que ser um inteiro"
     locale_errors:
       top_level_locale: "A chave base de um ficheiro de locale deve coincidir com o nome do locale"
       invalid_yaml: "YAML de traduçaõ é inválido"
@@ -181,14 +187,10 @@ pt:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
       invalid_category_id: "Especificou uma categoria que não existe"
-      invalid_choice:
-        one: "Especificou a escolha inválida %{name}"
-        other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Não pode ativar envio de inventório para S3 a não ser que tenha ativado carregamentos para S3."
-      page_publishing_requirements: "A publicação de página não pode ser ativada se a media segura estiver ativada."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
@@ -279,7 +281,6 @@ pt:
     more_replies:
       one: "mais %{count} resposta"
       other: "mais %{count} respostas"
-    loading: "A carregar Discussão..."
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
@@ -300,7 +301,7 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_embedded_media_allowed_trust: "Desculpe, você não pode incorporar itens de media num post."
+  no_embedded_media_allowed_group: "Desculpe, você não pode incorporar itens de media num post."
   no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
   too_many_embedded_media:
     one: "Sinto muito, novos usuários só podem colocar um item de mídia embutida por post."
@@ -433,7 +434,8 @@ pt:
               same_as_current: "é a mesma que a sua palavra-passe atual."
               unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
             ip_address:
-              signup_not_allowed: "A inscrição não é permitida através desta conta."
+              blocked: "Novos registos não são permitidos a partir do seu endereço IP."
+              max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
         color_scheme_color:
           attributes:
             hex:
@@ -596,8 +598,6 @@ pt:
     os:
       android: "Android"
   change_email:
-    confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, mas esta hiperligação de confirmação já não é valida. Talvez o seu email já tenha sido alterado?"
@@ -630,6 +630,9 @@ pt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
       email_title: 'A sua mensagem em "%{title}"'
@@ -662,6 +665,9 @@ pt:
       long_form: "sinalizou isto para obter a atenção do moderador"
       short_description: "Requer a atenção da equipa por outra razão"
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>"
@@ -958,9 +964,6 @@ pt:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
-    min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
-    min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
-    min_personal_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
     topic_featured_link_enabled: "Permitir publicar uma ligação com tópicos."
     show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
@@ -1013,8 +1016,6 @@ pt:
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
-    top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
-    post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     site_contact_username: "Um nome de utilizador válido de um membro do pessoal de onde enviar todas as mensagens automatizadas. Quando deixado em branco, a conta padrão do Sistema será usada."
@@ -1026,7 +1027,6 @@ pt:
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
-    top_page_default_timeframe: "Intervalo de tempo por defeito para a página de visualizações do topo."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
@@ -1055,7 +1055,6 @@ pt:
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador (n) de menos gostos por publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
-    rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_new_user_create_post: "Após a publicação, os novos utilizadores devem esperar (n) segundos antes de criarem novas mensagens."
     max_likes_per_day: "Número máximo de gostos por utilizador por dia."
     max_flags_per_day: "Número máximo de sinalizações por utilizador por dia."
@@ -1127,10 +1126,7 @@ pt:
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
-    category_style: "Estilo visível para distintivos de categorias."
     dark_mode_none: "Nenhum"
-    max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
-    authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Após todas estas visualizações, o campo de visitas fica ligeiramente destacado."
@@ -1227,27 +1223,21 @@ pt:
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     share_anonymized_statistics: "Partilhe estatísticas de utilização anonimizadas."
-    max_prints_per_hour_per_user: "Número máximo de impressões de páginas /print, por hora, por utlizador. (coloque 0 para desactivar)"
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
-    autohighlight_all_code: "Forçar a aplicação do destaque de código para todos os blocos de código pré-formatados mesmo quando estes não especificam explicitamente a linguagem."
     embed_truncate: "Truncar mensagens incorporadas."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
-    show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
-    bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
     approve_post_count: "O número de publicações de um utilizador novo ou básico que devem ser aprovadas"
-    approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
@@ -1273,9 +1263,7 @@ pt:
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
-    allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
-    min_trust_level_for_user_api_key: "Nível de confiança requerido para gerar chaves da API de utilizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
@@ -1288,7 +1276,6 @@ pt:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
-    enable_new_notifications_menu: "Permite o novo menu de notificações para o menu de navegação antigo."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1309,12 +1296,10 @@ pt:
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
       pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
-      email_polling_disabled: "Tem de ligar a consulta manual ou automática de emails via POP3 antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Deve definir \"menu_navegação\" para \"legado\" antes de permitir esta definição."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1422,9 +1407,6 @@ pt:
       blocked: "não é permitido."
       revoked: "Emails não serão enviados a '%{email}' até %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Novos registos não são permitidos a partir do seu endereço IP."
-      max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
     destroy_reasons:
       reviewable_reject_auto: "Gerir automaticamente itens de revisão pendentes"
       reviewable_reject: "Usuário em revisão rejeitado"
@@ -2115,6 +2097,9 @@ pt:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
+  onebox:
+    github:
+      closed: "fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
@@ -2128,6 +2113,7 @@ pt:
       confirm_body: "Sucesso! As notificações foram ativadas."
       custom: "Notificação de %{username} em %{site_title}"
   staff_action_logs:
+    unknown: "desconhecido"
     api_key:
       revoked: Revogado
   reviewables:
@@ -2156,7 +2142,6 @@ pt:
       approve:
         title: "Aprovar"
       reject_user:
-        title: "Eliminar Utilizador..."
         delete:
           title: "Eliminar Utilizador"
       reject:

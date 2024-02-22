@@ -54,7 +54,53 @@
                 "redo"
                 title="admin.email.bounced"
               }}{{/if}}
-            <a href="mailto:{{l.to_address}}">{{l.to_address}}</a>
+            <p><a
+                href="mailto:{{l.to_address}}"
+                title="TO"
+              >{{l.to_address}}</a></p>
+            {{#if l.cc_addresses}}
+              {{#if (gt l.cc_addresses.length this.ccAddressDisplayThreshold)}}
+                {{#each
+                  (slice
+                    0
+                    this.ccAddressDisplayThreshold
+                    (fn this.sortWithAddressFilter l.cc_addresses)
+                  )
+                  as |cc|
+                }}
+                  <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
+                {{/each}}
+                <DTooltip
+                  @placement="right-start"
+                  @arrow={{true}}
+                  @identifier="email-log-cc-addresses"
+                  @interactive={{true}}
+                >
+                  <:trigger>
+                    {{i18n "admin.email.logs.email_addresses.see_more"}}
+                  </:trigger>
+                  <:content>
+                    <ul>
+                      {{#each
+                        (slice this.ccAddressDisplayThreshold l.cc_addresses)
+                        as |cc|
+                      }}
+                        <li>
+                          <span>
+                            <a href="mailto:{{cc}}" title="CC">{{cc}}</a>
+                          </span>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  </:content>
+                </DTooltip>
+
+              {{else}}
+                {{#each l.cc_addresses as |cc|}}
+                  <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
+                {{/each}}
+              {{/if}}
+            {{/if}}
           </td>
           <td class="sent-email-type">{{l.email_type}}</td>
           <td class="sent-email-reply-key">
@@ -62,8 +108,12 @@
           </td>
           <td class="sent-email-post-link-with-smtp-response">
             {{#if l.post_url}}
-              <a href={{l.post_url}}>{{l.post_description}}</a><br />
-            {{/if}}
+              <a href={{l.post_url}}>
+                {{l.post_description}}
+              </a>
+              {{i18n "admin.email.logs.post_id" post_id=l.post_id}}
+              <br />
+              /{{/if}}
             <code
               title={{l.smtp_transaction_response}}
             >{{l.smtp_transaction_response}}</code>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::UpdateGravatar do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:temp) { Tempfile.new("test") }
   fab!(:upload) { Fabricate(:upload, user: user) }
   let(:avatar) { user.create_user_avatar! }

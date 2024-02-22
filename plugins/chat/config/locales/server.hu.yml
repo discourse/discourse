@@ -39,9 +39,6 @@ hu:
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
-      message_too_long:
-        one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
-        other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
       draft_too_long: "A vázlat túl hosszú."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
@@ -68,15 +65,11 @@ hu:
         agree_and_delete:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
-        delete_and_agree:
-          title: "Üzenet törlése"
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
         disagree:
           title: "Elutasítás"
-        ignore:
-          title: "Letiltás"
     channel:
       archive:
         first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
@@ -88,18 +81,23 @@ hu:
         multi_user_truncated:
           one: "%{comma_separated_usernames} és még %{count} fő"
           other: "%{comma_separated_usernames} és még %{count} fő"
+    mention_warning:
+      dismiss: "elvetés"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
     personal_chat: "személyes csevegés"
     onebox:
+      thread_title_connector: "ebben:"
       x_members:
         one: "%{count} tag"
         other: "%{count} tag"
       and_x_others:
         one: "és még %{count} fő"
         other: "és még %{count} fő"
+    transcript:
+      default_thread_title: "Szál"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -1,4 +1,8 @@
-import I18n from "I18n";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
+import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
@@ -6,12 +10,8 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
-import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import I18n from "discourse-i18n";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -114,6 +114,7 @@ acceptance("Category Edit", function (needs) {
     await allowedTagChooser.expand();
     await allowedTagChooser.selectRowByValue("monkey");
 
+    await allowedTagChooser.collapse();
     const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.selectRowByValue("TagGroup1");
@@ -127,6 +128,7 @@ acceptance("Category Edit", function (needs) {
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
+    await allowedTagGroupChooser.collapse();
     await allowedTagChooser.expand();
     await allowedTagChooser.deselectItemByValue("monkey");
 
@@ -176,6 +178,36 @@ acceptance("Category Edit", function (needs) {
 
     await click(".dialog-footer .btn-primary");
     assert.ok(!visible(".dialog-body"));
+  });
+
+  test("Nested subcategory error when saving", async function (assert) {
+    await visit("/c/bug/edit");
+
+    const categoryChooser = selectKit(".category-chooser.single-select");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(1002);
+
+    await click("#save-category");
+
+    assert.strictEqual(
+      query(".dialog-body").textContent.trim(),
+      I18n.t("generic_error_with_reason", {
+        error: "subcategory nested under another subcategory",
+      })
+    );
+
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!visible(".dialog-body"));
+
+    assert.ok(
+      !visible(".category-breadcrumb .category-drop-header[data-value='1002']"),
+      "it doesn't show the nested subcategory in the breadcrumb"
+    );
+
+    assert.ok(
+      !visible(".category-breadcrumb .single-select-header[data-value='1002']"),
+      "it clears the category chooser"
+    );
   });
 
   test("Subcategory list settings", async function (assert) {

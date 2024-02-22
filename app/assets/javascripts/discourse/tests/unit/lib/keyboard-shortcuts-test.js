@@ -1,25 +1,14 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import DiscourseURL from "discourse/lib/url";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import sinon from "sinon";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import DiscourseURL from "discourse/lib/url";
 
 module("Unit | Utility | keyboard-shortcuts", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     sinon.stub(DiscourseURL, "routeTo");
-  });
-
-  test("selectDown calls _moveSelection with 1", function (assert) {
-    let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
-
-    KeyboardShortcuts.selectDown();
-    assert.ok(stub.calledWith(1), "_moveSelection is called with 1");
-  });
-
-  test("selectUp calls _moveSelection with -1", function (assert) {
-    let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
-
-    KeyboardShortcuts.selectUp();
-    assert.ok(stub.calledWith(-1), "_moveSelection is called with -1");
   });
 
   test("goBack calls history.back", function (assert) {

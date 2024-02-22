@@ -16,6 +16,7 @@ class ReviewableSerializer < ApplicationSerializer
     :score,
     :version,
     :target_created_by_trust_level,
+    :created_from_flag?,
   )
 
   attribute :status_for_database, key: :status
@@ -94,6 +95,10 @@ class ReviewableSerializer < ApplicationSerializer
         data[:payload] = (object.payload || {}).slice(*self.class._payload_for_serialization)
       end
     end
+  end
+
+  def created_from_flag?
+    false
   end
 
   def topic_tags

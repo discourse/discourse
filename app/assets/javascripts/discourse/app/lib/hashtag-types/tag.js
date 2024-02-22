@@ -1,3 +1,4 @@
+import { iconHTML } from "discourse-common/lib/icon-library";
 import HashtagTypeBase from "./base";
 
 export default class TagHashtagType extends HashtagTypeBase {
@@ -11,5 +12,11 @@ export default class TagHashtagType extends HashtagTypeBase {
 
   generateColorCssClasses() {
     return [];
+  }
+
+  generateIconHTML(hashtag) {
+    return iconHTML(hashtag.icon, {
+      class: `hashtag-color--${this.type}-${hashtag.id}`,
+    });
   }
 }

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TopicTagsMixin
+  DESCRIPTION_LIMIT = 80
+
   def self.included(klass)
     klass.attributes :tags
     klass.attributes :tags_descriptions
@@ -15,7 +17,10 @@ module TopicTagsMixin
   end
 
   def tags_descriptions
-    all_tags.each.with_object({}) { |tag, acc| acc[tag.name] = tag.description }.compact
+    all_tags
+      .each
+      .with_object({}) { |tag, acc| acc[tag.name] = tag.description&.truncate(DESCRIPTION_LIMIT) }
+      .compact
   end
 
   def topic
@@ -26,17 +31,20 @@ module TopicTagsMixin
 
   def all_tags
     return @tags if defined?(@tags)
+
+    tags = topic.visible_tags(scope)
+
     # Calling method `pluck` or `order` along with `includes` causing N+1 queries
     tags =
       (
         if SiteSetting.tags_sort_alphabetically
-          topic.tags.sort_by(&:name)
+          tags.sort_by(&:name)
         else
           topic_count_column = Tag.topic_count_column(scope)
-          topic.tags.sort_by { |tag| tag.public_send(topic_count_column) }.reverse
+          tags.sort_by { |tag| tag.public_send(topic_count_column) }.reverse
         end
       )
-    tags = tags.reject { |tag| scope.hidden_tag_names.include?(tag[:name]) } if !scope.is_staff?
+
     @tags = tags
   end
 end

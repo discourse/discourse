@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class SidebarSectionSerializer < ApplicationSerializer
-  attributes :id, :title, :links, :slug, :public
+  attributes :id, :title, :links, :slug, :public, :section_type
 
   def links
-    object.sidebar_section_links.map { |link| SidebarUrlSerializer.new(link.linkable, root: false) }
+    object.sidebar_urls.map { |sidebar_url| SidebarUrlSerializer.new(sidebar_url, root: false) }
   end
 
   def slug

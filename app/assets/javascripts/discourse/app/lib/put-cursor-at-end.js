@@ -1,5 +1,5 @@
-import { helperContext } from "discourse-common/lib/helpers";
 import positioningWorkaround from "discourse/lib/safari-hacks";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export default function (element) {
   const caps = helperContext().capabilities;

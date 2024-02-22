@@ -1,14 +1,16 @@
-import { isBlank } from "@ember/utils";
-import { schedule, scheduleOnce, throttle } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import AddArchetypeClass from "discourse/mixins/add-archetype-class";
-import ClickTrack from "discourse/lib/click-track";
+import { getOwner } from "@ember/application";
 import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import { schedule, scheduleOnce, throttle } from "@ember/runloop";
+import { isBlank } from "@ember/utils";
+import $ from "jquery";
+import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
+import { highlightPost } from "discourse/lib/utilities";
+import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
-import { alias } from "@ember/object/computed";
-import { highlightPost } from "discourse/lib/utilities";
+import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
@@ -104,7 +106,7 @@ export default Component.extend(
       $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
-        (e) => ClickTrack.trackClick(e, this.siteSettings)
+        (e) => ClickTrack.trackClick(e, getOwner(this))
       );
       this.appEvents.on("discourse:focus-changed", this, "gotFocus");
       this.appEvents.on("post:highlight", this, "_highlightPost");

@@ -18,7 +18,7 @@ fa_IR:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - ژانویه
     - فوریه
     - مارس
@@ -51,9 +51,12 @@ fa_IR:
   remove_posts_deleted_by_author: "پاک شده توسط نویسنده"
   redirect_warning: "ما قادر به تایید این پیوند نمی‌باشیم. پیوند انتخابی شما قبلا به انجمن پست شده است. اگر در هر‌صورت مایل به انجام این کار هستید بر روی پیوند زیر کلیک کنید."
   on_another_topic: "در یک مبحث دیگر"
+  topic_category_changed: "از %{from} به %{to}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
+  components:
+    disabled_filter: "غیرفعال"
   themes:
     bad_color_scheme: "نمی‌توان پوسته را بروزرسانی کرد، جعبه رنگ نامعتبر"
     other_error: "در بروزرسانی قالب مشکلی پیش آمده"
@@ -63,6 +66,10 @@ fa_IR:
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
       ssh_key_gone: "شما برای نصب پوسته بیش از حد طولانی صبر کردید و کلید SSH منقضی شده است. لطفا دوباره امتحان کنید."
+    settings_errors:
+      objects:
+        required: "باید حاضر باشد"
+        not_valid_integer_value: "باید یک عدد صحیح باشد"
   emails:
     incoming:
       default_subject: "این موضوع نیاز به عنوان دارد"
@@ -135,7 +142,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
-      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "یوزر ایجینت باید حداقل 3 کاراکتر داشته باشند تا از محدود شدن نرخ درخواست کاربران قانونی به صورت تصادفی جلوگیری شود."
   word_connector:
     comma: "، "
   invite:
@@ -184,7 +191,7 @@ fa_IR:
     more_replies:
       one: "%{count} پاسخ دیگر"
       other: "%{count} پاسخ دیگر"
-    loading: "بارگزاری بحث..."
+    loading: "در حال بارگیری بحث…"
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
@@ -339,7 +346,8 @@ fa_IR:
               same_as_current: "رمز انتخابی مشابه رمز فعلی شما است."
               unique_characters: "تعداد نویسه تکراری زیاد است. لطفا یک رمز قوی‌تر انتخاب کنید."
             ip_address:
-              signup_not_allowed: "ثبت نام با این حساب‌کاربری ممنوع می باشد."
+              blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
+              max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
         color_scheme_color:
           attributes:
             hex:
@@ -376,21 +384,6 @@ fa_IR:
   meta_category_description: "گفتگو در مورد سایت، این سازمان، چگونه کار می کنه٬ و چطور می‌توانیم آن را بهبود ببخشیم. "
   staff_category_name: "همکاران"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. موضوعات فقط برای مدیران ارشد و مدیران قابل رویت است."
-  discourse_welcome_topic:
-    title: "به انجمن ما خوش آمدید!"
-    body: |2
-
-      اولین پاراگراف این موضوع سنجاق شده و به عنوان پیام خوش‌آمد گویی به تمام بازدید‌کنندگان نمایش داده می‌شود. که مهم است!
-
-      این متن را به یک توضیح مختصر درباره انجمن خود **تغییر دهید**:
-
-      - برای چه افرادی است؟
-      - چه چیزی را در اینجا پیدا می‌کنند؟
-      - چرا باید به اینجا بیایند؟
-      - چه زمانی می‌توانند بیشتر بخوانند (پیوند‌ها، منابع و...)؟
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      شاید بخواهید این موضوع را از طریق مدیریت ببندید :wrench: (در قسمت بالا سمت راست و پایین)، بنابراین پاسخ‌ها در اعلان ها انباشته نمی‌شوند.
   category:
     topic_prefix: "در رابطه با دسته‌بندی %{category}"
     post_template: "%{replace_paragraph}\n\nپاراگراف‌های زیر را برای توضیحات طولانی تر استفاده کنید، یا برای ایجاد راهنمای دسته‌بندی یا قوانین:\n\nچرا مردم باید این دسته‌بندی را استفاده کنند؟ برای چه منظوری است؟\n\nاین دسته‌بندی چقدر با دسته‌بندی‌های موجود تفاوت دارد؟\n\nموضوعات این دسته‌بندی باید شامل چه مواردی باشند؟\n\nآیا به این دسته‌بندی نیاز داریم؟ آیا می‌توانیم این دسته‌بندی را با یک دسته‌بندی یا زیر‌دسته‌بندی دیگر ادغام کنیم؟\n"
@@ -533,18 +526,10 @@ fa_IR:
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
   change_email:
-    confirmed: "ایمیل شما به روز شد."
-    please_continue: "برو به %{site_name}"
     error: "در تغییر ایمیلتان خطایی روی داد. شاید قبلا در سایت استفاده شده است؟"
     error_staged: "خطایی در تغییر ایمیل رخ داده است. این ایمیل در حال حاضر در یک حساب‌کاربری خودکار استفاده می‌شود."
     already_done: "با عرض پوزش، پیوند تایید نامعتبر است. شاید ایمیل شما تغییر کرده؟"
     confirm: "تایید"
-    authorizing_new:
-      description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
-    authorizing_old:
-      description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
-      old_email: "ایمیل قدیمی: %{email}"
-      new_email: "ایمیل جدید: %{email}"
   activation:
     action: "برای فعال کردن حساب‌کاربری خود اینجا کلیک کنید"
     already_done: "متاسفیم، این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب‌کاربری شما در حال حاضر فعال است."
@@ -575,6 +560,9 @@ fa_IR:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "نامناسب"
+    illegal:
+      email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "فرستادن پیام به @%{username}"
       email_title: 'فرسته‌ی شما در « %{title} »'
@@ -593,6 +581,8 @@ fa_IR:
       title: "پسندیدن"
       description: "پسندیدن این فرسته"
       short_description: "پسندیدن این فرسته"
+  user_activity:
+    no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
@@ -606,6 +596,9 @@ fa_IR:
       long_form: "این را برای توجه مدیر پرچم گذاری کن"
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
       email_title: 'موضوع "%{title}" نیاز به توجه مدیر دارد. '
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>این نوشته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
@@ -900,9 +893,6 @@ fa_IR:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "تمام فرسته‌هایی که بیش از ۳۰ روز پنهان باقی می‌مانند پاک شوند."
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."
-    min_post_length: "حداقل طول مجاز فرسته بر حسب تعداد نویسه"
-    min_first_post_length: "حداقل طول فرسته (بدنه‌ی موضوع) بر حسب نویسه"
-    min_personal_message_post_length: "حداقل طول فرسته در پیام‌ها بر حسب نویسه "
     max_post_length: "حداکثر طول فرسته بر حسب نویسه"
     topic_featured_link_enabled: "فرستادن پیوند همراه موضوع فعال باشد."
     show_topic_featured_link_in_digest: "نمایش پیوند‌های برجسته موضوع در ایمیل خلاصه"
@@ -950,12 +940,11 @@ fa_IR:
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
     must_approve_users: "مدیران باید کاربران جدید را قبل از اجازه دسترسی به سایت تایید کنند."
-    review_every_post: "همه نوشته‌ها باید بررسی شوند. هشدار! برای وب‌سایت‌های فعال و مشغول توصیه نمی‌شود."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
     use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
-    top_menu: "مشخص کنید کدام موارد و با چه ترتیبی در ناوبری صفحه خانگی نشان داده شوند. برای مثال: آخرین‌ها|تازه‌ها|نخوانده‌ها|دسته‌ها|خوانده‌ها|فرسته‌ها|نشانک‌ها"
-    post_menu: "مشخص کنید کدام موارد بر روی فهرست نوشته ها نشان داده شوند٬ و بر اساس چه ترتیبی. برای مثال : پسند|ویرایش|پرچم|پاک کردن|همرسانی|نشانک|پاسخ"
+    content_security_policy: "فعال کردن Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     post_menu_hidden_items: "فهرست موارد مخفی شود بطور پیش فرض در فهرست نوشته مگر اینکه رفع گسترش به حالت روشن باشد."
     share_links: "مشخص کنید کدام موارد بر روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود. "
@@ -968,10 +957,10 @@ fa_IR:
     topics_per_period_in_top_summary: "تعداد بهترین موضوعات در بخش پیش فرض خلاصه بهترین موضوعات، نشان داده شده."
     topics_per_period_in_top_page: "تعداد موضوعات خوب در بخش گسترش یافته \" بیشتر نشان بده\" بهترین موضوعات، نشان داده شود. "
     redirect_users_to_top_page: "بطور خودکار کاربران جدید و کاربران غایب را به صفحه‌ی بهترین‌ها هدایت کن."
-    top_page_default_timeframe: "بازه زمانی پیشفرض برای نمایش در بالای صفحه."
     prioritize_username_in_ux: "نام کاربری را در ابتدا در صفحه‌ی کاربر، کارت کاربر یا نوشته‌هایش نمایش بده(وقتی غیر‌فعال باشد نام در ابتدا نمایش داده می‌شود)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال تا (n) ساعت اعتبار دارد."
     enable_badges: "فعال سازی سیستم نشان‌دهی"
+    hidden_post_visible_groups: "به کاربرانی که در این گروه‌ها هستند اجازه دهید که نوشته‌های پنهان شده را مشاهد کنند. کاربرانی که به عنوان مدیر هستند همیشه می‌توانند نوشته‌های پنهان را مشاهده کنند."
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید Discourse موجود است. "
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
@@ -1000,7 +989,6 @@ fa_IR:
     top_topics_formula_least_likes_per_post_multiplier: "مقدار پسند‌های حداقل هر نوشته ضربدر (n) در موضوعات برتر است فرمول: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "بعد از ایجاد موضوع،‌ کاربر باید (n) ثانیه قبل از اینکه موضوع دیگری ایجاد کند صبر کند. "
     rate_limit_create_post: "بعد از نوشته،‌ کاربر باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
-    rate_limit_new_user_create_topic: "بعد از ایجاد یک موضوع، کاربر جدید باید (n) ثانیه قبل از ایجاد موضوع دیگر صبر کند."
     rate_limit_new_user_create_post: "بعد از نوشته،‌ کاربر جدید باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
     max_likes_per_day: "حداکثر تعداد پسند هر کاربر در روز"
     max_flags_per_day: "حداکثر تعداد پرچم هر کاربر در روز"
@@ -1059,6 +1047,8 @@ fa_IR:
     min_trust_to_edit_wiki_post: "حداقل سطح اعتماد برای ویرایش نوشته ای که به‌عنوان دانشنامه نشانه‌گزاری شده است. "
     min_trust_to_edit_post: "حداقل سطح اعتماد برای ویرایش نوشته مورد نیاز است."
     min_trust_to_allow_self_wiki: "حداقل سطح اعتماد برای تبدیل نوشته‌ی خود به دانش‌نامه نیاز است."
+    invite_allowed_groups: "گروه‌هایی که مجاز به دعوت از کاربران هستند."
+    ignore_allowed_groups: "گروه‌هایی که مجاز به نادیده گرفتن سایر کاربران هستند."
     newuser_max_links: "کاربر جدید می تواند چند پیوند به نوشته اضافه کند. "
     newuser_max_attachments: "کاربر جدید می تواند چند پیوست اضافه کند به پست. "
     newuser_max_mentions_per_post: "حداکثر تعداد @نام اطلاعیه ها که کاربر جدید در یک پست می تواند استفاده کند. "
@@ -1076,11 +1066,7 @@ fa_IR:
     min_title_similar_length: "حداقل طول عنوان قبل از اینکه برای موضوعات مشابه بررسی شود."
     desktop_category_page_style: "سبک بصری برای صفحه‌ی دسته‌بندی"
     category_colors: "لیست مقادیر رنگ هگزا دسیمال مجاز برای دسته‌بندی‌ها."
-    category_style: "سبک بصری برای نشان دسته‌بندی"
     dark_mode_none: "هیچ کدام"
-    max_attachment_size_kb: "حداکثر سایز فایل پیوست شده به واحد کیلوبایت. این باید در پیکربندی nginx باشد (client_max_body_size) / همچنین apache یا proxy."
-    authorized_extensions: "لیست پسوند‌های مجاز فایل برای بارگذاری ( از '*' برای اجازه به تمام فایل‌ها استفاده کنید)"
-    theme_authorized_extensions: "لیست پسوند‌های قابل بارگذاری برای قالب (از '*' برای اجازه به تمامی فایل‌ها استفاده کنید)"
     max_similar_results: "چند موضوع مشابه زیر ویرایشگر وقتی که موضوع جدید ایجاد می شود، نمایش داده شود. مقایسه بر اساس عنوان و متن است. "
     title_prettify: "از غلط های املایی و اشتباهات رایج جلوگیری کن٬ از جمله همه حروف بزرگ٬‌ حرف کوچک اولین کاراکتر، ! و ؟ چندگانه . اضافه در پایان و غیره."
     topic_views_heat_low: "بعد از این تعداد بازدید، فیلد تعداد بازدید بسیار پر‌رنگ می‌شود."
@@ -1165,6 +1151,7 @@ fa_IR:
     enable_user_directory: "شاخه کاربری را برای مرور ارائه کن"
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
     allow_anonymous_posting: "به کاربر اجازه بده که به حالت ناشناس بروند"
+    allow_anonymous_likes: "به کاربران ناشناس اجازه دهید نوشته‌ها را بپسندند"
     anonymous_posting_min_trust_level: "حداقل سطح اعتماد برای فعال‌سازی نوشته گذاشتن در حالت ناشناس"
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به 600 تنظیم شد٬‌ به محض اینکه 600 دقیقه از نوشته گذشت و کاربر سوئیچ شد چند لحظه بعد٬‌ حساب کاربری جدید ناشناس ساخته می شود. "
     hide_user_profiles_from_public: "غیر‌فعال‌سازی کارت کاربری، پروفایل کاربر و فهرست راهنمای کاربر برای کاربران ناشناس."
@@ -1178,31 +1165,24 @@ fa_IR:
     suppress_uncategorized_badge: "نشان برای موضوعات دسته‌بندی نشده را در فهرست موضوعات را نشان نده. "
     permalink_normalizations: "اعمال Regex زیر قبل از تطابق پیوند یکتا، برای مثال /(topic.*)\\?.*/\\1 نوار query string را از پیوند موضوع جدا می‌کند. فرمت regex+string از \\1 استفاده می‌کند. برای دسترسی به تصویر‌برداری."
     disable_system_edit_notifications: "ویرایش اعلان‌ها را از طریق کاربر سیستم کار بینداز وقتی 'download_remote_images_to_local' فعال است "
-    disable_tags_edit_notifications: "ویرایش برچسب‌های آگاه‌سازی مربوط به این موضوعات غیرفعال شود."
     automatically_unpin_topics: "وقتی کاربر به پایین صفحه می‌رسد سنجاق موضوع‌ها به‌صورت خودکار برداشته شود."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."
     share_anonymized_statistics: "اشتراک‌گذاری آمار استفاده ناشناس"
-    max_prints_per_hour_per_user: "حداکثر تعداد برداشت /print صفحه (0 برای غیرفعال)"
     full_name_required: "نام و نام خانوادگی برای کامل کردن نمایه کاربر مورد نیاز است."
     enable_names: "نام و نام‌خانوادگی کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     display_name_on_posts: "نام و نام‌خانوادگی کاربران را در نوشته نشان بده به‌علاوه‌ی @نام‌کاربری."
     show_time_gap_days: "اگر دو نوشته با این فاصله زمانی از هم نوشته شوند، فاصله زمانی را نشان بده."
     short_progress_text_threshold: "بعد از اینکه تعداد نوشته ها در این موضوع از این تعداد پایین تر آمد٬ نوار پیشرفت تعداد نوشته ها را در حال حاضر نشان می دهد. اگر عرض نوار پیشرفت را تعویض کنید٬ شاید لازم باشد این مقدار را هم عوض کنید. "
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به موضوعی که آخرین پاسخ برمی گردد به خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
-    autohighlight_all_code: "اعمال زور برای برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
     embed_truncate: "کوتاه کردن نوشته‌های جاسازی شده "
     allowed_href_schemes: "طرح‌ها در لینک‌های http و https مجازند"
     embed_post_limit: "حداکثر تعداد نوشته‌هایی که می‌توانید جا‌سازی کنید. "
     embed_username_required: "نام‌کاربری برای ایجاد تاپیک مورد نیاز است."
-    show_create_topics_notice: "اگر سایت کمتر از 5 موضوع عمومی دارد٬ مدیران اطلاع بده تا موضوعات بیشتری بسازند."
     delete_drafts_older_than_n_days: "پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن"
-    bootstrap_mode_min_users: "حداقل تعداد کاربرانی که نیاز است تا حالت خود‌راه‌انداز غیر‌فعال شود (0 برای غیر‌فعال)"
     slug_generation_method: "یک روش ایجاد نام یکتا انتخاب کنید. 'encoded' رشته‌ای شامل درصد ایجاد می‌کند. 'none' اسم یکتا را به صورت کلی غیر‌فعال می‌نماید."
     enable_emoji: "فعالسازی شکلک"
     emoji_set: "می‌خواهید شکلک شما چطور باشد؟"
     approve_post_count: "تعداد نوشته‌های کاربر جدید که باید تایید شود."
-    approve_unless_trust_level: "نوشته‌ها برای کاربران پایین تر از این سطح اعتماد نیاز به تایید دارد. "
-    approve_new_topics_unless_trust_level: "موضوعات جدید برای کاربرانی با کمتر از این سطح اعتماد باید تایید شود"
     auto_close_messages_post_count: "حداکثر تعداد نوشته‌های مجاز برای پیام‌خصوصی قبل از اینکه به صورت خودکار بسته شود (0 برای غیر فعال)"
     auto_close_topics_post_count: "حداکثر تعداد نوشته‌های مجاز برای موضوع قبل از اینکه به صورت خودکار بسته شود (0 برای غیر فعال)"
     code_formatting_style: "کد دکمه در composer به صورت پیشفرض این حالت خواهد بود"
@@ -1224,9 +1204,7 @@ fa_IR:
     default_categories_tracking: "لیست دسته‌بندی‌هایی که به صورت پیشفرض پیگیری می‌شوند."
     default_categories_muted: "لیست دسته‌بندی‌هایی که به صورت پیشفرض غیر‌فعال می‌شوند."
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
-    allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
-    min_trust_level_for_user_api_key: "سطح اعتماد مورد نیاز برای ایجاد کلید API کاربر"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
     min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای ایجاد برچسب."
@@ -1237,6 +1215,7 @@ fa_IR:
     tags_sort_alphabetically: "نمایش برچسب‌ها به ترتیب الفبا. پیشفرض نمایش به ترتیب محبوبیت است."
     tag_style: "سبک بصری نشان برچسب‌ها."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
+    tag_topic_allowed_groups: "گروه‌هایی که مجاز به برچسب‌گذاری موضوعات هستند."
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
@@ -1262,12 +1241,15 @@ fa_IR:
       pop3_polling_password_is_empty: "حداقل باید یک 'رمز‌عبور رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
       pop3_polling_authentication_failed: "اعتبار سنجی به POP3 ناموفق بود. لطفا اطلاعا ورود را بررسی نمایید."
       reply_by_email_address_is_empty: "باید یک 'آدرس پاسخ با ایمیل' قبل از فعالسازی پاسخ با ایمیل تنظیم کنید."
-      email_polling_disabled: "باید حالت دستی یا رای‌گیری POP3 را قبل از فعالسازی پاسخ با ایمیل، فعال کنید."
       user_locale_not_enabled: "قبل از فعالسازی این قسمت، ابتدا باید 'اجازه انتخاب زبان' را به کاربر بدهید."
       invalid_regex: "الگوی regex نامعتبر یا غیر‌مجاز است."
       min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
       max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
       markdown_linkify_tlds: "شما مقدار «*» را نمی‌توانید وارد کنید."
+    keywords:
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1412,9 +1394,6 @@ fa_IR:
       not_allowed: "این ارائه کننده ایمیل پشتیبانی نمی‌شود. لطفا از ایمیل دیگری استفاده کنید."
       blocked: "مجاز نیست."
       revoked: "تا %{date} ایمیلی به '%{email}' ارسال نخواهد شد."
-    ip_address:
-      blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
-      max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
     website:
       domain_not_allowed: "سایت نامعتبر است. دامنه‌های مجاز: %{domains}"
   unsubscribe_mailer:
@@ -1670,8 +1649,6 @@ fa_IR:
       title: "دانلود تصاویر خارجی غیر‌فعال شد"
       subject_template: "دانلود کردن عکس‌های خارجی از کار افتاده"
       text_body_template: " تنظیمات `download_remote_images_to_local` غیرفعال شده زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده شده است. "
-    dashboard_problems:
-      title: "مشکلات داشبورد"
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"
@@ -2007,7 +1984,6 @@ fa_IR:
       too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده {max_size_kb}% کیلوبایت است.)"
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
-      larger_than_x_megapixels: "با عرض پوزش، تصویری که در حال بارگذاری آن هستید بزرگتر از حد مجاز است. (حداکثر اندازه تصویر %{max_image_megapixels} مگاپیکسل) است - لطفا بعد از تغییر اندازه دوباره تلاش کنید."
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما مشکل دارد. "
   avatar:
     missing: "با عرض پوزش، نمی‌توانیم آواتار مرتبطی با این ایمیل پیدا کنیم. لطفا دوباره آپلود کنید."
@@ -2077,7 +2053,7 @@ fa_IR:
       name: خوش آمدید
       description: یک پسند دریافت کرده‌اید
     autobiographer:
-      name: نویسنده شرح‌حال
+      name: شرح‌حال نویس
       description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a> خود را تکمیل کرده
     anniversary:
       name: سالگرد
@@ -2318,6 +2294,8 @@ fa_IR:
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
+    github:
+      closed: "بسته"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
@@ -2351,6 +2329,8 @@ fa_IR:
         title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+      delete:
+        title: "حذف…"
       delete_and_agree:
         title: "حذف نوشته"
       disagree:
@@ -2360,16 +2340,20 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
-        title: "حذف کاربر..."
+        title: "حذف کاربر…"
         delete:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
-        bundle_title: "رد کردن..."
+        bundle_title: "رد کردن…"
   fallback_username: "کاربران"
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at باید بیشتر از set_at باشد"
+  form_templates:
+    errors:
+      duplicate_ids: "دارای شناسه های تکراری است"
+      reserved_id: "دارای یک کلمه کلیدی رزرو شده به عنوان شناسه است: %{id}"
   activemodel:
     errors:
       <<: *errors

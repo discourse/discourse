@@ -18,8 +18,6 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_USERS_LIMIT = 10_000
 
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    whisperers_group_ids = SiteSetting.whispers_allowed_group_ids
-
     DB.exec(
       <<~SQL,
     UPDATE user_stats us
@@ -37,11 +35,11 @@ class UserStat < ActiveRecord::Base
         INNER JOIN topics t ON t.id = tau.topic_id
         INNER JOIN users u ON u.id = tau.user_id
         LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
-        #{whisperers_group_ids.present? ? "LEFT JOIN group_users gu ON gu.group_id IN (:whisperers_group_ids) AND gu.user_id = u.id" : ""}
+        #{SiteSetting.whispers_allowed_groups_map.any? ? "LEFT JOIN group_users gu ON gu.group_id IN (:whisperers_group_ids) AND gu.user_id = u.id" : ""}
         WHERE t.deleted_at IS NULL
         AND t.archetype = :archetype
         AND tu.last_read_post_number < CASE
-                                       WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? "OR gu.id IS NOT NULL" : ""}
+                                       WHEN u.admin OR u.moderator #{SiteSetting.whispers_allowed_groups_map.any? ? "OR gu.id IS NOT NULL" : ""}
                                        THEN t.highest_staff_post_number
                                        ELSE t.highest_post_number
                                        END
@@ -71,7 +69,7 @@ class UserStat < ActiveRecord::Base
       now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
       last_seen: last_seen,
       limit: limit,
-      whisperers_group_ids: whisperers_group_ids,
+      whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
     )
   end
 
@@ -175,19 +173,23 @@ class UserStat < ActiveRecord::Base
 
     # Update denormalized posts_read_count
     DB.exec(<<~SQL, seen_at: last_seen)
+      WITH filtered_users AS (
+        SELECT id FROM users u
+        JOIN user_stats ON user_id = u.id
+        WHERE last_seen_at > :seen_at
+        AND posts_read_count < 10000
+      )
       UPDATE user_stats SET posts_read_count = X.c
-      FROM
-      (SELECT pt.user_id,
-              COUNT(*) AS c
-       FROM users AS u
-       JOIN post_timings AS pt ON pt.user_id = u.id
-       JOIN topics t ON t.id = pt.topic_id
-       WHERE u.last_seen_at > :seen_at AND
-             t.archetype = 'regular' AND
-             t.deleted_at IS NULL
-       GROUP BY pt.user_id) AS X
-       WHERE X.user_id = user_stats.user_id AND
-             X.c <> posts_read_count
+      FROM (SELECT pt.user_id, COUNT(*) as c
+            FROM filtered_users AS u
+            JOIN post_timings AS pt ON pt.user_id = u.id
+            JOIN topics t ON t.id = pt.topic_id
+            WHERE t.archetype = 'regular'
+            AND t.deleted_at IS NULL
+            GROUP BY pt.user_id
+           ) AS X
+      WHERE X.user_id = user_stats.user_id
+      AND X.c <> posts_read_count
     SQL
   end
 

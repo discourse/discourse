@@ -41,6 +41,9 @@
         "new_features": {
           "type": "integer"
         },
+        "admin_problems": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },
@@ -218,6 +221,38 @@
         "member",
         "regular",
         "leader"
+      ]
+    },
+    "user_tips": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "first_notification": {
+          "type": "integer"
+        },
+        "topic_timeline": {
+          "type": "integer"
+        },
+        "post_menu": {
+          "type": "integer"
+        },
+        "topic_notification_levels": {
+          "type": "integer"
+        },
+        "suggested_topics": {
+          "type": "integer"
+        },
+        "admin_guide": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "first_notification",
+        "topic_timeline",
+        "post_menu",
+        "topic_notification_levels",
+        "suggested_topics",
+        "admin_guide"
       ]
     },
     "groups": {
@@ -493,7 +528,7 @@
       "type": "object"
     },
     "hashtag_icons" : {
-      "type": "array"
+      "type": "object"
     },
     "displayed_about_plugin_stat_groups" : {
       "type": "array"
@@ -666,6 +701,12 @@
                 "null"
               ]
             },
+            "uploaded_background_dark": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "can_edit": {
               "type": "boolean"
             },
@@ -681,7 +722,7 @@
             },
             "form_template_ids": {
               "type": "array",
-              "items": []
+              "items": {}
             }
           },
           "required": [
@@ -717,12 +758,10 @@
             "uploaded_logo",
             "uploaded_logo_dark",
             "uploaded_background",
+            "uploaded_background_dark",
             "can_edit"
           ]
         }
-    },
-    "show_welcome_topic_banner": {
-      "type": "boolean"
     },
     "archetypes": {
       "type": "array",
@@ -764,6 +803,12 @@
       }
     },
     "whispers_allowed_groups_names" : {
+      "type": "array"
+    },
+    "denied_emojis" : {
+      "type": "array"
+    },
+    "navigation_menu_site_top_tags": {
       "type": "array"
     }
   },

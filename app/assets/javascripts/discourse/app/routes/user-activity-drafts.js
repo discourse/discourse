@@ -1,8 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import { action } from "@ember/object";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  templateName: "user/stream",
+
   model() {
     const user = this.modelFor("user");
     const draftsStream = user.get("userDraftsStream");
@@ -14,14 +15,6 @@ export default DiscourseRoute.extend({
         emptyState: this.emptyState(),
       };
     });
-  },
-
-  renderTemplate() {
-    this.render("user_stream");
-  },
-
-  setupController(controller, model) {
-    controller.set("model", model);
   },
 
   emptyState() {
@@ -40,11 +33,5 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("user_action_groups.15");
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("user-activity")._showFooter();
-    return true;
   },
 });

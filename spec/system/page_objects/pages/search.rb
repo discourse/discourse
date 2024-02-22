@@ -29,16 +29,28 @@ module PageObjects
         find(".d-header #search-button").click
       end
 
+      SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
+
       def has_search_result?
-        page.has_selector?(".search-results .fps-result")
+        page.has_selector?(SEARCH_RESULT_SELECTOR)
+      end
+
+      def has_no_search_result?
+        page.has_no_selector?(SEARCH_RESULT_SELECTOR)
       end
 
       def has_warning_message?
         page.has_selector?(".search-results .warning")
       end
 
-      def is_search_page
-        has_css?("body.search-page")
+      SEARCH_PAGE_SELECTOR = "body.search-page"
+
+      def active?
+        has_css?(SEARCH_PAGE_SELECTOR)
+      end
+
+      def not_active?
+        has_no_css?(SEARCH_PAGE_SELECTOR)
       end
     end
   end

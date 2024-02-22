@@ -1,8 +1,9 @@
-import { module, test } from "qunit";
-import Category from "discourse/models/category";
-import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import Category from "discourse/models/category";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | category", function (hooks) {
   setupTest(hooks);
@@ -69,8 +70,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
@@ -134,8 +133,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findSingleBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
@@ -263,6 +260,27 @@ module("Unit | Model | category", function (hooks) {
     });
 
     assert.strictEqual(quux.minimumRequiredTags, null);
+
+    const foobar = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      minimum_required_tags: 2,
+      required_tag_groups: [{ name: "bar", min_count: 1 }],
+    });
+
+    assert.strictEqual(foobar.minimumRequiredTags, 2);
+
+    const barfoo = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      minimum_required_tags: 2,
+      required_tag_groups: [
+        { name: "foo", min_count: 1 },
+        { name: "bar", min_count: 2 },
+      ],
+    });
+
+    assert.strictEqual(barfoo.minimumRequiredTags, 3);
   });
 
   test("search with category name", function (assert) {
@@ -429,5 +447,28 @@ module("Unit | Model | category", function (hooks) {
       "Test2 Sub Sub2",
       "Test2 Sub Sub",
     ]);
+  });
+
+  test("asyncFindByIds - do not request categories that have been loaded already", async function (assert) {
+    const requestedIds = [];
+    pretender.get("/categories/find", (request) => {
+      const ids = request.queryParams.ids.map((id) => parseInt(id, 10));
+      requestedIds.push(ids);
+      return response({
+        categories: ids.map((id) => ({ id, slug: `category-${id}` })),
+      });
+    });
+
+    const site = this.owner.lookup("service:site");
+    site.set("lazy_load_categories", true);
+
+    await Category.asyncFindByIds([12345, 12346]);
+    assert.deepEqual(requestedIds, [[12345, 12346]]);
+
+    await Category.asyncFindByIds([12345, 12346, 12347]);
+    assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
+
+    await Category.asyncFindByIds([12345]);
+    assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
   });
 });

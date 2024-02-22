@@ -2,7 +2,7 @@
 
 RSpec.describe UploadReference do
   describe "badge uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "creates upload references" do
       badge = nil
@@ -22,6 +22,7 @@ RSpec.describe UploadReference do
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
     fab!(:upload3) { Fabricate(:upload) }
+    fab!(:upload4) { Fabricate(:upload) }
 
     it "creates upload references" do
       category = nil
@@ -32,18 +33,19 @@ RSpec.describe UploadReference do
             uploaded_logo_id: upload1.id,
             uploaded_logo_dark_id: upload2.id,
             uploaded_background_id: upload3.id,
+            uploaded_background_dark_id: upload4.id,
           )
-      }.to change { UploadReference.count }.by(3)
+      }.to change { UploadReference.count }.by(4)
 
       upload_reference = UploadReference.last
       expect(upload_reference.target).to eq(category)
 
-      expect { category.destroy! }.to change { UploadReference.count }.by(-3)
+      expect { category.destroy! }.to change { UploadReference.count }.by(-4)
     end
   end
 
   describe "custom emoji uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "creates upload references" do
       custom_emoji = nil
@@ -59,7 +61,7 @@ RSpec.describe UploadReference do
   end
 
   describe "group uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "creates upload references" do
       group = nil
@@ -76,7 +78,7 @@ RSpec.describe UploadReference do
   end
 
   describe "post uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
     fab!(:post) { Fabricate(:post, raw: "[](#{upload.short_url})") }
 
     it "creates upload references" do
@@ -92,7 +94,7 @@ RSpec.describe UploadReference do
 
   describe "site setting uploads" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
     fab!(:upload2) { Fabricate(:upload) }
 
     it "creates upload references for uploads" do
@@ -125,9 +127,9 @@ RSpec.describe UploadReference do
   end
 
   describe "theme field uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
-    it "creates upload refererences" do
+    it "creates upload references" do
       theme_field = nil
       expect do
         theme_field =
@@ -150,9 +152,9 @@ RSpec.describe UploadReference do
   end
 
   describe "theme setting uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
-    it "creates upload refererences" do
+    it "creates upload references" do
       theme_setting = nil
       expect do
         theme_setting =
@@ -173,7 +175,7 @@ RSpec.describe UploadReference do
   end
 
   describe "user uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "creates upload references" do
       user = nil
@@ -208,7 +210,7 @@ RSpec.describe UploadReference do
   end
 
   describe "user export uploads" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "creates upload references" do
       user_export = nil
@@ -231,7 +233,7 @@ RSpec.describe UploadReference do
   end
 
   describe "user profile uploads" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
 

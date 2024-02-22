@@ -73,7 +73,8 @@ module Reports::ModeratorsActivity
       flag_count AS (
           WITH period_actions AS (
           SELECT agreed_by_id,
-          disagreed_by_id
+          disagreed_by_id,
+          deferred_by_id
           FROM post_actions
           WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(",")})
           AND created_at >= '#{report.start_date}'
@@ -94,13 +95,23 @@ module Reports::ModeratorsActivity
           JOIN period_actions pa
           ON pa.disagreed_by_id = m.user_id
           GROUP BY disagreed_by_id
+          ),
+          deferred_flags AS (
+          SELECT pa.deferred_by_id AS user_id,
+          COUNT(*) AS flag_count
+          FROM mods m
+          JOIN period_actions pa
+          ON pa.deferred_by_id = m.user_id
+          GROUP BY deferred_by_id
           )
       SELECT
-      COALESCE(af.user_id, df.user_id) AS user_id,
-      COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) AS flag_count
+      COALESCE(af.user_id, df.user_id, def.user_id) AS user_id,
+      COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) + COALESCE(def.flag_count, 0) AS flag_count
       FROM agreed_flags af
       FULL OUTER JOIN disagreed_flags df
       ON df.user_id = af.user_id
+      FULL OUTER JOIN deferred_flags def
+      ON def.user_id = af.user_id
       ),
       revision_count AS (
       SELECT pr.user_id,

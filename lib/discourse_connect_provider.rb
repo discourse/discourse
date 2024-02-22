@@ -3,10 +3,21 @@
 class DiscourseConnectProvider < DiscourseConnectBase
   class BlankSecret < RuntimeError
   end
+
   class BlankReturnUrl < RuntimeError
   end
 
+  class InvalidParameterValueError < RuntimeError
+    attr_reader :param
+    def initialize(param)
+      @param = param
+      super("Invalid value for parameter `#{param}`")
+    end
+  end
+
   def self.parse(payload, sso_secret = nil, **init_kwargs)
+    # We extract the return_sso_url parameter early; we need the URL's host
+    # in order to lookup the correct SSO secret in our site settings.
     parsed_payload = Rack::Utils.parse_query(payload)
     return_sso_url = lookup_return_sso_url(parsed_payload)
 
@@ -32,7 +43,12 @@ class DiscourseConnectProvider < DiscourseConnectBase
       raise BlankSecret
     end
 
-    super(payload, sso_secret, **init_kwargs)
+    sso = super(payload, sso_secret, **init_kwargs)
+
+    # Do general parameter validation now, after signature-verification has succeeded.
+    raise InvalidParameterValueError.new("prompt") if (sso.prompt != nil) && (sso.prompt != "none")
+
+    sso
   end
 
   def self.lookup_return_sso_url(parsed_payload)

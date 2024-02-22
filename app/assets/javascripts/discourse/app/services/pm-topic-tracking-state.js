@@ -1,52 +1,51 @@
-import { Promise } from "rsvp";
 import Service from "@ember/service";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
+import { bind } from "discourse-common/utils/decorators";
 
 // See private_message_topic_tracking_state.rb for documentation
-const PrivateMessageTopicTrackingState = Service.extend({
-  CHANNEL_PREFIX: "/private-message-topic-tracking-state",
-
-  inbox: null,
-  filter: null,
-  activeGroup: null,
+class PrivateMessageTopicTrackingState extends Service {
+  CHANNEL_PREFIX = "/private-message-topic-tracking-state";
+  inbox = null;
+  filter = null;
+  activeGroup = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.states = new Map();
     this.statesModificationCounter = 0;
     this.isTracking = false;
     this.newIncoming = [];
     this.stateChangeCallbacks = new Map();
-  },
+  }
 
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy(...arguments);
 
     if (this.currentUser) {
       this.messageBus.unsubscribe(this.userChannel(), this._processMessage);
     }
 
     this.messageBus.unsubscribe(this.groupChannel("*"), this._processMessage);
-  },
+  }
 
   onStateChange(key, callback) {
     this.stateChangeCallbacks.set(key, callback);
-  },
+  }
 
   offStateChange(key) {
     this.stateChangeCallbacks.delete(key);
-  },
+  }
 
   startTracking() {
     if (this.isTracking) {
@@ -65,7 +64,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
     return this._loadInitialState().finally(() => {
       this.set("isTracking", true);
     });
-  },
+  }
 
   lookupCount(type, opts = {}) {
     const typeFilterFn = type === "new" ? this._isNew : this._isUnread;
@@ -81,7 +80,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
     return Array.from(this.states.values()).filter((topic) => {
       return typeFilterFn(topic) && filterFn?.(topic, opts.groupName);
     }).length;
-  },
+  }
 
   trackIncoming(inbox, filter, group) {
     this.setProperties({
@@ -90,13 +89,23 @@ const PrivateMessageTopicTrackingState = Service.extend({
       activeGroup: group,
       isTrackingIncoming: true,
     });
-  },
+  }
 
-  resetIncomingTracking() {
-    if (this.isTrackingIncoming) {
+  resetIncomingTracking(topicIds) {
+    if (!this.isTrackingIncoming) {
+      return;
+    }
+
+    if (topicIds) {
+      const topicIdSet = new Set(topicIds);
+      this.set(
+        "newIncoming",
+        this.newIncoming.filter((id) => !topicIdSet.has(id))
+      );
+    } else {
       this.set("newIncoming", []);
     }
-  },
+  }
 
   stopIncomingTracking() {
     if (this.isTrackingIncoming) {
@@ -105,7 +114,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
         newIncoming: [],
       });
     }
-  },
+  }
 
   removeTopics(topicIds) {
     if (!this.isTracking) {
@@ -114,19 +123,19 @@ const PrivateMessageTopicTrackingState = Service.extend({
 
     topicIds.forEach((topicId) => this.states.delete(topicId));
     this._afterStateChange();
-  },
+  }
 
   findState(topicId) {
     return this.states.get(topicId);
-  },
+  }
 
   userChannel() {
     return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
-  },
+  }
 
   groupChannel(groupId) {
     return `${this.CHANNEL_PREFIX}/group/${groupId}`;
-  },
+  }
 
   _isNew(topic) {
     return (
@@ -135,7 +144,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
         topic.notification_level >= NotificationLevels.TRACKING) &&
       !topic.is_seen
     );
-  },
+  }
 
   _isUnread(topic) {
     return (
@@ -143,7 +152,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
       topic.last_read_post_number < topic.highest_post_number &&
       topic.notification_level >= NotificationLevels.TRACKING
     );
-  },
+  }
 
   @bind
   _isPersonal(topic) {
@@ -156,7 +165,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
     return !groups.some((group) => {
       return topic.group_ids?.includes(group.id);
     });
-  },
+  }
 
   @bind
   _isGroup(topic, activeGroupName) {
@@ -166,7 +175,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
         topic.group_ids?.includes(group.id)
       );
     });
-  },
+  }
 
   @bind
   _processMessage(message) {
@@ -217,14 +226,14 @@ const PrivateMessageTopicTrackingState = Service.extend({
 
         break;
     }
-  },
+  }
 
   _displayMessageForGroupInbox(message) {
     return (
       this.inbox === "group" &&
       message.payload.group_ids.includes(this.activeGroup.id)
     );
-  },
+  }
 
   _shouldDisplayMessageForInbox(message) {
     return (
@@ -235,13 +244,13 @@ const PrivateMessageTopicTrackingState = Service.extend({
             return message.payload.group_ids.includes(group.id);
           }).length === 0))
     );
-  },
+  }
 
   _notifyIncoming(topicId) {
     if (this.isTrackingIncoming && !this.newIncoming.includes(topicId)) {
       this.newIncoming.pushObject(topicId);
     }
-  },
+  }
 
   _loadInitialState() {
     return ajax(
@@ -253,7 +262,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
         });
       })
       .catch(popupAjaxError);
-  },
+  }
 
   _modifyState(topicId, data, opts = {}) {
     const oldState = this.findState(topicId);
@@ -268,12 +277,12 @@ const PrivateMessageTopicTrackingState = Service.extend({
     if (!opts.skipIncrement) {
       this._afterStateChange();
     }
-  },
+  }
 
   _afterStateChange() {
     this.incrementProperty("statesModificationCounter");
     this.stateChangeCallbacks.forEach((callback) => callback());
-  },
-});
+  }
+}
 
 export default PrivateMessageTopicTrackingState;

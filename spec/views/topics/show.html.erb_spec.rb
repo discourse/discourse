@@ -4,7 +4,22 @@ require "rails_helper"
 require "ostruct"
 
 RSpec.describe "topics/show.html.erb" do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, category: category) }
+
+  it "uses subfolder-safe category url" do
+    set_subfolder "/subpath"
+    topic_view = OpenStruct.new(topic: topic, posts: [])
+    topic_view.stubs(:summary).returns("")
+    view.stubs(:crawler_layout?).returns(false)
+    assign(:topic_view, topic_view)
+    assign(:breadcrumbs, [{ name: category.name, color: category.color }])
+    assign(:tags, [])
+
+    render template: "topics/show", formats: [:html]
+
+    assert_select "a[href='/subpath/c/#{category.slug}/#{category.id}']"
+  end
 
   it "add nofollow to RSS alternate link for topic" do
     topic_view = OpenStruct.new(topic: topic, posts: [])
@@ -21,7 +36,7 @@ RSpec.describe "topics/show.html.erb" do
     )
   end
 
-  it "adds sturctured data" do
+  it "adds structured data" do
     view.stubs(:include_crawler_content?).returns(true)
     post = Fabricate(:post, topic: topic)
     TopicLink.create!(
@@ -59,5 +74,6 @@ RSpec.describe "topics/show.html.erb" do
     topic_schema = doc.css('[itemtype="http://schema.org/DiscussionForumPosting"]')
     expect(topic_schema.size).to eq(1)
     expect(topic_schema.css('[itemtype="http://schema.org/Comment"]').size).to eq(2)
+    expect(topic_schema.css('[itemprop="articleSection"]')[0]["content"]).to eq(topic.category.name)
   end
 end

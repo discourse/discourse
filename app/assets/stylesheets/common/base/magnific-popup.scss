@@ -29,7 +29,7 @@
 
 @use "sass:math";
 
-$overlay-color: #0b0b0b !default;
+$overlay-color: #000000 !default;
 $overlay-opacity: 0.8 !default;
 $shadow: 0 0 8px rgba(0, 0, 0, 0.6) !default; // shadow on image or iframe
 $popup-padding-left: 8px !default; // Padding from left and from right side
@@ -79,7 +79,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   position: fixed;
 
   background: $overlay-color;
-  opacity: $overlay-opacity;
+  animation: fade 0.3s alternate;
 }
 
 // Wrapper for popup
@@ -481,10 +481,14 @@ button {
     color: $caption-title-color;
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
-
+    max-width: 100%;
     // add the download icon
     a.image-source-link .d-icon {
       padding-right: 5px;
+    }
+
+    a {
+      color: var(--tertiary-medium);
     }
   }
 
@@ -617,7 +621,7 @@ button {
       @include transform(scale(1));
     }
     &.mfp-bg {
-      opacity: 0.8;
+      opacity: 0.7;
     }
   }
 

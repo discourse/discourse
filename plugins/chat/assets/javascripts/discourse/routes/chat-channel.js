@@ -1,37 +1,22 @@
+import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import withChatChannel from "./chat-channel-decorator";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 
 @withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
-  @service chat;
-  @service chatStateManager;
+  @service site;
+  @service router;
 
-  @action
-  willTransition(transition) {
-    this.#closeThread();
-
-    if (transition?.to?.name === "chat.channel.index") {
-      const targetChannelId = transition?.to?.parent?.params?.channelId;
-      if (
-        targetChannelId &&
-        parseInt(targetChannelId, 10) !== this.chat.activeChannel.id
-      ) {
-        this.chat.activeChannel.messagesManager.clearMessages();
-      }
+  redirect(model) {
+    if (this.site.mobileView) {
+      return;
     }
 
-    if (!transition?.to?.name?.startsWith("chat.")) {
-      this.chatStateManager.storeChatURL();
-      this.chat.activeChannel = null;
-      this.chat.updatePresence();
-    }
-  }
+    const messageId = this.paramsFor("chat.channel.near-message").messageId;
+    const threadId = this.paramsFor("chat.channel.thread").threadId;
 
-  #closeThread() {
-    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
-    this.chat.activeChannel.activeThread = null;
-    this.chatStateManager.closeSidePanel();
+    if (!messageId && !threadId && model.threadsManager.unreadThreadCount > 0) {
+      this.router.transitionTo("chat.channel.threads", ...model.routeModels);
+    }
   }
 }

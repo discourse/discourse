@@ -85,6 +85,12 @@ cs:
           title: "Ikony záhlaví"
         spinners:
           title: "Spinnery"
-        rich_tooltip:
+        empty_state:
+          title: "Prázdný stav"
+        tooltips:
           description: "Popis"
           header: "Hlavička"
+          hover_to_see: "Přejetím zobrazit popisek"
+        char_counter:
+          title: "Počítadlo znaků"
+          placeholder: "Zde zadejte svůj text..."

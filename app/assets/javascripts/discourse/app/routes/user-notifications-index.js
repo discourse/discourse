@@ -1,11 +1,11 @@
+import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  router: service(),
   controllerName: "user-notifications",
-  renderTemplate() {
-    this.render("user/notifications-index");
-  },
+  templateName: "user/notifications-index",
 
   titleToken() {
     return I18n.t("user.filters.all");
@@ -13,7 +13,7 @@ export default DiscourseRoute.extend({
 
   afterModel(model) {
     if (!model) {
-      this.transitionTo("userNotifications.responses");
+      this.router.transitionTo("userNotifications.responses");
     }
   },
 });

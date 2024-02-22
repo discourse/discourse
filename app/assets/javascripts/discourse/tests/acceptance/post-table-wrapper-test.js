@@ -1,5 +1,5 @@
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -17,13 +17,13 @@ acceptance("Post Table Wrapper Test", function () {
 
     assert.ok(
       exists(
-        `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper--buttons .open-popup-link`
+        `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper__buttons .open-popup-link`
       ),
       "buttons for the table wrapper appear inside a separate div"
     );
 
     const fullscreenButtonWrapper = query(
-      `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper--buttons`
+      `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper__buttons`
     );
 
     assert.strictEqual(
@@ -37,6 +37,7 @@ acceptance("Post Table Wrapper Test", function () {
     await click(
       `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table`
     );
+
     assert.ok(
       exists(".fullscreen-table-modal"),
       "The fullscreen table modal appears"
@@ -44,6 +45,16 @@ acceptance("Post Table Wrapper Test", function () {
     assert.ok(
       exists(".fullscreen-table-modal table"),
       "The table is present inside the modal"
+    );
+
+    await click(".fullscreen-table-modal .modal-close");
+    await click(
+      `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table svg`
+    );
+
+    assert.ok(
+      exists(".fullscreen-table-modal"),
+      "Fullscreen table modal appears on clicking svg icon"
     );
   });
 });

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ChannelMembershipManager do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:channel1) { Fabricate(:category_channel) }
   fab!(:channel2) { Fabricate(:category_channel) }
 

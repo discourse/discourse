@@ -20,7 +20,8 @@ module MultisiteTestHelpers
   end
 
   def self.create_multisite?
-    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
+      !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
   end
 end
 
@@ -116,7 +117,12 @@ class SeedHelper
   end
 end
 
-task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, args|
+task "multisite:migrate" => %w[
+       db:load_config
+       environment
+       set_locale
+       assets:precompile:theme_transpiler
+     ] do |_, args|
   raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
   DistributedMutex.synchronize(
@@ -216,8 +222,12 @@ task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, arg
   end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
-task "db:migrate" => %w[load_config environment set_locale] do |_, args|
+task "db:migrate" => %w[
+       load_config
+       environment
+       set_locale
+       assets:precompile:theme_transpiler
+     ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
@@ -574,4 +584,19 @@ task "db:status:json" do
   else
     puts({ status: "ok" }.to_json)
   end
+end
+
+desc "Grow notification id column to a big int in case of overflow"
+task "db:resize:notification_id" => :environment do
+  sql = <<~SQL
+    SELECT table_name, column_name FROM INFORMATION_SCHEMA.columns
+    WHERE (column_name like '%notification_id' OR column_name = 'id' and table_name = 'notifications') AND data_type = 'integer'
+  SQL
+
+  DB
+    .query(sql)
+    .each do |row|
+      puts "Changing #{row.table_name}(#{row.column_name}) to a bigint"
+      DB.exec("ALTER table #{row.table_name} ALTER COLUMN #{row.column_name} TYPE BIGINT")
+    end
 end

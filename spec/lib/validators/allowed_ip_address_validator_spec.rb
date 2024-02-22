@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe AllowedIpAddressValidator do
+  subject(:validate) { validator.validate_each(record, :ip_address, record.ip_address) }
+
   let(:record) { Fabricate.build(:user, trust_level: TrustLevel[0], ip_address: "99.232.23.123") }
   let(:validator) { described_class.new(attributes: :ip_address) }
-  subject(:validate) { validator.validate_each(record, :ip_address, record.ip_address) }
 
   context "when ip address should be blocked" do
     it "should add an error" do
       ScreenedIpAddress.stubs(:should_block?).returns(true)
       validate
       expect(record.errors[:ip_address]).to be_present
-      expect(record.errors[:ip_address][0]).to eq(I18n.t("user.ip_address.blocked"))
+      expect(record.errors[:ip_address][0]).to eq(
+        I18n.t("activerecord.errors.models.user.attributes.ip_address.blocked"),
+      )
     end
   end
 
@@ -20,7 +23,9 @@ RSpec.describe AllowedIpAddressValidator do
       validate
       expect(record.errors[:ip_address]).to be_present
       expect(record.errors[:ip_address][0]).to eq(
-        I18n.t("user.ip_address.max_new_accounts_per_registration_ip"),
+        I18n.t(
+          "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+        ),
       )
     end
   end

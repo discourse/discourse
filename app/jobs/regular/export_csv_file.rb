@@ -63,18 +63,15 @@ module Jobs
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @current_user = User.find_by(id: args[:user_id])
 
-      entities = [{ name: @entity }]
+      entity = { name: @entity }
+      entity[:method] = :"#{entity[:name]}_export"
+      raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
 
-      entities.each do |entity|
-        entity[:method] = :"#{entity[:name]}_export"
-        raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
-
-        @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
-        entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
-          "#{@extra[:name].dasherize}-#{@timestamp}"
-        else
-          "#{entity[:name].dasherize}-#{@timestamp}"
-        end
+      @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
+      entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
+        "#{@extra[:name].dasherize}-#{@timestamp}"
+      else
+        "#{entity[:name].dasherize}-#{@timestamp}"
       end
 
       export_title =
@@ -84,28 +81,11 @@ module Jobs
           @entity.gsub("_", " ").titleize
         end
 
-      filename = entities[0][:filename] # use first entity as a name for this export
+      filename = entity[:filename]
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
-
       filename = "#{filename}-#{user_export.id}"
-      dirname = "#{UserExport.base_directory}/#{filename}"
 
-      # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-
-      # Generate a compressed CSV file
-      begin
-        entities.each do |entity|
-          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
-            csv << get_header(entity[:name]) if entity[:name] != "report"
-            public_send(entity[:method]).each { |d| csv << d }
-          end
-        end
-
-        zip_filename = Compression::Zip.new.compress(UserExport.base_directory, filename)
-      ensure
-        FileUtils.rm_rf(dirname)
-      end
+      zip_filename = write_to_csv_and_zip(filename, entity)
 
       # create upload
       upload = nil
@@ -123,7 +103,9 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{zip_filename}")
+            Rails.logger.warn(
+              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
+            )
           end
         end
 
@@ -140,8 +122,6 @@ module Jobs
     end
 
     def user_list_export
-      return enum_for(:user_list_export) unless block_given?
-
       user_field_ids = UserField.pluck(:id)
 
       condition = {}
@@ -168,37 +148,31 @@ module Jobs
     end
 
     def staff_action_export
-      return enum_for(:staff_action_export) unless block_given?
-
       staff_action_data =
         if @current_user.admin?
-          UserHistory.only_staff_actions.order("id DESC")
+          UserHistory.only_staff_actions
         else
-          UserHistory.where(admin_only: false).only_staff_actions.order("id DESC")
+          UserHistory.where(admin_only: false).only_staff_actions
         end
 
-      staff_action_data.each { |staff_action| yield get_staff_action_fields(staff_action) }
+      staff_action_data.find_each(order: :desc) do |staff_action|
+        yield get_staff_action_fields(staff_action)
+      end
     end
 
     def screened_email_export
-      return enum_for(:screened_email_export) unless block_given?
-
-      ScreenedEmail
-        .order("last_match_at DESC")
-        .each { |screened_email| yield get_screened_email_fields(screened_email) }
+      ScreenedEmail.find_each(order: :desc) do |screened_email|
+        yield get_screened_email_fields(screened_email)
+      end
     end
 
     def screened_ip_export
-      return enum_for(:screened_ip_export) unless block_given?
-
-      ScreenedIpAddress
-        .order("id DESC")
-        .each { |screened_ip| yield get_screened_ip_fields(screened_ip) }
+      ScreenedIpAddress.find_each(order: :desc) do |screened_ip|
+        yield get_screened_ip_fields(screened_ip)
+      end
     end
 
     def screened_url_export
-      return enum_for(:screened_url_export) unless block_given?
-
       ScreenedUrl
         .select(
           "domain, sum(match_count) as match_count, max(last_match_at) as last_match_at, min(created_at) as created_at",
@@ -209,8 +183,6 @@ module Jobs
     end
 
     def report_export
-      return enum_for(:report_export) unless block_given?
-
       # If dates are invalid consider then `nil`
       if @extra[:start_date].is_a?(String)
         @extra[:start_date] = begin
@@ -461,7 +433,7 @@ module Jobs
 
       if @current_user
         post =
-          if upload
+          if upload&.errors&.empty?
             SystemMessage.create_from_system_user(
               @current_user,
               :csv_export_succeeded,
@@ -474,6 +446,21 @@ module Jobs
       end
 
       post
+    end
+
+    def write_to_csv_and_zip(filename, entity)
+      dirname = "#{UserExport.base_directory}/#{filename}"
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
+      begin
+        CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+          csv << get_header(entity[:name]) if entity[:name] != "report"
+          public_send(entity[:method]) { |d| csv << d }
+        end
+
+        Compression::Zip.new.compress(UserExport.base_directory, filename)
+      ensure
+        FileUtils.rm_rf(dirname)
+      end
     end
   end
 end

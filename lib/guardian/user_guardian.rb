@@ -74,7 +74,7 @@ module UserGuardian
   end
 
   def can_anonymize_user?(user)
-    is_staff? && !user.nil? && !user.staff? && !user.email.ends_with?(UserAnonymizer::EMAIL_SUFFIX)
+    is_staff? && !user.nil? && !user.staff? && !user.email&.ends_with?(UserAnonymizer::EMAIL_SUFFIX)
   end
 
   def can_merge_user?(user)
@@ -122,6 +122,10 @@ module UserGuardian
     true
   end
 
+  def public_can_see_profiles?
+    !SiteSetting.hide_user_profiles_from_public || !anonymous?
+  end
+
   def can_see_profile?(user)
     return false if user.blank?
     return true if !SiteSetting.allow_users_to_hide_profile?
@@ -134,6 +138,7 @@ module UserGuardian
 
   def can_see_user_actions?(user, action_types)
     return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
   end
 
@@ -177,17 +182,13 @@ module UserGuardian
   end
 
   def can_upload_profile_header?(user)
-    (
-      is_me?(user) &&
-        user.has_trust_level?(SiteSetting.min_trust_level_to_allow_profile_background.to_i)
-    ) || is_staff?
+    (is_me?(user) && user.in_any_groups?(SiteSetting.profile_background_allowed_groups_map)) ||
+      is_staff?
   end
 
   def can_upload_user_card_background?(user)
-    (
-      is_me?(user) &&
-        user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)
-    ) || is_staff?
+    (is_me?(user) && user.in_any_groups?(SiteSetting.user_card_background_allowed_groups_map)) ||
+      is_staff?
   end
 
   def can_upload_external?

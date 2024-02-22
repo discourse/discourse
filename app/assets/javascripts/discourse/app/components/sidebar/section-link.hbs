@@ -1,23 +1,23 @@
 {{#if this.shouldDisplay}}
   <li
     class="sidebar-section-link-wrapper"
-    {{did-insert this.didInsert this.args}}
+    data-list-item-name={{@linkName}}
+    ...attributes
   >
     {{#if @href}}
       <a
         href={{@href}}
         rel="noopener noreferrer"
         target={{this.target}}
-        class={{this.classNames}}
         title={{@title}}
-        ...attributes
+        data-link-name={{@linkName}}
+        class={{this.linkClass}}
       >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
           @prefixValue={{@prefixValue}}
           @prefixCSSClass={{@prefixCSSClass}}
           @prefixColor={{this.prefixColor}}
-          @prefixElementColors={{this.prefixElementColors}}
           @prefixBadge={{@prefixBadge}}
         />
 
@@ -27,13 +27,13 @@
       </a>
     {{else}}
       <LinkTo
-        class={{this.classNames}}
         @route={{@route}}
         @query={{or @query (hash)}}
         @models={{this.models}}
         @current-when={{@currentWhen}}
         title={{@title}}
-        ...attributes
+        data-link-name={{@linkName}}
+        class={{this.linkClass}}
       >
 
         <Sidebar::SectionLinkPrefix
@@ -41,7 +41,6 @@
           @prefixValue={{@prefixValue}}
           @prefixCSSClass={{@prefixCSSClass}}
           @prefixColor={{this.prefixColor}}
-          @prefixElementColors={{this.prefixElementColors}}
           @prefixBadge={{@prefixBadge}}
         />
 
@@ -52,6 +51,7 @@
           }}
         >
           {{@content}}
+          {{@contentComponent}}
         </span>
 
         {{#if @badgeText}}

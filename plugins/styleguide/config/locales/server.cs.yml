@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    styleguide_enabled: 'Povolení cesty "/styleguide" pro pomoc při stylování Discourse'
+    styleguide_admin_only: "Omezení viditelnosti styleguide pro správce"

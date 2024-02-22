@@ -10,16 +10,23 @@ zh_CN:
       title: "样式指南"
       welcome: "首先，从左侧菜单中选择一个部分。"
       categories:
+        syntax: 语法
         atoms: 原子
         molecules: 分子
         organisms: 生物
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "排版"
           example: "欢迎来到 Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "日期/时间输入"
+        menus:
+          title: "菜单"
+        toasts:
+          title: "消息框"
         font_scale:
           title: "字体系统"
         colors:
@@ -87,11 +94,11 @@ zh_CN:
           title: "旋转的图标"
         empty_state:
           title: "空状态"
-        rich_tooltip:
-          title: "富工具提示"
+        tooltips:
+          title: "工具提示"
           description: "描述"
           header: "标头"
           hover_to_see: "悬停以查看工具提示"
         char_counter:
           title: "字符计数器"
-          placeholder: "在这里输入你的文字..."
+          placeholder: "在此处输入您的文本…"

@@ -7,15 +7,10 @@ RSpec.describe WebHookUserSerializer do
     user
   end
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   let :serializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
-  end
-
-  before do
-    SiteSetting.navigation_menu = "legacy"
-    SiteSetting.chat_enabled = false if defined?(::Chat)
   end
 
   it "should include relevant user info" do

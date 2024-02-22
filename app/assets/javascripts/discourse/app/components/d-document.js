@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import { bind } from "discourse-common/utils/decorators";
-import logout from "discourse/lib/logout";
 import { inject as service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
+import logout from "discourse/lib/logout";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let pluginCounterFunctions = [];
 export function addPluginDocumentTitleCounter(counterFunction) {
@@ -50,15 +50,9 @@ export default Component.extend({
     }
 
     let count = pluginCounterFunctions.reduce((sum, fn) => sum + fn(), 0);
-    if (this.currentUser.redesigned_user_menu_enabled) {
-      count += this.currentUser.all_unread_notifications_count;
-      if (this.currentUser.unseen_reviewable_count) {
-        count += this.currentUser.unseen_reviewable_count;
-      }
-    } else {
-      count +=
-        this.currentUser.unread_notifications +
-        this.currentUser.unread_high_priority_notifications;
+    count += this.currentUser.all_unread_notifications_count;
+    if (this.currentUser.unseen_reviewable_count) {
+      count += this.currentUser.unseen_reviewable_count;
     }
     this.documentTitle.updateNotificationCount(count, { forced: opts?.forced });
   },

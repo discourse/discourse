@@ -17,8 +17,8 @@ export default class PostFlag extends Flag {
     return "post:flag-created";
   }
 
-  flagsAvailable(_flagController, _site, model) {
-    let flagsAvailable = model.flagsAvailable;
+  flagsAvailable(flagModal) {
+    let flagsAvailable = flagModal.args.model.flagModel.flagsAvailable;
 
     // "message user" option should be at the top
     const notifyUserIndex = flagsAvailable.indexOf(
@@ -34,9 +34,10 @@ export default class PostFlag extends Flag {
     return flagsAvailable;
   }
 
-  postActionFor(controller) {
-    return controller
-      .get("model.actions_summary")
-      .findBy("id", controller.get("selected.id"));
+  postActionFor(flagModal) {
+    return flagModal.args.model.flagModel.actions_summary.findBy(
+      "id",
+      flagModal.selected.id
+    );
   }
 }

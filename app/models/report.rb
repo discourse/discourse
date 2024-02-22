@@ -76,8 +76,6 @@ class Report
                 :icon,
                 :modes,
                 :prev_data,
-                :prev_start_date,
-                :prev_end_date,
                 :dates_filtering,
                 :error,
                 :primary_color,
@@ -129,14 +127,6 @@ class Report
   end
 
   def add_filter(name, options = {})
-    if options[:type].blank?
-      options[:type] = name
-      Discourse.deprecate(
-        "#{name} filter should define a `:type` option. Temporarily setting type to #{name}.",
-        drop_from: "2.9.0",
-      )
-    end
-
     available_filters[name] = options
   end
 
@@ -422,18 +412,13 @@ class Report
     add_counts report, subject, "topics.created_at"
   end
 
-  def lighten_color(hex, amount)
-    hex = adjust_hex(hex)
-    rgb = hex.scan(/../).map { |color| color.hex }
-    rgb[0] = [(rgb[0].to_i + 255 * amount).round, 255].min
-    rgb[1] = [(rgb[1].to_i + 255 * amount).round, 255].min
-    rgb[2] = [(rgb[2].to_i + 255 * amount).round, 255].min
-    "#%02x%02x%02x" % rgb
-  end
-
   def rgba_color(hex, opacity = 1)
     rgbs = hex_to_rgbs(adjust_hex(hex))
     "rgba(#{rgbs.join(",")},#{opacity})"
+  end
+
+  def colors
+    %w[#1EB8D1 #9BC53D #721D8D #E84A5F #8A6916]
   end
 
   private

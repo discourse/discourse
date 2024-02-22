@@ -289,7 +289,8 @@ end
 #
 # Indexes
 #
-#  idx_category_users_category_id_user_id            (category_id,user_id) UNIQUE
-#  idx_category_users_user_id_category_id            (user_id,category_id) UNIQUE
-#  index_category_users_on_user_id_and_last_seen_at  (user_id,last_seen_at)
+#  idx_category_users_category_id_user_id                      (category_id,user_id) UNIQUE
+#  idx_category_users_user_id_category_id                      (user_id,category_id) UNIQUE
+#  index_category_users_on_category_id_and_notification_level  (category_id,notification_level)
+#  index_category_users_on_user_id_and_last_seen_at            (user_id,last_seen_at)
 #

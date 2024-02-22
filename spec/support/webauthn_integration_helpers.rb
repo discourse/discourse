@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WebauthnIntegrationHelpers
+module DiscourseWebauthnIntegrationHelpers
   ##
   # Usage notes:
   #
@@ -10,13 +10,17 @@ module WebauthnIntegrationHelpers
   #
   # To make this all work together you need to
   # create a UserSecurityKey for a user using valid_security_key_data,
-  # and you override Webauthn::ChallengeGenerator.generate to return
-  # a Webauthn::ChallengeGenerator::ChallengeSession object using
+  # and you override DiscourseWebauthn::ChallengeGenerator.generate to return
+  # a DiscourseWebauthn::ChallengeGenerator::ChallengeSession object using
   # valid_security_key_challenge_data.
   #
   # This is because the challenge is embedded
   # in the post data's authenticatorData and must match up. See
-  # simulate_localhost_webautn_challenge for a real example.
+  # simulate_localhost_webauthn_challenge for a real example.
+
+  # All of the valid security key data is sourced from a localhost
+  # login (with origin http://localhost:3000).
+
   def valid_security_key_data
     {
       credential_id:
@@ -55,20 +59,45 @@ module WebauthnIntegrationHelpers
     }
   end
 
-  # all of the valid security key data is sourced from a localhost
-  # login, if this is not set the specs for webauthn WILL NOT WORK
-  def stub_as_dev_localhost
-    Discourse.stubs(:current_hostname).returns("localhost")
-    Discourse.stubs(:base_url).returns("http://localhost:3000")
+  def simulate_localhost_webauthn_challenge
+    DiscourseWebauthn.stubs(:challenge).returns(valid_security_key_challenge_data[:challenge])
   end
 
-  def simulate_localhost_webauthn_challenge
-    stub_as_dev_localhost
-    Webauthn::ChallengeGenerator.stubs(:generate).returns(
-      Webauthn::ChallengeGenerator::ChallengeSession.new(
-        challenge: valid_security_key_challenge_data[:challenge],
-        rp_id: Discourse.current_hostname,
-      ),
-    )
+  # Passkey data sourced from a key generated in a local browser
+  # with webauthn.create that includes the user verification flag on localhost:3000
+  # usin puts statements in the passkeys session controllers
+  def valid_passkey_challenge
+    "66b47014ef72937d8320ed893dc797e8a9a6d5098b89b185ca3d439b3656"
+  end
+
+  def passkey_client_data_param(type)
+    {
+      type: type,
+      challenge: Base64.strict_encode64(valid_passkey_challenge),
+      origin: "http://localhost:3000",
+      crossOrigin: false,
+    }
+  end
+
+  def valid_passkey_auth_data
+    {
+      clientData: Base64.strict_encode64(passkey_client_data_param("webauthn.get").to_json),
+      credentialId: "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=",
+      authenticatorData: "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==",
+      signature:
+        "MEUCIG5AFaw2Nfy69hHjeRLqm3LzQRMFb+TRbUAz19WJymegAiEAyEEyGdAMB2/NBwRCHM47IwtjKWCLEtabAX2BaK6fD8g=",
+    }
+  end
+
+  def valid_passkey_data
+    {
+      credential_id: "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=",
+      public_key:
+        "pQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI=",
+    }
+  end
+
+  def simulate_localhost_passkey_challenge
+    DiscourseWebauthn.stubs(:challenge).returns(valid_passkey_challenge)
   end
 end

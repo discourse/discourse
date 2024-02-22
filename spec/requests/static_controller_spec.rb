@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe StaticController do
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   describe "#favicon" do
     let(:filename) { "smallest.png" }
@@ -57,93 +57,8 @@ RSpec.describe StaticController do
     end
   end
 
-  describe "#brotli_asset" do
-    it "returns a non brotli encoded 404 if asset is missing" do
-      get "/brotli_asset/missing.js"
-
-      expect(response.status).to eq(404)
-      expect(response.headers["Content-Encoding"]).not_to eq("br")
-      expect(response.headers["Cache-Control"]).to match(/max-age=1/)
-    end
-
-    it "can handle fallback brotli assets" do
-      begin
-        assets_path = Rails.root.join("tmp/backup_assets")
-
-        GlobalSetting.stubs(:fallback_assets_path).returns(assets_path.to_s)
-
-        FileUtils.mkdir_p(assets_path)
-
-        file_path = assets_path.join("test.js.br")
-        File.write(file_path, "fake brotli file")
-
-        get "/brotli_asset/test.js"
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
-      ensure
-        File.delete(file_path)
-      end
-    end
-
-    it "has correct headers for brotli assets" do
-      begin
-        assets_path = Rails.root.join("public/assets")
-
-        FileUtils.mkdir_p(assets_path)
-
-        file_path = assets_path.join("test.js.br")
-        File.write(file_path, "fake brotli file")
-
-        get "/brotli_asset/test.js"
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
-      ensure
-        File.delete(file_path)
-      end
-    end
-
-    it "has correct cors headers for brotli assets" do
-      begin
-        assets_path = Rails.root.join("public/assets")
-
-        FileUtils.mkdir_p(assets_path)
-
-        file_path = assets_path.join("test.js.br")
-        File.write(file_path, "fake brotli file")
-        GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
-
-        get "/brotli_asset/test.js"
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Access-Control-Allow-Origin"]).to match("*")
-      ensure
-        File.delete(file_path)
-      end
-    end
-
-    it "can serve sourcemaps on adjacent paths" do
-      assets_path = Rails.root.join("public/assets")
-
-      FileUtils.mkdir_p(assets_path)
-
-      file_path = assets_path.join("test.map")
-      File.write(file_path, "fake source map")
-      GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
-
-      get "/brotli_asset/test.map"
-
-      expect(response.status).to eq(200)
-    ensure
-      File.delete(file_path)
-    end
-  end
-
   describe "#cdn_asset" do
-    let (:site) {
-      RailsMultisite::ConnectionManagement.current_db
-    }
+    let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
       begin
@@ -254,11 +169,6 @@ RSpec.describe StaticController do
           expect(response).to redirect_to "/login"
         end
 
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
-
         it "#{page_name} page loads for logged in user" do
           sign_in(Fabricate(:user))
 
@@ -289,9 +199,9 @@ RSpec.describe StaticController do
         Discourse::Application.routes.send(:eval_block, routes)
 
         topic_id = Fabricate(:post, cooked: "contact info").topic_id
-        SiteSetting.setting(:test_contact_topic_id, topic_id)
+        SiteSetting.test_some_topic_id = topic_id
 
-        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_contact_topic_id")
+        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_some_topic_id")
 
         get "/contact"
 
@@ -301,14 +211,15 @@ RSpec.describe StaticController do
 
       it "replaces existing topic-backed pages" do
         topic_id = Fabricate(:post, cooked: "Regular FAQ").topic_id
-        SiteSetting.setting(:test_faq_topic_id, topic_id)
+        SiteSetting.test_some_topic_id = topic_id
+
         polish_topic_id = Fabricate(:post, cooked: "Polish FAQ").topic_id
-        SiteSetting.setting(:test_polish_faq_topic_id, polish_topic_id)
+        SiteSetting.test_some_other_topic_id = polish_topic_id
 
         Plugin::Instance
           .new
           .add_topic_static_page("faq") do
-            current_user&.locale == "pl" ? "test_polish_faq_topic_id" : "test_faq_topic_id"
+            current_user&.locale == "pl" ? "test_some_other_topic_id" : "test_some_topic_id"
           end
 
         get "/faq"
@@ -408,7 +319,7 @@ RSpec.describe StaticController do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("workbox")
+      expect(response.body).to include("addEventListener")
     end
 
     it "replaces sourcemap URL" do

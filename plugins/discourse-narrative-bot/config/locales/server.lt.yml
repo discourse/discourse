@@ -98,7 +98,6 @@ lt:
         "10": "Ženklai rodo, kad taip"
         "11": "Atsakymas miglotas, bandykite dar kartą"
         "12": "Vėliau paklauskite dar kartą"
-        "13": "Better not tell you now"
         "14": "Dabar negalima prognozuoti"
         "15": "Susikaupkite ir vėl paklauskite"
         "16": "Nesitikėkite"
@@ -308,16 +307,6 @@ lt:
 
           Ar galite padaryti man paslaugą ir <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **atšaukti ištrynimą**?
       category_hashtag:
-        instructions: |-
-          Ar žinojote, kad savo įraše galite nurodyti kategorijas ir žymas? Pavyzdžiui, ar matėte %{category} kategoriją?
-
-          Įveskite „#“ sakinio viduryje ir pasirinkite bet kurią kategoriją arba žymą.
-        not_found: |-
-          Hmm, niekur nematau kategorijos. Atminkite, kad „#“ negali būti pirmasis simbolis. Ar galite tai nukopijuoti kitame atsakyme?
-
-          ```tekstas
-          Galiu sukurti kategorijos nuorodą per #
-          ```
         reply: |-
           Puikiai! Atminkite, kad tai veikia abiejų kategorijų _ir_ žymas, jei žymės įjungtos.
       change_topic_notification_level:

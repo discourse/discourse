@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { isTesting } from "discourse-common/config/environment";
 
 let mobileForced = false;

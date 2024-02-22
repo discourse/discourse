@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PublishTopicToCategory do
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
   fab!(:another_category) { Fabricate(:category) }
 
   let(:topic) do

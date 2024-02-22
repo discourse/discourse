@@ -5,14 +5,30 @@ module TurboTests
     def self.run(opts = {})
       files = opts[:files]
       formatters = opts[:formatters]
+      seed = opts[:seed]
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
       use_runtime_info = opts.fetch(:use_runtime_info, false)
+      retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
-      STDERR.puts "VERBOSE" if verbose
+      STDOUT.puts "VERBOSE" if verbose
 
-      reporter = Reporter.from_config(formatters, start_time)
+      reporter =
+        Reporter.from_config(
+          formatters,
+          start_time,
+          max_timings_count: opts[:profile_print_slowest_examples_count],
+        )
+
+      if ENV["GITHUB_ACTIONS"]
+        RSpec.configure do |config|
+          # Enable color output in GitHub Actions
+          # This eventually will be `config.color_mode = :on` in RSpec 4?
+          config.tty = true
+          config.color = true
+        end
+      end
 
       new(
         reporter: reporter,
@@ -20,6 +36,9 @@ module TurboTests
         verbose: verbose,
         fail_fast: fail_fast,
         use_runtime_info: use_runtime_info,
+        seed: seed,
+        profile: opts[:profile],
+        retry_and_log_flaky_tests: retry_and_log_flaky_tests,
       ).run
     end
 
@@ -37,6 +56,9 @@ module TurboTests
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
       @use_runtime_info = opts[:use_runtime_info]
+      @seed = opts[:seed]
+      @profile = opts[:profile]
+      @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
       @failure_count = 0
 
       @messages = Queue.new
@@ -50,17 +72,14 @@ module TurboTests
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       group_opts = {}
-
-      if @use_runtime_info
-        group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
-      else
-        group_opts[:group_by] = :filesize
-      end
+      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
 
       setup_tmp_dir
+
+      @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
@@ -75,6 +94,18 @@ module TurboTests
       @reporter.finish
 
       @threads.each(&:join)
+
+      if @retry_and_log_flaky_tests && @reporter.failed_examples.present?
+        retry_failed_examples_threshold = 10
+
+        if @reporter.failed_examples.length <= retry_failed_examples_threshold
+          STDOUT.puts "Retrying failed examples and logging flaky tests..."
+          return rerun_failed_examples(@reporter.failed_examples)
+        else
+          STDOUT.puts "Retry and log flaky tests was enabled but ignored because there are more than #{retry_failed_examples_threshold} failures."
+          Flaky::Manager.remove_flaky_tests
+        end
+      end
 
       @reporter.failed_examples.empty? && !@error
     end
@@ -110,6 +141,21 @@ module TurboTests
       end
 
       FileUtils.mkdir_p("tmp/test-pipes/")
+    end
+
+    def rerun_failed_examples(failed_examples)
+      command = [
+        "bundle",
+        "exec",
+        "rspec",
+        "--format",
+        "documentation",
+        "--format",
+        "TurboTests::Flaky::FlakyDetectorFormatter",
+        *Flaky::Manager.potential_flaky_tests,
+      ]
+
+      system(*command)
     end
 
     def start_multisite_subprocess(tests, **opts)
@@ -151,8 +197,8 @@ module TurboTests
           "exec",
           "rspec",
           *extra_args,
-          "--seed",
-          rand(2**16).to_s,
+          "--order",
+          "random:#{@seed}",
           "--format",
           "TurboTests::JsonRowsFormatter",
           "--out",
@@ -161,12 +207,14 @@ module TurboTests
           *tests,
         ]
 
-        if @verbose
-          command_str =
-            [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
-              .join(" ")
+        env["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"] = "1" if @profile
 
-          STDERR.puts "Process #{process_id}: #{command_str}"
+        command_string = [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].join(" ")
+
+        if @verbose
+          STDOUT.puts "::group::[#{process_id}] Run RSpec" if ENV["GITHUB_ACTIONS"]
+          STDOUT.puts "Process #{process_id}: #{command_string}"
+          STDOUT.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
         end
 
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
@@ -178,6 +226,7 @@ module TurboTests
               message = JSON.parse(line)
               message = message.symbolize_keys
               message[:process_id] = process_id
+              message[:command_string] = command_string
               @messages << message
             end
           end
@@ -215,13 +264,31 @@ module TurboTests
           message = @messages.pop
           case message[:type]
           when "example_passed"
-            example = FakeExample.from_obj(message[:example])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_passed(example)
           when "example_pending"
-            example = FakeExample.from_obj(message[:example])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_pending(example)
           when "example_failed"
-            example = FakeExample.from_obj(message[:example])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_failed(example)
             @failure_count += 1
             if fail_fast_met
@@ -237,6 +304,11 @@ module TurboTests
             @error = true
           when "exit"
             exited += 1
+
+            if @reporter.formatters.any? { |f| f.is_a?(DocumentationFormatter) }
+              @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+            end
+
             break if exited == @num_processes + 1
           else
             STDERR.puts("Unhandled message in main process: #{message}")

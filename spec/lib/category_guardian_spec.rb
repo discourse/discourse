@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryGuardian do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
   fab!(:can_create_user) { Fabricate(:user) }
 
   describe "can_post_in_category?" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     context "when not restricted category" do
       it "returns false for anonymous user" do
         expect(Guardian.new.can_post_in_category?(category)).to eq(false)
@@ -21,7 +21,7 @@ RSpec.describe CategoryGuardian do
     end
 
     context "when restricted category" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
       fab!(:category) do
         Fabricate(
           :private_category,
@@ -36,6 +36,19 @@ RSpec.describe CategoryGuardian do
       end
 
       it "returns false for member of group with readonly access" do
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
+      end
+
+      it "returns false if everyone has readonly access" do
+        everyone = Group.find(Group::AUTO_GROUPS[:everyone])
+        everyone.add(user)
+        category = Fabricate(:category)
+        Fabricate(
+          :category_group,
+          category: category,
+          group: everyone,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
         expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
       end
 

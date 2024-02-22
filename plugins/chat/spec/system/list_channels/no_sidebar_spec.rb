@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | no sidebar", type: :system, js: true do
+RSpec.describe "List channels | no sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
 
   before do
-    SiteSetting.navigation_menu = "legacy"
+    SiteSetting.navigation_menu = "header dropdown"
     chat_system_bootstrap
     sign_in(current_user)
   end

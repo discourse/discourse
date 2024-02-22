@@ -15,7 +15,7 @@ module Stylesheet
         file += options[:theme_variables].to_s
         file += importer.theme_import(asset)
       elsif plugin_assets = Importer.plugin_assets[asset.to_s]
-        filename = "#{asset.to_s}.scss"
+        filename = "#{asset}.scss"
         options[:load_paths] = [] if options[:load_paths].nil?
         plugin_assets.each do |src|
           file += File.read src
@@ -34,7 +34,7 @@ module Stylesheet
         when Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += importer.import_color_definitions
           file += importer.import_wcag_overrides
-          file += importer.category_backgrounds
+          file += importer.category_backgrounds(options[:color_scheme_id])
           file += importer.font
         end
       end
@@ -55,12 +55,7 @@ module Stylesheet
           style: :compressed,
           source_map_file: source_map_file,
           source_map_contents: true,
-          theme_id: options[:theme_id],
-          theme: options[:theme],
-          theme_field: options[:theme_field],
-          color_scheme_id: options[:color_scheme_id],
           load_paths: load_paths,
-          validate_source_map_path: false,
         )
 
       result = engine.render

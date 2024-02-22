@@ -21,7 +21,7 @@ sw:
         label: "Piga kura sasa!"
       show-results:
         title: "Onyesha matokeo ya uchaguzi"
-        label: "Onyesha matokeo"
+        label: "Majibu"
       hide-results:
         title: "Rudi kwenye kura zako"
       export-results:
@@ -34,6 +34,8 @@ sw:
         title: "Funga uchaguzi"
         label: "Funga"
         confirm: "Unauhakika unataka kufunga uchaguzi huu?"
+      options:
+        label: "Machaguo"
       error_while_toggling_status: "Samahani kulikuwa na hitilafu kwenye kubadilisha hali ya uchaguzi huu."
       error_while_casting_votes: "Samahani kulikuwa na hitilafu kwenye kupiga kura."
       error_while_fetching_voters: "Samahani kulikuwa na hitilafu kwenye kuonyesha wapiga kura."

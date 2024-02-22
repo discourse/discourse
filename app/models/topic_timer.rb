@@ -23,17 +23,13 @@ class TopicTimer < ActiveRecord::Base
   scope :scheduled_bump_topics,
         -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
   scope :pending_timers,
-        ->(before_time = Time.now.utc) {
+        ->(before_time = Time.now.utc) do
           where("execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
-        }
+        end
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
     self.public_type = self.public_type?
-
-    if (will_save_change_to_execute_at? && !attribute_in_database(:execute_at).nil?) ||
-         will_save_change_to_user_id?
-    end
   end
 
   # These actions are in place to make sure the topic is in the correct

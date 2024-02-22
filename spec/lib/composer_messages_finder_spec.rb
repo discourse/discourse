@@ -100,7 +100,7 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_avatar_notification" do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     context "with success" do
       let!(:message) { finder.check_avatar_notification }
@@ -143,14 +143,19 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      SiteSetting.allow_uploaded_avatars = "disabled"
+      user.change_trust_level!(TrustLevel[3])
+
+      SiteSetting.uploaded_avatars_allowed_groups = ""
       expect(finder.check_avatar_notification).to be_blank
+
+      SiteSetting.uploaded_avatars_allowed_groups = "13"
+      expect(finder.check_avatar_notification).to be_present
     end
   end
 
   describe ".check_sequential_replies" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -234,8 +239,8 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_dominating_topic" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -328,8 +333,97 @@ RSpec.describe ComposerMessagesFinder do
     end
   end
 
+  describe "#dont_feed_the_trolls" do
+    fab!(:user)
+    fab!(:author) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:third_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: author) }
+    fab!(:original_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:unflagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:self_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:under_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:over_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:resolved_flag_post) { Fabricate(:post, topic: topic, user: author) }
+
+    before { SiteSetting.dont_feed_the_trolls_threshold = 2 }
+
+    it "does not show a message for unflagged posts" do
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: unflagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "shows a message when the replier has already flagged the post" do
+      Fabricate(:flag, post: self_flagged_post, user: user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: self_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "shows a message when replying to flagged topic (first post)" do
+      Fabricate(:flag, post: original_post, user: user)
+      finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "does not show a message when not enough others have flagged the post" do
+      Fabricate(:flag, post: under_flagged_post, user: other_user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: under_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "does not show a message when the flag has already been resolved" do
+      SiteSetting.dont_feed_the_trolls_threshold = 1
+
+      Fabricate(:flag, post: resolved_flag_post, user: other_user, disagreed_at: 1.hour.ago)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: resolved_flag_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "shows a message when enough others have already flagged the post" do
+      Fabricate(:flag, post: over_flagged_post, user: other_user)
+      Fabricate(:flag, post: over_flagged_post, user: third_user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: over_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "safely returns from not finding a post" do
+      finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: nil)
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+  end
+
   describe ".check_get_a_room" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
     fab!(:third_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic, user: other_user) }
@@ -465,8 +559,8 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_reviving_old_topic" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     it "does not give a message without a topic id" do
       expect(
@@ -534,7 +628,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   context "when editing a post" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:topic) { Fabricate(:post).topic }
 
     let!(:post) do

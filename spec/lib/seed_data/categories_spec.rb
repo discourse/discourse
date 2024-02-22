@@ -3,10 +3,10 @@
 require "seed_data/categories"
 
 RSpec.describe SeedData::Categories do
-  subject { SeedData::Categories.with_default_locale }
+  subject(:seeder) { SeedData::Categories.with_default_locale }
 
   def create_category(name = "staff_category_id")
-    subject.create(site_setting_names: [name])
+    seeder.create(site_setting_names: [name])
   end
 
   def description_post(category)
@@ -99,14 +99,33 @@ RSpec.describe SeedData::Categories do
       expect(SiteSetting.default_composer_category).to eq(Category.last.id)
     end
 
-    it "adds default categories SiteSetting.default_sidebar_categories" do
+    it "does not overwrite permissions on the General category" do
+      create_category("general_category_id")
+      expect(Category.last.name).to eq("General")
+      category = Category.last
+
+      expect(category.category_groups.count).to eq(0)
+
+      category.set_permissions(staff: :full)
+      category.save!
+
+      expect(category.category_groups.count).to eq(1)
+
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
+
+      category.reload
+      expect(category.category_groups.count).to eq(1)
+      expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
+    end
+
+    it "adds default categories SiteSetting.default_navigation_menu_categories" do
       create_category("staff_category_id")
       staff_category = Category.last
       create_category("meta_category_id")
       site_feedback_category = Category.last
       create_category("general_category_id")
       general_category = Category.last
-      site_setting_ids = SiteSetting.default_sidebar_categories.split("|")
+      site_setting_ids = SiteSetting.default_navigation_menu_categories.split("|")
       create_category("uncategorized_category_id")
 
       expect(site_setting_ids[0].to_i).to eq(staff_category.id)
@@ -116,7 +135,7 @@ RSpec.describe SeedData::Categories do
     end
 
     it "does not override permissions of existing category when not forced" do
-      create_category("lounge_category_id")
+      create_category("general_category_id")
 
       category = Category.last
       category.set_permissions(trust_level_2: :full)
@@ -124,7 +143,7 @@ RSpec.describe SeedData::Categories do
 
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
-      expect { create_category("lounge_category_id") }.not_to change { CategoryGroup.count }
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
@@ -133,7 +152,7 @@ RSpec.describe SeedData::Categories do
 
   describe "#update" do
     def update_category(name = "staff_category_id", skip_changed: false)
-      subject.update(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.update(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     before do
@@ -192,7 +211,7 @@ RSpec.describe SeedData::Categories do
         { id: "general_category_id", name: I18n.t("general_category_name"), selected: false },
       ]
 
-      expect(subject.reseed_options).to eq(expected_options)
+      expect(seeder.reseed_options).to eq(expected_options)
     end
   end
 end

@@ -2,6 +2,10 @@
 
 class UserSecondFactor < ActiveRecord::Base
   include SecondFactorManager
+
+  MAX_TOTPS_PER_USER = 50
+  MAX_NAME_LENGTH = 300
+
   belongs_to :user
 
   scope :backup_codes, -> { where(method: UserSecondFactor.methods[:backup_codes], enabled: true) }
@@ -9,6 +13,10 @@ class UserSecondFactor < ActiveRecord::Base
   scope :totps, -> { where(method: UserSecondFactor.methods[:totp], enabled: true) }
 
   scope :all_totps, -> { where(method: UserSecondFactor.methods[:totp]) }
+
+  validates :name, length: { maximum: MAX_NAME_LENGTH }, if: :name_changed?
+
+  validate :count_per_user_does_not_exceed_limit, on: :create
 
   def self.methods
     @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3)
@@ -20,6 +28,16 @@ class UserSecondFactor < ActiveRecord::Base
 
   def totp_provisioning_uri
     totp_object.provisioning_uri(user.email)
+  end
+
+  private
+
+  def count_per_user_does_not_exceed_limit
+    if self.method == UserSecondFactor.methods[:totp]
+      if self.class.where(method: self.method, user_id: self.user_id).count >= MAX_TOTPS_PER_USER
+        errors.add(:base, I18n.t("login.too_many_authenticators"))
+      end
+    end
   end
 end
 
@@ -35,7 +53,7 @@ end
 #  last_used  :datetime
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  name       :string
+#  name       :string(300)
 #
 # Indexes
 #

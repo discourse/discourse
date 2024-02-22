@@ -6,7 +6,7 @@ RSpec.describe Jobs::CreateLinkedTopic do
   end
 
   context "with a post" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:user_1) { Fabricate(:user) }

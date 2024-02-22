@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require "theme_settings_manager"
-
 RSpec.describe ThemeSettingsManager do
   let!(:theme) { Fabricate(:theme) }
+
   let(:theme_settings) do
     yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
@@ -11,20 +10,16 @@ RSpec.describe ThemeSettingsManager do
     theme.settings
   end
 
-  def find_by_name(name)
-    theme_settings.find { |setting| setting.name == name }
-  end
-
   describe "Enum" do
     it "only accepts values from its choices" do
-      enum_setting = find_by_name(:enum_setting)
+      enum_setting = theme_settings[:enum_setting]
       expect { enum_setting.value = "trust level 2" }.to raise_error(Discourse::InvalidParameters)
       expect { enum_setting.value = "trust level 0" }.not_to raise_error
 
-      enum_setting = find_by_name(:enum_setting_02)
+      enum_setting = theme_settings[:enum_setting_02]
       expect { enum_setting.value = "10" }.not_to raise_error
 
-      enum_setting = find_by_name(:enum_setting_03)
+      enum_setting = theme_settings[:enum_setting_03]
       expect { enum_setting.value = "10" }.not_to raise_error
       expect { enum_setting.value = 1 }.not_to raise_error
       expect { enum_setting.value = 15 }.to raise_error(Discourse::InvalidParameters)
@@ -33,7 +28,7 @@ RSpec.describe ThemeSettingsManager do
 
   describe "Bool" do
     it "is either true or false" do
-      bool_setting = find_by_name(:boolean_setting)
+      bool_setting = theme_settings[:boolean_setting]
       expect(bool_setting.value).to eq(true) # default
 
       bool_setting.value = "true"
@@ -52,7 +47,7 @@ RSpec.describe ThemeSettingsManager do
 
   describe "Integer" do
     it "is always an integer" do
-      int_setting = find_by_name(:integer_setting)
+      int_setting = theme_settings[:integer_setting]
       int_setting.value = 1.6
       theme.reload
       expect(int_setting.value).to eq(1)
@@ -71,7 +66,7 @@ RSpec.describe ThemeSettingsManager do
     end
 
     it "can have min or max value" do
-      int_setting = find_by_name(:integer_setting_02)
+      int_setting = theme_settings[:integer_setting_02]
       expect { int_setting.value = 0 }.to raise_error(Discourse::InvalidParameters)
       expect { int_setting.value = 61 }.to raise_error(Discourse::InvalidParameters)
 
@@ -87,7 +82,7 @@ RSpec.describe ThemeSettingsManager do
 
   describe "Float" do
     it "is always a float" do
-      float_setting = find_by_name(:float_setting)
+      float_setting = theme_settings[:float_setting]
       float_setting.value = 1.615
       theme.reload
       expect(float_setting.value).to eq(1.615)
@@ -102,7 +97,7 @@ RSpec.describe ThemeSettingsManager do
     end
 
     it "can have min or max value" do
-      float_setting = find_by_name(:float_setting)
+      float_setting = theme_settings[:float_setting]
       expect { float_setting.value = 1.4 }.to raise_error(Discourse::InvalidParameters)
       expect { float_setting.value = 10.01 }.to raise_error(Discourse::InvalidParameters)
       expect { float_setting.value = "text" }.to raise_error(Discourse::InvalidParameters)
@@ -115,7 +110,7 @@ RSpec.describe ThemeSettingsManager do
 
   describe "String" do
     it "can have min or max length" do
-      string_setting = find_by_name(:string_setting_02)
+      string_setting = theme_settings[:string_setting_02]
       expect { string_setting.value = "a" }.to raise_error(Discourse::InvalidParameters)
 
       string_setting.value = "ab"
@@ -130,20 +125,20 @@ RSpec.describe ThemeSettingsManager do
     end
 
     it "can be a textarea" do
-      expect(find_by_name(:string_setting_02).textarea).to eq(false)
-      expect(find_by_name(:string_setting_03).textarea).to eq(true)
+      expect(theme_settings[:string_setting_02].textarea).to eq(false)
+      expect(theme_settings[:string_setting_03].textarea).to eq(true)
     end
 
     it "supports json schema" do
-      expect(find_by_name(:string_setting_03).json_schema).to eq(false)
-      expect(find_by_name(:invalid_json_schema_setting).json_schema).to eq(false)
-      expect(find_by_name(:valid_json_schema_setting).json_schema).to be_truthy
+      expect(theme_settings[:string_setting_03].json_schema).to eq(false)
+      expect(theme_settings[:invalid_json_schema_setting].json_schema).to eq(false)
+      expect(theme_settings[:valid_json_schema_setting].json_schema).to be_truthy
     end
   end
 
   describe "List" do
     it "can have a list type" do
-      list_setting = find_by_name(:compact_list_setting)
+      list_setting = theme_settings[:compact_list_setting]
       expect(list_setting.list_type).to eq("compact")
     end
   end
@@ -152,7 +147,7 @@ RSpec.describe ThemeSettingsManager do
     let!(:upload) { Fabricate(:upload) }
 
     it "saves the upload id" do
-      upload_setting = find_by_name(:upload_setting)
+      upload_setting = theme_settings[:upload_setting]
       upload_setting.value = upload.url
       theme.reload
 
@@ -164,7 +159,7 @@ RSpec.describe ThemeSettingsManager do
     describe "#value" do
       context "when it's changed to a custom upload" do
         it "returns CDN URL" do
-          upload_setting = find_by_name(:upload_setting)
+          upload_setting = theme_settings[:upload_setting]
           upload_setting.value = upload.url
           theme.reload
 
@@ -181,7 +176,7 @@ RSpec.describe ThemeSettingsManager do
             upload_id: upload.id,
           )
           theme.save!
-          upload_setting = find_by_name(:upload_setting)
+          upload_setting = theme_settings[:upload_setting]
           expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
         end
       end

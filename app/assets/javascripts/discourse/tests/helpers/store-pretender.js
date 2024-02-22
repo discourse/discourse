@@ -12,7 +12,14 @@ const fruits = [
   { id: 1, name: "apple", farmer_id: 1, color_ids: [1, 2], category_id: 4 },
   { id: 2, name: "banana", farmer_id: 1, color_ids: [3], category_id: 3 },
   { id: 3, name: "grape", farmer_id: 2, color_ids: [2], category_id: 5 },
-  { id: 4, name: "orange", farmer_id: null, color_ids: [2], category_id: 5 },
+  {
+    id: 4,
+    name: "orange",
+    farmer_id: null,
+    color_ids: [2],
+    category_id: 5,
+    other_fruit_ids: { apple: 1, banana: 2 },
+  },
 ];
 
 const farmers = [

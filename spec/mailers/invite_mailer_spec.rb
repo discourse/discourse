@@ -4,7 +4,7 @@ RSpec.describe InviteMailer do
   describe "send_invite" do
     context "when inviting to site" do
       context "with default invite message" do
-        fab!(:invite) { Fabricate(:invite) }
+        fab!(:invite)
         let(:invite_mail) { InviteMailer.send_invite(invite) }
 
         it "renders the invitee email" do
@@ -78,7 +78,7 @@ RSpec.describe InviteMailer do
     end
 
     context "when inviting to topic" do
-      let(:trust_level_2) { build(:user, trust_level: 2) }
+      fab!(:trust_level_2)
       let(:topic) do
         Fabricate(
           :topic,

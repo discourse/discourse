@@ -1,6 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  router: service(),
   tagGroups: controller(),
 
   actions: {
@@ -8,7 +10,7 @@ export default Controller.extend({
       const tagGroups = this.tagGroups.model;
       tagGroups.removeObject(this.model);
 
-      this.transitionToRoute("tagGroups.index");
+      this.router.transitionTo("tagGroups.index");
     },
   },
 });

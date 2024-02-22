@@ -5,9 +5,18 @@ module Chat
     self.table_name = "incoming_chat_webhooks"
 
     belongs_to :chat_channel, class_name: "Chat::Channel"
-    has_many :chat_webhook_events, class_name: "Chat::WebhookEvent"
+    has_many :chat_webhook_events,
+             foreign_key: "incoming_chat_webhook_id",
+             class_name: "Chat::WebhookEvent",
+             dependent: :delete_all
 
     before_create { self.key = SecureRandom.hex(12) }
+
+    validates :name, presence: true, length: { maximum: 100 }
+    validates :key, length: { maximum: 100 }
+    validates :username, length: { maximum: 100 }
+    validates :description, length: { maximum: 500 }
+    validates :emoji, length: { maximum: 100 }
 
     def url
       "#{Discourse.base_url}/chat/hooks/#{key}.json"

@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require 'open-uri'
+require "open-uri"
 
 class Typepad < Thor
-
   desc "import", "Imports posts from a Disqus XML export"
-  method_option :file, aliases: '-f', required: true, desc: "The typepad file to import"
-  method_option :post_as, aliases: '-p', required: true, desc: "The Discourse username to post as"
-  method_option :google_api, aliases: '-g', required: false, desc: "The google plus API key to use to fetch usernames"
+  method_option :file, aliases: "-f", required: true, desc: "The typepad file to import"
+  method_option :post_as, aliases: "-p", required: true, desc: "The Discourse username to post as"
+  method_option :google_api,
+                aliases: "-g",
+                required: false,
+                desc: "The google plus API key to use to fetch usernames"
 
   def import
-    require './config/environment'
+    require "./config/environment"
 
     backup_settings = {}
-    %w(blocked_email_domains).each do |s|
-      backup_settings[s] = SiteSetting.get(s)
-    end
+    %w[blocked_email_domains].each { |s| backup_settings[s] = SiteSetting.get(s) }
 
     user = User.where(username_lower: options[:post_as].downcase).first
     if user.nil?
@@ -31,26 +31,24 @@ class Typepad < Thor
     input = ""
 
     entries = []
-    File.open(options[:file]).each_line do |l|
-      l = l.scrub
+    File
+      .open(options[:file])
+      .each_line do |l|
+        l = l.scrub
 
-      if l =~ /\A--------\z/
-        parsed_entry = process_entry(input)
-        if parsed_entry
-          puts "Parsed #{parsed_entry[:title]}"
-          entries << parsed_entry
+        if l =~ /\A--------\z/
+          parsed_entry = process_entry(input)
+          if parsed_entry
+            puts "Parsed #{parsed_entry[:title]}"
+            entries << parsed_entry
+          end
+          input = ""
+        else
+          input << l
         end
-        input = ""
-      else
-        input << l
       end
-    end
 
-    entries.each_with_index do |e, i|
-      if e[:title] =~ /Head/
-        puts "#{i}: #{e[:title]}"
-      end
-    end
+    entries.each_with_index { |e, i| puts "#{i}: #{e[:title]}" if e[:title] =~ /Head/ }
 
     RateLimiter.disable
     SiteSetting.blocked_email_domains = ""
@@ -74,13 +72,23 @@ class Typepad < Thor
             email = c[:email]
             post_user = User.where(email: email).first
             if post_user.blank?
-              post_user = User.create!(name: c[:name], email: email, username: UserNameSuggester.suggest(username))
+              post_user =
+                User.create!(
+                  name: c[:name],
+                  email: email,
+                  username: UserNameSuggester.suggest(username),
+                )
             end
           else
             post_user = User.where(username: username).first
             if post_user.blank?
               suggested = UserNameSuggester.suggest(username)
-              post_user = User.create!(name: c[:name], email: "#{suggested}@no-email-found.com", username: suggested)
+              post_user =
+                User.create!(
+                  name: c[:name],
+                  email: "#{suggested}@no-email-found.com",
+                  username: suggested,
+                )
             end
           end
 
@@ -89,7 +97,7 @@ class Typepad < Thor
             raw: c[:body],
             cooked: c[:body],
             created_at: c[:date],
-            skip_validations: true
+            skip_validations: true,
           }
           begin
             post = PostCreator.new(post_user, attrs).create
@@ -100,35 +108,34 @@ class Typepad < Thor
         end
       end
     end
-
   ensure
     RateLimiter.enable
-    backup_settings.each do |s, v|
-      SiteSetting.set(s, v)
-    end
+    backup_settings.each { |s, v| SiteSetting.set(s, v) }
   end
 
   private
 
   def clean_type!(type)
     type.downcase!
-    type.gsub!(/ /, '_')
+    type.gsub!(/ /, "_")
     type
   end
 
   def parse_meta_data(section)
     result = {}
-    section.split(/\n/).each do |l|
-      if l =~ /\A([A-Z\ ]+)\: (.*)\z/
-        key, value = Regexp.last_match[1], Regexp.last_match[2]
-        clean_type!(key)
-        value.strip!
-        result[key.to_sym] = value
-      else
-        result[:body] ||= ""
-        result[:body] << l << "\n"
+    section
+      .split(/\n/)
+      .each do |l|
+        if l =~ /\A([A-Z\ ]+)\: (.*)\z/
+          key, value = Regexp.last_match[1], Regexp.last_match[2]
+          clean_type!(key)
+          value.strip!
+          result[key.to_sym] = value
+        else
+          result[:body] ||= ""
+          result[:body] << l << "\n"
+        end
       end
-    end
     result
   end
 
@@ -138,7 +145,7 @@ class Typepad < Thor
       type = clean_type!(Regexp.last_match[1])
       value = section.split("\n")[1..-1].join("\n")
       value.strip!
-      return [type.to_sym, value] if value.present?
+      [type.to_sym, value] if value.present?
     end
   end
 
@@ -159,35 +166,36 @@ class Typepad < Thor
       when :comment
         comment = parse_comment(value).slice(:author, :email, :url, :body, :date)
 
-        if options[:google_api] && comment[:author] =~ /plus.google.com\/(\d+)/
+        if options[:google_api] && comment[:author] =~ %r{plus.google.com/(\d+)}
           gplus_id = Regexp.last_match[1]
           from_redis = Discourse.redis.get("gplus:#{gplus_id}")
           if from_redis.blank?
-            json = ::JSON.parse(open("https://www.googleapis.com/plus/v1/people/#{gplus_id}?key=#{options[:google_api]}").read)
-            from_redis = json['displayName']
+            json =
+              ::JSON.parse(
+                open(
+                  "https://www.googleapis.com/plus/v1/people/#{gplus_id}?key=#{options[:google_api]}",
+                ).read,
+              )
+            from_redis = json["displayName"]
             Discourse.redis.set("gplus:#{gplus_id}", from_redis)
           end
           comment[:author] = from_redis
         end
 
-        if comment[:author] =~ /([^\.]+)\.wordpress\.com/
+        comment[:author] = Regexp.last_match[1] if comment[:author] =~ /([^\.]+)\.wordpress\.com/
+
+        comment[:author] = Regexp.last_match[1] if comment[:author] =~ /([^\.]+)\.blogspot\.com/
+
+        if comment[:author] =~ %r{twitter.com/([a-zA-Z0-9]+)}
           comment[:author] = Regexp.last_match[1]
         end
 
-        if comment[:author] =~ /([^\.]+)\.blogspot\.com/
-          comment[:author] = Regexp.last_match[1]
-        end
-
-        if comment[:author] =~ /twitter.com\/([a-zA-Z0-9]+)/
-          comment[:author] = Regexp.last_match[1]
-        end
-
-        if comment[:author] =~ /www.facebook.com\/profile.php\?id=(\d+)/
+        if comment[:author] =~ %r{www.facebook.com/profile.php\?id=(\d+)}
           fb_id = Regexp.last_match[1]
           from_redis = Discourse.redis.get("fb:#{fb_id}")
           if from_redis.blank?
             json = ::JSON.parse(open("http://graph.facebook.com/#{fb_id}").read)
-            from_redis = json['username']
+            from_redis = json["username"]
             Discourse.redis.set("fb:#{fb_id}", from_redis)
           end
           comment[:author] = from_redis
@@ -195,11 +203,11 @@ class Typepad < Thor
 
         comment[:name] = comment[:author]
         if comment[:author]
-          comment[:author].gsub!(/\A[_\.]+/, '')
-          comment[:author].gsub!(/[_\.]+\z/, '')
+          comment[:author].gsub!(/\A[_\.]+/, "")
+          comment[:author].gsub!(/[_\.]+\z/, "")
 
           if comment[:author].size < 12
-            comment[:author].gsub!(/ /, '_')
+            comment[:author].gsub!(/ /, "_")
           else
             segments = []
             current = ""
@@ -225,14 +233,13 @@ class Typepad < Thor
             segments << current
 
             comment[:author] = segments[0]
-            if segments.size > 1 && segments[1][0] =~ /[a-zA-Z]/
-              comment[:author] << segments[1][0]
-            end
+            comment[:author] << segments[1][0] if segments.size > 1 && segments[1][0] =~ /[a-zA-Z]/
           end
         end
 
         comment[:author] = "commenter" if comment[:author].blank?
-        comment[:author] = "codinghorror" if comment[:author] == "Jeff Atwood" || comment[:author] == "JeffAtwood" || comment[:author] == "Jeff_Atwood"
+        comment[:author] = "codinghorror" if comment[:author] == "Jeff Atwood" ||
+          comment[:author] == "JeffAtwood" || comment[:author] == "Jeff_Atwood"
 
         comment[:date] = comment[:date] ? DateTime.strptime(comment[:date], "%m/%d/%Y") : Time.now
         entry[:comments] << comment if comment[:body].present?
@@ -241,5 +248,4 @@ class Typepad < Thor
 
     entry[:title] && entry[:body] ? entry : nil
   end
-
 end

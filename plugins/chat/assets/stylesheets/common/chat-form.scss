@@ -1,62 +1,80 @@
-.chat-form__section {
-  margin: 1.5rem 1rem;
-
-  &:first-child {
-    margin-top: 0;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-    border-bottom: none;
-  }
-}
-.chat-form__section-admin-title {
-  margin-inline: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--primary-low);
-}
-
-.chat-form__field {
-  margin-bottom: 1rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.chat-form__description {
-  margin-top: 3px;
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-}
-
-.chat-form__btn {
-  border: 0;
-  background: none;
-  padding: 0.25rem 0;
-  margin: 0;
-}
-
-.chat-form__label {
-  font-weight: 700;
+.chat-form {
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
-.chat-form__label-actions {
-  margin-left: auto;
-
-  .btn-text {
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
+.chat-form__row {
+  &.-separator {
+    border-bottom: 1px solid var(--primary-low);
   }
 }
 
-.chat-retention-info {
-  margin-top: 2rem;
-  color: var(--primary-high);
+.chat-form__section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 2rem;
 
-  .d-icon {
-    margin-right: 0.5em;
+  &-title {
+    font-weight: 700;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &-title + &-content {
+    margin-top: 0.25rem;
+  }
+
+  &-content {
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.chat-form__row {
+  display: flex;
+  width: 100%;
+
+  // background: green;
+  flex-direction: column;
+  justify-content: center;
+
+  label,
+  .d-toggle-switch__checkbox-slider {
+    margin: 0;
+  }
+
+  &-action {
+    .chat-form__btn:first-child {
+      padding-left: 0;
+    }
+  }
+
+  &-label + &-action {
+    margin-left: auto;
+  }
+
+  &.-link {
+    color: var(--primary);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &-description {
+    display: flex;
+    padding-top: 3px;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 }

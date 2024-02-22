@@ -40,7 +40,6 @@ class TopicList
     :filter,
     :for_period,
     :per_page,
-    :top_tags,
     :current_user,
     :tags,
     :shared_drafts,
@@ -76,6 +75,11 @@ class TopicList
     @topics ||= load_topics
   end
 
+  def categories
+    @categories ||=
+      topics.map { |t| [t.category&.parent_category, t.category] }.uniq.flatten.compact
+  end
+
   def load_topics
     @topics = @topics_input
 
@@ -97,12 +101,15 @@ class TopicList
 
     # Create a lookup for all the user ids we need
     user_ids = []
+    group_ids = []
     @topics.each do |ft|
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+      group_ids |= (ft.allowed_group_ids || [])
     end
 
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
+    group_lookup = GroupLookup.new(group_ids)
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
@@ -120,10 +127,17 @@ class TopicList
       ft.posters = ft.posters_summary(user_lookup: user_lookup)
 
       ft.participants = ft.participants_summary(user_lookup: user_lookup, user: @current_user)
+      ft.participant_groups =
+        ft.participant_groups_summary(group_lookup: group_lookup, group: @opts[:group])
       ft.topic_list = self
     end
 
-    topic_preloader_associations = [:image_upload, { topic_thumbnails: :optimized_image }]
+    topic_preloader_associations = [
+      :image_upload,
+      { topic_thumbnails: :optimized_image },
+      { category: :parent_category },
+    ]
+
     topic_preloader_associations.concat(DiscoursePluginRegistry.topic_preloader_associations.to_a)
 
     ActiveRecord::Associations::Preloader.new(

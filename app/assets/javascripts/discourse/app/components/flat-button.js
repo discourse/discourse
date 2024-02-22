@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: "button",

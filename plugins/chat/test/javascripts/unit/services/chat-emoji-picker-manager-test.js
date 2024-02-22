@@ -1,18 +1,21 @@
-import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 
-function emojisReponse() {
+function emojisResponse() {
   return { favorites: [{ name: "sad" }] };
 }
 
 module(
   "Discourse Chat | Unit | Service | chat-emoji-picker-manager",
   function (hooks) {
+    setupTest(hooks);
+
     hooks.beforeEach(function () {
       pretender.get("/chat/emojis.json", () => {
-        return [200, {}, emojisReponse()];
+        return [200, {}, emojisResponse()];
       });
 
       this.manager = getOwner(this).lookup("service:chat-emoji-picker-manager");
@@ -20,46 +23,6 @@ module(
 
     hooks.afterEach(function () {
       this.manager.close();
-    });
-
-    test("startFromMessageReactionList", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, callback);
-
-      assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-message");
-      assert.strictEqual(this.manager.callback, callback);
-      assert.deepEqual(this.manager.visibleSections, [
-        "favorites",
-        "smileys_&_emotion",
-      ]);
-      assert.strictEqual(this.manager.lastVisibleSection, "favorites");
-
-      await settled();
-
-      assert.deepEqual(this.manager.emojis, emojisReponse());
-      assert.strictEqual(this.manager.loading, false);
-    });
-
-    test("startFromMessageActions", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, callback);
-
-      assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-message");
-      assert.strictEqual(this.manager.callback, callback);
-      assert.deepEqual(this.manager.visibleSections, [
-        "favorites",
-        "smileys_&_emotion",
-      ]);
-      assert.strictEqual(this.manager.lastVisibleSection, "favorites");
-
-      await settled();
-
-      assert.deepEqual(this.manager.emojis, emojisReponse());
-      assert.strictEqual(this.manager.loading, false);
     });
 
     test("addVisibleSections", async function (assert) {
@@ -75,7 +38,7 @@ module(
     test("sections", async function (assert) {
       assert.deepEqual(this.manager.sections, []);
 
-      this.manager.startFromComposer(() => {});
+      this.manager.open({});
 
       assert.deepEqual(this.manager.sections, []);
 
@@ -84,14 +47,12 @@ module(
       assert.deepEqual(this.manager.sections, ["favorites"]);
     });
 
-    test("startFromComposer", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromComposer(callback);
+    test("open", async function (assert) {
+      this.manager.open({ context: "chat-composer" });
 
       assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-composer");
-      assert.strictEqual(this.manager.callback, callback);
+      assert.ok(this.manager.picker);
+      assert.strictEqual(this.manager.picker.context, "chat-composer");
       assert.deepEqual(this.manager.visibleSections, [
         "favorites",
         "smileys_&_emotion",
@@ -100,32 +61,20 @@ module(
 
       await settled();
 
-      assert.deepEqual(this.manager.emojis, emojisReponse());
+      assert.deepEqual(this.manager.emojis, emojisResponse());
       assert.strictEqual(this.manager.loading, false);
     });
 
-    test("startFromComposer with filter option", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromComposer(callback, { filter: "foofilter" });
-      await settled();
-
-      assert.strictEqual(this.manager.initialFilter, "foofilter");
-    });
-
     test("closeExisting", async function (assert) {
-      const callback = () => {
-        return;
-      };
-
-      this.manager.startFromComposer(() => {});
+      this.manager.open({ context: "channel-composer", trigger: "foo" });
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
-      this.manager.startFromComposer(callback);
+      this.manager.open({ context: "thread-composer", trigger: "bar" });
 
       assert.strictEqual(
-        this.manager.callback,
-        callback,
-        "it resets the callback to latest picker"
+        this.manager.picker.context,
+        "thread-composer",
+        "it resets the picker to latest picker"
       );
       assert.deepEqual(
         this.manager.visibleSections,
@@ -139,39 +88,21 @@ module(
       );
     });
 
-    test("didSelectEmoji", async function (assert) {
-      let value;
-      const callback = (emoji) => {
-        value = emoji.name;
-      };
-      this.manager.startFromComposer(callback);
-      this.manager.didSelectEmoji({ name: "joy" });
-
-      assert.notOk(this.manager.callback);
-      assert.strictEqual(value, "joy");
-
-      await settled();
-
-      assert.notOk(this.manager.opened, "it closes the picker after selection");
-    });
-
     test("close", async function (assert) {
-      this.manager.startFromComposer(() => {});
+      this.manager.open({ context: "channel-composer" });
 
-      assert.ok(this.manager.opened);
-      assert.ok(this.manager.callback);
+      assert.ok(this.manager.picker);
 
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
       this.manager.close();
 
-      assert.notOk(this.manager.callback);
       assert.ok(this.manager.closing);
-      assert.ok(this.manager.opened);
+      assert.ok(this.manager.picker);
 
       await settled();
 
-      assert.notOk(this.manager.opened);
+      assert.notOk(this.manager.picker);
       assert.notOk(this.manager.closing);
       assert.deepEqual(
         this.manager.visibleSections,

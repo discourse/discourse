@@ -26,6 +26,7 @@ module ApplicationHelper
         },
         EXTEND_PROTOTYPES: {
           Date: false,
+          String: false,
         },
         _APPLICATION_TEMPLATE_WRAPPER: false,
         _DEFAULT_ASYNC_OBSERVERS: true,
@@ -64,8 +65,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def self.google_tag_manager_nonce
-    @gtm_nonce ||= SecureRandom.hex
+  def csp_nonce_placeholder
+    response.headers[
+      ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
+    ] ||= "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
   end
 
   def shared_session_key
@@ -122,40 +125,42 @@ module ApplicationHelper
           path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
-    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? &&
-          Rails.env != "development"
-      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
     path
   end
 
   def preload_script(script)
-    scripts = [script]
+    scripts = []
 
     if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
+    else
+      scripts.push(script)
     end
 
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path)
+        preload_script_url(path, entrypoint: script)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url)
+  def preload_script_url(url, entrypoint: nil)
+    entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
+    nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+
     add_resource_preload_list(url, "script")
     if GlobalSetting.preload_link_header
       <<~HTML.html_safe
-        <script defer src="#{url}"></script>
+        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
       HTML
     else
       <<~HTML.html_safe
-        <link rel="preload" href="#{url}" as="script">
-        <script defer src="#{url}"></script>
+        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute} #{nonce_attribute}>
+        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
       HTML
     end
   end
@@ -297,7 +302,7 @@ module ApplicationHelper
     ) if opts[:twitter_summary_large_image].present?
 
     result = []
-    result << tag(:meta, property: "og:site_name", content: SiteSetting.title)
+    result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
     result << tag(:meta, property: "og:type", content: "website")
 
     generate_twitter_card_metadata(result, opts)
@@ -369,6 +374,7 @@ module ApplicationHelper
         "@context" => "http://schema.org",
         "@type" => "WebSite",
         :url => Discourse.base_url,
+        :name => SiteSetting.title,
         :potentialAction => {
           "@type" => "SearchAction",
           :target => "#{Discourse.base_url}/search?q={search_term_string}",
@@ -581,6 +587,7 @@ module ApplicationHelper
       mobile_view? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -590,6 +597,7 @@ module ApplicationHelper
       :translations,
       I18n.locale,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -599,6 +607,7 @@ module ApplicationHelper
       :extra_js,
       nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -689,7 +698,6 @@ module ApplicationHelper
       base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
-      markdown_it_url: script_asset_path("markdown-it-bundle"),
       service_worker_url: "service-worker.js",
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,
@@ -732,6 +740,10 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def escape_noscript(&block)
+    raw capture(&block).gsub(%r{<(/\s*noscript)}i, '&lt;\1')
   end
 
   def manifest_url

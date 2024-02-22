@@ -11,15 +11,16 @@ body.static-login {
 
   .logo-container {
     border-bottom: 1px solid var(--primary-low);
-    padding-bottom: 2em;
-    margin-bottom: 2em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    display: block;
   }
 
   .site-logo {
-    height: var(--d-logo-height);
     width: auto;
-    max-width: 40%;
     object-fit: contain;
+    max-width: 60%;
+    max-height: 150px;
   }
 
   .waving-hand {
@@ -33,7 +34,7 @@ body.static-login {
     border: 1px solid var(--primary-low);
     text-align: center;
     padding: 2em;
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     border-radius: 5px;
     display: grid;
     place-items: center;

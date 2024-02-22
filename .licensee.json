@@ -10,7 +10,10 @@
   },
   "packages": {
     "@fortawesome/fontawesome-free": "*",
+    "@glimmer/interfaces": "*",
+    "@glimmer/syntax": "*",
     "ember-template-lint-plugin-discourse": "*",
+    "spawn-command": "0.0.2",
     "squoosh": "2.0.0",
     "taffydb": "2.6.2"
   },

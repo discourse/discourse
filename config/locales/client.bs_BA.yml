@@ -36,11 +36,8 @@ bs_BA:
       long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ bs_BA:
           few: "%{count} god."
           other: "%{count} god."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -100,7 +97,6 @@ bs_BA:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -257,9 +253,8 @@ bs_BA:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
-      see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @ %{username} ...'
+      pill: "Povezane Poruke"
     suggested_topics:
-      title: "Preporučene teme"
       pm_title: "Preporučene Poruke"
     about:
       simple_title: "O nama"
@@ -268,13 +263,9 @@ bs_BA:
       our_admins: "Naši administratori"
       our_moderators: "Naši moderatori"
       moderators: "Moderators"
-      stat:
-        all_time: "Ukupno vrijeme"
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      active_user_count: "Aktivnih korisnika"
-      contact: "Kontaktirajte nas"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Zabilješka"
@@ -311,6 +302,10 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       abandon:
         yes_value: "Odbaci"
+    topic_count_all:
+      one: "Pogledaj %{count} novu temu"
+      few: "Pogledaj %{count} nove teme"
+      other: "Pogledaj %{count} novih tema"
     topic_count_categories:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -334,14 +329,10 @@ bs_BA:
     preview: "predprikaz"
     cancel: "otkaži"
     save: "Spremiti promjene"
-    saving: "Spremam..."
     saved: "Spremljeno!"
     upload: "Učitaj"
-    uploading: "Učitava se..."
-    uploading_filename: "Učitavanje %{filename}"
     clipboard: "clipboard"
     uploaded: "Učitano!"
-    pasting: "Lijepim..."
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
@@ -385,6 +376,9 @@ bs_BA:
         type_bonus:
           name: "bonus tip"
           title: "Neki ocjenjivi tipovi mogu zaprimiti bonus od strane osoblja foruma kako bi tim tipovima podigli prioritet"
+      revise_and_reject_post:
+        reason: "Reason"
+        optional: "opciono"
       claim_help:
         optional: "Možete tražiti ova da sprijećite ostale da ga pregledaju"
         required: "VI morate tvrditi stavari prije ih morate cijeniti"
@@ -504,14 +498,19 @@ bs_BA:
         reviewable_flagged_post:
           title: "Kažnjen post"
           flagged_by: "Kaznio je"
+          noun: "objava"
         reviewable_queued_topic:
           title: "Tema u redu čekanja"
+          noun: "topic"
         reviewable_queued_post:
           title: "Post na čekanju"
+          noun: "objava"
         reviewable_user:
           title: "User"
+          noun: "user"
         reviewable_post:
           title: "Objava"
+          noun: "objava"
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo za strpljenje."
@@ -825,7 +824,6 @@ bs_BA:
         one: "%{count} nova tema u posljednjih mjesec dana."
         few: "%{count} nove teme u posljednjih mjesec dana."
         other: "%{count} novih tema u zadnjih mjesec dana."
-      n_more: "Kategorije (još %{count})..."
     ip_lookup:
       title: forenzika IP adrese
       hostname: Hostname
@@ -869,7 +867,6 @@ bs_BA:
         ignore_no_users: "Nemate ignorisanih korisnika."
         ignore_option: "Ignorisano"
         ignore_option_title: "Nećete primati obavijesti koje se odnose na ovog korisnika i sve njihove teme i odgovori će biti skriveni."
-        add_ignored_user: "Dodaj"
         mute_option: "Utišan"
         mute_option_title: "Nećete primati nikakve obavijesti koje se odnose na ovog korisnika."
         normal_option: "Normalno"
@@ -997,13 +994,6 @@ bs_BA:
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
       staged: "Priređen"
-      staff_counters:
-        flags_given: "pomoćne prijave"
-        flagged_posts: "prijavljene objave"
-        deleted_posts: "obrisane objave"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
-        rejected_posts: "odbijeni postovi"
       messages:
         inbox: "Inbox"
         latest: "Zadnje"
@@ -1041,7 +1031,6 @@ bs_BA:
         success: "(email poslat)"
         in_progress: "(šaljem email)"
         error: "(greška)"
-        emoji: "zaključavanje emotikona"
         action: "Pošalji Email za resetovanje šifre"
         set_password: "Namjesti šifru"
         choose_new: "Izaberite novu šifru"
@@ -1049,8 +1038,6 @@ bs_BA:
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
-        enable: "Omogući"
-        enable_long: "Omogućite rezervne kodove"
         copy_to_clipboard: "Kopirati u clipboard"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
@@ -1060,8 +1047,6 @@ bs_BA:
           title: "Generirani sigurnosni kodovi"
           description: "Svaki od ovih rezervnih kodova može se koristiti samo jednom. Držite ih na sigurnom, ali pristupačnom mjestu."
       second_factor:
-        forgot_password: "Zaboravili ste password?"
-        confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         name: "Ime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
@@ -1069,8 +1054,6 @@ bs_BA:
           Skenirajte ovaj QR kod u podržanoj aplikaciji ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ) i unesite kod za provjeru autentičnosti.
         disable_description: "Molimo da uneste kod za ovjeru autentičnosti sa vaše aplikacije"
         show_key_description: "Unesi manuelno"
-        short_description: |
-          Zaštitite svoj račun pomoću jednokratnih sigurnosnih kodova.
         use: "Koristi Authenticator app?"
         disable: "Onemogući"
         delete: "Obriši"
@@ -1088,6 +1071,10 @@ bs_BA:
           already_added_error: "Već ste registrirali ovaj sigurnosni ključ. Ne morate ga ponovno registrirati."
           save: "Sačuvaj"
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
+      passkeys:
+        save: "Save"
+        added_prefix: "Doodano"
+        last_used_prefix: "Posljednji put korišten"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -1105,6 +1092,7 @@ bs_BA:
         error: "Desila se greška pri promjeni vašeg email-a. Možda se ta email adresa kod nas već koristi?"
         success: "Poslali smo email na datu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
         success_staff: "Poslali smo email na vašu trenutnu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
+        confirm_success: "Your email has been updated."
       change_avatar:
         title: "Promjeni sliku"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na temelju"
@@ -1132,7 +1120,6 @@ bs_BA:
         primary_label: "primary"
         unconfirmed_label: "nepotvrđeno"
         resend_label: "ponovno pošaljite poruku e-pošte s potvrdom"
-        resending_label: "slanje..."
         resent_label: "e-mail je poslan"
         update_email: "Promijeni Email"
         set_primary: "Postavi primarnu e-poštu"
@@ -1160,21 +1147,19 @@ bs_BA:
           generic: "Vaš %{provider} račun će biti korišten za prijavu."
       name:
         title: "Ime"
-        instructions: "vaše puno ime (opciono)"
-        instructions_required: "Vaše puno ime"
+        instructions: "Vaše puno ime (opciono)."
+        instructions_required: "Vaše puno ime."
         required: "Unesite ime"
         too_short: "Vaše ime je prekratko."
         ok: "Vaše ime izgleda ok."
       username:
         title: "Nadimak"
-        instructions: "unikatno, bez tipke praznog prostora, kratko"
         short_instructions: "Ljudi vas mogu spomenuti preko @%{username}."
         available: "Vaš nadimak je dostupan."
         not_available: "Nije dostupan. Pokušaj %{suggestion}?"
         not_available_no_suggestion: "Nedostupno"
         too_short: "Vaše korisničko ime je prekratako."
         too_long: "Vaše korisničko ime je predugačko."
-        checking: "Provjeravamo dostupnost..."
         prefilled: "Email je već u upotrebi kod ovog korisničkog imena"
         required: "Unesite korisničko ime"
       locale:
@@ -1280,7 +1265,6 @@ bs_BA:
         edit: "Izmijeni"
         remove: "Ukloni"
         reinvited: "Pozivnica ponovo poslata"
-        search: "kucaj da potražiš pozivnice..."
         user: "Pozvan korisnik"
         none: "Nema pozivnica za prikazati"
         truncated:
@@ -1316,7 +1300,7 @@ bs_BA:
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
         ok: "Vaša lozinka dobro izgleda."
-        instructions: "minimalno %{count} karaktera"
+        instructions: "Minimalno %{count} karaktera."
         required: "Molimo unesite lozinku"
       summary:
         title: "Sumirano"
@@ -1397,7 +1381,6 @@ bs_BA:
         the_topic: "tema"
     user_status:
       save: "Sačuvaj"
-    loading: "Učitava se..."
     errors:
       prev_page: "dok pokušava da učita"
       reasons:
@@ -1428,7 +1411,6 @@ bs_BA:
       enabled: "Ovaj sajt je u read only mod-u: Dozvoljeno je čitati. Možete nastaviti sa pregledom, ali odgovaranje na objave, lajkanje i ostale akcije su isključene za sada."
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
-    learn_more: "saznaj više..."
     mute: Utišaj
     unmute: Normalno
     last_post: Zadnja objava
@@ -1447,8 +1429,6 @@ bs_BA:
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
-      enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
-      enable: "Napravi sažetak ove teme"
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -1457,9 +1437,6 @@ bs_BA:
       disable: "Prikaži obrisane objave"
     private_message_info:
       title: "Privatna poruka"
-      invite: "Pozovi Ostale..."
-      edit: "Dodaj ili ukloni..."
-      add: "Dodaj"
       leave_message: "Da li zaista želite da napustite ovu poruku?"
       remove_allowed_user: "Da li zaista želite da uklonite %{name} sa ove privatne poruke?"
       remove_allowed_group: "Da li zaista želite da uklonite %{name} sa ove poruke?"
@@ -1493,7 +1470,6 @@ bs_BA:
     email_login:
       link_label: "Pošalji mi mejlom moj login link"
       button_label: "pomoću email-a"
-      emoji: "zaključaj emoji"
       complete_username: "Ukoliko korisnički račun se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_email: "Ukoliko korisnički račun se podudara sa <b>%{email}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_username_found: "Pronašli smo korisnički račun koji se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
@@ -1523,9 +1499,7 @@ bs_BA:
       blank_username: "Molimo vas da unesete vaš email ili ime korisničkog računa."
       blank_username_or_password: "Molimo vas da unesete vaš email ili ime korisničkog računa, i šifru."
       reset_password: "Resetuj lozinku"
-      logging_in: "Prijavljivanje..."
       or: "Or"
-      authenticating: "Autorizacija..."
       awaiting_activation: "Vaš korisnički račun čeka aktivaciju, koristite Zaboravio šifru link kako bi dobili novi email sa aktivacijkim linkom."
       awaiting_approval: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada bude zvanično aktiviran."
       requires_invite: "Žalimo, pristup ka forumu imaju samo članovi koji su primili pozivnicu."
@@ -1587,14 +1561,9 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
-    conditional_loading_section:
-      loading: Obrađuje...
     select_kit:
       delete_item: "Izbriši %{name}"
-      default_header_text: Označava...
       no_content: Nije pronađen traženi pojam
-      filter_placeholder: Pretraga...
-      filter_placeholder_with_any: Pretražite ili kreirajte ...
       create: "Kreiraj: '%{content}'"
       max_content_reached:
         one: "Možete označiti samo %{count} predmet."
@@ -1604,6 +1573,9 @@ bs_BA:
         one: "Označi bar %{count} predmet."
         few: "Označi bar %{count} predmeta."
         other: "Označi bar %{count} predmeta."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
       to: Ka
@@ -1631,10 +1603,8 @@ bs_BA:
       destination_category: "Kategorija destinacije"
       publish: "Objavi dijeljenu skicu"
       confirm_publish: "Da li ste sigurni da želite objaviti ovu skicu?"
-      publishing: "Objavljujem temu..."
     composer:
       emoji: "Emotikoni :)"
-      more_emoji: "više..."
       options: "Opcije"
       whisper: "šapat"
       unlist: "nelistan"
@@ -1643,13 +1613,8 @@ bs_BA:
       toggle_unlisted: "Prekidač za Listan"
       posting_not_on_topic: "Na koju temu želite da odgovorite?"
       saved_local_draft_tip: "sačuvano lokalno"
-      similar_topics: "Tvoja tema je slična..."
       drafts_offline: "skicirano lokalno"
       edit_conflict: "uredi sukob"
-      group_mentioned:
-        one: "Spominjući %{group}, obavijestiti će te %{count} korisnika – da li ste sigurni?"
-        few: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
-        other: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
       duplicate_link: "Izgleda da vaš link ka <b>%{domain}</b> je već objavljen u temi od strane <b>@%{username}</b> u<a href='%{post_url}'>odgovoru prije %{ago}</a> – da li ste sigurni da želite ponovno objaviti link?"
       reference_topic_title: "RE:%{title}"
       error:
@@ -1679,7 +1644,6 @@ bs_BA:
       saving: "Spašavam"
       saved: "Sačuvano!"
       saved_draft: "Sastav je u toku. Tipkajte kako bi nastavili dalje."
-      uploading: "Uplodujem..."
       quote_post_title: "Citiraj cjeli post"
       bold_label: "B"
       bold_title: "Bold"
@@ -1764,15 +1728,7 @@ bs_BA:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} and %{count} ostali</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count}</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count} </span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} ostali"
-        few: "%{username}, %{username2} i ostalih %{count}"
-        other: "%{username}, %{username2} i ostalih %{count}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"
@@ -1805,6 +1761,7 @@ bs_BA:
         private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
         linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
         watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} je objavio/la "%{topic}" - %{site_title}'
         confirm_title: "Obavijesti uključene - %{site_title}"
         confirm_body: "Uspješno! Obavijesti su sada uključene."
         custom: "Obavijest od %{username} na %{site_title}"
@@ -1883,7 +1840,6 @@ bs_BA:
         with_tags:
           label: Označen
         filters:
-          label: Vrati samo teme/postove...
           title: Podudaranje samo u naslovu
           likes: Sviđalo mi se
           posted: Moje objave
@@ -1944,11 +1900,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        change_category: "Postavi kategoriju..."
         close_topics: "Zatvori teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
-        notification_level: "Obavijest..."
         choose_new_category: "Izaberi novu kategoriju za temu:"
         selected:
           one: "Označili ste <b>%{count}</b> temu."
@@ -1977,6 +1931,9 @@ bs_BA:
         tag: "Nema više %{tag} tema."
         top: "Nema više top tema."
         bookmarks: "U zabilješkama više nema spremljenih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2028,6 +1985,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -2076,8 +2034,6 @@ bs_BA:
         replies_short: "%{current} / %{total}"
       progress:
         title: progres teme
-        jump_prompt: "skoči na..."
-        jump_prompt_long: "Skoči na ..."
         jump_prompt_to_date: "do datuma"
         jump_prompt_or: "ili"
       notifications:
@@ -2093,7 +2049,6 @@ bs_BA:
           "2_8": "Vidjet ćete broj novih odgovora jer pratite ovu kategoriju."
           "2_4": "Vidjet ćete broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjet ćete broj novih odgovora jer pratite ovu temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Dobiti ćete obavijest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "1": "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "0_7": "Ignorišete sve notifikacije u ovoj kategoriji."
@@ -2130,13 +2085,11 @@ bs_BA:
         open: "Open Topic"
         close: "Zatvori temu"
         multi_select: "Odaberi postove..."
-        timed_update: "Podesi tajmer teme..."
         pin: "Prikvači temu…"
         unpin: "Otkvači temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
         reset_read: "Reset Read Data"
-        make_public: "Napiši temu javno..."
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"
       feature:
@@ -2187,7 +2140,6 @@ bs_BA:
         banner_note: "Korisnici mogu odkloniti banner tako što će ga zatvoriti. U svakom momentu samo jedna tema može biti postavljena za banner."
         no_banner_exists: "Nema banner tema."
         banner_exists: "Trenutno <strong class='badge badge-notification unread'>postoji</strong> banner tema."
-      inviting: "Inviting..."
       automatically_add_to_groups: "Ova pozivnica uključuje također i pristup ka sljedećim grupama:"
       invite_private:
         title: "Invite to Private Message"
@@ -2279,7 +2231,6 @@ bs_BA:
           few: "Molimo odaberite novog vlasnika za %{count} postove od <b>@ %{old_user}</b>"
           other: "Molimo odaberite novog vlasnika za %{count} postove od <b>@ %{old_user}</b>"
       change_timestamp:
-        title: "Promijeni vrijeme objave..."
         action: "izmijeni vrijeme"
         invalid_timestamp: "Vrijeme ne može biti u budućnosti."
         error: "Došlo je do greške prilikom izmjene vremena teme."
@@ -2347,7 +2298,6 @@ bs_BA:
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Nažalost, ta datoteka je prevelika (maksimalna veličina je %{max_size_kb}kb). Zašto ne biste prenijeli vašu veliku datoteku na uslugu dijeljenja u oblaku, a zatim zalijepili vezu?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Nažalost, fajl koji pokušavate da učitate nije dozvoljen za učitavanje (dozvoljene ekstenzije su: %{authorized_extensions})."
@@ -2393,8 +2343,6 @@ bs_BA:
         revert_to_regular: "Ukloni boje osoblja"
         rebake: "Popravi HTML"
         unhide: "Unhide"
-        change_owner: "Izmijeni vlasništvo..."
-        grant_badge: "Grant Badge..."
         lock_post: "Zaključaj objavu"
         lock_post_description: "spriječi objavljivača ove objave da izmijeni objavu"
         unlock_post: "Odključaj objavu"
@@ -2402,7 +2350,6 @@ bs_BA:
         delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako zaista želite da bude obrisan, pošaljite kaznu za pažnju moderatora zajedno s obrazloženjem."
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
-        add_post_notice: "Dodaj obavještenje moderatora..."
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -2591,11 +2538,7 @@ bs_BA:
     flagging:
       title: "Zašto prijavljujete ovaj post?"
       action: "Prijavi objavu"
-      take_action: "Poduzmi Akciju..."
       take_action_options:
-        default:
-          title: "Poduzmi Akciju"
-          details: "Dođite odmah do praga za oznake, umjesto da čekate još oznaka od zajednice."
         suspend:
           title: "Suspend User"
         silence:
@@ -2607,7 +2550,6 @@ bs_BA:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
       submit_tooltip: "Predaj privatnu prijavu"
-      take_action_tooltip: "Dođite odmah do praga za oznake, umjesto da čekate još oznaka od zajednice."
       cant: "Nažalost, trenutno ne možete prijaviti ovu objavu"
       notify_staff: "Obavijesti privatno moderatora foruma"
       formatted_name:
@@ -2621,10 +2563,6 @@ bs_BA:
           one: "unesite bar %{count} znak"
           few: "unesite najmanje %{count} znakova"
           other: "unesite najmanje %{count} znakova"
-        more:
-          one: "%{count} to go ..."
-          few: "%{count} to go ... \\ t"
-          other: "%{count}preostalo..."
         left:
           one: "%{count} preostalo"
           few: "%{count} preostalo"
@@ -2637,7 +2575,6 @@ bs_BA:
       title: "Pregled Teme"
       participants_title: "Često objavljuju"
       links_title: "Popularni linkovi"
-      links_shown: "prikaži više poveznica..."
       clicks:
         one: "%{count} click"
         few: "%{count} klika"
@@ -2748,6 +2685,9 @@ bs_BA:
           few: "Novo (%{count})"
           other: "Novo (%{count})"
         help: "teme stvorene u zadnjih par dana"
+        all: "All"
+        topics: "Topics"
+        replies: "Odgovori"
       posted:
         title: "Moje objave"
         help: "teme u kojima imate postove"
@@ -2795,6 +2735,9 @@ bs_BA:
       close: "Zatvori (Esc)"
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
+    experimental_lightbox:
+      buttons:
+        close: "Zatvori (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", \\ T"
       shortcut_key_delimiter_plus: "+"
@@ -2881,7 +2824,6 @@ bs_BA:
         few: "Zaradili ste ovu oznaku %{count} puta"
         other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
-      others_count: "Ostale sa ovom značkom (%{count}) \\ t"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"
       multiple_grant: "To možete zaraditi više puta"
@@ -2893,10 +2835,6 @@ bs_BA:
         one: "+ Još %{count}"
         few: "+ Još %{count}"
         other: "+ Još %{count}"
-      granted:
-        one: "%{count} odobreno"
-        few: "%{count} odobreno"
-        other: "%{count} odobreno"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljen %{badge} za %{username}"
@@ -2917,7 +2855,6 @@ bs_BA:
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
-      changed: "oznake  promijenjene:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"
@@ -2952,7 +2889,6 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
-      description: "Description"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3048,6 +2984,9 @@ bs_BA:
         other: "%{count} novih"
       more: "Još"
       all_categories: "Sve kategorije"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Save"
@@ -3076,7 +3015,8 @@ bs_BA:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Zajednica"
+          edit_section:
+            header_dropdown: "Customize"
           links:
             about:
               content: "O nama"
@@ -3084,8 +3024,8 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
-            everything:
-              content: "Sve"
+            topics:
+              content: "Topics"
             faq:
               content: "Česta pitanja"
             groups:
@@ -3097,8 +3037,26 @@ bs_BA:
             review:
               content: "Pregled"
     until: "Sve do:"
+    form_templates:
+      upload_field:
+        upload: "Učitavanje"
+        uploading: "Učitavam"
+      errors:
+        typeMismatch:
+          default: "Molim unesite ispravnu vrijednost."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Naprijed"
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Save"
+          reason: "zašto pravite izmjenu?"
+      spreadsheet:
+        show: "Show"
+        about: "O nama"
   admin_js:
-    type_to_filter: "kucaj da sortiraš..."
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3125,8 +3083,7 @@ bs_BA:
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         new_features:
-          dismiss: "Odpusti"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -3209,7 +3166,6 @@ bs_BA:
           name:
             too_short: "Naziv grupe je prekratak"
             too_long: "Naziv grupe je predug"
-            checking: "Provjera dostupnosti naziva grupe ..."
             available: "Ime grupe je dostupno"
             not_available: "Naziv grupe nije dostupan"
             blank: "Naziv grupe ne može biti prazan"
@@ -3317,26 +3273,6 @@ bs_BA:
         groups_filter_instructions: "Relevantne web-kuke će biti aktivirane samo ako je događaj povezan sa određenim grupama. Ostavite prazno da biste pokrenuli web-kuke za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovaj webhook?"
-        topic_event:
-          name: "Teme dogadaj"
-          details: "Kada se stvori nova tema, revidirana, izmijenjena ili izbrisana."
-        post_event:
-          name: "Objavi doađaj"
-          details: "Kada postoji novi odgovor, uredite, obrišite ili oporavite."
-        user_event:
-          name: "Korisnički događaj"
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništava."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada je kategorija stvorena, ažurirana ili uništena."
-        tag_event:
-          name: "Oznaći događaj"
-          details: "Kada se oznaka kreira, ažurira ili uništava."
-        reviewable_event:
-          name: "Eventable Event"
-          details: "Kada je nova stavka spremna za pregled i kada je njen status ažuriran."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -3377,7 +3313,8 @@ bs_BA:
         not_enabled: "Ne"
         change_settings_short: "Postavke"
         howto: "Kako instaliram pluginove?"
-        official: "Officionalni Plugin"
+        author: "Od %{author}"
+        learn_more: "Saznaj više"
       backups:
         title: "Backups"
         menu:
@@ -3392,20 +3329,15 @@ bs_BA:
           disable:
             title: "Onemogućite režim samo za čitanje"
             label: "Onemogući samo za čitanje"
-        logs:
-          none: "No logs yet..."
         columns:
           filename: "Filename"
           size: "Size"
         upload:
           label: "Učitavanje"
           title: "Prenesite rezervnu kopiju na ovu instancu"
-          uploading: "Uploading..."
-          uploading_progress: "Snimanje ... %{progress}% \\ t"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
           error: "There has been an error while uploading '%{filename}': %{message}"
         operations:
-          is_running: "An operation is currently running..."
           failed: "The %{operation} failed. Please check the logs."
           cancel:
             label: "Odustani"
@@ -3415,7 +3347,6 @@ bs_BA:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Da (ne uključuju učitavanja)"
           download:
             label: "Skinuti"
             title: "Pošaljite e-poštu sa linkom za preuzimanje"
@@ -3474,6 +3405,10 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+        component:
+          all_filter: "All"
+          enabled_filter: "Omogućen"
+          disabled_filter: "Neomogućen"
         theme:
           theme: "Izgled"
           component: "Komponenta"
@@ -3489,6 +3424,7 @@ bs_BA:
           create: "napravi"
           create_type: "Tip"
           create_name: "Ime"
+          save: "Save"
           long_title: "Izmijenite boje, CSS i HTML sadržaj Vaše web lokacije"
           edit: "Izmijeni"
           edit_confirm: "Ovo je udaljena tema, ako uredite CSS / HTML, vaše izmene će biti izbrisane sledeći put kada ažurirate temu."
@@ -3515,6 +3451,7 @@ bs_BA:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima greške u CSS-u, HTML-u ili YAML-u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova tema je podrazumevana tema sajta"
@@ -3523,7 +3460,6 @@ bs_BA:
           collapse: Spusti
           uploads: "Uploads"
           no_uploads: "Možete prenijeti sredstva povezana s vašom temom, kao što su fontovi i slike"
-          upload_file_tip: "Odaberite sredstvo za prijenos (png, woff2, itd ...)"
           variable_name: "SCSS var ime:"
           variable_name_invalid: "Nevažeće ime varijable. Dozvoljena je samo alfanumerička oznaka. Mora početi slovom. Mora biti jedinstveno."
           variable_name_error:
@@ -3531,7 +3467,6 @@ bs_BA:
             no_overwrite: "Nevažeće ime varijable. Ne smije prebrisati postojeću varijablu."
             must_be_unique: "Nevažeće ime varijable. Mora biti jedinstveno."
           upload: "Učitavanje"
-          select_component: "Izaberite komponentu ..."
           unsaved_changes_alert: "Još niste spremili promjene, želite li ih odbaciti i krenuti dalje?"
           discard: "Odbaci"
           stay: "Ostani"
@@ -3540,7 +3475,6 @@ bs_BA:
           edit_css_html_help: "Niste uredili nijedan CSS ili HTML"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
-          import_web_advanced: "Napredno ..."
           import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
           is_private: "Tema je u privatnom git repozitoriju"
           remote_branch: "Naziv podružnice (opcionalno)"
@@ -3566,7 +3500,6 @@ bs_BA:
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
           update_to_latest: "Ažuriraj na zadnje"
           check_for_updates: "Potražite ažuriranja"
-          updating: "Ažuriranje ..."
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
           theme_settings: "Postavke teme"
@@ -3599,6 +3532,9 @@ bs_BA:
           yaml:
             text: "YAML"
             title: "Definirajte postavke teme u YAML formatu"
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Neaktivan"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -3654,7 +3590,6 @@ bs_BA:
           css: "Stylesheet"
       email:
         title: "Emailovi"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Pregled Sajta"
         advanced_test:
@@ -3664,7 +3599,6 @@ bs_BA:
           run: "Pokreni test"
           text: "Odlućeno Tijelo Texta"
           elided: "Elided Text"
-        sending_test: "Sending test Email..."
         error: "<b>Greška</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
@@ -3685,7 +3619,6 @@ bs_BA:
         refresh: "Refresh"
         send_digest_label: "Pošaljite ovaj rezultat na:"
         send_digest: "Pošalji"
-        sending_email: "Slanje e-pošte ..."
         format: "Format"
         html: "html"
         text: "text"
@@ -3711,7 +3644,6 @@ bs_BA:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Naslov..."
             error_placeholder: "Greška"
         logs:
           none: "No logs found."
@@ -3719,7 +3651,6 @@ bs_BA:
             title: "Filter"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
       moderation_history:
         performed_by: "Izvedeno od"
@@ -3932,6 +3863,8 @@ bs_BA:
           validations:
             required:
               key: "required"
+            type:
+              key: "tip"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -4054,8 +3987,6 @@ bs_BA:
         delete: "Delete User"
         delete_posts:
           button: "Delete all posts"
-          progress:
-            description: "Brisanje postova ..."
           confirmation:
             cancel: "Odustani"
         merge:
@@ -4071,7 +4002,6 @@ bs_BA:
           other: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{count} dana ne mogu biti obrisane.)"
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
-        deleting_user: "Brisanje korisnika ..."
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
@@ -4119,7 +4049,6 @@ bs_BA:
             other: "U zadnjih %{count} dana:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -4192,6 +4121,8 @@ bs_BA:
         recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
+        outdated:
+          dismiss: "Odbaci"
       settings:
         show_overriden: "Only show overridden"
         reset: "reset"
@@ -4199,7 +4130,6 @@ bs_BA:
       site_settings:
         title: "Postavke"
         no_results: "No results found."
-        more_than_30_results: "Postoji više od 30 rezultata. Pročistite pretraživanje ili odaberite kategoriju."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
@@ -4246,6 +4176,8 @@ bs_BA:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Images"
       badges:
         title: Bedž
         new_badge: Novi Bedž
@@ -4322,7 +4254,6 @@ bs_BA:
       emoji:
         title: "Emoji"
         add: "Dodaj novi emoji"
-        uploading: "Učitava se..."
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -4353,6 +4284,7 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"
@@ -4370,7 +4302,6 @@ bs_BA:
       next: "Iduće"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      uploading: "Učitavanje..."
       upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
       invites:
         add_user: "Dodaj"

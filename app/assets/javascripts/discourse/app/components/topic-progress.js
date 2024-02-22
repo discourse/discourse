@@ -1,10 +1,10 @@
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 const CSS_TRANSITION_DELAY = isTesting() ? 0 : 500;
 
@@ -177,6 +177,6 @@ export default Component.extend({
 
   @action
   goBack() {
-    this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
+    this.jumpToPost(this.get("topic.last_read_post_number"));
   },
 });

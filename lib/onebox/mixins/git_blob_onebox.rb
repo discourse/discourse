@@ -220,6 +220,7 @@ module Onebox
           @data ||= {
             title: title,
             link: link,
+            i18n: i18n,
             # IMPORTANT NOTE: All of the other class variables are populated
             #     as *side effects* of the `raw` method! They must all appear
             #     AFTER the call to `raw`! Don't get bitten by this like I did!

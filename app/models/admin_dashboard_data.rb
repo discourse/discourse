@@ -3,7 +3,11 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_syms, :problem_blocks, :problem_messages, :problem_scheduled_check_blocks
+  cattr_reader :problem_syms,
+               :problem_blocks,
+               :problem_messages,
+               :problem_scheduled_check_blocks,
+               :problem_scheduled_check_klasses
 
   class Problem
     VALID_PRIORITIES = %w[low high].freeze
@@ -35,7 +39,7 @@ class AdminDashboardData
   GLOBAL_REPORTS ||= []
 
   PROBLEM_MESSAGE_PREFIX = "admin-problem:"
-  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems"
+  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems-list"
 
   def initialize(opts = {})
     @opts = opts
@@ -80,7 +84,8 @@ class AdminDashboardData
     @@problem_blocks << blk if blk
   end
 
-  def self.add_scheduled_problem_check(check_identifier, &blk)
+  def self.add_scheduled_problem_check(check_identifier, klass = nil, &blk)
+    @@problem_scheduled_check_klasses[check_identifier] = klass
     @@problem_scheduled_check_blocks[check_identifier] = blk
   end
 
@@ -89,12 +94,11 @@ class AdminDashboardData
     if problem.identifier.present?
       return if problems.find { |p| p.identifier == problem.identifier }
     end
-    problems << problem
-    set_found_scheduled_check_problems(problems)
+    set_found_scheduled_check_problem(problem)
   end
 
-  def self.set_found_scheduled_check_problems(problems)
-    Discourse.redis.setex(SCHEDULED_PROBLEM_STORAGE_KEY, 300, JSON.dump(problems.map(&:to_h)))
+  def self.set_found_scheduled_check_problem(problem)
+    Discourse.redis.rpush(SCHEDULED_PROBLEM_STORAGE_KEY, JSON.dump(problem.to_h))
   end
 
   def self.clear_found_scheduled_check_problems
@@ -103,26 +107,30 @@ class AdminDashboardData
 
   def self.clear_found_problem(identifier)
     problems = load_found_scheduled_check_problems
-    problems.reject! { |p| p.identifier == identifier }
-    set_found_scheduled_check_problems(problems)
+    problem = problems.find { |p| p.identifier == identifier }
+    Discourse.redis.lrem(SCHEDULED_PROBLEM_STORAGE_KEY, 1, JSON.dump(problem.to_h))
   end
 
   def self.load_found_scheduled_check_problems
-    found_problems_json = Discourse.redis.get(SCHEDULED_PROBLEM_STORAGE_KEY)
-    return [] if found_problems_json.blank?
-    begin
-      JSON.parse(found_problems_json).map { |problem| Problem.from_h(problem) }
-    rescue JSON::ParserError => err
-      Discourse.warn_exception(
-        err,
-        message: "Error parsing found problem JSON in admin dashboard: #{found_problems_json}",
-      )
-      []
+    found_problems = Discourse.redis.lrange(SCHEDULED_PROBLEM_STORAGE_KEY, 0, -1)
+
+    return [] if found_problems.blank?
+
+    found_problems.filter_map do |problem|
+      begin
+        Problem.from_h(JSON.parse(problem))
+      rescue JSON::ParserError => err
+        Discourse.warn_exception(
+          err,
+          message: "Error parsing found problem JSON in admin dashboard: #{problem}",
+        )
+        nil
+      end
     end
   end
 
   def self.register_default_scheduled_problem_checks
-    add_scheduled_problem_check(:group_smtp_credentials) do
+    add_scheduled_problem_check(:group_smtp_credentials, GroupEmailCredentialsCheck) do
       problems = GroupEmailCredentialsCheck.run
       problems.map do |p|
         problem_message =
@@ -145,28 +153,31 @@ class AdminDashboardData
   end
 
   def self.execute_scheduled_checks
-    found_problems = []
-    problem_scheduled_check_blocks.each do |check_identifier, blk|
-      problems = nil
+    problem_scheduled_check_blocks.keys.each do |check_identifier|
+      Jobs.enqueue(:problem_check, check_identifier: check_identifier.to_s)
+    end
+  end
 
-      begin
-        problems = instance_exec(&blk)
-      rescue StandardError => err
-        Discourse.warn_exception(
-          err,
-          message: "A scheduled admin dashboard problem check (#{check_identifier}) errored.",
-        )
-        # we don't want to hold up other checks because this one errored
-        next
+  def self.execute_scheduled_check(identifier)
+    check = problem_scheduled_check_blocks[identifier]
+
+    problems = instance_exec(&check)
+
+    yield(problems) if block_given? && problems.present?
+
+    Array
+      .wrap(problems)
+      .compact
+      .each do |problem|
+        next if !problem.is_a?(Problem)
+
+        add_found_scheduled_check_problem(problem)
       end
-
-      found_problems += Array.wrap(problems)
-    end
-
-    found_problems.compact.each do |problem|
-      next if !problem.is_a?(Problem)
-      add_found_scheduled_check_problem(problem)
-    end
+  rescue StandardError => err
+    Discourse.warn_exception(
+      err,
+      message: "A scheduled admin dashboard problem check (#{identifier}) errored.",
+    )
   end
 
   ##
@@ -182,6 +193,7 @@ class AdminDashboardData
     @@problem_syms = []
     @@problem_blocks = []
     @@problem_scheduled_check_blocks = {}
+    @@problem_scheduled_check_klasses = {}
 
     @@problem_messages = %w[
       dashboard.bad_favicon_url
@@ -206,7 +218,9 @@ class AdminDashboardData
                       :out_of_date_themes,
                       :unreachable_themes,
                       :watched_words_check,
-                      :google_analytics_version_check
+                      :google_analytics_version_check,
+                      :translation_overrides_check,
+                      :ember_version_check
 
     register_default_scheduled_problem_checks
 
@@ -360,6 +374,12 @@ class AdminDashboardData
     end
   end
 
+  def translation_overrides_check
+    if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
+      I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
+    end
+  end
+
   def image_magick_check
     if SiteSetting.create_thumbnails && !system("command -v convert >/dev/null;")
       I18n.t("dashboard.image_magick_warning")
@@ -413,7 +433,7 @@ class AdminDashboardData
   def watched_words_check
     WatchedWord.actions.keys.each do |action|
       begin
-        WordWatcher.word_matcher_regexp_list(action, raise_errors: true)
+        WordWatcher.compiled_regexps_for_action(action, raise_errors: true)
       rescue RegexpError => e
         translated_action = I18n.t("admin_js.admin.watched_words.actions.#{action}")
         I18n.t(
@@ -424,6 +444,10 @@ class AdminDashboardData
       end
     end
     nil
+  end
+
+  def ember_version_check
+    I18n.t("dashboard.ember_version_warning") if ENV["EMBER_VERSION"] == "3"
   end
 
   def out_of_date_themes

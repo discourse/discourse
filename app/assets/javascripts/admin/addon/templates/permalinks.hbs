@@ -9,10 +9,10 @@
   <div class="permalink-search">
     <TextField
       @value={{this.filter}}
-      @class="url-input"
       @placeholderKey="admin.permalink.form.filter"
       @autocorrect="off"
       @autocapitalize="off"
+      class="url-input"
     />
   </div>
 
@@ -60,13 +60,15 @@
                   {{/if}}
                   <a href={{pl.external_url}}>{{pl.external_url}}</a>
                 {{/if}}
+                {{#if pl.user_id}}
+                  <a href={{pl.user_url}}>{{pl.username}}</a>
+                {{/if}}
               </td>
               <td class="col action" style="text-align: right;">
                 <DButton
-                  @action={{action "destroyRecord"}}
-                  @actionParam={{pl}}
+                  @action={{fn this.destroyRecord pl}}
                   @icon="far-trash-alt"
-                  @class="btn-danger"
+                  class="btn-danger"
                 />
               </td>
             </tr>

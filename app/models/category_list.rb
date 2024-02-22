@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class CategoryList
+  CATEGORIES_PER_PAGE = 20
+  SUBCATEGORIES_PER_CATEGORY = 5
+
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_topic_custom_fields
@@ -16,6 +19,7 @@ class CategoryList
   def self.included_associations
     [
       :uploaded_background,
+      :uploaded_background_dark,
       :uploaded_logo,
       :uploaded_logo_dark,
       :topic_only_relative_url,
@@ -55,10 +59,9 @@ class CategoryList
     if SiteSetting.fixed_category_positions
       categories.order(:position, :id)
     else
-      allowed_category_ids = categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
       categories
         .left_outer_joins(:featured_topics)
-        .where(topics: { category_id: allowed_category_ids })
+        .where("topics.category_id IS NULL OR topics.category_id IN (?)", categories.select(:id))
         .group("categories.id")
         .order("max(topics.bumped_at) DESC NULLS LAST")
         .order("categories.id ASC")
@@ -86,12 +89,17 @@ class CategoryList
 
     if @guardian.authenticated?
       @all_topics =
-        @all_topics.joins(
-          "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
-        ).where(
-          "COALESCE(tu.notification_level,1) > :muted",
-          muted: TopicUser.notification_levels[:muted],
-        )
+        @all_topics
+          .joins(
+            "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+          .joins(
+            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{@guardian.user.id}",
+          )
+          .where(
+            "COALESCE(tu.notification_level,1) > :muted",
+            muted: TopicUser.notification_levels[:muted],
+          )
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
@@ -119,24 +127,62 @@ class CategoryList
   end
 
   def find_categories
-    @categories = Category.includes(CategoryList.included_associations).secured(@guardian)
+    query = Category.includes(CategoryList.included_associations).secured(@guardian)
 
-    @categories =
-      @categories.where(
+    query =
+      query.where(
         "categories.parent_category_id = ?",
         @options[:parent_category_id].to_i,
       ) if @options[:parent_category_id].present?
 
-    @categories = self.class.order_categories(@categories)
+    query = self.class.order_categories(query)
 
-    @categories = @categories.to_a
+    if @guardian.can_lazy_load_categories?
+      page = [1, @options[:page].to_i].max
+      query =
+        query
+          .where(parent_category_id: nil)
+          .limit(CATEGORIES_PER_PAGE)
+          .offset((page - 1) * CATEGORIES_PER_PAGE)
+    end
+
+    query =
+      DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
+
+    @categories = query.to_a
+
+    if @guardian.can_lazy_load_categories?
+      categories_with_rownum =
+        Category
+          .secured(@guardian)
+          .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
+          .where(parent_category_id: @categories.map { |c| c.id })
+
+      @categories +=
+        Category.includes(CategoryList.included_associations).where(
+          "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
+          SUBCATEGORIES_PER_CATEGORY,
+        )
+    end
+
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
+    end
 
     include_subcategories = @options[:include_subcategories] == true
 
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
-    if @options[:parent_category_id].blank?
+    if @guardian.can_lazy_load_categories?
+      subcategory_ids = {}
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: @categories.map(&:id))
+        .pluck(:id, :parent_category_id)
+        .each { |id, parent_id| (subcategory_ids[parent_id] ||= []) << id }
+      @categories.each { |c| c.subcategory_ids = subcategory_ids[c.id] || [] }
+    elsif @options[:parent_category_id].blank?
       subcategory_ids = {}
       subcategory_list = {}
       to_delete = Set.new

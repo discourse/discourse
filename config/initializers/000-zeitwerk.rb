@@ -43,6 +43,8 @@ Rails.autoloaders.each do |autoloader|
     "json" => "JSON",
     "ssrf_detector" => "SSRFDetector",
     "http" => "HTTP",
+    "gc_stat_instrumenter" => "GCStatInstrumenter",
+    "chat_sdk" => "ChatSDK",
   )
 end
 Rails.autoloaders.main.ignore(

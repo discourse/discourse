@@ -28,54 +28,67 @@ class Guardian
     def blank?
       true
     end
+
     def admin?
       false
     end
+
     def staff?
       false
     end
+
     def moderator?
       false
     end
+
     def anonymous?
       true
     end
+
     def approved?
       false
     end
+
     def staged?
       false
     end
+
     def silenced?
       false
     end
+
     def is_system_user?
       false
     end
+
     def bot?
       false
     end
+
     def secure_category_ids
       []
     end
-    def topic_create_allowed_category_ids
-      []
-    end
+
     def groups
       []
     end
+
     def has_trust_level?(level)
       false
     end
+
     def has_trust_level_or_staff?(level)
       false
     end
+
     def email
       nil
     end
+
     def whisperer?
       false
     end
+
     def in_any_groups?(group_ids)
       false
     end
@@ -84,7 +97,7 @@ class Guardian
   attr_reader :request
 
   def initialize(user = nil, request = nil)
-    @user = user.presence || AnonymousUser.new
+    @user = user.presence || Guardian::AnonymousUser.new
     @request = request
   end
 
@@ -232,7 +245,11 @@ class Guardian
   end
 
   def can_delete_reviewable_queued_post?(reviewable)
-    reviewable.present? && authenticated? && reviewable.created_by_id == @user.id
+    return false if reviewable.blank?
+    return false if !authenticated?
+    return true if is_api? && is_admin?
+
+    reviewable.target_created_by_id == @user.id
   end
 
   def can_see_group?(group)
@@ -401,7 +418,7 @@ class Guardian
 
   def can_invite_to_forum?(groups = nil)
     authenticated? && (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
-      (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
+      (is_staff? || @user.in_any_groups?(SiteSetting.invite_allowed_groups_map)) &&
       (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
   end
 
@@ -419,7 +436,7 @@ class Guardian
       end
 
       if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false).any? { |g| can_edit_group?(g) }
+        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
       end
     end
 
@@ -509,7 +526,7 @@ class Guardian
     return false if !authenticated?
     # User is trusted enough
     @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) &&
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
+      @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
   def can_export_entity?(entity)
@@ -540,7 +557,8 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i)
+    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i) ||
+      @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
   end
 
   def allowed_theme_repo_import?(repo)
@@ -606,7 +624,13 @@ class Guardian
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
-    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map) ||
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+  end
+
+  def can_lazy_load_categories?
+    SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
   def is_me?(other)
@@ -616,10 +640,19 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    unless anonymous?
-      return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
-      return obj.user == @user if obj.respond_to?(:user)
+    # NOTE: This looks strange...but we are checking if someone is posting anonymously
+    # as a AnonymousUser model, _not_ as Guardian::AnonymousUser which is a different thing
+    # used when !authenticated?
+    if authenticated? && is_anonymous?
+      return(
+        SiteSetting.allow_anonymous_likes? && obj.class == PostAction && obj.is_like? &&
+          obj.user_id == @user.id
+      )
     end
+
+    return false if anonymous?
+    return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
+    return obj.user == @user if obj.respond_to?(:user)
 
     false
   end
@@ -638,7 +671,7 @@ class Guardian
 
   def method_name_for(action, obj)
     method_name = :"can_#{action}_#{obj.class.name.underscore}?"
-    return method_name if respond_to?(method_name)
+    method_name if respond_to?(method_name)
   end
 
   def can_do?(action, obj)
@@ -648,6 +681,10 @@ class Guardian
     else
       false
     end
+  end
+
+  def is_api?
+    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
   end
 
   protected

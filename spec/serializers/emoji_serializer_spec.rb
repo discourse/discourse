@@ -4,16 +4,17 @@ RSpec.describe EmojiSerializer do
   fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
 
   describe "#url" do
+    subject(:serializer) { described_class.new(emoji, root: false) }
+
     fab!(:emoji) { Emoji.load_custom.first }
-    subject { described_class.new(emoji, root: false) }
 
     it "returns a valid URL" do
-      expect(subject.url).to start_with("/uploads/")
+      expect(serializer.url).to start_with("/uploads/")
     end
 
     it "works with a CDN" do
       set_cdn_url("https://cdn.com")
-      expect(subject.url).to start_with("https://cdn.com")
+      expect(serializer.url).to start_with("https://cdn.com")
     end
   end
 

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Sitemap do
   describe ".regenerate_sitemaps" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "always create the news and recent sitemaps" do
       described_class.regenerate_sitemaps
@@ -85,7 +85,7 @@ RSpec.describe Sitemap do
         expect(sitemap.topics).to be_empty
       end
 
-      it "returns all the neccessary topic attributes to render a sitemap URL" do
+      it "returns all the necessary topic attributes to render a sitemap URL" do
         topic = Fabricate(:topic)
 
         topics_data = sitemap.topics.first

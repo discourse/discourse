@@ -3,20 +3,51 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      def composer
+        @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
+      end
+
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
+      end
+
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
+      def replying_to?(message)
+        find(".chat-channel .chat-reply", text: message.message)
+      end
+
       def type_in_composer(input)
-        find(".chat-composer-input").send_keys(input)
+        find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-channel .chat-composer__input").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input").fill_in(with: input)
+        find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-channel .chat-composer__input").fill_in(with: input)
+      end
+
+      def click_composer
+        find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
       def click_send_message
-        find(".chat-composer .send-btn:enabled").click
+        find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
+      end
+
+      def message_by_id_selector(id)
+        ".chat-channel .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
       def message_by_id(id)
-        find(".chat-message-container[data-id=\"#{id}\"]")
+        find(message_by_id_selector(id))
       end
 
       def has_no_loading_skeleton?
@@ -27,89 +58,69 @@ module PageObjects
         has_css?(".chat-selection-management")
       end
 
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_button
       end
 
       def expand_message_actions_mobile(message, delay: 2)
-        message_by_id(message.id).click(delay: delay)
+        find(message_by_id_selector(message.id)).find(".chat-message-content").click(delay: delay)
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.5)
-        wait_for_animation(find(".chat-message-actions"), timeout: 5)
-        find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
+        expand_message_actions_mobile(message, delay: 0.4)
+        find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
       def hover_message(message)
-        message_by_id(message.id).hover
+        message = message_by_id(message.id)
+        # Scroll to top of message so that the actions are not hidden
+        page.scroll_to(message, align: :top)
+        message.hover
       end
 
       def bookmark_message(message)
-        hover_message(message)
-        find(".bookmark-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "bookmark")
+        else
+          hover_message(message)
+          find(".bookmark-btn").click
+        end
       end
 
       def click_more_button
         find(".more-buttons").click
       end
 
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def open_message_thread(message)
-        hover_message(message)
-        find(".chat-message-thread-btn").click
-      end
-
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='selectMessage']").click
-      end
-
-      def delete_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='deleteMessage']").click
-      end
-
-      def open_edit_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='edit']").click
-      end
-
       def edit_message(message, text = nil)
-        open_edit_message(message)
-        send_message(text) if text
+        messages.edit(message)
+        send_message(message.message + " " + text) if text
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input").fill_in(with: text)
+        composer.fill_in(with: text)
         click_send_message
-        find(".chat-composer-input").click # ensures autocomplete is closed and not masking anything
+        expect(page).to have_no_css(".chat-message.-not-processed")
+        text
       end
 
       def reply_to(message)
-        hover_message(message)
-        find(".reply-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "reply")
+        else
+          hover_message(message)
+          find(".reply-btn").click
+        end
       end
 
       def has_bookmarked_message?(message)
-        within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
+        find(message_by_id_selector(message.id) + ".-bookmarked")
       end
 
       def find_reaction(message, emoji)
@@ -146,12 +157,43 @@ module PageObjects
         find(".chat-composer-dropdown__action-btn.#{action_button_class}").click
       end
 
-      def has_message?(text: nil, id: nil)
-        if text
-          has_css?(".chat-message-text", text: text)
-        elsif id
-          has_css?(".chat-message-container[data-id=\"#{id}\"]", wait: 10)
-        end
+      def has_thread_indicator?(message)
+        message_thread_indicator(message).exists?
+      end
+
+      def has_no_thread_indicator?(message)
+        message_thread_indicator(message).does_not_exist?
+      end
+
+      def message_thread_indicator(message)
+        PageObjects::Components::Chat::ThreadIndicator.new(message_by_id_selector(message.id))
+      end
+
+      def open_thread_list
+        find(thread_list_button_selector).click
+        PageObjects::Components::Chat::ThreadList.new.has_loaded?
+      end
+
+      def has_unread_thread_indicator?(count:)
+        has_css?("#{thread_list_button_selector}.has-unreads") &&
+          has_css?(
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number",
+            text: count.to_s,
+          )
+      end
+
+      def has_no_unread_thread_indicator?
+        has_no_css?("#{thread_list_button_selector}.has-unreads")
+      end
+
+      def thread_list_button_selector
+        ".c-navbar__threads-list-button"
+      end
+
+      private
+
+      def message_thread_indicator_selector(message)
+        "#{message_by_id_selector(message.id)} .chat-message-thread-indicator"
       end
     end
   end

@@ -163,7 +163,7 @@ class UploadSecurity
   #### START PRIVATE CHECKS ####
 
   def login_required_check
-    SiteSetting.login_required?
+    SiteSetting.login_required? && !SiteSetting.secure_uploads_pm_only?
   end
 
   # Whether the upload should remain secure or not after posting depends on its context,

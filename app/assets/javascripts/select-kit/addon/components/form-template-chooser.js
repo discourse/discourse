@@ -1,41 +1,67 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import FormTemplate from "admin/models/form-template";
 import { computed } from "@ember/object";
+import FormTemplate from "discourse/models/form-template";
+import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["form-template-chooser"],
   classNames: ["form-template-chooser"],
   selectKitOptions: {
-    none: "admin.form_templates.edit_category.select_template",
+    none: "form_template_chooser.select_template",
   },
 
   init() {
     this._super(...arguments);
+    this.triggerSearch();
+  },
 
-    if (!this.templates) {
-      this._fetchTemplates();
-    }
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this.set("templatesLoaded", false);
+    this.triggerSearch();
   },
 
   @computed("templates")
   get content() {
-    if (!this.templates) {
-      return this._fetchTemplates();
-    }
-
     return this.templates;
   },
 
-  _fetchTemplates() {
-    FormTemplate.findAll().then((result) => {
-      const sortedTemplates = this._sortTemplatesByName(result);
-      if (sortedTemplates.length > 0) {
-        return this.set("templates", sortedTemplates);
-      } else {
-        this.set("templates", sortedTemplates);
-        this.set("selectKit.options.disabled", true);
-      }
+  search(filter) {
+    if (this.get("templatesLoaded")) {
+      return this._super(filter);
+    } else {
+      return this._fetchTemplates();
+    }
+  },
+
+  async _fetchTemplates() {
+    if (this.get("loadingTemplates")) {
+      return;
+    }
+
+    this.set("templatesLoaded", false);
+    this.set("loadingTemplates", true);
+
+    const result = await FormTemplate.findAll();
+
+    let sortedTemplates = this._sortTemplatesByName(result);
+
+    if (this.filteredIds) {
+      sortedTemplates = sortedTemplates.filter((t) =>
+        this.filteredIds.includes(t.id)
+      );
+    }
+
+    if (sortedTemplates.length === 0) {
+      this.set("selectKit.options.disabled", true);
+    }
+
+    this.setProperties({
+      templates: sortedTemplates,
+      loadingTemplates: false,
+      templatesLoaded: true,
     });
+
+    return this.templates;
   },
 
   _sortTemplatesByName(templates) {

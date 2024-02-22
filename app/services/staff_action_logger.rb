@@ -46,6 +46,23 @@ class StaffActionLogger
     UserHistory.create!(attrs)
   end
 
+  def edit_directory_columns_details(column_data, directory_column)
+    directory_column = directory_column.attributes.transform_values(&:to_s)
+    previous_value = directory_column
+    new_value = directory_column.clone
+
+    directory_column.each do |key, value|
+      if column_data[key] != value && column_data[key].present?
+        new_value[key] = column_data[key]
+      elsif key != "name"
+        previous_value.delete key
+        new_value.delete key
+      end
+    end
+
+    [previous_value.to_json, new_value.to_json]
+  end
+
   def log_post_deletion(deleted_post, opts = {})
     unless deleted_post && deleted_post.is_a?(Post)
       raise Discourse::InvalidParameters.new(:deleted_post)
@@ -219,7 +236,7 @@ class StaffActionLogger
   end
 
   def theme_json(theme)
-    ThemeSerializer.new(theme, root: false).to_json
+    ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
 
   def strip_duplicates(old, cur)
@@ -297,7 +314,7 @@ class StaffActionLogger
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:change_theme_setting],
-        subject: "#{theme.name}: #{setting_name.to_s}",
+        subject: "#{theme.name}: #{setting_name}",
         previous_value: previous_value,
         new_value: new_value,
       ),
@@ -779,8 +796,8 @@ class StaffActionLogger
 
     topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t("staff_action_logs.not_found")
-    username = reviewable.created_by&.username || I18n.t("staff_action_logs.unknown")
-    name = reviewable.created_by&.name || I18n.t("staff_action_logs.unknown")
+    username = reviewable.target_created_by&.username || I18n.t("staff_action_logs.unknown")
+    name = reviewable.target_created_by&.name || I18n.t("staff_action_logs.unknown")
 
     details = [
       "created_at: #{reviewable.created_at}",
@@ -940,7 +957,7 @@ class StaffActionLogger
     )
   end
 
-  def log_group_deletetion(group)
+  def log_group_deletion(group)
     raise Discourse::InvalidParameters.new(:group) if group.nil?
 
     details = ["name: #{group.name}", "id: #{group.id}"]

@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { isPresent } from "@ember/utils";
 import { action } from "@ember/object";
+import { isPresent } from "@ember/utils";
+import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";
 
 export default DiscourseRoute.extend({
@@ -95,9 +95,7 @@ export default DiscourseRoute.extend({
   },
 
   get _reviewableCountsChannel() {
-    return this.currentUser.redesigned_user_menu_enabled
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
+    return `/reviewable_counts/${this.currentUser.id}`;
   },
 
   @action

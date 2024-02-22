@@ -210,7 +210,7 @@ class InlineUploads
         node["src"] = upload&.short_url || PLACEHOLDER
 
         spaces_before = match[1].present? ? match[1][/ +$/].size : 0
-        replacement = +"#{" " * spaces_before}#{node.to_s}"
+        replacement = +"#{" " * spaces_before}#{node}"
 
         yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end

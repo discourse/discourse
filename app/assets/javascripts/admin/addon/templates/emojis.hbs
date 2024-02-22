@@ -41,9 +41,9 @@
             <td>{{e.group}}</td>
             <td class="action">
               <DButton
-                @action={{action "destroyEmoji" e}}
-                @class="btn-danger"
+                @action={{fn this.destroyEmoji e}}
                 @icon="far-trash-alt"
+                class="btn-danger"
               />
             </td>
           </tr>

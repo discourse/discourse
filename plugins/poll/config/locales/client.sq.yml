@@ -19,7 +19,7 @@ sq:
         label: "Voto Tani"
       show-results:
         title: "Display the poll results"
-        label: "Shfaq rezultatet"
+        label: "Results"
       hide-results:
         title: "Back to your votes"
       export-results:
@@ -32,6 +32,8 @@ sq:
         title: "Mbyll sondazhin"
         label: "Mbyll"
         confirm: "Jeni të sigurt për të mbyllur këtë sondazh?"
+      options:
+        label: "Opsione"
       error_while_toggling_status: "Ndjesë, u has në një gabim kur u ndryshua gjendja e këtij sondazhi."
       error_while_casting_votes: "Ndjesë, u has në një gabim duke mbledhur votat tuaja."
       error_while_fetching_voters: "Ndjesë, u has në një gabim duke shfaqur votuesit."

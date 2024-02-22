@@ -1,14 +1,23 @@
-import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
-import cookie from "discourse/lib/cookie";
-import getURL from "discourse-common/lib/get-url";
 import { setTransientHeader } from "discourse/lib/ajax";
+import cookie from "discourse/lib/cookie";
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
+import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
+import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
-  constructor({ notification, currentUser, siteSettings, site }) {
+  constructor({
+    notification,
+    endComponent,
+    appEvents,
+    currentUser,
+    siteSettings,
+    site,
+  }) {
     super(...arguments);
-    this.notification = notification;
+    this.appEvents = appEvents;
     this.currentUser = currentUser;
+    this.endComponent = endComponent;
+    this.notification = notification;
     this.siteSettings = siteSettings;
     this.site = site;
 
@@ -57,11 +66,27 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.notification.topic_id;
   }
 
+  get avatarTemplate() {
+    return this.notification.acting_user_avatar_template;
+  }
+
+  get endOutletArgs() {
+    return {
+      notification: this.notification,
+    };
+  }
+
   get #notificationName() {
     return this.site.notificationLookup[this.notification.notification_type];
   }
 
   onClick() {
+    this.renderDirector.onClick?.();
+    this.appEvents.trigger("user-menu:notification-click", {
+      notification: this.notification,
+      href: this.linkHref,
+    });
+
     if (!this.notification.read) {
       this.notification.set("read", true);
 

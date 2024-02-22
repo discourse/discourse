@@ -1,125 +1,96 @@
 # frozen_string_literal: true
 
 module CategoryBadge
-  def self.category_stripe(color, classes)
-    style = color ? "style='background-color: ##{color};'" : ""
-    "<span class='#{classes}' #{style}></span>"
-  end
-
-  def self.inline_category_stripe(color, styles = "", insert_blank = false)
-    "<span style='background-color: ##{color};#{styles}'>#{insert_blank ? "&nbsp;" : ""}</span>"
-  end
-
-  def self.inline_badge_wrapper_style(category)
-    style =
-      case (SiteSetting.category_style || :box).to_sym
-      when :bar
-        "line-height: 1.25; margin-right: 5px;"
-      when :box
-        "background-color:##{category.color}; line-height: 1.5; margin-top: 5px; margin-right: 5px;"
-      when :bullet
-        "line-height: 1; margin-right: 10px;"
-      when :none
-        ""
-      end
-
-    " style='font-size: 0.857em; white-space: nowrap; display: inline-block; position: relative; #{style}'"
-  end
-
   def self.html_for(category, opts = nil)
-    opts = opts || {}
+    opts ||= {}
 
-    # If there is no category, bail
-    return "" if category.blank?
+    # Bail if there is no category, hide uncategorized by default
+    return "" if category.blank? || (category.uncategorized? && !opts[:show_uncategorized])
 
-    # By default hide uncategorized
-    return "" if category.uncategorized? && !opts[:show_uncategorized]
+    if opts[:inline_style]
+      # Inline styles for email
+      style_for_email(category, opts)
+    else
+      # Browser styles
+      style_for_browser(category, opts)
+    end
+  end
 
-    extra_classes = "#{opts[:extra_classes]} #{SiteSetting.category_style}"
+  def self.shared_data(category, opts)
+    {
+      parent_category: fetch_parent_category(category),
+      category_url:
+        opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url,
+      extra_classes: opts[:extra_classes].to_s,
+    }
+  end
+
+  def self.fetch_parent_category(category)
+    Category.find_by(id: category.parent_category_id) if category.parent_category_id
+  end
+
+  def self.map_styles_to_string(styles)
+    styles.map { |k, v| "#{k}: #{ERB::Util.html_escape(v)};" }.join(" ")
+  end
+
+  def self.wrap_in_link(content, url, extra_classes = "", style_value = nil)
+    style_attr = style_value ? " style='#{style_value}'" : ""
+    "<a class='badge-category__wrapper #{extra_classes}' href='#{url}'#{style_attr}>#{content}</a>".html_safe
+  end
+
+  def self.style_for_browser(category, opts)
+    data = shared_data(category, opts)
+
+    class_names = "badge-category #{data[:parent_category] ? "--has-parent" : ""}"
+    description = category.description_text ? "title='#{category.description_text}'" : ""
+
+    badge_styles = {
+      "--category-badge-color": "##{category.color}",
+      "--category-badge-text-color": "##{category.text_color}",
+    }
+    badge_styles["--parent-category-badge-color"] = "##{data[:parent_category].color}" if data[
+      :parent_category
+    ]
 
     result = +""
+    result << "<span data-category-id='#{category.id}'"
+    result << " style='#{map_styles_to_string(badge_styles)}'"
+    result << " data-parent-category-id='#{data[:parent_category].id}'" if data[:parent_category]
+    result << " data-drop-close='true' class='#{class_names}' #{description}>"
+    result << "<span class='badge-category__name'>"
+    result << ERB::Util.html_escape(category.name)
+    result << "</span></span>"
 
-    # parent span
-    unless category.parent_category_id.nil? || opts[:hide_parent]
-      parent_category = Category.find_by(id: category.parent_category_id)
-      result << if opts[:inline_style]
-        case (SiteSetting.category_style || :box).to_sym
-        when :bar
-          inline_category_stripe(
-            parent_category.color,
-            "display: inline-block; padding: 1px;",
-            true,
-          )
-        when :box
-          inline_category_stripe(
-            parent_category.color,
-            "display: inline-block; padding: 0 1px;",
-            true,
-          )
-        when :bullet
-          inline_category_stripe(
-            parent_category.color,
-            "display: inline-block; width: 5px; height: 10px; line-height: 1;",
-          )
-        when :none
-          ""
-        end
-      else
-        category_stripe(parent_category.color, "badge-category-parent-bg")
-      end
+    wrap_in_link(result, data[:category_url], data[:extra_classes])
+  end
+
+  def self.style_for_email(category, opts)
+    data = shared_data(category, opts)
+
+    badge_styles = {
+      display: "inline-block",
+      width: "0.72em",
+      height: "0.72em",
+      "margin-right": "0.33em",
+      "background-color": "##{category.color}",
+    }
+
+    result = +""
+    result << "<span data-category-id='#{category.id}'"
+    result << " data-parent-category-id='#{data[:parent_category].id}'" if data[:parent_category]
+    result << " data-drop-close='true'>"
+    result << "<span>"
+    result << "<span style='#{map_styles_to_string(badge_styles)}'>"
+    if data[:parent_category]
+      parent_badge_styles = { display: "block", width: "0.36em", height: "0.72em" }
+      parent_badge_styles["background-color"] = "##{data[:parent_category].color}"
+      parent_badge_style_value = map_styles_to_string(parent_badge_styles)
+      result << "<span style='#{parent_badge_style_value}'></span>"
     end
+    result << "</span>"
+    result << ERB::Util.html_escape(category.name)
+    result << "</span></span>"
 
-    # sub parent or main category span
-    result << if opts[:inline_style]
-      case (SiteSetting.category_style || :box).to_sym
-      when :bar
-        inline_category_stripe(category.color, "display: inline-block; padding: 1px;", true)
-      when :box
-        ""
-      when :bullet
-        inline_category_stripe(
-          category.color,
-          "display: inline-block; width: #{category.parent_category_id.nil? ? 10 : 5}px; height: 10px;",
-        )
-      when :none
-        ""
-      end
-    else
-      category_stripe(category.color, "badge-category-bg")
-    end
-
-    # category name
-    class_names = "badge-category clear-badge"
-    description = category.description_text ? "title='#{category.description_text}'" : ""
-    category_url =
-      opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
-
-    extra_span_classes =
-      if opts[:inline_style]
-        case (SiteSetting.category_style || :box).to_sym
-        when :bar
-          "color: #222222; padding: 3px; vertical-align: text-top; margin-top: -3px; display: inline-block;"
-        when :box
-          "color: ##{category.text_color}; padding: 0 5px;"
-        when :bullet
-          "color: #222222; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;"
-        when :none
-          ""
-        end + "max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
-      elsif (SiteSetting.category_style).to_sym == :box
-        "color: ##{category.text_color}"
-      else
-        ""
-      end
-    result << "<span style='#{extra_span_classes}' data-drop-close='true' class='#{class_names}'
-                 #{description}>"
-
-    result << ERB::Util.html_escape(category.name) << "</span>"
-
-    result =
-      "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" +
-        (opts[:inline_style] ? inline_badge_wrapper_style(category) : "") + ">#{result}</a>"
-
-    result.html_safe
+    wrap_in_link(result, data[:category_url])
   end
 end

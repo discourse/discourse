@@ -38,7 +38,7 @@ RSpec.describe ReviewablesController do
   end
 
   context "when logged in" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { sign_in(admin) }
 
@@ -324,7 +324,7 @@ RSpec.describe ReviewablesController do
 
     describe "#show" do
       context "with basics" do
-        fab!(:reviewable) { Fabricate(:reviewable) }
+        fab!(:reviewable)
         before { sign_in(Fabricate(:moderator)) }
 
         it "returns the reviewable as json" do
@@ -342,9 +342,9 @@ RSpec.describe ReviewablesController do
       end
 
       context "with conversation" do
-        fab!(:post) { Fabricate(:post) }
-        fab!(:user) { Fabricate(:user) }
-        fab!(:admin) { Fabricate(:admin) }
+        fab!(:post)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:admin)
         let(:result) { PostActionCreator.notify_moderators(user, post, "this is the first post") }
         let(:reviewable) { result.reviewable }
 
@@ -393,7 +393,7 @@ RSpec.describe ReviewablesController do
 
     describe "#explain" do
       context "with basics" do
-        fab!(:reviewable) { Fabricate(:reviewable) }
+        fab!(:reviewable)
 
         before { sign_in(Fabricate(:moderator)) }
 
@@ -414,7 +414,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#perform" do
-      fab!(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
       it "returns 404 when the reviewable does not exist" do
@@ -565,8 +565,8 @@ RSpec.describe ReviewablesController do
       fab!(:post0) { Fabricate(:post) }
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }
       fab!(:post2) { Fabricate(:post) }
-      fab!(:user0) { Fabricate(:user) }
-      fab!(:user1) { Fabricate(:user) }
+      fab!(:user0) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
 
       it "returns empty json for no reviewables" do
         get "/review/topics.json"
@@ -659,10 +659,10 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#update" do
-      fab!(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable)
       fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
       fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
-      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:moderator)
       fab!(:reviewable_approved_post) do
         Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       end
@@ -788,31 +788,100 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#destroy" do
-      fab!(:user) { Fabricate(:user) }
-
-      before { sign_in(user) }
+      fab!(:user)
 
       it "returns 404 if the reviewable doesn't exist" do
+        sign_in(user)
         delete "/review/1234.json"
         expect(response.code).to eq("404")
       end
 
       it "returns 404 if the user can't see the reviewable" do
+        sign_in(user)
         queued_post = Fabricate(:reviewable_queued_post)
         delete "/review/#{queued_post.id}.json"
         expect(response.code).to eq("404")
       end
 
       it "returns 200 if the user can delete the reviewable" do
-        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        sign_in(user)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
         delete "/review/#{queued_post.id}.json"
         expect(response.code).to eq("200")
         expect(queued_post.reload).to be_deleted
       end
+
+      it "denies attempts to destroy unowned reviewables" do
+        sign_in(admin)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.status).to eq(404)
+        # Reviewable is not deleted because request is not via API
+        expect(queued_post.reload).to be_present
+      end
+
+      shared_examples "for a passed user" do
+        it "deletes reviewable" do
+          api_key = Fabricate(:api_key).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: recipient)
+          delete "/review/#{queued_post.id}.json",
+                 params: {
+                   username: recipient.username,
+                 },
+                 headers: {
+                   HTTP_API_USERNAME: caller.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(response_code)
+
+          if reviewable_deleted
+            expect(queued_post.reload).to be_deleted
+          else
+            expect(queued_post.reload).to be_present
+          end
+        end
+      end
+
+      describe "api called by admin" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:admin) }
+          let(:recipient) { user }
+          let(:response_code) { 200 }
+          let(:reviewable_deleted) { true }
+        end
+      end
+
+      describe "api called by tl4 user" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:trust_level_4) }
+          let(:recipient) { user }
+          let(:response_code) { 403 }
+          let(:reviewable_deleted) { false }
+        end
+      end
+
+      describe "api called by regular user" do
+        include_examples "for a passed user" do
+          let(:caller) { user }
+          let(:recipient) { Fabricate(:user) }
+          let(:response_code) { 403 }
+          let(:reviewable_deleted) { false }
+        end
+      end
+
+      describe "api called by admin for another admin" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:admin) }
+          let(:recipient) { Fabricate(:admin) }
+          let(:response_code) { 200 }
+          let(:reviewable_deleted) { true }
+        end
+      end
     end
 
     describe "#count" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
 
       before { sign_in(admin) }
 

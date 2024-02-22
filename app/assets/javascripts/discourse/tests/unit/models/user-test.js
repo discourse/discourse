@@ -1,12 +1,10 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import PreloadStore from "discourse/lib/preload-store";
-import sinon from "sinon";
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { getOwner } from "discourse-common/lib/get-owner";
-import * as userTips from "discourse/lib/user-tips";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
@@ -122,25 +120,25 @@ module("Unit | Model | user", function (hooks) {
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
-    assert.strictEqual(user._subscribersCount, 0);
+    assert.strictEqual(user.statusManager._subscribersCount, 0);
 
-    user.trackStatus();
-    assert.strictEqual(user._subscribersCount, 1);
+    user.statusManager.trackStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 1);
 
-    user.trackStatus();
-    assert.strictEqual(user._subscribersCount, 2);
+    user.statusManager.trackStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 2);
 
-    user.stopTrackingStatus();
-    assert.strictEqual(user._subscribersCount, 1);
+    user.statusManager.stopTrackingStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 1);
 
-    user.stopTrackingStatus();
-    assert.strictEqual(user._subscribersCount, 0);
+    user.statusManager.stopTrackingStatus();
+    assert.strictEqual(user.statusManager._subscribersCount, 0);
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
-    user.stopTrackingStatus();
+    user.statusManager.stopTrackingStatus();
     assert.ok(true);
   });
 
@@ -162,8 +160,8 @@ module("Unit | Model | user", function (hooks) {
     const appEvents = user1.appEvents;
 
     try {
-      user1.trackStatus();
-      user2.trackStatus();
+      user1.statusManager.trackStatus();
+      user2.statusManager.trackStatus();
       assert.strictEqual(user1.status, status1);
       assert.strictEqual(user2.status, status2);
 
@@ -175,8 +173,8 @@ module("Unit | Model | user", function (hooks) {
       assert.strictEqual(user1.status, null);
       assert.strictEqual(user2.status, null);
     } finally {
-      user1.stopTrackingStatus();
-      user2.stopTrackingStatus();
+      user1.statusManager.stopTrackingStatus();
+      user2.statusManager.stopTrackingStatus();
     }
   });
 
@@ -195,56 +193,5 @@ module("Unit | Model | user", function (hooks) {
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );
-  });
-
-  test("hideUserTipForever() makes a single request", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    let requestsCount = 0;
-    pretender.put("/u/eviltrout.json", () => {
-      requestsCount += 1;
-      return response(200, {
-        user: {
-          user_option: {
-            seen_popups: [1],
-          },
-        },
-      });
-    });
-
-    await user.hideUserTipForever("first_notification");
-    assert.strictEqual(requestsCount, 1);
-
-    await user.hideUserTipForever("first_notification");
-    assert.strictEqual(requestsCount, 1);
-  });
-
-  test("hideUserTipForever() can hide the user tip", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideSpy = sinon.spy(userTips, "hideUserTip");
-    const showNextSpy = sinon.spy(userTips, "showNextUserTip");
-    await user.hideUserTipForever("first_notification");
-
-    assert.ok(hideSpy.calledWith("first_notification"));
-    assert.ok(showNextSpy.calledWith());
-  });
-
-  test("hideUserTipForever() can hide all the user tips", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideAllSpy = sinon.spy(userTips, "hideAllUserTips");
-    await user.hideUserTipForever();
-
-    assert.ok(hideAllSpy.calledWith());
   });
 });

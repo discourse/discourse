@@ -25,27 +25,28 @@ RSpec.describe ScreenedUrl do
   end
 
   describe "normalize" do
-    let(:record) { described_class.new(@params) }
-    subject do
+    subject(:normalized) do
       record.normalize
       record
     end
 
+    let(:record) { described_class.new(@params) }
+
     %w[http:// HTTP:// https:// HTTPS://].each do |prefix|
       it "strips #{prefix}" do
         @params = valid_params.merge(url: url.gsub("http://", prefix))
-        expect(subject.url).to eq(url.gsub("http://", ""))
+        expect(normalized.url).to eq(url.gsub("http://", ""))
       end
     end
 
     it "strips trailing slash" do
       @params = valid_params.merge(url: "silverbullet.in/")
-      expect(subject.url).to eq("silverbullet.in")
+      expect(normalized.url).to eq("silverbullet.in")
     end
 
     it "strips trailing slashes" do
       @params = valid_params.merge(url: "silverbullet.in/buy///")
-      expect(subject.url).to eq("silverbullet.in/buy")
+      expect(normalized.url).to eq("silverbullet.in/buy")
     end
 
     it "downcases domains" do

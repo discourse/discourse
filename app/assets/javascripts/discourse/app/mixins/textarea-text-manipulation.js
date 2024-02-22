@@ -1,16 +1,16 @@
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import { action } from "@ember/object";
 import Mixin from "@ember/object/mixin";
+import { next, schedule } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
-import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { isTesting } from "discourse-common/config/environment";
 import {
   clipboardHelpers,
   determinePostReplaceSelection,
 } from "discourse/lib/utilities";
-import { next, schedule } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
@@ -402,10 +402,12 @@ export default Mixin.create({
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:insert-text`,
-          table
-        );
+        this.composerEventPrefix
+          ? this.appEvents.trigger(
+              `${this.composerEventPrefix}:insert-text`,
+              table
+            )
+          : this.insertText(table);
         handled = true;
       }
     }
@@ -457,10 +459,12 @@ export default Mixin.create({
         }
 
         if (isComposer) {
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:insert-text`,
-            markdown
-          );
+          this.composerEventPrefix
+            ? this.appEvents.trigger(
+                `${this.composerEventPrefix}:insert-text`,
+                markdown
+              )
+            : this.insertText(markdown);
           handled = true;
         }
       }

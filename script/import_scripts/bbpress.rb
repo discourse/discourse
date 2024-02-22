@@ -139,7 +139,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     # make sure every user name has a unique email address
     anon_names.each do |k, name|
       if not emails.include? name["email"]
-        emails.push (name["email"])
+        emails.push(name["email"])
       else
         name["email"] = "anonymous_#{SecureRandom.hex}@no-email.invalid"
       end
@@ -310,9 +310,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
               if !post.raw[html]
                 post.raw << "\n\n" << html
                 post.save!
-                unless PostUpload.where(post: post, upload: upload).exists?
-                  PostUpload.create!(post: post, upload: upload)
-                end
+                UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
               end
             end
           end
@@ -360,9 +358,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
               if !post.raw[html]
                 post.raw << "\n\n" << html
                 post.save!
-                unless PostUpload.where(post: post, upload: upload).exists?
-                  PostUpload.create!(post: post, upload: upload)
-                end
+                UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
               end
             end
           end

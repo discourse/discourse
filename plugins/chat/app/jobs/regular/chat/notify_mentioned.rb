@@ -40,6 +40,8 @@ module Jobs
           is_direct_message_channel: @chat_channel.direct_message_channel?,
         }
 
+        data[:chat_thread_id] = @chat_message.thread_id if @chat_message.in_thread?
+
         if !@is_direct_message_channel
           data[:chat_channel_title] = @chat_channel.title(membership.user)
           data[:chat_channel_slug] = @chat_channel.slug
@@ -61,12 +63,19 @@ module Jobs
       end
 
       def build_payload_for(membership, identifier_type:)
+        post_url =
+          if @chat_message.in_thread?
+            @chat_message.thread.relative_url
+          else
+            "#{@chat_channel.relative_url}/#{@chat_message.id}"
+          end
+
         payload = {
           notification_type: ::Notification.types[:chat_mention],
           username: @creator.username,
           tag: ::Chat::Notifier.push_notification_tag(:mention, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
-          post_url: "#{@chat_channel.relative_url}/#{@chat_message.id}",
+          post_url: post_url,
         }
 
         translation_prefix =
@@ -113,7 +122,7 @@ module Jobs
             read: is_read,
           )
 
-        mention.update!(notification: notification)
+        mention.notifications << notification
       end
 
       def send_notifications(membership, mention_type)
@@ -136,11 +145,41 @@ module Jobs
         memberships = get_memberships(user_ids)
 
         memberships.each do |membership|
-          mention = ::Chat::Mention.find_by(user: membership.user, chat_message: @chat_message)
+          mention = find_mention(@chat_message, mention_type, membership.user.id)
           if mention.present?
             create_notification!(membership, mention, mention_type)
             send_notifications(membership, mention_type)
           end
+        end
+      end
+
+      def find_mention(chat_message, mention_type, user_id)
+        mention_klass = resolve_mention_klass(mention_type)
+
+        target_id = nil
+        if mention_klass == ::Chat::UserMention
+          target_id = user_id
+        elsif mention_klass == ::Chat::GroupMention
+          begin
+            target_id = Group.where("LOWER(name) = ?", "#{mention_type}").pick(:id)
+          rescue => e
+            Discourse.warn_exception(e, message: "Mentioned group doesn't exist")
+          end
+        end
+
+        mention_klass.find_by(chat_message: chat_message, target_id: target_id)
+      end
+
+      def resolve_mention_klass(mention_type)
+        case mention_type
+        when :global_mentions
+          ::Chat::AllMention
+        when :here_mentions
+          ::Chat::HereMention
+        when :direct_mentions
+          ::Chat::UserMention
+        else
+          ::Chat::GroupMention
         end
       end
     end

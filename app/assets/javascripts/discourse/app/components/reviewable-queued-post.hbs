@@ -1,11 +1,11 @@
-<ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="">
+<ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
   <div class="title-text">
     {{d-icon "plus-square" title="review.new_topic"}}
-    {{this.reviewable.payload.title}}
+    {{@reviewable.payload.title}}
   </div>
-  {{category-badge this.reviewable.category}}
-  <ReviewableTags @tags={{this.reviewable.payload.tags}} @tagName="" />
-  {{#if this.reviewable.payload.via_email}}
+  {{category-badge @reviewable.category}}
+  <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
+  {{#if @reviewable.payload.via_email}}
     <a href {{on "click" this.showRawEmail}} class="show-raw-email">
       {{d-icon "envelope" title="post.via_email"}}
     </a>
@@ -13,23 +13,33 @@
 </ReviewableTopicLink>
 
 <div class="post-contents-wrapper">
-  <ReviewableCreatedBy @user={{this.reviewable.created_by}} @tagName="" />
+  <ReviewableCreatedBy @user={{@reviewable.target_created_by}} @tagName="" />
 
   <div class="post-contents">
     <ReviewablePostHeader
-      @reviewable={{this.reviewable}}
-      @createdBy={{this.reviewable.created_by}}
+      @reviewable={{@reviewable}}
+      @createdBy={{@reviewable.target_created_by}}
       @tagName=""
     />
 
     <CookText
-      @rawText={{this.reviewable.payload.raw}}
-      @class="post-body"
-      @categoryId={{this.reviewable.category_id}}
-      @topicId={{this.reviewable.topic_id}}
+      class="post-body {{if this.isCollapsed 'is-collapsed'}}"
+      @rawText={{@reviewable.payload.raw}}
+      @categoryId={{@reviewable.category_id}}
+      @topicId={{@reviewable.topic_id}}
       @paintOneboxes={{true}}
       @opts={{hash removeMissing=true}}
+      @onOffsetHeightCalculated={{this.setPostBodyHeight}}
     />
+
+    {{#if this.isLongPost}}
+      <DButton
+        @action={{this.toggleContent}}
+        @label={{this.collapseButtonProps.label}}
+        @icon={{this.collapseButtonProps.icon}}
+        class="btn-default btn-icon post-body__toggle-btn"
+      />
+    {{/if}}
 
     {{yield}}
   </div>

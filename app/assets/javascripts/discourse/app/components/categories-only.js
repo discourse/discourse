@@ -1,12 +1,10 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
 
 export default Component.extend({
   tagName: "",
   showMuted: false,
-  noCategoryStyle: equal("siteSettings.category_style", "none"),
 
   @discourseComputed("showMutedCategories", "filteredCategories.length")
   mutedToggleIcon(showMutedCategories, filteredCategoriesLength) {

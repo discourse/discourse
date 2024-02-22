@@ -10,16 +10,23 @@ de:
       title: "Styleguide"
       welcome: "Wähle einen Abschnitt aus dem linken Menü aus, um loszulegen."
       categories:
+        syntax: Syntax
         atoms: Atome
         molecules: Moleküle
         organisms: Organismen
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typografie"
           example: "Willkommen bei Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Datum/Uhrzeit"
+        menus:
+          title: "Menüs"
+        toasts:
+          title: "Toasts"
         font_scale:
           title: "Schrift"
         colors:
@@ -87,11 +94,11 @@ de:
           title: "Spinner"
         empty_state:
           title: "Empty State"
-        rich_tooltip:
-          title: "Rich Tooltip"
+        tooltips:
+          title: "Tooltipps"
           description: "Beschreibung"
           header: "Kopfzeile"
           hover_to_see: "Bewege den Mauszeiger darüber, um einen Tooltipp zu sehen"
         char_counter:
           title: "Zeichenzähler"
-          placeholder: "Gib deinen Text hier ein..."
+          placeholder: "Gib deinen Text hier ein …"

@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 id:
+  site_settings:
+    details_enabled: 'Sertakan kemampuan untuk menambahkan detail yang dapat diperluas ke sebuah post. Fitur ini dapat ditemukan di menu popup toolbar komposer. Anda harus melakukan rebake semua post dengan "rake posts:rebake" jika Anda mengubah pengaturan ini.'
   details:
     excerpt_details: "(klik untuk lebih jelasnya)"

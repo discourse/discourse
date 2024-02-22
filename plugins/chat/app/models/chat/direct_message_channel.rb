@@ -4,10 +4,6 @@ module Chat
   class DirectMessageChannel < Channel
     alias_attribute :direct_message, :chatable
 
-    def self.polymorphic_class_for(name)
-      Chat::Chatable.polymorphic_class_for(name) || super(name)
-    end
-
     def direct_message_channel?
       true
     end
@@ -24,12 +20,8 @@ module Chat
       direct_message.chat_channel_title_for_user(self, user)
     end
 
-    def ensure_slug_ok
-      true
-    end
-
     def generate_auto_slug
-      self.slug = nil
+      false if !self.slug.present?
     end
   end
 end

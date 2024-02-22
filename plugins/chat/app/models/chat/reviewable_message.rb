@@ -2,6 +2,9 @@
 
 module Chat
   class ReviewableMessage < Reviewable
+    validates :type, length: { maximum: 100 }
+    validates :target_type, length: { maximum: 100 }
+
     def serializer
       Chat::ReviewableMessageSerializer
     end
@@ -37,7 +40,8 @@ module Chat
 
     def build_actions(actions, guardian, args)
       return unless pending?
-      return if chat_message.blank?
+
+      return build_action(actions, :ignore, icon: "external-link-alt") if chat_message.blank?
 
       agree =
         actions.add_bundle(
@@ -73,10 +77,12 @@ module Chat
         )
       end
 
-      build_action(actions, :ignore, icon: "external-link-alt")
+      ignore_bundle = actions.add_bundle("#{id}-ignore", label: "reviewables.actions.ignore.title")
+
+      build_action(actions, :ignore, icon: "external-link-alt", bundle: ignore_bundle)
 
       unless chat_message.deleted_at?
-        build_action(actions, :delete_and_agree, icon: "far-trash-alt")
+        build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: ignore_bundle)
       end
     end
 

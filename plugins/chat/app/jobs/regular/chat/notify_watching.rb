@@ -45,8 +45,7 @@ module Jobs
 
       def send_notifications(membership)
         user = membership.user
-        guardian = ::Guardian.new(user)
-        return unless guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
+        return unless user.guardian.can_join_chat_channel?(@chat_channel)
         return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
         return if online_user_ids.include?(user.id)
 
@@ -65,7 +64,7 @@ module Jobs
         payload = {
           username: @creator.username,
           notification_type: ::Notification.types[:chat_message],
-          post_url: @chat_channel.relative_url,
+          post_url: @chat_message.url,
           translated_title: ::I18n.t(translation_key, translation_args),
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,

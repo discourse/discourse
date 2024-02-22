@@ -1,3 +1,5 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -5,13 +7,10 @@ import {
   loggedInUser,
   publishToMessageBus,
   query,
-  updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Review", function (needs) {
   needs.user();
@@ -71,21 +70,21 @@ acceptance("Review", function (needs) {
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer .cancel");
+    await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected and blocked"
     );
   });
@@ -114,9 +113,7 @@ acceptance("Review", function (needs) {
     );
 
     assert.strictEqual(
-      query(
-        ".reviewable-flagged-post .post-body .post-body__scroll"
-      ).innerHTML.trim(),
+      query(".reviewable-flagged-post .post-body").innerHTML.trim(),
       "<b>cooked content</b>"
     );
 
@@ -141,7 +138,7 @@ acceptance("Review", function (needs) {
     await visit("/review");
 
     assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .category-name`));
+    assert.ok(!exists(`${topic} .badge-category__name`));
 
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
@@ -223,43 +220,12 @@ acceptance("Review", function (needs) {
       "new raw contents"
     );
     assert.strictEqual(
-      query(`${topic} .category-name`).innerText.trim(),
+      query(`${topic} .badge-category__name`).innerText.trim(),
       "support"
     );
   });
 
-  test("Reviewables can become stale when redesigned_user_menu_enabled is false", async function (assert) {
-    updateCurrentUser({ redesigned_user_menu_enabled: false });
-    await visit("/review");
-
-    const reviewable = query(`[data-reviewable-id="1234"]`);
-    assert.notOk(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(
-      count(`[data-reviewable-id="1234"] .status .pending`),
-      1
-    );
-    assert.ok(!exists(".stale-help"));
-
-    await publishToMessageBus("/reviewable_counts", {
-      review_count: 1,
-      updates: {
-        1234: { last_performing_username: "foo", status: 1 },
-      },
-    });
-
-    assert.ok(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
-    assert.strictEqual(count(".stale-help"), 1);
-    assert.ok(query(".stale-help").innerText.includes("foo"));
-
-    await visit("/");
-    await visit("/review"); // reload review
-
-    assert.strictEqual(count(".stale-help"), 0);
-  });
-
-  test("Reviewables can become stale when redesigned_user_menu_enabled is true", async function (assert) {
-    updateCurrentUser({ redesigned_user_menu_enabled: true });
+  test("Reviewables can become stale", async function (assert) {
     await visit("/review");
 
     const reviewable = query(`[data-reviewable-id="1234"]`);

@@ -1,7 +1,7 @@
-import { assert, module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { assert, module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Helper | concat-class", function (hooks) {

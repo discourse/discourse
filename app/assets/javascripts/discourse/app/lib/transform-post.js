@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 const _additionalAttributes = [];
 
@@ -26,6 +26,7 @@ export function transformBasicPost(post) {
     flair_url: post.flair_url,
     flair_bg_color: post.flair_bg_color,
     flair_color: post.flair_color,
+    flair_group_id: post.flair_group_id,
     wiki: post.wiki,
     lastWikiEdit: post.last_wiki_edit,
     firstPost: post.post_number === 1,
@@ -56,6 +57,7 @@ export function transformBasicPost(post) {
     canPermanentlyDelete: false,
     showFlagDelete: false,
     canRecover: post.can_recover,
+    canSeeHiddenPost: post.can_see_hidden_post,
     canEdit: post.can_edit,
     canFlag: !post.get("topic.deleted") && !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
@@ -115,6 +117,7 @@ export default function transformPost(
 
   const createdBy = details.created_by || {};
 
+  postAtts.topic = topic;
   postAtts.topicId = topic.id;
   postAtts.topicOwner = createdBy.id === post.user_id;
   postAtts.topicCreatedById = createdBy.id;
@@ -216,7 +219,12 @@ export default function transformPost(
     postAtts.userFilters = postStream.userFilters;
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
-    postAtts.hasTopicSummary = topic.has_summary;
+    postAtts.hasTopRepliesSummary = topic.has_summary;
+    postAtts.summarizable = topic.summarizable;
+
+    if (post.post_number === 1) {
+      postAtts.summary = postStream.topicSummary;
+    }
   }
 
   if (postAtts.isDeleted) {

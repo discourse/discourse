@@ -1,12 +1,18 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import User from "discourse/models/user";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import User from "discourse/models/user";
+import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";
 
 export default DiscourseRoute.extend({
+  router: service(),
+  searchService: service("search"),
+  appEvents: service("app-events"),
+  messageBus: service("message-bus"),
+
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      this.replaceWith("discovery");
+      this.router.replaceWith("discovery");
     }
   },
 
@@ -30,8 +36,8 @@ export default DiscourseRoute.extend({
     return user
       .findDetails()
       .then(() => user.findStaffInfo())
-      .then(() => user.trackStatus())
-      .catch(() => this.replaceWith("/404"));
+      .then(() => user.statusManager.trackStatus())
+      .catch(() => this.router.replaceWith("/404"));
   },
 
   serialize(model) {
@@ -44,7 +50,7 @@ export default DiscourseRoute.extend({
 
   setupController(controller, user) {
     controller.set("model", user);
-    this.searchService.set("searchContext", user.searchContext);
+    this.searchService.searchContext = user.searchContext;
   },
 
   activate() {
@@ -70,10 +76,10 @@ export default DiscourseRoute.extend({
       `/u/${user.username_lower}/counters`,
       this.onUserCountersMessage
     );
-    user.stopTrackingStatus();
+    user.statusManager.stopTrackingStatus();
 
     // Remove the search context
-    this.searchService.set("searchContext", null);
+    this.searchService.searchContext = null;
   },
 
   @bind

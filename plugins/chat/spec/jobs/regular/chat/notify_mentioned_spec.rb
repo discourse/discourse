@@ -3,28 +3,47 @@
 require "rails_helper"
 
 describe Jobs::Chat::NotifyMentioned do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
+  subject(:job) { described_class.new }
+
+  fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:public_channel) { Fabricate(:category_channel) }
 
   before do
-    Group.refresh_automatic_groups!
     user_1.reload
     user_2.reload
 
     @chat_group = Fabricate(:group, users: [user_1, user_2])
-    @personal_chat_channel =
-      Chat::DirectMessageChannelCreator.create!(acting_user: user_1, target_users: [user_1, user_2])
+    result =
+      Chat::CreateDirectMessageChannel.call(
+        guardian: user_1.guardian,
+        target_usernames: [user_1.username, user_2.username],
+      )
+
+    service_failed!(result) if result.failure?
+
+    @personal_chat_channel = result.channel
 
     [user_1, user_2].each do |u|
       Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
     end
   end
 
-  def create_chat_message(channel: public_channel, author: user_1, mentioned_user: user_2)
+  def create_chat_message(
+    channel: public_channel,
+    author: user_1,
+    mentioned_user: user_2,
+    thread: nil
+  )
     message =
-      Fabricate(:chat_message, chat_channel: channel, user: author, created_at: 10.minutes.ago)
-    Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: author,
+        created_at: 10.minutes.ago,
+        thread: thread,
+      )
+    Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
     message
   end
 
@@ -36,9 +55,9 @@ describe Jobs::Chat::NotifyMentioned do
   )
     MessageBus
       .track_publish("/chat/notification-alert/#{user.id}") do
-        subject.execute(
+        job.execute(
           chat_message_id: message.id,
-          timestamp: message.created_at,
+          timestamp: message.created_at.to_s,
           to_notify_ids_map: to_notify_ids_map,
           already_notified_user_ids: already_notified_user_ids,
         )
@@ -47,9 +66,9 @@ describe Jobs::Chat::NotifyMentioned do
   end
 
   def track_core_notification(user: user_2, message:, to_notify_ids_map:)
-    subject.execute(
+    job.execute(
       chat_message_id: message.id,
-      timestamp: message.created_at,
+      timestamp: message.created_at.to_s,
       to_notify_ids_map: to_notify_ids_map,
     )
 
@@ -164,9 +183,9 @@ describe Jobs::Chat::NotifyMentioned do
 
       PostAlerter.expects(:push_notification).never
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end
@@ -193,9 +212,9 @@ describe Jobs::Chat::NotifyMentioned do
 
       PostAlerter.expects(:push_notification).never
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end
@@ -206,6 +225,9 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "works for desktop notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       desktop_notification =
         track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -224,6 +246,9 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "works for push notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       PostAlerter.expects(:push_notification).with(
         user_2,
@@ -237,15 +262,18 @@ describe Jobs::Chat::NotifyMentioned do
         },
       )
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end
 
     it "works for core notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       created_notification =
         track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -262,10 +290,6 @@ describe Jobs::Chat::NotifyMentioned do
       expect(data_hash[:is_direct_message_channel]).to eq(false)
       expect(data_hash[:chat_channel_title]).to eq(expected_channel_title)
       expect(data_hash[:chat_channel_slug]).to eq(public_channel.slug)
-
-      chat_mention =
-        Chat::Mention.where(notification: created_notification, user: user_2, chat_message: message)
-      expect(chat_mention).to be_present
     end
   end
 
@@ -286,6 +310,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes global mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:all_chat_mention, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -297,6 +322,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes global mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:all_chat_mention, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -307,6 +333,7 @@ describe Jobs::Chat::NotifyMentioned do
       context "with private channels" do
         it "users a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:all_chat_mention, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -339,6 +366,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:here_chat_mention, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -349,6 +377,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:here_chat_mention, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -357,8 +386,9 @@ describe Jobs::Chat::NotifyMentioned do
       end
 
       context "with private channels" do
-        it "users a different translated title" do
+        it "uses a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:here_chat_mention, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -408,6 +438,26 @@ describe Jobs::Chat::NotifyMentioned do
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
       end
 
+      context "when the mention is within a thread" do
+        before { public_channel.update!(threading_enabled: true) }
+
+        fab!(:thread) { Fabricate(:chat_thread, channel: public_channel) }
+
+        it "uses the thread URL for the post_url in the desktop notification" do
+          message = create_chat_message(thread: thread)
+          desktop_notification =
+            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          expect(desktop_notification.data[:post_url]).to eq(thread.relative_url)
+        end
+
+        it "includes the thread ID in the core notification data" do
+          message = create_chat_message(thread: thread)
+          created_notification =
+            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          expect(created_notification.data_hash[:chat_thread_id]).to eq(thread.id)
+        end
+      end
+
       context "with private channels" do
         it "users a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
@@ -443,6 +493,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -454,6 +505,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -462,8 +514,9 @@ describe Jobs::Chat::NotifyMentioned do
       end
 
       context "with private channels" do
-        it "users a different translated title" do
+        it "uses a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)

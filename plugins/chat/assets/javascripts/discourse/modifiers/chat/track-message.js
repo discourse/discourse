@@ -1,5 +1,5 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
+import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatTrackMessage extends Modifier {
@@ -11,9 +11,9 @@ export default class ChatTrackMessage extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [callbacks = {}]) {
-    this.didEnterViewport = callbacks.didEnterViewport;
-    this.didLeaveViewport = callbacks.didLeaveViewport;
+  modify(element, [didEnterViewport, didLeaveViewport]) {
+    this.didEnterViewport = didEnterViewport;
+    this.didLeaveViewport = didLeaveViewport;
 
     this.intersectionObserver = new IntersectionObserver(
       this._intersectionObserverCallback,

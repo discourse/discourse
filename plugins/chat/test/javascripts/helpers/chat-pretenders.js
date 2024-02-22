@@ -1,11 +1,10 @@
+import User from "discourse/models/user";
+import { cloneJSON } from "discourse-common/lib/object";
 import {
   chatChannels,
   directMessageChannels,
   generateChatView,
 } from "discourse/plugins/chat/chat-fixtures";
-
-import { cloneJSON } from "discourse-common/lib/object";
-import User from "discourse/models/user";
 
 export function baseChatPretenders(server, helper) {
   server.get("/chat/:chatChannelId/messages.json", () =>
@@ -138,7 +137,6 @@ export function directMessageChannelPretender(
   opts = { unread_count: 0, muted: false }
 ) {
   let copy = cloneJSON(directMessageChannels[0]);
-  copy.chat_channel.currentUserMembership.unread_count = opts.unread_count;
   copy.chat_channel.currentUserMembership.muted = opts.muted;
   server.get("/chat/chat_channels/75.json", () => helper.response(copy));
 }
@@ -150,13 +148,11 @@ export function chatChannelPretender(server, helper, changes = []) {
     let found;
     found = copy.public_channels.find((c) => c.id === change.id);
     if (found) {
-      found.currentUserMembership.unread_count = change.unread_count;
       found.currentUserMembership.muted = change.muted;
     }
     if (!found) {
       found = copy.direct_message_channels.find((c) => c.id === change.id);
       if (found) {
-        found.currentUserMembership.unread_count = change.unread_count;
         found.currentUserMembership.muted = change.muted;
       }
     }

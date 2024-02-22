@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = %w[list#category_feed list#category_default]
+      actions = %w[list#category_feed list#category_default list#latest_feed]
 
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
@@ -35,8 +35,8 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#destroy],
           },
           read: {
-            actions: %w[topics#show topics#feed topics#posts],
-            params: %i[topic_id],
+            actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
+            params: %i[topic_id external_id],
             aliases: {
               topic_id: :id,
             },
@@ -61,10 +61,29 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[posts#destroy],
           },
+          list: {
+            actions: %w[posts#latest],
+          },
         },
         tags: {
           list: {
             actions: %w[tags#index],
+          },
+        },
+        tag_groups: {
+          list: {
+            actions: %w[tag_groups#index],
+          },
+          show: {
+            actions: %w[tag_groups#show],
+            params: %i[id],
+          },
+          create: {
+            actions: %w[tag_groups#create],
+          },
+          update: {
+            actions: %w[tag_groups#update],
+            params: %i[id],
           },
         },
         categories: {
@@ -107,7 +126,14 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[username],
           },
           update: {
-            actions: %w[users#update],
+            actions: %w[
+              users#update
+              users#badge_title
+              users#pick_avatar
+              users#select_avatar
+              users#feature_topic
+              users#clear_featured_topic
+            ],
             params: %i[username],
           },
           log_out: {
@@ -171,7 +197,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         groups: {
           manage_groups: {
-            actions: %w[groups#members groups#add_members groups#remove_members],
+            actions: %w[groups#members groups#add_members groups#remove_member],
             params: %i[id],
           },
           administer_groups: {
@@ -206,6 +232,11 @@ class ApiKeyScope < ActiveRecord::Base
           },
           utilities: {
             actions: %w[users#create groups#index],
+          },
+        },
+        logs: {
+          messages: {
+            actions: [Logster::Web],
           },
         },
       }
@@ -253,7 +284,7 @@ class ApiKeyScope < ActiveRecord::Base
           engine_mount_path = nil if engine_mount_path == "/"
           set.routes.each do |route|
             defaults = route.defaults
-            action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+            action = "#{defaults[:controller]}##{defaults[:action]}"
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, "")
             api_supported_path =
               (
@@ -264,6 +295,11 @@ class ApiKeyScope < ActiveRecord::Base
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
               urls << "#{engine_mount_path}#{path} (#{route.verb})"
+            end
+
+            if actions.include?(Logster::Web)
+              urls << "/logs/messages.json (POST)"
+              urls << "/logs/show/:id.json (GET)"
             end
           end
         end

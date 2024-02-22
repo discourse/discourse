@@ -21,11 +21,13 @@ module Stylesheet
       @default_paths = ["app/assets/stylesheets"]
       Discourse.plugins.each do |plugin|
         if plugin.path.to_s.include?(Rails.root.to_s)
-          @default_paths << File.dirname(plugin.path).sub(Rails.root.to_s, "").sub(%r{\A/}, "")
+          path = File.dirname(plugin.path).sub(Rails.root.to_s, "").sub(%r{\A/}, "")
+          path << "/assets/stylesheets"
+          @default_paths << path if File.exist?(path)
         else
           # if plugin doesn’t seem to be in our app, consider it as outside of the app
           # and ignore it
-          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path.to_s}")
+          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path}")
         end
       end
       @default_paths
@@ -41,7 +43,7 @@ module Stylesheet
         end
       end
 
-      listener_opts = { ignore: /xxxx/, only: /\.(css|scss)\z/ }
+      listener_opts = { ignore: [/node_modules/], only: /\.s?css\z/ }
       listener_opts[:force_polling] = true if ENV["FORCE_POLLING"]
 
       Thread.new do
@@ -107,7 +109,7 @@ module Stylesheet
       targets = []
       if target.present?
         if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target.to_sym)
-          targets.push("#{plugin_name}_#{target.to_s}")
+          targets.push("#{plugin_name}_#{target}")
         end
       else
         targets.push(plugin_name)

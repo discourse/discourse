@@ -1,6 +1,5 @@
-import I18n from "I18n";
-
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
+import I18n from "discourse-i18n";
 
 export default class FAQSectionLink extends BaseSectionLink {
   get name() {
@@ -20,10 +19,13 @@ export default class FAQSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.faq.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "question-circle";
   }
 }

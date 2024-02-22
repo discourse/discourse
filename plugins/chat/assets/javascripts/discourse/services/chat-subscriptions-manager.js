@@ -1,11 +1,13 @@
 import Service, { inject as service } from "@ember/service";
-import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannelArchive from "../models/chat-channel-archive";
 
 export default class ChatSubscriptionsManager extends Service {
   @service store;
   @service chatChannelsManager;
+  @service chatTrackingStateManager;
   @service currentUser;
   @service appEvents;
   @service chat;
@@ -23,9 +25,9 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     this._channelSubscriptions.add(channel.id);
+    this._startChannelMentionsSubscription(channel);
 
     if (!channel.isDirectMessageChannel) {
-      this._startChannelMentionsSubscription(channel);
       this._startKickFromChannelSubscription(channel);
     }
 
@@ -120,13 +122,7 @@ export default class ChatSubscriptionsManager extends Service {
           return;
         }
 
-        channel.setProperties({
-          archive_failed: busData.archive_failed,
-          archive_completed: busData.archive_completed,
-          archived_messages: busData.archived_messages,
-          archive_topic_id: busData.archive_topic_id,
-          total_messages: busData.total_messages,
-        });
+        channel.archive = ChatChannelArchive.create(busData);
       });
   }
 
@@ -134,8 +130,8 @@ export default class ChatSubscriptionsManager extends Service {
   _onNewMentions(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
-      if (busData.message_id > membership?.last_read_message_id) {
-        membership.unread_mentions = (membership.unread_mentions || 0) + 1;
+      if (busData.message_id > membership?.lastReadMessageId) {
+        channel.tracking.mentionCount++;
       }
     });
   }
@@ -178,29 +174,112 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onNewMessages(busData) {
+    switch (busData.type) {
+      case "channel":
+        this._onNewChannelMessage(busData);
+        break;
+      case "thread":
+        this._onNewThreadMessage(busData);
+        break;
+    }
+  }
+
+  _onNewChannelMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
-      if (busData.user_id === this.currentUser.id) {
+      channel.lastMessage = busData.message;
+      const user = busData.message.user;
+      if (user.id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
-        channel.currentUserMembership.last_read_message_id = busData.message_id;
+        channel.currentUserMembership.lastReadMessageId =
+          channel.lastMessage.id;
       } else {
         // Ignored user sent message, update tracking state to no unread
-        if (this.currentUser.ignored_users.includes(busData.username)) {
-          channel.currentUserMembership.last_read_message_id =
-            busData.message_id;
+        if (this.currentUser.ignored_users.includes(user.username)) {
+          channel.currentUserMembership.lastReadMessageId =
+            channel.lastMessage.id;
         } else {
-          // Message from other user. Increment trackings state
           if (
-            busData.message_id >
-            (channel.currentUserMembership.last_read_message_id || 0)
+            channel.lastMessage.id >
+            (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
-            channel.currentUserMembership.unread_count =
-              channel.currentUserMembership.unread_count + 1;
+            channel.tracking.unreadCount++;
+          }
+
+          // Thread should be considered unread if not already.
+          if (busData.thread_id && channel.threadingEnabled) {
+            channel.threadsManager
+              .find(channel.id, busData.thread_id)
+              .then((thread) => {
+                if (thread.currentUserMembership) {
+                  channel.threadsManager.markThreadUnread(
+                    busData.thread_id,
+                    busData.message.created_at
+                  );
+                  this._updateActiveLastViewedAt(channel);
+                }
+              });
           }
         }
       }
-
-      channel.lastMessageSentAt = new Date();
     });
+  }
+
+  _onNewThreadMessage(busData) {
+    this.chatChannelsManager.find(busData.channel_id).then((channel) => {
+      if (!channel.threadingEnabled) {
+        return;
+      }
+
+      channel.threadsManager
+        .find(busData.channel_id, busData.thread_id)
+        .then((thread) => {
+          if (busData.message.user.id === this.currentUser.id) {
+            // Thread should no longer be considered unread.
+            if (thread.currentUserMembership) {
+              channel.threadsManager.unreadThreadOverview.delete(
+                parseInt(busData.thread_id, 10)
+              );
+              thread.currentUserMembership.lastReadMessageId =
+                busData.message.id;
+            }
+          } else {
+            // Ignored user sent message, update tracking state to no unread
+            if (
+              this.currentUser.ignored_users.includes(
+                busData.message.user.username
+              )
+            ) {
+              if (thread.currentUserMembership) {
+                thread.currentUserMembership.lastReadMessageId =
+                  busData.message.id;
+              }
+            } else {
+              // Message from other user. Increment unread for thread tracking state.
+              if (
+                thread.currentUserMembership &&
+                busData.message.id >
+                  (thread.currentUserMembership.lastReadMessageId || 0) &&
+                !thread.currentUserMembership.isQuiet
+              ) {
+                channel.threadsManager.markThreadUnread(
+                  busData.thread_id,
+                  busData.message.created_at
+                );
+                thread.tracking.unreadCount++;
+                this._updateActiveLastViewedAt(channel);
+              }
+            }
+          }
+        });
+    });
+  }
+
+  // If the user is currently looking at this channel via activeChannel, we don't want the unread
+  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
+  _updateActiveLastViewedAt(channel) {
+    if (this.chat.activeChannel?.id === channel.id) {
+      channel.updateLastViewedAt();
+    }
   }
 
   _startUserTrackingStateSubscription(lastId) {
@@ -249,18 +328,44 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   @bind
-  _updateChannelTrackingData(channelId, trackingData) {
+  _updateChannelTrackingData(channelId, busData) {
     this.chatChannelsManager.find(channelId).then((channel) => {
+      if (!busData.thread_id) {
+        channel.currentUserMembership.lastReadMessageId =
+          busData.last_read_message_id;
+      }
+
+      channel.tracking.unreadCount = busData.unread_count;
+      channel.tracking.mentionCount = busData.mention_count;
+
       if (
-        !channel?.currentUserMembership?.last_read_message_id ||
-        parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          trackingData.last_read_message_id
+        busData.hasOwnProperty("unread_thread_overview") &&
+        channel.threadingEnabled
       ) {
-        channel.currentUserMembership.last_read_message_id =
-          trackingData.last_read_message_id;
-        channel.currentUserMembership.unread_count = trackingData.unread_count;
-        channel.currentUserMembership.unread_mentions =
-          trackingData.mention_count;
+        channel.threadsManager.unreadThreadOverview =
+          busData.unread_thread_overview;
+      }
+
+      if (
+        busData.thread_id &&
+        busData.hasOwnProperty("thread_tracking") &&
+        channel.threadingEnabled
+      ) {
+        channel.threadsManager
+          .find(channelId, busData.thread_id)
+          .then((thread) => {
+            if (
+              thread.currentUserMembership &&
+              !thread.currentUserMembership.isQuiet
+            ) {
+              thread.currentUserMembership.lastReadMessageId =
+                busData.last_read_message_id;
+              thread.tracking.unreadCount =
+                busData.thread_tracking.unread_count;
+              thread.tracking.mentionCount =
+                busData.thread_tracking.mention_count;
+            }
+          });
       }
     });
   }
@@ -283,14 +388,15 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onNewChannelSubscription(data) {
     this.chatChannelsManager.find(data.channel.id).then((channel) => {
-      // we need to refrehs here to have correct last message ids
+      // we need to refresh here to have correct last message ids
       channel.meta = data.channel.meta;
+      channel.currentUserMembership = data.channel.current_user_membership;
 
       if (
         channel.isDirectMessageChannel &&
         !channel.currentUserMembership.following
       ) {
-        channel.currentUserMembership.unread_count = 1;
+        channel.tracking.unreadCount = 1;
       }
 
       this.chatChannelsManager.follow(channel);
@@ -342,9 +448,7 @@ export default class ChatSubscriptionsManager extends Service {
       .find(busData.chat_channel_id, { fetchIfNotFound: false })
       .then((channel) => {
         if (channel) {
-          channel.setProperties({
-            memberships_count: busData.memberships_count,
-          });
+          channel.membershipsCount = busData.memberships_count;
           this.appEvents.trigger("chat:refresh-channel-members");
         }
       });
@@ -354,11 +458,9 @@ export default class ChatSubscriptionsManager extends Service {
   _onChannelEdits(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (channel) {
-        channel.setProperties({
-          title: busData.name,
-          description: busData.description,
-          slug: busData.slug,
-        });
+        channel.title = busData.name;
+        channel.description = busData.description;
+        channel.slug = busData.slug;
       }
     });
   }
@@ -366,15 +468,14 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onChannelStatus(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
-      channel.set("status", busData.status);
+      channel.status = busData.status;
 
       // it is not possible for the user to set their last read message id
       // if the channel has been archived, because all the messages have
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        channel.currentUserMembership.unread_count = 0;
-        channel.currentUserMembership.unread_mentions = 0;
+        channel.tracking.reset();
       }
     });
   }

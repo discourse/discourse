@@ -1,8 +1,7 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
-import { moduleForComponent } from "ember-qunit";
-import jQuery from "jquery";
+import $ from "jquery";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (query(selector).classList.contains("is-expanded")) {
@@ -66,7 +65,7 @@ async function keyboardHelper(value, target, selector) {
 
   if (value === "selectAll") {
     // special casing the only one not working with triggerEvent
-    const event = jQuery.Event("keydown");
+    const event = $.Event("keydown");
     event.key = "A";
     event.keyCode = 65;
     event.metaKey = true;
@@ -305,21 +304,6 @@ export default function selectKit(selector) {
       return exists(selector);
     },
   };
-}
-
-export function testSelectKitModule(moduleName, options = {}) {
-  moduleForComponent(`select-kit/${moduleName}`, {
-    integration: true,
-
-    beforeEach() {
-      this.set("subject", selectKit());
-      options.beforeEach?.call(this);
-    },
-
-    afterEach() {
-      options.afterEach?.call(this);
-    },
-  });
 }
 
 export const DEFAULT_CONTENT = [

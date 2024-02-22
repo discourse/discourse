@@ -83,9 +83,14 @@ module CachedCounting
   end
 
   def self.flush
-    @flush = true
-    @thread.wakeup
-    sleep 0.001 while @flush
+    if @thread && @thread.alive?
+      @flush = true
+      @thread.wakeup
+      sleep 0.001 while @flush
+    else
+      flush_in_memory
+      flush_to_db
+    end
   end
 
   COUNTER_REDIS_HASH = "CounterCacheHash"
@@ -163,9 +168,30 @@ module CachedCounting
   end
 
   class_methods do
-    def perform_increment!(key)
-      CachedCounting.ensure_thread!
-      CachedCounting.queue(key, self)
+    if Rails.env.test?
+      # perform increment is a risky call in test,
+      # it shifts stuff to background threads and leaks
+      # data in the DB
+      # Require caller is deliberate if they want that
+      #
+      # Splitting implementation to avoid any perf impact
+      # given this is a method that is called a lot
+      def perform_increment!(key, async: false)
+        if async
+          CachedCounting.ensure_thread!
+          CachedCounting.queue(key, self)
+        else
+          CachedCounting.queue(key, self)
+          CachedCounting.clear_flush_to_db_lock!
+          CachedCounting.flush_in_memory
+          CachedCounting.flush_to_db
+        end
+      end
+    else
+      def perform_increment!(key)
+        CachedCounting.ensure_thread!
+        CachedCounting.queue(key, self)
+      end
     end
 
     def write_cache!(key, count, date)

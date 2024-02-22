@@ -1,18 +1,16 @@
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import { configureEyeline } from "discourse/lib/eyeline";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
-import { skip, test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import { configureEyeline } from "discourse/lib/eyeline";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -128,19 +126,13 @@ acceptance("Topic Discovery", function (needs) {
   });
 
   test("Using period chooser when query params are present", async function (assert) {
-    await visit("/top?f=foo&d=bar");
-
-    sinon.stub(DiscourseURL, "routeTo");
+    await visit("/top?status=closed");
 
     const periodChooser = selectKit(".period-chooser");
-
     await periodChooser.expand();
     await periodChooser.selectRowByValue("yearly");
 
-    assert.ok(
-      DiscourseURL.routeTo.calledWith("/top?f=foo&d=bar&period=yearly"),
-      "it keeps the query params"
-    );
+    assert.strictEqual(currentURL(), "/top?period=yearly&status=closed");
   });
 
   test("switching between tabs", async function (assert) {
@@ -165,8 +157,8 @@ acceptance("Topic Discovery", function (needs) {
   });
 
   test("refreshing tabs", async function (assert) {
-    const assertShowingLatest = () => {
-      assert.strictEqual(currentURL(), "/latest", "stays on latest");
+    const assertShowingLatest = (url) => {
+      assert.strictEqual(currentURL(), url, "stays on latest");
       const el = query(".topic-list-body .topic-list-item:first-of-type");
       assert.strictEqual(el.closest(".hidden"), null, "topic list is visible");
       assert.strictEqual(
@@ -177,13 +169,13 @@ acceptance("Topic Discovery", function (needs) {
     };
 
     await visit("/latest");
-    assertShowingLatest();
+    assertShowingLatest("/latest");
 
     await click(".navigation-container a[href='/latest']");
-    assertShowingLatest();
+    assertShowingLatest("/latest");
 
     await click("#site-logo");
-    assertShowingLatest();
+    assertShowingLatest("/");
   });
 });
 

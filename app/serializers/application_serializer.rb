@@ -9,6 +9,7 @@ class ApplicationSerializer < ActiveModel::Serializer
     def initialize(json)
       @json = json
     end
+
     def as_json(*_args)
       @json
     end
@@ -19,11 +20,7 @@ class ApplicationSerializer < ActiveModel::Serializer
     when String
       fragment_cache.delete(name_or_regexp)
     when Regexp
-      fragment_cache
-        .hash
-        .keys
-        .select { |k| k =~ name_or_regexp }
-        .each { |k| fragment_cache.delete(k) }
+      fragment_cache.clear_regex(name_or_regexp)
     end
   end
 

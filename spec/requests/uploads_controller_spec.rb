@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   describe "#create" do
     it "requires you to be logged in" do
@@ -132,24 +132,21 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "ensures allow_uploaded_avatars is enabled when uploading an avatar" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+      it "ensures user belongs to uploaded_avatars_allowed_groups when uploading an avatar" do
+        SiteSetting.uploaded_avatars_allowed_groups = "13"
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
+
+        user.change_trust_level!(TrustLevel[3])
+
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(200)
       end
 
       it "ensures discourse_connect_overrides_avatar is not enabled when uploading an avatar" do
         SiteSetting.discourse_connect_overrides_avatar = true
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
-      end
-
-      it "always allows admins to upload avatars" do
-        sign_in(Fabricate(:admin))
-        SiteSetting.allow_uploaded_avatars = "disabled"
-
-        post "/uploads.json", params: { file: logo, type: "avatar" }
-        expect(response.status).to eq(200)
       end
 
       it "allows staff to upload any file in PM" do
@@ -581,6 +578,20 @@ RSpec.describe UploadsController do
           end
         end
 
+        context "when login is required and user is not signed in" do
+          let(:post) { Fabricate(:post) }
+
+          before do
+            SiteSetting.login_required = true
+            upload.update(access_control_post_id: post.id)
+          end
+
+          it "returns a 403" do
+            get secure_url
+            expect(response.status).to eq(403)
+          end
+        end
+
         context "when the prevent_anons_from_downloading_files setting is enabled and the user is anon" do
           before { SiteSetting.prevent_anons_from_downloading_files = true }
 
@@ -672,7 +683,7 @@ RSpec.describe UploadsController do
   end
 
   describe "#metadata" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     describe "when url is missing" do
       it "should return the right response" do
@@ -756,7 +767,7 @@ RSpec.describe UploadsController do
         expect(result["url"]).to include("Amz-Expires")
       end
 
-      it "includes accepted metadata in the presigned url when provided" do
+      it "includes accepted metadata in the response when provided" do
         post "/uploads/generate-presigned-put.json",
              **{
                params: {
@@ -772,29 +783,60 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
 
         result = response.parsed_body
-        expect(result["url"]).to include("&x-amz-meta-sha1-checksum=testing")
+        expect(result["url"]).not_to include("&x-amz-meta-sha1-checksum=testing")
         expect(result["url"]).not_to include("&x-amz-meta-blah=wontbeincluded")
+        expect(result["signed_headers"]).to eq(
+          "x-amz-acl" => "private",
+          "x-amz-meta-sha1-checksum" => "testing",
+        )
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-        SiteSetting.max_presigned_put_per_minute = 1
+      context "when enable_s3_transfer_acceleration is true" do
+        before { SiteSetting.enable_s3_transfer_acceleration = true }
 
-        post "/uploads/generate-presigned-put.json",
-             params: {
-               file_name: "test.png",
-               type: "card_background",
-               file_size: 1024,
-             }
-        post "/uploads/generate-presigned-put.json",
-             params: {
-               file_name: "test.png",
-               type: "card_background",
-               file_size: 1024,
-             }
+        it "uses the s3-accelerate endpoint for presigned URLs" do
+          post "/uploads/generate-presigned-put.json",
+               **{
+                 params: {
+                   file_name: "test.png",
+                   file_size: 1024,
+                   type: "card_background",
+                   metadata: {
+                     "sha1-checksum" => "testing",
+                     "blah" => "wontbeincluded",
+                   },
+                 },
+               }
+          expect(response.status).to eq(200)
 
-        expect(response.status).to eq(429)
+          result = response.parsed_body
+          expect(result["url"]).to include("s3-accelerate")
+        end
+      end
+
+      describe "rate limiting" do
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "rate limits" do
+          SiteSetting.max_presigned_put_per_minute = 1
+
+          post "/uploads/generate-presigned-put.json",
+               params: {
+                 file_name: "test.png",
+                 type: "card_background",
+                 file_size: 1024,
+               }
+          post "/uploads/generate-presigned-put.json",
+               params: {
+                 file_name: "test.png",
+                 type: "card_background",
+                 file_size: 1024,
+               }
+
+          expect(response.status).to eq(429)
+        end
       end
     end
 
@@ -850,6 +892,16 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(422)
         expect(response.body).to include(
           I18n.t("upload.attachments.too_large_humanized", max_size: "1 MB"),
+        )
+      end
+
+      it "returns 422 when the file is an gif and it's too big, since gifs cannot be resized on client" do
+        SiteSetting.max_image_size_kb = 1024
+        post "/uploads/create-multipart.json",
+             **{ params: { file_name: "test.gif", file_size: 9_999_999, upload_type: "composer" } }
+        expect(response.status).to eq(422)
+        expect(response.body).to include(
+          I18n.t("upload.images.too_large_humanized", max_size: "1 MB"),
         )
       end
 
@@ -934,27 +986,31 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-        SiteSetting.max_create_multipart_per_minute = 1
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        stub_create_multipart_request
-        post "/uploads/create-multipart.json",
-             params: {
-               file_name: "test.png",
-               upload_type: "composer",
-               file_size: 1024,
-             }
-        expect(response.status).to eq(200)
+        use_redis_snapshotting
 
-        post "/uploads/create-multipart.json",
-             params: {
-               file_name: "test.png",
-               upload_type: "composer",
-               file_size: 1024,
-             }
-        expect(response.status).to eq(429)
+        it "rate limits" do
+          SiteSetting.max_create_multipart_per_minute = 1
+
+          stub_create_multipart_request
+          post "/uploads/create-multipart.json",
+               params: {
+                 file_name: "test.png",
+                 upload_type: "composer",
+                 file_size: 1024,
+               }
+          expect(response.status).to eq(200)
+
+          post "/uploads/create-multipart.json",
+               params: {
+                 file_name: "test.png",
+                 upload_type: "composer",
+                 file_size: 1024,
+               }
+          expect(response.status).to eq(429)
+        end
       end
     end
 
@@ -1023,7 +1079,7 @@ RSpec.describe UploadsController do
         XML
         stub_request(
           :get,
-          "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}",
+          "https://s3-upload-bucket.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.us-west-1"}.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}",
         ).to_return({ status: 200, body: list_multipart_result })
       end
 
@@ -1107,27 +1163,49 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-        SiteSetting.max_batch_presign_multipart_per_minute = 1
+      context "when enable_s3_transfer_acceleration is true" do
+        before { SiteSetting.enable_s3_transfer_acceleration = true }
 
-        stub_list_multipart_request
-        post "/uploads/batch-presign-multipart-parts.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-               part_numbers: [1, 2, 3],
-             }
+        it "uses the s3-accelerate endpoint for presigned URLs" do
+          stub_list_multipart_request
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers: [2, 3, 4],
+               }
 
-        expect(response.status).to eq(200)
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["presigned_urls"].keys).to eq(%w[2 3 4])
+          expect(result["presigned_urls"]["2"]).to include("s3-accelerate")
+        end
+      end
 
-        post "/uploads/batch-presign-multipart-parts.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-               part_numbers: [1, 2, 3],
-             }
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        expect(response.status).to eq(429)
+        use_redis_snapshotting
+
+        it "rate limits" do
+          SiteSetting.max_batch_presign_multipart_per_minute = 1
+
+          stub_list_multipart_request
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers: [1, 2, 3],
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers: [1, 2, 3],
+               }
+
+          expect(response.status).to eq(429)
+        end
       end
     end
 
@@ -1147,7 +1225,7 @@ RSpec.describe UploadsController do
 
   describe "#complete_multipart" do
     let(:upload_base_url) do
-      "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com"
+      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.#{SiteSetting.s3_region}"}.amazonaws.com"
     end
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
@@ -1330,23 +1408,27 @@ RSpec.describe UploadsController do
         expect(result[:upload]).to eq(JSON.parse(UploadSerializer.new(upload).to_json)[:upload])
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-        SiteSetting.max_complete_multipart_per_minute = 1
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        post "/uploads/complete-multipart.json",
-             params: {
-               unique_identifier: "blah",
-               parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
-             }
-        post "/uploads/complete-multipart.json",
-             params: {
-               unique_identifier: "blah",
-               parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
-             }
+        use_redis_snapshotting
 
-        expect(response.status).to eq(429)
+        it "rate limits" do
+          SiteSetting.max_complete_multipart_per_minute = 1
+
+          post "/uploads/complete-multipart.json",
+               params: {
+                 unique_identifier: "blah",
+                 parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
+               }
+          post "/uploads/complete-multipart.json",
+               params: {
+                 unique_identifier: "blah",
+                 parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
+               }
+
+          expect(response.status).to eq(429)
+        end
       end
     end
 
@@ -1366,7 +1448,7 @@ RSpec.describe UploadsController do
 
   describe "#abort_multipart" do
     let(:upload_base_url) do
-      "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com"
+      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.#{SiteSetting.s3_region}"}.amazonaws.com"
     end
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
@@ -1491,7 +1573,9 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("upload.checksum_mismatch_failure"),
+        )
       end
 
       it "handles SizeMismatchError" do
@@ -1504,7 +1588,9 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("upload.size_mismatch_failure", additional_detail: "expected: 10, actual: 1000"),
+        )
       end
 
       it "handles CannotPromoteError" do
@@ -1517,7 +1603,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.cannot_promote_failure"))
       end
 
       it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
@@ -1530,7 +1616,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
         ExternalUploadManager
           .any_instance
           .stubs(:transform!)
@@ -1540,7 +1626,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
       end
 
       it "handles a generic upload failure" do

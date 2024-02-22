@@ -20,7 +20,7 @@ class Search
   end
 
   def self.per_filter
-    50
+    SiteSetting.search_page_size
   end
 
   def self.facets
@@ -89,9 +89,25 @@ class Search
       Regexp.compile("[-–—―.。・（）()［］｛｝{}【】⟨⟩、､,，،…‥〽「」『』〜~！!：:？?\"'|_＿“”‘’;/⁄／«»]")
   end
 
+  def self.clean_term(term)
+    term = term.to_s.dup
+
+    # Removes any zero-width characters from search terms
+    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
+
+    # Replace curly quotes to regular quotes
+    term.gsub!(/[\u201c\u201d]/, '"')
+
+    # Replace fancy apostophes to regular apostophes
+    term.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+
+    term
+  end
+
   def self.prepare_data(search_data, purpose = nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
+    data = clean_term(data)
 
     if purpose != :topic
       if segment_chinese?
@@ -214,17 +230,17 @@ class Search
     @page = @opts[:page]
     @search_all_pms = false
 
-    term = term.to_s.dup
-
-    # Removes any zero-width characters from search terms
-    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
-    # Replace curly quotes to regular quotes
-    term.gsub!(/[\u201c\u201d]/, '"')
+    term = Search.clean_term(term)
 
     @clean_term = term
     @in_title = false
 
     term = process_advanced_search!(term)
+    if !@order &&
+         SiteSetting.search_default_sort_order !=
+           SearchSortOrderSiteSetting.value_from_id(:relevance)
+      @order = SearchSortOrderSiteSetting.id_from_value(SiteSetting.search_default_sort_order)
+    end
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
@@ -250,6 +266,7 @@ class Search
         search_context: @search_context,
         blurb_length: @blurb_length,
         is_header_search: !use_full_page_limit,
+        can_lazy_load_categories: @guardian.can_lazy_load_categories?,
       )
   end
 
@@ -480,7 +497,7 @@ class Search
   end
 
   advanced_filter(/\Acreated:@(.*)\z/i) do |posts, match|
-    user_id = User.where(username: match.downcase).pick(:id)
+    user_id = User.where(username_lower: match.downcase).pick(:id)
     posts.where(user_id: user_id, post_number: 1)
   end
 
@@ -619,7 +636,7 @@ class Search
       Group
         .visible_groups(@guardian.user)
         .members_visible_groups(@guardian.user)
-        .where("groups.name ILIKE ? OR (id = ? AND id > 0)", match, match.to_i)
+        .where("groups.name ILIKE ? OR (groups.id = ? AND groups.id > 0)", match, match.to_i)
 
     DiscoursePluginRegistry.search_groups_set_query_callbacks.each do |cb|
       group_query = cb.call(group_query, @term, @guardian)
@@ -732,6 +749,71 @@ class Search
 
   advanced_filter(/\Amax_views:(\d+)\z/i) do |posts, match|
     posts.where("topics.views <= ?", match.to_i)
+  end
+
+  def apply_filters(posts)
+    @filters.each do |block, match|
+      if block.arity == 1
+        posts = instance_exec(posts, &block) || posts
+      else
+        posts = instance_exec(posts, match, &block) || posts
+      end
+    end if @filters
+    posts
+  end
+
+  def apply_order(
+    posts,
+    aggregate_search: false,
+    allow_relevance_search: true,
+    type_filter: "all_topics"
+  )
+    if @order == :latest
+      if aggregate_search
+        posts = posts.order("MAX(posts.created_at) DESC")
+      else
+        posts = posts.reorder("posts.created_at DESC")
+      end
+    elsif @order == :oldest
+      if aggregate_search
+        posts = posts.order("MAX(posts.created_at) ASC")
+      else
+        posts = posts.reorder("posts.created_at ASC")
+      end
+    elsif @order == :latest_topic
+      if aggregate_search
+        posts = posts.order("MAX(topics.created_at) DESC")
+      else
+        posts = posts.order("topics.created_at DESC")
+      end
+    elsif @order == :oldest_topic
+      if aggregate_search
+        posts = posts.order("MAX(topics.created_at) ASC")
+      else
+        posts = posts.order("topics.created_at ASC")
+      end
+    elsif @order == :views
+      if aggregate_search
+        posts = posts.order("MAX(topics.views) DESC")
+      else
+        posts = posts.order("topics.views DESC")
+      end
+    elsif @order == :likes
+      if aggregate_search
+        posts = posts.order("MAX(posts.like_count) DESC")
+      else
+        posts = posts.order("posts.like_count DESC")
+      end
+    elsif allow_relevance_search
+      posts = sort_by_relevance(posts, type_filter: type_filter, aggregate_search: aggregate_search)
+    end
+
+    if @order
+      advanced_order = Search.advanced_orders&.fetch(@order, nil)
+      posts = advanced_order.call(posts) if advanced_order
+    end
+
+    posts
   end
 
   private
@@ -928,6 +1010,8 @@ class Search
       users = users.where(suspended_at: nil)
     end
 
+    users = DiscoursePluginRegistry.apply_modifier(:search_user_search, users)
+
     users_custom_data_query =
       DB.query(<<~SQL, user_ids: users.pluck(:id), term: "%#{@original_term.downcase}%")
       SELECT user_custom_fields.user_id, user_fields.name, user_custom_fields.value FROM user_custom_fields
@@ -1046,11 +1130,6 @@ class Search
             "%#{term_without_quote}%",
           )
       else
-        # A is for title
-        # B is for category
-        # C is for tags
-        # D is for cooked
-        weights = @in_title ? "A" : (SiteSetting.tagging_enabled ? "ABCD" : "ABD")
         posts = posts.where(post_number: 1) if @in_title
         posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
@@ -1062,13 +1141,7 @@ class Search
       end
     end
 
-    @filters.each do |block, match|
-      if block.arity == 1
-        posts = instance_exec(posts, &block) || posts
-      else
-        posts = instance_exec(posts, match, &block) || posts
-      end
-    end if @filters
+    posts = apply_filters(posts)
 
     # If we have a search context, prioritize those posts first
     posts =
@@ -1107,104 +1180,6 @@ class Search
         posts
       end
 
-    if @order == :latest
-      if aggregate_search
-        posts = posts.order("MAX(posts.created_at) DESC")
-      else
-        posts = posts.reorder("posts.created_at DESC")
-      end
-    elsif @order == :latest_topic
-      if aggregate_search
-        posts = posts.order("MAX(topics.created_at) DESC")
-      else
-        posts = posts.order("topics.created_at DESC")
-      end
-    elsif @order == :views
-      if aggregate_search
-        posts = posts.order("MAX(topics.views) DESC")
-      else
-        posts = posts.order("topics.views DESC")
-      end
-    elsif @order == :likes
-      if aggregate_search
-        posts = posts.order("MAX(posts.like_count) DESC")
-      else
-        posts = posts.order("posts.like_count DESC")
-      end
-    elsif !is_topic_search
-      exact_rank = nil
-
-      if SiteSetting.prioritize_exact_search_title_match
-        exact_rank = ts_rank_cd(weight_filter: "A", prefix_match: false)
-      end
-
-      rank = ts_rank_cd(weight_filter: weights)
-
-      if type_filter != "private_messages"
-        category_search_priority = <<~SQL
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:very_high]}
-          THEN 3
-          WHEN #{Searchable::PRIORITIES[:very_low]}
-          THEN 1
-          ELSE 2
-          END
-        )
-        SQL
-
-        category_priority_weights = <<~SQL
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:low]}
-          THEN #{SiteSetting.category_search_priority_low_weight}
-          WHEN #{Searchable::PRIORITIES[:high]}
-          THEN #{SiteSetting.category_search_priority_high_weight}
-          ELSE
-            CASE WHEN topics.archived
-            THEN 0.85
-            WHEN topics.closed
-            THEN 0.9
-            ELSE 1
-            END
-          END
-        )
-        SQL
-
-        posts =
-          if aggregate_search
-            posts.order("MAX(#{category_search_priority}) DESC")
-          else
-            posts.order("#{category_search_priority} DESC")
-          end
-
-        if @term.present? && exact_rank
-          posts =
-            if aggregate_search
-              posts.order("MAX(#{exact_rank} * #{category_priority_weights}) DESC")
-            else
-              posts.order("#{exact_rank} * #{category_priority_weights} DESC")
-            end
-        end
-
-        data_ranking =
-          if @term.blank?
-            "(#{category_priority_weights})"
-          else
-            "(#{rank} * #{category_priority_weights})"
-          end
-
-        posts =
-          if aggregate_search
-            posts.order("MAX(#{data_ranking}) DESC")
-          else
-            posts.order("#{data_ranking} DESC")
-          end
-      end
-
-      posts = posts.order("topics.bumped_at DESC")
-    end
-
     if type_filter != "private_messages"
       posts =
         if secure_category_ids.present?
@@ -1219,13 +1194,106 @@ class Search
         end
     end
 
-    if @order
-      advanced_order = Search.advanced_orders&.fetch(@order, nil)
-      posts = advanced_order.call(posts) if advanced_order
-    end
+    posts =
+      apply_order(
+        posts,
+        aggregate_search: aggregate_search,
+        allow_relevance_search: !is_topic_search,
+        type_filter: type_filter,
+      )
 
     posts = posts.offset(offset)
     posts.limit(limit)
+  end
+
+  def weights
+    # A is for title
+    # B is for category
+    # C is for tags
+    # D is for cooked
+    @in_title ? "A" : (SiteSetting.tagging_enabled ? "ABCD" : "ABD")
+  end
+
+  def sort_by_relevance(posts, type_filter:, aggregate_search:)
+    exact_rank = nil
+
+    if SiteSetting.prioritize_exact_search_title_match
+      exact_rank = ts_rank_cd(weight_filter: "A", prefix_match: false)
+    end
+
+    rank = ts_rank_cd(weight_filter: weights)
+
+    if type_filter != "private_messages"
+      category_search_priority = <<~SQL
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:very_high]}
+          THEN 3
+          WHEN #{Searchable::PRIORITIES[:very_low]}
+          THEN 1
+          ELSE 2
+          END
+        )
+        SQL
+
+      rank_sort_priorities = [["topics.archived", 0.85], ["topics.closed", 0.9]]
+
+      rank_sort_priorities =
+        DiscoursePluginRegistry.apply_modifier(
+          :search_rank_sort_priorities,
+          rank_sort_priorities,
+          self,
+        )
+
+      category_priority_weights = <<~SQL
+          (
+            CASE categories.search_priority
+              WHEN #{Searchable::PRIORITIES[:low]}
+              THEN #{SiteSetting.category_search_priority_low_weight.to_f}
+              WHEN #{Searchable::PRIORITIES[:high]}
+              THEN #{SiteSetting.category_search_priority_high_weight.to_f}
+              ELSE 1.0
+            END
+            *
+            CASE
+              #{rank_sort_priorities.sort_by { |_, pri| -pri }.map { |k, v| "WHEN #{k} THEN #{v}" }.join("\n")}
+              ELSE 1.0
+            END
+          )
+        SQL
+
+      posts =
+        if aggregate_search
+          posts.order("MAX(#{category_search_priority}) DESC")
+        else
+          posts.order("#{category_search_priority} DESC")
+        end
+
+      if @term.present? && exact_rank
+        posts =
+          if aggregate_search
+            posts.order("MAX(#{exact_rank} * #{category_priority_weights}) DESC")
+          else
+            posts.order("#{exact_rank} * #{category_priority_weights} DESC")
+          end
+      end
+
+      data_ranking =
+        if @term.blank?
+          "(#{category_priority_weights})"
+        else
+          "(#{rank} * #{category_priority_weights})"
+        end
+
+      posts =
+        if aggregate_search
+          posts.order("MAX(#{data_ranking}) DESC")
+        else
+          posts.order("#{data_ranking} DESC")
+        end
+    end
+
+    posts.order("topics.bumped_at DESC")
   end
 
   def ts_rank_cd(weight_filter:, prefix_match: true)
@@ -1266,7 +1334,7 @@ class Search
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     # PG 14 and up default to using the followed by operator
     # this restores the old behavior
-    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
+    tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
@@ -1276,12 +1344,6 @@ class Search
   end
 
   def self.escape_string(term)
-    # HACK: The ’ and other similar characters have to be "unaccented" before
-    # it is escaped or the resulting tsqueries will be invalid
-    if SiteSetting.search_ignore_accents
-      term = term.gsub(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
-    end
-
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
@@ -1302,8 +1364,6 @@ class Search
   end
 
   def aggregate_post_sql(opts)
-    default_opts = { type_filter: opts[:type_filter] }
-
     min_id =
       if SiteSetting.search_recent_regular_posts_offset_post_id > 0
         if %w[all_topics private_message].include?(opts[:type_filter])
@@ -1388,7 +1448,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category]
+    topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 

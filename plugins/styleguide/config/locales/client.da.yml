@@ -87,6 +87,6 @@ da:
           title: "Spinnere"
         empty_state:
           title: "Tom Tilstand"
-        rich_tooltip:
+        tooltips:
           description: "Beskrivelse"
           header: "Sidehoved"

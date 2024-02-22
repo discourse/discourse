@@ -83,12 +83,12 @@
   <div class="control-group buttons">
     <DButton
       @disabled={{or this.missingSettings this.testingSettings}}
-      @class="btn-primary test-imap-settings"
-      @action={{action "testImapSettings"}}
+      @action={{this.testImapSettings}}
       @icon="cog"
       @label="groups.manage.email.test_settings"
-      @tabindex="12"
       @title="groups.manage.email.settings_required"
+      tabindex="12"
+      class="btn-primary test-imap-settings"
     />
 
     <ConditionalLoadingSpinner

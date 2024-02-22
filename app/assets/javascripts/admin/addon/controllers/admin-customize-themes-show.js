@@ -1,4 +1,5 @@
-import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
 import {
   empty,
   filterBy,
@@ -6,21 +7,23 @@ import {
   match,
   notEmpty,
 } from "@ember/object/computed";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import ThemeSettings from "admin/models/theme-settings";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ThemeSettingsEditor from "admin/components/theme-settings-editor";
+import { COMPONENTS, THEMES } from "admin/models/theme";
+import ThemeSettings from "admin/models/theme-settings";
+import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
 
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
+  @service router;
+  @service modal;
 
   editRouteName = "adminCustomizeThemes.edit";
 
@@ -226,7 +229,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   transitionToEditRoute() {
-    this.transitionToRoute(
+    this.router.transitionTo(
       this.editRouteName,
       this.get("model.id"),
       "common",
@@ -247,6 +250,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @discourseComputed("model.user.id", "model.default")
   showConvert(userId, defaultTheme) {
     return userId > 0 && !defaultTheme;
+  }
+
+  @action
+  refreshModel() {
+    this.send("routeRefreshModel");
   }
 
   @action
@@ -273,7 +281,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   addUploadModal() {
-    showModal("admin-add-upload", { admin: true, name: "" });
+    this.modal.show(ThemeUploadAddModal, {
+      model: {
+        themeFields: this.model.theme_fields,
+        addUpload: this.addUpload,
+      },
+    });
   }
 
   @action
@@ -383,9 +396,19 @@ export default class AdminCustomizeThemesShowController extends Controller {
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
-          this.transitionToRoute("adminCustomizeThemes");
+          this.router.transitionTo("adminCustomizeThemes");
         });
       },
+    });
+  }
+
+  @action
+  showThemeSettingsEditor() {
+    this.dialog.alert({
+      title: "Edit Settings",
+      bodyComponent: ThemeSettingsEditor,
+      bodyComponentModel: { model: this.model, controller: this },
+      class: "theme-settings-editor-dialog",
     });
   }
 
@@ -423,5 +446,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.model
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
+  }
+
+  @action
+  editColorScheme() {
+    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 }

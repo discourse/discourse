@@ -15,7 +15,6 @@ hr:
   poll:
     poll: "anketa"
     invalid_argument: "Neispravna vrijednost '%{value}' za argument '%{argument}'."
-    multiple_polls_without_name: "Trenutno postoji više anketa bez imena. Koristite '<code>ime</code>' da identificirate svoju anketu."
     multiple_polls_with_same_name: "Postoji više anketa s istim nazivom:<strong>%{name}</strong>. Upotrijebite atribut '<code>name</code>' da biste jedinstveno identificirali svoje ankete.."
     default_poll_must_have_at_least_1_option: "Anketa mora imati najmanje 1 opciju."
     named_poll_must_have_at_least_1_option: "Anketa <strong>%{name}</strong> mora imati najmanje 1 opciju."

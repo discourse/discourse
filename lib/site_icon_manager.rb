@@ -61,6 +61,10 @@ module SiteIconManager
 
   WATCHED_SETTINGS = ICONS.keys + %i[logo logo_small]
 
+  def self.clear_cache!
+    @cache.clear
+  end
+
   def self.ensure_optimized!
     unless @disabled
       ICONS.each do |name, info|

@@ -2,6 +2,10 @@
   @include sticky;
   top: 0;
   z-index: z("header");
+
+  .footer-nav-ipad & {
+    top: var(--footer-nav-height, 0px);
+  }
 }
 
 .d-header {
@@ -10,7 +14,7 @@
   width: 100%;
   z-index: z("header");
   background-color: var(--header_background);
-  box-shadow: shadow("header");
+  box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
@@ -48,6 +52,9 @@
     align-items: center;
     height: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
@@ -98,6 +105,7 @@
     display: flex;
     align-items: center;
     margin-top: 0.2em;
+    white-space: nowrap;
   }
 
   .login-button,
@@ -124,13 +132,10 @@
 }
 
 .d-header-icons {
-  text-align: center;
+  display: flex;
   margin: 0 0 0 0.5em;
   list-style: none;
 
-  > li {
-    float: left;
-  }
   .icon {
     box-sizing: content-box;
     appearance: none;
@@ -204,37 +209,11 @@
   .notifications {
     position: relative;
   }
-  .ring {
-    position: absolute;
-    top: -11px;
-    right: 23.5px;
-    z-index: z("base");
-    margin-left: 0;
-    background: radial-gradient(transparent, var(--success));
-    border-radius: 100%;
-    width: 20px;
-    height: 20px;
-    transform-origin: center;
-    animation-iteration-count: infinite;
-    animation-duration: 3s;
-    animation-name: ping;
-
-    &.revamped {
-      right: -4px;
-      top: -6px;
-
-      &.regular-notifications {
-        background: radial-gradient(
-          transparent,
-          var(--tertiary-med-or-tertiary)
-        );
-      }
-    }
-  }
   .header-dropdown-toggle {
     position: relative;
   }
   .badge-notification {
+    border: 2px solid var(--header_background);
     position: absolute;
     z-index: z("base");
     left: 0;
@@ -260,8 +239,7 @@
   .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
-  .unread-high-priority-notifications,
-  .ring {
+  .unread-high-priority-notifications {
     left: auto;
     right: 25px;
   }
@@ -306,6 +284,9 @@
     overflow: hidden;
     width: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
   .title-wrapper {
     display: grid;
@@ -314,6 +295,7 @@
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
     align-items: baseline;
+    gap: 0 0.5em;
     .header-title {
       grid-area: title;
     }
@@ -346,28 +328,21 @@
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
+    gap: 0 0.5em;
     @include ellipsis;
-    .badge-wrapper {
-      @include ellipsis;
-    }
   }
-  .badge-wrapper {
-    margin-right: 0.7em;
+  .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
-  }
-  .badge-wrapper {
-    &.bullet,
-    &.bar,
-    &.none {
-      span.badge-category {
-        color: var(--header_primary-high);
-      }
+    @include ellipsis;
+    .badge-category {
+      color: var(--header_primary-high);
     }
   }
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
+    gap: 0.5em;
     .discourse-tags {
       display: inline;
       color: var(--header_primary-high);
@@ -446,10 +421,21 @@ $mobile-avatar-height: 1.532em;
   }
 }
 
-.d-header-mode .bootstrap-mode {
-  border-radius: 2em;
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-  margin-left: 0.5em;
-  padding: 0.25em 0.5em;
+.d-header-mode {
+  .bootstrap-mode {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 1em;
+    padding: 0.15em 0.5em;
+
+    &:focus {
+      background-color: var(--primary-medium);
+      color: var(--secondary);
+    }
+  }
+
+  .fk-d-button-tooltip .fk-d-tooltip__trigger {
+    color: var(--header_primary-high);
+    background: transparent;
+  }
 }

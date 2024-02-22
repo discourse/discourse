@@ -5,16 +5,16 @@
     <%= discourse_color_scheme_stylesheets %>
     <meta name="color-scheme" content="light dark">
 
-    <%- if !@suggested_themes %>
-      <%= preload_script "locales/#{I18n.locale}" %>
+    <%- if @has_test_bundle && !@suggested_themes %>
       <%= preload_script "vendor" %>
+      <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
+      <%= preload_script "test" %>
+      <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
         <%= preload_script file %>
       <%- end %>
-      <%= preload_script "test-support" %>
-      <%= preload_script "test-helpers" %>
       <%= preload_script "test-site-settings" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
@@ -45,7 +45,10 @@
     <%- end %>
   </head>
   <body>
-    <%- if @suggested_themes %>
+    <%- if !@has_test_bundle %>
+      This is a production installation of Discourse, and cannot be used for theme testing.
+      For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
+    <% elsif @suggested_themes %>
       <h2>Theme QUnit Test Runner</h2>
 
       <%- if @suggested_themes.size == 0 %>
@@ -56,9 +59,7 @@
           <h4><%= link_to name, theme_qunit_path(id: id) %></h4>
         <%- end %>
       <%- end %>
-    <%- end %>
-
-    <%- if !@suggested_themes %>
+    <% else %>
       <%= preload_script "scripts/discourse-test-listen-boot" %>
       <%= preload_script "scripts/discourse-boot" %>
     <%- end %>

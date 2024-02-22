@@ -50,12 +50,13 @@ class PostCreator
   #     category              - Category to assign to topic
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
-  #     meta_data             - Topic meta data hash
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
   #     shared_draft          - Is the topic meant to be a shared draft
   #     topic_opts            - Options to be overwritten for topic
+  #     embed_url             - Creates a TopicEmbed for the topic
+  #     embed_content_sha1    - Sets the content_sha1 of the TopicEmbed
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -66,7 +67,10 @@ class PostCreator
 
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
-    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
+    opts[:visible] = false if (
+      (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
+        (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
+    )
 
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
@@ -167,7 +171,11 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post, @opts
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = PostValidator.new(skip_topic: true)
+    post_validator =
+      PostValidator.new(
+        skip_topic: true,
+        private_message: @opts[:archetype] == Archetype.private_message,
+      )
     post_validator.validate(@post)
 
     valid = @post.errors.blank?
@@ -190,7 +198,6 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         @post.link_post_uploads
-        @post.update_uploads_secure_status(source: "post creator")
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
@@ -388,9 +395,6 @@ class PostCreator
     end
   end
 
-  # You can supply an `embed_url` for a post to set up the embedded relationship.
-  # This is used by the wp-discourse plugin to associate a remote post with a
-  # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
 
@@ -398,7 +402,12 @@ class PostCreator
     raise Discourse::InvalidParameters.new(:embed_url) unless original_uri.is_a?(URI::HTTP)
 
     embed =
-      TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
+      TopicEmbed.new(
+        topic_id: @post.topic_id,
+        post_id: @post.id,
+        embed_url: @opts[:embed_url],
+        content_sha1: @opts[:embed_content_sha1],
+      )
     rollback_from_errors!(embed) unless embed.save
   end
 

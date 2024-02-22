@@ -1,6 +1,6 @@
-import ComboBoxComponent from "select-kit/components/combo-box";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -30,12 +30,11 @@ export default ComboBoxComponent.extend({
       if (value !== "custom" && !isEmpty(value)) {
         const { time } = this.content.find((x) => x.id === value);
         if (time) {
-          this.attrs.onChangeInput &&
-            this.attrs.onChangeInput(time.locale("en").format(FORMAT));
+          this.onChangeInput?.(time.locale("en").format(FORMAT));
         }
       }
 
-      this.attrs.onChange && this.attrs.onChange(value);
+      this.onChange?.(value);
     },
   },
 });

@@ -1,6 +1,10 @@
 import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+
 export default Route.extend({
+  router: service(),
+
   beforeModel() {
-    this.transitionTo("group.messages.inbox");
+    this.router.transitionTo("group.messages.inbox");
   },
 });

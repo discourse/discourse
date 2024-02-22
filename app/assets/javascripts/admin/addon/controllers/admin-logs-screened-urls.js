@@ -1,8 +1,8 @@
-import { action } from "@ember/object";
 import Controller from "@ember/controller";
-import ScreenedUrl from "admin/models/screened-url";
+import { action } from "@ember/object";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
+import ScreenedUrl from "admin/models/screened-url";
 
 export default class AdminLogsScreenedUrlsController extends Controller {
   loading = false;

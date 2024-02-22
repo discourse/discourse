@@ -1,23 +1,21 @@
 <tr class="group-manage-logs-row">
   <td>
     <DButton
-      @class="btn-default"
-      @action={{action "filter"}}
-      @actionParam={{hash value=this.log.action key="action"}}
+      @action={{fn this.filter (hash value=this.log.action key="action")}}
       @translatedLabel={{this.log.actionTitle}}
+      class="btn-default"
     />
   </td>
 
   <td>
     <span>{{avatar this.log.acting_user imageSize="tiny"}}</span>
     <DButton
-      @class="btn-default"
-      @action={{action "filter"}}
-      @actionParam={{hash
-        value=this.log.acting_user.username
-        key="acting_user"
+      @action={{fn
+        this.filter
+        (hash value=this.log.acting_user.username key="acting_user")
       }}
       @translatedLabel={{this.log.acting_user.username}}
+      class="btn-default"
     />
   </td>
 
@@ -25,13 +23,12 @@
     {{#if this.log.target_user}}
       <span>{{avatar this.log.target_user imageSize="tiny"}}</span>
       <DButton
-        @class="btn-default"
-        @action={{action "filter"}}
-        @actionParam={{hash
-          value=this.log.target_user.username
-          key="target_user"
+        @action={{fn
+          this.filter
+          (hash value=this.log.target_user.username key="target_user")
         }}
         @translatedLabel={{this.log.target_user.username}}
+        class="btn-default"
       />
     {{/if}}
   </td>
@@ -39,10 +36,9 @@
   <td>
     {{#if this.log.subject}}
       <DButton
-        @class="btn-default"
-        @action={{action "filter"}}
-        @actionParam={{hash value=this.log.subject key="subject"}}
+        @action={{fn this.filter (hash value=this.log.subject key="subject")}}
         @translatedLabel={{this.log.subject}}
+        class="btn-default"
       />
     {{/if}}
   </td>
@@ -52,7 +48,7 @@
   <td class="group-manage-logs-expand-details">
     {{#if this.log.prev_value}}
       <DButton
-        @action={{action "toggleDetails"}}
+        @action={{this.toggleDetails}}
         @icon={{if this.expandDetails "angle-up" "angle-down"}}
       />
     {{/if}}

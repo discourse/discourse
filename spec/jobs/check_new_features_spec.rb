@@ -15,8 +15,8 @@ RSpec.describe Jobs::CheckNewFeatures do
     }
   end
 
-  def stub_meta_new_features_endpoint(*features)
-    stub_request(:get, "https://meta.discourse.org/new-features.json").to_return(
+  def stub_new_features_endpoint(*features)
+    stub_request(:get, DiscourseUpdates.new_features_endpoint).to_return(
       status: 200,
       body: JSON.dump(features),
       headers: {
@@ -43,7 +43,7 @@ RSpec.describe Jobs::CheckNewFeatures do
   before do
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta13")
     freeze_time
-    stub_meta_new_features_endpoint(feature1, feature2, pending_feature)
+    stub_new_features_endpoint(feature1, feature2, pending_feature)
   end
 
   after { DiscourseUpdates.clean_state }

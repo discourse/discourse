@@ -24,6 +24,7 @@ module Jobs
       extract_images_from(post.cooked).each do |node|
         download_src =
           original_src = node["src"] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node["href"]
+        download_src = replace_encoded_src(download_src)
         download_src =
           "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?(
           "//",
@@ -111,8 +112,10 @@ module Jobs
 
     class ImageTooLargeError < StandardError
     end
+
     class ImageBrokenError < StandardError
     end
+
     class UploadCreateError < StandardError
     end
 
@@ -197,6 +200,10 @@ module Jobs
     end
 
     protected
+
+    def replace_encoded_src(src)
+      PostHotlinkedMedia.normalize_src(src, reset_scheme: false)
+    end
 
     def normalize_src(src)
       PostHotlinkedMedia.normalize_src(src)

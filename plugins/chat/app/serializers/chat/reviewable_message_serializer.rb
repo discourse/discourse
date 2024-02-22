@@ -10,8 +10,12 @@ module Chat
 
     has_one :chat_channel, serializer: Chat::ChannelSerializer, root: false, embed: :objects
 
+    def created_from_flag?
+      true
+    end
+
     def chat_channel
-      object.chat_message.chat_channel
+      object.chat_message&.chat_channel
     end
 
     def target_id

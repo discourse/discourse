@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Navigating with breadcrumbs", type: :system, js: true do
+describe "Navigating with breadcrumbs", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category1) { Fabricate(:category) }
@@ -49,7 +49,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
   end
 
   context "with tags" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:c1_topic_tagged) { Fabricate(:topic, category: category1, tags: [tag]) }
     fab!(:c3_topic_tagged) { Fabricate(:topic, category: category3, tags: [tag]) }
     fab!(:c3_child_topic_tagged) { Fabricate(:topic, category: category3_child, tags: [tag]) }
@@ -86,7 +86,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
     end
   end
 
-  describe "initial pageloads for nosubcategories" do
+  describe "initial page loads for no-subcategories" do
     it "shows correct data for /c/" do
       visit("/c/#{category3.id}")
       expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/none")

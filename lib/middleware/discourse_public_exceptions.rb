@@ -14,10 +14,6 @@ module Middleware
         ],
       )
 
-    def initialize(path)
-      super
-    end
-
     def call(env)
       # this is so so gnarly
       # sometimes we leak out exceptions prior to creating a controller instance
@@ -49,12 +45,16 @@ module Middleware
           # Or badly formatted multipart requests
           begin
             request.POST
-          rescue EOFError
-            return [
-              400,
-              { "Cache-Control" => "private, max-age=0, must-revalidate" },
-              ["Invalid request"]
-            ]
+          rescue ActionController::BadRequest => error
+            if error.cause.is_a?(EOFError)
+              return [
+                400,
+                { "Cache-Control" => "private, max-age=0, must-revalidate" },
+                ["Invalid request"]
+              ]
+            else
+              raise
+            end
           end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)

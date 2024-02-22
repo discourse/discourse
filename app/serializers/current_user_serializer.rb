@@ -6,7 +6,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
              :unread_notifications,
-             :unread_private_messages,
              :unread_high_priority_notifications,
              :all_unread_notifications_count,
              :read_first_notification?,
@@ -20,10 +19,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :trust_level,
              :can_send_private_email_messages,
              :can_send_private_messages,
+             :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
              :can_delete_account,
+             :can_post_anonymously,
+             :can_ignore_users,
+             :can_delete_all_posts_and_topics,
+             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -63,14 +67,14 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :grouped_unread_notifications,
-             :redesigned_user_menu_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
-             :sidebar_list_destination,
              :sidebar_sections,
-             :custom_sidebar_sections_enabled,
-             :new_new_view_enabled?
+             :new_new_view_enabled?,
+             :use_experimental_topic_bulk_actions?,
+             :use_experimental_topic_bulk_actions?,
+             :use_admin_sidebar
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -79,9 +83,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def sidebar_sections
     SidebarSection
-      .includes(sidebar_section_links: :linkable)
-      .where("public OR user_id = ?", object.id)
-      .order("(public IS TRUE) DESC")
+      .public_sections
+      .or(SidebarSection.where(user_id: object.id))
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 
@@ -120,6 +125,35 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  def use_admin_sidebar
+    object.admin? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
+  end
+
+  def include_user_admin_sidebar?
+    object.admin?
+  end
+
+  def can_post_anonymously
+    SiteSetting.allow_anonymous_posting &&
+      (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
+  end
+
+  def can_ignore_users
+    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+  end
+
+  def can_delete_all_posts_and_topics
+    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
+
+  def can_summarize
+    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
+  end
+
+  def can_upload_avatar
+    !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
   end
 
   def can_edit
@@ -281,31 +315,7 @@ class CurrentUserSerializer < BasicUserSerializer
     Reviewable.unseen_reviewable_count(object)
   end
 
-  def redesigned_user_menu_enabled
-    object.redesigned_user_menu_enabled?
-  end
-
-  def include_all_unread_notifications_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_grouped_unread_notifications?
-    redesigned_user_menu_enabled
-  end
-
-  def include_unseen_reviewable_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_new_personal_messages_notifications_count?
-    redesigned_user_menu_enabled
-  end
-
-  def custom_sidebar_sections_enabled
-    if SiteSetting.enable_custom_sidebar_sections.present?
-      object.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
-    else
-      false
-    end
+  def use_experimental_topic_bulk_actions?
+    scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
   end
 end

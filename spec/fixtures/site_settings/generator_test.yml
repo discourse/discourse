@@ -1,0 +1,17 @@
+category1:
+  use_https: true
+  min_trust_level_to_allow_invite:
+    default: 2
+    enum: "TrustLevelSetting"
+    hidden: true
+  min_trust_level_to_allow_invite_tl_and_staff:
+    default: 2
+    enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  allow_invite_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"

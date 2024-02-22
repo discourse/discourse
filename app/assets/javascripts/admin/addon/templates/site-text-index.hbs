@@ -4,18 +4,18 @@
   <TextField
     @value={{this.q}}
     @placeholderKey="admin.site_text.search"
-    @class="no-blur site-text-search"
     @autofocus="true"
-    @key-up={{action "search"}}
+    @key-up={{this.search}}
+    class="no-blur site-text-search"
   />
 
   <div class="reseed">
     <DButton
-      @action={{route-action "showReseedModal"}}
-      @class="btn-default"
+      @action={{this.showReseedModal}}
       @label="admin.reseed.action.label"
       @title="admin.reseed.action.title"
       @icon="sync"
+      class="btn-default"
     />
   </div>
 
@@ -26,38 +26,51 @@
         @valueProperty="value"
         @content={{this.availableLocales}}
         @value={{this.locale}}
-        @onChange={{action "updateLocale"}}
-        @class="locale-search"
+        @onChange={{this.updateLocale}}
         @options={{hash filterable=true}}
+        class="locale-search"
       />
     </div>
 
-    <label>
-      <Input
-        @type="checkbox"
-        @checked={{this.overridden}}
-        {{on "click" (action "toggleOverridden")}}
+    <label class="checkbox-label">
+      <input
+        id="toggle-overridden"
+        type="checkbox"
+        checked={{this.resolvedOverridden}}
+        {{on "click" this.toggleOverridden}}
       />
       {{i18n "admin.site_text.show_overriden"}}
+    </label>
+
+    <label class="checkbox-label">
+      <input
+        id="toggle-outdated"
+        type="checkbox"
+        checked={{this.resolvedOutdated}}
+        {{on "click" this.toggleOutdated}}
+      />
+      {{i18n "admin.site_text.show_outdated"}}
     </label>
   </p>
 </div>
 
 <ConditionalLoadingSpinner @condition={{this.searching}}>
-  {{#if this.siteTexts.extras.recommended}}
+  {{#if this.model.extras.recommended}}
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
   {{/if}}
 
-  {{#each this.siteTexts as |siteText|}}
+  {{#each this.model as |siteText|}}
     <SiteTextSummary
       @siteText={{siteText}}
-      @editAction={{action "edit"}}
+      @editAction={{this.edit}}
       @term={{this.q}}
-      @searchRegex={{this.siteTexts.extras.regex}}
+      @searchRegex={{this.model.extras.regex}}
     />
+  {{else}}
+    {{i18n "admin.site_text.no_results"}}
   {{/each}}
 
-  {{#if this.siteTexts.extras.has_more}}
+  {{#if this.model.extras.has_more}}
     <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
   {{/if}}
 </ConditionalLoadingSpinner>

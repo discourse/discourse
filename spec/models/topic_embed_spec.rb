@@ -8,19 +8,54 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe ".import" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
-    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-    fab!(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:embeddable_host)
+    fab!(:category)
+    fab!(:tag)
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
       expect(TopicEmbed.count).to eq(0)
+    end
+
+    it "Allows figure and figcaption HTML tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <div class='content'>
+            <p>some content</p>
+            <figure>
+              <img src="/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </div>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      # div inception is inserted by the readability gem
+      expected = <<~HTML
+        <div><div>
+          <div>
+            <p>some content</p>
+            <figure>
+              <img src="https://blog.discourse.com/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </figure></figure></div>
+        </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
     end
 
     context "when creating a post" do
@@ -37,6 +72,9 @@ RSpec.describe TopicEmbed do
         # It converts relative URLs to absolute
         expect(post.cooked).to have_tag("a", with: { href: "http://eviltrout.com/hello" })
         expect(post.cooked).to have_tag("img", with: { src: "http://eviltrout.com/images/wat.jpg" })
+
+        # It caches the embed content
+        expect(post.topic.topic_embed.embed_content_cache).to eq(contents)
 
         # It converts relative URLs to absolute when expanded
         stub_request(:get, url).to_return(status: 200, body: contents)
@@ -70,6 +108,13 @@ RSpec.describe TopicEmbed do
         topic_embed.reload
         expect(topic_embed.post.user).to eq(new_user)
         expect(topic_embed.post.topic.user).to eq(new_user)
+      end
+
+      it "Supports updating the embed content cache" do
+        expect do TopicEmbed.import(user, url, title, "new contents") end.to change {
+          topic_embed.reload.embed_content_cache
+        }
+        expect(topic_embed.embed_content_cache).to eq("new contents")
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
@@ -121,6 +166,17 @@ RSpec.describe TopicEmbed do
           )
         expect(imported_post.topic.category).not_to eq(embeddable_host.category)
         expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "does not create duplicate topics with different protocols in the embed_url" do
+        Jobs.run_immediately!
+        expect {
+          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+        }.to change { Topic.all.count }.by(1)
+
+        expect {
+          TopicEmbed.import(user, "https://eviltrout.com/abcd", title, "some random content")
+        }.to_not change { Topic.all.count }
       end
 
       it "creates the topic with the tag passed as a parameter" do
@@ -233,7 +289,7 @@ RSpec.describe TopicEmbed do
   end
 
   describe ".find_remote" do
-    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:embeddable_host)
 
     describe ".title_scrub" do
       let(:url) { "http://eviltrout.com/123" }
@@ -253,10 +309,23 @@ RSpec.describe TopicEmbed do
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Through the Looking Glass")
       end
+
+      it "doesn't follow redirect when making request" do
+        FinalDestination.any_instance.stubs(:resolve).returns(URI("https://redirect.com"))
+        stub_request(:get, "https://redirect.com/").to_return(
+          status: 301,
+          body: "<title>Moved permanently</title>",
+          headers: {
+            "Location" => "https://www.example.org/",
+          },
+        )
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Moved permanently")
+      end
     end
 
     context 'with post with allowed classes "foo" and "emoji"' do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:url) { "http://eviltrout.com/123" }
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
@@ -306,7 +375,7 @@ RSpec.describe TopicEmbed do
     end
 
     context "with post with no allowed classes" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:url) { "http://eviltrout.com/123" }
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
@@ -395,21 +464,53 @@ RSpec.describe TopicEmbed do
     end
 
     context "with canonical links" do
+      fab!(:user)
+      let(:title) { "How to turn a fish from good to evil in 30 seconds" }
       let(:url) { "http://eviltrout.com/123?asd" }
       let(:canonical_url) { "http://eviltrout.com/123" }
+      let(:url2) { "http://eviltrout.com/blog?post=1&canonical=false" }
+      let(:canonical_url2) { "http://eviltrout.com/blog?post=1" }
       let(:content) { "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head>" }
+      let(:content2) { "<head><link rel=\"canonical\" href=\"#{canonical_url2}\"></head>" }
       let(:canonical_content) { "<title>Canonical</title><body></body>" }
 
       before do
         stub_request(:get, url).to_return(status: 200, body: content)
         stub_request(:head, canonical_url)
         stub_request(:get, canonical_url).to_return(status: 200, body: canonical_content)
+
+        stub_request(:get, url2).to_return(status: 200, body: content2)
+        stub_request(:head, canonical_url2)
+        stub_request(:get, canonical_url2).to_return(status: 200, body: canonical_content)
       end
 
-      it "a" do
+      it "fetches canonical content" do
         response = TopicEmbed.find_remote(url)
 
         expect(response.title).to eq("Canonical")
+        expect(response.url).to eq(canonical_url)
+      end
+
+      it "does not create duplicate topics when url differs from canonical_url" do
+        Jobs.run_immediately!
+        expect { TopicEmbed.import_remote(canonical_url, { title: title, user: user }) }.to change {
+          Topic.all.count
+        }.by(1)
+
+        expect { TopicEmbed.import_remote(url, { title: title, user: user }) }.to_not change {
+          Topic.all.count
+        }
+      end
+
+      it "does not create duplicate topics when url contains extra params" do
+        Jobs.run_immediately!
+        expect {
+          TopicEmbed.import_remote(canonical_url2, { title: title, user: user })
+        }.to change { Topic.all.count }.by(1)
+
+        expect { TopicEmbed.import_remote(url2, { title: title, user: user }) }.to_not change {
+          Topic.all.count
+        }
       end
     end
   end
@@ -456,6 +557,42 @@ RSpec.describe TopicEmbed do
 
       I18n.locale = :de
       expect(TopicEmbed.imported_from_html("some_url")).to eq(expected_html)
+    end
+
+    it "normalize_encodes the url" do
+      html =
+        TopicEmbed.imported_from_html(
+          'http://www.discourse.org/%23<%2Fa><img%20src%3Dx%20onerror%3Dalert("document.domain")%3B>',
+        )
+      expected_html =
+        "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
+      expect(html).to eq(expected_html)
+    end
+  end
+
+  describe ".expanded_for" do
+    fab!(:user)
+    let(:title) { "How to turn a fish from good to evil in 30 seconds" }
+    let(:url) { "http://eviltrout.com/123" }
+    let(:contents) { "<p>hello world new post :D</p>" }
+    fab!(:embeddable_host)
+    fab!(:category)
+    fab!(:tag)
+
+    it "returns embed content" do
+      stub_request(:get, url).to_return(status: 200, body: contents)
+      post = TopicEmbed.import(user, url, title, contents)
+      expect(TopicEmbed.expanded_for(post)).to include(contents)
+    end
+
+    it "updates the embed content cache" do
+      stub_request(:get, url)
+        .to_return(status: 200, body: contents)
+        .then
+        .to_return(status: 200, body: "contents changed")
+      post = TopicEmbed.import(user, url, title, contents)
+      TopicEmbed.expanded_for(post)
+      expect(post.topic.topic_embed.reload.embed_content_cache).to include("contents changed")
     end
   end
 end

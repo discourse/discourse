@@ -1,9 +1,9 @@
+import { TextField } from "@ember/legacy-built-in-components";
 import { cancel, next } from "@ember/runloop";
 import { isLTR, isRTL, siteDir } from "discourse/lib/text-direction";
-import I18n from "I18n";
-import { TextField } from "@ember/legacy-built-in-components";
-import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const DEBOUNCE_MS = 500;
 

@@ -1,8 +1,8 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 function dateInput() {
   return query(".date-picker");
@@ -62,5 +62,24 @@ module("Integration | Component | date-time-input", function (hooks) {
     );
 
     assert.notOk(exists(timeInput()));
+  });
+
+  test("supports swapping timezone without changing visible date/time", async function (assert) {
+    this.setProperties({
+      date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
+      timezone: "Europe/London",
+      onChange: setDate,
+    });
+
+    await render(
+      hbs`<DateTimeInput @date={{this.date}} @timezone={{this.timezone}} @onChange={{this.onChange}} />`
+    );
+    dateInput().dispatchEvent(new Event("change"));
+    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+01:00");
+
+    this.setProperties({ timezone: "Australia/Sydney" });
+
+    dateInput().dispatchEvent(new Event("change"));
+    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+10:00");
   });
 });

@@ -1,0 +1,12 @@
+<DModal
+  @title={{i18n "copy_codeblock.view_code"}}
+  @closeModal={{this.closeModal}}
+  {{did-insert this.applyCodeblockButtons}}
+  class="fullscreen-code-modal -max"
+>
+  <:body>
+    <pre>
+      <code class={{@model.codeClasses}}>{{@model.code}}</code>
+    </pre>
+  </:body>
+</DModal>

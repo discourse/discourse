@@ -2,6 +2,20 @@
 
 module Chat
   module ServiceMatchers
+    class RunServiceSuccessfully
+      attr_reader :result
+
+      def matches?(result)
+        @result = result
+        result.success?
+      end
+
+      def failure_message
+        inspector = StepsInspector.new(result)
+        "Expected to run the service sucessfully but failed:\n\n#{inspector.inspect}\n\n#{inspector.error}"
+      end
+    end
+
     class FailStep
       attr_reader :name, :result
 
@@ -84,6 +98,24 @@ module Chat
       def description
         "fail to find a model named '#{name}'"
       end
+
+      def step_failed?
+        super && result[name].blank?
+      end
+    end
+
+    class FailWithInvalidModel < FailStep
+      def type
+        "model"
+      end
+
+      def description
+        "fail to have a valid model named '#{name}'"
+      end
+
+      def step_failed?
+        super && result[step].invalid
+      end
     end
 
     def fail_a_policy(name)
@@ -96,6 +128,18 @@ module Chat
 
     def fail_to_find_a_model(name = "model")
       FailToFindModel.new(name)
+    end
+
+    def fail_with_an_invalid_model(name = "model")
+      FailWithInvalidModel.new(name)
+    end
+
+    def fail_a_step(name = "model")
+      FailStep.new(name)
+    end
+
+    def run_service_successfully
+      RunServiceSuccessfully.new
     end
 
     def inspect_steps(result)

@@ -1,14 +1,10 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll in a post reply history", function (needs) {
   needs.user();
   needs.settings({ poll_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/t/topic_with_poll_in_post_reply_history.json", () => {

@@ -1,2 +1,17 @@
 chat:
-- plugins/chat/**/*
+  - changed-files:
+      - any-glob-to-any-file: plugins/chat/**/*
+
+migrations-tooling:
+  - changed-files:
+      - any-glob-to-any-file:
+        - migrations/**/*
+        - script/bulk_import/**/*
+        - script/import_scripts/**/*
+
+i18n:
+  - changed-files:
+      - any-glob-to-any-file:
+        - config/locales/*en.yml
+        - plugins/**/config/locales/*en.yml
+        - "**/*i18n*"

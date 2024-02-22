@@ -83,7 +83,7 @@ RSpec.describe Onebox::Engine::VimeoOnebox do
         'data-video-id="786646692"',
       )
       expect(Onebox.preview("https://vimeo.com/786646692").to_s).to include(
-        'src="https://vumbnail.com/786646692.jpg"',
+        'src="https://i.vimeocdn.com/filter/overlay?src0=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1582157011-37115b15c717a168bf86e2f2855b6bbc23b1cbcee54ff99c8d7b808b459365d6-d_1280x720&amp;src1=https%3A%2F%2Ff.vimeocdn.com%2Fimages_v6%2Fshare%2Fplay_icon_overlay.png"',
       )
     end
   end
@@ -100,7 +100,7 @@ RSpec.describe Onebox::Engine::VimeoOnebox do
         'data-video-id="192207770?h=0faf1dd09d&amp;app_id=122963"',
       )
       expect(Onebox.preview("https://vimeo.com/192207770/0faf1dd09d").to_s).to include(
-        'src="https://vumbnail.com/192207770.jpg"',
+        'src="https://i.vimeocdn.com/filter/overlay?src0=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F603496523-33935d2b2cbf32d39c4697fa5b03364507eb81dc03a0be84b9a9fe4ec7b89868-d_1280x544&amp;src1=https%3A%2F%2Ff.vimeocdn.com%2Fimages_v6%2Fshare%2Fplay_icon_overlay.png"',
       )
     end
   end

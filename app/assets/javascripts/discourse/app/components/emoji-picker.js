@@ -1,8 +1,10 @@
+import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
+import { htmlSafe } from "@ember/template";
+import { createPopper } from "@popperjs/core";
 import {
   emojiSearch,
   extendedEmojiList,
@@ -10,13 +12,11 @@ import {
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import Component from "@ember/component";
-import { createPopper } from "@popperjs/core";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import { underscore } from "@ember/string";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 
 function customEmojis() {
   const list = extendedEmojiList();
@@ -277,7 +277,7 @@ export default Component.extend({
       if (fromTopicComposer) {
         document.querySelector(".d-editor-input")?.focus();
       } else if (fromChatComposer) {
-        document.querySelector(".chat-composer-input")?.focus();
+        document.querySelector(".chat-composer__input")?.focus();
       } else {
         document.querySelector("textarea")?.focus();
       }
@@ -380,6 +380,7 @@ export default Component.extend({
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
         diversity: this.emojiStore.diversity,
+        exclude: this.site.denied_emojis,
       })
         .map(this._replaceEmoji)
         .join("");

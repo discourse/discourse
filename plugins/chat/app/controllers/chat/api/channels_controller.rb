@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description slug]
-CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
+CHANNEL_EDITABLE_PARAMS ||= %i[name description slug]
+CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[
+  auto_join_users
+  allow_channel_wide_mentions
+  threading_enabled
+]
 
 class Chat::Api::ChannelsController < Chat::ApiController
   def index
@@ -12,7 +16,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
-    channels = Chat::ChannelFetcher.secured_public_channels(guardian, memberships, options)
+    channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
         Chat::ChannelSerializer.new(
@@ -36,48 +40,42 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
-
-    guardian.ensure_can_create_chat_channel!
-    if channel_params[:name].length > SiteSetting.max_topic_title_length
-      raise Discourse::InvalidParameters.new(:name)
-    end
-
-    if Chat::Channel.exists?(
-         chatable_type: "Category",
-         chatable_id: channel_params[:chatable_id],
-         name: channel_params[:name],
-       )
-      raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
-    end
-
-    chatable = Category.find_by(id: channel_params[:chatable_id])
-    raise Discourse::NotFound unless chatable
-
-    auto_join_users =
-      ActiveRecord::Type::Boolean.new.deserialize(channel_params[:auto_join_users]) || false
-
-    channel =
-      chatable.create_chat_channel!(
-        name: channel_params[:name],
-        slug: channel_params[:slug],
-        description: channel_params[:description],
-        user_count: 1,
-        auto_join_users: auto_join_users,
+      params.require(:channel).permit(
+        :chatable_id,
+        :name,
+        :slug,
+        :description,
+        :auto_join_users,
+        :threading_enabled,
       )
 
-    channel.user_chat_channel_memberships.create!(user: current_user, following: true)
-
-    if channel.auto_join_users
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
+    # NOTE: We don't allow creating channels for anything but category chatable types
+    # at the moment. This may change in future, at which point we will need to pass in
+    # a chatable_type param as well and switch to the correct service here.
+    with_service(
+      Chat::CreateCategoryChannel,
+      **channel_params.merge(category_id: channel_params[:chatable_id]),
+    ) do
+      on_success do
+        render_serialized(
+          result.channel,
+          Chat::ChannelSerializer,
+          root: "channel",
+          membership: result.membership,
+        )
+      end
+      on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
+      on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:category_channel_does_not_exist) do
+        raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
+      end
+      on_model_errors(:channel) do
+        render_json_error(result.channel, type: :record_invalid, status: 422)
+      end
+      on_model_errors(:membership) do
+        render_json_error(result.membership, type: :record_invalid, status: 422)
+      end
     end
-
-    render_serialized(
-      channel,
-      Chat::ChannelSerializer,
-      membership: channel.membership_for(current_user),
-      root: "channel",
-    )
   end
 
   def show
@@ -86,6 +84,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       Chat::ChannelSerializer,
       membership: channel_from_params.membership_for(current_user),
       root: "channel",
+      include_extra_info: true,
     )
   end
 
@@ -117,7 +116,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     @channel ||=
       begin
         channel = Chat::Channel.find(params.require(:channel_id))
-        guardian.ensure_can_preview_chat_channel!(channel)
+        guardian.ensure_can_join_chat_channel!(channel)
         channel
       end
   end

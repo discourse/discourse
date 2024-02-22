@@ -64,11 +64,6 @@ RSpec.describe Email::Styles do
       expect(frag.at("a")["style"]).to be_present
     end
 
-    it "attaches a style to a tags" do
-      frag = html_fragment("<a href>wat</a>")
-      expect(frag.at("a")["style"]).to be_present
-    end
-
     it "attaches a style to ul and li tags" do
       frag = html_fragment("<ul><li>hello</li></ul>")
       expect(frag.at("ul")["style"]).to be_present
@@ -109,12 +104,10 @@ RSpec.describe Email::Styles do
     end
 
     it "replaces hashtag-cooked text with raw #hashtag" do
-      hashtag_html =
-        "<a class=\"hashtag-cooked\" href=\"#{Discourse.base_url}/c/123/dev\" data-type=\"category\" data-slug=\"dev\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Dev Zone</span></a>"
-      frag = html_fragment(hashtag_html)
-      expect(frag.at("a").text.chomp).to eq("#dev")
-      hashtag_html =
-        "<a class=\"hashtag-cooked\" href=\"#{Discourse.base_url}/c/123/dev\" data-type=\"category\" data-slug=\"dev\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\">Dev Zone</a>"
+      category = Fabricate(:category, name: "dev", slug: "dev")
+      post = Fabricate(:post, raw: "this is #dev")
+      post.rebake!
+      hashtag_html = post.cooked
       frag = html_fragment(hashtag_html)
       expect(frag.at("a").text.chomp).to eq("#dev")
     end
@@ -296,7 +289,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  describe "inline_secure_images" do
+  describe "#inline_secure_images" do
     before do
       setup_s3
       SiteSetting.secure_uploads = true

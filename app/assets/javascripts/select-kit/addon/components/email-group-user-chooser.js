@@ -42,7 +42,7 @@ export default UserChooserComponent.extend({
           reconstructed.name = item.full_name;
           reconstructed.isGroup = true;
         }
-        return Object.assign({}, item, reconstructed);
+        return { ...item, ...reconstructed };
       });
     });
   },

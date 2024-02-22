@@ -17,7 +17,9 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :seen_popups,
              :should_be_redirected_to_top,
              :redirected_to_top,
-             :treat_as_new_topic_start_date
+             :treat_as_new_topic_start_date,
+             :sidebar_link_to_filtered_list,
+             :sidebar_show_count_of_new_items
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?

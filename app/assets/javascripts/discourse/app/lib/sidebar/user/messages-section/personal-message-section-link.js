@@ -1,6 +1,5 @@
-import I18n from "I18n";
-
 import MessageSectionLink from "discourse/lib/sidebar/user/messages-section/message-section-link";
+import I18n from "discourse-i18n";
 
 export default class PersonalMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([

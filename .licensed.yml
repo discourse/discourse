@@ -13,6 +13,9 @@ allowed:
 
 ignored:
   bundler:
+    - abbrev # Ruby (default gem)
+    - base64 # Ruby (default gem)
+    - bigdecimal # Ruby (default gem)
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)

@@ -1,7 +1,7 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { setPrefix } from "discourse-common/lib/get-url";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 function reportWithData(data) {
   const store = getOwner(this).lookup("service:store");
@@ -370,7 +370,7 @@ module("Unit | Model | report", function (hooks) {
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
       computedUsernameLabel.formattedValue,
-      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
 
@@ -459,7 +459,7 @@ module("Unit | Model | report", function (hooks) {
     const userLink = computedLabels[0].compute(row).formattedValue;
     assert.strictEqual(
       userLink,
-      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
   });
 });

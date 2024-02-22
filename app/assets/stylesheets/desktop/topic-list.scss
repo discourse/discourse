@@ -32,10 +32,14 @@
     &:last-of-type {
       padding-right: 10px;
     }
+    th & {
+      border-bottom: 3px solid var(--primary-low);
+    }
   }
 
   button.bulk-select {
     padding: 0;
+    margin-right: 0.5em;
     line-height: var(--line-height-large);
   }
 
@@ -52,13 +56,15 @@
     }
   }
 
-  .badge-notification {
-    position: relative;
-    top: -2px;
-
-    &.new-topic {
-      top: -1px;
-      padding-left: 2px;
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    &.active {
+      background: var(--quaternary);
+      color: var(--secondary);
     }
   }
 
@@ -162,6 +168,25 @@
   h2 {
     margin: 20px 0 10px;
   }
+
+  .show-more {
+    width: 100%;
+    z-index: z("base");
+    position: absolute;
+    top: 0;
+
+    .alert {
+      margin: 0;
+      padding: 1.1em 2em 1.1em 0.65em;
+      gap: 0.65em;
+      align-items: center;
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+    }
+  }
 }
 
 .bulk-select-topics {
@@ -248,22 +273,4 @@
 
 .container.list-container {
   position: relative;
-}
-
-.welcome-cta {
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
-  border-radius: 4px;
-  padding: 12px 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  z-index: z("usercard");
-  &__content {
-    width: 70%;
-  }
-  &__button {
-    align-self: center;
-  }
 }

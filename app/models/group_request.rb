@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupRequest < ActiveRecord::Base
-  REASON_CHARACTER_LIMIT = 280
+  REASON_CHARACTER_LIMIT = 5000
 
   belongs_to :group
   belongs_to :user

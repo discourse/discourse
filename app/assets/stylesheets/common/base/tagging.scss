@@ -1,3 +1,7 @@
+.container.tags-index {
+  background: var(--d-content-background);
+}
+
 .topic-title-outlet.choose-tags {
   margin-left: 25px;
   margin-top: 3px;
@@ -34,10 +38,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: 0.5em;
 
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
+    gap: 0.5em;
   }
 
   .badge-wrapper {
@@ -114,7 +120,7 @@
 .list-tags,
 .search-category {
   .discourse-tag.simple:not(:last-child):after {
-    content: ", ";
+    content: ",\00a0";
     margin-left: 1px;
   }
 }
@@ -122,9 +128,6 @@
 .d-header .topic-header-extra {
   .discourse-tags {
     font-size: var(--font-down-1);
-  }
-  .discourse-tags + .topic-featured-link {
-    margin-left: 0.5em;
   }
 }
 
@@ -150,7 +153,6 @@ header .discourse-tag {
 
 .list-tags {
   display: inline-block;
-  margin-right: 3px;
   font-size: var(--font-down-1);
 }
 
@@ -160,7 +162,7 @@ header .discourse-tag {
 }
 
 #topic-title {
-  .discourse-tags .discourse-tag {
+  .discourse-tags .discourse-tag.box {
     margin-right: 0.35em;
   }
 }
@@ -210,7 +212,7 @@ header .discourse-tag {
     grid-area: header;
     background: var(--primary-very-low);
     padding: 20px;
-    margin-bottom: 1em;
+    margin: 1em 0;
   }
   .tag-groups-sidebar {
     grid-area: sidebar;
@@ -332,10 +334,10 @@ section.tag-info {
     flex-wrap: wrap;
     margin-bottom: 1em;
     #edit-name {
-      flex: 1 1 auto;
-      margin-right: 0.5em;
+      width: 100%;
     }
     #edit-description {
+      height: 120px;
       flex: 10 1 auto;
     }
     .edit-controls {

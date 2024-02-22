@@ -6,8 +6,8 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://embed\.smartcontracts\.org/?.*})
-      requires_iframe_origins "https://embed.smartcontracts.org"
+      matches_regexp(%r{^https?://embed\.(motoko|smartcontracts)\.org/?.*})
+      requires_iframe_origins("https://embed.motoko.org", "https://embed.smartcontracts.org")
       always_https
 
       def to_html
@@ -21,7 +21,7 @@ module Onebox
       protected
 
       def get_oembed_url
-        "https://embed.smartcontracts.org/api/onebox?url=#{url}"
+        "https://embed.smartcontracts.org/services/onebox?url=#{url}"
       end
     end
   end

@@ -1,8 +1,8 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 function dateInput() {
   return query(".date-picker");
@@ -53,5 +53,21 @@ module("Integration | Component | date-input", function (hooks) {
     dateInput().dispatchEvent(new Event("change"));
 
     assert.ok(this.date.isSame(moment("2019-02-02")));
+  });
+
+  test("always shows date in timezone of input timestamp", async function (assert) {
+    this.setProperties({
+      date: moment.tz("2023-05-05T10:00:00", "ETC/GMT-12"),
+    });
+
+    await render(
+      hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
+    );
+    assert.strictEqual(dateInput().value, "2023-05-05");
+
+    this.setProperties({
+      date: moment.tz("2023-05-05T10:00:00", "ETC/GMT+12"),
+    });
+    assert.strictEqual(dateInput().value, "2023-05-05");
   });
 });

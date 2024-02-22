@@ -1,0 +1,17 @@
+.chat-channel-name {
+  @include ellipsis;
+  color: var(--primary);
+
+  .has-unread & {
+    font-weight: bold;
+  }
+
+  &__label {
+    white-space: nowrap;
+  }
+
+  .emoji {
+    height: 1em;
+    width: 1em;
+  }
+}

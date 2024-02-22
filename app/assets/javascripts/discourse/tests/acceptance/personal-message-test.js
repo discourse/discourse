@@ -1,13 +1,19 @@
-import { click, visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/application";
+import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import {
+  getCachedTopicList,
+  setCachedTopicList,
+} from "discourse/lib/cached-topic-list";
 import DiscourseURL from "discourse/lib/url";
 import {
   acceptance,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { test } from "qunit";
-import sinon from "sinon";
+import I18n from "discourse-i18n";
+import selectKit from "../helpers/select-kit-helper";
 
 acceptance("Personal Message", function (needs) {
   needs.user();
@@ -16,9 +22,20 @@ acceptance("Personal Message", function (needs) {
     await visit("/t/pm-for-testing/12");
 
     assert.strictEqual(
-      query("#suggested-topics .suggested-topics-title").innerText.trim(),
+      query("#suggested-topics-title").innerText.trim(),
       I18n.t("suggested_topics.pm_title")
     );
+  });
+
+  test("redirects to inbox after topic is archived and clears topicList cache", async function (assert) {
+    const session = getOwner(this).lookup("service:session");
+    setCachedTopicList(session, {});
+
+    await visit("/t/pm-for-testing/12");
+    await click(".archive-topic");
+
+    assert.strictEqual(currentURL(), "/u/eviltrout/messages");
+    assert.notOk(getCachedTopicList(session), "topic list cached is cleared");
   });
 });
 
@@ -54,5 +71,49 @@ acceptance("Personal Message (regular user)", function (needs) {
     });
 
     assert.true(DiscourseURL.redirectTo.calledWith("/"));
+  });
+});
+
+acceptance("Personal Message - invite", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/search/users", () =>
+      helper.response({ users: [{ username: "example" }] })
+    );
+
+    server.post("/t/12/invite", () =>
+      helper.response(422, {
+        errors: ["Some validation error"],
+      })
+    );
+  });
+
+  test("can open invite modal", async function (assert) {
+    await visit("/t/pm-for-testing/12");
+    await click(".add-remove-participant-btn");
+    await click(".private-message-map .controls .add-participant-btn");
+
+    assert
+      .dom(".d-modal.add-pm-participants .invite-user-control")
+      .exists("invite modal is displayed");
+  });
+
+  test("shows errors correctly", async function (assert) {
+    await visit("/t/pm-for-testing/12");
+    await click(".add-remove-participant-btn");
+    await click(".private-message-map .controls .add-participant-btn");
+
+    assert
+      .dom(".d-modal.add-pm-participants .invite-user-control")
+      .exists("invite modal is displayed");
+
+    const input = selectKit(".invite-user-input");
+    await input.expand();
+    await input.fillInFilter("example");
+    await input.selectRowByValue("example");
+
+    await click(".send-invite");
+
+    assert.dom(".d-modal.add-pm-participants .alert-error").exists();
   });
 });

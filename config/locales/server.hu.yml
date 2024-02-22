@@ -19,7 +19,7 @@ hu:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - január
     - február
     - március
@@ -55,6 +55,9 @@ hu:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
+  components:
+    enabled_filter: "Engedélyezed"
+    disabled_filter: "Kikapcsolt"
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
@@ -78,7 +81,7 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_not_a_number: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
+      data_type_inclusion: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -92,6 +95,9 @@ hu:
       string_value_not_valid_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
       string_value_not_valid_min: "Legalább %{min} karakter hosszúnak kell lennie."
       string_value_not_valid_max: "Legfeljebb %{max} karakter hosszúnak kell lennie."
+      objects:
+        required: "megadása kötelező"
+        not_valid_integer_value: "egész számnak kell lennie"
     locale_errors:
       top_level_locale: "A felsőszintű kulcsnak a területibeállítás-fájlban egyeznie kell a területi beállítás nevével"
       invalid_yaml: "A fordítási YAML érvénytelen"
@@ -165,12 +171,12 @@ hu:
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltésekor."
     site_settings:
+      invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       default_tags_already_selected: "Más listában használt címke nem választható ki."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
       enable_s3_uploads_is_required: "Az S3 leltár használatát csak akkor engedélyezheti, ha engedélyezte az S3 feltöltéseket."
-      secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltést."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
       second_factor_cannot_enforce_with_socials: "A közösségi bejelentkezések engedélyezése mellett nem lehet 2FA-t érvényesíteni. Először le kell tiltania ezt a bejelentkezést: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
@@ -178,7 +184,6 @@ hu:
       local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nem engedélyezheti az S3 feltöltést, mivel az S3 feltöltés már globálisan engedélyezve van, és a helyszintű engedélyezés kritikus problémákat okozna a feltöltésekkel kapcsolatban."
       cors_origins_should_not_have_trailing_slash: "A CORS-eredethez nem szabad hozzáadni az utolsóként használt perjelet (/)."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
     onebox:
@@ -225,7 +230,6 @@ hu:
     more_replies:
       one: "és %{count} további válasz"
       other: "és %{count} további válasz"
-    loading: "Beszélgetés betöltése…"
     permalink: "Közvetlen hivatkozás"
     imported_from: "Ez egy kapcsolódó beszélgetési téma, az eredeti bejegyzés itt található: %{link}"
     in_reply_to: "▶ %{username}"
@@ -345,6 +349,7 @@ hu:
 
       Mindenki számára könnyebb elolvasni azokat a témákat, amelyekben kevesebb mélyreható válasz van, mint a sok apró, egyedi válasz.
     dominating_topic: Sokat írt ebben a témában! Fontolja meg, hogy lehetőséget ad másoknak arra, hogy itt válaszoljanak, és megbeszéljék egymással a dolgokat.
+    dont_feed_the_trolls: Ezt a bejegyzést már megjelölték moderátor figyelmébe. Biztos, hogy válaszolni akarsz rá? A negatív tartalomra adott válaszok inkább negatív viselkedésre ösztönöznek.
     too_many_replies: |
       ### Elérted a válaszkorlátot ebben a témában
 
@@ -385,7 +390,8 @@ hu:
               same_as_email: "azonos az e-mail címével. Használjon biztonságosabb jelszót."
               same_as_current: "azonos a jelenlegi jelszavával."
             ip_address:
-              signup_not_allowed: "A regisztráció nem lehetséges ezzel a fiókkal."
+              blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
+              max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
         user_profile:
           attributes:
             featured_topic_id:
@@ -411,21 +417,6 @@ hu:
   meta_category_description: "Beszélgetés erről az oldalról, a szervezéséről, a működéséről és arról, hogyan tudnánk jobbá tenni."
   staff_category_name: "Stáb"
   staff_category_description: "Privát kategória a stáb számára. Ezeket a témákat csak az adminisztrátorok és moderátorok látják."
-  discourse_welcome_topic:
-    body: |2
-
-      A rögzített téma első bekezdése üdvözlő üzenetként fog megjelenni a kezdőlap összes új látogatója előtt. Ez fontos!
-
-      ** Szerkeszd át ezt ** a közösség rövid leírására:
-
-      - Kinek szól?
-      - Mit találhatnak itt?
-      - Miért kellene idejönniük?
-      - Hol tudnak többet olvasni (linkek, források stb.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Érdemes bezárnod ezt a témát az admin :wrench: en keresztül (a jobb felső és az alsó részen), hogy a válaszok ne halmozódjanak fel egy bejelentésre.
   category:
     topic_prefix: "A(z) %{category} kategóriáról"
     replace_paragraph: "(Cseréld le ezt az első bekezdést az új kategória rövid leírására. Ez az útmutató a kategória kiválasztási területén jelenik meg, ezért próbálj 200 karakter alatt maradni.)"
@@ -449,7 +440,6 @@ hu:
   post:
     image_placeholder:
       broken: "Ez a kép hibás"
-    hidden_bidi_character: "A kétirányú karakterek megváltoztathatják a szöveg megjelenítési sorrendjét. Ez felhasználható rosszindulatú kódok elrejtésére is."
     has_likes:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
@@ -565,23 +555,9 @@ hu:
       android: "Android"
       chromeos: "Chrome OS"
   change_email:
-    confirmed: "Az e-mail címe frissítve lett."
-    please_continue: "Tovább a(z) %{site_name} oldalra"
     error: "Hiba történt az e-mail cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail cím nincs társítva a fiókodhoz."
     confirm: "Megerősít"
-    authorizing_new:
-      title: "Erősítse meg az új e-mail címét"
-      description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
-      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
-    authorizing_old:
-      title: "E-mail cím módosítása"
-      description: "Kérjük, erősítsd meg az e-mail címed megváltoztatását"
-      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
-      old_email: "Régi e-mail: %{email}"
-      new_email: "Új e-mail: %{email}"
-      almost_done_title: "Új e-mail cím megerősítése"
-      almost_done_description: "Küldtünk egy e-mailt az új e-mail címedre, hogy megerősítsük a változást!"
   associated_accounts:
     connected: "(kapcsolódva)"
   activation:
@@ -609,6 +585,8 @@ hu:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -637,6 +615,8 @@ hu:
     notify_moderators:
       title: "Valami más"
       email_title: 'A(z) „%{title}” téma moderátori figyelmet igényel'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Letiltott tartalom</p>"
@@ -954,6 +934,7 @@ hu:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
+    v3_analytics_deprecated: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
   site_settings:
     disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
@@ -971,11 +952,8 @@ hu:
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
-    enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
-    review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
-    content_security_policy: "Tartalom-biztonsági házirend engedélyezése"
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
@@ -988,7 +966,6 @@ hu:
     discourse_connect_url: "A DiscourseConnect végpont URL-je (tartalmaznia kell a http:// vagy https:// karaktereket, és nem tartalmazhat a végén perjelet)"
     discord_secret: "Discord titkos kulcs"
     maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
-    rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
@@ -1013,23 +990,23 @@ hu:
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
     suppress_digest_email_after_days: "Letiltja az összefoglaló e-maileket azon felhasználók számára, akik nem láttak a webhelyen (n) napnál hosszabb ideig."
     digest_suppress_categories: "Letiltom ezeket a kategóriákat az összefoglaló e-mailekből."
+    dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
     embed_truncate: "Beágyazott bejegyzések rövidítése."
     embed_post_limit: "A bejegyzések maximális száma a beágyazásban."
     delete_drafts_older_than_n_days: "Törölje az (n) napnál régebbi piszkozatokat."
+    bootstrap_mode_min_users: "A bootstrap üzemmód kikapcsolásához szükséges felhasználók minimális száma (a kikapcsoláshoz 0-ra kell állítani, ez akár 24 órát is igénybe vehet)."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
+    emoji_deny_list: "Ezek a hangulatjelek nem használhatók menükben vagy rövid kódokban."
     auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
     default_email_digest_frequency: "Alapértelmezés szerint a felhasználók milyen gyakran kapnak összefoglaló e-maileket."
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
-    company_name: "Cégnév"
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
-    navigation_menu: "Határozza meg, melyik navigációs menüt használja. Az oldalsáv és a fejléc navigációja a felhasználók által testreszabható. A visszamenőleges kompatibilitás érdekében a régebbi opció is elérhető."
-    enable_new_notifications_menu: "Engedélyezi az új értesítési menü használatát a régi navigációs menüben."
-    enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
-    experimental_new_new_view_groups: "Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő \"Minden\" linket kapcsolja rá."
+    experimental_new_new_view_groups: 'Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő "Minden" linket kapcsolja rá.'
     enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
+    experimental_form_templates: "KÍSÉRLETI: Az űrlapsablonok szolgáltatás engedélyezése. <b>Az engedélyezés után</b> a sablonokat a <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a> menüpont alatt kezelheti."
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -1051,7 +1028,6 @@ hu:
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "A beállítás engedélyezése előtt a `navigation_menu`-t `legacy` értékre kell állítani."
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
   search:
     within_post: "#%{post_number}, szerző: %{username}"
@@ -1119,12 +1095,6 @@ hu:
   admin:
     email:
       sent_test: "elküldve."
-    user:
-      merge_user:
-        updating_username: "Felhasználónév frissítése..."
-        updating_site_settings: "A webhely beállításainak frissítése..."
-        updating_user_stats: "Felhasználói statisztikák frissítése..."
-        updating_user_ids: "Felhasználói azonosítók frissítése..."
   user:
     deactivated: "Deaktiváltuk a túl sok innen visszapattanó e-mail miatt: '%{email}'."
     username:
@@ -1141,9 +1111,6 @@ hu:
     email:
       invalid: "érvénytelen."
       blocked: "nem engedélyezett."
-    ip_address:
-      blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
-      max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
   unsubscribe_mailer:
     subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
     text_body_template: |
@@ -1445,14 +1412,6 @@ hu:
     download_remote_images_disabled:
       subject_template: "A távoli képek letöltése le lett tiltva"
       text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mert az erre szánt `download_remote_image_threshold` tárhelykorlát elérésre került."
-    dashboard_problems:
-      subject_template: "Új tanácsok a webhely irányítópultján"
-      text_body_template: |
-        Van néhány új tanácsunk és javaslatunk a jelenlegi webhelybeállításaid alapján.
-
-        [Látogasd meg a webhely irányítópultját] (%{base_url}/ admin) ezek megtekintéséhez.
-
-        Ha semmi nem látható az irányítópulton, lehet, hogy egy másik munkatársunk már eljárt aktivizálta magát. A személyzeti műveletek listája megtalálható a [Staff Action Logs] (%{base_url}/ admin / logs / staff_action_logs) könyvtárban.
     new_user_of_the_month:
       text_body_template: |
         Elnyerted ** A hónap új felhasználója %{month_year}** díjat. :trophy:
@@ -2209,6 +2168,8 @@ hu:
   onebox:
     discourse:
       user_joined_community: "Csatlakozott %{date}"
+    github:
+      closed: "zárt"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
@@ -2249,8 +2210,6 @@ hu:
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
       delete_single:
         title: "Törlés"
-      delete:
-        title: "Törlés…"
       delete_and_ignore_replies:
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
       delete_and_agree_replies:
@@ -2268,7 +2227,6 @@ hu:
       approve_post:
         title: "Bejegyzés jóváhagyása"
       reject_user:
-        title: "Felhasználó törlése..."
         delete:
           title: "Felhasználó törlése"
       reject:

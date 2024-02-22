@@ -1,14 +1,18 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { tracked } from "@glimmer/tracking";
-import userSearch from "discourse/lib/user-search";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { action, computed } from "@ember/object";
+import { and } from "@ember/object/computed";
+import { cancel, next } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { cancel, next } from "@ember/runloop";
-import { and } from "@ember/object/computed";
-import { computed } from "@ember/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  onPresenceChange,
+  removeOnPresenceChange,
+} from "discourse/lib/user-presence";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseLater from "discourse-common/lib/later";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import { bind } from "discourse-common/utils/decorators";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -16,15 +20,19 @@ const CHAT_ONLINE_OPTIONS = {
 };
 
 export default class Chat extends Service {
+  @service chatApi;
   @service appEvents;
+  @service currentUser;
   @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
+  @service chatDraftsManager;
   @service presence;
   @service router;
   @service site;
   @service chatChannelsManager;
-  @tracked activeChannel = null;
+  @service chatTrackingStateManager;
+
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -32,20 +40,58 @@ export default class Chat extends Service {
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
 
+  @tracked _activeMessage = null;
+  @tracked _activeChannel = null;
+
+  get activeChannel() {
+    return this._activeChannel;
+  }
+
+  set activeChannel(channel) {
+    if (!channel) {
+      this._activeMessage = null;
+    }
+
+    if (this._activeChannel) {
+      this._activeChannel.activeThread = null;
+    }
+
+    this._activeChannel = channel;
+  }
+
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
     if (!this.currentUser) {
       return false;
     }
 
-    return (
-      this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        (this.siteSettings.direct_message_enabled_groups || "11") // trust level 1 auto group
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
+    return this.currentUser.staff || this.currentUser.can_direct_message;
+  }
+
+  @computed("chatChannelsManager.directMessageChannels")
+  get userHasDirectMessages() {
+    return this.chatChannelsManager.directMessageChannels?.length > 0;
+  }
+
+  get userCanAccessDirectMessages() {
+    return this.userCanDirectMessage || this.userHasDirectMessages;
+  }
+
+  @computed("activeChannel.userSilenced")
+  get userCanInteractWithChat() {
+    return !this.activeChannel?.userSilenced;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    if (hash) {
+      this._activeMessage = hash;
+    } else {
+      this._activeMessage = null;
+    }
   }
 
   init() {
@@ -53,6 +99,59 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  @bind
+  onPresenceChangeCallback(present) {
+    if (present) {
+      // NOTE: channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
+      this.chatApi.listCurrentUserChannels().then((channelsView) => {
+        this.chatSubscriptionsManager.stopChannelsSubscriptions();
+        this.chatSubscriptionsManager.startChannelsSubscriptions(
+          channelsView.meta.message_bus_last_ids
+        );
+
+        [
+          ...channelsView.public_channels,
+          ...channelsView.direct_message_channels,
+        ].forEach((channelObject) => {
+          this.chatChannelsManager
+            .find(channelObject.id, { fetchIfNotFound: false })
+            .then((channel) => {
+              if (!channel) {
+                return;
+              }
+              // TODO (martin) We need to do something here for thread tracking
+              // state as well on presence change, otherwise we will be back in
+              // the same place as the channels were.
+              //
+              // At some point it would likely be better to just fetch an
+              // endpoint that gives you all channel tracking state and the
+              // thread tracking state for the current channel.
+
+              // ensures we have the latest message bus ids
+              channel.meta.message_bus_last_ids =
+                channelObject.meta.message_bus_last_ids;
+
+              const state = channelsView.tracking.channel_tracking[channel.id];
+              channel.tracking.unreadCount = state.unread_count;
+              channel.tracking.mentionCount = state.mention_count;
+
+              channel.currentUserMembership =
+                channelObject.current_user_membership;
+
+              this.chatSubscriptionsManager.startChannelSubscription(channel);
+            });
+        });
+      });
     }
   }
 
@@ -76,27 +175,45 @@ export default class Chat extends Service {
     this.set("isNetworkUnreliable", false);
   }
 
-  setupWithPreloadedChannels(channels) {
+  setupWithPreloadedChannels(channelsView) {
     this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channels.meta.message_bus_last_ids
+      channelsView.meta.message_bus_last_ids
     );
-    this.presenceChannel.subscribe(channels.global_presence_channel_state);
+    this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
 
-    [...channels.public_channels, ...channels.direct_message_channels].forEach(
-      (channelObject) => {
-        const channel = this.chatChannelsManager.store(channelObject);
+    [
+      ...channelsView.public_channels,
+      ...channelsView.direct_message_channels,
+    ].forEach((channelObject) => {
+      const storedChannel = this.chatChannelsManager.store(channelObject);
+      const storedDrafts = (this.currentUser?.chat_drafts || []).filter(
+        (draft) => draft.channel_id === storedChannel.id
+      );
 
-        if (this.currentUser.chat_drafts) {
-          const storedDraft = this.currentUser.chat_drafts.find(
-            (draft) => draft.channel_id === channel.id
-          );
-          channel.draft = ChatMessageDraft.create(
-            storedDraft ? JSON.parse(storedDraft.data) : null
-          );
-        }
+      storedDrafts.forEach((storedDraft) => {
+        this.chatDraftsManager.add(
+          ChatMessage.createDraftMessage(
+            storedChannel,
+            Object.assign(
+              { user: this.currentUser },
+              JSON.parse(storedDraft.data)
+            )
+          ),
+          storedDraft.channel_id,
+          storedDraft.thread_id
+        );
+      });
 
-        return this.chatChannelsManager.follow(channel);
+      if (channelsView.unread_thread_overview?.[storedChannel.id]) {
+        storedChannel.threadsManager.unreadThreadOverview =
+          channelsView.unread_thread_overview[storedChannel.id];
       }
+
+      return this.chatChannelsManager.follow(storedChannel);
+    });
+
+    this.chatTrackingStateManager.setupWithPreloadedState(
+      channelsView.tracking
     );
   }
 
@@ -105,12 +222,17 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
     }
   }
 
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
+
+      if (this.currentUser.user_option?.hide_profile_and_presence) {
         return;
       }
 
@@ -124,7 +246,7 @@ export default class Chat extends Service {
 
   getDocumentTitleCount() {
     return this.chatNotificationManager.shouldCountChatInDocTitle()
-      ? this.chatChannelsManager.unreadUrgentCount
+      ? this.chatTrackingStateManager.allChannelUrgentCount
       : 0;
   }
 
@@ -172,11 +294,6 @@ export default class Chat extends Service {
     }
   }
 
-  searchPossibleDirectMessageUsers(options) {
-    // TODO: implement a chat specific user search function
-    return userSearch(options);
-  }
-
   getIdealFirstChannelId() {
     // When user opens chat we need to give them the 'best' channel when they enter.
     //
@@ -198,8 +315,12 @@ export default class Chat extends Service {
     this.chatChannelsManager.channels.forEach((channel) => {
       const membership = channel.currentUserMembership;
 
+      if (!membership.following) {
+        return;
+      }
+
       if (channel.isDirectMessageChannel) {
-        if (!dmChannelWithUnread && membership.unread_count > 0) {
+        if (!dmChannelWithUnread && channel.tracking.unreadCount > 0) {
           dmChannelWithUnread = channel.id;
         } else if (!dmChannel) {
           dmChannel = channel.id;
@@ -208,7 +329,10 @@ export default class Chat extends Service {
         if (membership.unread_mentions > 0) {
           publicChannelWithMention = channel.id;
           return; // <- We have a public channel with a mention. Break and return this.
-        } else if (!publicChannelWithUnread && membership.unread_count > 0) {
+        } else if (
+          !publicChannelWithUnread &&
+          channel.tracking.unreadCount > 0
+        ) {
           publicChannelWithUnread = channel.id;
         } else if (
           !defaultChannel &&
@@ -260,16 +384,22 @@ export default class Chat extends Service {
       .concat(user.username)
       .uniq();
 
-    return this.upsertDmChannelForUsernames(usernames);
+    return this.upsertDmChannel({ usernames });
   }
 
-  // @param {array} usernames - The usernames to create or fetch the direct message
-  // channel for. The current user will automatically be included in the channel
-  // when it is created.
-  upsertDmChannelForUsernames(usernames) {
-    return ajax("/chat/direct_messages/create.json", {
+  // @param {object} targets - The targets to create or fetch the direct message
+  // channel for. The current user will automatically be included in the channel when it is created.
+  // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
+  // @param {array} [targets.groups] - The groups to include in the direct message channel.
+  // @param {string|null} [name=null] - Optional name for the direct message channel.
+  upsertDmChannel(targets, name = null) {
+    return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { usernames: usernames.uniq() },
+      data: {
+        target_usernames: targets.usernames?.uniq(),
+        target_groups: targets.groups?.uniq(),
+        name,
+      },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);
@@ -291,6 +421,15 @@ export default class Chat extends Service {
   addToolbarButton() {
     deprecated(
       "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`"
+    );
+  }
+
+  @action
+  toggleDrawer() {
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
     );
   }
 }

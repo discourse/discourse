@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::StaffActionLogsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#index" do
     shared_examples "staff action logs accessible" do
@@ -26,6 +26,12 @@ RSpec.describe Admin::StaffActionLogsController do
           "id" => "delete_topic",
           "action_id" => UserHistory.actions[:delete_topic],
         )
+      end
+
+      describe "when limit params is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/logs/staff_action_logs.json",
+                         described_class::INDEX_LIMIT
       end
     end
 
@@ -105,7 +111,8 @@ RSpec.describe Admin::StaffActionLogsController do
         theme.set_field(target: :mobile, name: :scss, value: "body {.up}")
         theme.set_field(target: :common, name: :scss, value: "omit-dupe")
 
-        original_json = ThemeSerializer.new(theme, root: false).to_json
+        original_json =
+          ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
 
         theme.set_field(target: :mobile, name: :scss, value: "body {.down}")
 

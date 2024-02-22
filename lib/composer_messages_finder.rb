@@ -90,7 +90,7 @@ class ComposerMessagesFinder
     # - "allow uploaded avatars" is disabled
     if SiteSetting.disable_avatar_education_message ||
          SiteSetting.discourse_connect_overrides_avatar ||
-         !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, @user)
+         !@user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
       return
     end
 
@@ -226,6 +226,33 @@ class ComposerMessagesFinder
     }
   end
 
+  def check_dont_feed_the_trolls
+    return if !replying?
+
+    post =
+      if @details[:post_id]
+        Post.find_by(id: @details[:post_id])
+      else
+        @topic&.first_post
+      end
+
+    return if post.blank?
+
+    flags = post.flags.active.group(:user_id).count
+    flagged_by_replier = flags[@user.id].to_i > 0
+    flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
+
+    return if !flagged_by_replier && !flagged_by_others
+
+    {
+      id: "dont_feed_the_trolls",
+      templateName: "education",
+      wait_for_typing: false,
+      extraClass: "urgent",
+      body: PrettyText.cook(I18n.t("education.dont_feed_the_trolls")),
+    }
+  end
+
   def check_reviving_old_topic
     return unless replying?
     if @topic.nil? || SiteSetting.warn_reviving_old_topic_age < 1 || @topic.last_posted_at.nil? ||
@@ -243,7 +270,7 @@ class ComposerMessagesFinder
           I18n.t(
             "education.reviving_old_topic",
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 @topic.last_posted_at,
                 false,
                 scope: :"datetime.distance_in_words_verbose",

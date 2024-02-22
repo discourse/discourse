@@ -19,7 +19,7 @@ vi:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Tháng Một
     - Tháng Hai
     - Tháng Ba
@@ -55,6 +55,8 @@ vi:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} bởi %{username}"
+  components:
+    disabled_filter: "Vô hiệu hóa"
   themes:
     bad_color_scheme: "Không thể cập nhật chủ đề, bảng màu không hợp lệ"
     other_error: "Đã xảy ra lỗi khi cập nhật chủ đề"
@@ -79,7 +81,7 @@ vi:
       optimized_link: Các liên kết hình ảnh được tối ưu hóa là không lâu và không nên được bao gồm trong mã nguồn theme.
     settings_errors:
       invalid_yaml: "YAML được cung cấp không hợp lệ."
-      data_type_not_a_number: "Thiết lập kiểu `%{name}` không được hỗ trợ. Các kiểu được hỗ trợ là `integer`, `bool`, `list`, `enum` và `upload`"
+      data_type_inclusion: "Thiết lập kiểu `%{name}` không được hỗ trợ. Các kiểu được hỗ trợ là `integer`, `bool`, `list`, `enum` và `upload`"
       name_too_long: "Có một cài đặt có tên quá dài. Chiều dài tối đa là 255"
       default_value_missing: "Cài đặt `%{name}'không có giá trị mặc định"
       default_not_match_type: "Đặt kiểu giá trị mặc định `%{name}` không khớp với kiểu cài đặt."
@@ -93,6 +95,9 @@ vi:
       string_value_not_valid_min_max: "Nó phải dài từ %{min} đến %{max} ký tự."
       string_value_not_valid_min: "Nó phải dài ít nhất %{min} ký tự."
       string_value_not_valid_max: "Nó phải dài tối đa %{max} ký tự."
+      objects:
+        required: "phải hiện hành"
+        not_valid_integer_value: "phải là một số nguyên"
     locale_errors:
       top_level_locale: "Khóa cấp cao nhất trong tệp ngôn ngữ phải khớp với tên ngôn ngữ"
       invalid_yaml: "Bản dịch YAML không hợp lệ"
@@ -175,20 +180,16 @@ vi:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
-      invalid_choice:
-        other: "Bạn đã chỉ định các lựa chọn không hợp lệ %{name}"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Bạn không thể cho phép sử dụng kho lưu trữ S3 trừ khi bạn đã bật tính năng tải lên S3."
-      page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
       s3_backup_requires_s3_settings: "Bạn không thể sử dụng S3 làm vị trí sao lưu trừ khi bạn đã cung cấp '%{setting_name}'."
       share_quote_facebook_requirements: "Bạn phải đặt id ứng dụng Facebook để bật tính năng chia sẻ báo giá cho Facebook."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Bạn không thể thực thi 2FA nếu DiscourseConnect được bật."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Bạn không thể tắt đăng nhập cục bộ nếu 2FA được thực thi. Tắt 2FA được thực thi trước khi tắt đăng nhập cục bộ."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Bạn không thể bật tải lên S3 vì tải lên S3 đã được bật trên toàn cầu và việc bật cấp trang web này có thể gây ra các vấn đề nghiêm trọng với tải lên"
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Tác nhân người dùng phải dài ít nhất 3 ký tự để tránh xếp hạng không chính xác giới hạn người dùng."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
       twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
@@ -269,7 +270,6 @@ vi:
     configure: "Định cấu hình nhúng"
     more_replies:
       other: "còn %{count} câu trả lời"
-    loading: "Đang tải cuộc thảo luận"
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
@@ -286,7 +286,7 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
-  no_embedded_media_allowed_trust: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
+  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
   no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào bài viết."
   too_many_embedded_media:
     other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
@@ -457,7 +457,8 @@ vi:
             name:
               same_as_password: "là giống như mật khẩu hiện tại của bạn."
             ip_address:
-              signup_not_allowed: "Đăng ký không cho phép tài khoản này"
+              blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
+              max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
         user_profile:
           attributes:
             featured_topic_id:
@@ -492,22 +493,6 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
-  discourse_welcome_topic:
-    body: |2
-
-      Đoạn đầu tiên của chủ đề được ghim này sẽ hiển thị như một thông điệp chào mừng cho tất cả những khách truy cập mới trên trang chủ của bạn. Nó quan trọng!
-
-      ** Chỉnh sửa ** này thành mô tả ngắn gọn về cộng đồng của bạn:
-
-      - Nó dành cho ai?
-      - Họ có thể tìm thấy gì ở đây?
-      - Tại sao họ phải đến đây?
-      - Họ có thể đọc thêm ở đâu (liên kết, tài nguyên, v.v.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Bạn có thể muốn đóng chủ đề này thông qua quản trị viên :wrench: (ở phía trên bên phải và phía dưới), để các câu trả lời không bị dồn vào một thông báo.
-  admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về danh mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
@@ -608,11 +593,10 @@ vi:
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
   change_email:
-    confirmed: "Email của bạn đã được cập nhật."
-    please_continue: "Tiếp tục đến %{site_name}"
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
+    confirm: "Xác nhận"
   activation:
     action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
     already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
@@ -635,6 +619,9 @@ vi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Gửi tin nhắn cho @%{username}."
       email_title: 'Bài đăng của bạn trong "%{title}"'
@@ -677,6 +664,9 @@ vi:
       long_form: "đã đánh dấu cho điều hành viên xem xét"
       short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>"
@@ -1008,9 +998,6 @@ vi:
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
     set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ của trình duyệt web của họ"
-    min_post_length: "Số kí tự tối thiểu trong bài đăng."
-    min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
-    min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
     max_post_length: "Số kí tự tối đa trong bài đăng."
     min_topic_views_for_delete_confirm: "Số lượt xem tối thiểu mà một chủ đề phải có để cửa sổ bật lên xác nhận xuất hiện khi chủ đề bị xóa"
     min_topic_title_length: "Số kí tự tối thiểu trong tiêu đề chủ đề."
@@ -1040,7 +1027,6 @@ vi:
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
-    enforce_second_factor: "Buộc người dùng kích hoạt xác thực hai yếu tố. Chọn 'tất cả' để thực thi nó cho tất cả người dùng. Chọn 'nhân viên' để chỉ áp dụng cho người dùng là nhân viên."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
@@ -1068,11 +1054,10 @@ vi:
     moderators_change_post_ownership: "Cho phép người kiểm duyệt thay đổi quyền sở hữu bài đăng"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
-    content_security_policy: "Kích hoạt chính sách bảo mật nội dung"
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
-    top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
+    post_menu: "Xác định các mục nào hiển thị trong bảng chọn bài đăng, và theo thứ tự nào."
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
@@ -1085,7 +1070,6 @@ vi:
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."
     topics_per_period_in_top_page: "Số lượng chủ đề top hiển thị khi click 'Xem thêm'."
     redirect_users_to_top_page: "Tự động chuyển thành viên mới và vắng mặt lâu ngày lên trên cùng trang."
-    top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
     enable_rich_text_paste: "Bật chuyển đổi HTML sang Markdown tự động khi dán văn bản vào trình soạn thảo. (Thực nghiệm)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
@@ -1144,7 +1128,6 @@ vi:
     top_topics_formula_least_likes_per_post_multiplier: "giá trị số lượt like tối thiểu của mỗi bài viết nhân với (n) trong công thức chủ đề top: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Sau khi tạo một chủ đề, người dùng phải chờ (n) giây trước khi tạo một chủ đề khác."
     rate_limit_create_post: "Sau khi đăn bài, người dùng phải chờ (n) giây trước khi đăng bài khác."
-    rate_limit_new_user_create_topic: "Sau khi tạo một chủ đề, người dùng mới phải chờ (n) giây trước khi tạo chủ đề khác."
     rate_limit_new_user_create_post: "Sau khi đăng bài, người dùng mới phải chờ (n) giây trước khi đăng bài khác."
     max_likes_per_day: "Số tối đa người dùng có thể like mỗi ngày."
     max_flags_per_day: "Số tối đa mà người dùng có thể gắn cờ mỗi ngày."
@@ -1215,15 +1198,11 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
-    max_consecutive_replies: "Số lượng bài đăng mà người dùng phải thực hiện liên tiếp trong một chủ đề trước khi bị ngăn không cho thêm câu trả lời khác."
     enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các bài đăng khác và chỉ hiển thị bài đăng hiện tại và các câu trả lời của nó.'
     title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
-    category_style: "Style trực quan cho phù hiệu danh mục."
     dark_mode_none: "Không có gì"
-    max_attachment_size_kb: "Kích thước file tải lên tối đa tính theo kB. đã cấu hình trong nginx (client_max_body_size) / apache hoặc proxy."
-    authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
     automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
@@ -1323,19 +1302,14 @@ vi:
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
     warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
-    autohighlight_all_code: "Highlight code bắt buộc đối với các đoạn mã thực thi ngay cả khi họ không chỉ định ngôn ngữ rõ ràng."
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
-    notify_about_flags_after: "Nếu có cờ chưa được xử lý sau nhiều giờ này, hãy gửi tin nhắn cá nhân cho người điều hành. Đặt thành 0 để tắt."
-    show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
-    bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
-    approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
@@ -1366,7 +1340,6 @@ vi:
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
     enable_user_status: "(thử nghiệm) Cho phép người dùng đặt thông báo trạng thái tùy chỉnh (biểu tượng cảm xúc + mô tả)."
-    enable_user_tips: "(thử nghiệm) Bật mẹo người dùng mới mô tả các tính năng chính cho người dùng"
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
@@ -1391,9 +1364,7 @@ vi:
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
-      email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      personal_message_enabled_groups_invalid: "Bạn phải chỉ định ít nhất một nhóm cho cài đặt này. Nếu bạn không muốn bất kỳ ai ngoại trừ nhân viên gửi PM, hãy chọn nhóm nhân viên."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
   search:
@@ -1526,9 +1497,6 @@ vi:
       blocked: "không được chấp nhận."
       revoked: "Sẽ không gửi email đến '%{email}' cho đến %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
-      max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
     website:
       domain_not_allowed: "Trang web không hợp lệ. Các miền được phép là: %{domains}"
     auto_rejected: "Bị từ chối tự động do tuổi tác. Xem cài đặt trang auto_handle_queued_age."
@@ -1763,14 +1731,6 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
-    dashboard_problems:
-      subject_template: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
-      text_body_template: |
-        Chúng tôi có một số lời khuyên & đề xuất mới cho bạn dựa trên cài đặt trang web hiện tại của bạn.
-
-        [Truy cập bảng điều khiển trang web của bạn](%{base_url}/admin) để xem nó.
-
-        Nếu không có gì hiển thị trên bảng điều khiển của bạn, một nhân viên khác có thể đã thực hiện theo lời khuyên này. Bạn có thể tìm thấy danh sách các hành động của nhân viên trong [Nhật ký hành động của nhân viên](%{base_url}/admin/logs/staff_action_logs) của bạn.
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"
@@ -2199,6 +2159,9 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
@@ -2212,6 +2175,7 @@ vi:
       confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
       custom: "Thông báo từ %{username} trên %{site_title}"
   staff_action_logs:
+    unknown: "không biết"
     user_merged: "%{username} đã được hợp nhất vào tài khoản này"
     webhook_deactivation_reason: "Webhook của bạn đã tự động bị vô hiệu hóa. Chúng tôi đã nhận được nhiều phản hồi lỗi trạng thái HTTP '%{status}'."
     api_key:
@@ -2254,7 +2218,6 @@ vi:
       approve_user:
         title: "Phê duyệt người dùng"
       reject_user:
-        title: "Xóa người dùng..."
         delete:
           title: "Xóa tài khoản"
         block:

@@ -1,23 +1,22 @@
-import { module, test } from "qunit";
-import hbs from "htmlbars-inline-precompile";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import fabricators from "../../helpers/fabricators";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Unit | Helpers | format-chat-date", function (hooks) {
   setupRenderingTest(hooks);
 
   test("link to chat message", async function (assert) {
-    const channel = fabricators.chatChannel();
-    this.message = ChatMessage.create(channel, {
-      id: 1,
-      chat_channel_id: channel.id,
-    });
+    const channel = fabricators.channel();
+    this.message = fabricators.message({ channel });
 
     await render(hbs`{{format-chat-date this.message}}`);
 
-    assert.equal(query(".chat-time").getAttribute("href"), "/chat/c/-/1/1");
+    assert.equal(
+      query(".chat-time").getAttribute("href"),
+      `/chat/c/-/${channel.id}/${this.message.id}`
+    );
   });
 });

@@ -1,4 +1,8 @@
-<PluginOutlet @name="above-latest-topic-list-item" @connectorTagName="div" />
+<PluginOutlet
+  @name="above-latest-topic-list-item"
+  @connectorTagName="div"
+  @outletArgs={{hash topic=this.topic}}
+/>
 <div class="topic-poster">
   <UserLink @user={{this.topic.lastPosterUser}}>
     {{avatar this.topic.lastPosterUser imageSize="large"}}
@@ -10,9 +14,9 @@
     {{raw "topic-status" topic=this.topic}}
     {{topic-link this.topic}}
     {{~#if this.topic.featured_link}}
-      {{topic-featured-link this.topic}}
-    {{/if}}
-    <TopicPostBadges
+      &nbsp;{{topic-featured-link this.topic}}
+    {{/if}}{{! intentionally inline 
+    to avoid whitespace}}<TopicPostBadges
       @unreadPosts={{this.topic.unread_posts}}
       @unseen={{this.topic.unseen}}
       @url={{this.topic.lastUnreadUrl}}
@@ -26,6 +30,11 @@
   </div>
 </div>
 <div class="topic-stats">
+  <PluginOutlet
+    @name="above-latest-topic-list-item-post-count"
+    @connectorTagName="div"
+    @outletArgs={{hash topic=this.topic}}
+  />
   {{raw "list/posts-count-column" topic=this.topic tagName="div"}}
   <div class="topic-last-activity">
     <a

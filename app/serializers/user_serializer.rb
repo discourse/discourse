@@ -59,12 +59,12 @@ class UserSerializer < UserCardSerializer
                      :can_change_website,
                      :can_change_tracking_preferences,
                      :user_api_keys,
+                     :user_passkeys,
                      :user_auth_tokens,
                      :user_notification_schedule,
                      :use_logo_small_as_avatar,
                      :sidebar_tags,
                      :sidebar_category_ids,
-                     :sidebar_list_destination,
                      :display_sidebar_tags
 
   untrusted_attributes :bio_raw, :bio_cooked, :profile_background_upload_url
@@ -163,6 +163,19 @@ class UserSerializer < UserCardSerializer
       each_serializer: UserAuthTokenSerializer,
       scope: scope,
     )
+  end
+
+  def user_passkeys
+    UserSecurityKey
+      .where(user_id: object.id, factor_type: UserSecurityKey.factor_types[:first_factor])
+      .order("created_at ASC")
+      .map do |usk|
+        { id: usk.id, name: usk.name, last_used: usk.last_used, created_at: usk.created_at }
+      end
+  end
+
+  def include_user_passkeys?
+    SiteSetting.enable_passkeys?
   end
 
   def bio_raw

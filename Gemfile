@@ -6,28 +6,14 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-def rails_master?
-  ENV["RAILS_MASTER"] == "1"
-end
-
-if rails_master?
-  gem "arel", git: "https://github.com/rails/arel.git"
-  gem "rails", git: "https://github.com/rails/rails.git"
-else
-  # NOTE: Until rubygems gives us optional dependencies we are stuck with this needing to be explicit
-  # this allows us to include the bits of rails we use without pieces we do not.
-  #
-  # To issue a rails update bump the version number here
-  rails_version = "7.0.4.3"
-  gem "actionmailer", rails_version
-  gem "actionpack", rails_version
-  gem "actionview", rails_version
-  gem "activemodel", rails_version
-  gem "activerecord", rails_version
-  gem "activesupport", rails_version
-  gem "railties", rails_version
-  gem "sprockets-rails"
-end
+gem "actionmailer", "< 7.1"
+gem "actionpack", "< 7.1"
+gem "actionview", "< 7.1"
+gem "activemodel", "< 7.1"
+gem "activerecord", "< 7.1"
+gem "activesupport", "< 7.1"
+gem "railties", "< 7.1"
+gem "sprockets-rails"
 
 gem "json"
 
@@ -96,8 +82,7 @@ gem "omniauth-oauth2", require: false
 
 gem "omniauth-google-oauth2"
 
-# pending: https://github.com/ohler55/oj/issues/789
-gem "oj", "3.13.14"
+gem "oj"
 
 gem "pg"
 gem "mini_sql"
@@ -142,9 +127,11 @@ group :test do
   gem "fakeweb", require: false
   gem "minitest", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", require: false
+  gem "selenium-webdriver", "~> 4.14", require: false
+  gem "selenium-devtools", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
+  gem "rails-dom-testing", require: false
+  gem "minio_runner", require: false
 end
 
 group :test, :development do
@@ -209,7 +196,9 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+
 gem "rbtrace", require: false, platform: :mri
+
 gem "gc_tracer", require: false, platform: :mri
 
 # required for feed importing and embedding
@@ -228,9 +217,8 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# These are forks of sassc and sassc-rails with dart-sass support
-gem "dartsass-ruby"
-gem "dartsass-sprockets"
+# A fork of sassc with dart-sass support
+gem "sassc-embedded"
 
 gem "rotp", require: false
 
@@ -259,6 +247,11 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
+group :generic_import, optional: true do
+  gem "sqlite3"
+  gem "redcarpet"
+end
+
 gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
@@ -271,9 +264,6 @@ gem "faraday-retry"
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
 gem "net-http"
-
-# workaround for prometheus-client
-gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false

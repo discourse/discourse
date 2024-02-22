@@ -26,12 +26,14 @@
     .date-picker-wrapper {
       margin-right: 5px;
     }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
-  .poll-checkbox {
-    label {
-      width: unset;
-    }
+  .poll-public .d-toggle-switch--label {
+    margin-bottom: 0;
   }
 
   .radio-group {
@@ -67,13 +69,13 @@
     margin-bottom: 15px;
 
     .poll-option-value {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       justify-content: space-between;
-      margin-bottom: 3px;
+      margin-bottom: 0;
 
       button {
-        margin-left: 3px;
+        margin-left: 0.5rem;
       }
     }
 

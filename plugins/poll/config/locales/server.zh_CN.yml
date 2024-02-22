@@ -10,12 +10,16 @@ zh_CN:
     poll_maximum_options: "投票允许的最大选项数。"
     poll_edit_window_mins: "创建帖子后可以编辑投票的分钟数。"
     poll_minimum_trust_level_to_create: "定义创建投票所需的最低信任级别。"
+    poll_create_allowed_groups: "允许创建投票的群组。"
     poll_groupable_user_fields: "一组可用于对投票结果进行分组和筛选的用户字段名称。"
     poll_export_data_explorer_query_id: "用于导出投票结果的数据资源管理器查询的 ID（0 将禁用）。"
+    poll_default_public: "创建新投票时，默认启用“显示投票人”选项。"
+  keywords:
+    poll_create_allowed_groups: "允许创建群组的最低信任等级"
   poll:
     poll: "投票"
     invalid_argument: "参数 '%{argument}' 的值 '%{value}' 无效。"
-    multiple_polls_without_name: "有多个没有名称的投票。使用 '<code>name</code>' 特性对您的投票进行唯一标识。"
+    multiple_polls_without_name: "创建多个投票时，通过将 <code>name=example</code> 添加到 <code>[poll]</code> 标签来包含唯一名称。"
     multiple_polls_with_same_name: "有多个投票的名称相同：<strong>%{name}</strong>。使用 '<code>name</code>' 特性对您的投票进行唯一标识。"
     default_poll_must_have_at_least_1_option: "投票必须至少有 1 个选项。"
     named_poll_must_have_at_least_1_option: "名为“<strong>%{name}</strong>”的投票必须至少有 1 个选项。"

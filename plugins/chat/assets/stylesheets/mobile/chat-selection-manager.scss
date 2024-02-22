@@ -1,8 +1,9 @@
 .chat-selection-management {
-  .chat-selection-management-buttons {
+  &__buttons {
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
 
     .cancel-btn {
       margin-left: initial;
@@ -10,6 +11,10 @@
 
     .btn {
       margin-bottom: 0.25em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }

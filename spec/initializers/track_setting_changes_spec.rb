@@ -43,4 +43,56 @@ RSpec.describe "Setting changes" do
       expect(Reviewable.min_score_for_priority(:low)).not_to eq(new_threshold)
     end
   end
+
+  describe "#title and #site_description" do
+    before do
+      general_category = Fabricate(:category, name: "General")
+      SiteSetting.general_category_id = general_category.id
+      SeedData::Topics.with_default_locale.create(site_setting_names: ["welcome_topic_id"])
+    end
+
+    it "updates the welcome topic when title changes" do
+      SiteSetting.title = SecureRandom.alphanumeric
+
+      topic = Topic.find(SiteSetting.welcome_topic_id)
+      expect(topic.title).to include(SiteSetting.title)
+    end
+
+    it "updates the welcome topic when site_description changes" do
+      SiteSetting.title = SecureRandom.alphanumeric
+      SiteSetting.site_description = SecureRandom.alphanumeric
+
+      topic = Topic.find(SiteSetting.welcome_topic_id)
+      expect(topic.title).to include(SiteSetting.title)
+      expect(topic.first_post.raw).to include(SiteSetting.title)
+      expect(topic.first_post.raw).to include(SiteSetting.site_description)
+    end
+  end
+
+  describe "#company_name" do
+    it "creates the TOS and Privacy topics" do
+      expect { SiteSetting.company_name = "Company Name" }.to change { Topic.count }.by(
+        2,
+      ).and change { SiteSetting.tos_topic_id }.and change { SiteSetting.privacy_topic_id }
+    end
+
+    it "creates, updates and deletes the topic" do
+      # Topic is created
+      expect { SiteSetting.company_name = "Company Name" }.to change { Topic.count }.by(2)
+      topic = Topic.find(SiteSetting.tos_topic_id)
+      first_post = topic.first_post
+      expect(first_post.raw).to include("Company Name")
+
+      # Topic is edited
+      expect { SiteSetting.company_name = "Other Name" }.not_to change { Topic.count }
+      expect(first_post.reload.raw).to include("Other Name")
+
+      # Topic can be deleted
+      expect { SiteSetting.company_name = "" }.to change { Topic.count }.by(-2)
+
+      # Topic can be recovered and edited
+      SiteSetting.company_name = "New Name"
+      expect(first_post.reload.raw).to include("New Name")
+    end
+  end
 end

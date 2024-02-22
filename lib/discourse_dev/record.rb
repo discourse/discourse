@@ -37,7 +37,7 @@ module DiscourseDev
         raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
       end
 
-      unless ignore_current_count
+      unless ignore_current_count || @ignore_current_count
         if current_count >= @count
           puts "Already have #{current_count} #{type} records"
 
@@ -68,16 +68,18 @@ module DiscourseDev
       model.count
     end
 
-    def self.populate!(*args)
-      self.new(*args).populate!
+    def self.populate!(**args)
+      self.new(**args).populate!
     end
 
     def self.random(model, use_existing_records: true)
       if !use_existing_records && model.new.respond_to?(:custom_fields)
-        model.joins(:_custom_fields).where("#{:type}_custom_fields.name = '#{AUTO_POPULATED}'")
+        model.joins(:_custom_fields).where(
+          "#{model.to_s.underscore}_custom_fields.name = '#{AUTO_POPULATED}'",
+        )
       end
       count = model.count
-      raise "#{:type} records are not yet populated" if count == 0
+      raise "#{model} records are not yet populated" if count == 0
 
       offset = Faker::Number.between(from: 0, to: count - 1)
       model.offset(offset).first

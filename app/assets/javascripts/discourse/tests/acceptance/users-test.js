@@ -1,11 +1,14 @@
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -34,6 +37,24 @@ acceptance("User Directory", function () {
     assert.ok(
       exists(".directory .directory-table .directory-table__row"),
       "has a list of users"
+    );
+  });
+
+  test("Visit With Group Exclusion", async function (assert) {
+    let queryParams;
+
+    pretender.get("/directory_items", (request) => {
+      queryParams = request.queryParams;
+
+      return response(cloneJSON(directoryFixtures["directory_items"]));
+    });
+
+    await visit("/u?exclude_groups=trust_level_0");
+
+    assert.strictEqual(
+      queryParams.exclude_groups,
+      "trust_level_0",
+      "includes the right query param in the API call"
     );
   });
 
@@ -84,7 +105,7 @@ acceptance("User directory - Editing columns", function (needs) {
     const columns = queryAll(
       ".edit-directory-columns-container .edit-directory-column"
     );
-    assert.strictEqual(columns.length, 8);
+    assert.strictEqual(columns.length, 9);
 
     const checked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:checked"
@@ -94,7 +115,7 @@ acceptance("User directory - Editing columns", function (needs) {
     const unchecked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:not(:checked)"
     );
-    assert.strictEqual(unchecked.length, 1);
+    assert.strictEqual(unchecked.length, 2);
   });
 
   const fetchColumns = function () {
@@ -134,6 +155,7 @@ acceptance("User directory - Editing columns", function (needs) {
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
+    await click(moveUserFieldColumnUpBtn);
 
     columns = fetchColumns();
     assert.strictEqual(
@@ -160,6 +182,7 @@ acceptance("User directory - Editing columns", function (needs) {
       "Topics Viewed",
       "Posts Read",
       "Days Visited",
+      "[en.an_extra_field]",
       "Favorite Color",
     ]);
   });

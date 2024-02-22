@@ -46,6 +46,8 @@ RSpec.describe Report do
 
   describe "counting" do
     describe "requests" do
+      subject(:json) { Report.find("http_total_reqs").as_json }
+
       before do
         freeze_time DateTime.parse("2017-03-01 12:00")
 
@@ -59,37 +61,31 @@ RSpec.describe Report do
         ]
 
         # 60 complete days:
-        30
-          .times
-          .each_with_object(application_requests) do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (i + 1).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 10,
-                },
-              ],
-            )
-          end
-        30
-          .times
-          .each_with_object(application_requests) do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (31 + i).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 100,
-                },
-              ],
-            )
-          end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (i + 1).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 10,
+              },
+            ],
+          )
+        end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (31 + i).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 100,
+              },
+            ],
+          )
+        end
 
         ApplicationRequest.insert_all(application_requests)
       end
-
-      subject(:json) { Report.find("http_total_reqs").as_json }
 
       it "counts the correct records" do
         expect(json[:data].size).to eq(31) # today and 30 full days
@@ -204,16 +200,16 @@ RSpec.describe Report do
           freeze_time DateTime.parse("2017-03-01 12:00")
 
           if arg == :flag
-            user = Fabricate(:user)
+            user = Fabricate(:user, refresh_auto_groups: true)
             topic = Fabricate(:topic, user: user)
-            builder = ->(dt) {
+            builder = ->(dt) do
               PostActionCreator.create(
                 user,
                 Fabricate(:post, topic: topic, user: user),
                 :spam,
                 created_at: dt,
               )
-            }
+            end
           elsif arg == :signup
             builder = ->(dt) { Fabricate(:user, created_at: dt) }
           else
@@ -466,7 +462,7 @@ RSpec.describe Report do
       before do
         3.times { Fabricate(:user, admin: true) }
         2.times { Fabricate(:user, moderator: true) }
-        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        UserSilencer.silence(Fabricate(:user, refresh_auto_groups: true), Fabricate.build(:admin))
         Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
       end
 
@@ -563,7 +559,7 @@ RSpec.describe Report do
         arpit = Fabricate(:user)
         sam = Fabricate(:user)
 
-        jeff = Fabricate(:user, created_at: 1.day.ago)
+        jeff = Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true)
         post = create_post(user: jeff, created_at: 1.day.ago)
         PostActionCreator.like(arpit, post)
         PostActionCreator.like(sam, post)
@@ -594,7 +590,7 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with flags" do
-      let(:flagger) { Fabricate(:user) }
+      let(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
       let(:post) { Fabricate(:post, user: flagger) }
 
       before { freeze_time }
@@ -693,7 +689,7 @@ RSpec.describe Report do
 
     let(:sam) { Fabricate(:user, moderator: true, username: "sam") }
 
-    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff") }
+    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff", refresh_auto_groups: true) }
 
     include_examples "no data"
 
@@ -852,7 +848,7 @@ RSpec.describe Report do
       include_examples "with data x/y"
 
       before(:each) do
-        user = Fabricate(:user)
+        user = Fabricate(:user, refresh_auto_groups: true)
         topic = Fabricate(:topic, user: user)
         post0 = Fabricate(:post, topic: topic, user: user)
         post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1, user: user), user: user)
@@ -1082,8 +1078,8 @@ RSpec.describe Report do
   end
 
   describe "user_flagging_ratio" do
-    let(:joffrey) { Fabricate(:user, username: "joffrey") }
-    let(:robin) { Fabricate(:user, username: "robin") }
+    let(:joffrey) { Fabricate(:user, username: "joffrey", refresh_auto_groups: true) }
+    let(:robin) { Fabricate(:user, username: "robin", refresh_auto_groups: true) }
     let(:moderator) { Fabricate(:moderator) }
     let(:user) { Fabricate(:user) }
 
@@ -1309,9 +1305,11 @@ RSpec.describe Report do
       end
 
       after do
+        CachedCounting.reset
         ApplicationRequest.disable
         CachedCounting.disable
       end
+
       it "works" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }
@@ -1323,15 +1321,14 @@ RSpec.describe Report do
         page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
         page_view_anon_report = reports.data.find { |r| r[:req] == "page_view_anon" }
 
-        expect(page_view_crawler_report[:color]).to eql("rgba(200,0,1,0.75)")
+        expect(page_view_crawler_report[:color]).to eql("#721D8D")
         expect(page_view_crawler_report[:data][0][:y]).to eql(3)
 
-        expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(page_view_logged_in_report[:color]).to eql("#1EB8D1")
         expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
 
-        expect(page_view_anon_report[:color]).to eql("#40c8ff")
+        expect(page_view_anon_report[:color]).to eql("#9BC53D")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
-      ensure
       end
     end
   end
@@ -1371,12 +1368,11 @@ RSpec.describe Report do
         api_report = reports.data.find { |r| r[:req] == "api" }
         user_api_report = reports.data.find { |r| r[:req] == "user_api" }
 
-        expect(api_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(api_report[:color]).to eql("#1EB8D1")
         expect(api_report[:data][0][:y]).to eql(2)
 
-        expect(user_api_report[:color]).to eql("rgba(200,0,1,1)")
+        expect(user_api_report[:color]).to eql("#9BC53D")
         expect(user_api_report[:data][0][:y]).to eql(1)
-      ensure
       end
     end
   end

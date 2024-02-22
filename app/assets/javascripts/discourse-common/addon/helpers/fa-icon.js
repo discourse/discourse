@@ -1,13 +1,14 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { htmlSafe } from "@ember/template";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 import { renderIcon } from "discourse-common/lib/icon-library";
 
 export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
 
-registerUnbound("fa-icon", function (icon, params) {
+registerRawHelper("fa-icon", faIcon);
+export default function faIcon(icon, params) {
   deprecated("Use `{{d-icon}}` instead of `{{fa-icon}}");
   return htmlSafe(iconHTML(icon, params));
-});
+}

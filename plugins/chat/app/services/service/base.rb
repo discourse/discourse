@@ -18,6 +18,8 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context < OpenStruct
+      include ActiveModel::Serialization
+
       # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
         !failure?
@@ -36,7 +38,7 @@ module Service
       #   context.fail!("failure": "something went wrong")
       # @return [Context]
       def fail!(context = {})
-        fail(context)
+        self.fail(context)
         raise Failure, self
       end
 
@@ -58,6 +60,10 @@ module Service
         self
       end
 
+      def inspect_steps
+        Chat::StepsInspector.new(self)
+      end
+
       private
 
       def self.build(context = {})
@@ -68,8 +74,8 @@ module Service
     # Internal module to define available steps as DSL
     # @!visibility private
     module StepsHelpers
-      def model(name = :model, step_name = :"fetch_#{name}")
-        steps << ModelStep.new(name, step_name)
+      def model(name = :model, step_name = :"fetch_#{name}", optional: false)
+        steps << ModelStep.new(name, step_name, optional: optional)
       end
 
       def contract(name = :default, class_name: self::Contract, default_values_from: nil)
@@ -80,8 +86,8 @@ module Service
         )
       end
 
-      def policy(name = :default)
-        steps << PolicyStep.new(name)
+      def policy(name = :default, class_name: nil)
+        steps << PolicyStep.new(name, class_name: class_name)
       end
 
       def step(name)
@@ -104,10 +110,11 @@ module Service
       end
 
       def call(instance, context)
-        method = instance.method(method_name)
+        object = class_name&.new(context)
+        method = object&.method(:call) || instance.method(method_name)
         args = {}
         args = context.to_h if method.arity.nonzero?
-        context[result_key] = Context.build
+        context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
 
@@ -124,9 +131,20 @@ module Service
 
     # @!visibility private
     class ModelStep < Step
+      attr_reader :optional
+
+      def initialize(name, method_name = name, class_name: nil, optional: nil)
+        super(name, method_name, class_name: class_name)
+        @optional = optional.present?
+      end
+
       def call(instance, context)
         context[name] = super
-        raise ArgumentError, "Model not found" if context[name].blank?
+        raise ArgumentError, "Model not found" if !optional && context[name].blank?
+        if context[name].try(:invalid?)
+          context[result_key].fail(invalid: true)
+          context.fail!
+        end
       rescue ArgumentError => exception
         context[result_key].fail(exception: exception)
         context.fail!
@@ -137,7 +155,7 @@ module Service
     class PolicyStep < Step
       def call(instance, context)
         if !super
-          context[result_key].fail
+          context[result_key].fail(reason: context[result_key].object&.reason)
           context.fail!
         end
       end
@@ -221,9 +239,10 @@ module Service
     end
 
     # @!scope class
-    # @!method model(name = :model, step_name = :"fetch_#{name}")
+    # @!method model(name = :model, step_name = :"fetch_#{name}", optional: false)
     # @param name [Symbol] name of the model
     # @param step_name [Symbol] name of the method to call for this step
+    # @param optional [Boolean] if +true+, then the step won’t fail if its return value is falsy.
     # Evaluates arbitrary code to build or fetch a model (typically from the
     # DB). If the step returns a falsy value, then the step will fail.
     #
@@ -240,18 +259,41 @@ module Service
     #   end
 
     # @!scope class
-    # @!method policy(name = :default)
+    # @!method policy(name = :default, class_name: nil)
     # @param name [Symbol] name for this policy
+    # @param class_name [Class] a policy object (should inherit from +PolicyBase+)
     # Performs checks related to the state of the system. If the
     # step doesn’t return a truthy value, then the policy will fail.
     #
-    # @example
+    # When using a policy object, there is no need to define a method on the
+    # service for the policy step. The policy object `#call` method will be
+    # called and if the result isn’t truthy, a `#reason` method is expected to
+    # be implemented to explain the failure.
+    #
+    # Policy objects are usually useful for more complex logic.
+    #
+    # @example Without a policy object
     #   policy :no_direct_message_channel
     #
     #   private
     #
     #   def no_direct_message_channel(channel:, **)
     #     !channel.direct_message_channel?
+    #   end
+    #
+    # @example With a policy object
+    #   # in the service object
+    #   policy :no_direct_message_channel, class_name: NoDirectMessageChannelPolicy
+    #
+    #   # in the policy object File
+    #   class NoDirectMessageChannelPolicy < PolicyBase
+    #     def call
+    #       !context.channel.direct_message_channel?
+    #     end
+    #
+    #     def reason
+    #       "Direct message channels aren’t supported"
+    #     end
     #   end
 
     # @!scope class
@@ -328,7 +370,7 @@ module Service
 
     # @!visibility private
     def fail!(message)
-      step_name = caller_locations(1, 1)[0].label
+      step_name = caller_locations(1, 1)[0].base_label
       context["result.step.#{step_name}"].fail(error: message)
       context.fail!
     end

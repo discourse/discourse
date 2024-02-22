@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::UserFieldsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#create" do
     context "when logged in as an admin" do
@@ -75,7 +75,7 @@ RSpec.describe Admin::UserFieldsController do
   end
 
   describe "#index" do
-    fab!(:user_field) { Fabricate(:user_field) }
+    fab!(:user_field)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -112,7 +112,7 @@ RSpec.describe Admin::UserFieldsController do
   end
 
   describe "#destroy" do
-    fab!(:user_field) { Fabricate(:user_field) }
+    fab!(:user_field)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -150,7 +150,7 @@ RSpec.describe Admin::UserFieldsController do
   end
 
   describe "#update" do
-    fab!(:user_field) { Fabricate(:user_field) }
+    fab!(:user_field)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }

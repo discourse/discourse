@@ -93,7 +93,7 @@ class ImportScripts::MyBB < ImportScripts::Base
                   UserAvatar.import_url_for_user(avatar, newuser)
                 else
                   filename = File.join(UPLOADS_DIR, avatar)
-                  @uploader.create_avatar(newuser, filename) if File.exists?(filename)
+                  @uploader.create_avatar(newuser, filename) if File.exist?(filename)
                 end
               end
             end,
@@ -300,7 +300,7 @@ class ImportScripts::MyBB < ImportScripts::Base
       ccf = cat.custom_fields
       count += 1
       next unless id = ccf["import_id"]
-      puts ("forum-#{id}.html --> /c/#{cat.id}") unless QUIET
+      puts("forum-#{id}.html --> /c/#{cat.id}") unless QUIET
       begin
         Permalink.create(url: "#{BASE}/forum-#{id}.html", category_id: cat.id)
       rescue StandardError
@@ -340,7 +340,7 @@ class ImportScripts::MyBB < ImportScripts::Base
             nil
           end
           unless QUIET
-            puts ("#{BASE}/thread-#{id}.html --> http://localhost:3000/t/#{topic[:topic_id]}")
+            puts("#{BASE}/thread-#{id}.html --> http://localhost:3000/t/#{topic[:topic_id]}")
           end
           print_status(count, total_posts, start_time)
         end

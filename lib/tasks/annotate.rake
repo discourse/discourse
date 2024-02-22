@@ -17,7 +17,7 @@ desc "ensure the asynchronously-created post_search_data index is present"
 task "annotate:ensure_all_indexes" => :environment do |task, args|
   # One of the indexes on post_search_data is created by a sidekiq job
   # We need to do some acrobatics to create it on-demand
-  SeedData::Topics.with_default_locale.create(include_welcome_topics: true)
+  SeedData::Topics.with_default_locale.create
   SiteSetting.search_enable_recent_regular_posts_offset_size = 1
   Jobs::CreateRecentPostSearchIndexes.new.execute([])
 end

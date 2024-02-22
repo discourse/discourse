@@ -10,20 +10,19 @@ RSpec.describe SearchController do
   end
 
   fab!(:awesome_post) do
-    SearchIndexer.enable
-    Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    with_search_indexer_enabled do
+      Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    end
   end
 
   fab!(:awesome_post_2) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "this is my really awesome post 2")
+    with_search_indexer_enabled { Fabricate(:post, raw: "this is my really awesome post 2") }
   end
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { with_search_indexer_enabled { Fabricate(:user) } }
 
   fab!(:user_post) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "#{user.username} is a cool person")
+    with_search_indexer_enabled { Fabricate(:post, raw: "#{user.username} is a cool person") }
   end
 
   context "with integration" do
@@ -229,6 +228,10 @@ RSpec.describe SearchController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -247,8 +250,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         start = Time.now
         freeze_time start
@@ -269,8 +270,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -290,8 +289,6 @@ RSpec.describe SearchController do
 
         it "rate limits logged in searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search/query.json", params: { term: "wookie" }
@@ -367,7 +364,66 @@ RSpec.describe SearchController do
       expect(SearchLog.where(term: "bantha")).to be_blank
     end
 
+    it "works when using a tag context" do
+      tag = Fabricate(:tag, name: "awesome")
+      awesome_topic.tags << tag
+      SearchIndexer.index(awesome_topic, force: true)
+
+      get "/search.json",
+          params: {
+            q: "awesome",
+            context: "tag",
+            context_id: "awesome",
+            skip_context: false,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].length).to eq(1)
+      expect(response.parsed_body["posts"][0]["id"]).to eq(awesome_post.id)
+    end
+
+    context "with restricted tags" do
+      let(:restricted_tag) { Fabricate(:tag) }
+      let(:admin) { Fabricate(:admin) }
+
+      before do
+        tag_group =
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [restricted_tag.name])
+        awesome_topic.tags << restricted_tag
+        SearchIndexer.index(awesome_topic, force: true)
+      end
+
+      it "works for user with tag group permision" do
+        sign_in(admin)
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn’t work for user without tag group permission" do
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -386,8 +442,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -406,8 +460,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -427,8 +479,6 @@ RSpec.describe SearchController do
 
         it "rate limits searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search.json", params: { q: "bantha" }
@@ -443,6 +493,39 @@ RSpec.describe SearchController do
           json = response.parsed_body
           expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
         end
+      end
+    end
+
+    context "with lazy loaded categories" do
+      fab!(:parent_category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category, parent_category: parent_category) }
+      fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
+
+      fab!(:post) do
+        with_search_indexer_enabled do
+          topic = Fabricate(:topic, category: category)
+          Fabricate(:post, topic: topic, raw: "hello world. first topic")
+        end
+      end
+
+      fab!(:other_post) do
+        with_search_indexer_enabled do
+          topic = Fabricate(:topic, category: other_category)
+          Fabricate(:post, topic: topic, raw: "hello world. second topic")
+        end
+      end
+
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+
+      it "returns extra categories and parent categories" do
+        get "/search.json", params: { q: "hello" }
+
+        categories = response.parsed_body["grouped_search_result"]["extra"]["categories"]
+        expect(categories.map { |c| c["id"] }).to contain_exactly(
+          parent_category.id,
+          category.id,
+          other_category.id,
+        )
       end
     end
   end
@@ -470,35 +553,37 @@ RSpec.describe SearchController do
     fab!(:very_high_priority_topic) { Fabricate(:topic, category: very_high_priority_category) }
 
     fab!(:very_low_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      end
     end
 
     fab!(:low_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: low_priority_topic,
-        raw: "This is a Low Priority Post",
-        created_at: 1.day.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: low_priority_topic,
+          raw: "This is a Low Priority Post",
+          created_at: 1.day.ago,
+        )
+      end
     end
 
     fab!(:high_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      end
     end
 
     fab!(:very_high_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: very_high_priority_topic,
-        raw: "This is a Old but Very High Priority Post",
-        created_at: 2.days.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: very_high_priority_topic,
+          raw: "This is a Old but Very High Priority Post",
+          created_at: 2.days.ago,
+        )
+      end
     end
 
     it "sort posts with search priority when search term is empty" do

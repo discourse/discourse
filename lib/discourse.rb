@@ -8,6 +8,7 @@ require "version"
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
+  MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
     URI_REGEXP ||= URI.regexp(%w[http https])
@@ -312,11 +313,11 @@ module Discourse
   end
 
   def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks]
+    @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= %i[latest top categories]
+    @anonymous_filters ||= %i[latest top categories hot]
   end
 
   def self.top_menu_items
@@ -327,23 +328,17 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
   end
 
+  # list of pixel ratios Discourse tries to optimize for
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
-    set = Set.new
-
-    SiteSetting
-      .avatar_sizes
-      .split("|")
-      .map(&:to_i)
-      .each { |size| PIXEL_RATIOS.each { |pixel_ratio| set << (size * pixel_ratio).to_i } }
-
-    set
+    Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
   end
 
   def self.activate_plugins!
     @plugins = []
+    @plugins_by_name = {}
     Plugin::Instance
       .find_all("#{Rails.root}/plugins")
       .each do |p|
@@ -351,6 +346,18 @@ module Discourse
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
           p.activate!
           @plugins << p
+          @plugins_by_name[p.name] = p
+
+          # The plugin directory name and metadata name should match, but that
+          # is not always the case
+          dir_name = p.path.split("/")[-2]
+          if p.name != dir_name
+            STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
+            # Plugins are looked up by directory name in SiteSettingExtension
+            # because SiteSetting.load_settings uses directory name as plugin
+            # name. We alias the two names just to make sure the look up works
+            @plugins_by_name[dir_name] = p
+          end
         else
           STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
         end
@@ -358,20 +365,23 @@ module Discourse
     DiscourseEvent.trigger(:after_plugin_activation)
   end
 
-  def self.disabled_plugin_names
-    plugins.select { |p| !p.enabled? }.map(&:name)
-  end
-
   def self.plugins
     @plugins ||= []
   end
 
-  def self.hidden_plugins
-    @hidden_plugins ||= []
+  def self.plugins_by_name
+    @plugins_by_name ||= {}
   end
 
   def self.visible_plugins
-    self.plugins - self.hidden_plugins
+    plugins.filter(&:visible?)
+  end
+
+  def self.plugins_sorted_by_name(enabled_only: true)
+    if enabled_only
+      return visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+    end
+    visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
   end
 
   def self.plugin_themes
@@ -429,6 +439,7 @@ module Discourse
           end
     end
 
+    assets.map! { |asset| "#{asset}_rtl" } if args[:rtl]
     assets
   end
 
@@ -594,6 +605,52 @@ module Discourse
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
+  def self.urls_cache
+    @urls_cache ||= DistributedCache.new("urls_cache")
+  end
+
+  def self.tos_url
+    if SiteSetting.tos_url.present?
+      SiteSetting.tos_url
+    else
+      return urls_cache["tos"] if urls_cache["tos"].present?
+
+      tos_url =
+        if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+          "#{Discourse.base_path}/tos"
+        end
+
+      if tos_url
+        urls_cache["tos"] = tos_url
+      else
+        urls_cache.delete("tos")
+      end
+    end
+  end
+
+  def self.privacy_policy_url
+    if SiteSetting.privacy_policy_url.present?
+      SiteSetting.privacy_policy_url
+    else
+      return urls_cache["privacy_policy"] if urls_cache["privacy_policy"].present?
+
+      privacy_policy_url =
+        if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+          "#{Discourse.base_path}/privacy"
+        end
+
+      if privacy_policy_url
+        urls_cache["privacy_policy"] = privacy_policy_url
+      else
+        urls_cache.delete("privacy_policy")
+      end
+    end
+  end
+
+  def self.clear_urls!
+    urls_cache.clear
+  end
+
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
 
   READONLY_MODE_KEY_TTL ||= 60
@@ -715,13 +772,10 @@ module Discourse
   end
 
   def self.postgres_recently_readonly?
-    timestamp =
-      postgres_last_read_only.defer_get_set("timestamp") do
-        seconds = redis.get(LAST_POSTGRES_READONLY_KEY)
-        Time.zone.at(seconds.to_i) if seconds
-      end
+    seconds =
+      postgres_last_read_only.defer_get_set("timestamp") { redis.get(LAST_POSTGRES_READONLY_KEY) }
 
-    timestamp.present? && timestamp > 15.seconds.ago
+    seconds ? Time.zone.at(seconds.to_i) > 15.seconds.ago : false
   end
 
   def self.recently_readonly?
@@ -733,14 +787,14 @@ module Discourse
   def self.received_postgres_readonly!
     time = Time.zone.now
     redis.set(LAST_POSTGRES_READONLY_KEY, time.to_i.to_s)
-    postgres_last_read_only.clear
+    postgres_last_read_only.clear(after_commit: false)
 
     time
   end
 
   def self.clear_postgres_readonly!
     redis.del(LAST_POSTGRES_READONLY_KEY)
-    postgres_last_read_only.clear
+    postgres_last_read_only.clear(after_commit: false)
   end
 
   def self.received_redis_readonly!
@@ -780,10 +834,8 @@ module Discourse
 
   def self.git_branch
     @git_branch ||=
-      begin
-        git_cmd = "git rev-parse --abbrev-ref HEAD"
-        self.try_git(git_cmd, "unknown")
-      end
+      self.try_git("git branch --show-current", nil) ||
+        self.try_git("git config user.discourse-version", "unknown")
   end
 
   def self.full_version
@@ -804,17 +856,11 @@ module Discourse
   end
 
   def self.try_git(git_cmd, default_value)
-    version_value = false
-
     begin
-      version_value = `#{git_cmd}`.strip
+      `#{git_cmd}`.strip
     rescue StandardError
-      version_value = default_value
-    end
-
-    version_value = default_value if version_value.empty?
-
-    version_value
+      default_value
+    end.presence || default_value
   end
 
   # Either returns the site_contact_username user or the first admin.
@@ -979,14 +1025,15 @@ module Discourse
 
     raise Deprecation.new(warning) if raise_error
 
-    STDERR.puts(warning) if Rails.env == "development"
+    STDERR.puts(warning) if Rails.env.development?
 
-    STDERR.puts(warning) if output_in_test && Rails.env == "test"
+    STDERR.puts(warning) if output_in_test && Rails.env.test?
 
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if Rails.logger && !Discourse.redis.without_namespace.get(redis_key)
+    if !Rails.env.development? && Rails.logger && !GlobalSetting.skip_redis? &&
+         !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
@@ -1108,6 +1155,7 @@ module Discourse
         Discourse.git_version
         Discourse.git_branch
         Discourse.full_version
+        Discourse.plugins.each { |p| p.commit_url }
       end,
       Thread.new do
         require "actionview_precompiler"

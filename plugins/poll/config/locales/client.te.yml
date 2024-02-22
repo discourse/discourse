@@ -7,10 +7,14 @@
 te:
   js:
     poll:
+      show-results:
+        label: "ఫలితాలు"
       export-results:
         label: "ఎగుమతి"
       close:
         label: "మూసివేయి"
+      options:
+        label: "ఎంపికలు"
       ui_builder:
         poll_type:
           label: రకం

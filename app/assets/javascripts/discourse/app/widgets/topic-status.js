@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import { createWidget } from "discourse/widgets/widget";
-import { escapeExpression } from "discourse/lib/utilities";
 import { h } from "virtual-dom";
+import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import { escapeExpression } from "discourse/lib/utilities";
+import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export default createWidget("topic-status", {
   tagName: "span.topic-statuses",

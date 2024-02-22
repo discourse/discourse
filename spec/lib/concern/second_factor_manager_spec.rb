@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactorManager do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user: user) }
   fab!(:user_security_key) do
     Fabricate(
@@ -13,7 +13,7 @@ RSpec.describe SecondFactorManager do
   end
   fab!(:another_user) { Fabricate(:user) }
 
-  fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup) }
+  fab!(:user_second_factor_backup)
   let(:user_backup) { user_second_factor_backup.user }
 
   describe "#totp" do
@@ -182,7 +182,8 @@ RSpec.describe SecondFactorManager do
       before do
         disable_totp
         simulate_localhost_webauthn_challenge
-        Webauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
       context "when security key params are valid" do
@@ -264,7 +265,8 @@ RSpec.describe SecondFactorManager do
 
       before do
         simulate_localhost_webauthn_challenge
-        Webauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
       end
 
       context "when method selected is invalid" do
@@ -312,7 +314,7 @@ RSpec.describe SecondFactorManager do
 
         before do
           simulate_localhost_webauthn_challenge
-          Webauthn.stage_challenge(user, secure_session)
+          DiscourseWebauthn.stage_challenge(user, secure_session)
         end
 
         context "when security key params are valid" do

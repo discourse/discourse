@@ -34,7 +34,10 @@ describe Chat::MessageMover do
   fab!(:message4) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message5) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message6) { Fabricate(:chat_message, chat_channel: destination_channel) }
+
   let(:move_message_ids) { [message1.id, message2.id, message3.id] }
+
+  before { source_channel.update!(last_message: message3) }
 
   describe "#move_to_channel" do
     def move!(move_message_ids = [message1.id, message2.id, message3.id])
@@ -76,9 +79,9 @@ describe Chat::MessageMover do
       deleted_messages = Chat::Message.with_deleted.where(id: move_message_ids).order(:id)
       expect(deleted_messages.count).to eq(3)
       expect(messages.first.channel).to eq("/chat/#{source_channel.id}")
-      expect(messages.first.data[:typ]).to eq("bulk_delete")
-      expect(messages.first.data[:deleted_ids]).to eq(deleted_messages.map(&:id))
-      expect(messages.first.data[:deleted_at]).not_to eq(nil)
+      expect(messages.first.data["type"]).to eq("bulk_delete")
+      expect(messages.first.data["deleted_ids"]).to eq(deleted_messages.map(&:id))
+      expect(messages.first.data["deleted_at"]).not_to eq(nil)
     end
 
     it "creates a message in the source channel to indicate that the messages have been moved" do
@@ -113,7 +116,7 @@ describe Chat::MessageMover do
     it "updates references for reactions, uploads, revisions, mentions, etc." do
       reaction = Fabricate(:chat_message_reaction, chat_message: message1)
       upload = Fabricate(:upload_reference, target: message1)
-      mention = Fabricate(:chat_mention, chat_message: message2, user: acting_user)
+      mention = Fabricate(:user_chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
       move!
@@ -181,6 +184,31 @@ describe Chat::MessageMover do
         move!([message2.id])
         expect(message3.reload.in_reply_to_id).to eq(nil)
         expect(message3.reload.thread).to eq(thread)
+      end
+
+      it "updates the tracking to the last non-deleted channel message for users whose last_read_message_id was the moved message" do
+        membership_1 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message1,
+          )
+        membership_2 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message2,
+          )
+        membership_3 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message3,
+          )
+        move!([message2.id])
+        expect(membership_1.reload.last_read_message_id).to eq(message1.id)
+        expect(membership_2.reload.last_read_message_id).to eq(message3.id)
+        expect(membership_3.reload.last_read_message_id).to eq(message3.id)
       end
 
       context "when a thread original message is moved" do

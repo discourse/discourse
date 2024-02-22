@@ -5,7 +5,7 @@ class ThemeSvgSprite < ActiveRecord::Base
 
   def self.refetch!
     ThemeField.svg_sprite_fields.find_each(&:upsert_svg_sprite!)
-    DB.after_commit { SvgSprite.expire_cache }
+    SvgSprite.expire_cache
   end
 end
 

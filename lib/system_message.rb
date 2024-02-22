@@ -73,7 +73,12 @@ class SystemMessage
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
 
-    DiscourseEvent.trigger(:system_message_sent, post: post, message_type: type)
+    DiscourseEvent.trigger(
+      :system_message_sent,
+      post: post,
+      message_type: type,
+      recipient: @recipient,
+    )
 
     raise StandardError, creator.errors.full_messages.join(" ") if creator.errors.present?
 

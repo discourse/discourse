@@ -1,17 +1,17 @@
 {{#if this.isActive}}
-  {{! template-lint-disable no-invalid-interactive no-down-event-binding }}
+  {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
   <div
     {{on "keydown" (action "keydown")}}
     class="emoji-picker {{if this.isActive 'opened'}}"
   >
-    {{! template-lint-enable no-invalid-interactive no-down-event-binding }}
+    {{! template-lint-enable no-invalid-interactive no-pointer-down-event-binding }}
     <div class="emoji-picker-category-buttons">
       {{#if this.recentEmojis.length}}
         <button
-          type="button"
-          data-section="recent"
           {{on "click" (fn this.onCategorySelection "recent")}}
-          class="btn btn-default category-button emoji"
+          data-section="recent"
+          type="button"
+          class="btn btn-flat category-button emoji"
         >
           {{replace-emoji ":star:"}}
         </button>
@@ -24,12 +24,12 @@
 
       {{#each-in this.customEmojis as |group emojis|}}
         <button
-          type="button"
-          data-section={{concat "custom-" group}}
           {{on "click" (fn this.onCategorySelection (concat "custom-" group))}}
+          data-section={{concat "custom-" group}}
+          type="button"
           class="btn btn-default category-button emoji"
         >
-          {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
+          {{replace-emoji (concat ":" (get emojis "0.code") ":")}}
         </button>
       {{/each-in}}
     </div>
@@ -66,8 +66,8 @@
                 <span class="title">{{i18n "emoji_picker.recent"}}</span>
                 <DButton
                   @icon="trash-alt"
-                  @action={{action "onClearRecent"}}
-                  @class="trash-recent"
+                  @action={{this.onClearRecent}}
+                  class="trash-recent"
                 />
               </div>
               <div class="section-group">
@@ -125,9 +125,9 @@
           {{#each this.diversityScales as |diversityScale index|}}
             <DButton
               @icon={{diversityScale.icon}}
-              @class={{concat "diversity-scale " diversityScale.name}}
               @title={{diversityScale.title}}
-              @action={{action "onDiversitySelection" index}}
+              @action={{fn this.onDiversitySelection index}}
+              class={{concat-class "diversity-scale" diversityScale.name}}
             />
           {{/each}}
         </div>

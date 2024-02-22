@@ -331,16 +331,6 @@ ca:
           Uf, ha anat d'un pèl! Gràcies per arreglar-ho :wink:
           Tingueu en compte que només teniu %{deletion_after} hora/hores per a restaurar una publicació.
       category_hashtag:
-        instructions: |-
-          ¿Sabeu que podeu fer referència a categories i etiquetes en la vostra publicació? Per exemple, ¿heu vist la categoria %{category}?
-
-          Escriviu `#` al mig d'una frase i seleccioneu qualsevol categoria o etiqueta.
-        not_found: |-
-          Vaja, no veig cap categoria enlloc. Tingueu en compte que `#` no pot ser el primer caràcter. Podeu copiar això en la vostra pròxima resposta?
-
-          ```text
-          Puc crear un enllaç de categoria mitjançant #
-          ```
         reply: |-
           Genial! Recordeu que això funciona per a categories _i_ per a etiquetes, si les etiquetes estan activades.
       change_topic_notification_level:

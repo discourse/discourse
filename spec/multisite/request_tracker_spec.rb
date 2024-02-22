@@ -5,11 +5,10 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
     global_setting :skip_per_ip_rate_limit_trust_level, 2
 
     RateLimiter.enable
-
-    test_multisite_connection("default") { RateLimiter.clear_all! }
-    test_multisite_connection("second") { RateLimiter.clear_all! }
     RateLimiter.clear_all_global!
   end
+
+  use_redis_snapshotting
 
   def call(env, &block)
     Middleware::RequestTracker.new(block).call(env)

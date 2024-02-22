@@ -3,11 +3,12 @@
 RSpec.describe UserSilencer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
   fab!(:post) { Fabricate(:post, user: user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "silence" do
-    let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
+
+    let(:silencer) { UserSilencer.new(user) }
 
     it "silences the user correctly" do
       expect { UserSilencer.silence(user, admin) }.to change { user.reload.silenced? }
@@ -69,10 +70,10 @@ RSpec.describe UserSilencer do
 
     context "with a plugin hook" do
       before do
-        @override_silence_message = ->(opts) {
+        @override_silence_message = ->(opts) do
           opts[:silence_message_params][:message_title] = "override title"
           opts[:silence_message_params][:message_raw] = "override raw"
-        }
+        end
 
         DiscourseEvent.on(:user_silenced, &@override_silence_message)
       end

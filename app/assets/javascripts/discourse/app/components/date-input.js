@@ -1,11 +1,11 @@
 /* global Pikaday:true */
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { Promise } from "rsvp";
 import { action } from "@ember/object";
-import loadScript from "discourse/lib/load-script";
 import { schedule } from "@ember/runloop";
+import { Promise } from "rsvp";
+import loadScript from "discourse/lib/load-script";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 function isInputDateSupported() {
   const input = document.createElement("input");
@@ -54,7 +54,7 @@ export default Component.extend({
         if (this._picker && this.date) {
           const parsedDate =
             this.date instanceof moment ? this.date : moment(this.date);
-          this._picker.setDate(parsedDate.toDate(), true);
+          this._picker.setDate(parsedDate, true);
         }
       });
     });
@@ -66,7 +66,7 @@ export default Component.extend({
     if (this._picker && this.date) {
       const parsedDate =
         this.date instanceof moment ? this.date : moment(this.date);
-      this._picker.setDate(parsedDate.toDate(), true);
+      this._picker.setDate(parsedDate, true);
     }
 
     if (this._picker && this.relativeDate) {
@@ -75,7 +75,7 @@ export default Component.extend({
           ? this.relativeDate
           : moment(this.relativeDate);
 
-      this._picker.setMinDate(parsedRelativeDate.toDate(), true);
+      this._picker.setMinDate(parsedRelativeDate, true);
     }
 
     if (this._picker && !this.date) {
@@ -102,12 +102,10 @@ export default Component.extend({
       };
 
       if (this.relativeDate) {
-        defaultOptions = Object.assign({}, defaultOptions, {
-          minDate: moment(this.relativeDate).toDate(),
-        });
+        defaultOptions.minDate = moment(this.relativeDate).toDate();
       }
 
-      return new Pikaday(Object.assign({}, defaultOptions, this._opts()));
+      return new Pikaday({ ...defaultOptions, ...this._opts() });
     });
   },
 

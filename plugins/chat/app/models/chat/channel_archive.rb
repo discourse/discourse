@@ -6,6 +6,9 @@ module Chat
     belongs_to :archived_by, class_name: "User"
     belongs_to :destination_topic, class_name: "Topic"
 
+    validates :archive_error, length: { maximum: 1000 }
+    validates :destination_topic_title, length: { maximum: 1000 }
+
     self.table_name = "chat_channel_archives"
 
     def complete?

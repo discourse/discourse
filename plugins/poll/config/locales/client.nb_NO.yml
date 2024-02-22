@@ -25,27 +25,14 @@ nb_NO:
           title: "Resultatene vises når <strong>lukket</strong>."
         staff:
           title: "Resultatene vises bare til <strong>Moderatorer</strong> medlemmer."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Velg minst <strong>%{count}</strong> alternativ."
-            other: "Velg minst <strong>%{count}</strong> alternativ"
-          up_to_max_options:
-            one: "Velg opptil <strong>%{count}</strong> alternativ."
-            other: "Velg opptil <strong>%{count}</strong> alternativer."
-          x_options:
-            one: "Velg <strong>%{count}</strong> alternativ."
-            other: "Velg <strong>%{count}</strong> alternativer."
-          between_min_and_max_options: "Velg mellom <strong>%{min}</strong> og <strong>%{max}</strong> alternativer."
       cast-votes:
         title: "Stem nå"
         label: "Stem!"
       show-results:
         title: "Vis resultat"
-        label: "Vis resultat"
+        label: "Resultater"
       hide-results:
         title: "Tilbake til dine stemmer"
-        label: "Vis stemme"
       group-results:
         title: "Gruppere stemmer etter brukerfelt"
         label: "Vis Fordeling"
@@ -69,6 +56,8 @@ nb_NO:
         breakdown: "Fordeling"
         percentage: "Prosent"
         count: "Antall"
+      options:
+        label: "Alternativer"
       error_while_toggling_status: "Beklager, det oppstod en feil ved endring av status på denne avstemningen."
       error_while_casting_votes: "Beklager, det oppstod en feil da du ga din stemme."
       error_while_fetching_voters: "Beklager, det oppstod en feil når stemmegivere skulle vises."

@@ -29,4 +29,10 @@ export default Component.extend(UppyUploadMixin, {
   startUpload() {
     this._startUpload();
   },
+
+  @action
+  setElement(element) {
+    this.set("fileInputEl", element);
+    this._initialize();
+  },
 });

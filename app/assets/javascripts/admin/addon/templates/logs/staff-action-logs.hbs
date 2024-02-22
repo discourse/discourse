@@ -72,10 +72,10 @@
   {{/if}}
 
   <DButton
-    @class="btn-default"
-    @action={{action "exportStaffActionLogs"}}
+    @action={{this.exportStaffActionLogs}}
     @label="admin.export_csv.button_text"
     @icon="download"
+    class="btn-default"
   />
 </div>
 

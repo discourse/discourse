@@ -49,7 +49,8 @@ class FileHelper
     skip_rate_limit: false,
     verbose: false,
     validate_uri: true,
-    retain_on_max_file_size_exceeded: false
+    retain_on_max_file_size_exceeded: false,
+    include_port_in_host_header: false
   )
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
@@ -64,6 +65,7 @@ class FileHelper
         verbose: verbose,
         validate_uri: validate_uri,
         timeout: read_timeout,
+        include_port_in_host_header: include_port_in_host_header,
       )
 
     fd.get do |response, chunk, uri|
@@ -158,7 +160,7 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp]
+    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif]
   end
 
   def self.inline_images

@@ -11,7 +11,7 @@ module PrettyText
       key = "js." + key
       return I18n.t(key) if opts.blank?
       str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-      opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+      opts.each { |k, v| str.gsub!("{{#{k}}}", v.to_s) }
       str
     end
 
@@ -92,22 +92,7 @@ module PrettyText
       if topic && Guardian.new.can_see?(topic)
         { title: Rack::Utils.escape_html(topic.title), href: topic.url }
       elsif topic
-        { title: I18n.t("on_another_topic"), href: Discourse.base_url + topic.slugless_url }
-      end
-    end
-
-    # TODO (martin) Remove this when everything is using hashtag_lookup
-    # after enable_experimental_hashtag_autocomplete is default.
-    def category_tag_hashtag_lookup(text)
-      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}\z/
-
-      if !is_tag && category = Category.query_from_hashtag_slug(text)
-        [category.url, text]
-      elsif (!is_tag && tag = Tag.find_by(name: text)) ||
-            (is_tag && tag = Tag.find_by(name: text.gsub!(TAG_HASHTAG_POSTFIX, "")))
-        [tag.url, text]
-      else
-        nil
+        { title: I18n.t("on_another_topic"), href: topic.slugless_url }
       end
     end
 
@@ -124,6 +109,11 @@ module PrettyText
       else
         cooking_user = User.find(cooking_user_id)
       end
+
+      types_in_priority_order =
+        types_in_priority_order.select do |type|
+          HashtagAutocompleteService.data_source_types.include?(type)
+        end
 
       result =
         HashtagAutocompleteService.new(Guardian.new(cooking_user)).lookup(

@@ -1,3 +1,10 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import {
+  SEARCH_TYPE_CATS_TAGS,
+  SEARCH_TYPE_DEFAULT,
+  SEARCH_TYPE_USERS,
+} from "discourse/controllers/full-page-search";
 import {
   acceptance,
   count,
@@ -6,13 +13,6 @@ import {
   selectDate,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import {
-  SEARCH_TYPE_CATS_TAGS,
-  SEARCH_TYPE_DEFAULT,
-  SEARCH_TYPE_USERS,
-} from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 let lastBody;
@@ -573,8 +573,8 @@ acceptance("Search - Full Page", function (needs) {
     await click(".bulk-select"); // toggle bulk
     await click(".bulk-select-visible .btn:nth-child(2)"); // select all
     await click(".bulk-select-btn"); // show bulk actions
-    await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
-    assert.equal(lastBody["topic_ids[]"], 130);
+    await click(".topic-bulk-actions-modal .btn.bulk-actions__close-topics");
+    assert.deepEqual(lastBody["topic_ids[]"], ["130"]);
   });
 
   test("adds visited class to visited topics", async function (assert) {

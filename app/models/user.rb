@@ -6,8 +6,15 @@ class User < ActiveRecord::Base
   include HasCustomFields
   include SecondFactorManager
   include HasDestroyedWebHook
+  include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
+
+  PASSWORD_SALT_LENGTH = 16
+  TARGET_PASSWORD_ALGORITHM =
+    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
+  deprecate_column :flag_level, drop_from: "3.2"
 
   # not deleted on user delete
   has_many :posts
@@ -49,7 +56,7 @@ class User < ActiveRecord::Base
   has_many :pending_posts,
            -> { merge(Reviewable.pending) },
            class_name: "ReviewableQueuedPost",
-           foreign_key: :created_by_id
+           foreign_key: :target_created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -92,10 +99,11 @@ class User < ActiveRecord::Base
   has_many :directory_items
   has_many :email_logs
   has_many :security_keys, -> { where(enabled: true) }, class_name: "UserSecurityKey"
+  has_many :all_security_keys, class_name: "UserSecurityKey"
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
-           -> {
+           -> do
              max_featured_rank =
                (
                  if SiteSetting.max_favorite_badges > 0
@@ -105,7 +113,7 @@ class User < ActiveRecord::Base
                  end
                )
              for_enabled_badges.grouped_with_count.where("featured_rank <= ?", max_featured_rank)
-           },
+           end,
            class_name: "UserBadge"
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
@@ -133,13 +141,6 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
-  has_many :category_sidebar_section_links,
-           -> { where(linkable_type: "Category") },
-           class_name: "SidebarSectionLink"
-  has_many :custom_sidebar_tags,
-           through: :sidebar_section_links,
-           source: :linkable,
-           source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -148,11 +149,14 @@ class User < ActiveRecord::Base
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
-  validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
+  validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
+                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
   after_initialize :add_trust_level
 
@@ -166,22 +170,20 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
-  after_create :add_default_sidebar_section_links
-
-  after_update :update_default_sidebar_section_links, if: Proc.new { self.saved_change_to_admin? }
-
-  after_update :add_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
+  after_create :set_default_sidebar_section_links
+  after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
                if: Proc.new { self.human? && self.saved_change_to_uploaded_avatar_id? }
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+  after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -250,18 +252,18 @@ class User < ActiveRecord::Base
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
   scope :with_primary_email,
-        ->(email) {
+        ->(email) do
           joins(:user_emails).where(
             "lower(user_emails.email) IN (?) AND user_emails.primary",
             email,
           )
-        }
+        end
 
   scope :human_users, -> { where("users.id > 0") }
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> {
+        -> do
           human_users.where(
             "NOT EXISTS(
                      SELECT 1
@@ -269,7 +271,7 @@ class User < ActiveRecord::Base
                      WHERE a.user_id = users.id
                   )",
           )
-        }
+        end
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -282,16 +284,16 @@ class User < ActiveRecord::Base
   scope :not_staged, -> { where(staged: false) }
 
   scope :filter_by_username,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(Array)
             where("username_lower ~* ?", "(#{filter.join("|")})")
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
-        }
+        end
 
   scope :filter_by_username_or_email,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
             if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
@@ -312,10 +314,10 @@ class User < ActiveRecord::Base
               filter: "%#{filter}%",
             )
           end
-        }
+        end
 
   scope :watching_topic,
-        ->(topic) {
+        ->(topic) do
           joins(
             DB.sql_fragment(
               "LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id",
@@ -334,7 +336,7 @@ class User < ActiveRecord::Base
             .where(
               "category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0",
             )
-        }
+        end
 
   module NewTopicDuration
     ALWAYS = -1
@@ -351,12 +353,30 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
+        admin_guide: 6,
       )
+  end
+
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
+  end
+
+  def secured_sidebar_category_ids(user_guardian = nil)
+    user_guardian ||= guardian
+
+    SidebarSectionLink.where(user_id: self.id, linkable_type: "Category").pluck(:linkable_id) &
+      user_guardian.allowed_category_ids
   end
 
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
-    DiscourseTagging.filter_visible(custom_sidebar_tags, user_guardian)
+
+    DiscourseTagging.filter_visible(
+      Tag.where(
+        id: SidebarSectionLink.where(user_id: self.id, linkable_type: "Tag").select(:linkable_id),
+      ),
+      user_guardian,
+    )
   end
 
   def self.max_password_length
@@ -503,7 +523,9 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
+      (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -588,7 +610,6 @@ class User < ActiveRecord::Base
     @unread_pms = nil
     @unread_bookmarks = nil
     @unread_high_prios = nil
-    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
@@ -603,7 +624,7 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type)
+  def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
         SELECT COUNT(*)
@@ -613,10 +634,11 @@ class User < ActiveRecord::Base
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
            AND NOT read
+           #{since ? "AND n.created_at > :since" : ""}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
   end
 
   def unread_notifications_of_priority(high_priority:)
@@ -651,14 +673,6 @@ class User < ActiveRecord::Base
     SQL
     results.map! { |row| [row.type, row.count] }
     results.to_h
-  end
-
-  ###
-  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
-  # may be inconsistencies with counts in the UI because of this, because unread
-  # high priority includes PMs AND bookmark reminders.
-  def unread_private_messages
-    @unread_pms ||= unread_high_priority_notifications
   end
 
   def unread_high_priority_notifications
@@ -756,7 +770,7 @@ class User < ActiveRecord::Base
   end
 
   def reviewable_count
-    Reviewable.list_for(self, include_claimed_by_others: !redesigned_user_menu_enabled?).count
+    Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
   def saw_notification_id(notification_id)
@@ -803,20 +817,8 @@ class User < ActiveRecord::Base
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
-  TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
-
   def read_first_notification?
-    if (
-         trust_level > TrustLevel[1] ||
-           (
-             first_seen_at.present? &&
-               first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
-           ) || user_option.skip_new_user_tips
-       )
-      return true
-    end
-
-    self.seen_notification_id == 0 ? false : true
+    self.seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
   def publish_notifications_state
@@ -855,7 +857,6 @@ class User < ActiveRecord::Base
 
     payload = {
       unread_notifications: unread_notifications,
-      unread_private_messages: unread_private_messages,
       unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
@@ -863,13 +864,9 @@ class User < ActiveRecord::Base
       seen_notification_id: seen_notification_id,
     }
 
-    if self.redesigned_user_menu_enabled?
-      payload[:all_unread_notifications_count] = all_unread_notifications_count
-      payload[:grouped_unread_notifications] = grouped_unread_notifications
-      payload[
-        :new_personal_messages_notifications_count
-      ] = new_personal_messages_notifications_count
-    end
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -927,8 +924,20 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt
-    self.password_hash == hash_password(password, salt)
+    return false unless password_hash && salt && password_algorithm
+    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
+
+    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
+      # Regenerate password_hash with new algorithm and persist
+      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      update_columns(
+        password_algorithm: TARGET_PASSWORD_ALGORITHM,
+        salt: salt,
+        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
+      )
+    end
+
+    confirmed
   end
 
   def new_user_posting_on_first_day?
@@ -1262,7 +1271,7 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    return suspend_record.try(:details) if suspended?
+    suspend_record.try(:details) if suspended?
   end
 
   def suspend_reason
@@ -1407,10 +1416,6 @@ class User < ActiveRecord::Base
     cats.pluck("categories.id").sort
   end
 
-  def topic_create_allowed_category_ids
-    Category.topic_create_allowed(self.id).select(:id)
-  end
-
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     results = []
@@ -1502,15 +1507,7 @@ class User < ActiveRecord::Base
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
 
-    @user_fields_cache ||= {}
-
-    # Memoize based on requested fields
-    @user_fields_cache[field_ids.join(":")] ||= {}.tap do |hash|
-      field_ids.each do |fid|
-        # The hash keys are strings for backwards compatibility
-        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
-      end
-    end
+    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
   end
 
   def validatable_user_fields_values
@@ -1546,7 +1543,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(created_by_id: self.id).count
+    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
   end
 
   def number_of_flags_given
@@ -1631,8 +1628,6 @@ class User < ActiveRecord::Base
       secondary_match.mark_for_destruction
       primary_email.skip_validate_unique_email = true
     end
-
-    new_email
   end
 
   def emails
@@ -1738,11 +1733,18 @@ class User < ActiveRecord::Base
     new_secure_identifier
   end
 
+  def second_factor_security_keys
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor])
+  end
+
   def second_factor_security_key_credential_ids
-    security_keys
-      .select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
-      .pluck(:credential_id)
+    second_factor_security_keys.pluck(:credential_id)
+  end
+
+  def passkey_credential_ids
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:first_factor]).pluck(
+      :credential_id,
+    )
   end
 
   def encoded_username(lower: false)
@@ -1810,12 +1812,16 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def redesigned_user_menu_enabled?
-    !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
-  end
-
   def new_new_view_enabled?
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  end
+
+  def watched_precedence_over_muted
+    if user_option.watched_precedence_over_muted.nil?
+      SiteSetting.watched_precedence_over_muted
+    else
+      user_option.watched_precedence_over_muted
+    end
   end
 
   protected
@@ -1862,8 +1868,9 @@ class User < ActiveRecord::Base
 
   def ensure_password_is_hashed
     if @raw_password
-      self.salt = SecureRandom.hex(16)
-      self.password_hash = hash_password(@raw_password, salt)
+      self.salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
+      self.password_hash = hash_password(@raw_password, salt, password_algorithm)
     end
   end
 
@@ -1879,14 +1886,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def hash_password(password, salt)
+  def hash_password(password, salt, algorithm)
     raise StandardError.new("password is too long") if password.size > User.max_password_length
-    Pbkdf2.hash_password(
-      password,
-      salt,
-      Rails.configuration.pbkdf2_iterations,
-      Rails.configuration.pbkdf2_algorithm,
-    )
+    PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
   end
 
   def add_trust_level
@@ -2053,21 +2055,10 @@ class User < ActiveRecord::Base
   private
 
   def set_default_sidebar_section_links(update: false)
-    return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
-    if SiteSetting.default_sidebar_categories.present?
-      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
-
-      if update
-        filtered_default_category_ids =
-          Category.secured(self.guardian).where(id: categories_to_update).pluck(:id)
-        existing_category_ids =
-          SidebarSectionLink.where(user: self, linkable_type: "Category").pluck(:linkable_id)
-
-        categories_to_update =
-          existing_category_ids + (filtered_default_category_ids & self.secure_category_ids)
-      end
+    if SiteSetting.default_navigation_menu_categories.present?
+      categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
 
       SidebarSectionLinksUpdater.update_category_section_links(
         self,
@@ -2075,38 +2066,12 @@ class User < ActiveRecord::Base
       )
     end
 
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
-
-      if update
-        default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)
-        filtered_default_tags =
-          DiscourseTagging
-            .filter_visible(Tag, self.guardian)
-            .where(id: default_tag_ids)
-            .pluck(:name)
-
-        existing_tag_ids =
-          SidebarSectionLink.where(user: self, linkable_type: "Tag").pluck(:linkable_id)
-        existing_tags =
-          DiscourseTagging
-            .filter_visible(Tag, self.guardian)
-            .where(id: existing_tag_ids)
-            .pluck(:name)
-
-        tags_to_update = existing_tags + (filtered_default_tags & DiscourseTagging.hidden_tag_names)
-      end
-
-      SidebarSectionLinksUpdater.update_tag_section_links(self, tag_names: tags_to_update)
+    if SiteSetting.tagging_enabled && SiteSetting.default_navigation_menu_tags.present?
+      SidebarSectionLinksUpdater.update_tag_section_links(
+        self,
+        tag_ids: Tag.where(name: SiteSetting.default_navigation_menu_tags.split("|")).pluck(:id),
+      )
     end
-  end
-
-  def add_default_sidebar_section_links
-    set_default_sidebar_section_links
-  end
-
-  def update_default_sidebar_section_links
-    set_default_sidebar_section_links(update: true)
   end
 
   def stat
@@ -2141,6 +2106,10 @@ class User < ActiveRecord::Base
   def update_previous_visit(timestamp)
     update_visit_record!(timestamp.to_date)
     update_column(:previous_visit_at, last_seen_at) if previous_visit_at_update_required?(timestamp)
+  end
+
+  def change_display_name
+    Jobs.enqueue(:change_display_name, user_id: id, old_name: name_before_last_save, new_name: name)
   end
 
   def trigger_user_created_event
@@ -2228,6 +2197,7 @@ end
 #  secure_identifier         :string
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
+#  password_algorithm        :string(64)
 #
 # Indexes
 #

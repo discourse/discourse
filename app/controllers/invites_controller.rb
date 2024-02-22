@@ -37,7 +37,10 @@ class InvitesController < ApplicationController
     render layout: "no_ember"
   end
 
-  def create
+  def create_multiple
+    guardian.ensure_can_bulk_invite_to_forum!(current_user)
+    emails = params[:email]
+    # validate that topics and groups can accept invites.
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
@@ -59,37 +62,107 @@ class InvitesController < ApplicationController
       )
     end
 
-    invite =
-      Invite.generate(
-        current_user,
-        email: params[:email],
-        domain: params[:domain],
-        skip_email: params[:skip_email],
-        invited_by: current_user,
-        custom_message: params[:custom_message],
-        max_redemptions_allowed: params[:max_redemptions_allowed],
-        topic_id: topic&.id,
-        group_ids: groups&.map(&:id),
-        expires_at: params[:expires_at],
-        invite_to_topic: params[:invite_to_topic],
+    if emails.size > SiteSetting.max_api_invites
+      return(
+        render_json_error(
+          I18n.t("invite.max_invite_emails_limit_exceeded", max: SiteSetting.max_api_invites),
+          422,
+        )
       )
-
-    if invite.present?
-      render_serialized(
-        invite,
-        InviteSerializer,
-        scope: guardian,
-        root: nil,
-        show_emails: params.has_key?(:email),
-        show_warnings: true,
-      )
-    else
-      render json: failed_json, status: 422
     end
-  rescue Invite::UserExists => e
-    render_json_error(e.message)
-  rescue ActiveRecord::RecordInvalid => e
-    render_json_error(e.record.errors.full_messages.first)
+
+    success = []
+    fail = []
+
+    emails.map do |email|
+      begin
+        invite =
+          Invite.generate(
+            current_user,
+            email: email,
+            domain: params[:domain],
+            skip_email: params[:skip_email],
+            invited_by: current_user,
+            custom_message: params["custom_message"],
+            max_redemptions_allowed: params[:max_redemptions_allowed],
+            topic_id: topic&.id,
+            group_ids: groups&.map(&:id),
+            expires_at: params[:expires_at],
+            invite_to_topic: params[:invite_to_topic],
+          )
+        success.push({ email: email, invite: invite }) if invite
+      rescue Invite::UserExists => e
+        fail.push({ email: email, error: e.message })
+      rescue ActiveRecord::RecordInvalid => e
+        fail.push({ email: email, error: e.record.errors.full_messages.first })
+      end
+    end
+
+    render json: {
+             num_successfully_created_invitations: success.length,
+             num_failed_invitations: fail.length,
+             failed_invitations: fail,
+             successful_invitations:
+               success.map do |s| InviteSerializer.new(s[:invite], scope: guardian) end,
+           }
+  end
+
+  def create
+    begin
+      if params[:topic_id].present?
+        topic = Topic.find_by(id: params[:topic_id])
+        raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
+        guardian.ensure_can_invite_to!(topic)
+      end
+
+      if params[:group_ids].present? || params[:group_names].present?
+        groups =
+          Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
+      end
+
+      guardian.ensure_can_invite_to_forum!(groups)
+
+      if !groups_can_see_topic?(groups, topic)
+        editable_topic_groups = topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
+        return(
+          render_json_error(
+            I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")),
+          )
+        )
+      end
+
+      invite =
+        Invite.generate(
+          current_user,
+          email: params[:email],
+          domain: params[:domain],
+          skip_email: params[:skip_email],
+          invited_by: current_user,
+          custom_message: params[:custom_message],
+          max_redemptions_allowed: params[:max_redemptions_allowed],
+          topic_id: topic&.id,
+          group_ids: groups&.map(&:id),
+          expires_at: params[:expires_at],
+          invite_to_topic: params[:invite_to_topic],
+        )
+
+      if invite.present?
+        render_serialized(
+          invite,
+          InviteSerializer,
+          scope: guardian,
+          root: nil,
+          show_emails: params.has_key?(:email),
+          show_warnings: true,
+        )
+      else
+        render json: failed_json, status: 422
+      end
+    rescue Invite::UserExists => e
+      render_json_error(e.message)
+    rescue ActiveRecord::RecordInvalid => e
+      render_json_error(e.record.errors.full_messages.first)
+    end
   end
 
   def retrieve
@@ -278,7 +351,10 @@ class InvitesController < ApplicationController
         end
 
         user = invite.redeem(**attrs)
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, Invite::UserExists => e
+      rescue ActiveRecord::RecordInvalid,
+             ActiveRecord::RecordNotSaved,
+             ActiveRecord::LockWaitTimeout,
+             Invite::UserExists => e
         return render json: failed_json.merge(message: e.message), status: 412
       end
 

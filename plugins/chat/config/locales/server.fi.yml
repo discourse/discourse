@@ -6,7 +6,9 @@
 
 fi:
   site_settings:
-    chat_enabled: "Ota chat-lisäosa käyttöön."
+    chat_separate_sidebar_mode: "Näytä erilliset sivupalkkitilat foorumille ja chatille."
+    chat_enabled: "Ota chat käyttöön."
+    enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
     chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että henkilökunnalla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
@@ -26,33 +28,60 @@ fi:
     max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
     chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
     chat_allow_archiving_channels: "Salli henkilökunnan arkistoida viestejä ketjuun suljettaessa kanavaa."
+    chat_editing_grace_period: "(n) sekunnin ajan chatin lähettämisen jälkeen muokkaaminen ei näytä (muokattu)-tunnistetta chat-viestissä."
+    chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
       chat_upload_not_allowed_secure_uploads: "Chat-lataukset eivät ole sallittuja, kun suojattujen latauksien sivustoasetus on käytössä."
   system_messages:
+    private_channel_title: "Kanava %{id}"
     chat_channel_archive_complete:
       title: "Chat-kanavan arkistointi on valmis"
       subject_template: "Chat-kanavan arkistointi on valmis"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi on valmis. Viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Chat-kanavan arkistointi epäonnistui"
       subject_template: "Chat-kanavan arkistointi epäonnistui"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi epäonnistui. %{messages_archived} viestiä on arkistoitu. Osittain arkistoidut viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}). Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
     chat_channel_archive_failed_no_topic:
       title: "Chat-kanavan arkistointi epäonnistui"
       subject_template: "Chat-kanavan arkistointi epäonnistui"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi epäonnistui. Viestejä ei ole arkistoitu. Ketjun luominen ei onnistunut seuraavista syistä:
+
+          %{topic_validation_errors}
+
+        Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
   chat:
     deleted_chat_username: poistettu
     errors:
+      users_cant_be_added_to_channel: "Käyttäjiä ei voi lisätä tälle kanavalle."
       channel_exists_for_category: "Tällä alueella ja nimellä on jo olemassa kanava"
+      channel_new_message_disallowed:
+        archived: "Kanava on arkistoitu, uusia viestejä ei voi lähettää"
+        closed: "Kanava on suljettu, uusia viestejä ei voi lähettää"
+        read_only: "Kanava on vain luettavissa, uusia viestejä ei voi lähettää"
+      channel_modify_message_disallowed:
+        archived: "Kanava on arkistoitu, viestejä ei voi muokata tai poistaa"
+        closed: "Kanava on suljettu, viestejä ei voi muokata tai poistaa"
+        read_only: "Kanava on vain luettavissa, viestejä ei voi muokata tai poistaa"
       user_cannot_send_message: "Et voi lähettää viestejä tällä hetkellä."
       rate_limit_exceeded: "Ylitti 30 sekunnin sisällä lähetettävien chat-viestien rajan"
       auto_silence_from_flags: "Chat-viesti liputettiin riittävän korkealla pistemäärällä käyttäjän hiljentämiseksi."
       channel_cannot_be_archived: "Kanavaa ei voi arkistoida tällä hetkellä, sen täytyy olla suljettu tai avoinna, jotta sen voi arkistoida."
       duplicate_message: "Lähetit identtisen viestin liian äskettäin."
       delete_channel_failed: "Kanavan poistaminen epäonnistui, yritä uudelleen."
+      minimum_length_not_met:
+        one: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{count} merkki."
+        other: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{count} merkkiä."
       message_too_long:
-        one: "Viesti on liian pitkä, viesteissä täytyy olla enintään %{count} merkkiä."
-        other: "Viesti on liian pitkä, viesteissä täytyy olla enintään %{count} merkkiä."
+        one: "Viesti on liian pitkä. Enintään %{count} merkki sallitaan."
+        other: "Viesti on liian pitkä. Enintään %{count} merkkiä sallitaan."
+      draft_too_long: "Luonnos on liian pitkä."
       max_reactions_limit_reached: "Uusia reaktioita ei sallita tässä viestissä."
       message_move_invalid_channel: "Lähde- ja kohdekanavan täytyy olla julkisia kanavia."
       message_move_no_messages_found: "Annetuilla viestitunnuksilla ei löytynyt viestejä."
@@ -64,6 +93,12 @@ fi:
       actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
       over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
+      over_chat_max_direct_message_users:
+        one: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
+        other: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
+      original_message_not_found: "Sen viestin edeltäjää, johon olet vastaamassa, ei löydy, tai se on poistettu."
+      thread_invalid_for_channel: "Ketju ei kuulu ilmoitetulle kanavalle."
+      thread_does_not_match_parent: "Ketju ei vastaa ylemmän tason viestiä."
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
@@ -88,18 +123,23 @@ fi:
           title: "Poista viesti"
           description: "Poista viesti, jotta käyttäjät eivät näe sitä."
         delete_and_agree:
-          title: "Poista viesti"
+          title: "Ohita liputus ja poista viesti"
+          description: "Ohita lippu poistamalla se jonosta ja poista viesti."
         disagree_and_restore:
           title: "Hylkää ja palauta viesti"
           description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
         disagree:
           title: "Hylkää"
         ignore:
-          title: "Ohita"
+          title: "Älä tee mitään"
+          description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
       direct_messages:
         transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
         transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{inviting_user} on kutsunut käyttäjän %{invited_users}."
+        other: "%{inviting_user} on kutsunut käyttäjät %{invited_users}."
       archive:
         first_post_raw: "Tämä ketju on chat-kanavan [%{channel_name}](%{channel_url}) arkisto."
       messages_moved:
@@ -107,9 +147,33 @@ fi:
         other: "@%{acting_username} siirsi %{count} viestiä kanavalle [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} ja %{count} muu"
           other: "%{comma_separated_usernames} ja %{count} muuta"
+    mention_warning:
+      dismiss: "hylkää"
+      cannot_see: "%{first_identifier} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+      cannot_see_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+      invitations_sent:
+        one: "Kutsu lähetetty"
+        other: "Kutsut lähetettiin"
+      invite: "Kutsu kanavalle"
+      without_membership: "%{first_identifier} ei ole liittynyt tälle kanavalle."
+      without_membership_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät ole liittyneet tälle kanavalle."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät ole liittyneet tälle kanavalle."
+      group_mentions_disabled: "%{first_identifier} ei salli mainintoja."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ja %{count} muu ryhmä eivät salli mainintoja."
+        other: "%{first_identifier} ja %{count} muuta ryhmää eivät salli mainintoja."
+      global_mentions_disallowed: "@here- ja @all-maininnat eivät ole käytössä tällä kanavalla."
+      too_many_members: "Ryhmässä %{first_identifier} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
+      too_many_members_multiple:
+        one: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+        other: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
@@ -121,12 +185,18 @@ fi:
       inline_to_message: "Viesti %{message_id}, lähettäjä: %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Ketjun %{topic_title} chat-keskustelu"
+      thread_title_connector: "kohteessa"
       x_members:
         one: "%{count} jäsen"
         other: "%{count} jäsentä"
       and_x_others:
         one: "ja %{count} muu"
         other: "ja %{count} muuta"
+    summaries:
+      no_targets: "Valitun ajanjakson aikana ei ollut viestejä."
+    transcript:
+      default_thread_title: "Ketju"
+      split_thread_range: "viestit %{start}–%{end}/%{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -161,6 +231,7 @@ fi:
         other: "Sinulla on uusia chat-viestejä"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Uusi viesti"
         direct_message_from_1: "[%{email_prefix}] Uusi viesti käyttäjältä %{username}"
         direct_message_from_2: "[%{email_prefix}] Uusi viesti käyttäjältä %{username1} ja %{username2}"
         direct_message_from_more:

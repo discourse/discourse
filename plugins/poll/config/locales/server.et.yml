@@ -10,7 +10,6 @@ et:
     poll_maximum_options: "Maksimaalne valikute arv, mis on küsitluses lubatud."
     poll_edit_window_mins: "Minutite arv peale loomist, mille jooksul saab küsitlust veel muuta."
   poll:
-    multiple_polls_without_name: "Mitmed küsitlused on ilma nimeta. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
     multiple_polls_with_same_name: "Mitu küsitlust on sama nimega: <strong>%{name}</strong>. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
     default_poll_must_have_less_options:
       one: "Küsitlusel peab olema vähemalt %{count} valik."
@@ -31,3 +30,5 @@ et:
     only_staff_or_op_can_toggle_status: "Ainult meeskonnaliige või postitaja ise saavad küsitluse staatust muuta."
     email:
       link_to_poll: "Vaata küsitlust"
+    user_field:
+      no_data: "Andmed puuduvad"

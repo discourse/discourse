@@ -39,6 +39,18 @@ RSpec.describe Onebox::Engine::ImageOnebox do
     ).to match(/<img/)
   end
 
+  it "supports webp" do
+    expect(Onebox.preview("https://www.gstatic.com/webp/gallery/1.sm.webp").to_s).to match(/<img/)
+  end
+
+  it "supports avif" do
+    expect(
+      Onebox.preview(
+        "https://raw.githubusercontent.com/AOMediaCodec/av1-avif/master/testFiles/Xiph/abandoned_filmgrain.avif",
+      ).to_s,
+    ).to match(/<img/)
+  end
+
   it "supports image URLs with query parameters" do
     expect(
       Onebox.preview(

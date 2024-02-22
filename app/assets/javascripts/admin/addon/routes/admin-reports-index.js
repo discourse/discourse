@@ -1,7 +1,10 @@
+import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminReportsIndexRoute extends DiscourseRoute {
+  @service router;
+
   beforeModel() {
-    this.transitionTo("admin.dashboardReports");
+    this.router.transitionTo("admin.dashboardReports");
   }
 }

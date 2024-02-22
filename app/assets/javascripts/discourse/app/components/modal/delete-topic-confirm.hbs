@@ -1,0 +1,32 @@
+<DModal
+  @title={{i18n "topic.actions.delete"}}
+  @closeModal={{@closeModal}}
+  class="delete-topic-confirm-modal"
+  @flash={{this.flash}}
+>
+  <:body>
+    <p>
+      {{i18n
+        "post.controls.delete_topic_confirm_modal"
+        count=this.siteSettings.min_topic_views_for_delete_confirm
+      }}
+    </p>
+  </:body>
+  <:footer>
+    <DButton
+      @action={{this.deleteTopic}}
+      @disabled={{this.deletingTopic}}
+      @label={{if
+        this.deletingTopic
+        "deleting"
+        "post.controls.delete_topic_confirm_modal_yes"
+      }}
+      class="btn-danger"
+    />
+    <DButton
+      @action={{@closeModal}}
+      @label="post.controls.delete_topic_confirm_modal_no"
+      class="btn-primary"
+    />
+  </:footer>
+</DModal>

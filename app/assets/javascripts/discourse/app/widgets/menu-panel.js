@@ -1,37 +1,5 @@
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
-
-createWidget("menu-links", {
-  buildClasses(attrs) {
-    if (attrs.name && attrs.name.length) {
-      return `menu-container-${attrs.name}`;
-    }
-  },
-
-  html(attrs) {
-    const links = [].concat(attrs.contents());
-    const liOpts = {};
-
-    if (attrs.heading) {
-      liOpts.className = "header";
-    }
-
-    const result = [];
-    result.push(
-      h(
-        "ul.menu-links.columned",
-        links.map((l) => h("li", liOpts, l))
-      )
-    );
-
-    result.push(h("div.clearfix"));
-    if (!attrs.omitRule) {
-      result.push(h("hr"));
-    }
-    return result;
-  },
-});
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("menu-panel", {
   tagName: "div.menu-panel",

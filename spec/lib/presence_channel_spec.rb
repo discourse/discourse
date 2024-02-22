@@ -3,7 +3,7 @@
 require "presence_channel"
 
 RSpec.describe PresenceChannel do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
   fab!(:user2) { Fabricate(:user) }
 
@@ -63,6 +63,12 @@ RSpec.describe PresenceChannel do
 
     expect(channel3.user_ids).to eq([])
     expect(channel3.count).to eq(0)
+  end
+
+  it "does not raise error when getting channel config under readonly" do
+    PresenceChannel.redis.stubs(:set).raises(Redis::CommandError.new("READONLY")).once
+    channel = PresenceChannel.new("/test/public1")
+    expect(channel.user_ids).to eq([])
   end
 
   it "can automatically expire users" do

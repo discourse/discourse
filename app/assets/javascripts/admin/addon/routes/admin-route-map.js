@@ -14,6 +14,10 @@ export default function () {
         path: "/dashboard/reports",
         resetNamespace: true,
       });
+      this.route("admin.dashboardNewFeatures", {
+        path: "/dashboard/whats-new",
+        resetNamespace: true,
+      });
     });
 
     this.route(
@@ -55,8 +59,14 @@ export default function () {
           function () {
             this.route("show", { path: "/:theme_id" });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
+            this.route("schema", { path: "/:theme_id/schema/:setting_name" });
           }
         );
+
+        this.route("adminCustomizeThemeComponents", {
+          path: "theme-components",
+          resetNamespace: true,
+        });
 
         this.route(
           "adminSiteText",
@@ -101,7 +111,7 @@ export default function () {
           "adminCustomizeFormTemplates",
           { path: "/form-templates", resetNamespace: true },
           function () {
-            this.route("new", { path: "/new" });
+            this.route("new");
             this.route("edit", { path: "/:id" });
           }
         );
@@ -109,7 +119,6 @@ export default function () {
           "adminWatchedWords",
           { path: "/watched_words", resetNamespace: true },
           function () {
-            this.route("index", { path: "/" });
             this.route("action", { path: "/action/:action_id" });
           }
         );
@@ -122,7 +131,7 @@ export default function () {
         { path: "/keys", resetNamespace: true },
         function () {
           this.route("show", { path: "/:api_key_id" });
-          this.route("new", { path: "/new" });
+          this.route("new");
         }
       );
 
@@ -165,7 +174,7 @@ export default function () {
           { path: "/search_logs", resetNamespace: true },
           function () {
             this.route("index", { path: "/" });
-            this.route("term", { path: "/term" });
+            this.route("term");
           }
         );
       }
@@ -210,5 +219,15 @@ export default function () {
         this.route("index", { path: "/" });
       }
     );
+  });
+
+  // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`
+  // site setting and are subject to constant change.
+  this.route("admin-revamp", { resetNamespace: true }, function () {
+    this.route("lobby", { path: "/" }, function () {});
+
+    this.route("config", function () {
+      this.route("area", { path: "/:area" });
+    });
   });
 }

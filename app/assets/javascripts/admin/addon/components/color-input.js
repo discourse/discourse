@@ -1,6 +1,6 @@
-import { classNames } from "@ember-decorators/component";
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
+import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 
 /**
@@ -44,9 +44,9 @@ export default class ColorInput extends Component {
   }
 
   @action
-  onHexInput(color) {
-    if (this.attrs.onChangeColor) {
-      this.attrs.onChangeColor(this.normalize(color || ""));
+  onHexInput(event) {
+    if (this.onChangeColor) {
+      this.onChangeColor(this.normalize(event.target.value || ""));
     }
   }
 
@@ -59,8 +59,8 @@ export default class ColorInput extends Component {
   hexValueChanged() {
     const hex = this.hexValue;
 
-    if (this.attrs.onChangeColor) {
-      this.attrs.onChangeColor(this.normalize(hex));
+    if (this.onChangeColor) {
+      this.onChangeColor(this.normalize(hex));
     }
 
     if (this._valid()) {

@@ -15,7 +15,6 @@ ko:
   poll:
     poll: "투표"
     invalid_argument: "&#39;%{argument}&#39;인수에 대해 &#39;%{value}&#39;값이 잘못되었습니다."
-    multiple_polls_without_name: "이름없는 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용해서 투표에 특색을 부여해보세요."
     multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 으로 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용하여 투표를 구분해보세요."
     default_poll_must_have_at_least_1_option: "설문 조사에는 1 개 이상의 옵션이 있어야합니다."
     named_poll_must_have_at_least_1_option: "이름이 <strong>%{name} 인</strong> 설문 조사에는 하나 이상의 옵션이 있어야합니다."
@@ -41,6 +40,8 @@ ko:
     one_vote_per_user: "이 투표에는 1표만 허용됩니다."
     max_vote_per_user:
       other: 이 투표에는 최대 %{count}표가 허용됩니다.
+    min_vote_per_user:
+      other: 이 투표에는 최소 %{count}개의 표가 필요합니다.
     topic_must_be_open_to_toggle_status: "토픽이 열려야 상태 변경을 할 수 있습니다."
     only_staff_or_op_can_toggle_status: "운영진이나 작성자만이 투표 상태를 변경할 수 있습니다."
     insufficient_rights_to_create: "설문 조사를 만들 수 없습니다."

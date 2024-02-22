@@ -1,9 +1,9 @@
 import { module, test } from "qunit";
-import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import {
   defaultTimeShortcuts,
   hideDynamicTimeShortcuts,
 } from "discourse/lib/time-shortcut";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Unit | Lib | time-shortcut | hideDynamicTimeShortcuts",

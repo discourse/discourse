@@ -1,6 +1,7 @@
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
+  <PageLoadingSlider />
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
@@ -14,7 +15,6 @@
       @showLogin={{route-action "showLogin"}}
       @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
       @toggleMobileView={{route-action "toggleMobileView"}}
-      @toggleAnonymous={{route-action "toggleAnonymous"}}
       @logout={{route-action "logout"}}
       @sidebarEnabled={{this.sidebarEnabled}}
       @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
@@ -24,6 +24,10 @@
   {{/if}}
 
   <SoftwareUpdatePrompt />
+
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
 
   <PluginOutlet
     @name="below-site-header"
@@ -40,6 +44,10 @@
       {{/if}}
     </div>
 
+    <LoadingSliderFallbackSpinner />
+
+    <PluginOutlet @name="before-main-outlet" />
+
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
@@ -49,7 +57,6 @@
         <NotificationConsentBanner />
         <PwaInstallBanner />
         <GlobalNotice />
-        <CreateTopicsNotice />
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
@@ -60,7 +67,14 @@
       {{outlet}}
 
       <CardContainer />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" />
+
   </div>
 
   <PluginOutlet
@@ -81,12 +95,18 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  {{outlet "modal"}}
+  <DLightbox />
+  <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
-  {{outlet "composer"}}
+  <ComposerContainer />
+  <RenderGlimmerContainer />
 
   {{#if this.showFooterNav}}
     <FooterNav />
   {{/if}}
 </DiscourseRoot>
+
+<DInlineMenu />
+<DInlineTooltip />
+<DToasts />

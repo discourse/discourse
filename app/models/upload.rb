@@ -144,7 +144,7 @@ class Upload < ActiveRecord::Base
     external_copy = nil
 
     if original_path.blank?
-      external_copy = Discourse.store.download(self)
+      external_copy = Discourse.store.download!(self)
       original_path = external_copy.path
     end
 
@@ -160,13 +160,8 @@ class Upload < ActiveRecord::Base
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy =
-          begin
-            Discourse.store.download(self)
-          rescue StandardError
-            nil
-          end
-        original_path = external_copy.try(:path)
+        external_copy = Discourse.store.download_safe(self)
+        original_path = external_copy&.path
       end
 
       image_info =
@@ -273,19 +268,20 @@ class Upload < ActiveRecord::Base
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
-    path =
-      if local?
-        Discourse.store.path_for(self)
-      else
-        Discourse.store.download(self).path
-      end
-
     begin
+      path =
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download!(self).path
+        end
+
       if extension == "svg"
         w, h =
           begin
             Discourse::Utils.execute_command(
               "identify",
+              "-ping",
               "-format",
               "%w %h",
               path,
@@ -361,13 +357,7 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          begin
-            Discourse.store.download(self)&.path
-          rescue OpenURI::HTTPError => e
-            # Some issue with downloading the image from a remote store.
-            # Assume the upload is broken and save an empty string to prevent re-evaluation
-            nil
-          end
+          Discourse.store.download_safe(self)&.path
         end
 
       if local_path.nil?
@@ -424,6 +414,7 @@ class Upload < ActiveRecord::Base
       begin
         Discourse::Utils.execute_command(
           "identify",
+          "-ping",
           "-format",
           "%Q",
           local_path,
@@ -442,6 +433,10 @@ class Upload < ActiveRecord::Base
 
   def self.sha1_from_short_url(url)
     self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
+  end
+
+  def self.sha1_from_long_url(url)
+    $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
   end
 
   def self.sha1_from_base62_encoded(encoded_sha1)
@@ -477,7 +472,7 @@ class Upload < ActiveRecord::Base
     secure_status_did_change = self.secure? != mark_secure
     self.update(secure_params(mark_secure, reason, source))
 
-    if Discourse.store.external?
+    if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
       begin
         Discourse.store.update_upload_ACL(self)
       rescue Aws::S3::Errors::NotImplemented => err

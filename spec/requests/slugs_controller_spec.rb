@@ -22,21 +22,24 @@ RSpec.describe SlugsController do
         expect(response.parsed_body["slug"]).to eq(Slug.for(name, ""))
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
-        stub_const(SlugsController, "MAX_SLUG_GENERATIONS_PER_MINUTE", 1) do
-          post "/slugs.json?name=#{name}"
-          post "/slugs.json?name=#{name}"
-        end
-
-        expect(response.status).to eq(429)
-      end
-
       it "requires name" do
         post "/slugs.json"
         expect(response.status).to eq(400)
+      end
+
+      describe "rate limiting" do
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "rate limits" do
+          stub_const(SlugsController, "MAX_SLUG_GENERATIONS_PER_MINUTE", 1) do
+            post "/slugs.json?name=#{name}"
+            post "/slugs.json?name=#{name}"
+          end
+
+          expect(response.status).to eq(429)
+        end
       end
 
       context "when user is not TL4 or higher" do

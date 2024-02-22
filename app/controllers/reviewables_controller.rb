@@ -155,10 +155,25 @@ class ReviewablesController < ApplicationController
   end
 
   def destroy
-    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: current_user)
+    user =
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
+      else
+        current_user
+      end
+
+    reviewable =
+      Reviewable.find_by_flagger_or_queued_post_creator(
+        id: params[:reviewable_id],
+        user_id: user.id,
+      )
     raise Discourse::NotFound.new if reviewable.blank?
 
-    reviewable.perform(current_user, :delete)
+    reviewable.perform(current_user, :delete, { guardian: @guardian })
 
     render json: success_json
   end
@@ -207,11 +222,8 @@ class ReviewablesController < ApplicationController
         return render_json_error(error)
       end
 
-      if reviewable.type == "ReviewableUser"
-        args.merge!(
-          reject_reason: params[:reject_reason],
-          send_email: params[:send_email] != "false",
-        )
+      if reviewable.type_class.respond_to?(:additional_args)
+        args.merge!(reviewable.type_class.additional_args(params) || {})
       end
 
       plugin_params =

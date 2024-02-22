@@ -4,7 +4,7 @@ RSpec.describe PendingPostSerializer do
   subject(:serializer) { described_class.new(post, scope: guardian, root: false) }
 
   let(:guardian) { Guardian.new(author) }
-  let(:author) { post.created_by }
+  let(:author) { post.target_created_by }
 
   before { freeze_time }
 

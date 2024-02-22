@@ -22,6 +22,6 @@ bs_BA:
           title: "Objava"
         suggested_topics:
           title: "Preporučene teme"
-        rich_tooltip:
-          description: "Description"
+        tooltips:
+          description: "Opis"
           header: "Header"

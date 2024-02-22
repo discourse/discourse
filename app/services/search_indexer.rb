@@ -21,6 +21,14 @@ class SearchIndexer
     @disabled = false
   end
 
+  def self.with_indexing
+    prior = @disabled
+    enable
+    yield
+  ensure
+    @disabled = prior
+  end
+
   def self.update_index(table:, id:, a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
     raw_data = { a: a_weight, b: b_weight, c: c_weight, d: d_weight }
 
@@ -118,7 +126,9 @@ class SearchIndexer
             .each do |index|
               family = nil
               family = index[-1] if index[-1].match?(/[A-D]/)
-              if (family_counts[family] += 1) <= max_dupes
+              # title dupes can completely dominate the index
+              # so we limit them to 1
+              if (family_counts[family] += 1) <= (family == "A" ? 1 : max_dupes)
                 new_index_array << index
               end
             end

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-
-  before { Group.refresh_automatic_groups! }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:coding_horror)
 
   describe "#destroy" do
     fab!(:post) { Fabricate(:post, user: coding_horror) }
@@ -120,7 +118,7 @@ RSpec.describe PostActionsController do
     end
 
     describe "as a moderator" do
-      fab!(:user) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:moderator, refresh_auto_groups: true) }
       fab!(:post_1) { Fabricate(:post, user: coding_horror) }
 
       before { sign_in(user) }
@@ -257,7 +255,7 @@ RSpec.describe PostActionsController do
       end
 
       it "doesn't pass take_action through if the user isn't staff" do
-        sign_in(Fabricate(:user))
+        sign_in(Fabricate(:user, refresh_auto_groups: true))
 
         post "/post_actions.json",
              params: {

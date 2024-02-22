@@ -1,12 +1,13 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import PreloadStore from "discourse/lib/preload-store";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 function setAuthenticationData(hooks, json) {
   hooks.beforeEach(() => {
@@ -97,6 +98,17 @@ acceptance("Invite accept", function (needs) {
     });
 
     await visit("/invites/my-valid-invite-token");
+
+    assert.notOk(
+      document.body.classList.contains("has-sidebar-page"),
+      "does not display the sidebar on the invites page"
+    );
+
+    assert.notOk(
+      exists(".d-header"),
+      "does not display the site header on the invites page"
+    );
+
     assert.ok(exists("#new-account-email"), "shows the email input");
     assert.ok(exists("#new-account-username"), "shows the username input");
     assert.strictEqual(
@@ -493,3 +505,76 @@ acceptance(
     });
   }
 );
+
+acceptance("Associate link", function (needs) {
+  needs.user();
+  needs.settings({ enable_local_logins: false });
+
+  setAuthenticationData(needs.hooks, {
+    auth_provider: "facebook",
+    email: "blah@example.com",
+    email_valid: true,
+    username: "foobar",
+    name: "barfoo",
+    associate_url: "/associate/abcde",
+  });
+
+  test("associates the account", async function (assert) {
+    preloadInvite({ link: true });
+    pretender.get("/associate/abcde.json", () => {
+      return response({
+        token: "abcde",
+        provider_name: "facebook",
+      });
+    });
+
+    pretender.post("/associate/abcde", () => {
+      return response({ success: true });
+    });
+
+    await visit("/invites/my-valid-invite-token");
+    assert
+      .dom(".create-account-associate-link")
+      .exists("shows the associate account link");
+
+    await click(".create-account-associate-link a");
+    assert.dom(".d-modal").exists();
+
+    await click(".d-modal .btn-primary");
+    assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
+  });
+});
+
+acceptance("Associate link, with an error", function (needs) {
+  needs.user();
+  needs.settings({ enable_local_logins: false });
+
+  setAuthenticationData(needs.hooks, {
+    auth_provider: "facebook",
+    email: "blah@example.com",
+    email_valid: true,
+    username: "foobar",
+    name: "barfoo",
+    associate_url: "/associate/abcde",
+  });
+
+  test("shows the error", async function (assert) {
+    preloadInvite({ link: true });
+    pretender.get("/associate/abcde.json", () => {
+      return response({
+        token: "abcde",
+        provider_name: "facebook",
+      });
+    });
+
+    pretender.post("/associate/abcde", () => {
+      return response({ error: "sorry, no" });
+    });
+
+    await visit("/invites/my-valid-invite-token");
+    await click(".create-account-associate-link a");
+    await click(".d-modal .btn-primary");
+
+    assert.dom(".d-modal .alert").hasText("sorry, no");
+  });
+});

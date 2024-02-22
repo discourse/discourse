@@ -26,19 +26,18 @@ class BookmarkQuery
 
   attr_reader :guardian, :count
 
-  def initialize(user:, guardian: nil, params: {})
+  def initialize(user:, guardian: nil, search_term: nil, page: nil, per_page: nil)
     @user = user
-    @params = params
+    @search_term = search_term
     @guardian = guardian || Guardian.new(@user)
-    @page = @params[:page].to_i
-    @limit = @params[:limit].present? ? @params[:limit].to_i : @params[:per_page]
+    @page = page ? page.to_i : 0
+    @per_page = per_page ? per_page.to_i : 20
     @count = 0
   end
 
   def list_all(&blk)
-    search_term = @params[:q]
-    ts_query = search_term.present? ? Search.ts_query(term: search_term) : nil
-    search_term_wildcard = search_term.present? ? "%#{search_term}%" : nil
+    ts_query = @search_term.present? ? Search.ts_query(term: @search_term) : nil
+    search_term_wildcard = @search_term.present? ? "%#{@search_term}%" : nil
 
     queries =
       Bookmark
@@ -51,14 +50,14 @@ class BookmarkQuery
           # on a topic and that topic was moved into a private category
           next if interim_results.blank?
 
-          if search_term.present?
+          if @search_term.present?
             interim_results =
               bookmarkable.perform_search_query(interim_results, search_term_wildcard, ts_query)
           end
 
           # this is purely to make the query easy to read and debug, otherwise it's
           # all mashed up into a massive ball in MiniProfiler :)
-          "---- #{bookmarkable.model.to_s} bookmarkable ---\n\n #{interim_results.to_sql}"
+          "---- #{bookmarkable.model} bookmarkable ---\n\n #{interim_results.to_sql}"
         end
         .compact
 
@@ -78,14 +77,39 @@ class BookmarkQuery
 
     @count = results.count
 
-    results = results.offset(@page * @params[:per_page]) if @page.positive?
+    results = results.offset(@page * @per_page) if @page.positive?
 
     if updated_results = blk&.call(results)
       results = updated_results
     end
 
-    results = results.limit(@limit).to_a
+    results = results.limit(@per_page).to_a
+
     BookmarkQuery.preload(results, self)
     results
+  end
+
+  def unread_notifications(limit: 20)
+    reminder_notifications =
+      Notification
+        .for_user_menu(@user.id, limit: [limit, 100].min)
+        .unread
+        .where(notification_type: Notification.types[:bookmark_reminder])
+
+    # We preload associations like we do above for the list to avoid
+    # N1s in the can_see? guardian calls for each bookmark.
+    bookmarks =
+      Bookmark.where(
+        id: reminder_notifications.map { |n| n.data_hash[:bookmark_id] }.compact,
+        user: @user,
+      )
+    BookmarkQuery.preload(bookmarks, self)
+
+    reminder_notifications.select do |n|
+      bookmark = bookmarks.find { |bm| bm.id == n.data_hash[:bookmark_id] }
+      next if bookmark.blank?
+      bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type)
+      bookmarkable.can_see?(@guardian, bookmark)
+    end
   end
 end

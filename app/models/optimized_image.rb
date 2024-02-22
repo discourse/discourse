@@ -14,13 +14,22 @@ class OptimizedImage < ActiveRecord::Base
     # this can very easily lead to runaway CPU so slowing it down is beneficial and it is hijacked
     #
     # we can not afford this blocking in Sidekiq cause it can lead to starvation
-    if Sidekiq.server?
-      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
-    else
+    if lock_per_machine?
       DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
         DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
       end
+    else
+      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
     end
+  end
+
+  def self.lock_per_machine?
+    return @lock_per_machine if defined?(@lock_per_machine)
+    @lock_per_machine = !Sidekiq.server?
+  end
+
+  def self.lock_per_machine=(value)
+    @lock_per_machine = value
   end
 
   def self.create_for(upload, width, height, opts = {})
@@ -50,18 +59,15 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    store = Discourse.store
+
     # create the thumbnail otherwise
-    original_path = Discourse.store.path_for(upload)
+    original_path = store.path_for(upload)
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy =
-        begin
-          Discourse.store.download(upload)
-        rescue StandardError
-          nil
-        end
-      original_path = external_copy.try(:path)
+      external_copy = store.download_safe(upload)
+      original_path = external_copy&.path
     end
 
     lock(upload.id, width, height) do
@@ -111,8 +117,7 @@ class OptimizedImage < ActiveRecord::Base
 
           # store the optimized image and update its url
           File.open(temp_path) do |file|
-            url =
-              Discourse.store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
+            url = store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
             if url.present?
               thumbnail.url = url
               thumbnail.save
@@ -129,7 +134,7 @@ class OptimizedImage < ActiveRecord::Base
       end
 
       # make sure we remove the cached copy from external stores
-      external_copy&.close if Discourse.store.external?
+      external_copy&.close if store.external?
 
       thumbnail
     end
@@ -151,7 +156,7 @@ class OptimizedImage < ActiveRecord::Base
       if local?
         Discourse.store.path_for(self)
       else
-        Discourse.store.download(self).path
+        Discourse.store.download!(self).path
       end
     File.size(path)
   end
@@ -180,7 +185,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp)\z/i
+  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp|avif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}
@@ -197,7 +202,9 @@ class OptimizedImage < ActiveRecord::Base
       extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
     end
 
-    raise Discourse::InvalidAccess if !extension || !extension.match?(IM_DECODERS)
+    if !extension || !extension.match?(IM_DECODERS)
+      raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
+    end
     "#{extension}:#{path}"
   end
 

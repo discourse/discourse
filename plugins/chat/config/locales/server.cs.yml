@@ -8,7 +8,9 @@ cs:
   chat:
     deleted_chat_username: smazáno
     errors:
+      draft_too_long: "Koncept je příliš dlouhý."
       not_accepting_dms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
+      actor_disallowed_dms: "Rozhodli jste se zabránit uživatelům v zasílání soukromých a přímých zpráv, takže nemůžete vytvářet nové přímé zprávy."
     reviewables:
       actions:
         agree_and_suspend:
@@ -19,11 +21,21 @@ cs:
           description: "Schválit nahlášení a ztišit uživatele."
         disagree:
           title: "Neschvaluji"
-        ignore:
-          title: "ignorovat"
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} a %{count} další"
+          few: "%{comma_separated_usernames} a %{count} další"
+          many: "%{comma_separated_usernames} a %{count} další"
+          other: "%{comma_separated_usernames} a %{count} dalších"
+    mention_warning:
+      dismiss: "označit jako přečtené"
+    onebox:
+      thread_title_connector: "v"
+    transcript:
+      default_thread_title: "Vlákno"
+      split_thread_range: "zprávy %{start} až %{end} z %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -33,6 +45,11 @@ cs:
       chat_pm_body: "%{link}\\n\\n%{message}\n"
     notify_moderators:
       chat_pm_body: "%{link}\\n\\n%{message}\n"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Smazaný uživatel"
+      unsubscribe: "Tento souhrn chatu je odeslán z %{site_link}, když jste pryč. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení."
+      unsubscribe_no_link: "Tento přehled chatu je odeslán z %{site_link}, když jste pryč. Změňte své %{email_preferences_link}."
   unsubscribe:
     chat_summary:
       never: Nikdy

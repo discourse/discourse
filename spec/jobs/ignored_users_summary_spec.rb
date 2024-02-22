@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::IgnoredUsersSummary do
+  subject(:job) { Jobs::IgnoredUsersSummary.new.execute({}) }
+
   before do
     SiteSetting.ignored_users_count_message_threshold = 1
     SiteSetting.ignored_users_message_gap_days = 365
   end
 
-  subject { Jobs::IgnoredUsersSummary.new.execute({}) }
-
   context "with no ignored users" do
     it "does nothing" do
-      subject
-      expect { subject }.to_not change { Post.count }
+      job
+      expect { job }.to_not change { Post.count }
     end
   end
 
@@ -30,14 +30,14 @@ RSpec.describe Jobs::IgnoredUsersSummary do
         before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
 
       context "when threshold is hit" do
         it "creates a system message" do
-          subject
+          job
           posts =
             Post.joins(:topic).where(
               topics: {
@@ -57,15 +57,15 @@ RSpec.describe Jobs::IgnoredUsersSummary do
         before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
 
       context "when threshold is hit" do
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
     end

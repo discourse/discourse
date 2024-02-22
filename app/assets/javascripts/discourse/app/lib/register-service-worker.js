@@ -1,10 +1,6 @@
 import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 
-export function registerServiceWorker(
-  container,
-  serviceWorkerURL,
-  registerOptions = {}
-) {
+export function registerServiceWorker(serviceWorkerURL, registerOptions = {}) {
   if (window.isSecureContext && "serviceWorker" in navigator) {
     if (serviceWorkerURL) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {

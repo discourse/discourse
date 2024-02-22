@@ -1,7 +1,7 @@
+import { action, computed } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { schedule } from "@ember/runloop";
-import { action, computed } from "@ember/object";
 
 export default buildCategoryPanel("topic-template", {
   showFormTemplate: computed("category.form_template_ids", {

@@ -1,3 +1,6 @@
+import { click, render, waitFor } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
@@ -5,9 +8,6 @@ import {
   createFile,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { click, render, settled, waitFor } from "@ember/test-helpers";
-import { module, test } from "qunit";
 
 const fakeUpload = {
   type: ".png",
@@ -51,7 +51,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await render(hbs`
       <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" />
     `);
-    await settled();
 
     assert.strictEqual(count(".chat-composer-upload"), 1);
     assert.strictEqual(exists(".chat-composer-upload"), true);
@@ -66,7 +65,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     `);
 
     const done = assert.async();
-    this.appEvents = this.container.lookup("service:appEvents");
+    this.appEvents = this.container.lookup("service:app-events");
     this.appEvents.on(
       "upload-mixin:chat-composer-uploader:upload-success",
       (fileName, upload) => {
@@ -97,7 +96,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
 
     assert.dom(".chat-composer-upload").exists({ count: 0 });
   });
@@ -116,7 +115,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     const image = createFile("avatar.png");
     const done = assert.async();
-    this.appEvents = this.container.lookup("service:appEvents");
+    this.appEvents = this.container.lookup("service:app-events");
 
     this.appEvents.on(
       `upload-mixin:chat-composer-uploader:upload-cancelled`,
@@ -138,7 +137,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await waitFor(".chat-composer-upload");
     assert.strictEqual(count(".chat-composer-upload"), 1);
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
     assert.strictEqual(count(".chat-composer-upload"), 0);
   });
 });

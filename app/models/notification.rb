@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
+  attr_accessor :acting_user
+  attr_accessor :acting_username
+
   belongs_to :user
   belongs_to :topic
 
@@ -25,14 +28,14 @@ class Notification < ActiveRecord::Base
         }
   scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
   scope :unread_types,
-        ->(user, types, limit = 30) {
+        ->(user, types, limit = 30) do
           where(user_id: user.id, read: false, notification_type: types)
             .visible
             .includes(:topic)
             .limit(limit)
-        }
+        end
   scope :prioritized,
-        ->(deprioritized_types = []) {
+        ->(deprioritized_types = []) do
           scope = order("notifications.high_priority AND NOT notifications.read DESC")
           if deprioritized_types.present?
             scope =
@@ -46,11 +49,11 @@ class Notification < ActiveRecord::Base
             scope = scope.order("NOT notifications.read DESC")
           end
           scope.order("notifications.created_at DESC")
-        }
+        end
   scope :for_user_menu,
-        ->(user_id, limit: 30) {
+        ->(user_id, limit: 30) do
           where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
-        }
+        end
 
   attr_accessor :skip_send_email
 
@@ -152,6 +155,7 @@ class Notification < ActiveRecord::Base
         question_answer_user_commented: 35, # Used by https://github.com/discourse/discourse-question-answer
         watching_category_or_tag: 36,
         new_features: 37,
+        admin_problems: 38,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -226,6 +230,12 @@ class Notification < ActiveRecord::Base
     Notification.where(user_id: user_id, topic_id: topic_id).delete_all
   end
 
+  def self.filter_inaccessible_topic_notifications(guardian, notifications)
+    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
+  end
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||=
@@ -278,7 +288,6 @@ class Notification < ActiveRecord::Base
     notifications.to_a
   end
 
-  # TODO(osama): deprecate this method when redesigned_user_menu_enabled is removed
   def self.recent_report(user, count = nil, types = [])
     return unless user && user.user_option
 
@@ -341,6 +350,25 @@ class Notification < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def self.populate_acting_user(notifications)
+    usernames =
+      notifications.map do |notification|
+        notification.acting_username =
+          (
+            notification.data_hash[:username] || notification.data_hash[:display_username] ||
+              notification.data_hash[:mentioned_by_username] ||
+              notification.data_hash[:invited_by_username]
+          )&.downcase
+      end
+
+    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
+    notifications.each do |notification|
+      notification.acting_user = users[notification.acting_username]
+    end
+
+    notifications
   end
 
   def unread_high_priority?

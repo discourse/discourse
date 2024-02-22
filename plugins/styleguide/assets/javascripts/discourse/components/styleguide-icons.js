@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import { afterRender } from "discourse-common/utils/decorators";
 import { REPLACEMENTS } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
+import { afterRender } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "section",
@@ -19,7 +19,7 @@ export default Component.extend({
     if (symbols.length > 0) {
       let ids = Array.from(symbols).mapBy("id");
       ids.push(...Object.keys(REPLACEMENTS));
-      this.set("iconIds", ids.sort());
+      this.set("iconIds", [...new Set(ids.sort())]);
     } else {
       // Let's try again a short time later if there are no svgs loaded yet
       discourseLater(this, this.setIconIds, 1500);

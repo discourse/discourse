@@ -8,7 +8,6 @@ RSpec.describe "users" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.navigation_menu = "legacy"
     Jobs.run_immediately!
     sign_in(admin)
   end
@@ -186,7 +185,7 @@ RSpec.describe "users" do
       response "200", "avatar updated" do
         expected_response_schema = load_spec_schema("success_ok_response")
 
-        let(:user) { Fabricate(:user) }
+        let(:user) { Fabricate(:user, refresh_auto_groups: true) }
         let(:username) { user.username }
         let(:upload) { Fabricate(:upload, user: user) }
         let(:params) { { "upload_id" => upload.id, "type" => "uploaded" } }
@@ -358,6 +357,52 @@ RSpec.describe "users" do
     end
   end
 
+  path "/admin/users/{id}/activate.json" do
+    put "Activate a user" do
+      tags "Users", "Admin"
+      operationId "activateUser"
+      consumes "application/json"
+      expected_request_schema = nil
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces "application/json"
+      response "200", "response" do
+        let(:id) { Fabricate(:user, active: false).id }
+
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path "/admin/users/{id}/deactivate.json" do
+    put "Deactivate a user" do
+      tags "Users", "Admin"
+      operationId "deactivateUser"
+      consumes "application/json"
+      expected_request_schema = nil
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces "application/json"
+      response "200", "response" do
+        let(:id) { Fabricate(:user).id }
+
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path "/admin/users/{id}/suspend.json" do
     put "Suspend a user" do
       tags "Users", "Admin"
@@ -462,7 +507,7 @@ RSpec.describe "users" do
     before do
       stub_request(
         :get,
-        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=360},
+        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
       ).with(
         headers: {
           "Accept" => "*/*",
@@ -530,7 +575,23 @@ RSpec.describe "users" do
                 }
       parameter name: :asc, in: :query, schema: { type: :string, enum: ["true"] }
       parameter name: :page, in: :query, type: :integer
-      parameter name: :show_emails, in: :query, type: :boolean
+      parameter name: :show_emails,
+                in: :query,
+                type: :boolean,
+                description:
+                  "Include user email addresses in response. These requests will be logged in the staff action logs."
+      parameter name: :stats,
+                in: :query,
+                type: :boolean,
+                description: "Include user stats information"
+      parameter name: :email,
+                in: :query,
+                type: :string,
+                description: "Filter to the user with this email address"
+      parameter name: :ip,
+                in: :query,
+                type: :string,
+                description: "Filter to users with this IP address"
 
       produces "application/json"
       response "200", "response" do
@@ -539,6 +600,9 @@ RSpec.describe "users" do
         let(:asc) { "true" }
         let(:page) { 0 }
         let(:show_emails) { false }
+        let(:stats) { nil }
+        let(:email) { nil }
+        let(:ip) { nil }
 
         expected_response_schema = load_spec_schema("admin_user_list_response")
         schema(expected_response_schema)

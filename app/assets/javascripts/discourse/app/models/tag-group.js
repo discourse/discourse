@@ -2,7 +2,7 @@ import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default RestModel.extend({
+export default class TagGroup extends RestModel {
   @discourseComputed("permissions")
   permissionName(permissions) {
     if (!permissions) {
@@ -16,5 +16,5 @@ export default RestModel.extend({
     } else {
       return "private";
     }
-  },
-});
+  }
+}

@@ -16,6 +16,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     )
   end
   let(:upload_path) { Discourse.store.upload_path }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do
     Jobs.run_immediately!
@@ -54,7 +55,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     before { Jobs.run_immediately! }
 
     it "does nothing if topic has been deleted" do
-      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{image_url}'>")
       post.topic.destroy!
 
       expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.not_to change {
@@ -63,7 +64,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "does nothing if there are no large images to pull" do
-      post = Fabricate(:post, raw: "bob bob")
+      post = Fabricate(:post, user: user, raw: "bob bob")
       orig = post.updated_at
 
       freeze_time 1.week.from_now
@@ -72,7 +73,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces images" do
-      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{image_url}'>")
       stub_image_size
 
       expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.to change {
@@ -85,7 +86,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     it "enqueues raw replacement job with a delay" do
       Jobs.run_later!
 
-      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{image_url}'>")
       stub_image_size
 
       freeze_time
@@ -102,7 +103,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "removes downloaded images when they are no longer needed" do
-      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{image_url}'>")
       stub_image_size
       post.rebake!
       post.reload
@@ -115,7 +116,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces images again after edit" do
-      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{image_url}'>")
       stub_image_size
 
       expect do post.rebake! end.to change { Upload.count }.by(1)
@@ -131,7 +132,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces encoded image urls" do
-      post = Fabricate(:post, raw: "<img src='#{encoded_image_url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{encoded_image_url}'>")
       stub_image_size
       expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
         Upload.count
@@ -150,7 +151,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         "http://test.localhost/uploads/short-url/z2QSs1KJWoj51uYhDjb6ifCzxH6.gif",
       ).to_return(status: 200, body: "")
 
-      post = Fabricate(:post, raw: <<~MD)
+      post = Fabricate(:post, user: user, raw: <<~MD)
       <h1></h1>
                                 <a href="https://somelink.com">
                                     <img alt="somelink" src="#{image_url}">
@@ -173,7 +174,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
     it "replaces correct image URL" do
       url = image_url.sub("/2e/Longcat1.png", "")
-      post = Fabricate(:post, raw: "[Images](#{url})\n![](#{image_url})")
+      post = Fabricate(:post, user: user, raw: "[Images](#{url})\n![](#{image_url})")
       stub_image_size
 
       expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
@@ -183,9 +184,26 @@ RSpec.describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("[Images](#{url})\n![](#{Upload.last.short_url})")
     end
 
+    it "does not replace images in code blocks", skip: "Known issue" do
+      post = Fabricate(:post, user: user, raw: <<~RAW)
+        ![realimage](#{image_url})
+        `![codeblockimage](#{image_url})`
+      RAW
+      stub_image_size
+
+      expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
+        Upload.count
+      }.by(1)
+
+      expect(post.reload.raw).to eq(<<~RAW)
+        ![realimage](#{Upload.last.short_url})
+        `![codeblockimage](#{image_url})`
+      RAW
+    end
+
     it "replaces images without protocol" do
       url = image_url.sub(/^https?\:/, "")
-      post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")
+      post = Fabricate(:post, user: user, raw: "<img alt='test' src='#{url}'>")
       stub_image_size
 
       expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
@@ -198,7 +216,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     it "replaces images without extension" do
       url = image_url.sub(/\.[a-zA-Z0-9]+$/, "")
       stub_request(:get, url).to_return(body: png, headers: { "Content-Type" => "image/png" })
-      post = Fabricate(:post, raw: "<img src='#{url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
       stub_image_size
 
       expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
@@ -214,7 +232,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
       stub_request(:get, url).to_return(status: 200, body: file_from_fixtures("smallest.png"))
 
-      post = Fabricate(:post, raw: "<img src='#{url}'>")
+      post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
       stub_image_size
 
       expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.to change {
@@ -230,7 +248,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
     it "skips editing raw for raw_html posts" do
       raw = "<img src=\"#{image_url}\">"
-      post = Fabricate(:post, raw: raw, cook_method: Post.cook_methods[:raw_html])
+      post = Fabricate(:post, user: user, raw: raw, cook_method: Post.cook_methods[:raw_html])
       stub_image_size
       expect do
         post.rebake!
@@ -249,7 +267,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         stub_s3(upload)
         url = Upload.secure_uploads_url_from_upload_url(upload.url)
         url = Discourse.base_url + url
-        post = Fabricate(:post, raw: "<img src='#{url}'>")
+        post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
         upload.update(access_control_post: post)
         expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.not_to change {
           Upload.count
@@ -266,7 +284,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
           Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
           url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
-          post = Fabricate(:post, raw: "<img src='#{url}'>")
+          post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
           upload.update(access_control_post: post)
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
 
@@ -288,7 +306,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
           Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
           url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
-          post = Fabricate(:post, raw: "<img src='#{url}'>")
+          post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
 
@@ -304,7 +322,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces markdown image" do
-      post = Fabricate(:post, raw: <<~MD)
+      post = Fabricate(:post, user: user, raw: <<~MD)
       [![some test](#{image_url})](https://somelink.com)
       ![some test](#{image_url})
       ![](#{image_url})
@@ -329,7 +347,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "works when invalid url in post" do
-      post = Fabricate(:post, raw: <<~MD)
+      post = Fabricate(:post, user: user, raw: <<~MD)
       ![some test](#{image_url})
       ![some test 2]("#{image_url})
       MD
@@ -341,7 +359,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces bbcode images" do
-      post = Fabricate(:post, raw: <<~MD)
+      post = Fabricate(:post, user: user, raw: <<~MD)
       [img]
       #{image_url}
       [/img]
@@ -397,7 +415,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
       end
 
       it "replaces image src" do
-        post = Fabricate(:post, raw: "#{url}")
+        post = Fabricate(:post, user: user, raw: "#{url}")
         stub_image_size
 
         post.rebake!
@@ -408,7 +426,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
       end
 
       it "associates uploads correctly" do
-        post = Fabricate(:post, raw: "#{url}")
+        post = Fabricate(:post, user: user, raw: "#{url}")
         stub_image_size
         post.rebake!
         post.reload
@@ -423,7 +441,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
       end
 
       it "all combinations" do
-        post = Fabricate(:post, raw: <<~MD)
+        post = Fabricate(:post, user: user, raw: <<~MD)
         <img src='#{image_url}'>
         #{url}
         <img src='#{broken_image_url}'>
@@ -451,7 +469,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
       end
 
       it "rewrites a lone onebox" do
-        post = Fabricate(:post, raw: <<~MD)
+        post = Fabricate(:post, user: user, raw: <<~MD)
         Onebox here:
         #{image_url}
         MD
@@ -472,25 +490,25 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "#should_download_image?" do
-    subject { described_class.new }
+    subject(:job) { described_class.new }
 
     describe "when url is invalid" do
       it "should return false" do
-        expect(subject.should_download_image?("null")).to eq(false)
-        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
+        expect(job.should_download_image?("null")).to eq(false)
+        expect(job.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe "when url is valid" do
       it "should return true" do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
-        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
+        expect(job.should_download_image?("http://meta.discourse.org")).to eq(true)
+        expect(job.should_download_image?("//meta.discourse.org")).to eq(true)
       end
     end
 
     describe "when url is an upload" do
       it "should return false for original" do
-        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
+        expect(job.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
       context "when secure uploads enabled" do
@@ -501,19 +519,19 @@ RSpec.describe Jobs::PullHotlinkedImages do
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_uploads_url_from_upload_url(upload.url)
-          expect(subject.should_download_image?(url)).to eq(false)
+          expect(job.should_download_image?(url)).to eq(false)
         end
       end
 
       it "should return true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(job.should_download_image?(src)).to eq(true)
       end
     end
 
     it "returns false for emoji" do
       src = Emoji.url_for("testemoji.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when app and S3 CDNs configured" do
@@ -522,14 +540,14 @@ RSpec.describe Jobs::PullHotlinkedImages do
       set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when emoji CDN configured" do
       SiteSetting.external_emoji_url = "https://emoji.cdn.com"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when app, S3 *and* emoji CDNs configured" do
@@ -539,17 +557,17 @@ RSpec.describe Jobs::PullHotlinkedImages do
       set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for plugin assets" do
       src = UrlHelper.cook_url("/plugins/discourse-amazing-plugin/myasset.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for local non-uploaded files" do
       src = UrlHelper.cook_url("/mycustomroute.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     context "when download_remote_images_to_local? is false" do
@@ -557,18 +575,18 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(job.should_download_image?(src)).to eq(true)
       end
 
       it "returns false for valid remote URLs" do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
+        expect(job.should_download_image?("http://meta.discourse.org")).to eq(false)
       end
     end
   end
 
   describe "with a lightboxed image" do
     fab!(:upload) { Fabricate(:large_image_upload) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before { Jobs.run_immediately! }
 
@@ -620,7 +638,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "#disable_if_low_on_disk_space" do
-    fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
+    fab!(:post) { Fabricate(:post, user: user, created_at: 20.days.ago) }
     let(:job) { Jobs::PullHotlinkedImages.new }
 
     before do

@@ -20,7 +20,7 @@ class AboutController < ApplicationController
     unless current_user.staff?
       RateLimiter.new(current_user, "live_post_counts", 1, 10.minutes).performed!
     end
-    category_topic_ids = Category.pluck(:topic_id).compact!
+    category_topic_ids = Category.select(:topic_id).where.not(topic_id: nil)
     public_topics =
       Topic.listable_topics.visible.secured(Guardian.new(nil)).where.not(id: category_topic_ids)
     stats = { public_topic_count: public_topics.count }

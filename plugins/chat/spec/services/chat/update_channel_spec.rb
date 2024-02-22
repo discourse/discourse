@@ -23,12 +23,6 @@ RSpec.describe Chat::UpdateChannel do
     it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
-  context "when the user tries to edit a DM channel" do
-    fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)]) }
-
-    it { is_expected.to fail_a_policy(:no_direct_message_channel) }
-  end
-
   context "when channel is a category one" do
     context "when a valid user provides valid params" do
       let(:message) do
@@ -63,45 +57,100 @@ RSpec.describe Chat::UpdateChannel do
         )
       end
 
-      context "when the name is blank" do
-        before { params[:name] = "" }
+      describe "name" do
+        context "when blank" do
+          before { params[:name] = "" }
 
-        it "nils out the name" do
-          result
-          expect(channel.reload.name).to be_nil
+          it "nils out the name" do
+            result
+            expect(channel.reload.name).to be_nil
+          end
         end
       end
 
-      context "when the description is blank" do
-        before do
-          channel.update!(description: "something")
-          params[:description] = ""
-        end
+      describe "description" do
+        context "when blank" do
+          before do
+            channel.update!(description: "something")
+            params[:description] = ""
+          end
 
-        it "nils out the description" do
-          result
-          expect(channel.reload.description).to be_nil
+          it "nils out the description" do
+            result
+            expect(channel.reload.description).to be_nil
+          end
         end
       end
 
-      context "when auto_join_users is set to 'true'" do
+      describe "#auto_join_users" do
+        context "when set to 'true'" do
+          before do
+            channel.update!(auto_join_users: false)
+            params[:auto_join_users] = true
+          end
+
+          it "updates the model accordingly" do
+            result
+            expect(channel.reload).to have_attributes(auto_join_users: true)
+          end
+
+          it "auto joins users" do
+            expect_enqueued_with(
+              job: Jobs::Chat::AutoJoinChannelMemberships,
+              args: {
+                chat_channel_id: channel.id,
+              },
+            ) { result }
+          end
+        end
+      end
+
+      describe "threading_enabled" do
+        context "when true" do
+          before { params[:threading_enabled] = true }
+
+          it "changes the value to true" do
+            expect { result }.to change { channel.reload.threading_enabled }.from(false).to(true)
+          end
+
+          it "enqueues a job to mark all threads in the channel as read" do
+            expect_enqueued_with(
+              job: Jobs::Chat::MarkAllChannelThreadsRead,
+              args: {
+                channel_id: channel.id,
+              },
+            ) { result }
+          end
+        end
+
+        context "when false" do
+          before { params[:threading_enabled] = false }
+
+          it "changes the value to false" do
+            channel.update!(threading_enabled: true)
+
+            expect { result }.to change { channel.reload.threading_enabled }.from(true).to(false)
+          end
+
+          it "does not enqueue a job to mark all threads in the channel as read" do
+            expect_not_enqueued_with(
+              job: Jobs::Chat::MarkAllChannelThreadsRead,
+              args: {
+                channel_id: channel.id,
+              },
+            ) { result }
+          end
+        end
+      end
+
+      describe "#update_site_settings" do
         before do
-          channel.update!(auto_join_users: false)
-          params[:auto_join_users] = true
+          SiteSetting.chat_threads_enabled = false
+          params[:threading_enabled] = true
         end
 
-        it "updates the model accordingly" do
-          result
-          expect(channel.reload).to have_attributes(auto_join_users: true)
-        end
-
-        it "auto joins users" do
-          expect_enqueued_with(
-            job: Jobs::Chat::AutoJoinChannelMemberships,
-            args: {
-              chat_channel_id: channel.id,
-            },
-          ) { result }
+        it "sets chat_threads_enabled to true" do
+          expect { result }.to change { SiteSetting.chat_threads_enabled }.from(false).to(true)
         end
       end
     end

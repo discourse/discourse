@@ -19,7 +19,7 @@ lt:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Sausis
     - Vasaris
     - Kovas
@@ -55,6 +55,9 @@ lt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
+  components:
+    enabled_filter: "Galimas"
+    disabled_filter: "Uždrausta"
   themes:
     bad_color_scheme: "Negalima atnaujinti temos, netinkama spalvų paletė"
     other_error: "Įvyko klaida atnaujinant temą"
@@ -78,7 +81,7 @@ lt:
       optimized_link: Optimizuotos vaizdo nuorodos yra trumpalaikės ir neturėtų būti įtrauktos į temos šaltinio kodą.
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."
-      data_type_not_a_number: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
+      data_type_inclusion: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
       default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės"
       default_not_match_type: "Nustatymas „%{name}“ numatytosios vertės tipas neatitinka nustatymo tipo."
@@ -92,6 +95,8 @@ lt:
       string_value_not_valid_min_max: "Turi būti tarp %{min} ir %{max} simbolių ilgio."
       string_value_not_valid_min: "Turi sudaryti mažiausia %{min} simbolių."
       string_value_not_valid_max: "Turi sudaryti daugiausia %{max} simbolių."
+      objects:
+        not_valid_integer_value: "privalo buti integruotas"
     locale_errors:
       top_level_locale: "Aukščiausio lygio raktas lokalės faile turi atitikti lokalės pavadinimą"
       invalid_yaml: "Vertimas YAML negaliojantis"
@@ -167,7 +172,6 @@ lt:
       default_tags_already_selected: "Negalite pasirinkti žymos, naudojamos kitame sąraše."
       s3_upload_bucket_is_required: "Negalite įgalinti įkėlimų į S3, jei nepateikėte „s3_upload_bucket“."
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
-      page_publishing_requirements: "Puslapio publikavimo įjungti negalima, jei įjungta saugi laikmena."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."
@@ -175,7 +179,6 @@ lt:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Negalite išjungti vietinio prisijungimo, jei taikomas 2FA. Prieš išjungdami vietinius prisijungimus, išjunkite priverstinį 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Negalite įgalinti S3 įkėlimų, nes S3 įkėlimai jau įgalinti visame pasaulyje, o įjungus šį svetainės lygį gali kilti kritinių įkėlimų problemų"
       cors_origins_should_not_have_trailing_slash: "Neturėtumėte pridėti galinio brūkšnio (/) prie CORS šaltinių."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Vartotojų agentai turi būti ne trumpesni kaip 3 simboliai, kad būtų išvengta klaidingo greičio ribojimo žmonių vartotojams."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Prie nustatymo negalite pridėti nė vienos iš šių reikšmių: %{values}."
     onebox:
       invalid_address: "Deja, nepavyko sukurti šio tinklalapio peržiūros, nes nepavyko rasti serverio %{hostname}Vietoj peržiūros jūsų įraše bus rodoma tik nuoroda. :cry:"
@@ -246,7 +249,6 @@ lt:
       few: "dar %{count} atsakymai"
       many: "dar %{count} atsakymų"
       other: "dar %{count} atsakymų"
-    loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
     replies:
@@ -269,7 +271,7 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_embedded_media_allowed_trust: "Deja, jūs negalite įterpti medijos elementų į įrašą."
+  no_embedded_media_allowed_group: "Deja, jūs negalite įterpti medijos elementų į įrašą."
   no_embedded_media_allowed: "Atsiprašome, nauji vartotojai negali įterpti medijos elementų į įrašus."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
@@ -452,7 +454,8 @@ lt:
             name:
               same_as_password: "yra toks pats kaip jūsų slaptažodis."
             ip_address:
-              signup_not_allowed: "Registracijos nėra galimos iš šios paskyros."
+              blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
+              max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
         user_profile:
           attributes:
             featured_topic_id:
@@ -496,22 +499,6 @@ lt:
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
-  discourse_welcome_topic:
-    body: |2
-
-      Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
-
-      **Redaguokite tai** į trumpą savo bendruomenės aprašymą:
-
-      – Kam tai skirta?
-      – Ką jie čia gali rasti?
-      – Kodėl jie turėtų čia ateiti?
-      – Kur jie gali skaityti daugiau (nuorodos, šaltiniai ir pan.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
-  admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
     post_template: "%{replace_paragraph}\n\nNaudokite šias pastraipas ilgesniam aprašymui arba kategorijų gairėms ar taisyklėms nustatyti:\n\n– Kodėl žmonės turėtų naudoti šią kategoriją? Kam tai?\n\n– Kuo tai skiriasi nuo kitų jau turimų kategorijų?\n\n– Kas apskritai turėtų būti šios kategorijos temose?\n\n– Ar mums reikia šios kategorijos? Ar galime sujungti su kita kategorija ar subkategorija?\n"
@@ -537,7 +524,6 @@ lt:
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
-    hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     has_likes:
       one: "%{count} patinka"
       few: "%{count} Patinka"
@@ -725,27 +711,12 @@ lt:
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
   change_email:
-    wrong_account_error: "Esate prisijungę prie netinkamos paskyros, atsijunkite ir bandykite dar kartą."
-    confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
-    please_continue: "Tęsti į %{site_name}"
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
     error_staged: "Keičiant el. pašto adresą įvyko klaida. Adresą jau naudoja suaktyvintas naudotojas."
     already_done: "Deja, ši patvirtinimo nuoroda nebegalioja. Galbūt jūsų el. pašto adresas jau buvo pakeistas?"
     confirm: "Patvirtinti"
     max_secondary_emails_error: "Pasiekėte didžiausią leistiną antrinių el. laiškų limitą."
-    authorizing_new:
-      title: "Patvirtinkite naują el. paštą"
-      description: "Patvirtinkite, kad norite, kad jūsų el. Pašto adresas būtų pakeistas į:"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-    authorizing_old:
-      title: "Pakeisti elektroninio pašto adresą"
-      description: "Patvirtinkite savo el. pašto adreso pakeitimą"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-      old_email: "Senas el. Paštas: %{email}"
-      new_email: "Naujas el. paštas: %{email}"
-      almost_done_title: "Patvirtinamas naujas el. Pašto adresas"
-      almost_done_description: "Mes išsiuntėme laišką į jūsų naują elektroninio pašto adresą, kad patvirtintume pakeitimą!"
   associated_accounts:
     revoke_failed: "Nepavyko anuliuoti paskyros naudojant %{provider_name}."
     connected: "(prijungtas)"
@@ -779,6 +750,9 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -806,8 +780,6 @@ lt:
   draft_backup:
     pm_title: "Atsarginės temų juodraščių kopijos"
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
-  user_activity:
-    no_log_search_queries: "Paieškos žurnalo užklausos šiuo metu išjungtos (administratorius gali jas įjungti svetainės nustatymuose)."
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
     imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
@@ -839,6 +811,9 @@ lt:
       long_form: "pažymėjo tai moderatoriaus dėmesiui"
       short_description: "Reikia darbuotojų dėmesio dėl kitos priežasties"
       email_title: 'Tema "%{title}" reikalauja moderatoriaus dėmesio'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Jūsų įrašą pažymėjo bendruomenė. Prašome <a href="%{path}">pamatyti savo pranešimus</a>.</p>'
@@ -1233,9 +1208,6 @@ lt:
     allow_user_locale: "Leisti vartotojams pasirinkti savo kalbos sąsajos pageidavimus"
     set_locale_from_accept_language_header: "nustatyti sąsajos kalbą anoniminiams vartotojams iš jų interneto naršyklės kalbos antraščių"
     support_mixed_text_direction: "Palaikykite įvairias teksto kryptis iš kairės į dešinę ir iš dešinės į kairę."
-    min_post_length: "Mažiausias leistinas įrašo ilgis simboliais"
-    min_first_post_length: "Mažiausias leistinas pirmojo įrašo (temos turinio) ilgis simboliais"
-    min_personal_message_post_length: "Mažiausias leistinas pranešimų ilgis simboliais"
     max_post_length: "Didžiausias leistinas įrašo ilgis simboliais"
     topic_featured_link_enabled: "Įgalinti nuorodos su temomis paskelbimą."
     show_topic_featured_link_in_digest: "Rodyti temos nuorodą santraukos el. laiške."
@@ -1272,7 +1244,6 @@ lt:
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
-    enforce_second_factor: "Priverčia vartotojus įgalinti dviejų veiksnių autentifikavimą. Pasirinkite „viskas“, kad jis būtų taikomas visiems vartotojams. Pasirinkite „personalas“, kad jis būtų taikomas tik darbuotojams."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1289,7 +1260,6 @@ lt:
     tl2_additional_edits_per_day_multiplier: "Padidinkite tl2 (nario) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_edits_per_day_multiplier: "Padidinkite tl3 (įprasto) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
     tl4_additional_edits_per_day_multiplier: "Padidinkite tl4 (lyderio) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
-    num_users_to_silence_new_user: "Jei naujo vartotojo įrašai gauna num_spam_flags_to_silence_new_user šlamšto žymas nuo daugelio skirtingų vartotojų, paslėpkite visus jų įrašus ir neleiskite skelbti ateityje. 0, kad išjungtumėte."
     num_tl3_flags_to_silence_new_user: "Jei naujo vartotojo įrašai gauna tiek daug žymų iš num_tl3_users_to_silence_new_user skirtingų 3 patikimumo lygio vartotojų, paslėpkite visus jų įrašus ir neleiskite skelbti ateityje. 0, kad išjungtumėte."
     must_approve_users: "Darbuotojai turi patvirtinti visas naujas vartotojų paskyras, prieš jiems leidžiant pasiekti svetainę."
     persistent_sessions: "Vartotojai liks prisijungę, kai interneto naršyklė bus uždaryta"
@@ -1298,8 +1268,6 @@ lt:
     moderators_change_post_ownership: "Leisti moderatoriams pakeisti įrašo nuosavybę"
     use_admin_ip_allowlist: "Administratoriai gali prisijungti tik tuo atveju, jei yra IP adresas, apibrėžtas sąraše „Tikrinami IP“ (Administratorius> Žurnalai> Tikrinami IP)."
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
-    top_menu: "Nustatykite, kurie elementai rodomi pagrindinio puslapio navigacijoje ir kokia tvarka. Pavyzdys naujausios | naujos | neskaitytos | kategorijos | viršuje | skaityti | paskelbta | žymos"
-    post_menu: "Nustatykite, kurie elementai rodomi įrašų meniu ir kokia tvarka. Pavyzdys kaip | redaguoti | vėliava | ištrinti | bendrinti | žymėti | atsakyti"
     share_links: "Nustatykite, kurie elementai rodomi bendrinimo dialogo lange ir kokia tvarka."
     site_contact_username: "Tinkamas personalo vartotojo vardas, iš kurio siunčiami visi automatiniai pranešimai. Jei jis paliekamas tuščias, bus naudojama numatytoji sistemos paskyra."
     site_contact_group_name: "Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes."
@@ -1342,7 +1310,6 @@ lt:
     enable_safe_mode: "Leisti vartotojams įjungti saugųjį režimą, kad būtų derinami papildiniai."
     rate_limit_create_topic: "Sukūrę temą, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą temą."
     rate_limit_create_post: "Po paskelbimo, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
-    rate_limit_new_user_create_topic: "Sukūrę temą, nauji vartotojai, prieš sukurdami kitą temą, turi palaukti (n) sekundžių."
     rate_limit_new_user_create_post: "Po paskelbimo nauji vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
     max_likes_per_day: "Didžiausias paspaudimų „Patinka“ skaičius vienam vartotojui per dieną."
     max_flags_per_day: "Maksimalus vėliavų skaičius vienam vartotojui per dieną."
@@ -1402,13 +1369,14 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
-    category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
     max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
     topic_views_heat_medium: "Po tiek peržiūrų rodinių laukas vidutiniškai paryškinamas."
     topic_views_heat_high: "Po šio daugybės peržiūrų, peržiūros laukas yra stipriai paryškintas."
     privacy_policy_url: "Jei turite Privatumo politikos dokumentą, talpinamą kitur, kurį norite naudoti, pateikite visą URL čia."
+    num_flaggers_to_close_topic: "Mažiausias unikalių pranešimų skaičius, kurio reikia, kad tema būtų automatiškai sustabdyta intervencijai"
+    num_hours_to_close_topic: "Valandų skaičius pristabdyti temą intervencijai."
     incoming_email_prefer_html: "Įeinantiems el. laiškams naudokite HTML, o ne tekstą."
     display_name_on_email_from: "Rodyti visus vardus el. pašte iš laukų"
     unsubscribe_via_email: "Leiskite naudotojams atšaukti el. laiškų prenumeratą išsiųsdami el. laišką, kurio temoje arba tekste yra „atsisakyti prenumeratos“."
@@ -1439,7 +1407,6 @@ lt:
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     disable_avatar_education_message: "Išjungti švietimo pranešimą keičiant avataras."
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
-    disable_category_edit_notifications: "Išjungti pranešimus apie temų kategorijų redagavimą."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
     full_name_required: "Pilnas vardas yra būtinas vartotojo profilio laukas."
@@ -1456,8 +1423,6 @@ lt:
     emoji_autocomplete_min_chars: "Minimalus simbolių skaičius, reikalingas automatinio užbaigimo jaustukų iššokančiam langui suaktyvinti"
     enable_inline_emoji_translation: "Įgalinamas įterptųjų jaustukų vertimas (be tarpų ar skyrybos ženklų prieš tai)"
     approve_post_count: "Naujo arba pagrindinio naudotojo įrašų, kuriuos reikia patvirtinti, skaičius"
-    approve_unless_trust_level: "Naudotojų įrašai žemiau šio pasitikėjimo lygio turi būti patvirtinti"
-    approve_new_topics_unless_trust_level: "Naujos temos vartotojams žemiau šio patikimumo lygio turi būti patvirtintos"
     auto_close_messages_post_count: "Maksimalus pranešimų skaičius, leidžiamas pranešime prieš jį automatiškai uždarant (0 išjungti)"
     auto_close_topics_create_linked_topic: "Sukurkite naują susietą temą, kai tema automatiškai uždaroma pagal nustatymą „Automatiškai uždarytų temų įrašų skaičių“"
     returning_user_notice_tl: "Minimalus patikimumo lygis, reikalingas norint pamatyti grįžtančius vartotojo pašto pranešimus."
@@ -1476,9 +1441,7 @@ lt:
     default_categories_muted: "Kategorijų, kurios yra nutildytos pagal numatytuosius nustatymus, sąrašas."
     default_text_size: "Teksto dydis, kuris pasirenkamas pagal numatytuosius nustatymus"
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
-    allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"
@@ -1491,7 +1454,6 @@ lt:
     suppress_overlapping_tags_in_list: "Jei žymos atitinka tikslius žodžius temų pavadinimuose, nerodykite jų"
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
-    company_name: "Įmonės pavadinimas"
     governing_law: "Reglamentuojantys teisės aktai"
     city_for_disputes: "Ginčų miestas"
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
@@ -1605,16 +1567,6 @@ lt:
   admin:
     email:
       sent_test: "išsiųsta!"
-    user:
-      merge_user:
-        updating_username: "Atnaujinamas vartotojo vardas ..."
-        changing_post_ownership: "Keičiama įrašo nuosavybė ..."
-        merging_given_daily_likes: "Sujungiama atsižvelgiant į kasdienius mėgstamus dalykus ..."
-        merging_user_visits: "Vartotojų apsilankymų sujungimas..."
-        updating_site_settings: "Atnaujinami svetainės nustatymai ..."
-        updating_user_stats: "Vartotojo statistikos atnaujinimas..."
-        merging_user_attributes: "Sujungiami naudotojo atributai ..."
-        deleting_source_user: "Ištrinamas šaltinio vartotojas ..."
   user:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
@@ -1630,9 +1582,6 @@ lt:
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."
       blocked: "negalimas."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
-      max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
     website:
       domain_not_allowed: "Svetainė netinkama. Leidžiami domenai yra: %{domains}"
     destroy_reasons:
@@ -1922,14 +1871,6 @@ lt:
         Tai automatinis pranešimas nuo %{site_name} , informuojantis, kad jūsų paskyra nebėra sulaikyta po darbuotojų peržiūros.
 
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
-    dashboard_problems:
-      subject_template: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
-      text_body_template: |
-        Atsižvelgdami į dabartinius svetainės nustatymus, turime jums keletą naujų patarimų ir rekomendacijų.
-
-        [Apsilankykite savo svetainės informacijos suvestinėje](%{base_url}/admin), kad ją pamatytumėte.
-
-        Jei suvestinėje nieko nematote, kitas darbuotojas jau galėjo pasinaudoti šiuo patarimu. Personalo veiksmų sąrašą galite rasti [Personalo veiksmų%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
       subject_template: "Jūs esate naujas mėnesio vartotojas!"
@@ -2362,7 +2303,6 @@ lt:
     images:
       too_large: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB), pakeiskite jo dydį ir bandykite dar kartą."
       too_large_humanized: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (maksimalus dydis yra %{max_size}), pakeiskite jo dydį ir bandykite dar kartą."
-      larger_than_x_megapixels: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias matmuo yra %{max_image_megapixels}megapikselių), pakeiskite jo dydį ir bandykite dar kartą."
       size_not_found: "Atsiprašome, bet mes negalėjome nustatyti vaizdo dydžio. Gal jūsų vaizdas yra sugadintas?"
     placeholders:
       too_large: "(vaizdas didesnis nei %{max_size_kb}KB)"
@@ -2734,6 +2674,9 @@ lt:
         title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
+  onebox:
+    github:
+      closed: "uždaryta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2785,8 +2728,6 @@ lt:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
-      delete:
-        title: "Ištrinti..."
       delete_and_ignore_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       delete_and_agree_replies:
@@ -2808,7 +2749,6 @@ lt:
       approve_user:
         title: "Patvirtinti vartotoją"
       reject_user:
-        title: "Ištrinti vartotoją..."
         delete:
           title: "Ištrinti vartotoją"
           description: "Vartotojas bus pašalintas iš forumo."
@@ -2816,7 +2756,6 @@ lt:
           title: "Ištrinti ir blokuoti vartotoją"
       reject:
         title: "Atmesti"
-        bundle_title: "Atmesti..."
       reject_and_suspend:
         title: "Atmesti ir sustabdyti vartotoją"
       reject_and_silence:

@@ -1,14 +1,12 @@
+import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import Component from "@ember/component";
-import layout from "select-kit/templates/components/topic-notifications-button";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
-  layout,
   classNames: ["topic-notifications-button"],
   classNameBindings: ["isLoading"],
   appendReason: true,
@@ -17,6 +15,7 @@ export default Component.extend({
   topic: null,
   showCaret: true,
   isLoading: false,
+
   icon: computed("isLoading", function () {
     return this.isLoading ? "spinner" : null;
   }),

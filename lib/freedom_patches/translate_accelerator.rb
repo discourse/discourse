@@ -52,7 +52,7 @@ module I18n
         # load it
         I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml\z/))
 
-        if Discourse.allow_dev_populate?
+        if Discourse.allow_dev_populate? || Rails.env.test? || Rails.env.development?
           I18n.backend.load_translations(
             I18n.load_path.grep(%r{.*faker.*/#{Regexp.escape locale}\.yml\z}),
           )
@@ -148,7 +148,7 @@ module I18n
       elsif should_raise
         raise I18n::MissingTranslationData.new(locale, key)
       else
-        -"translation missing: #{locale}.#{key}"
+        -"Translation missing: #{locale}.#{key}"
       end
     end
 

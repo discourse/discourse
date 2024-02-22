@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SvgSpriteController do
+  fab!(:user)
+
   describe "#show" do
     before { SvgSprite.expire_cache }
 
@@ -38,7 +40,7 @@ RSpec.describe SvgSpriteController do
     end
 
     it "should return symbol for FA icon search" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/svg-sprite/search/fa-bolt"
       expect(response.status).to eq(200)
@@ -46,7 +48,7 @@ RSpec.describe SvgSpriteController do
     end
 
     it "should return 404 when looking for non-existent FA icon" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/svg-sprite/search/fa-not-a-valid-icon"
       expect(response.status).to eq(404)
@@ -68,7 +70,7 @@ RSpec.describe SvgSpriteController do
 
       SiteSetting.default_theme_id = theme.id
 
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/svg-sprite/search/fa-my-custom-theme-icon"
       expect(response.status).to eq(200)
@@ -77,8 +79,14 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#icon_picker_search" do
+    it "should return 403 for anonymous users" do
+      get "/svg-sprite/picker-search"
+
+      expect(response.status).to eq(403)
+    end
+
     it "should work with no filter and max out at 200 results" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(200)
@@ -89,7 +97,7 @@ RSpec.describe SvgSpriteController do
     end
 
     it "should filter" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/svg-sprite/picker-search", params: { filter: "500px" }
 
@@ -101,7 +109,7 @@ RSpec.describe SvgSpriteController do
     end
 
     it "should display only available" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/svg-sprite/picker-search"
       data = response.parsed_body

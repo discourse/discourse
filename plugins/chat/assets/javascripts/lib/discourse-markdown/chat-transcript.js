@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import { performEmojiUnescape } from "pretty-text/emoji";
+import I18n from "discourse-i18n";
 
 let customMarkdownCookFn;
 
@@ -20,6 +20,8 @@ const chatTranscriptRule = {
     const noLink = !!tagInfo.attrs.noLink;
     const channelName = tagInfo.attrs.channel;
     const channelId = tagInfo.attrs.channelId;
+    const threadId = tagInfo.attrs.threadId;
+    const threadTitle = tagInfo.attrs.threadTitle;
     const channelLink = channelId
       ? options.getURL(`/chat/c/-/${channelId}`)
       : null;
@@ -28,10 +30,83 @@ const chatTranscriptRule = {
       return;
     }
 
+    const isThread = threadId && content.includes("[chat");
     let wrapperDivToken = state.push("div_chat_transcript_wrap", "div", 1);
+
+    if (channelName && multiQuote) {
+      let metaDivToken = state.push("div_chat_transcript_meta", "div", 1);
+      metaDivToken.attrs = [["class", "chat-transcript-meta"]];
+      const channelToken = state.push("html_inline", "", 0);
+
+      const unescapedChannelName = performEmojiUnescape(channelName, {
+        getURL: options.getURL,
+        emojiSet: options.emojiSet,
+        emojiCDNUrl: options.emojiCDNUrl,
+        enableEmojiShortcuts: options.enableEmojiShortcuts,
+        inlineEmoji: options.inlineEmoji,
+        lazy: true,
+      });
+
+      channelToken.content = I18n.t("chat.quote.original_channel", {
+        channel: unescapedChannelName,
+        channelLink,
+      });
+      state.push("div_chat_transcript_meta", "div", -1);
+    }
+
+    if (isThread) {
+      state.push("details_chat_transcript_wrap_open", "details", 1);
+      state.push("summary_chat_transcript_open", "summary", 1);
+
+      const threadToken = state.push("div_thread_open", "div", 1);
+      threadToken.attrs = [["class", "chat-transcript-thread"]];
+
+      const threadHeaderToken = state.push("div_thread_header_open", "div", 1);
+      threadHeaderToken.attrs = [["class", "chat-transcript-thread-header"]];
+
+      const thread_svg = state.push("svg_thread_header_open", "svg", 1);
+      thread_svg.block = false;
+      thread_svg.attrs = [
+        ["class", "fa d-icon d-icon-discourse-threads svg-icon svg-node"],
+      ];
+      state.push(thread_svg);
+      let thread_use = state.push("use_svg_thread_open", "use", 1);
+      thread_use.block = false;
+      thread_use.attrs = [["href", "#discourse-threads"]];
+      state.push(thread_use);
+      state.push(state.push("use_svg_thread_close", "use", -1));
+      state.push(state.push("svg_thread_header_close", "svg", -1));
+
+      const threadTitleContainerToken = state.push(
+        "span_thread_title_open",
+        "span",
+        1
+      );
+      threadTitleContainerToken.attrs = [
+        ["class", "chat-transcript-thread-header__title"],
+      ];
+
+      const threadTitleToken = state.push("html_inline", "", 0);
+      const unescapedThreadTitle = performEmojiUnescape(threadTitle, {
+        getURL: options.getURL,
+        emojiSet: options.emojiSet,
+        emojiCDNUrl: options.emojiCDNUrl,
+        enableEmojiShortcuts: options.enableEmojiShortcuts,
+        inlineEmoji: options.inlineEmoji,
+        lazy: true,
+      });
+      threadTitleToken.content = unescapedThreadTitle
+        ? unescapedThreadTitle
+        : I18n.t("chat.quote.default_thread_title");
+
+      state.push("span_thread_title_close", "span", -1);
+
+      state.push("div_thread_header_close", "div", -1);
+    }
+
     let wrapperClasses = ["chat-transcript"];
 
-    if (!!tagInfo.attrs.chained) {
+    if (tagInfo.attrs.chained) {
       wrapperClasses.push("chat-transcript-chained");
     }
 
@@ -46,17 +121,6 @@ const chatTranscriptRule = {
 
     if (channelName) {
       wrapperDivToken.attrs.push(["data-channel-name", channelName]);
-
-      if (multiQuote) {
-        let metaDivToken = state.push("div_chat_transcript_meta", "div", 1);
-        metaDivToken.attrs = [["class", "chat-transcript-meta"]];
-        const channelToken = state.push("html_inline", "", 0);
-        channelToken.content = I18n.t("chat.quote.original_channel", {
-          channel: channelName,
-          channelLink,
-        });
-        state.push("div_chat_transcript_meta", "div", -1);
-      }
     }
 
     if (channelId) {
@@ -117,6 +181,17 @@ const chatTranscriptRule = {
       spanToken.attrs = [["title", messageTimeStart]];
 
       spanToken.block = false;
+      if (channelName && !multiQuote) {
+        let channelLinkToken = state.push("link_open", "a", 1);
+        channelLinkToken.attrs = [
+          ["class", "chat-transcript-channel"],
+          ["href", channelLink],
+        ];
+        let inlineTextToken = state.push("html_inline", "", 0);
+        inlineTextToken.content = `#${channelName}`;
+        channelLinkToken = state.push("link_close", "a", -1);
+        channelLinkToken.block = false;
+      }
       spanToken = state.push("span_close", "span", -1);
       spanToken.block = false;
     } else {
@@ -153,11 +228,32 @@ const chatTranscriptRule = {
     let messagesToken = state.push("div_chat_transcript_messages", "div", 1);
     messagesToken.attrs = [["class", "chat-transcript-messages"]];
 
-    // rendering chat message content with limited markdown rule subset
-    const token = state.push("html_raw", "", 1);
+    if (isThread) {
+      const regex = /\[chat/i;
+      const match = regex.exec(content);
 
-    token.content = customMarkdownCookFn(content);
-    state.push("html_raw", "", -1);
+      if (match) {
+        const threadToken = state.push("html_raw", "", 1);
+
+        threadToken.content = customMarkdownCookFn(
+          content.substring(0, match.index)
+        );
+        state.push("html_raw", "", -1);
+        state.push("div_thread_close", "div", -1);
+        state.push("summary_chat_transcript_close", "summary", -1);
+        const token = state.push("html_raw", "", 1);
+
+        token.content = customMarkdownCookFn(content.substring(match.index));
+        state.push("html_raw", "", -1);
+        state.push("details_chat_transcript_wrap_close", "details", -1);
+      }
+    } else {
+      // rendering chat message content with limited markdown rule subset
+      const token = state.push("html_raw", "", 1);
+
+      token.content = customMarkdownCookFn(content);
+      state.push("html_raw", "", -1);
+    }
 
     if (reactions) {
       let emojiHtmlCache = {};
@@ -202,8 +298,12 @@ const chatTranscriptRule = {
 
 export function setup(helper) {
   helper.allowList([
+    "svg[class=fa d-icon d-icon-discourse-threads svg-icon svg-node]",
+    "use[href=#discourse-threads]",
     "div[class=chat-transcript]",
+    "details[class=chat-transcript]",
     "div[class=chat-transcript chat-transcript-chained]",
+    "details[class=chat-transcript chat-transcript-chained]",
     "div.chat-transcript-meta",
     "div.chat-transcript-user",
     "div.chat-transcript-username",
@@ -219,6 +319,9 @@ export function setup(helper) {
     "div[data-username]",
     "div[data-datetime]",
     "a.chat-transcript-channel",
+    "div.chat-transcript-thread",
+    "div.chat-transcript-thread-header",
+    "span.chat-transcript-thread-header__title",
   ]);
 
   helper.registerOptions((opts, siteSettings) => {

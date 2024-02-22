@@ -1,10 +1,9 @@
 import { dasherize, decamelize } from "@ember/string";
+import Resolver from "ember-resolver";
 import deprecated from "discourse-common/lib/deprecated";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import { findHelper } from "discourse-common/lib/helpers";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
-import Resolver from "ember-resolver";
-import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legacy-resolver";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let _options = {};
 let moduleSuffixTrie = null;
@@ -107,6 +106,12 @@ const DEPRECATED_MODULES = new Map(
       dropFrom: "3.0.0",
       silent: true,
     },
+    "controller:composer": {
+      newName: "service:composer",
+      since: "3.1.0.beta3",
+      dropFrom: "3.2.0",
+      silent: true,
+    },
   })
 );
 
@@ -130,7 +135,6 @@ function lookupModuleBySuffix(suffix) {
       "discourse-common/",
       "select-kit/",
       "admin/",
-      "wizard/",
       "truth-helpers/",
     ];
     Object.keys(requirejs.entries).forEach((name) => {
@@ -142,20 +146,18 @@ function lookupModuleBySuffix(suffix) {
       }
     });
   }
-  return moduleSuffixTrie.withSuffix(suffix, 1)[0];
+  return (
+    moduleSuffixTrie.withSuffix(suffix, 1)[0] ||
+    moduleSuffixTrie.withSuffix(`${suffix}/index`, 1)[0]
+  );
+}
+
+export function expireModuleTrieCache() {
+  moduleSuffixTrie = null;
 }
 
 export function buildResolver(baseName) {
-  let LegacyResolver = buildLegacyResolver(baseName);
-
   return class extends Resolver {
-    LegacyResolver = LegacyResolver;
-
-    init(props) {
-      super.init(props);
-      this.legacyResolver = this.LegacyResolver.create(props);
-    }
-
     resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -212,18 +214,12 @@ export function buildResolver(baseName) {
           const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
 
           const adminBase = `admin/${type}s/`;
-          const wizardBase = `wizard/${type}s/`;
           if (
             lookupModuleBySuffix(`${type}s/${dashed}`) ||
             requirejs.entries[adminBase + dashed] ||
             requirejs.entries[adminBase + dashed.replace(/^admin[-]/, "")] ||
             requirejs.entries[
               adminBase + dashed.replace(/^admin[-]/, "").replace(/-/g, "_")
-            ] ||
-            requirejs.entries[wizardBase + dashed] ||
-            requirejs.entries[wizardBase + dashed.replace(/^wizard[-]/, "")] ||
-            requirejs.entries[
-              wizardBase + dashed.replace(/^wizard[-]/, "").replace(/-/g, "_")
             ]
           ) {
             corrected = type + ":" + dashed;
@@ -262,23 +258,6 @@ export function buildResolver(baseName) {
       }
     }
 
-    resolveOther(parsedName) {
-      let resolved = super.resolveOther(parsedName);
-      if (!resolved) {
-        let legacyParsedName = this.legacyResolver.parseName(
-          `${parsedName.type}:${parsedName.fullName}`
-        );
-        resolved = this.legacyResolver.resolveOther(legacyParsedName);
-        if (resolved) {
-          deprecated(
-            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`,
-            { id: "discourse.legacy-resolver-fallback" }
-          );
-        }
-      }
-      return resolved;
-    }
-
     resolveHelper(parsedName) {
       return findHelper(parsedName.fullNameWithoutType);
     }
@@ -296,7 +275,6 @@ export function buildResolver(baseName) {
         this.findMobileTemplate(parsedName) ||
         this.findTemplate(parsedName) ||
         this.findAdminTemplate(parsedName) ||
-        this.findWizardTemplate(parsedName) ||
         this.findLoadingTemplate(parsedName) ||
         this.findConnectorTemplate(parsedName) ||
         this.discourseTemplateModule("not_found")
@@ -399,29 +377,6 @@ export function buildResolver(baseName) {
       }
 
       return resolved;
-    }
-
-    findWizardTemplate(parsedName) {
-      if (parsedName.fullNameWithoutType === "wizard") {
-        return this.discourseTemplateModule("wizard/templates/wizard");
-      }
-
-      let namespaced;
-
-      if (parsedName.fullNameWithoutType.startsWith("components/")) {
-        // Look up components as-is
-        namespaced = parsedName.fullNameWithoutType;
-      } else if (/^wizard[_\.-]/.test(parsedName.fullNameWithoutType)) {
-        // This may only get hit for the loading routes and may be removable.
-        namespaced = parsedName.fullNameWithoutType.slice(7);
-      }
-
-      if (namespaced) {
-        let wizardParsedName = this.parseName(
-          `template:wizard/templates/${namespaced}`
-        );
-        return this.findTemplate(wizardParsedName);
-      }
     }
   };
 }

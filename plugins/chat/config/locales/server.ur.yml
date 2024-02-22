@@ -21,14 +21,16 @@ ur:
           description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
         disagree:
           title: "اختلاف کریں"
-        ignore:
-          title: "نظر انداز کریں"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "بر خاست کریں"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
+    onebox:
+      thread_title_connector: "میں"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

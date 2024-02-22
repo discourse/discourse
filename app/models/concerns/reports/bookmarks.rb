@@ -8,7 +8,7 @@ module Reports::Bookmarks
       report.icon = "bookmark"
 
       category_filter = report.filters.dig(:category)
-      report.add_filter("category", default: category_filter)
+      report.add_filter("category", type: "category", default: category_filter)
 
       report.data = []
       Bookmark

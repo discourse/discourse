@@ -91,8 +91,12 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
+  def hidden_settings_provider
+    @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
+  end
+
   def hidden_settings
-    @hidden_settings ||= []
+    hidden_settings_provider.all
   end
 
   def refresh_settings
@@ -115,62 +119,20 @@ module SiteSettingExtension
     @plugins ||= {}
   end
 
-  def setting(name_arg, default = nil, opts = {})
-    name = name_arg.to_sym
-
-    if name == :default_locale
-      raise Discourse::InvalidParameters.new(
-              "Other settings depend on default locale, you can not configure it like this",
-            )
-    end
-
-    shadowed_val = nil
-
-    mutex.synchronize do
-      defaults.load_setting(name, default, opts.delete(:locale_default))
-
-      categories[name] = opts[:category] || :uncategorized
-
-      hidden_settings << name if opts[:hidden]
-
-      if GlobalSetting.respond_to?(name)
-        val = GlobalSetting.public_send(name)
-
-        unless val.nil? || (val == "")
-          shadowed_val = val
-          hidden_settings << name
-          shadowed_settings << name
-        end
+  def load_settings(file, plugin: nil)
+    SiteSettings::YamlLoader
+      .new(file)
+      .load do |category, name, default, opts|
+        setting(name, default, opts.merge(category: category, plugin: plugin))
       end
+  end
 
-      refresh_settings << name if opts[:refresh]
-
-      client_settings << name.to_sym if opts[:client]
-
-      previews[name] = opts[:preview] if opts[:preview]
-
-      secret_settings << name if opts[:secret]
-
-      plugins[name] = opts[:plugin] if opts[:plugin]
-
-      type_supervisor.load_setting(
-        name,
-        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS),
-      )
-
-      if !shadowed_val.nil?
-        setup_shadowed_methods(name, shadowed_val)
-      else
-        setup_methods(name)
-      end
-    end
+  def deprecated_settings
+    @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
   def settings_hash
     result = {}
-    deprecated_settings = Set.new
-
-    SiteSettings::DeprecatedSettings::SETTINGS.each { |s| deprecated_settings << s[0] }
 
     defaults.all.keys.each do |s|
       result[s] = if deprecated_settings.include?(s.to_s)
@@ -196,7 +158,12 @@ module SiteSettingExtension
       Hash[
         *@client_settings
           .map do |name|
-            value = self.public_send(name)
+            value =
+              if deprecated_settings.include?(name.to_s)
+                public_send(name, warn: false)
+              else
+                public_send(name)
+              end
             type = type_supervisor.get_type(name)
             value = value.to_s if type == :upload
             value = value.map(&:to_s).join("|") if type == :uploaded_image_list
@@ -224,6 +191,9 @@ module SiteSettingExtension
 
     defaults
       .all(default_locale)
+      .reject do |setting_name, _|
+        plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
+      end
       .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
@@ -239,6 +209,7 @@ module SiteSettingExtension
         opts = {
           setting: s,
           description: description(s),
+          keywords: keywords(s),
           default: default,
           value: value.to_s,
           category: categories[s],
@@ -256,6 +227,10 @@ module SiteSettingExtension
 
   def description(setting)
     I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
+  end
+
+  def keywords(setting)
+    I18n.t("site_settings.keywords.#{setting}", default: "")
   end
 
   def placeholder(setting)
@@ -433,7 +408,9 @@ module SiteSettingExtension
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 
@@ -441,7 +418,9 @@ module SiteSettingExtension
     if has_setting?(name)
       self.public_send(name)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 
@@ -540,6 +519,11 @@ module SiteSettingExtension
       end
     else
       define_singleton_method clean_name do
+        if plugins[name]
+          plugin = Discourse.plugins_by_name[plugins[name]]
+          return false if !plugin.configurable? && plugin.enabled_site_setting == name
+        end
+
         if (c = current[name]).nil?
           refresh!
           current[name]
@@ -560,9 +544,14 @@ module SiteSettingExtension
 
     # Same logic as above for group_list settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
-    if type_supervisor.get_type(name) == :list &&
-         %w[simple compact].include?(type_supervisor.get_list_type(name))
-      define_singleton_method("#{clean_name}_map") { self.public_send(clean_name).to_s.split("|") }
+    if type_supervisor.get_type(name) == :list
+      list_type = type_supervisor.get_list_type(name)
+
+      if %w[simple compact].include?(list_type) || list_type.nil?
+        define_singleton_method("#{clean_name}_map") do
+          self.public_send(clean_name).to_s.split("|")
+        end
+      end
     end
 
     define_singleton_method "#{clean_name}?" do
@@ -593,6 +582,57 @@ module SiteSettingExtension
   end
 
   private
+
+  def setting(name_arg, default = nil, opts = {})
+    name = name_arg.to_sym
+
+    if name == :default_locale
+      raise Discourse::InvalidParameters.new(
+              "Other settings depend on default locale, you can not configure it like this",
+            )
+    end
+
+    shadowed_val = nil
+
+    mutex.synchronize do
+      defaults.load_setting(name, default, opts.delete(:locale_default))
+
+      categories[name] = opts[:category] || :uncategorized
+
+      hidden_settings_provider.add_hidden(name) if opts[:hidden]
+
+      if GlobalSetting.respond_to?(name)
+        val = GlobalSetting.public_send(name)
+
+        unless val.nil? || (val == "")
+          shadowed_val = val
+          hidden_settings_provider.add_hidden(name)
+          shadowed_settings << name
+        end
+      end
+
+      refresh_settings << name if opts[:refresh]
+
+      client_settings << name.to_sym if opts[:client]
+
+      previews[name] = opts[:preview] if opts[:preview]
+
+      secret_settings << name if opts[:secret]
+
+      plugins[name] = opts[:plugin] if opts[:plugin]
+
+      type_supervisor.load_setting(
+        name,
+        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS),
+      )
+
+      if !shadowed_val.nil?
+        setup_shadowed_methods(name, shadowed_val)
+      else
+        setup_methods(name)
+      end
+    end
+  end
 
   def default_uploads
     @default_uploads ||= {}

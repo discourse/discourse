@@ -1,24 +1,18 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 let deleteAndBlock = null;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
-  needs.pretender((server, helper) => {
-    server.get("/u/eviltrout.json", () => {
-      const response = cloneJSON(userFixtures["/u/eviltrout.json"]);
-      return helper.response(response);
-    });
-  });
 
   test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");

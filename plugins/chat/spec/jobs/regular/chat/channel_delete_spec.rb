@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::Chat::ChannelDelete do
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:chat_channel)
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
@@ -23,10 +23,10 @@ describe Jobs::Chat::ChannelDelete do
       UploadReference.create(target: message, upload: upload)
     end
 
-    Chat::Mention.create(
+    Chat::UserMention.create(
       user: user2,
       chat_message: messages.sample,
-      notification: Fabricate(:notification),
+      notifications: [Fabricate(:notification)],
     )
 
     @incoming_chat_webhook_id = Fabricate(:incoming_chat_webhook, chat_channel: chat_channel)
@@ -62,7 +62,10 @@ describe Jobs::Chat::ChannelDelete do
       revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
       mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
       upload_references:
-        UploadReference.where(target_id: @message_ids, target_type: Chat::Message.sti_name).count,
+        UploadReference.where(
+          target_id: @message_ids,
+          target_type: Chat::Message.polymorphic_name,
+        ).count,
       messages: Chat::Message.where(id: @message_ids).count,
       reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
     }

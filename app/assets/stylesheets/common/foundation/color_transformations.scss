@@ -171,3 +171,12 @@ $hljs-attribute: dark-light-choose(
 $hljs-symbol: dark-light-choose(unquote("#990073"), unquote("#fbe")) !default;
 $hljs-bg: dark-light-choose(unquote("#f8f8f8"), unquote("#333")) !default;
 $hljs-builtin-name: dark-light-choose($tertiary-high, $tertiary-hover) !default;
+
+// shadow opacity variables
+$shadow-opacity-modal: dark-light-choose(0.6, 1) !default;
+$shadow-opacity-composer: dark-light-choose(0.12, 0.35) !default;
+$shadow-opacity-menu-panel: dark-light-choose(0.15, 0.35) !default;
+$shadow-opacity-card: dark-light-choose(0.15, 0.5) !default;
+$shadow-opacity-dropdown: dark-light-choose(0.1, 0.25) !default;
+$shadow-opacity-header: dark-light-choose(0.25, 0.45) !default;
+$shadow-opacity-footer-nav: dark-light-choose(0.2, 0.4) !default;

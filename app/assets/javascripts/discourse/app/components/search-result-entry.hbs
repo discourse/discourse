@@ -10,7 +10,7 @@
       <TrackSelected
         @selectedList={{this.selected}}
         @selectedId={{this.post.topic}}
-        @class="bulk-select"
+        class="bulk-select"
       />
     {{/if}}
 
@@ -31,6 +31,10 @@
           </HighlightSearch>
         {{/if}}
       </span>
+      <PluginOutlet
+        @name="search-results-topic-title-suffix"
+        @outletArgs={{hash topic=this.post.topic}}
+      />
     </a>
 
     <div class="search-category">
@@ -79,3 +83,5 @@
     {{/if}}
   {{/if}}
 </div>
+
+<PluginOutlet @name="after-search-result-entry" />

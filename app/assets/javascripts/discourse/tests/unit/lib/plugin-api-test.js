@@ -1,9 +1,9 @@
-import { module, skip, test } from "qunit";
+import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import discourseComputed from "discourse-common/utils/decorators";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -88,7 +88,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(thingy.prop, "g'day");
   });
 
-  skip("modifyClass works with getters", function (assert) {
+  test("modifyClass works with getters", function (assert) {
     let Base = EmberObject.extend({
       get foo() {
         throw new Error("base getter called");
@@ -105,6 +105,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
     // This puts things in a state which will trigger https://github.com/emberjs/ember.js/issues/18860 when a native getter is overridden.
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("test-class:main", {
+        pluginId: "plugin-api-test",
+
         get foo() {
           return "modified getter";
         },

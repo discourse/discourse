@@ -1,10 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
 acceptance("Post - History", function (needs) {
   needs.user();

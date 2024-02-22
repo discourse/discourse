@@ -25,14 +25,14 @@
 # into a new channel, they end up as just a flat series of messages that are
 # not in a chain. If the original message of a thread and N other messages
 # in that thread, then any messages left behind just get placed into a new
-# thread. Message moving will be disabled in the thread UI while
-# enable_experimental_chat_threaded_discussions is present, its too complicated
+# thread. Message moving will be disabled in the thread UI, its too complicated
 # to have end users reason about for now, and we may want a standalone
 # "Move Thread" UI later on.
 module Chat
   class MessageMover
     class NoMessagesFound < StandardError
     end
+
     class InvalidChannel < StandardError
     end
 
@@ -66,6 +66,7 @@ module Chat
         update_references
         delete_source_messages
         update_reply_references
+        update_tracking_state
         update_thread_references
       end
 
@@ -111,6 +112,7 @@ module Chat
         message_ids: @ordered_source_message_ids,
         destination_channel_id: destination_channel.id,
       }
+
       moved_message_ids = DB.query_single(<<~SQL, query_args)
       INSERT INTO chat_messages(
         chat_channel_id, user_id, last_editor_id, message, cooked, cooked_version, created_at, updated_at
@@ -125,6 +127,7 @@ module Chat
              CLOCK_TIMESTAMP()
       FROM chat_messages
       WHERE id IN (:message_ids)
+      ORDER BY created_at ASC, id ASC
       RETURNING id
     SQL
 
@@ -143,7 +146,7 @@ module Chat
       WHERE cmr.chat_message_id = mm.old_chat_message_id
     SQL
 
-      DB.exec(<<~SQL, target_type: Chat::Message.sti_name)
+      DB.exec(<<~SQL, target_type: Chat::Message.polymorphic_name)
       UPDATE upload_references uref
       SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
@@ -184,10 +187,11 @@ module Chat
     end
 
     def add_moved_placeholder(destination_channel, first_moved_message)
-      Chat::MessageCreator.create(
-        chat_channel: @source_channel,
-        user: Discourse.system_user,
-        content:
+      @source_channel.add(Discourse.system_user)
+      Chat::CreateMessage.call(
+        chat_channel_id: @source_channel.id,
+        guardian: Discourse.system_user.guardian,
+        message:
           I18n.t(
             "chat.channel.messages_moved",
             count: @source_message_ids.length,
@@ -206,10 +210,14 @@ module Chat
     SQL
     end
 
+    def update_tracking_state
+      ::Chat::Action::ResetUserLastReadChannelMessage.call(@source_message_ids, @source_channel.id)
+    end
+
     def update_thread_references
       threads_to_update = []
       @source_messages
-        .select { |message| message.thread_id.present? }
+        .select { |message| message.in_thread? }
         .each do |message_with_thread|
           # If one of the messages we are moving is the original message in a thread,
           # then all the remaining messages for that thread must be moved to a new one,

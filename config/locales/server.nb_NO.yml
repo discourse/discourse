@@ -18,7 +18,7 @@ nb_NO:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - januar
     - februar
     - mars
@@ -52,6 +52,9 @@ nb_NO:
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
+  components:
+    enabled_filter: "Aktivert"
+    disabled_filter: "Deaktivert"
   themes:
     other_error: "Noe gikk galt under oppdateringen av drakten"
     import_error:
@@ -74,6 +77,9 @@ nb_NO:
       string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
       string_value_not_valid_min: "Den må være minst %{min} tegn lang."
       string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
+      objects:
+        required: "Må være til stede"
+        not_valid_integer_value: "må være ett heltall"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -150,9 +156,6 @@ nb_NO:
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
-      invalid_choice:
-        one: "Du spesifiserte det ugyldige valget %{name}"
-        other: "Du spesifiserte de ugyldige valgene %{name}"
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -195,7 +198,6 @@ nb_NO:
     more_replies:
       one: "%{count} svar til"
       other: "%{count} svar til"
-    loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
@@ -359,7 +361,8 @@ nb_NO:
               same_as_current: "er det samme som nåværende passord."
               unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
-              signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
+              blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
+              max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
         user_email:
           attributes:
             user_id:
@@ -394,21 +397,6 @@ nb_NO:
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
-  discourse_welcome_topic:
-    body: |2
-
-      Det første avsnittet av dette festede emnet vil være synlig som en velkomstmelding til alle nye besøkende på hjemmesiden. Det er viktig!
-
-      **Rediger dette** til en kort beskrivelse av samfunnet ditt:
-
-      - Hvem er det ment for?
-      - Hva kan de finner her?
-      - Hvorfor skal de besøke stedet?
-      - Hvor kan de lese mer (lenker, ressurser, etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   category:
     topic_prefix: "Om kategorien %{category} "
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
@@ -527,8 +515,6 @@ nb_NO:
   email_login:
     title: "E-post innlogging"
   change_email:
-    confirmed: "E-postaddressen din er blitt oppdatert."
-    please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
@@ -564,6 +550,9 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
@@ -598,6 +587,9 @@ nb_NO:
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
       email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
@@ -929,9 +921,6 @@ nb_NO:
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
-    min_post_length: "Minimum tillatt lengde for innlegg i tegn"
-    min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
-    min_personal_message_post_length: "Minste lengde i antall tegn for en melding"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     topic_featured_link_enabled: "Tillat publisering av lenker som emner."
     show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
@@ -973,7 +962,6 @@ nb_NO:
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
-    num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
@@ -1111,9 +1099,6 @@ nb_NO:
       blank: "Må være til stede"
     email:
       blocked: "er ikke tillatt."
-    ip_address:
-      blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
-      max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
@@ -1341,6 +1326,9 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1353,6 +1341,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
       custom: "Varsling fra %{username} på %{site_title}"
+  staff_action_logs:
+    unknown: "ukjent"
   reviewables:
     priorities:
       low: "Lav"
@@ -1385,7 +1375,6 @@ nb_NO:
       approve:
         title: "Godkjenn"
       reject_user:
-        title: "Slett bruker..."
         delete:
           title: "Slett bruker"
       reject:

@@ -1,10 +1,17 @@
 import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
 
 export default class AdminCustomizeColorsShowRoute extends Route {
+  @service router;
+
   model(params) {
     const all = this.modelFor("adminCustomize.colors");
     const model = all.findBy("id", parseInt(params.scheme_id, 10));
-    return model ? model : this.replaceWith("adminCustomize.colors.index");
+    if (model) {
+      return model;
+    } else {
+      this.router.replaceWith("adminCustomize.colors.index");
+    }
   }
 
   serialize(model) {

@@ -26,15 +26,15 @@ en:
       multiple:
         help:
           at_least_min_options:
-            one: "Choose at least <strong>%{count}</strong> option."
-            other: "Choose at least <strong>%{count}</strong> options."
+            one: "Choose at least <strong>%{count} option</strong>."
+            other: "Choose at least <strong>%{count} options</strong>."
           up_to_max_options:
-            one: "Choose up to <strong>%{count}</strong> option."
-            other: "Choose up to <strong>%{count}</strong> options."
+            one: "Choose up to <strong>%{count} option</strong>."
+            other: "Choose up to <strong>%{count} options</strong>."
           x_options:
-            one: "Choose <strong>%{count}</strong> option."
-            other: "Choose <strong>%{count}</strong> options."
-          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
+            one: "Choose <strong>%{count} option</strong>."
+            other: "Choose <strong>%{count} options</strong>."
+          between_min_and_max_options: "Choose between <strong>%{min} and %{max} options</strong>."
 
       cast-votes:
         title: "Cast your votes"
@@ -42,15 +42,15 @@ en:
 
       show-results:
         title: "Display the poll results"
-        label: "Show results"
+        label: "Results"
 
       remove-vote:
         title: "Remove your vote"
-        label: "Remove vote"
+        label: "Undo vote"
 
       hide-results:
         title: "Back to your votes"
-        label: "Show vote"
+        label: "Vote"
 
       group-results:
         title: "Group votes by user field"
@@ -80,6 +80,9 @@ en:
         breakdown: "Breakdown"
         percentage: "Percentage"
         count: "Count"
+      
+      options:
+        label: "Options"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."

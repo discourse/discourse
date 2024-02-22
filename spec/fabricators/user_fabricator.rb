@@ -3,13 +3,23 @@
 Fabricator(:user_stat) {}
 
 Fabricator(:user, class_name: :user) do
+  transient refresh_auto_groups: false
+  transient trust_level: nil
+
   name "Bruce Wayne"
   username { sequence(:username) { |i| "bruce#{i}" } }
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
   password "myawesomepassword"
-  trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+
+  after_build { |user, transients| user.trust_level = transients[:trust_level] || TrustLevel[1] }
+
+  after_create do |user, transients|
+    if transients[:refresh_auto_groups] || transients[:trust_level]
+      Group.user_trust_level_change!(user.id, user.trust_level)
+    end
+  end
 end
 
 Fabricator(:user_with_secondary_email, from: :user) do
@@ -97,9 +107,8 @@ Fabricator(:leader, from: :user) do
 end
 
 Fabricator(:trust_level_0, from: :user) { trust_level TrustLevel[0] }
-
 Fabricator(:trust_level_1, from: :user) { trust_level TrustLevel[1] }
-
+Fabricator(:trust_level_2, from: :user) { trust_level TrustLevel[2] }
 Fabricator(:trust_level_3, from: :user) { trust_level TrustLevel[3] }
 
 Fabricator(:trust_level_4, from: :user) do
@@ -132,5 +141,13 @@ Fabricator(:bot, from: :user) do
   id do
     min_id = User.minimum(:id)
     [(min_id || 0) - 1, -10].min
+  end
+end
+
+Fabricator(:east_coast_user, from: :user) do
+  email "eastcoast@tz.com"
+  after_create do |user|
+    user.user_option = UserOption.new(timezone: "Eastern Time (US & Canada)")
+    user.save
   end
 end

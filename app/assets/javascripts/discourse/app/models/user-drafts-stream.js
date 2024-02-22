@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { cookAsync, emojiUnescape, excerpt } from "discourse/lib/text";
+import { cook, emojiUnescape, excerpt } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -8,19 +8,18 @@ import {
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
-import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default RestModel.extend({
-  limit: 30,
-
-  loading: false,
-  hasMore: false,
-  content: null,
+export default class UserDraftsStream extends RestModel {
+  limit = 30;
+  loading = false;
+  hasMore = false;
+  content = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.reset();
-  },
+  }
 
   reset() {
     this.setProperties({
@@ -28,19 +27,19 @@ export default RestModel.extend({
       hasMore: true,
       content: [],
     });
-  },
+  }
 
   @discourseComputed("content.length", "loading")
   noContent(contentLength, loading) {
     return contentLength === 0 && !loading;
-  },
+  }
 
   remove(draft) {
     this.set(
       "content",
       this.content.filter((item) => item.draft_key !== draft.draft_key)
     );
-  },
+  }
 
   findItems(site) {
     if (site) {
@@ -68,8 +67,8 @@ export default RestModel.extend({
 
         const promises = result.drafts.map((draft) => {
           draft.data = JSON.parse(draft.data);
-          return cookAsync(draft.data.reply).then((cooked) => {
-            draft.excerpt = excerpt(cooked.string, 300);
+          return cook(draft.data.reply).then((cooked) => {
+            draft.excerpt = excerpt(cooked.toString(), 300);
             draft.post_number = draft.data.postId || null;
             if (
               draft.draft_key === NEW_PRIVATE_MESSAGE_KEY ||
@@ -92,5 +91,5 @@ export default RestModel.extend({
       .finally(() => {
         this.set("loading", false);
       });
-  },
-});
+  }
+}

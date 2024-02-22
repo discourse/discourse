@@ -1,36 +1,41 @@
-$avatar_width: 120px;
+[data-content][data-identifier="card"] {
+  z-index: z("max");
+}
 
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  // mobile cards should always be on top of everything - 1102
-  z-index: z("mobile-composer") + 2;
   max-width: 95vw;
-  margin: 0 2.5vw;
+  margin: 0;
   max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
+  box-sizing: border-box;
   // avatar - names - controls
   .first-row {
     flex-wrap: wrap;
     .names {
-      flex: 1 1 calc(100% - #{$avatar_width});
+      flex: 1 1 auto;
       box-sizing: border-box;
     }
+    .user-card-avatar {
+      flex: 0 0 auto;
+    }
     .usercard-controls {
-      --usercard-control-margin: 0.25em;
+      width: 100%; // always wraps to next line
       display: flex;
-      flex: 1;
       flex-wrap: wrap;
-      margin: 1em calc(var(--usercard-control-margin) * -1) 0;
+      margin-top: 1em;
+      gap: 0.5em;
       li {
-        flex: 1 0 calc(50% - (var(--usercard-control-margin) * 2));
-        min-width: 0;
-        margin: 0 var(--usercard-control-margin);
+        flex: 1 0 45%;
+        min-width: 8em;
         &:empty {
           display: none;
         }
         button {
-          @include ellipsis;
-          margin-bottom: calc(var(--usercard-control-margin) * 2);
+          margin: 0;
+          .d-button-label {
+            @include ellipsis;
+          }
         }
       }
     }
@@ -104,4 +109,7 @@ $avatar_width: 120px;
   width: 100vw;
   background-color: rgba(black, 0.5);
   animation: fadein 0.2s;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
 }

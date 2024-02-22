@@ -1,13 +1,13 @@
-import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import Category from "discourse/models/category";
 import Component from "@ember/component";
-import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
-import I18n from "I18n";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { isTesting } from "discourse-common/config/environment";
+import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
+import Category from "discourse/models/category";
+import { isTesting } from "discourse-common/config/environment";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["topic-timer-info"],
@@ -69,7 +69,16 @@ export default Component.extend({
 
     const topicStatus = this.topicClosed ? "close" : "open";
     const topicStatusKnown = this.topicClosed !== undefined;
+    const topicStatusUpdate = this.statusUpdate !== undefined;
     if (topicStatusKnown && topicStatus === this.statusType) {
+      if (!topicStatusUpdate) {
+        return;
+      }
+
+      // The topic status has just been toggled, so we can hide the timer info.
+      this.set("showTopicTimer", null);
+      // The timer has already been removed on the back end. The front end is not aware of the change yet.
+      this.set("executeAt", null);
       return;
     }
 

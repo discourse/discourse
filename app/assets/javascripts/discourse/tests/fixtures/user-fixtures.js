@@ -2724,6 +2724,14 @@ export default {
         text_size_seq: 0,
         timezone: "America/Los_Angeles",
       },
+      user_passkeys: [
+        {
+          id: 2,
+          name: "iCloud Keychain",
+          last_used: "2023-10-10T20:03:20.986Z",
+          created_at: "2023-10-09T20:01:37.578Z",
+        },
+      ],
     },
   },
   "/u/charlie/card.json": {

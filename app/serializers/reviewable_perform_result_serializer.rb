@@ -48,8 +48,4 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(scope.user)
   end
-
-  def include_unseen_reviewable_count?
-    scope.user.redesigned_user_menu_enabled?
-  end
 end

@@ -8,8 +8,8 @@ RSpec.describe CategoryList do
     Topic.update_featured_topics = true
   end
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
   describe "security" do
@@ -42,6 +42,13 @@ RSpec.describe CategoryList do
       muted_tag = Fabricate(:tag) # muted tag
       SiteSetting.default_tags_muted = muted_tag.name
       Fabricate(:topic, category: public_cat, tags: [muted_tag])
+
+      muted_tag_2 = Fabricate(:tag)
+      TagUser.create!(
+        tag: muted_tag_2,
+        user: user,
+        notification_level: TagUser.notification_levels[:muted],
+      )
 
       CategoryFeaturedTopic.feature_topics
 
@@ -122,7 +129,7 @@ RSpec.describe CategoryList do
   end
 
   context "when mute_all_categories_by_default enabled" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     before { SiteSetting.mute_all_categories_by_default = true }
 
@@ -325,6 +332,80 @@ RSpec.describe CategoryList do
           [SiteSetting.uncategorized_category_id, cat1.id, cat3.id, muted_cat.id],
         )
       end
+    end
+  end
+
+  describe "category_list_find_categories_query modifier" do
+    fab!(:cool_category) { Fabricate(:category, name: "Cool category") }
+    fab!(:boring_category) { Fabricate(:category, name: "Boring category") }
+
+    it "allows changing the query" do
+      prefetched_categories = CategoryList.new(Guardian.new(user)).categories.map { |c| c[:id] }
+      expect(prefetched_categories).to include(cool_category.id, boring_category.id)
+
+      Plugin::Instance
+        .new
+        .register_modifier(:category_list_find_categories_query) do |query|
+          query.where("categories.name LIKE 'Cool%'")
+        end
+
+      prefetched_categories = CategoryList.new(Guardian.new(user)).categories.map { |c| c[:id] }
+
+      expect(prefetched_categories).to include(cool_category.id)
+      expect(prefetched_categories).not_to include(boring_category.id)
+    ensure
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+  end
+
+  describe "with custom fields" do
+    fab!(:category) { Fabricate(:category, user: admin) }
+
+    before { category.upsert_custom_fields("bob" => "marley") }
+    after { Site.reset_preloaded_category_custom_fields }
+
+    it "can preloads custom fields" do
+      Site.preloaded_category_custom_fields << "bob"
+
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to eq(true)
+    end
+
+    it "does not preload fields that were not set for preloading" do
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to be_falsey
+    end
+  end
+
+  describe "with lazy load categories enabled" do
+    fab!(:category) { Fabricate(:category, user: admin) }
+    fab!(:subcategory) { Fabricate(:category, user: admin, parent_category: category) }
+
+    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+
+    it "returns categories with subcategory_ids" do
+      expect(category_list.categories.size).to eq(3)
+      expect(
+        category_list.categories.find { |c| c.id == category.id }.subcategory_ids,
+      ).to contain_exactly(subcategory.id)
+    end
+
+    it "returns at most SUBCATEGORIES_PER_CATEGORY subcategories" do
+      subcategory_2 = Fabricate(:category, user: admin, parent_category: category)
+
+      category_list =
+        stub_const(CategoryList, "SUBCATEGORIES_PER_CATEGORY", 1) do
+          CategoryList.new(Guardian.new(user), include_topics: true)
+        end
+
+      expect(category_list.categories.size).to eq(3)
+      uncategorized_category = Category.find(SiteSetting.uncategorized_category_id)
+      expect(category_list.categories).to include(uncategorized_category)
+      expect(category_list.categories).to include(category)
+      expect(category_list.categories).to include(subcategory).or include(subcategory_2)
+      expect(category_list.categories.map(&:parent_category_id)).to contain_exactly(
+        nil,
+        nil,
+        category.id,
+      )
     end
   end
 end

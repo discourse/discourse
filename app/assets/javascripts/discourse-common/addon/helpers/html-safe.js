@@ -1,6 +1,8 @@
-import { htmlSafe } from "@ember/template";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { htmlSafe as emberHtmlSafe } from "@ember/template";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("html-safe", function (string) {
-  return htmlSafe(string);
-});
+registerRawHelper("html-safe", htmlSafe);
+
+export default function htmlSafe(string) {
+  return emberHtmlSafe(string);
+}

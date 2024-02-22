@@ -1,13 +1,16 @@
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
-import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import { ajax } from "discourse/lib/ajax";
-import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
-import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import guid from "pretty-text/guid";
+import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { getOwner } from "discourse-common/lib/get-owner";
+import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
+import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -47,31 +50,92 @@ const READONLY_STATUSES = [
   CHANNEL_STATUSES.archived,
 ];
 
-export default class ChatChannel extends RestModel {
-  @tracked currentUserMembership = null;
-  @tracked isDraft = false;
-  @tracked title;
-  @tracked description;
-  @tracked chatableType;
-  @tracked status;
-  @tracked activeThread;
-  @tracked lastMessageSentAt;
-  @tracked canDeleteOthers;
-  @tracked canDeleteSelf;
-  @tracked canFlag;
-  @tracked canModerate;
-  @tracked userSilenced;
-  @tracked draft;
-
-  threadsManager = new ChatThreadsManager(getOwner(this));
-  messagesManager = new ChatMessagesManager(getOwner(this));
-
-  get messages() {
-    return this.messagesManager.messages;
+export default class ChatChannel {
+  static create(args = {}) {
+    return new ChatChannel(args);
   }
 
-  set messages(messages) {
-    this.messagesManager.messages = messages;
+  @tracked title;
+  @tracked slug;
+  @tracked description;
+  @tracked status;
+  @tracked activeThread = null;
+  @tracked meta;
+  @tracked chatableId;
+  @tracked chatableType;
+  @tracked chatableUrl;
+  @tracked autoJoinUsers = false;
+  @tracked allowChannelWideMentions = true;
+  @tracked membershipsCount = 0;
+  @tracked archive;
+  @tracked tracking;
+  @tracked threadingEnabled = false;
+  @tracked draft;
+
+  threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
+  messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
+
+  @tracked _currentUserMembership;
+  @tracked _lastMessage;
+
+  constructor(args = {}) {
+    this.id = args.id;
+    this.chatableId = args.chatable_id;
+    this.chatableUrl = args.chatable_url;
+    this.chatableType = args.chatable_type;
+    this.membershipsCount = args.memberships_count;
+    this.slug = args.slug;
+    this.title = args.title;
+    this.status = args.status;
+    this.description = args.description;
+    this.threadingEnabled = args.threading_enabled;
+    this.autoJoinUsers = args.auto_join_users;
+    this.allowChannelWideMentions = args.allow_channel_wide_mentions;
+    this.chatable = this.#initChatable(args.chatable || []);
+    this.currentUserMembership = args.current_user_membership;
+
+    if (args.archive_completed || args.archive_failed) {
+      this.archive = ChatChannelArchive.create(args);
+    }
+
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
+    this.lastMessage = args.last_message;
+    this.meta = args.meta;
+  }
+
+  get unreadThreadsCountSinceLastViewed() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
+      (lastReplyCreatedAt) =>
+        lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
+    ).length;
+  }
+
+  get unreadThreadsCount() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).length;
+  }
+
+  updateLastViewedAt() {
+    this.currentUserMembership.lastViewedAt = new Date();
+  }
+
+  get canDeleteSelf() {
+    return this.meta.can_delete_self;
+  }
+
+  get canDeleteOthers() {
+    return this.meta.can_delete_others;
+  }
+
+  get canFlag() {
+    return this.meta.can_flag;
+  }
+
+  get userSilenced() {
+    return this.meta.user_silenced;
+  }
+
+  get canModerate() {
+    return this.meta.can_moderate;
   }
 
   get escapedTitle() {
@@ -122,24 +186,33 @@ export default class ChatChannel extends RestModel {
     return this.currentUserMembership.following;
   }
 
-  get visibleMessages() {
-    return this.messages.filter((message) => message.visible);
+  get canJoin() {
+    return this.meta.can_join_chat_channel;
   }
 
-  set details(details) {
-    this.canDeleteOthers = details.can_delete_others ?? false;
-    this.canDeleteSelf = details.can_delete_self ?? false;
-    this.canFlag = details.can_flag ?? false;
-    this.canModerate = details.can_moderate ?? false;
-    if (details.can_load_more_future !== undefined) {
-      this.messagesManager.canLoadMoreFuture = details.can_load_more_future;
+  async stageMessage(message) {
+    message.id = guid();
+    message.staged = true;
+    message.processed = false;
+    message.draft = false;
+    message.createdAt = new Date();
+    message.channel = this;
+
+    if (message.inReplyTo) {
+      if (!this.threadingEnabled) {
+        this.messagesManager.addMessages([message]);
+      }
+    } else {
+      this.messagesManager.addMessages([message]);
     }
-    if (details.can_load_more_past !== undefined) {
-      this.messagesManager.canLoadMorePast = details.can_load_more_past;
-    }
-    this.userSilenced = details.user_silenced ?? false;
-    this.status = details.channel_status;
-    this.channelMessageBusLastId = details.channel_message_bus_last_id;
+
+    message.manager = this.messagesManager;
+  }
+
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this, {
+      user,
+    });
   }
 
   canModifyMessages(user) {
@@ -150,83 +223,52 @@ export default class ChatChannel extends RestModel {
     return !READONLY_STATUSES.includes(this.status);
   }
 
-  updateMembership(membership) {
-    this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.muted = membership.muted;
-    this.currentUserMembership.desktop_notification_level =
-      membership.desktop_notification_level;
-    this.currentUserMembership.mobile_notification_level =
-      membership.mobile_notification_level;
+  get currentUserMembership() {
+    return this._currentUserMembership;
   }
 
-  updateLastReadMessage(messageId) {
-    if (!this.isFollowing || !messageId) {
-      return;
+  set currentUserMembership(membership) {
+    if (membership instanceof UserChatChannelMembership) {
+      this._currentUserMembership = membership;
+    } else {
+      this._currentUserMembership =
+        UserChatChannelMembership.create(membership);
     }
-
-    if (this.currentUserMembership.last_read_message_id >= messageId) {
-      return;
-    }
-
-    // TODO (martin) Change this to use chatApi service once we change this
-    // class not to use RestModel
-    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
-      method: "PUT",
-    });
   }
-}
 
-ChatChannel.reopenClass({
-  create(args) {
-    args = args || {};
+  get lastMessage() {
+    return this._lastMessage;
+  }
 
-    this._initUserModels(args);
-    this._initUserMembership(args);
-
-    this._remapKey(args, "chatable_type", "chatableType");
-    this._remapKey(args, "memberships_count", "membershipsCount");
-    this._remapKey(args, "last_message_sent_at", "lastMessageSentAt");
-
-    return this._super(args);
-  },
-
-  _remapKey(obj, oldKey, newKey) {
-    delete Object.assign(obj, { [newKey]: obj[oldKey] })[oldKey];
-  },
-
-  _initUserModels(args) {
-    if (args.chatable?.users?.length) {
-      for (let i = 0; i < args.chatable?.users?.length; i++) {
-        const userData = args.chatable.users[i];
-        args.chatable.users[i] = User.create(userData);
-      }
-    }
-  },
-
-  _initUserMembership(args) {
-    if (args.currentUserMembership instanceof UserChatChannelMembership) {
+  set lastMessage(message) {
+    if (!message) {
+      this._lastMessage = null;
       return;
     }
 
-    args.currentUserMembership = UserChatChannelMembership.create(
-      args.current_user_membership || {
-        following: false,
-        muted: false,
-        unread_count: 0,
-        unread_mentions: 0,
+    if (message instanceof ChatMessage) {
+      this._lastMessage = message;
+    } else {
+      this._lastMessage = ChatMessage.create(this, message);
+    }
+  }
+
+  #initChatable(chatable) {
+    if (
+      !chatable ||
+      chatable instanceof Category ||
+      chatable instanceof ChatDirectMessage
+    ) {
+      return chatable;
+    } else {
+      if (this.isDirectMessageChannel) {
+        return ChatDirectMessage.create({
+          users: chatable?.users,
+          group: chatable?.group,
+        });
+      } else {
+        return Category.create(chatable);
       }
-    );
-
-    delete args.current_user_membership;
-  },
-});
-
-export function createDirectMessageChannelDraft() {
-  return ChatChannel.create({
-    isDraft: true,
-    chatable_type: CHATABLE_TYPES.directMessageChannel,
-    chatable: {
-      users: [],
-    },
-  });
+    }
+  }
 }

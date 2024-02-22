@@ -3,7 +3,7 @@
 RSpec.describe Jobs::UserEmail do
   before { SiteSetting.email_time_window_mins = 10 }
 
-  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
+  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago, refresh_auto_groups: true) }
   fab!(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
   fab!(:suspended) do
     Fabricate(
@@ -442,7 +442,7 @@ RSpec.describe Jobs::UserEmail do
               data: { original_post_id: post.id }.to_json,
             )
           end
-          fab!(:moderator) { Fabricate(:moderator) }
+          fab!(:moderator)
           fab!(:regular_user) { Fabricate(:user) }
 
           context "when this is not a group PM" do
@@ -468,7 +468,7 @@ RSpec.describe Jobs::UserEmail do
           end
 
           context "when this is a group PM" do
-            fab!(:group) { Fabricate(:group) }
+            fab!(:group)
             fab!(:users) { Fabricate.times(2, :user) }
 
             let(:post) { Fabricate(:group_private_message_post, user: user, recipients: group) }
@@ -927,6 +927,25 @@ RSpec.describe Jobs::UserEmail do
           )
 
           expect(ActionMailer::Base.deliveries).to eq([])
+        end
+      end
+    end
+
+    context "without post" do
+      context "when user is suspended" do
+        subject(:send_email) do
+          described_class.new.execute(
+            type: :account_suspended,
+            user_id: suspended.id,
+            user_history_id: user_history.id,
+          )
+        end
+
+        let(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
+
+        it "does send an email" do
+          send_email
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
         end
       end
     end

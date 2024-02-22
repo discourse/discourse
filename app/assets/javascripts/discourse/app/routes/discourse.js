@@ -1,21 +1,15 @@
-import Composer from "discourse/models/composer";
-import Draft from "discourse/models/draft";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { seenUser } from "discourse/lib/user-presence";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 const DiscourseRoute = Route.extend({
-  showFooter: false,
+  router: service(),
 
   willTransition() {
     seenUser();
-  },
-
-  activate() {
-    this._super(...arguments);
-    if (this.showFooter) {
-      this.controllerFor("application").set("showFooter", true);
-    }
   },
 
   _refreshTitleOnce() {
@@ -48,39 +42,20 @@ const DiscourseRoute = Route.extend({
   redirectIfLoginRequired() {
     const app = this.controllerFor("application");
     if (app.get("loginRequired")) {
-      this.replaceWith("login");
+      this.router.replaceWith("login");
     }
   },
 
   openTopicDraft() {
-    const composer = this.controllerFor("composer");
-
-    if (
-      composer.get("model.action") === Composer.CREATE_TOPIC &&
-      composer.get("model.draftKey") === Composer.NEW_TOPIC_KEY
-    ) {
-      composer.set("model.composeState", Composer.OPEN);
-    } else {
-      Draft.get(Composer.NEW_TOPIC_KEY).then((data) => {
-        if (data.draft) {
-          composer.open({
-            action: Composer.CREATE_TOPIC,
-            draft: data.draft,
-            draftKey: Composer.NEW_TOPIC_KEY,
-            draftSequence: data.draft_sequence,
-          });
-        }
-      });
+    deprecated(
+      "DiscourseRoute#openTopicDraft is deprecated. Inject the composer service and call openNewTopic instead",
+      { id: "discourse.open-topic-draft" }
+    );
+    if (this.currentUser?.has_topic_draft) {
+      return getOwnerWithFallback(this)
+        .lookup("service:composer")
+        .openNewTopic({ preferDraft: true });
     }
-  },
-
-  // deprecated, use isCurrentUser() instead
-  isAnotherUsersPage(user) {
-    if (!this.currentUser) {
-      return true;
-    }
-
-    return user.username !== this.currentUser.username;
   },
 
   isCurrentUser(user) {
@@ -89,13 +64,6 @@ const DiscourseRoute = Route.extend({
     }
 
     return user.id === this.currentUser.id;
-  },
-
-  isPoppedState(transition) {
-    return (
-      !transition._discourse_intercepted &&
-      (!!transition.intent.url || !!transition.queryParamsOnly)
-    );
   },
 });
 

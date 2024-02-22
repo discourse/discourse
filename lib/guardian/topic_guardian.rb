@@ -29,7 +29,7 @@ module TopicGuardian
   end
 
   def can_see_shared_draft?
-    @user.has_trust_level_or_staff?(SiteSetting.shared_drafts_min_trust_level)
+    @user.in_any_groups?(SiteSetting.shared_drafts_allowed_groups_map)
   end
 
   def can_create_whisper?
@@ -48,8 +48,8 @@ module TopicGuardian
   def can_create_topic?(parent)
     is_staff? ||
       (
-        user && user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-          can_create_post?(parent) && Category.topic_create_allowed(self).limit(1).count == 1
+        user && user.in_any_groups?(SiteSetting.create_topic_allowed_groups_map) &&
+          can_create_post?(parent) && Category.topic_create_allowed(self).any?
       )
   end
 
@@ -119,18 +119,16 @@ module TopicGuardian
       return true
     end
 
-    # TL4 users can edit archived topics, but can not edit private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic)
+         is_in_edit_post_groups? && topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end
 
-    # TL3 users can not edit archived topics and private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && !topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic)
+         is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end
@@ -141,9 +139,14 @@ module TopicGuardian
       (!first_post&.hidden? || can_edit_hidden_post?(first_post))
   end
 
+  def is_in_edit_topic_groups?
+    SiteSetting.edit_all_topic_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_topic_groups.to_s.split("|").map(&:to_i))
+  end
+
   def can_recover_topic?(topic)
     if is_staff? || (topic&.category && is_category_group_moderator?(topic.category)) ||
-         (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
+         user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
       !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
@@ -158,7 +161,7 @@ module TopicGuardian
             is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at &&
               topic.created_at > 24.hours.ago
           ) || is_category_group_moderator?(topic.category) ||
-          (SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4]))
+          user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
       ) && !topic.is_category_topic? && !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
@@ -195,14 +198,16 @@ module TopicGuardian
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
 
-  alias can_create_unlisted_topic? can_toggle_topic_visibility?
+  def can_create_unlisted_topic?(topic, has_topic_embed = false)
+    can_toggle_topic_visibility?(topic) || has_topic_embed
+  end
 
   def can_convert_topic?(topic)
-    return false unless @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     return false if topic.blank?
     return false if topic.trashed?
     return false if topic.is_category_topic?
     return true if is_admin?
+    return false if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     is_moderator? && can_create_post?(topic)
   end
 
@@ -212,7 +217,7 @@ module TopicGuardian
 
   def can_see_deleted_topics?(category)
     is_staff? || is_category_group_moderator?(category) ||
-      (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
+      user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
@@ -327,7 +332,7 @@ module TopicGuardian
     return true if can_edit_topic?(topic)
 
     if topic&.first_post&.wiki &&
-         (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+         @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
       return can_create_post?(topic)
     end
 

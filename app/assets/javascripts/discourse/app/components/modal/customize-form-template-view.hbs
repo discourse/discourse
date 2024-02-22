@@ -1,0 +1,37 @@
+<DModal
+  @title={{@model.name}}
+  @closeModal={{@closeModal}}
+  class="customize-form-template-view-modal"
+>
+  <:body>
+    <div class="control-group">
+      <DToggleSwitch
+        class="form-templates__preview-toggle"
+        @state={{this.showPreview}}
+        @label="admin.form_templates.view_template.toggle_preview"
+        {{on "click" this.togglePreview}}
+      />
+    </div>
+    {{#if this.showPreview}}
+      <FormTemplateField::Wrapper @id={{@model.id}} />
+    {{else}}
+      <HighlightedCode @lang="yaml" @code={{@model.template}} />
+    {{/if}}
+  </:body>
+
+  <:footer>
+    <DButton
+      class="btn-primary"
+      @action={{this.editTemplate}}
+      @icon="pencil-alt"
+      @label="admin.form_templates.view_template.edit"
+    />
+    <DModalCancel @close={{@closeModal}} />
+    <DButton
+      class="btn-danger"
+      @action={{this.deleteTemplate}}
+      @icon="trash-alt"
+      @label="admin.form_templates.view_template.delete"
+    />
+  </:footer>
+</DModal>

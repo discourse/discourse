@@ -5,7 +5,13 @@ module Chat
     attributes :status
 
     def include_status?
-      SiteSetting.enable_user_status && user.has_status?
+      predicate = SiteSetting.enable_user_status && user.has_status?
+
+      if user.association(:user_option).loaded?
+        predicate = predicate && !user.user_option.hide_profile_and_presence
+      end
+
+      predicate
     end
 
     def status

@@ -80,15 +80,15 @@ RSpec.describe CachedCounting do
       freeze_time
       d1 = Time.now.utc.to_date
 
-      RailsCacheCounter.perform_increment!("a,a")
-      RailsCacheCounter.perform_increment!("b")
-      20.times { RailsCacheCounter.perform_increment!("a,a") }
+      RailsCacheCounter.perform_increment!("a,a", async: true)
+      RailsCacheCounter.perform_increment!("b", async: true)
+      20.times { RailsCacheCounter.perform_increment!("a,a", async: true) }
 
       freeze_time 2.days.from_now
       d2 = Time.now.utc.to_date
 
-      RailsCacheCounter.perform_increment!("a,a")
-      RailsCacheCounter.perform_increment!("d")
+      RailsCacheCounter.perform_increment!("a,a", async: true)
+      RailsCacheCounter.perform_increment!("d", async: true)
 
       CachedCounting.flush
 

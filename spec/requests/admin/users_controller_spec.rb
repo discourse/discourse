@@ -4,10 +4,10 @@ require "discourse_ip_info"
 require "rotp"
 
 RSpec.describe Admin::UsersController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:coding_horror)
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -302,13 +302,36 @@ RSpec.describe Admin::UsersController do
             "user.already_suspended",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.suspend_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",
               ),
           ),
         )
+      end
+
+      context "with webhook" do
+        fab!(:user_web_hook)
+
+        it "enqueues a user_suspended webhook event" do
+          expect do
+            put "/admin/users/#{user.id}/suspend.json",
+                params: {
+                  suspend_until: 5.hours.from_now,
+                  reason: "because I said so",
+                }
+          end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(2)
+
+          user.reload
+          job_args =
+            Jobs::EmitWebHookEvent.jobs.last["args"].find do |args|
+              args["event_name"] == "user_suspended"
+            end
+          expect(job_args).to be_present
+          expect(job_args["id"]).to eq(user.id)
+          expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
+        end
       end
 
       it "requires suspend_until and reason" do
@@ -492,6 +515,29 @@ RSpec.describe Admin::UsersController do
         expect(user.suspended_at).to be_nil
         expect(user.suspended_till).to be_nil
         expect(user.suspend_record).to be_nil
+      end
+    end
+  end
+
+  describe "#unsuspend" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      context "with webhook" do
+        fab!(:user_web_hook)
+
+        it "enqueues a user_unsuspended webhook event" do
+          user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+
+          expect do put "/admin/users/#{user.id}/unsuspend.json" end.to change {
+            Jobs::EmitWebHookEvent.jobs.size
+          }.by(1)
+
+          user.reload
+          job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+          expect(job_args["id"]).to eq(user.id)
+          expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
+        end
       end
     end
   end
@@ -712,7 +758,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#add_group" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1002,7 +1048,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#primary_group" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:another_user) { coding_horror }
     fab!(:another_group) { Fabricate(:group, title: "New") }
 
@@ -1135,7 +1181,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#destroy" do
-    fab!(:delete_me) { Fabricate(:user) }
+    fab!(:delete_me) { Fabricate(:user, refresh_auto_groups: true) }
 
     shared_examples "user deletion possible" do
       it "returns a 403 if the user doesn't exist" do
@@ -1275,11 +1321,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "does not block the urls by default" do
-          delete "/admin/users/#{delete_me.id}.json",
-                 params: {
-                   delete_posts: true,
-                   block_urls: false,
-                 }
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true }
           expect(response.status).to eq(200)
           expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
         end
@@ -1430,7 +1472,7 @@ RSpec.describe Admin::UsersController do
     end
 
     shared_examples "user log out not allowed" do
-      it "prevents loging out of user with a 404 response" do
+      it "prevents logging out of user with a 404 response" do
         post "/admin/users/#{reg_user.id}/log_out.json"
 
         expect(response.status).to eq(404)
@@ -1539,7 +1581,7 @@ RSpec.describe Admin::UsersController do
             "user.already_silenced",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.silenced_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",

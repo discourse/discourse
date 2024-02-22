@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe "Viewing a category", type: :system, js: true do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:user) { Fabricate(:user) }
+RSpec.describe "Viewing a category", type: :system do
+  fab!(:category)
+  fab!(:user)
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
 

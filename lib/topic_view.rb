@@ -575,7 +575,7 @@ class TopicView
 
   def pending_posts
     @pending_posts ||=
-      ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+      ReviewableQueuedPost.pending.where(target_created_by: @user, topic: @topic).order(:created_at)
   end
 
   def actions_summary
@@ -720,6 +720,16 @@ class TopicView
           hash
         end
       end
+  end
+
+  def summarizable?
+    Summarization::Base.can_see_summary?(@topic, @user)
+  end
+
+  def categories
+    categories = [category, category&.parent_category]
+    categories += suggested_topics.categories if suggested_topics
+    categories.compact.uniq
   end
 
   protected

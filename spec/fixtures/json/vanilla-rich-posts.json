@@ -3,7 +3,7 @@
     "insert": "This is a message.\nAnd a second line.\n"
   }],
   "mention": [
-    { "insert": { "mention": { "name": "Gandalf The Grey", "userID": 666 } } },
+    { "insert": { "mention": { "name": "Gandalf The Grey", "userID": 999999999 } } },
     {
       "insert": ", what do you think?\n"
     }

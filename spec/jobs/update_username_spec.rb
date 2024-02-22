@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::UpdateUsername do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   it "does not do anything if user_id is invalid" do
     events =

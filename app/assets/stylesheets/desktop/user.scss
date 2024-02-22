@@ -88,9 +88,11 @@
 }
 
 .user-content {
+  padding: 0;
+  margin-top: 2em;
   padding-bottom: 12px;
   margin-bottom: 12px;
-  background-color: var(--secondary);
+  background: var(--d-content-background, var(--secondary));
   box-sizing: border-box;
 
   .btn.right {
@@ -103,10 +105,6 @@
     max-width: 90px;
     max-height: 90px;
   }
-}
-
-.pref-second-factor {
-  margin-top: 10px;
 }
 
 .invite-controls .btn {
@@ -248,24 +246,6 @@ table.user-invite-list {
 
 .user-messages {
   margin-right: 0.2em;
-}
-
-.user-preferences {
-  padding-top: 10px;
-  padding-left: 30px;
-
-  .form-vertical {
-    width: 500px;
-    max-width: 100%;
-  }
-
-  .category-selector,
-  .tag-chooser,
-  textarea,
-  input.user-selector,
-  .user-chooser {
-    width: 100%;
-  }
 }
 
 .user-crawler {

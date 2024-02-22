@@ -1,0 +1,28 @@
+<div class="ai-summary__container">
+  <ul class="ai-summary__list" {{did-insert this.setupAnimation}}>
+    {{#each this.blocks as |block|}}
+      <li
+        class={{concat-class
+          "ai-summary__list-item"
+          (if block.show "show")
+          (if block.shown "is-shown")
+          (if block.blinking "blink")
+        }}
+        {{did-update (fn this.onBlinking block) block.blinking}}
+        {{did-update (fn this.onShowing block) block.show}}
+        {{will-destroy this.teardownAnimation}}
+      ></li>
+    {{/each}}
+  </ul>
+
+  <span>
+    <div class="ai-summary__generating-text">
+      {{i18n "summary.in_progress"}}
+    </div>
+    <span class="ai-summary__indicator-wave">
+      <span class="ai-summary__indicator-dot">.</span>
+      <span class="ai-summary__indicator-dot">.</span>
+      <span class="ai-summary__indicator-dot">.</span>
+    </span>
+  </span>
+</div>

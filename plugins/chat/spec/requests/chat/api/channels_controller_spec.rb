@@ -155,7 +155,7 @@ RSpec.describe Chat::Api::ChannelsController do
           get "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["channel"]["id"]).to eq(channel_1.id)
+          expect(response.parsed_body.dig("channel", "id")).to eq(channel_1.id)
         end
       end
     end
@@ -230,8 +230,8 @@ RSpec.describe Chat::Api::ChannelsController do
   end
 
   describe "#create" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:admin)
+    fab!(:category)
 
     let(:params) do
       {
@@ -240,6 +240,7 @@ RSpec.describe Chat::Api::ChannelsController do
           chatable_id: category.id,
           name: "channel name",
           description: "My new channel",
+          threading_enabled: false,
         },
       }
     end
@@ -248,8 +249,9 @@ RSpec.describe Chat::Api::ChannelsController do
 
     it "creates a channel associated to a category" do
       post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
 
-      new_channel = Chat::Channel.last
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.name).to eq(params[:channel][:name])
       expect(new_channel.slug).to eq("channel-name")
@@ -262,16 +264,31 @@ RSpec.describe Chat::Api::ChannelsController do
       new_params = params.dup
       new_params[:channel][:slug] = "wow-so-cool"
       post "/chat/api/channels", params: new_params
+      expect(response.status).to eq(200)
 
-      new_channel = Chat::Channel.last
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.slug).to eq("wow-so-cool")
     end
 
+    context "when the user-provided slug already exists for a channel" do
+      before do
+        params[:channel][:slug] = "wow-so-cool"
+        post "/chat/api/channels", params: params
+        params[:channel][:name] = "new name"
+      end
+
+      it "returns an error" do
+        post "/chat/api/channels", params: params
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
     it "creates a channel sets auto_join_users to false by default" do
       post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
 
-      new_channel = Chat::Channel.last
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.auto_join_users).to eq(false)
     end
@@ -279,10 +296,30 @@ RSpec.describe Chat::Api::ChannelsController do
     it "creates a channel with auto_join_users set to true" do
       params[:channel][:auto_join_users] = true
       post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
 
-      new_channel = Chat::Channel.last
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.auto_join_users).to eq(true)
+    end
+
+    it "creates a channel sets threading_enabled to false by default" do
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(false)
+    end
+
+    it "creates a channel with threading_enabled set to true" do
+      params[:channel][:threading_enabled] = true
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(true)
     end
 
     describe "triggers the auto-join process" do
@@ -298,6 +335,7 @@ RSpec.describe Chat::Api::ChannelsController do
       it "joins the user when auto_join_users is true" do
         params[:channel][:auto_join_users] = true
         post "/chat/api/channels", params: params
+        expect(response.status).to eq(200)
 
         created_channel_id = response.parsed_body.dig("channel", "id")
         membership_exists =
@@ -313,6 +351,7 @@ RSpec.describe Chat::Api::ChannelsController do
       it "doesn't join the user when auto_join_users is false" do
         params[:channel][:auto_join_users] = false
         post "/chat/api/channels", params: params
+        expect(response.status).to eq(200)
 
         created_channel_id = response.parsed_body.dig("channel", "id")
         membership_exists =
@@ -476,6 +515,16 @@ RSpec.describe Chat::Api::ChannelsController do
         expect(response.parsed_body["channel"]).to match_response_schema("category_chat_channel")
       end
 
+      describe "when updating threading_enabled" do
+        it "sets the new value" do
+          expect {
+            put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+          }.to change { channel.reload.threading_enabled }.from(false).to(true)
+
+          expect(response.parsed_body["channel"]["threading_enabled"]).to eq(true)
+        end
+      end
+
       describe "when updating allow_channel_wide_mentions" do
         it "sets the new value" do
           put "/chat/api/channels/#{channel.id}",
@@ -519,7 +568,7 @@ RSpec.describe Chat::Api::ChannelsController do
           it "joins the user when auto_join_users is true" do
             put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
-            created_channel_id = response.parsed_body["channel"]["id"]
+            created_channel_id = response.parsed_body.dig("channel", "id")
             membership_exists =
               Chat::UserChatChannelMembership.find_by(
                 user: another_user,
@@ -533,7 +582,7 @@ RSpec.describe Chat::Api::ChannelsController do
           it "doesn't join the user when auto_join_users is false" do
             put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
 
-            created_channel_id = response.parsed_body["channel"]["id"]
+            created_channel_id = response.parsed_body.dig("channel", "id")
 
             expect(created_channel_id).to be_present
 
@@ -549,5 +598,9 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
     end
+  end
+
+  def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
+    Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 end

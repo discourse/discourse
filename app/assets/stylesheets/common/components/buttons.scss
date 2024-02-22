@@ -20,10 +20,19 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
-  background: $bg-color;
+  &:visited {
+    // covers cases where we add button classes to links
+    color: $text-color;
+  }
+  background-color: $bg-color;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0)
+  );
   border-radius: var(--d-button-border-radius);
+  transition: background 0.25s, color 0.25s;
   cursor: pointer;
-  transition: all 0.25s;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
@@ -43,7 +52,7 @@
     }
   }
   @include hover {
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -55,7 +64,7 @@
   }
   &:focus {
     outline: none;
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -63,14 +72,31 @@
         color: Highlight;
       }
     }
+
+    &:focus-visible {
+      @include darken-background($hover-bg-color, 0.1);
+    }
   }
-  &[href] {
-    color: $text-color;
+
+  .discourse-no-touch &:active:not(:hover):not(:focus),
+  .discourse-no-touch &.btn-active:not(:hover):not(:focus),
+  &:active:not(:hover):not(:focus),
+  &.btn-active:not(:hover):not(:focus) {
+    @include darken-background($bg-color, 0.6);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
   }
+  .discourse-no-touch &:active,
+  .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    border-bottom-color: $bg-color;
+    @include darken-background($bg-color, 0.3);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
   }
   &[disabled],
   &.disabled {
@@ -182,7 +208,7 @@
   border-radius: var(--d-border-radius);
   &:hover,
   &:focus {
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     outline: 1px solid #000;
   }
   &[href] {
@@ -274,25 +300,42 @@
   background: transparent;
   border: 0;
   line-height: var(--line-height-small);
-  transition: color 0.25s, background 0.25s;
+  transition: background 0.25s, color 0.25s;
   .d-icon {
     color: var(--primary-low-mid);
+    transition: color 0.25s;
   }
-  @include hover {
-    background: transparent;
-    color: var(--primary);
-    .d-icon {
+  .discourse-no-touch & {
+    &:hover,
+    &:focus {
       color: var(--primary);
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+    &:hover {
+      background: transparent;
+    }
+    &:focus {
+      background: var(--primary-low);
     }
   }
   &.close {
-    padding: 0;
     background: transparent;
-    font-size: var(--font-up-3);
+    font-size: var(--font-up-2);
     .d-icon {
       color: var(--primary-high);
     }
-    @include hover {
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: transparent;
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+    &:focus {
       background: transparent;
       .d-icon {
         color: var(--primary);
@@ -318,10 +361,7 @@
 
       &:active,
       &.btn-active {
-        @include linear-gradient(
-          var(--primary-low-mid) 0%,
-          var(--primary-very-low) 100%
-        );
+        @include darken-background(transparent, 0.2);
       }
     }
   }
@@ -353,6 +393,58 @@
     color: var(--tertiary);
     background: transparent;
     @include default-focus;
+  }
+}
+
+@mixin btn-colors($btn-color) {
+  color: var(--#{$btn-color});
+  .d-icon {
+    color: currentColor;
+  }
+  &:focus,
+  &:focus-visible {
+    color: var(--#{$btn-color}-hover);
+  }
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--#{$btn-color}-hover);
+    }
+  }
+}
+
+.btn-transparent {
+  &,
+  &.btn-default {
+    background: transparent !important;
+    border: 0;
+    color: var(--primary);
+    .d-icon {
+      color: var(--primary-high);
+    }
+    &:focus,
+    &:focus-visible {
+      color: var(--tertiary-hover);
+      .d-icon {
+        color: currentColor;
+      }
+    }
+    .discourse-no-touch & {
+      &:hover {
+        color: var(--tertiary-hover);
+        .d-icon {
+          color: currentColor;
+        }
+      }
+    }
+  }
+  &.btn-primary {
+    @include btn-colors("tertiary");
+  }
+  &.btn-danger {
+    @include btn-colors("danger");
+  }
+  &.btn-success {
+    @include btn-colors("success");
   }
 }
 

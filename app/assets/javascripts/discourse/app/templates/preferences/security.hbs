@@ -1,5 +1,5 @@
 {{#if this.canChangePassword}}
-  <div class="control-group pref-password">
+  <div class="control-group pref-password" data-setting-name="user-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
       <a href {{on "click" this.changePassword}} class="btn btn-default">
@@ -15,28 +15,41 @@
     </div>
   </div>
 
-  <div class="control-group pref-second-factor">
-    <label class="control-label">{{i18n "user.second_factor.title"}}</label>
-    {{#unless this.model.second_factor_enabled}}
-      <label>
+  {{#if this.canUsePasskeys}}
+    <UserPreferences::UserPasskeys @model={{@model}} />
+  {{/if}}
+
+  {{#if this.isCurrentUser}}
+    <div
+      class="control-group pref-second-factor"
+      data-setting-name="user-second-factor"
+    >
+      <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+      <div class="instructions">
         {{i18n "user.second_factor.short_description"}}
-      </label>
-    {{/unless}}
-    <div class="controls pref-second-factor">
-      {{#if this.isCurrentUser}}
-        <LinkTo @route="preferences.second-factor" class="btn btn-default">
-          {{d-icon "lock"}}
-          <span>{{i18n "user.second_factor.enable"}}</span>
-        </LinkTo>
-      {{/if}}
+      </div>
+
+      <div class="controls pref-second-factor">
+        <DButton
+          @action={{this.manage2FA}}
+          @icon="lock"
+          @label="user.second_factor.enable"
+          class="btn-second-factor"
+        />
+      </div>
     </div>
-  </div>
+  {{/if}}
 {{/if}}
 
 {{#if this.canCheckEmails}}
-  <div class="control-group pref-auth-tokens">
+  <div
+    class="control-group pref-auth-tokens"
+    data-setting-name="user-auth-tokens"
+  >
     <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
-
+    <div class="instructions">
+      {{i18n "user.auth_tokens.short_description"}}
+    </div>
     <div class="auth-tokens">
       {{#each this.authTokens as |token|}}
         <div class="row auth-token">

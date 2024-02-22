@@ -73,6 +73,7 @@ RSpec.describe Hijack do
 
   it "handles cors" do
     SiteSetting.cors_origins = "www.rainbows.com"
+    global_setting :enable_cors, true
 
     app =
       lambda do |env|
@@ -224,5 +225,13 @@ RSpec.describe Hijack do
     tester.hijack_test { ran = true }
 
     expect(ran).to eq(false)
+  end
+
+  it "handles the queue being full" do
+    Scheduler::Defer.stubs(:later).raises(WorkQueue::WorkQueueFull.new)
+
+    tester.hijack_test {}
+
+    expect(tester.response.status).to eq(503)
   end
 end

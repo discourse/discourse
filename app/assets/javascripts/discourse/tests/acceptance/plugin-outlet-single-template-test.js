@@ -1,11 +1,11 @@
+import { visit } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const CONNECTOR_MODULE =
@@ -15,7 +15,7 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
     registerTemporaryModule(
       CONNECTOR_MODULE,
-      hbs`<span class='hello-username'>{{model.username}}</span>`
+      hbs`<span class='hello-username'>{{this.model.username}}</span>`
     );
   });
 

@@ -36,3 +36,29 @@ if Rails.env.development? || Rails.env.test?
     alias_method :public_compute_asset_path, :compute_asset_path
   end
 end
+
+# By default, the Sprockets DirectiveProcessor introduces a newline between possible 'header' comments
+# and the rest of the JS file. (https://github.com/rails/sprockets/blob/f4d3dae71e/lib/sprockets/directive_processor.rb#L121)
+# This causes sourcemaps to be offset by 1 line, and therefore breaks browser tooling.
+# We know that Ember-Cli assets do not use Sprockets directives, so we can totally bypass the DirectiveProcessor for those files.
+Sprockets::DirectiveProcessor.prepend(
+  Module.new do
+    def process_source(source)
+      return source, [] if EmberCli.is_ember_cli_asset?(File.basename(@filename))
+      super
+    end
+  end,
+)
+
+# Skip sprockets fingerprinting for some assets
+Sprockets::Asset.prepend(
+  Module.new do
+    def digest_path
+      # Workbox assets are already in a folder with a digest in the name
+      return logical_path if logical_path.start_with?("workbox-")
+      # Webpack chunks are already named based on their contents
+      return logical_path if logical_path.start_with?("chunk.")
+      super
+    end
+  end,
+)

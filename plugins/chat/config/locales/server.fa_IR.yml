@@ -6,6 +6,8 @@
 
 fa_IR:
   site_settings:
+    chat_enabled: "گفتگو را فعال کنید."
+    enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
     chat_allowed_groups: "کاربران در این گروه‌ها می‌توانند گفتگو کنند. توجه داشته باشید که کارکنان همیشه می‌توانند به گفتگو دسترسی داشته باشند."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
     default_emoji_reactions: "واکنش‌های شکلک پیش‌فرض برای پیام‌های گفتگو. برای واکنش سریع تا ۵ شکلک اضافه کنید."
@@ -16,13 +18,14 @@ fa_IR:
     chat_channel_archive_complete:
       text_body_template: |
         بایگانی کانال گفتگو %{channel_hashtag_or_name} با موفقیت انجام شد. پیام‌ها در موضوع [%{topic_title}](%{topic_url}) کپی شده‌اند.
+    chat_channel_archive_failed:
+      title: "بایگانی کانال چت ناموفق بود"
+    chat_channel_archive_failed_no_topic:
+      title: "بایگانی کانال چت ناموفق بود"
   chat:
     deleted_chat_username: حذف شد
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
-      message_too_long:
-        one: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
-        other: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
       draft_too_long: "پیش‌نویس خیلی طولانی است."
       cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
       not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
@@ -31,6 +34,7 @@ fa_IR:
       actor_disallowed_dms: "شما انتخاب کرده‌اید که از ارسال پیام‌های خصوصی و پیام‌های مستقیم در گفتگو توسط کاربران دیگر به شما جلوگیری کنیم، بنابراین نمی‌توانید پیام‌های مستقیم جدید در گفتگو ارسال کنید."
       actor_preventing_target_user_from_dm: "شما انتخاب کرده‌اید که %{username}، از ارسال پیام‌های خصوصی و پیام‌های مستقیم در گفتگو برای شما جلوگیری کنیم، بنابراین نمی‌توانید پیام مستقیم جدیدی در گفتگو برای او ارسال کنید."
       user_cannot_send_direct_messages: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
+      thread_does_not_match_parent: "Thread با پیام parent مطابقت ندارد."
     reviewables:
       message_already_handled: "با تشکر از شما، اما ما در حال حاضر این پیام را بررسی کرده‌ایم و تشخیص داده‌ایم که نیازی به گزارش دوباره ندارد."
       actions:
@@ -41,15 +45,11 @@ fa_IR:
         agree_and_delete:
           title: "حذف پیام"
           description: "پیام را حذف کنید تا کاربران نتوانند آن را ببینند."
-        delete_and_agree:
-          title: "حذف پیام"
         disagree_and_restore:
           title: "مخالفت و بازگرداندن پیام"
           description: "پیام را بازیابی کنید تا همه کاربران بتوانند آن را ببینند."
         disagree:
           title: "مخالف"
-        ignore:
-          title: "چشم پوشی"
       direct_messages:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
@@ -59,6 +59,8 @@ fa_IR:
         multi_user_truncated:
           one: "%{comma_separated_usernames} و %{count} نفر دیگر"
           other: "%{comma_separated_usernames} و %{count} نفر دیگر"
+    mention_warning:
+      dismiss: "رد کردن"
     bookmarkable:
       notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UrlHelper
-  MAX_URL_LENGTH = 100_000
+  MAX_URL_LENGTH = 2_000
 
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded
@@ -66,19 +66,12 @@ class UrlHelper
     self.absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
   end
 
-  def self.escape_uri(uri)
-    Discourse.deprecate(
-      "UrlHelper.escape_uri is deprecated. For normalization of user input use `.normalized_encode`. For true encoding, use `.encode`",
-      output_in_test: true,
-      drop_from: "3.0",
-    )
-    normalized_encode(uri)
-  end
-
   def self.normalized_encode(uri)
     url = uri.to_s
 
-    raise ArgumentError.new(:uri, "URL is too long") if url.length > MAX_URL_LENGTH
+    if url.length > MAX_URL_LENGTH
+      raise ArgumentError.new("URL starting with #{url[0..100]} is too long")
+    end
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
     # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.

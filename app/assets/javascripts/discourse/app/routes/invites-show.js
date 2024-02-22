@@ -1,9 +1,10 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
+import DisableSidebar from "discourse/mixins/disable-sidebar";
+import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
+export default DiscourseRoute.extend(DisableSidebar, {
   titleToken() {
     return I18n.t("invites.accept_title");
   },
@@ -16,6 +17,22 @@ export default DiscourseRoute.extend({
     } else {
       return {};
     }
+  },
+
+  activate() {
+    this._super(...arguments);
+
+    this.controllerFor("application").setProperties({
+      showSiteHeader: false,
+    });
+  },
+
+  deactivate() {
+    this._super(...arguments);
+
+    this.controllerFor("application").setProperties({
+      showSiteHeader: true,
+    });
   },
 
   setupController(controller, model) {

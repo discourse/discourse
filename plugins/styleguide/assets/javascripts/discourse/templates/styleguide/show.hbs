@@ -1,9 +1,9 @@
 <StyleguideSection @section={{this.section}}>
-  {{#if this.note}}
-    <div class="styleguide-note">
-      {{component (concat "notes/" this.note)}}
-    </div>
-  {{/if}}
-
-  {{outlet}}
+  {{#let this.section.component as |SectionComponent|}}
+    <SectionComponent
+      @dummy={{this.dummy}}
+      @dummyAction={{this.dummyAction}}
+      @siteSettings={{this.siteSettings}}
+    />
+  {{/let}}
 </StyleguideSection>

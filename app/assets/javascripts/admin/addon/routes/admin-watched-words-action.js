@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject from "@ember/object";
-import I18n from "I18n";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default class AdminWatchedWordsActionRoute extends DiscourseRoute {
   model(params) {

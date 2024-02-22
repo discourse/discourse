@@ -24,3 +24,9 @@ Fabricator(:user_security_key_with_random_credential, from: :user_security_key) 
   credential_id { SecureRandom.base64(40) }
   public_key { SecureRandom.base64(40) }
 end
+
+Fabricator(:passkey_with_random_credential, from: :user_security_key) do
+  credential_id { SecureRandom.base64(40) }
+  public_key { SecureRandom.base64(40) }
+  factor_type { UserSecurityKey.factor_types[:first_factor] }
+end

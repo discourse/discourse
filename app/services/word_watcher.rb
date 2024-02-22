@@ -2,7 +2,7 @@
 
 class WordWatcher
   REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
-  CACHE_VERSION = 2
+  CACHE_VERSION ||= 3
 
   def initialize(raw)
     @raw = raw
@@ -18,97 +18,114 @@ class WordWatcher
     @cache_enabled
   end
 
+  def self.cache_key(action)
+    "watched-words-list:v#{CACHE_VERSION}:#{action}"
+  end
+
+  def self.clear_cache!
+    WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+  end
+
   def self.words_for_action(action)
     WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
       .pluck(:word, :replacement, :case_sensitive)
-      .map { |w, r, c| [w, { replacement: r, case_sensitive: c }.compact] }
-      .to_h
+      .to_h do |w, r, c|
+        [
+          word_to_regexp(w, match_word: false),
+          { word: w, replacement: r, case_sensitive: c }.compact,
+        ]
+      end
   end
 
-  def self.words_for_action_exists?(action)
+  def self.words_for_action_exist?(action)
     WatchedWord.where(action: WatchedWord.actions[action.to_sym]).exists?
   end
 
-  def self.get_cached_words(action)
+  def self.cached_words_for_action(action)
     if cache_enabled?
       Discourse
         .cache
-        .fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
-          words_for_action(action).presence
-        end
+        .fetch(cache_key(action), expires_in: 1.day) { words_for_action(action).presence }
     else
       words_for_action(action).presence
     end
   end
 
-  def self.serializable_word_matcher_regexp(action)
-    word_matcher_regexp_list(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+  def self.regexps_for_action(action, engine: :ruby)
+    cached_words_for_action(action)&.to_h do |_, attrs|
+      [word_to_regexp(attrs[:word], engine: engine), attrs]
+    end
   end
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  def self.word_matcher_regexp_list(action, raise_errors: false)
-    words = get_cached_words(action)
+  def self.compiled_regexps_for_action(action, engine: :ruby, raise_errors: false)
+    words = cached_words_for_action(action)
     return [] if words.blank?
 
-    grouped_words = { case_sensitive: [], case_insensitive: [] }
+    words
+      .values
+      .group_by { |attrs| attrs[:case_sensitive] ? :case_sensitive : :case_insensitive }
+      .map do |group_key, attrs_list|
+        words = attrs_list.map { |attrs| attrs[:word] }
 
-    words.each do |w, attrs|
-      word = word_to_regexp(w)
-      word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
+        # Compile all watched words into a single regular expression
+        regexp =
+          words
+            .map do |word|
+              r = word_to_regexp(word, match_word: SiteSetting.watched_words_regular_expressions?)
+              begin
+                r if Regexp.new(r)
+              rescue RegexpError
+                raise if raise_errors
+              end
+            end
+            .select { |r| r.present? }
+            .join("|")
 
-      group_key = attrs[:case_sensitive] ? :case_sensitive : :case_insensitive
-      grouped_words[group_key] << word
-    end
+        # Add word boundaries to the regexp for regular watched words
+        regexp =
+          match_word_regexp(
+            regexp,
+            engine: engine,
+          ) if !SiteSetting.watched_words_regular_expressions?
 
-    regexps = grouped_words.select { |_, w| w.present? }.transform_values { |w| w.join("|") }
-
-    if !SiteSetting.watched_words_regular_expressions?
-      regexps.transform_values! do |regexp|
-        regexp = "(#{regexp})"
-        "(?:\\W|^)#{regexp}(?=\\W|$)"
+        # Add case insensitive flag if needed
+        Regexp.new(regexp, group_key == :case_sensitive ? nil : Regexp::IGNORECASE)
       end
-    end
-
-    regexps.map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
-  rescue RegexpError
-    raise if raise_errors
-    [] # Admin will be alerted via admin_dashboard_data.rb
   end
 
-  def self.word_matcher_regexps(action)
-    if words = get_cached_words(action)
-      words.map { |w, opts| [word_to_regexp(w, whole: true), opts] }.to_h
+  def self.serialized_regexps_for_action(action, engine: :ruby)
+    compiled_regexps_for_action(action, engine: engine).map do |r|
+      { r.source => { case_sensitive: !r.casefold? } }
     end
   end
 
-  def self.word_to_regexp(word, whole: false)
+  def self.word_to_regexp(word, engine: :ruby, match_word: true)
     if SiteSetting.watched_words_regular_expressions?
-      # Strip ruby regexp format if present
-      regexp = word.start_with?("(?-mix:") ? word[7..-2] : word
-      regexp = "(#{regexp})" if whole
-      return regexp
+      regexp = word
+      regexp = "(#{regexp})" if match_word
+      regexp
+    else
+      # Convert word to regex by escaping special characters in a regexp.
+      # Avoid using Regexp.escape because it escapes more characters than
+      # it should (for example, whitespaces, dashes, etc)
+      regexp = word.gsub(/([.*+?^${}()|\[\]\\])/, '\\\\\1')
+
+      # Convert wildcards to regexp
+      regexp = regexp.gsub("\\*", '\S*')
+
+      regexp = match_word_regexp(regexp, engine: engine) if match_word
+      regexp
     end
-
-    regexp = Regexp.escape(word).gsub("\\*", '\S*')
-
-    if whole && !SiteSetting.watched_words_regular_expressions?
-      regexp = "(?:\\W|^)(#{regexp})(?=\\W|$)"
-    end
-
-    regexp
-  end
-
-  def self.word_matcher_regexp_key(action)
-    "watched-words-list:v#{CACHE_VERSION}:#{action}"
   end
 
   def self.censor(html)
-    regexps = word_matcher_regexp_list(:censor)
+    regexps = compiled_regexps_for_action(:censor)
     return html if regexps.blank?
 
     doc = Nokogiri::HTML5.fragment(html)
@@ -124,7 +141,7 @@ class WordWatcher
   def self.censor_text(text)
     return text if text.blank?
 
-    regexps = word_matcher_regexp_list(:censor)
+    regexps = compiled_regexps_for_action(:censor)
     return text if regexps.blank?
 
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
@@ -147,10 +164,6 @@ class WordWatcher
     text
   end
 
-  def self.clear_cache!
-    WatchedWord.actions.each { |a, i| Discourse.cache.delete word_matcher_regexp_key(a) }
-  end
-
   def requires_approval?
     word_matches_for_action?(:require_approval)
   end
@@ -168,7 +181,7 @@ class WordWatcher
   end
 
   def word_matches_for_action?(action, all_matches: false)
-    regexps = self.class.word_matcher_regexp_list(action)
+    regexps = self.class.compiled_regexps_for_action(action)
     return if regexps.blank?
 
     match_list = []
@@ -212,10 +225,8 @@ class WordWatcher
   end
 
   def word_matches?(word, case_sensitive: false)
-    Regexp.new(
-      WordWatcher.word_to_regexp(word, whole: true),
-      case_sensitive ? nil : Regexp::IGNORECASE,
-    ).match?(@raw)
+    options = case_sensitive ? nil : Regexp::IGNORECASE
+    Regexp.new(WordWatcher.word_to_regexp(word), options).match?(@raw)
   end
 
   def self.replace_text_with_regexp(text, regexp, replacement)
@@ -247,14 +258,28 @@ class WordWatcher
 
   private_class_method :censor_text_with_regexp
 
-  private
+  # Returns a regexp that transforms a regular expression into a regular
+  # expression that matches a whole word.
+  def self.match_word_regexp(regexp, engine: :ruby)
+    if engine == :js
+      "(?:\\P{L}|^)(#{regexp})(?=\\P{L}|$)"
+    elsif engine == :ruby
+      "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
+    else
+      raise "unknown regexp engine: #{engine}"
+    end
+  end
+
+  private_class_method :match_word_regexp
 
   def self.replace(text, watch_word_type)
-    word_matcher_regexps(watch_word_type)
+    regexps_for_action(watch_word_type)
       .to_a
       .reduce(text) do |t, (word_regexp, attrs)|
         case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
         replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
       end
   end
+
+  private_class_method :replace
 end

@@ -1,16 +1,16 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
-import { debounce } from "discourse-common/utils/decorators";
-import Promise from "rsvp";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { debounce } from "discourse-common/utils/decorators";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
 /*
   The ChatChannelsManager service is responsible for managing the loaded chat channels.
-  It provides helpers to facilitate using and managing laoded channels instead of constantly
+  It provides helpers to facilitate using and managing loaded channels instead of constantly
   fetching them from the server.
 */
 
@@ -18,6 +18,8 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
   @service currentUser;
+  @service router;
+  @service site;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -35,11 +37,19 @@ export default class ChatChannelsManager extends Service {
     return Object.values(this._cached);
   }
 
-  store(channelObject) {
-    let model = this.#findStale(channelObject.id);
+  store(channelObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(channelObject.id);
+    }
 
     if (!model) {
-      model = ChatChannel.create(channelObject);
+      if (channelObject instanceof ChatChannel) {
+        model = channelObject;
+      } else {
+        model = ChatChannel.create(channelObject);
+      }
       this.#cache(model);
     }
 
@@ -59,28 +69,24 @@ export default class ChatChannelsManager extends Service {
 
     if (!model.currentUserMembership.following) {
       return this.chatApi.followChannel(model.id).then((membership) => {
-        model.currentUserMembership.following = membership.following;
-        model.currentUserMembership.muted = membership.muted;
-        model.currentUserMembership.desktop_notification_level =
-          membership.desktop_notification_level;
-        model.currentUserMembership.mobile_notification_level =
-          membership.mobile_notification_level;
-
+        model.currentUserMembership = membership;
         return model;
       });
     } else {
-      return Promise.resolve(model);
+      return model;
     }
   }
 
   async unfollow(model) {
-    this.chatSubscriptionsManager.stopChannelSubscription(model);
-
-    return this.chatApi.unfollowChannel(model.id).then((membership) => {
-      model.currentUserMembership = membership;
-
+    try {
+      this.chatSubscriptionsManager.stopChannelSubscription(model);
+      model.currentUserMembership = await this.chatApi.unfollowChannel(
+        model.id
+      );
       return model;
-    });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @debounce(300)
@@ -94,34 +100,31 @@ export default class ChatChannelsManager extends Service {
     delete this._cached[model.id];
   }
 
-  get unreadCount() {
-    let count = 0;
-    this.publicMessageChannels.forEach((channel) => {
-      count += channel.currentUserMembership.unread_count || 0;
-    });
-    return count;
-  }
-
-  get unreadUrgentCount() {
-    let count = 0;
-    this.channels.forEach((channel) => {
-      if (channel.isDirectMessageChannel) {
-        count += channel.currentUserMembership.unread_count || 0;
+  get allChannels() {
+    return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
+      (a, b) => {
+        return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
+          a?.currentUserMembership?.lastViewedAt
+        );
       }
-      count += channel.currentUserMembership.unread_mentions || 0;
-    });
-    return count;
+    );
   }
 
+  @cached
   get publicMessageChannels() {
-    return this.channels
-      .filter(
-        (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following
-      )
-      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+    const channels = this.channels.filter(
+      (channel) =>
+        channel.isCategoryChannel && channel.currentUserMembership.following
+    );
+
+    if (this.site.mobileView) {
+      return this.#sortChannelsByActivity(channels);
+    } else {
+      return channels.sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+    }
   }
 
+  @cached
   get directMessageChannels() {
     return this.#sortDirectMessageChannels(
       this.channels.filter((channel) => {
@@ -136,13 +139,12 @@ export default class ChatChannelsManager extends Service {
   }
 
   async #find(id) {
-    return this.chatApi
-      .channel(id)
-      .catch(popupAjaxError)
-      .then((channel) => {
-        this.#cache(channel);
-        return channel;
-      });
+    try {
+      const result = await this.chatApi.channel(id);
+      return this.store(result.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   #cache(channel) {
@@ -157,16 +159,49 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
+  #sortChannelsByActivity(channels) {
+    return channels.sort((a, b) => {
+      // if both channels have mention count, sort by slug
+      // otherwise prioritize channel with mention count
+      if (a.tracking.mentionCount > 0 && b.tracking.mentionCount > 0) {
+        return a.slug?.localeCompare?.(b.slug);
+      }
+
+      if (a.tracking.mentionCount > 0 || b.tracking.mentionCount > 0) {
+        return a.tracking.mentionCount > b.tracking.mentionCount ? -1 : 1;
+      }
+
+      // if both channels have unread count, sort by slug
+      // otherwise prioritize channel with unread count
+      if (a.tracking.unreadCount > 0 && b.tracking.unreadCount > 0) {
+        return a.slug?.localeCompare?.(b.slug);
+      }
+
+      if (a.tracking.unreadCount > 0 || b.tracking.unreadCount > 0) {
+        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
+      }
+
+      return a.slug?.localeCompare?.(b.slug);
+    });
+  }
+
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      const unreadCountA = a.currentUserMembership.unread_count || 0;
-      const unreadCountB = b.currentUserMembership.unread_count || 0;
-      if (unreadCountA === unreadCountB) {
-        return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+      if (!a.lastMessage.id) {
+        return 1;
+      }
+
+      if (!b.lastMessage.id) {
+        return -1;
+      }
+
+      if (a.tracking.unreadCount === b.tracking.unreadCount) {
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
       } else {
-        return unreadCountA > unreadCountB ? -1 : 1;
+        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
       }
     });
   }

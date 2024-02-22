@@ -3,22 +3,15 @@
   z-index: z("dropdown");
 }
 
-.chat-message-actions {
-  .chat-message-reaction {
-    @include chat-reaction;
-  }
-}
-
 .chat-message-actions-container {
   @include unselectable;
-  position: relative;
+  z-index: z("composer", "content");
 }
 
 .chat-message-actions {
-  border-radius: 0.25em;
   background-color: var(--secondary);
+  border-radius: var(--d-border-radius);
   display: flex;
-  box-shadow: 0 0.75px 0px rgba(0, 0, 0, 0.15);
 
   .emoji-picker-anchor {
     position: absolute;
@@ -47,19 +40,18 @@
     width: 2.5em;
     transition: background 0.2s, border-color 0.2s;
 
+    > * {
+      pointer-events: none;
+    }
+
     &:focus {
       .d-icon {
         color: var(--primary);
       }
     }
 
-    &:first-child {
-      border-bottom-left-radius: 0.25em;
-      border-top-left-radius: 0.25em;
-    }
-
     &:first-child:not(:hover) {
-      border-color: var(--primary-low);
+      border-color: var(--primary-300);
       border-right-color: transparent;
     }
 
@@ -72,18 +64,27 @@
     }
   }
 
+  &.has-no-secondary-actions {
+    .reply-btn {
+      border-right: 1px solid var(--primary-300);
+      border-top: 1px solid var(--primary-300);
+      border-bottom: 1px solid var(--primary-300);
+    }
+  }
+
   .more-buttons.dropdown-select-box {
     .select-kit-header {
       background: none;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--primary-300);
       border-left-color: transparent;
-      border-radius: 0 0.25em 0.25em 0;
       padding: 0.5em 0;
       width: 2.5em;
       transition: background 0.2s, border-color 0.2s;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
 
       &:focus {
-        border-color: var(--primary-low);
+        border-color: var(--primary-300);
         border-left-color: transparent;
 
         .select-kit-header-wrapper .d-icon {
@@ -114,8 +115,8 @@
 
     .select-kit-body {
       padding: 0.5rem;
-      box-shadow: shadow("card");
-      border: 1px solid var(--primary-low);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--primary-300);
     }
 
     .select-kit-row {
@@ -132,6 +133,8 @@
   }
 
   .chat-message-reaction {
+    @include chat-reaction;
+
     align-items: center;
     border-radius: 0;
     border-left-color: transparent;
@@ -150,9 +153,9 @@
     }
 
     &:first-child {
-      border-bottom-left-radius: 0.25em;
-      border-left-color: var(--primary-low);
-      border-top-left-radius: 0.25em;
+      border-left-color: var(--primary-300);
+      border-top-left-radius: var(--d-border-radius);
+      border-bottom-left-radius: var(--d-border-radius);
     }
 
     &.reacted {

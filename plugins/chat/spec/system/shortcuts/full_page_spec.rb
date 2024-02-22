@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | full page", type: :system, js: true do
+RSpec.describe "Shortcuts | full page", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:user) }
 
@@ -19,7 +19,7 @@ RSpec.describe "Shortcuts | full page", type: :system, js: true do
 
       page.send_keys("e")
 
-      expect(find(".chat-composer-input").value).to eq("e")
+      expect(find(".chat-composer__input").value).to eq("e")
     end
   end
 end

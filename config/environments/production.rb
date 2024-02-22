@@ -71,4 +71,6 @@ Discourse::Application.configure do
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
+
+  config.active_record.action_on_strict_loading_violation = :log
 end

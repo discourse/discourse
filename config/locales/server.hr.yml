@@ -19,7 +19,7 @@ hr:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - siječanj
     - veljača
     - ožujak
@@ -55,6 +55,9 @@ hr:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućeno"
+    disabled_filter: "Onemogućeno"
   themes:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
@@ -81,7 +84,7 @@ hr:
       optimized_link: Optimizirane veze na slike su prolazne i ne bi trebale biti uključene u izvorni kod teme.
     settings_errors:
       invalid_yaml: "Zadani YAML je nevažeći"
-      data_type_not_a_number: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
+      data_type_inclusion: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
       name_too_long: "Postoji postavka s predugim imenom. Najveća dopuštena duljina je 255"
       default_value_missing: "Postavka `%{name}` nema podrazumijevanu vrijednost."
       default_not_match_type: "Tip zadane vrijednosti postavke `%{name}` ne podudara se s postavljenom vrijednošću postavke."
@@ -95,6 +98,9 @@ hr:
       string_value_not_valid_min_max: "Mora biti duga barem %{min} i najviše %{max} znakova."
       string_value_not_valid_min: "Mora biti duga barem %{min} znakova."
       string_value_not_valid_max: "Mora imati najviše %{max} znakova."
+      objects:
+        required: "mora biti prisutan"
+        not_valid_integer_value: "mora biti cijeli broj"
     locale_errors:
       top_level_locale: "Ključ najviše razine u datoteci jezika mora odgovarati nazivu jezika"
       invalid_yaml: "Nevažeći YAML s prijevodom."
@@ -195,15 +201,10 @@ hr:
       load_from_remote: "Dogodila se greška pri učitavanju objave."
     site_settings:
       invalid_category_id: "Naveli ste kategoriju koja ne postoji"
-      invalid_choice:
-        one: "Naveli ste nevažeći izbor %{name}"
-        few: "Naveli ste nevažeći izbor %{name}"
-        other: "Naveli ste nevažeće izbore %{name}"
       default_categories_already_selected: "Ne možete odabrati kategoriju koja se koristi na drugom popisu."
       default_tags_already_selected: "Ne možete odabrati oznaku koja se koristi na drugom popisu."
       s3_upload_bucket_is_required: "Ne možete omogućiti prijenose na S3 osim ako niste naveli 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Ne možete omogućiti korištenje S3 inventara osim ako niste omogućili S3 prijenose."
-      page_publishing_requirements: "Objavljivanje stranice ne može se omogućiti ako je omogućen siguran medij."
       s3_backup_requires_s3_settings: "Ne možete koristiti S3 kao pričuvnu lokaciju osim ako niste unijeli '%{setting_name}'."
   invite:
     disabled_errors:
@@ -262,7 +263,6 @@ hr:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Učitavanje rasprave"
     permalink: "Poveznica"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -287,7 +287,7 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_trust: "Nažalost, ne možete ugraditi medijske stavke u post."
+  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
   no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
@@ -433,7 +433,8 @@ hr:
             name:
               same_as_password: "je ista kao vaša lozinka."
             ip_address:
-              signup_not_allowed: "Prijava nije dopuštena ovom računu."
+              blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
+              max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
         color_scheme_color:
           attributes:
             hex:
@@ -453,7 +454,6 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
-  admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"
     errors:
@@ -487,7 +487,6 @@ hr:
     media_placeholder:
       blocked_hotlinked_title: "Mediji smješteni na drugom mjestu. Kliknite za otvaranje u novoj kartici."
       blocked_hotlinked: "Vanjski mediji"
-    hidden_bidi_character: "Dvosmjerni znakovi mogu promijeniti redoslijed prikaza teksta. To se može koristiti za prikrivanje zlonamjernog koda."
     has_likes:
       one: "%{count} Like"
       few: "%{count} Likeova"
@@ -654,27 +653,12 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   change_email:
-    wrong_account_error: "Prijavljeni ste na krivi račun, odjavite se i pokušajte ponovo."
-    confirmed: "Email vam je ažuriran."
-    please_continue: "Nastavite na %{site_name}"
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
     error_staged: "Dogodila se greška pri promjeni vaše email adrese. Adresu već koristi drugi korisnik."
     already_done: "Žao nam je, ova poveznica za potvrdu nije više važeća. Možda je vaš email već promijenjen?"
     confirm: "Potvrdi"
     max_secondary_emails_error: "Dosegli ste maksimalno dopušteno ograničenje sekundarne e-pošte."
-    authorizing_new:
-      title: "Potvrdite svoju novu e-poštu"
-      description: "Molimo potvrdite da želite da se vaša adresa e-pošte promijeni u:"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-    authorizing_old:
-      title: "Promijenite adresu e-pošte"
-      description: "Molimo potvrdite promjenu adrese e-pošte"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-      old_email: "Stari email: %{email}"
-      new_email: "Novi email: %{email}"
-      almost_done_title: "Potvrđivanje nove adrese e-pošte"
-      almost_done_description: "Poslali smo e-poruku na vašu novu adresu e-pošte kako bismo potvrdili promjenu!"
   associated_accounts:
     connected: "(povezano)"
   activation:
@@ -707,6 +691,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
       email_title: 'Vaša objava u "%{title}"'
@@ -735,6 +721,8 @@ hr:
       title: "Nešto drugo"
       long_form: "označio za moderatorsku pozornost"
       email_title: 'Tema "%{title}" zahtjeva moderatorsku pozornost'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Ovu je objavu zajednica označila zastavicom i privremeno je skrivena.</p>"
@@ -1083,9 +1071,6 @@ hr:
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
     set_locale_from_accept_language_header: "postaviti jezik sučelja za anonimne korisnike iz jezičnih zaglavlja njihovih web preglednika"
     support_mixed_text_direction: "Podržava mješoviti smjer teksta slijeva nadesno i zdesna nalijevo."
-    min_post_length: "Minimalna dopuštena duljina posta u znakovima"
-    min_first_post_length: "Minimalna dopuštena duljina prve objave (tijelo teme) u znakovima"
-    min_personal_message_post_length: "Minimalna dopuštena duljina posta u znakovima za poruke"
     max_post_length: "Najveća dopuštena duljina posta u znakovima"
     topic_featured_link_enabled: "Omogući objavljivanje poveznice s temama."
     show_topic_featured_link_in_digest: "Pokažite istaknutu vezu na temu u sažetku e-pošte."
@@ -1150,7 +1135,6 @@ hr:
     tl2_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl2 (član) množenjem s ovim brojem"
     tl3_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl3 (regular) množenjem s ovim brojem"
     tl4_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl4 (voditelj) množenjem s ovim brojem"
-    num_users_to_silence_new_user: "Ako postovi novog korisnika dobiju num_spam_flags_to_silence_new_user zastavice neželjene pošte od toliko različitih korisnika, sakrijte sve njihove postove i spriječite buduće objavljivanje. 0 za onemogućavanje."
     num_tl3_flags_to_silence_new_user: "Ako postovi novog korisnika dobiju ovoliko oznaka od num_tl3_users_to_silence_new_user različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     num_tl3_users_to_silence_new_user: "Ako postovi novog korisnika dobiju oznake num_tl3_flags_to_silence_new_user od toliko različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     notify_mods_when_user_silenced: "Ako je korisnik automatski utišan, pošaljite poruku svim moderatorima."
@@ -1164,7 +1148,6 @@ hr:
     must_approve_users: "Osoblje mora odobriti sve nove korisničke račune prije nego im se dopusti pristup stranici."
     invite_code: "Korisnik mora upisati ovaj kod kako bi mu se omogućila registracija računa, zanemaruje se kada je prazan (neosjetljivo je na velika i mala slova)"
     approve_suspect_users: "Dodajte sumnjive korisnike u red čekanja za pregled. Sumnjivi korisnici ušli su u biografiju/web stranicu, ali nemaju aktivnosti čitanja."
-    review_every_post: "Sve objave moraju biti pregledane. UPOZORENJE! NE PREPORUČUJE SE ZA PROMETNA MJESTA."
     pending_users_reminder_delay_minutes: "Obavijesti moderatore ako novi korisnici čekaju na odobrenje dulje od ovoliko minuta. Postavite na -1 da biste onemogućili obavijesti."
     persistent_sessions: "Korisnici će ostati prijavljeni kada se web preglednik zatvori"
     maximum_session_age: "Korisnik će ostati prijavljen n sati od zadnje posjete"
@@ -1172,7 +1155,6 @@ hr:
     ga_universal_tracking_code: "Google Universal Analytics ID koda za praćenje, npr.: UA-12345678-9; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics naziv domene, npr.: mysite.com; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Omogućite Google Universal Analytics praćenje među domenama. Odlazne veze na te domene imat će dodan ID klijenta. Pogledajte <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googleov vodič za praćenje među domenama.</a>"
-    gtm_container_id: "ID spremnika Google upravitelja oznaka. npr.: GTM-ABCDEF. <br/>Napomena: Skripte trećih strana koje učitava GTM možda će morati biti stavljene na popis dopuštenih u 'src skripte sigurnosne politike sadržaja'."
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Dopustite moderatorima stvaranje i upravljanje kategorijama i grupama"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
@@ -1208,7 +1190,6 @@ hr:
     discourse_connect_overrides_profile_background: "Nadjačava pozadinu korisničkog profila vrijednošću iz nosivosti DiscourseConnecta."
     discourse_connect_overrides_card_background: "Zamjenjuje pozadinu korisničke kartice s vrijednošću iz sadržaja DiscourseConnect."
     discourse_connect_not_approved_url: "Preusmjerite neodobrene DiscourseConnect račune na ovaj URL"
-    discourse_connect_allows_all_return_paths: "Nemojte ograničavati domenu za return_paths koje pruža DiscourseConnect (prema zadanim postavkama povratna staza mora biti na trenutnom mjestu)"
     enable_local_logins: "Omogućite račune temeljene na prijavi s lokalnim korisničkim imenom i lozinkom. UPOZORENJE: ako je onemogućeno, možda se nećete moći prijaviti ako prethodno niste konfigurirali barem jedan alternativni način prijave."
     enable_local_logins_via_email: "Omogućite korisnicima da zatraže vezu za prijavu jednim klikom da im se pošalje putem e-pošte."
     allow_new_registrations: "Dopusti registracije novih korisnika. Poništite ovu opciju kako biste spriječili bilo koga da stvori novi račun."
@@ -1282,14 +1263,8 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     desktop_category_page_style: "Vizualni stil za stranicu /kategorije."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    category_style: "Vizualni stil za bedževe kategorije."
     default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
-    max_image_size_kb: "Maksimalna veličina slike za učitavanje u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy. Slike veće od ovoga i manje od client_max_body_size bit će promijenjene u veličini kako bi stale pri prijenosu."
-    max_attachment_size_kb: "Maksimalna veličina učitanih datoteka privitka u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy."
-    authorized_extensions: "Popis ekstenzija datoteka dopuštenih za prijenos (upotrijebite '*' da biste omogućili sve vrste datoteka)"
-    authorized_extensions_for_staff: "Popis ekstenzija datoteka dopuštenih za učitavanje za korisnike osoblja uz popis definiran u postavci web mjesta `authorized_extensions`. (koristite '*' da omogućite sve vrste datoteka)"
-    theme_authorized_extensions: "Popis ekstenzija datoteka dopuštenih za učitavanje tema (upotrijebite '*' da omogućite sve vrste datoteka)"
     max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
@@ -1333,7 +1308,6 @@ hr:
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
-    email_in: 'Omogućite korisnicima objavljivanje novih tema putem e-pošte (zahtijeva ručno ili pop3 prozivanje). Konfigurirajte adrese u kartici "Postavke" svake kategorije.'
     email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
     email_in_spam_header: "Zaglavlje e-pošte za otkrivanje neželjene pošte."
@@ -1386,17 +1360,13 @@ hr:
     embed_topics_list: "Podržava HTML ugradnju popisa tema"
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
     embed_truncate: "Skratite ugrađene postove."
-    embed_unlisted: "Uvezene teme neće biti navedene dok korisnik ne odgovori."
     embed_support_markdown: "Podržava Markdown formatiranje za ugrađene objave."
     allowed_embed_selectors: "Popis CSS elemenata odvojenih zarezima koji su dopušteni u ugrađivanju."
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    notify_about_flags_after: "Ako postoje zastavice koje nisu obrađene nakon toliko sati, pošaljite osobnu poruku moderatorima. Postavite na 0 za onemogućavanje."
-    show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
-    bootstrap_mode_min_users: "Minimalan broj korisnika potreban za onemogućavanje načina pokretanja (postavite na 0 za onemogućavanje)"
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
@@ -1408,9 +1378,6 @@ hr:
     emoji_autocomplete_min_chars: "Minimalan broj znakova potreban za pokretanje skočnog prozora s emojijima za automatsko dovršavanje"
     enable_inline_emoji_translation: "Omogućuje prijevod za ugrađene emojije (bez razmaka ili interpunkcijskih znakova prije)"
     approve_post_count: "Količina objava novog ili osnovnog korisnika koja mora biti odobrena"
-    approve_unless_trust_level: "Objave za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_new_topics_unless_trust_level: "Nove teme za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_unless_staged: "Nove teme i postovi za stupnjevite korisnike moraju biti odobreni"
     notify_about_queued_posts_after: "Ako postoje postovi koji čekaju na pregled dulje od ovog broja sati, pošaljite obavijest svim moderatorima. Postavite na 0 da biste onemogućili ove obavijesti."
     auto_close_messages_post_count: "Maksimalan broj dopuštenih postova u poruci prije nego što se automatski zatvori (0 za onemogućiti)"
     auto_close_topics_post_count: "Maksimalan broj dopuštenih postova u temi prije nego što se automatski zatvori (0 za onemogućiti)"
@@ -1419,7 +1386,6 @@ hr:
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
     watched_words_regular_expressions: "Promatrane riječi su regularni izrazi."
     enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
-    enable_fast_edit: "Omogućuje mali odabir teksta objave koji se može uređivati na liniji."
     old_post_notice_days: "Dana prije nego što obavijest o pošti postane stara"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
@@ -1434,7 +1400,6 @@ hr:
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
-    company_name: "Ime tvrtke"
     governing_law: "Mjerodavno pravo"
     city_for_disputes: "Grad za sporove"
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
@@ -1448,7 +1413,6 @@ hr:
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
     enable_user_status: "(eksperimentalno) Omogućuje korisnicima postavljanje prilagođene statusne poruke (emoji + opis)."
-    enable_user_tips: "(eksperimentalno) Omogućite nove korisničke savjete koji korisnicima opisuju ključne značajke"
     short_title: "Kratki naslov koristit će se na korisničkom početnom zaslonu, pokretaču ili drugim mjestima gdje je prostor ograničen. Trebao bi biti ograničen na 12 znakova."
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
@@ -1464,10 +1428,6 @@ hr:
     use_name_for_username_suggestions: "Koristite puno ime korisnika kada predlažete korisnička imena."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
-    navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
-    default_sidebar_categories: "Odabrane kategorije će prema zadanim postavkama biti prikazane u odjeljku Kategorije na bočnoj traci."
-    default_sidebar_tags: "Odabrane oznake će prema zadanim postavkama biti prikazane u odjeljku Oznake bočne trake."
-    enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."
@@ -1643,9 +1603,6 @@ hr:
       blocked: "nije dopušteno."
       revoked: "Neće slati e-poštu na '%{email}' do %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
-      max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
     website:
       domain_not_allowed: "Web stranica nije važeća. Dopuštene domene su: %{domains}"
     auto_rejected: "Automatski odbijeno zbog starosti. Pogledajte postavku web mjesta auto_handle_queued_age."
@@ -1770,9 +1727,6 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
-    dashboard_problems:
-      title: "Problemi nadzorne ploče"
-      subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
     user_quoted:
       title: "Korisnik je citirao"
@@ -1902,6 +1856,9 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -1915,6 +1872,7 @@ hr:
       confirm_body: "Uspjeh! Obavijesti su omogućene."
       custom: "Obavijest od %{username} %{site_title}"
   staff_action_logs:
+    unknown: "nepoznato"
     api_key:
       revoked: Opoziv
   reviewables:
@@ -1941,7 +1899,6 @@ hr:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Obriši korisnika..."
         delete:
           title: "Obriši korisnika"
       reject:

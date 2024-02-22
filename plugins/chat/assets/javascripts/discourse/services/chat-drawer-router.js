@@ -1,15 +1,55 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import ChatDrawerDraftChannel from "discourse/plugins/chat/discourse/components/chat-drawer/draft-channel";
-import ChatDrawerChannel from "discourse/plugins/chat/discourse/components/chat-drawer/channel";
-import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
+import Service, { inject as service } from "@ember/service";
+import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
+import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
+import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
+import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
+import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
-const COMPONENTS_MAP = {
-  "chat.draft-channel": { name: ChatDrawerDraftChannel },
-  "chat.channel": { name: ChatDrawerChannel },
-  chat: { name: ChatDrawerIndex },
+const ROUTES = {
+  "chat.channel": { name: ChatDrawerRoutesChannel },
+  "chat.channel.thread": {
+    name: ChatDrawerRoutesChannelThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        threadId: route.params.threadId,
+      };
+    },
+  },
+  "chat.channel.thread.index": {
+    name: ChatDrawerRoutesChannelThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        threadId: route.params.threadId,
+      };
+    },
+  },
+  "chat.channel.thread.near-message": {
+    name: ChatDrawerRoutesChannelThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.parent.params.channelId,
+        threadId: route.parent.params.threadId,
+        messageId: route.params.messageId,
+      };
+    },
+  },
+  "chat.channel.threads": {
+    name: ChatDrawerRoutesChannelThreads,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+      };
+    },
+  },
+  "chat.threads": {
+    name: ChatDrawerRoutesThreads,
+  },
+  chat: { name: ChatDrawerRoutesChannels },
   "chat.channel.near-message": {
-    name: ChatDrawerChannel,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
@@ -18,7 +58,7 @@ const COMPONENTS_MAP = {
     },
   },
   "chat.channel-legacy": {
-    name: ChatDrawerChannel,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.params.channelId,
@@ -30,12 +70,21 @@ const COMPONENTS_MAP = {
 
 export default class ChatDrawerRouter extends Service {
   @service router;
+  @service chatHistory;
+
   @tracked component = null;
+  @tracked drawerRoute = null;
   @tracked params = null;
 
   stateFor(route) {
-    const component = COMPONENTS_MAP[route.name];
-    this.params = component?.extractParams?.(route) || route.params;
-    this.component = component?.name || ChatDrawerIndex;
+    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
+
+    this.chatHistory.visit(route);
+
+    this.drawerRoute = ROUTES[route.name];
+    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
+    this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+
+    this.drawerRoute.activate?.(route);
   }
 }

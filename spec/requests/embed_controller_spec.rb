@@ -5,7 +5,7 @@ RSpec.describe EmbedController do
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:discourse_username) { "eviltrout" }
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   describe "#info" do
     context "without api key" do
@@ -172,7 +172,7 @@ RSpec.describe EmbedController do
     end
 
     describe "by topic id" do
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+      fab!(:embeddable_host)
 
       it "allows a topic to be embedded by id" do
         get "/embed/comments",
@@ -188,7 +188,7 @@ RSpec.describe EmbedController do
     end
 
     context "with a host" do
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+      fab!(:embeddable_host)
 
       before { Jobs.run_immediately! }
 
@@ -211,7 +211,7 @@ RSpec.describe EmbedController do
         )
 
         topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
-        post = Fabricate(:post, topic: topic_embed.topic)
+        Fabricate(:post, topic: topic_embed.topic)
 
         get "/embed/comments", params: { embed_url: embed_url }, headers: { "REFERER" => embed_url }
 
@@ -356,7 +356,7 @@ RSpec.describe EmbedController do
                 embed_url: embed_url,
               },
               headers: {
-                "REFERER" => "http://eviltrout.com/wat/1-2-3.html",
+                "REFERER" => "https://discourse.org/blog-entry-1",
               }
 
           expect(response.status).to eq(200)

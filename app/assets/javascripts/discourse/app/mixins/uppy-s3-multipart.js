@@ -1,10 +1,11 @@
 import Mixin from "@ember/object/mixin";
-import getUrl from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
+import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import AwsS3Multipart from "@uppy/aws-s3-multipart";
+import { bind } from "discourse-common/utils/decorators";
+
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
+const MB = 1024 * 1024;
 
 export default Mixin.create({
   _useS3MultipartUploads() {
@@ -20,6 +21,20 @@ export default Mixin.create({
       // the chunk size for larger files
       limit: 10,
       retryDelays: RETRY_DELAYS,
+
+      // When we get to really big files, it's better to not have thousands
+      // of small chunks, since we don't have a resume functionality if the
+      // upload fails. Better to try upload less chunks even if those chunks
+      // are bigger.
+      getChunkSize(file) {
+        if (file.size >= 500 * MB) {
+          return 20 * MB;
+        } else if (file.size >= 100 * MB) {
+          return 10 * MB;
+        } else {
+          return 5 * MB;
+        }
+      },
 
       createMultipartUpload: this._createMultipartUpload,
       prepareUploadParts: this._prepareUploadParts,
@@ -51,7 +66,7 @@ export default Mixin.create({
       data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
     }
 
-    return ajax(getUrl(`${this.uploadRootPath}/create-multipart.json`), {
+    return ajax(`${this.uploadRootPath}/create-multipart.json`, {
       type: "POST",
       data,
       // uppy is inconsistent, an error here fires the upload-error event
@@ -71,16 +86,13 @@ export default Mixin.create({
     if (file.preparePartsRetryAttempts === undefined) {
       file.preparePartsRetryAttempts = 0;
     }
-    return ajax(
-      getUrl(`${this.uploadRootPath}/batch-presign-multipart-parts.json`),
-      {
-        type: "POST",
-        data: {
-          part_numbers: partData.parts.map((part) => part.number),
-          unique_identifier: file.meta.unique_identifier,
-        },
-      }
-    )
+    return ajax(`${this.uploadRootPath}/batch-presign-multipart-parts.json`, {
+      type: "POST",
+      data: {
+        part_numbers: partData.parts.map((part) => part.number),
+        unique_identifier: file.meta.unique_identifier,
+      },
+    })
       .then((data) => {
         if (file.preparePartsRetryAttempts) {
           delete file.preparePartsRetryAttempts;
@@ -130,7 +142,7 @@ export default Mixin.create({
     const parts = data.parts.map((part) => {
       return { part_number: part.PartNumber, etag: part.ETag };
     });
-    return ajax(getUrl(`${this.uploadRootPath}/complete-multipart.json`), {
+    return ajax(`${this.uploadRootPath}/complete-multipart.json`, {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
@@ -165,7 +177,7 @@ export default Mixin.create({
 
     file.meta.cancelled = true;
 
-    return ajax(getUrl(`${this.uploadRootPath}/abort-multipart.json`), {
+    return ajax(`${this.uploadRootPath}/abort-multipart.json`, {
       type: "POST",
       data: {
         external_upload_identifier: uploadId,

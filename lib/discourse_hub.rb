@@ -5,7 +5,7 @@ module DiscourseHub
 
   def self.version_check_payload
     default_payload = { installed_version: Discourse::VERSION::STRING }.merge!(
-      Discourse.git_branch == "unknown" ? {} : { branch: Discourse.git_branch },
+      Discourse.git_branch == "unknown" && !Rails.env.test? ? {} : { branch: Discourse.git_branch },
     )
     default_payload.merge!(get_payload)
   end

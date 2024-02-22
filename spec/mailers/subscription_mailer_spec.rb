@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe SubscriptionMailer do
-  fab!(:user) { Fabricate(:user) }
+  subject(:mail) { SubscriptionMailer.confirm_unsubscribe(user) }
 
-  subject { SubscriptionMailer.confirm_unsubscribe(user) }
+  fab!(:user)
 
   it "contains the right URL" do
-    expect(subject.body).to include(
+    expect(mail.body).to include(
       "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.last.key}",
     )
   end

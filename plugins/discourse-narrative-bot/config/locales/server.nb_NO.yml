@@ -361,16 +361,6 @@ nb_NO:
 
           Gjør oppmerksom på at du bare har %{deletion_after} timer(r) til å fjerne et innlegg.
       category_hashtag:
-        instructions: |-
-          Visste du at du kan ha referanser til kategorier og stikkord i innlegget ditt? For eksempel, har du sett %{category} kategorien?
-
-          Skriv `#` i midten av en setning og velg en kategori eller et stikkord.
-        not_found: |-
-          Hmm, jeg ser ikke en kategori noe sted i det innlegget. Pass på at `#` ikke må være det første tegnet på linjen. Kan du forsøke å kopiere dette eksempelet inn i det neste svaret?
-
-          ```text
-          Jeg kan lage en lenke til kategorier med #
-          ```
         reply: |-
           Genialt! Husk at dette fungerer både med kategorier _og_ stikkord, hvis stikkord er aktivert.
       change_topic_notification_level:

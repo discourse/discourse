@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-module ThemeStore
-end
-
-class ThemeStore::GitImporter
+class ThemeStore::GitImporter < ThemeStore::BaseImporter
   COMMAND_TIMEOUT_SECONDS = 20
 
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
     @url = GitUrl.normalize(url)
-    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
     @branch = branch
   end
@@ -18,7 +14,7 @@ class ThemeStore::GitImporter
   def import!
     clone!
 
-    if version = Discourse.find_compatible_git_resource(@temp_folder)
+    if version = Discourse.find_compatible_git_resource(temp_folder)
       begin
         execute "git", "cat-file", "-e", version
       rescue RuntimeError => e
@@ -56,34 +52,6 @@ class ThemeStore::GitImporter
     execute("git", "rev-parse", "HEAD").strip
   end
 
-  def cleanup!
-    FileUtils.rm_rf(@temp_folder)
-  end
-
-  def real_path(relative)
-    fullpath = "#{@temp_folder}/#{relative}"
-    return nil unless File.exist?(fullpath)
-
-    # careful to handle symlinks here, don't want to expose random data
-    fullpath = Pathname.new(fullpath).realpath.to_s
-
-    if fullpath && fullpath.start_with?(@temp_folder)
-      fullpath
-    else
-      nil
-    end
-  end
-
-  def all_files
-    Dir.glob("**/*", base: @temp_folder).reject { |f| File.directory?(File.join(@temp_folder, f)) }
-  end
-
-  def [](value)
-    fullpath = real_path(value)
-    return nil unless fullpath
-    File.read(fullpath)
-  end
-
   protected
 
   def redirected_uri
@@ -94,7 +62,7 @@ class ThemeStore::GitImporter
 
     redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
 
-    if redirected_uri&.path.ends_with?("/info/refs")
+    if redirected_uri&.path&.ends_with?("/info/refs")
       redirected_uri.path.gsub!(%r{/info/refs\z}, "")
       redirected_uri.query = nil
       redirected_uri
@@ -135,7 +103,7 @@ class ThemeStore::GitImporter
 
     args.concat(["--single-branch", "-b", @branch]) if @branch.present?
 
-    args.concat([url, @temp_folder])
+    args.concat([url, temp_folder])
 
     args
   end
@@ -196,6 +164,6 @@ class ThemeStore::GitImporter
   end
 
   def execute(*args)
-    Discourse::Utils.execute_command(*args, chdir: @temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
+    Discourse::Utils.execute_command(*args, chdir: temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
   end
 end

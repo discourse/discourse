@@ -1,0 +1,50 @@
+.calendar-date-time-input {
+  .fake-input {
+    display: none;
+  }
+
+  padding: 5px;
+  border: 1px solid var(--primary-low);
+  z-index: 1;
+  background: var(--secondary);
+  width: 200px;
+  box-sizing: border-box;
+  margin-left: 1em;
+
+  .date-picker {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    box-sizing: border-box;
+
+    .pika-single {
+      position: relative !important;
+      flex: 1;
+      display: flex;
+      border: 0;
+    }
+  }
+
+  .time-pickers {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    margin-top: 1em;
+    align-items: center;
+    padding: 0.25em;
+    border-top: 1px solid var(--primary-low-mid);
+    box-sizing: border-box;
+
+    .d-icon {
+      color: var(--primary-medium);
+      margin-right: 0.5em;
+    }
+
+    .time-picker {
+      box-shadow: none;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+}

@@ -345,6 +345,8 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
   end
 
   def normalize_raw(raw, user_id)
+    return "<missing>" if raw.blank?
+
     raw = raw.gsub('\n', "")
     raw = ReverseMarkdown.convert(raw)
 
@@ -380,7 +382,6 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
         html
       else
         puts "Error creating image upload"
-        "![](#{$1})"
         exit
       end
     end

@@ -10,10 +10,13 @@ ro:
       title: "Ghid stilistic"
       welcome: "Pentru a începe, alegeți o secțiune din meniul din stânga."
       categories:
+        syntax: Sintaxă
         atoms: Atomi
         molecules: Molecule
         organisms: Organisme
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Corpuri de literă"
           example: "Bine ai venit la Discourse"
@@ -81,6 +84,9 @@ ro:
           title: "Pictograme Antet"
         spinners:
           title: "Indicatori încărcare"
-        rich_tooltip:
+        tooltips:
           description: "Descriere"
           header: "Antet"
+        char_counter:
+          title: "Contor de caractere"
+          placeholder: "Introdu textul tău aici..."

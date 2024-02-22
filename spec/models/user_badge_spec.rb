@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBadge do
-  fab!(:badge) { Fabricate(:badge) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:badge)
+  fab!(:user)
 
   describe "Validations" do
     let(:subject) { BadgeGranter.grant(badge, user) }
@@ -31,8 +31,24 @@ RSpec.describe UserBadge do
     end
   end
 
+  describe "#destroy" do
+    it "triggers the 'user_badge_revoked' DiscourseEvent" do
+      user_badge =
+        UserBadge.create(
+          badge: badge,
+          user: user,
+          granted_at: Time.zone.now,
+          granted_by: Discourse.system_user,
+        )
+
+      event = DiscourseEvent.track(:user_badge_revoked) { user_badge.destroy! }
+
+      expect(event).to be_present
+    end
+  end
+
   describe "featured rank" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user_badge_tl1) do
       UserBadge.create!(
         badge_id: Badge::BasicUser,

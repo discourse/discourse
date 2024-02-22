@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe UserFullNameValidator do
-  let(:validator) { described_class.new(attributes: :name) }
   subject(:validate) { validator.validate_each(record, :name, @name) }
+
+  let(:validator) { described_class.new(attributes: :name) }
   let(:record) { Fabricate.build(:user, name: @name) }
 
   context "when name is not required" do

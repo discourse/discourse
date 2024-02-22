@@ -21,7 +21,7 @@
     "chatable_url": { "type": "string" },
     "title": { "type": "string" },
     "chatable_id": { "type": "number" },
-    "last_message_sent_at": { "type": "string" },
+    "last_message": { "type": ["object", "null"] },
     "status": { "type": "string" },
     "chatable": {
       "type": "object",

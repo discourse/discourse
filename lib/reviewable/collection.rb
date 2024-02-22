@@ -18,8 +18,8 @@ class Reviewable < ActiveRecord::Base
       @content = []
     end
 
-    def has?(id)
-      @content.any? { |a| a.id.to_s == id.to_s }
+    def has?(action_id)
+      @content.any? { |a| a.server_action.to_s == action_id.to_s }
     end
 
     def blank?

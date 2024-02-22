@@ -1,13 +1,15 @@
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import { h } from "virtual-dom";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { userPath } from "discourse/lib/url";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import { avatarFor } from "discourse/widgets/post";
+import PostCooked from "discourse/widgets/post-cooked";
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
@@ -93,7 +95,17 @@ export function resetPostSmallActionClassesCallbacks() {
 
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
-  tagName: "div.small-action.onscreen-post",
+  tagName: "article.small-action.onscreen-post",
+
+  buildAttributes(attrs) {
+    return {
+      "aria-label": I18n.t("share.post", {
+        postNumber: attrs.post_number,
+        username: attrs.username,
+      }),
+      role: "region",
+    };
+  },
 
   buildId(attrs) {
     return `post_${attrs.post_number}`;
@@ -122,13 +134,13 @@ export default createWidget("post-small-action", {
   html(attrs) {
     const contents = [];
     const buttons = [];
-    const customMessage = [];
 
     contents.push(
       avatarFor.call(this, "small", {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
+        ariaHidden: false,
       })
     );
 
@@ -177,20 +189,20 @@ export default createWidget("post-small-action", {
       );
     }
 
-    if (!attrs.actionDescriptionWidget && attrs.cooked) {
-      customMessage.push(
-        new RawHtml({
-          html: `<div class='small-action-custom-message'>${attrs.cooked}</div>`,
-        })
-      );
-    }
-
     return [
       h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
       h("div.small-action-desc", [
         h("div.small-action-contents", contents),
         h("div.small-action-buttons", buttons),
-        customMessage,
+        !attrs.actionDescriptionWidget && attrs.cooked
+          ? h("div.small-action-custom-message", [
+              new PostCooked(
+                attrs,
+                new DecoratorHelper(this),
+                this.currentUser
+              ),
+            ])
+          : null,
       ]),
     ];
   },

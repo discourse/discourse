@@ -2,6 +2,8 @@
 
 class FinalDestination::HTTP < Net::HTTP
   def connect
+    raise ArgumentError.new("address cannot be nil or empty") unless @address.present?
+
     original_open_timeout = @open_timeout
     return super if @ipaddr
 
@@ -23,7 +25,7 @@ class FinalDestination::HTTP < Net::HTTP
 
       @open_timeout = remaining_time
       return super
-    rescue SystemCallError, Net::OpenTimeout => e
+    rescue OpenSSL::SSL::SSLError, SystemCallError, Net::OpenTimeout => e
       debug "[FinalDestination] Error connecting to #{ip}... #{e.message}"
       was_last_attempt = index == ips.length - 1
       raise if was_last_attempt

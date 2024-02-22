@@ -12,7 +12,7 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [{ topic: [:tags] }, :user]
+    [{ topic: %i[tags category] }, :user]
   end
 
   def self.list_query(user, guardian)
@@ -54,7 +54,8 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_conditions(bookmark)
-    bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present?
+    bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present? &&
+      self.can_see?(bookmark.user.guardian, bookmark)
   end
 
   def self.can_see?(guardian, bookmark)

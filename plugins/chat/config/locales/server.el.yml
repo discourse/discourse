@@ -17,11 +17,13 @@ el:
           title: "Σίγαση Χρήστη"
         disagree:
           title: "Διαφωνώ"
-        ignore:
-          title: "Αγνόηση"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "απόρριψη"
+    onebox:
+      thread_title_connector: "σε"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -31,6 +33,9 @@ el:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Διαγραμμένος χρήστης"
   unsubscribe:
     chat_summary:
       never: Ποτέ

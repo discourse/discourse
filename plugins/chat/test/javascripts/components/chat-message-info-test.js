@@ -1,22 +1,26 @@
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { module, test } from "qunit";
-import { render } from "@ember/test-helpers";
+import I18n from "discourse-i18n";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import fabricators from "../helpers/fabricators";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
+  const template = hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `;
+
   test("chat_webhook_event", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       chat_webhook_event: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.strictEqual(
       query(".chat-message-info__username").innerText.trim(),
@@ -29,11 +33,11 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("user", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       user: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.strictEqual(
       query(".chat-message-info__username").innerText.trim(),
@@ -42,18 +46,18 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("date", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       user: { username: "discobot" },
       created_at: moment(),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.true(exists(".chat-message-info__date"));
   });
 
   test("bookmark (with reminder)", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       user: { username: "discobot" },
       bookmark: Bookmark.create({
         reminder_at: moment(),
@@ -61,7 +65,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.true(
       exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
@@ -69,57 +73,55 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (no reminder)", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       bookmark: Bookmark.create({
         name: "some name",
       }),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.true(exists(".chat-message-info__bookmark .d-icon-bookmark"));
   });
 
   test("user status", async function (assert) {
     const status = { description: "off to dentist", emoji: "tooth" };
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
-      user: { status },
-    });
+    this.message = fabricators.message({ user: { status } });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.true(exists(".chat-message-info__status .user-status-message"));
   });
 
-  test("reviewable", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+  test("flag status", async function (assert) {
+    this.message = fabricators.message({
       user: { username: "discobot" },
       user_flag_status: 0,
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
-    assert.strictEqual(
-      query(".chat-message-info__flag > .svg-icon-title").title,
-      I18n.t("chat.you_flagged")
-    );
+    assert
+      .dom(".chat-message-info__flag > .svg-icon-title")
+      .hasAttribute("title", I18n.t("chat.you_flagged"));
+  });
 
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+  test("reviewable", async function (assert) {
+    this.message = fabricators.message({
       user: { username: "discobot" },
-      reviewable_id: 1,
+      user_flag_status: 0,
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
-    assert.strictEqual(
-      query(".chat-message-info__flag a .svg-icon-title").title,
-      I18n.t("chat.flagged")
-    );
+    assert
+      .dom(".chat-message-info__flag > .svg-icon-title")
+      .hasAttribute("title", I18n.t("chat.you_flagged"));
   });
 
   test("with username classes", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       user: {
         username: "discobot",
         admin: true,
@@ -129,7 +131,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.dom(".chat-message-info__username.is-staff").exists();
     assert.dom(".chat-message-info__username.is-admin").exists();
@@ -139,11 +141,11 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("without username classes", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = fabricators.message({
       user: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(template);
 
     assert.dom(".chat-message-info__username.is-staff").doesNotExist();
     assert.dom(".chat-message-info__username.is-admin").doesNotExist();

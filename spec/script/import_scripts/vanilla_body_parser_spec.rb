@@ -96,6 +96,7 @@ this starts with spaces but IS NOT a quote" \
           { "Format" => "Rich", "Body" => rich_bodies[:mention].to_json },
           user_id,
         ).parse
+
       expect(parsed).to eq "@Gandalf The Grey, what do you think?"
     end
 
@@ -107,9 +108,10 @@ this starts with spaces but IS NOT a quote" \
           name: "Gandalf The Grey",
           username: "gandalf_the_grey",
         )
+
       lookup.add_user(mentioned.id.to_s, mentioned)
 
-      body = rich_bodies[:mention].to_json.gsub("666", mentioned.id.to_s)
+      body = rich_bodies[:mention].to_json.gsub("999999999", mentioned.id.to_s)
       parsed = VanillaBodyParser.new({ "Format" => "Rich", "Body" => body }, user_id).parse
       expect(parsed).to eq "@gandalf_the_grey, what do you think?"
     end
@@ -120,6 +122,7 @@ this starts with spaces but IS NOT a quote" \
           { "Format" => "Rich", "Body" => rich_bodies[:links].to_json },
           user_id,
         ).parse
+
       expect(
         parsed,
       ).to eq "We can link to the <a href=\"https:\/\/www.discourse.org\/\">Discourse home page</a> and it works."

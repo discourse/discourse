@@ -2,9 +2,9 @@
 
 RSpec.describe ReviewableScore, type: :model do
   describe "transitions" do
-    fab!(:user) { Fabricate(:user, trust_level: 3) }
-    fab!(:post) { Fabricate(:post) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+    fab!(:post)
+    fab!(:moderator)
 
     it "scores agreements properly" do
       reviewable = PostActionCreator.off_topic(user, post).reviewable
@@ -46,11 +46,11 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe "overall score" do
-    fab!(:user0) { Fabricate(:user, trust_level: 1) }
-    fab!(:user1) { Fabricate(:user, trust_level: 2) }
-    fab!(:user2) { Fabricate(:user, trust_level: 3) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:post) { Fabricate(:post) }
+    fab!(:user0) { Fabricate(:user, trust_level: TrustLevel[1]) }
+    fab!(:user1) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:user2) { Fabricate(:user, trust_level: TrustLevel[3]) }
+    fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+    fab!(:post)
     let(:topic) { post.topic }
 
     it "gives a bonus for take_action" do
@@ -87,7 +87,7 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe ".user_accuracy_bonus" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:user_stat) { user.user_stat }
 
     it "returns 0 for a user with no flags" do
@@ -171,7 +171,7 @@ RSpec.describe ReviewableScore, type: :model do
     end
 
     context "with a user with some flags" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:user_stat) { user.user_stat }
 
       it "returns 1.0 + trust_level + accuracy_bonus" do
@@ -185,7 +185,7 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe ".calculate_score" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:user_stat) { user.user_stat }
 
     it "never returns less than 0" do

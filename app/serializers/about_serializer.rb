@@ -30,7 +30,7 @@ class AboutSerializer < ApplicationSerializer
   end
 
   def stats
-    object.class.fetch_cached_stats || Jobs::AboutStats.new.execute({})
+    object.class.fetch_cached_stats
   end
 
   def include_contact_url?

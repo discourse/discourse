@@ -32,33 +32,33 @@ pl_PL:
       multiple:
         help:
           at_least_min_options:
-            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
-            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
-            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
-            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
+            one: "Wybierz co najmniej <strong>%{count} opcję</strong>."
+            few: "Wybierz co najmniej <strong>%{count} opcję</strong>."
+            many: "Wybierz co najmniej <strong>%{count} opcji</strong>."
+            other: "Wybierz co najmniej <strong>%{count} opcji</strong>."
           up_to_max_options:
-            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
-            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
-            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
-            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
+            one: "Wybierz maksymalnie <strong>%{count} opcję</strong>."
+            few: "Wybierz maksymalnie <strong>%{count} opcję</strong>."
+            many: "Wybierz maksymalnie <strong>%{count} opcji</strong>."
+            other: "Wybierz maksymalnie <strong>%{count} opcji</strong>."
           x_options:
-            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
-            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
-            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
-            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
-          between_min_and_max_options: "Wybierz między <strong>%{min}</strong> a <strong>%{max}</strong> opcji."
+            one: "Wybierz <strong>%{count} opcję</strong>."
+            few: "Wybierz <strong>%{count} opcję</strong>."
+            many: "Wybierz <strong>%{count} opcji</strong>."
+            other: "Wybierz <strong>%{count} opcji</strong>."
+          between_min_and_max_options: "Wybierz pomiędzy <strong>%{min} a %{max} opcjami</strong>."
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
       show-results:
         title: "Wyświetl wyniki ankiety"
-        label: "Pokaż wyniki"
+        label: "Wyniki"
       remove-vote:
         title: "Usuń swój głos"
-        label: "Usuń głos"
+        label: "Cofnij głos"
       hide-results:
         title: "Wróć do oddanych głosów"
-        label: "Pokaż głos"
+        label: "Głosuj"
       group-results:
         title: "Grupuj głosy według pól użytkownika"
         label: "Pokaż podsumowanie"
@@ -82,6 +82,8 @@ pl_PL:
         breakdown: "Podział"
         percentage: "Procent"
         count: "Liczba"
+      options:
+        label: "Opcje"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."

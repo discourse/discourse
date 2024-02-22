@@ -2,7 +2,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Category do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
+
+  it_behaves_like "it has custom fields"
 
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
@@ -51,8 +53,8 @@ RSpec.describe Category do
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(3).to(1)
-      expect(SidebarSectionLink.first).to eq(tag_sidebar_section_link)
+      }.from(12).to(10)
+      expect(SidebarSectionLink.last).to eq(tag_sidebar_section_link)
     end
   end
 
@@ -82,11 +84,11 @@ RSpec.describe Category do
   end
 
   describe "#review_group_id" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -130,7 +132,7 @@ RSpec.describe Category do
   end
 
   describe "topic_create_allowed and post_create_allowed" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     fab!(:user) do
       user = Fabricate(:user)
@@ -139,7 +141,7 @@ RSpec.describe Category do
       user
     end
 
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     fab!(:default_category) { Fabricate(:category_with_definition) }
 
@@ -224,8 +226,8 @@ RSpec.describe Category do
   describe "security" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:category_2) { Fabricate(:category_with_definition) }
-    fab!(:user) { Fabricate(:user) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:user)
+    fab!(:group)
 
     it "secures categories correctly" do
       expect(category.read_restricted?).to be false
@@ -554,13 +556,13 @@ RSpec.describe Category do
   end
 
   describe "new" do
-    subject { Fabricate.build(:category, user: Fabricate(:user)) }
+    subject(:category) { Fabricate.build(:category, user: Fabricate(:user)) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.last
+      event = DiscourseEvent.track_events { category.save! }.last
 
       expect(event[:event_name]).to eq(:category_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(category)
     end
   end
 
@@ -630,7 +632,10 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
@@ -692,7 +697,7 @@ RSpec.describe Category do
     context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -770,7 +775,7 @@ RSpec.describe Category do
   end
 
   describe "parent categories" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:parent_category) { Fabricate(:category_with_definition, user: user) }
 
     it "can be associated with a parent category" do
@@ -860,7 +865,7 @@ RSpec.describe Category do
   end
 
   describe "validate email_in" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "works with a valid email" do
       expect(Category.new(name: "test", user: user, email_in: "test@example.com").valid?).to eq(
@@ -904,22 +909,18 @@ RSpec.describe Category do
   describe "require topic/post approval" do
     fab!(:category) { Fabricate(:category_with_definition) }
 
-    describe "#require_topic_approval?" do
-      before do
-        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-        category.save
-      end
+    it "delegates methods to category settings" do
+      expect(category).to delegate_method(:require_reply_approval).to(:category_setting)
+      expect(category).to delegate_method(:require_reply_approval=).with_arguments(true).to(
+        :category_setting,
+      )
+      expect(category).to delegate_method(:require_reply_approval?).to(:category_setting)
 
-      it { expect(category.reload.require_topic_approval?).to eq(true) }
-    end
-
-    describe "#require_reply_approval?" do
-      before do
-        category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
-        category.save
-      end
-
-      it { expect(category.reload.require_reply_approval?).to eq(true) }
+      expect(category).to delegate_method(:require_topic_approval).to(:category_setting)
+      expect(category).to delegate_method(:require_topic_approval=).with_arguments(true).to(
+        :category_setting,
+      )
+      expect(category).to delegate_method(:require_topic_approval?).to(:category_setting)
     end
   end
 
@@ -974,10 +975,10 @@ RSpec.describe Category do
       category =
         Fabricate(
           :category_with_definition,
-          num_auto_bump_daily: 2,
           created_at: 1.minute.ago,
           category_setting_attributes: {
             auto_bump_cooldown_days: 1,
+            num_auto_bump_daily: 2,
           },
         )
       category.clear_auto_bump_cache!
@@ -1024,7 +1025,7 @@ RSpec.describe Category do
       topic = Topic.find_by_id(post1.topic_id)
 
       TopicTimer.create!(
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
         topic: topic,
         execute_at: 1.hour.from_now,
         status_type: TopicTimer.types[:bump],
@@ -1042,8 +1043,8 @@ RSpec.describe Category do
   end
 
   describe "validate permissions compatibility" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:admin)
+    fab!(:group)
     fab!(:group2) { Fabricate(:group) }
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
     fab!(:subcategory) do
@@ -1296,9 +1297,9 @@ RSpec.describe Category do
   end
 
   describe "#cannot_delete_reason" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let(:guardian) { Guardian.new(admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     describe "when category is uncategorized" do
       it "should return the reason" do
@@ -1342,7 +1343,7 @@ RSpec.describe Category do
   end
 
   describe "#deleting the general category" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "should empty out the general_category_id site_setting" do
       SiteSetting.general_category_id = category.id
@@ -1422,6 +1423,90 @@ RSpec.describe Category do
       expect(Category.ids_from_slugs(%w[subcategory])).to contain_exactly(
         subcategory.id,
         subcategory2.id,
+      )
+    end
+  end
+
+  describe "allowed_tags=" do
+    let(:category) { Fabricate(:category) }
+    fab!(:tag)
+    fab!(:tag2) { Fabricate(:tag) }
+
+    before { SiteSetting.tagging_enabled = true }
+
+    it "can use existing tags for category tags" do
+      category.allowed_tags = [tag.name]
+      expect_same_tag_names(category.reload.tags, [tag])
+    end
+
+    context "with synonyms" do
+      fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
+
+      it "can use existing tags for category tags" do
+        category.allowed_tags = [tag.name, synonym.name]
+        category.reload
+        category.allowed_tags = [tag.name, synonym.name, tag2.name]
+        expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
+    end
+  end
+
+  describe "#slug_ref" do
+    fab!(:category) { Fabricate(:category, slug: "foo") }
+
+    it "returns the slug for categories without parents" do
+      expect(category.slug_ref).to eq("foo")
+    end
+
+    context "for category with parent" do
+      fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "bar") }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory.slug_ref).to eq("foo#{Category::SLUG_REF_SEPARATOR}bar")
+      end
+    end
+
+    context "for category with multiple parents" do
+      let(:subcategory_1) { Fabricate(:category, parent_category: category, slug: "bar") }
+      let(:subcategory_2) { Fabricate(:category, parent_category: subcategory_1, slug: "boo") }
+
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory_2.slug_ref(depth: 2)).to eq(
+          "foo#{Category::SLUG_REF_SEPARATOR}bar#{Category::SLUG_REF_SEPARATOR}boo",
+        )
+      end
+
+      it "allows limiting depth" do
+        expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
+      end
+    end
+  end
+
+  describe ".ancestors_of" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    fab!(:sub_subcategory) do
+      SiteSetting.max_category_nesting = 3
+      Fabricate(:category, parent_category: subcategory)
+    end
+
+    it "finds the parent" do
+      expect(Category.ancestors_of([subcategory.id]).to_a).to eq([category])
+    end
+
+    it "finds the grandparent" do
+      expect(Category.ancestors_of([sub_subcategory.id]).to_a).to contain_exactly(
+        category,
+        subcategory,
+      )
+    end
+
+    it "respects the relation it's called on" do
+      expect(Category.where.not(id: category.id).ancestors_of([sub_subcategory.id]).to_a).to eq(
+        [subcategory],
       )
     end
   end

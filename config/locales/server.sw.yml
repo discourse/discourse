@@ -18,7 +18,7 @@ sw:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Mwezi wa kwanza
     - Mwezi wa pili
     - Mwezi wa tatu
@@ -52,6 +52,9 @@ sw:
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} za %{username}"
+  components:
+    enabled_filter: "Imeruhusiwa"
+    disabled_filter: "Imezuiwa"
   themes:
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
     import_error:
@@ -67,6 +70,9 @@ sw:
       number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
       string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
       string_value_not_valid_max: "Isizidi maneno %{max}."
+      objects:
+        required: "lazima iwepo"
+        not_valid_integer_value: "lazima iwe namba"
   emails:
     incoming:
       default_subject: "Hii mada inaitaji kichwa cha maneno"
@@ -154,7 +160,6 @@ sw:
     start_discussion: "Anzisha Majadiliano"
     continue: "Endelea Kujadiliana"
     error: "Hitilafu ya Uambatanishi"
-    loading: "Inapakua Majadiliano..."
     permalink: "Kiungo cha mtandao cha Mda Mrefu"
     in_reply_to: "▶ %{username}"
     replies:
@@ -298,7 +303,8 @@ sw:
               same_as_current: "ni sawa na nywila unayotumia sasa."
               unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
             ip_address:
-              signup_not_allowed: "Hauruhusiwi kujiunga kupitia akaunti hii."
+              blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
+              max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
         user_email:
           attributes:
             user_id:
@@ -415,8 +421,6 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   change_email:
-    confirmed: "Barua pepe yako imesasishwa."
-    please_continue: "Endelea kwenye %{site_name}"
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
@@ -450,6 +454,9 @@ sw:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Haifai"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
@@ -483,6 +490,9 @@ sw:
       long_form: "imeripotiwa na itapitiwa na msimamizi"
       short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
       email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Chapisho lako limeripotiwa na jumuiya. Tafadhali <a href="%{path}">ona ujumbe wako</a>.</p>'
@@ -763,9 +773,6 @@ sw:
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
     support_mixed_text_direction: "ruhusu mchanganyiko wa mwelekeo wa maneno wa kushoto-kwenda-kulia na kulia-kwenda-kushoto"
-    min_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa"
-    min_first_post_length: "Kiwango cha chini cha herufi za chapisho la kwanza (mwili wa mada) zinazokubaliwa"
-    min_personal_message_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa kwenye ujumbe"
     max_post_length: "Kiwango cha juu cha herufi za chapisho zinazokubaliwa"
     topic_featured_link_enabled: "Ruhusu uchapishaji wa kiungo pamoja na mada."
     show_topic_featured_link_in_digest: "Onyesha kiungo cha mada kwenye barua pepe."
@@ -798,7 +805,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
-    top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
@@ -816,7 +822,6 @@ sw:
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
-    rate_limit_new_user_create_topic: "Baada ya kutengeneza mada, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_new_user_create_post: "Baada ya kuchapisha, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     max_likes_per_day: "Kiwango cha juu cha upendo kwa kila mtumiaji kwa siku."
     max_flags_per_day: "Kiwango cha juu cha bendera kwa kila mtumiaji kwa siku."
@@ -855,7 +860,6 @@ sw:
     tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
     tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
     tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
-    trusted_users_can_edit_others: "Ruhusu watumiaji wenye viwango vya juu vya uaminifu kuhariri maandishi ya watumiaji wengine"
     min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
     allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
     min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
@@ -905,14 +909,10 @@ sw:
     embed_support_markdown: "Ruhusu umbizo wa Markdown kwa ajili ya machapisho yaliyoambatanishwa."
     embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
     embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."
-    show_create_topics_notice: "Kama tovuti ina machapisho chini ya 5, onyesha notisi kuwaambia viongozi kutengeneza mada mpya."
     delete_drafts_older_than_n_days: "Futa mswadajaribio zenye umri zaidi ya siku (n)."
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
     approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
-    approve_unless_trust_level: "Namba za machapisho kutoka kwa mtumiaji mwenye kiwango hichi cha uaminifu lazima zipate kibali"
-    approve_new_topics_unless_trust_level: "Mada mpya za watumiaji wenge kiwango cha chini cha uaminifu lazima zipate kibali"
-    approve_unless_staged: "Mada na machapisho kwa ajili ya watumiaji waliokuwa staged lazima zipate kibali"
     notify_about_queued_posts_after: "Kama kuna machapisho ambayo yamekuwa yanasubirishwa kwa zaidi ya masaa haya, tuma taarifa kwa wasimamizi wote. Andika 0 kuzima hizi taarifa."
     auto_close_topics_post_count: "Idadi ya juu ya machapisho yanayoruhusiwa kwenye mada kabla haijafungwa (0 kuzima)"
     max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
@@ -926,7 +926,6 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    min_trust_level_for_user_api_key: "Kiwango cha uaminifu kinachohitajika kutengeneza funguo za API za mtumiaji"
     tagging_enabled: "Ruhusu lebo kwenye mada?"
     min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
@@ -1031,9 +1030,6 @@ sw:
       not_allowed: "hairuhusiwi kutoka kwa mtoaji barua pepe. Tafadhali tumia barua pepe nyingine."
       blocked: "hairuhusiwi."
       revoked: "hatutatuma barua pepe kwenda kwa '%{email}' mpaka %{date}."
-    ip_address:
-      blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
-      max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
     website:
       domain_not_allowed: "Tovuti ni batili. Vikoa vinavyoruhusiwa ni: %{domains}"
     auto_rejected: "Imekataliwa otomatikali kwa sababu ya umri. Ona mpangilio wa tovuti wa auto_handle_queued_age"
@@ -1401,8 +1397,6 @@ sw:
         Unaweza kuandika majibu na mada tena. Asante kwa uvumilivu wako.
     pending_users_reminder:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
-    dashboard_problems:
-      title: "Matatizo ya Ubao"
     new_user_of_the_month:
       title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
       subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"
@@ -1762,7 +1756,6 @@ sw:
       too_large: "Samahani, faili unalojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb})."
     images:
       too_large: "Samahani, picha unayojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb}),tafadhali badilisha ukubwa na jaribu tena."
-      larger_than_x_megapixels: "Samahani, picha unayojaribu kupakia ni kubwa sana (kipimo cha juu ni %{max_image_megapixels} - megapixels),t afadhali badilisha ukubwa na jaribu tena."
       size_not_found: "Samahani ila hatujaweza kujua kipimo cha picha. Labda picha yako ina tatizo?"
     placeholders:
       too_large: "(picha kubwa zaidi ya KB %{max_size_kb})"
@@ -2033,6 +2026,9 @@ sw:
         title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
+  onebox:
+    github:
+      closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
@@ -2043,6 +2039,8 @@ sw:
       linked: '%{jina la mtumiaji} ametengeneza kiungo kutoka kwenye "%{mada}" - %{jina la_tovuti}'
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+  staff_action_logs:
+    unknown: "haijulikani"
   reviewables:
     sensitivity:
       disabled: "Imezuiwa"
@@ -2068,7 +2066,6 @@ sw:
       approve:
         title: "Imethibitishwa"
       reject_user:
-        title: "Futa Mtumiaji..."
         delete:
           title: "Futa Mtumiaji"
       reject:

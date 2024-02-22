@@ -57,7 +57,7 @@ class BaseBookmarkable
   #
   # @param [User] user The user to perform the query for, this scopes the bookmarks returned.
   # @param [Guardian] guardian An instance of Guardian for the user to be used for security filters.
-  # @return [Bookmark::ActiveRecord_AssociationRelation] Should be an approprialely scoped list of bookmarks for the user.
+  # @return [Bookmark::ActiveRecord_AssociationRelation] Should be an appropriately scoped list of bookmarks for the user.
   def self.list_query(user, guardian)
     raise NotImplementedError
   end
@@ -200,7 +200,7 @@ class BaseBookmarkable
   # may be deleted 3 days after the post or topic is deleted.
   #
   # In the case of bookmarkable records that are not trashable, and where
-  # dependent_destroy is not used, this shouldjust delete the bookmarks pointing
+  # dependent_destroy is not used, this should just delete the bookmarks pointing
   # to the record which no longer exists in the database.
   def self.cleanup_deleted
     # noop

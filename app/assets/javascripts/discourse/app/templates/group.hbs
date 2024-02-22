@@ -48,28 +48,28 @@
         {{#if this.currentUser.admin}}
           {{#if this.model.automatic}}
             <DButton
-              @action={{action "toggleDeleteTooltip"}}
-              @class="btn-default"
+              @action={{this.toggleDeleteTooltip}}
               @icon="question-circle"
               @label="admin.groups.delete"
+              class="btn-default"
             />
           {{else}}
             <DButton
-              @action={{action "destroyGroup"}}
+              @action={{this.destroyGroup}}
               @disabled={{this.destroying}}
               @icon="trash-alt"
-              @class="btn-danger"
               @label="admin.groups.delete"
+              class="btn-danger"
             />
           {{/if}}
         {{/if}}
 
         {{#if this.displayGroupMessageButton}}
           <DButton
-            @action={{action "messageGroup"}}
-            @class="btn-primary group-message-button"
+            @action={{this.messageGroup}}
             @icon="envelope"
             @label="groups.message"
+            class="btn-primary group-message-button"
           />
         {{/if}}
       </div>

@@ -127,6 +127,7 @@ export function sanitize(text, allowLister) {
             hrefAllowed(value, extraHrefMatchers)) ||
           (tag === "iframe" &&
             name === "src" &&
+            !value.match(/\/\.+\//) &&
             allowedIframes.some((i) => {
               return value.toLowerCase().startsWith((i || "").toLowerCase());
             }))

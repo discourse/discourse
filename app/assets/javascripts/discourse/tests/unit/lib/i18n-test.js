@@ -1,13 +1,17 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import I18n from "I18n";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
 module("Unit | Utility | i18n", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this._locale = I18n.locale;
     this._fallbackLocale = I18n.fallbackLocale;
     this._translations = I18n.translations;
     this._extras = I18n.extras;
-    this._pluralizationRules = Object.assign({}, I18n.pluralizationRules);
+    this._pluralizationRules = { ...I18n.pluralizationRules };
 
     I18n.locale = "fr";
 
@@ -65,12 +69,13 @@ module("Unit | Utility | i18n", function (hooks) {
             other: "%{count} days",
           },
           dollar_sign: "Hi {{description}}",
+          with_multiple_interpolate_arguments: "Hi %{username}, %{username2}",
         },
       },
     };
 
     // fake pluralization rules
-    I18n.pluralizationRules = Object.assign({}, I18n.pluralizationRules);
+    I18n.pluralizationRules = { ...I18n.pluralizationRules };
     I18n.pluralizationRules.fr = function (n) {
       if (n === 0) {
         return "zero";
@@ -287,5 +292,35 @@ module("Unit | Utility | i18n", function (hooks) {
       }),
       "customtest"
     );
+  });
+
+  test("legacy require support", function (assert) {
+    withSilencedDeprecations("discourse.i18n-t-import", () => {
+      const myI18n = require("I18n");
+      assert.strictEqual(myI18n.t("topic.reply.title"), "Répondre");
+    });
+  });
+
+  test("missing interpolation argument does not throw error when I18n.testing is `false`", function (assert) {
+    assert.strictEqual(
+      I18n.t("with_multiple_interpolate_arguments", { username: "username" }),
+      "Hi username, [missing %{username2} value]"
+    );
+  });
+
+  test("missing interpolation argument throws error when I18n.testing is true", function (assert) {
+    try {
+      I18n.testing = true;
+
+      assert.throws(function () {
+        I18n.t("with_multiple_interpolate_arguments", {
+          username: "username",
+        });
+      }, new I18nMissingInterpolationArgument(
+        "with_multiple_interpolate_arguments: [missing %{username2} value]"
+      ));
+    } finally {
+      I18n.testing = false;
+    }
   });
 });
