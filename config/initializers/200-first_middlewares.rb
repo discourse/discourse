@@ -58,12 +58,18 @@ if Rails.env.test?
            (
              @@block_requests ||
                (
-                 request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING].present? &&
+                 self.class.current_example_location.present? &&
                    self.class.current_example_location !=
                      request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
                )
            )
-        [503, { "Content-Type" => "text/plain" }, ["Blocked by BlockRequestsMiddleware"]]
+        [
+          503,
+          { "Content-Type" => "text/plain" },
+          [
+            "Blocked by BlockRequestsMiddleware for requests initiated by #{request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]} when running #{self.class.current_example_location}",
+          ],
+        ]
       else
         @app.call(env)
       end
