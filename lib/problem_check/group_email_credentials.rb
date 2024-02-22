@@ -10,50 +10,58 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
   self.perform_every = 30.minutes
 
   def call
-    errors = []
-
-    if SiteSetting.enable_smtp
-      Group.with_smtp_configured.find_each do |group|
-        errors << try_validate(group) do
-          EmailSettingsValidator.validate_smtp(
-            host: group.smtp_server,
-            port: group.smtp_port,
-            username: group.email_username,
-            password: group.email_password,
-          )
-        end
-      end
-    end
-
-    if SiteSetting.enable_imap
-      Group.with_imap_configured.find_each do |group|
-        errors << try_validate(group) do
-          EmailSettingsValidator.validate_imap(
-            host: group.smtp_server,
-            port: group.smtp_port,
-            username: group.email_username,
-            password: group.email_password,
-          )
-        end
-      end
-    end
-
-    errors.compact
+    [*smtp_errors, *imap_errors]
   end
 
   private
+
+  def smtp_errors
+    return [] if !SiteSetting.enable_smtp
+
+    Group.with_smtp_configured.find_each.filter_map do |group|
+      try_validate(group) do
+        EmailSettingsValidator.validate_smtp(
+          host: group.smtp_server,
+          port: group.smtp_port,
+          username: group.email_username,
+          password: group.email_password,
+        )
+      end
+    end
+  end
+
+  def imap_errors
+    return [] if !SiteSetting.enable_imap
+
+    Group.with_imap_configured.find_each.filter_map do |group|
+      try_validate(group) do
+        EmailSettingsValidator.validate_imap(
+          host: group.imap_server,
+          port: group.imap_port,
+          username: group.email_username,
+          password: group.email_password,
+        )
+      end
+    end
+  end
 
   def try_validate(group, &blk)
     begin
       blk.call
       nil
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
-      {
-        group_id: group.id,
-        group_name: group.name,
-        group_full_name: group.full_name,
-        message: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
-      }
+      message =
+        I18n.t(
+          "dashboard.group_email_credentials_warning",
+          {
+            base_path: Discourse.base_path,
+            group_name: group.name,
+            group_full_name: group.full_name,
+            error: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
+          },
+        )
+
+      Problem.new(message, priority: "high", identifier: "group_#{group.id}_email_credentials")
     rescue => err
       Discourse.warn_exception(
         err,
