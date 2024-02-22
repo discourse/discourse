@@ -102,8 +102,14 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     return connectors;
   }
 
-  get connectorsExist() {
-    return connectorsExist(this.args.name);
+  @bind
+  connectorsExist({ hasBlock } = {}) {
+    return (
+      connectorsExist(this.args.name) ||
+      (hasBlock &&
+        (connectorsExist(this.args.name + "__before") ||
+          connectorsExist(this.args.name + "__after")))
+    );
   }
 
   // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
