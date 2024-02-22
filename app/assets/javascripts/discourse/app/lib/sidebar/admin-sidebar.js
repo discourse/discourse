@@ -60,23 +60,6 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   get title() {
     return this.adminSidebarNavLink.text;
   }
-
-  get currentWhen() {
-    // NOTE: This is weird, but since our admin plugin routes starting with adminPlugins.
-    // are nested beneath /admin/plugins, Ember tries to highlight both the Installed Plugins
-    // and relevant plugin link.
-    //
-    // We only want to highlight the top level Installed Plugins link if we are on that page,
-    // not if we are on e.g. the chat plugin admin route.
-    if (
-      this.route === "adminPlugins.index" &&
-      this.router.currentRoute.name === "adminPlugins.index"
-    ) {
-      return "adminPlugins.index";
-    } else {
-      return this.route;
-    }
-  }
 }
 
 function defineAdminSection(adminNavSectionData, router) {
