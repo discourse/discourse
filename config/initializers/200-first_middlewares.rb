@@ -58,7 +58,7 @@ if Rails.env.test?
            (
              @@block_requests ||
                (
-                 self.class.current_example_location.present? &&
+                 request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING].present? &&
                    self.class.current_example_location !=
                      request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
                )
