@@ -30,7 +30,7 @@ export default class CloseOnClickOutside extends Modifier {
       (this.secondaryTargetSelector &&
         document
           .querySelector(this.secondaryTargetSelector)
-          .contains(event.target))
+          ?.contains(event.target))
     ) {
       return;
     }

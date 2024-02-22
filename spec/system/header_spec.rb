@@ -147,15 +147,14 @@ RSpec.describe "Glimmer Header", type: :system do
   end
 
   it "shows regular notifications bubble if there are neither new personal messages nor unseen reviewables" do
-    3.times do
-      Fabricate(
-        :notification,
-        user: current_user,
-        high_priority: true,
-        read: false,
-        created_at: 8.minutes.ago,
-      )
-    end
+    Fabricate.times(
+      3,
+      :notification,
+      user: current_user,
+      high_priority: true,
+      read: false,
+      created_at: 8.minutes.ago,
+    )
 
     sign_in(current_user)
     visit "/"

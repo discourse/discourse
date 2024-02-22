@@ -52,10 +52,6 @@ export default class GlimmerHeader extends Component {
     };
   });
 
-  get inTopicRoute() {
-    return this.search.inTopicContext;
-  }
-
   get customHeaderClasses() {
     return _customHeaderClasses.join(" ");
   }

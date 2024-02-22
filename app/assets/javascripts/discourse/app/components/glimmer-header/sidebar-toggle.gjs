@@ -4,8 +4,11 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import { inject as service } from "@ember/service";
 
 export default class SidebarToggle extends Component {
+  @service site;
+
   @action
   toggleWithBlur(e) {
     this.args.toggleHamburger();
@@ -14,6 +17,7 @@ export default class SidebarToggle extends Component {
       ? e.target.blur()
       : e.target.closest("button").blur();
   }
+
   <template>
     <span class="header-sidebar-toggle">
       <button

@@ -2807,8 +2807,8 @@ class PluginApi {
    * Add a custom css class to the header. The class or classes will live alongside the `d-header` class.
    *
    * ```
-   * api.addCustomHeaderClass("class_one");
-   * api.addCustomHeaderClass("class_two");
+   * api.addCustomHeaderClass("class-one");
+   * api.addCustomHeaderClass("class-two");
    *
    */
 

@@ -4,17 +4,18 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import HamburgerDropdown from "../sidebar/hamburger-dropdown";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default class HamburgerDropdownWrapper extends Component {
   @action
   click(e) {
     e.preventDefault();
     if (
-      e.target.closest(".sidebar-section-header-button") ||
-      e.target.closest(".sidebar-section-link-button") ||
-      e.target.closest(".sidebar-section-link")
+      e.target.closest(
+        ".sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link"
+      )
     ) {
       this.args.toggleHamburger();
     }
@@ -24,7 +25,7 @@ export default class HamburgerDropdownWrapper extends Component {
   clickOutside(e) {
     if (
       e.target.classList.contains("header-cloak") &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      !prefersReducedMotion()
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
@@ -61,7 +62,7 @@ export default class HamburgerDropdownWrapper extends Component {
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}
-      {{CloseOnClickOutside
+      {{closeOnClickOutside
         this.clickOutside
         (hash
           targetSelector=".hamburger-panel"

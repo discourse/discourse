@@ -24,17 +24,17 @@ export default class GlimmerSiteHeader extends Component {
   @service site;
   @service header;
 
-  @tracked headerWrap = null;
-  @tracked pxClosed = null;
-  @tracked headerElement = null;
+  pxClosed;
+  headerElement;
   docking;
-  @tracked _dockedHeader = false;
-  @tracked _swipeMenuOrigin = null;
-  @tracked _swipeEvents = null;
-  @tracked _applicationElement = null;
-  @tracked _resizeObserver = null;
-  @tracked _docAt = null;
-  @tracked _animate = false;
+  _dockedHeader = false;
+  _animate = false;
+  _headerWrap;
+  _swipeMenuOrigin;
+  _swipeEvents;
+  _applicationElement;
+  _resizeObserver;
+  _docAt;
 
   constructor() {
     super(...arguments);
@@ -46,6 +46,7 @@ export default class GlimmerSiteHeader extends Component {
 
     schedule("afterRender", () => this.animateMenu());
   }
+
   get dropDownHeaderEnabled() {
     return !this.sidebarEnabled || this.site.narrowDesktopView;
   }
@@ -84,11 +85,9 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     const documentStyle = document.documentElement.style;
-
     const currentValue =
       parseInt(documentStyle.getPropertyValue("--header-offset"), 10) || 0;
     const newValue = this._headerWrap.offsetHeight + offsetTop;
-
     if (currentValue !== newValue) {
       documentStyle.setProperty("--header-offset", `${newValue}px`);
     }
@@ -129,22 +128,20 @@ export default class GlimmerSiteHeader extends Component {
       const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
 
-      if ("ResizeObserver" in window) {
-        this._resizeObserver = new ResizeObserver((entries) => {
-          for (let entry of entries) {
-            if (entry.contentRect) {
-              const headerTop = this.headerElement?.offsetTop;
-              document.documentElement.style.setProperty(
-                "--header-top",
-                `${headerTop}px`
-              );
-              this.updateHeaderOffset();
-            }
+      this._resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          if (entry.contentRect) {
+            const headerTop = this.headerElement?.offsetTop;
+            document.documentElement.style.setProperty(
+              "--header-top",
+              `${headerTop}px`
+            );
+            this.updateHeaderOffset();
           }
-        });
+        }
+      });
 
-        this._resizeObserver.observe(this._headerWrap);
-      }
+      this._resizeObserver.observe(this._headerWrap);
 
       this._swipeEvents = new SwipeEvents(this._headerWrap);
       if (this.site.mobileView) {
@@ -259,7 +256,7 @@ export default class GlimmerSiteHeader extends Component {
 
     const main = (this._applicationElement ??=
       document.querySelector(".ember-application"));
-    const offsetTop = main ? main.offsetTop : 0;
+    const offsetTop = main?.offsetTop ?? 0;
     const offset = window.pageYOffset - offsetTop;
     if (offset >= this._docAt) {
       if (!this._dockedHeader) {

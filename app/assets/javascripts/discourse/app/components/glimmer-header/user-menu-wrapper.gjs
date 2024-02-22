@@ -3,7 +3,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import closeOnClickOutside from "../../modifiers/close-on-click-outside";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {
@@ -11,12 +12,12 @@ export default class UserMenuWrapper extends Component {
   clickOutside(e) {
     if (
       e.target.classList.contains("header-cloak") &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      !prefersReducedMotion()
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
+        document.documentElement.classList["direction"] === "rtl"
           ? "-340px"
           : "340px";
       panel
@@ -45,7 +46,7 @@ export default class UserMenuWrapper extends Component {
   <template>
     <div
       class="user-menu-dropdown-wrapper"
-      {{CloseOnClickOutside
+      {{closeOnClickOutside
         this.clickOutside
         (hash
           targetSelector=".user-menu-panel"

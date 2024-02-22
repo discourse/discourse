@@ -7,7 +7,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import and from "truth-helpers/helpers/and";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 
 export default class Dropdown extends Component {
   @action
@@ -34,7 +34,7 @@ export default class Dropdown extends Component {
       {{(if
         (and @active @targetSelector)
         (modifier
-          CloseOnClickOutside @onClick (hash targetSelector=@targetSelector)
+          closeOnClickOutside @onClick (hash targetSelector=@targetSelector)
         )
       )}}
     >
