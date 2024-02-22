@@ -934,6 +934,10 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
+    // deprecated(
+    //   "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+    //   { id: "discourse.add-header-panel" }
+    // );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1778,12 +1782,30 @@ class PluginApi {
     addExtraIconRenderer(renderer);
   }
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * Adds a widget or a component to the header-icon ul.
+   *
+   * If adding a widget it must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
    * api.addToHeaderIcons(
-   *  createWidget('some-widget')
+   *  createWidget("some-widget")
+   * ```
+   *
+   * If adding a component you can pass the component directly. Additionally, you can
+   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * api.addToHeaderIcons(
+      <template>
+        <span>Icon</span>
+
+        <@panelPortal>
+          <div>Panel</div>
+        </@panelPortal>
+      </template>
+    );
    * ```
    *
    **/

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
@@ -16,14 +17,8 @@ import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrappe
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
-import MountWidget from "./mount-widget";
 
 const SEARCH_BUTTON_ID = "search-button";
-
-let additionalPanels = [];
-export function attachAdditionalPanel(name, toggle, transformAttrs) {
-  additionalPanels.push({ name, toggle, transformAttrs });
-}
 
 let _customHeaderClasses = [];
 export function addCustomHeaderClass(className) {
@@ -40,6 +35,7 @@ export default class GlimmerHeader extends Component {
   @service header;
 
   @tracked skipSearchContext = this.site.mobileView;
+  @tracked panelElement;
 
   appEventsListeners = modifier(() => {
     this.appEvents.on(
@@ -169,6 +165,11 @@ export default class GlimmerHeader extends Component {
     scrollLock(bool);
   }
 
+  @action
+  setPanelElement(element) {
+    this.panelElement = element;
+  }
+
   <template>
     <header
       class={{concatClass this.customHeaderClasses "d-header"}}
@@ -196,6 +197,7 @@ export default class GlimmerHeader extends Component {
               @toggleHamburger={{this.toggleHamburger}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
+              @panelElement={{this.panelElement}}
             />
           {{/if}}
 
@@ -209,10 +211,8 @@ export default class GlimmerHeader extends Component {
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
 
-          {{#each this.additionalPanels as |panel|}}
-            {{! we need toggle state and attrs }}
-            <MountWidget @widget={{panel.name}} />
-          {{/each}}
+          <div id="additional-panel-wrapper" {{didInsert this.setPanelElement}}>
+          </div>
 
           {{#if
             (and

@@ -39,10 +39,6 @@ export default class Info extends Component {
     return this.args.topic.tags?.length > 0 ? 5 : 10;
   }
 
-  get additionalFancyTitleClasses() {
-    return _additionalFancyTitleClasses.join(" ");
-  }
-
   get twoRows() {
     return (
       this.tags?.length ||
@@ -100,10 +96,7 @@ export default class Info extends Component {
               <Status @topic={{@topic}} @disableActions={{@disableActions}} />
 
               <a
-                class={{concatClass
-                  "topic-link"
-                  this.additionalFancyTitleClasses
-                }}
+                class="topic-link"
                 {{on "click" this.jumpToTopPost}}
                 href={{@topic.url}}
                 data-topic-id={{@topic.id}}

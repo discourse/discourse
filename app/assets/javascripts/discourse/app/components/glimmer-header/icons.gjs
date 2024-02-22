@@ -5,10 +5,10 @@ import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
 import MountWidget from "../mount-widget";
 import Dropdown from "./dropdown";
+import PanelWrapper from "./panel-wrapper";
 import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
-
 export function addToHeaderIcons(icon) {
   _extraHeaderIcons.push(icon);
 }
@@ -23,12 +23,21 @@ export default class Icons extends Component {
   @service header;
   @service search;
 
+  _isStringType = (icon) => typeof icon === "string";
+
   <template>
     <ul class="icons d-header-icons">
-      {{#each _extraHeaderIcons as |icon|}}
-        <MountWidget @widget={{icon}} />
-        {{! I am not sure how we are going to render glimmer components here without
-        being able to import them. }}
+      {{#each _extraHeaderIcons as |Icon|}}
+        {{#if (this._isStringType Icon)}}
+          <MountWidget @widget={{Icon}} />
+        {{else}}
+          {{#let
+            (component PanelWrapper panelElement=@panelElement)
+            as |panelWrapper|
+          }}
+            <Icon @panelPortal={{panelWrapper}} />
+          {{/let}}
+        {{/if}}
       {{/each}}
 
       <Dropdown

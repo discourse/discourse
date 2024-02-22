@@ -439,3 +439,13 @@ $mobile-avatar-height: 1.532em;
     background: transparent;
   }
 }
+
+#additional-panel-wrapper {
+  position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
+  overflow: auto;
+}

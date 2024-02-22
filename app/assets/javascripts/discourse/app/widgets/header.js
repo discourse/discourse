@@ -9,7 +9,9 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
@@ -18,6 +20,7 @@ import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 
 const SEARCH_BUTTON_ID = "search-button";
+export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
 let _extraHeaderIcons = [];
 
@@ -231,6 +234,14 @@ createWidget("header-icons", {
   services: ["search"],
   tagName: "ul.icons.d-header-icons",
 
+  init() {
+    registerWidgetShim(
+      "extra-icon",
+      "div.wrapper",
+      hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
+    );
+  },
+
   html(attrs) {
     if (this.siteSettings.login_required && !this.currentUser) {
       return [];
@@ -240,7 +251,11 @@ createWidget("header-icons", {
 
     if (_extraHeaderIcons) {
       _extraHeaderIcons.forEach((icon) => {
-        icons.push(this.attach(icon));
+        if (typeof icon === "string") {
+          icons.push(this.attach(icon));
+        } else {
+          icons.push(this.attach("extra-icon", { component: icon }));
+        }
       });
     }
 
@@ -541,6 +556,8 @@ export default createWidget("header", {
           );
         }
       });
+
+      panels.push(h(`div#${PANEL_WRAPPER_ID}`));
 
       if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
