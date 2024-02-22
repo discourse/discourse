@@ -110,7 +110,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
