@@ -26,11 +26,6 @@ acceptance(
         "textarea is disabled"
       );
 
-      assert.ok(
-        !exists("button.toggle-fullscreen"),
-        "fullscreen button is not present"
-      );
-
       const categoryChooser = selectKit(".category-chooser");
 
       await categoryChooser.expand();

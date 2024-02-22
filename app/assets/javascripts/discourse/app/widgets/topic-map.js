@@ -34,7 +34,7 @@ createWidget("topic-map-show-links", {
         title: "topic_map.links_shown",
         icon: "chevron-down",
         action: "showLinks",
-        className: "btn",
+        className: "btn btn-flat",
       })
     );
   },

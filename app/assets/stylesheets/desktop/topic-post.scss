@@ -316,15 +316,6 @@ pre.codeblock-buttons:hover {
       }
     }
   }
-  .link-summary .btn {
-    color: var(--primary-med-or-secondary-high);
-    background: var(--blend-primary-secondary-5);
-    width: 100%;
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-low);
-    }
-  }
 
   .toggle-summary .summarization-buttons .top-replies {
     margin-left: 10px;
