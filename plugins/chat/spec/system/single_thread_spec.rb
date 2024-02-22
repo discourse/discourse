@@ -20,7 +20,7 @@ describe "Single thread in side panel", type: :system do
 
     before { channel.update!(threading_enabled: false) }
 
-    it "does not open the side panel for a single thread", capture_log: true do
+    it "does not open the side panel for a single thread" do
       thread =
         chat_thread_chain_bootstrap(channel: channel, users: [current_user, Fabricate(:user)])
       chat_page.visit_channel(channel)
