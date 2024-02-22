@@ -31,6 +31,10 @@ module PageObjects
         find(".form-templates__table tbody tr td", text: name).present?
       end
 
+      def has_no_form_template?(name)
+        has_no_css?(".form-templates__table tbody tr td", text: name)
+      end
+
       def has_category_in_template_row?(category_name)
         find(
           ".form-templates__table .categories .badge-category__name",
