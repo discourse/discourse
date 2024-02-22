@@ -465,24 +465,12 @@ class Docking {
     window.addEventListener("scroll", this.queueDockCheck, { passive: true });
 
     // dockCheck might happen too early on full page refresh
-    this._initialTimer = discourseLater(
-      this,
-      this._safeDockCheck,
-      INITIAL_DELAY_MS
-    );
+    this._initialTimer = discourseLater(this, this.dockCheck, INITIAL_DELAY_MS);
   }
 
   @debounce(DEBOUNCE_MS)
   queueDockCheck() {
-    this._queuedTimer = this._safeDockCheck;
-  }
-
-  @action
-  _safeDockCheck() {
-    if (this.isDestroyed || this.isDestroying) {
-      return;
-    }
-    this.dockCheck?.();
+    this._queuedTimer = this.dockCheck;
   }
 
   @action

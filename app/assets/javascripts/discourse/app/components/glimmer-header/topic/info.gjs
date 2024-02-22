@@ -127,11 +127,13 @@ export default class Info extends Component {
                 {{#if @topic.category.parentCategory}}
                   {{#if
                     (and
-                      (@topic.parentCategory.parentCategory)
+                      @topic.category.parentCategory.parentCategory
                       (not this.site.mobileView)
                     )
                   }}
-                    {{categoryLink @topic.category.parentCategory}}
+                    {{categoryLink
+                      @topic.category.parentCategory.parentCategory
+                    }}
                   {{/if}}
 
                   {{categoryLink
