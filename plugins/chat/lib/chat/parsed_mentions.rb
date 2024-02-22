@@ -110,24 +110,29 @@ module Chat
     def all_users_reached_by_mentions_info
       @all_users_reached_by_mentions_info ||=
         begin
-          global_mentions_info =
-            global_mentions.to_a.map { |user| { user: user, type: "Chat::AllMention" } }
-          direct_mentions_info =
-            direct_mentions.to_a.map do |user|
-              { user: user, type: "Chat::UserMention", target_id: user.id }
-            end
-          here_mentions_info =
-            here_mentions.to_a.map { |info| { user: info, type: "Chat::HereMention" } }
-
-          users = global_mentions_info
-          users.concat(direct_mentions_info)
+          users = users_reached_by_global_mentions_info
+          users.concat(users_reached_by_direct_mentions_info)
           users.concat(users_reached_by_group_mentions_info)
-          users.concat(here_mentions_info)
+          users.concat(users_reached_by_here_mentions_info)
           users
         end
     end
 
     private
+
+    def users_reached_by_here_mentions_info
+      here_mentions.to_a.map { |info| { user: info, type: "Chat::HereMention" } }
+    end
+
+    def users_reached_by_global_mentions_info
+      global_mentions.to_a.map { |user| { user: user, type: "Chat::AllMention" } }
+    end
+
+    def users_reached_by_direct_mentions_info
+      direct_mentions.to_a.map do |user|
+        { user: user, type: "Chat::UserMention", target_id: user.id }
+      end
+    end
 
     def all_users_reached_by_mentions
       @all_users_reached_by_mentions ||=
