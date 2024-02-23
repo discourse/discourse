@@ -54,15 +54,14 @@ if Rails.env.test?
     def call(env)
       request = Rack::Request.new(env)
 
-      if request.xhr? &&
-           (
-             @@block_requests ||
-               (
-                 self.class.current_example_location.present? &&
-                   self.class.current_example_location !=
-                     request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
-               )
-           )
+      if (
+           @@block_requests ||
+             (
+               request.xhr? && self.class.current_example_location.present? &&
+                 self.class.current_example_location !=
+                   request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
+             )
+         )
         [
           503,
           { "Content-Type" => "text/plain" },
