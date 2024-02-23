@@ -224,6 +224,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const siteSettings = getOwnerWithFallback(this).lookup(
       "service:site-settings"
     );
+    const session = getOwnerWithFallback(this).lookup("service:session");
     if (!currentUser.use_admin_sidebar) {
       return [];
     }
@@ -235,7 +236,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
-    navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+    if (!session.get("safe_mode")) {
+      navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+    }
 
     if (siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({

@@ -23,6 +23,14 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat", count: 1)
   end
 
+  it "does not show plugin links in the admin sidebar in safe mode" do
+    visit("/safe-mode")
+    find("#btn-enter-safe-mode").click
+    expect(sidebar).to have_section_link("Admin", href: "/admin")
+    sidebar.click_link_in_section("community", "admin")
+    expect(sidebar).to have_no_section_link("Chat", href: "/admin/plugins/chat")
+  end
+
   describe "admin sidebar respects separated and combined sidebar modes" do
     it "reverts to always (separated) mode after entering and leaving admin section" do
       admin.user_option.update!(
