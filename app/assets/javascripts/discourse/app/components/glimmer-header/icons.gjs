@@ -5,7 +5,7 @@ import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
 import MountWidget from "../mount-widget";
 import Dropdown from "./dropdown";
-import PanelWrapper from "./panel-wrapper";
+import PanelPortal from "./panel-wrapper";
 import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
@@ -32,7 +32,7 @@ export default class Icons extends Component {
           <MountWidget @widget={{Icon}} />
         {{else}}
           {{#let
-            (component PanelWrapper panelElement=@panelElement)
+            (component PanelPortal panelElement=@panelElement)
             as |panelWrapper|
           }}
             <Icon @panelPortal={{panelWrapper}} />
