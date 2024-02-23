@@ -13,7 +13,7 @@ module Chat
     end
 
     def reached_users
-      group.users.map { |user| user }
+      group.users
     end
   end
 end
