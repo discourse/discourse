@@ -3,98 +3,128 @@
 RSpec.describe Jobs::ProblemCheck do
   after do
     Discourse.redis.flushdb
-    AdminDashboardData.reset_problem_checks
+
+    ::ProblemCheck.send(:remove_const, "TestCheck")
   end
 
-  class TestCheck
-    def self.max_retries = 0
-    def self.retry_wait = 30.seconds
-  end
+  context "when there are problems" do
+    before do
+      ::ProblemCheck::TestCheck =
+        Class.new(::ProblemCheck) do
+          self.max_retries = 0
 
-  it "runs the scheduled problem check that has been added and adds the messages to the load_found_scheduled_check_problems array" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      AdminDashboardData::Problem.new("big problem")
+          def call
+            [
+              ::ProblemCheck::Problem.new("Big problem"),
+              ::ProblemCheck::Problem.new(
+                "Yuge problem",
+                priority: "high",
+                identifier: "config_is_a_mess",
+              ),
+            ]
+          end
+        end
     end
 
-    described_class.new.execute(check_identifier: :test_identifier)
-    problems = AdminDashboardData.load_found_scheduled_check_problems
-    expect(problems.count).to eq(1)
-    expect(problems.first).to be_a(AdminDashboardData::Problem)
-    expect(problems.first.to_s).to eq("big problem")
-  end
+    it "adds the messages to the Redis problems array" do
+      described_class.new.execute(check_identifier: :test_check)
 
-  it "can handle the problem check returning multiple problems" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      [
-        AdminDashboardData::Problem.new("big problem"),
-        AdminDashboardData::Problem.new(
-          "yuge problem",
-          priority: "high",
-          identifier: "config_is_a_mess",
-        ),
-      ]
-    end
+      problems = AdminDashboardData.load_found_scheduled_check_problems
 
-    described_class.new.execute(check_identifier: :test_identifier)
-    problems = AdminDashboardData.load_found_scheduled_check_problems
-    expect(problems.map(&:to_s)).to match_array(["big problem", "yuge problem"])
-  end
-
-  it "does not add the same problem twice if the identifier already exists" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      [
-        AdminDashboardData::Problem.new(
-          "yuge problem",
-          priority: "high",
-          identifier: "config_is_a_mess",
-        ),
-        AdminDashboardData::Problem.new(
-          "nasty problem",
-          priority: "high",
-          identifier: "config_is_a_mess",
-        ),
-      ]
-    end
-
-    described_class.new.execute(check_identifier: :test_identifier)
-    problems = AdminDashboardData.load_found_scheduled_check_problems
-    expect(problems.map(&:to_s)).to match_array(["yuge problem"])
-  end
-
-  it "schedules a retry if there are attempts remaining" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      AdminDashboardData::Problem.new("big problem")
-    end
-
-    TestCheck.stubs(:max_retries).returns(1)
-
-    expect_enqueued_with(
-      job: :problem_check,
-      args: {
-        check_identifier: :test_identifier,
-        retry_count: 1,
-      },
-    ) { described_class.new.execute(check_identifier: :test_identifier) }
-  end
-
-  it "does not schedule a retry if there are no more attempts remaining" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      AdminDashboardData::Problem.new("big problem")
-    end
-
-    TestCheck.stubs(:max_retries).returns(1)
-
-    expect_not_enqueued_with(job: :problem_check) do
-      described_class.new.execute(check_identifier: :test_identifier, retry_count: 1)
+      expect(problems.map(&:to_s)).to contain_exactly("Big problem", "Yuge problem")
     end
   end
 
-  it "handles errors from a troublesome check" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
-      raise StandardError.new("something went wrong")
+  context "with multiple problems with the same identifier" do
+    before do
+      ::ProblemCheck::TestCheck =
+        Class.new(::ProblemCheck) do
+          self.max_retries = 0
+
+          def call
+            [
+              ::ProblemCheck::Problem.new(
+                "Yuge problem",
+                priority: "high",
+                identifier: "config_is_a_mess",
+              ),
+              ::ProblemCheck::Problem.new(
+                "Nasty problem",
+                priority: "high",
+                identifier: "config_is_a_mess",
+              ),
+            ]
+          end
+        end
     end
 
-    described_class.new.execute(check_identifier: :test_identifier)
-    expect(AdminDashboardData.load_found_scheduled_check_problems.count).to eq(0)
+    it "does not add the same problem twice" do
+      described_class.new.execute(check_identifier: :test_check)
+
+      problems = AdminDashboardData.load_found_scheduled_check_problems
+
+      expect(problems.map(&:to_s)).to match_array(["Yuge problem"])
+    end
+  end
+
+  context "when there are retries remaining" do
+    before do
+      ::ProblemCheck::TestCheck =
+        Class.new(::ProblemCheck) do
+          self.max_retries = 2
+
+          def call
+            [::ProblemCheck::Problem.new("Yuge problem")]
+          end
+        end
+    end
+
+    it "schedules a retry" do
+      expect_enqueued_with(
+        job: :problem_check,
+        args: {
+          check_identifier: :test_check,
+          retry_count: 1,
+        },
+      ) { described_class.new.execute(check_identifier: :test_check) }
+    end
+  end
+
+  context "when there are no retries remaining" do
+    before do
+      ::ProblemCheck::TestCheck =
+        Class.new(::ProblemCheck) do
+          self.max_retries = 1
+
+          def call
+            [::ProblemCheck::Problem.new("Yuge problem")]
+          end
+        end
+    end
+
+    it "does not schedule a retry" do
+      expect_not_enqueued_with(job: :problem_check) do
+        described_class.new.execute(check_identifier: :test_identifier, retry_count: 1)
+      end
+    end
+  end
+
+  context "when the check unexpectedly errors out" do
+    before do
+      ::ProblemCheck::TestCheck =
+        Class.new(::ProblemCheck) do
+          self.max_retries = 1
+
+          def call
+            raise StandardError.new("Something went wrong")
+          end
+        end
+    end
+
+    it "does not add a problem to the Redis array" do
+      described_class.new.execute(check_identifier: :test_check)
+
+      expect(AdminDashboardData.load_found_scheduled_check_problems).to be_empty
+    end
   end
 end
