@@ -43,9 +43,10 @@ module Jobs
         @message.user_mentions.each { |mention| notify(mention, mention.user) }
 
         @message.group_mentions.each do |mention|
-          # fixme andrei handle here unmentionable groups and stuff like that?
-          mention.reached_users.each { |user| notify(mention, user) }
+          mention.reached_users.each { |user| notify(mention, user) } # fixme andrei handle here unmentionable groups and stuff like that?
         end
+
+        return unless @channel.allow_channel_wide_mentions
 
         if @message.here_mention
           @channel.members_here.each { |user| notify(@message.here_mention, user) }
@@ -86,11 +87,7 @@ module Jobs
       def should_not_notify?(mention, mentioned_user)
         return true unless mentioned_user.user_option.chat_enabled
 
-        if mention.is_mass_mention? &&
-             (
-               !@channel.allow_channel_wide_mentions ||
-                 mentioned_user.user_option.ignore_channel_wide_mention
-             )
+        if mention.is_mass_mention? && (mentioned_user.user_option.ignore_channel_wide_mention)
           return true
         end
 
