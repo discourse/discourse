@@ -42,6 +42,15 @@ module Jobs
       end
 
       def notify_mentioned_users
+        # fixme andrei add a comment about precedence
+        @message.user_mentions.each { |mention| notify(mention, mention.user) }
+
+        if @message.here_mention
+          @channel.members_here.each { |user| notify(@message.here_mention, user) }
+        end
+
+        @channel.members.each { |user| notify(@message.all_mention, user) } if @message.all_mention
+
         @parsed_mentions.all_users_reached_by_mentions_info.each do |info|
           mentioned_user = info[:user]
           mention = get_mention(info[:type], info[:target_id])
