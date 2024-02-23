@@ -11,5 +11,9 @@ module Chat
     def is_group_mention
       true
     end
+
+    def is_mass_mention?
+      false
+    end
   end
 end

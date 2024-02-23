@@ -32,7 +32,10 @@ module Jobs
           mentioned_user = info[:user]
           mention = get_mention(info[:type], info[:target_id])
 
-          next if already_notified?(mention, mentioned_user) || should_not_notify?(mentioned_user)
+          if already_notified?(mention, mentioned_user) ||
+               should_not_notify?(mention, mentioned_user)
+            next
+          end
           mention.create_notification_for(mentioned_user)
           notify(mention, mentioned_user)
         end
@@ -51,7 +54,11 @@ module Jobs
         end
       end
 
-      def should_not_notify?(mentioned_user)
+      def should_not_notify?(mention, mentioned_user)
+        if mention.is_mass_mention? && mentioned_user.user_option.ignore_channel_wide_mention
+          return true
+        end
+
         mentioned_user.suspended? || mentioned_user == @sender ||
           mentioned_user.doesnt_want_to_hear_from(@sender) || !mentioned_user.following?(@channel)
       end

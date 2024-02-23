@@ -8,6 +8,10 @@ module Chat
       nil
     end
 
+    def is_mass_mention?
+      false
+    end
+
     def translation_suffix
       "direct"
     end

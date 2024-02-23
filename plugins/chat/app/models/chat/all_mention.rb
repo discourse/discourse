@@ -5,5 +5,9 @@ module Chat
     def identifier
       "all"
     end
+
+    def is_mass_mention?
+      true
+    end
   end
 end
