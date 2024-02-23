@@ -5,9 +5,7 @@ require "file_store/s3_store"
 RSpec.describe Jobs::UpdateTopicHotScores do
 
   use_redis_snapshotting
-  let :job do
-    subject
-  end
+  let(:job) { subject }
 
   fab!(:topic) { Fabricate(:topic, created_at: 1.day.ago) }
 
