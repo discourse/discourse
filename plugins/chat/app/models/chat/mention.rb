@@ -74,7 +74,7 @@ module Chat
       {
         notification_type: notification_type,
         username: chat_message.user.username,
-        tag: Chat::Mention.notification_tag(channel.id),
+        tag: Chat::PushNotificationTag.for_mention(channel.id),
         excerpt: chat_message.push_notification_excerpt,
         post_url: post_url,
         translated_title:
@@ -85,10 +85,6 @@ module Chat
             channel: channel.title(mentioned_user),
           ),
       }
-    end
-
-    def self.notification_tag(channel_id)
-      "#{Discourse.current_hostname}-chat-mention-#{channel_id}"
     end
 
     private

@@ -294,10 +294,6 @@ module Chat
       (membership.last_read_message_id || 0) >= id
     end
 
-    def self.notification_tag(channel_id)
-      "#{Discourse.current_hostname}-chat-message-#{channel_id}"
-    end
-
     private
 
     def delete_mentions(mention_type, target_ids)

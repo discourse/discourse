@@ -66,7 +66,7 @@ module Jobs
           notification_type: ::Notification.types[:chat_message],
           post_url: @chat_message.url,
           translated_title: ::I18n.t(translation_key, translation_args),
-          tag: ::Chat::Message.notification_tag(@chat_channel.id),
+          tag: ::Chat::PushNotificationTag.for_message(@chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
         }
 
