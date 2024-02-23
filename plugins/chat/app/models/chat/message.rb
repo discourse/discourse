@@ -290,6 +290,10 @@ module Chat
       @parsed_mentions = nil
     end
 
+    def self.notification_tag(channel_id)
+      "#{Discourse.current_hostname}-chat-message-#{channel_id}"
+    end
+
     private
 
     def delete_mentions(mention_type, target_ids)
