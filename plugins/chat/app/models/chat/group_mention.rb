@@ -12,6 +12,7 @@ module Chat
       true
     end
 
+    # fixme andrei now do we still need it?
     def is_mass_mention?
       false
     end

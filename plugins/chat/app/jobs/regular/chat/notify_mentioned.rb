@@ -4,8 +4,7 @@ module Jobs
   module Chat
     class NotifyMentioned < ::Jobs::Base
       def execute(args)
-        # fixme andrei preload user on mentions
-        # fixme preload chat_channel and other stuff?
+        # fixme andrei preload stuff here to avoid N + 1's
         @message = ::Chat::Message.find(args[:message_id])
         @parsed_mentions = @message.parsed_mentions
         return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
