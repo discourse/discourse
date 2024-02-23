@@ -32,8 +32,16 @@ module Chat
     end
 
     def global_mentions
-      return User.none unless @has_global_mention && @channel.allow_channel_wide_mentions
+      return User.none unless @has_global_mention
       channel_members.where.not(username_lower: @parsed_direct_mentions)
+    end
+
+    def here_mentions
+      return User.none unless @has_here_mention
+
+      channel_members
+        .where("last_seen_at > ?", 5.minutes.ago)
+        .where.not(username_lower: @parsed_direct_mentions)
     end
 
     def direct_mentions
@@ -46,14 +54,6 @@ module Chat
 
     def has_mass_mention
       @has_global_mention || @has_here_mention
-    end
-
-    def here_mentions
-      return User.none unless @has_here_mention && @channel.allow_channel_wide_mentions
-
-      channel_members
-        .where("last_seen_at > ?", 5.minutes.ago)
-        .where.not(username_lower: @parsed_direct_mentions)
     end
 
     def groups_to_mention

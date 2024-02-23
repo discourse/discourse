@@ -55,7 +55,11 @@ module Jobs
       end
 
       def should_not_notify?(mention, mentioned_user)
-        if mention.is_mass_mention? && mentioned_user.user_option.ignore_channel_wide_mention
+        if mention.is_mass_mention? &&
+             (
+               !@channel.allow_channel_wide_mentions ||
+                 mentioned_user.user_option.ignore_channel_wide_mention
+             )
           return true
         end
 
