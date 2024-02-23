@@ -58,10 +58,10 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    this.maybeNotifyAdmin(opts.id, source);
+    this.maybeNotifyAdmin(opts, source);
   }
 
-  maybeNotifyAdmin(id, source) {
+  maybeNotifyAdmin(opts, source) {
     if (this.#adminWarned) {
       return;
     }
@@ -74,17 +74,26 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    if (CRITICAL_DEPRECATIONS.some((pattern) => pattern.test(id))) {
-      this.notifyAdmin(id, source);
+    if (CRITICAL_DEPRECATIONS.some((pattern) => pattern.test(opts.id))) {
+      this.notifyAdmin(opts, source);
     }
   }
 
-  notifyAdmin(id, source) {
+  notifyAdmin({ id, url }, source) {
     this.#adminWarned = true;
 
-    let notice = I18n.t("critical_deprecation.notice", {
-      id: escapeExpression(id),
-    });
+    let notice = I18n.t("critical_deprecation.notice") + " ";
+
+    if (url) {
+      notice += I18n.t("critical_deprecation.linked_id", {
+        id: escapeExpression(id),
+        url: escapeExpression(url),
+      });
+    } else {
+      notice += I18n.t("critical_deprecation.id", {
+        id: escapeExpression(id),
+      });
+    }
 
     if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
