@@ -85,11 +85,8 @@ module Jobs
       end
 
       def should_not_notify?(mention, mentioned_user)
-        return true unless mentioned_user.user_option.chat_enabled
-
-        if mention.is_mass_mention? && (mentioned_user.user_option.ignore_channel_wide_mention)
-          return true
-        end
+        return true unless mentioned_user.use_chat?
+        return true unless mention.should_notify?(mentioned_user)
 
         mentioned_user.suspended? || mentioned_user == @sender ||
           mentioned_user.doesnt_want_to_hear_from(@sender) || !mentioned_user.following?(@channel)

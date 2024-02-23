@@ -87,6 +87,10 @@ module Chat
       }
     end
 
+    def should_notify?(user)
+      true
+    end
+
     private
 
     def notification_type

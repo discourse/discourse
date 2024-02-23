@@ -6,8 +6,8 @@ module Chat
       "here"
     end
 
-    def is_mass_mention?
-      true
+    def should_notify?(user)
+      !user.user_option.ignore_channel_wide_mention
     end
   end
 end

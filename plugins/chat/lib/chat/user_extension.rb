@@ -23,5 +23,9 @@ module Chat
       return true if channel.direct_message_channel?
       channel_membership.following
     end
+
+    def use_chat?
+      user_option.chat_enabled
+    end
   end
 end
