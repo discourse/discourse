@@ -24,10 +24,6 @@ module Jobs
         @already_notified_user_ids.include?(mentioned_user.id)
       end
 
-      def get_mention(type, target_id = nil)
-        @message.chat_mentions.where(type: type, target_id: target_id).first
-      end
-
       def load_already_notified_user_ids
         user_ids =
           @message
