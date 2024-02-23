@@ -270,14 +270,15 @@ describe Jobs::Chat::ProcessMessage do
           expect(Notification.where(user: user_2).count).to be(0)
         end
 
-        it "doesn't create two notifications if a user has been reached both by a @here and a direct mention" do
+        it "sends only a direct mention notification if a user has been reached both by a @here and a direct mention" do
           msg = build_cooked_msg("hello @here and @#{user_2.username}", user_1)
-          Fabricate(:here_chat_mention, chat_message: msg)
-          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+          here_mention = Fabricate(:here_chat_mention, chat_message: msg)
+          direct_mention = Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
           described_class.new.execute(chat_message_id: msg.id)
 
-          expect(Notification.where(user: user_2).count).to be(1)
+          expect(direct_mention.notifications.count).to be(1)
+          expect(here_mention.notifications.where(user_id: user_2.id)).to be_empty
         end
 
         describe "users ignoring or muting the user creating the message" do
@@ -323,13 +324,15 @@ describe Jobs::Chat::ProcessMessage do
           expect(Notification.where(user: user_2).count).to be(1)
         end
 
-        it "doesn't create two notifications if a user has been reached both by a @all and a direct mention" do
+        it "sends only a direct mention notification if a user has been reached both by a @all and a direct mention" do
           msg = build_cooked_msg("Hello @all and @#{user_2.username}", user_1)
-          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+          all_mention = Fabricate(:all_chat_mention, chat_message: msg)
+          direct_mention = Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
           described_class.new.execute(chat_message_id: msg.id)
 
-          expect(Notification.where(user: user_2).count).to be(1)
+          expect(direct_mention.notifications.count).to be(1)
+          expect(all_mention.notifications.where(user_id: user_2.id)).to be_empty
         end
 
         describe "users ignoring or muting the user creating the message" do
