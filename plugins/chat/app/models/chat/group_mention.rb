@@ -15,5 +15,9 @@ module Chat
     def is_mass_mention?
       false
     end
+
+    def reached_users
+      group.users.map { |user| user }
+    end
   end
 end
