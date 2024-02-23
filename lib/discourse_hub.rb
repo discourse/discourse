@@ -14,6 +14,14 @@ module DiscourseHub
     get("/version_check", version_check_payload)
   end
 
+  def self.discover_enrollment_payload
+    { include_in_discourse_discover: SiteSetting.include_in_discourse_discover? }
+  end
+
+  def self.discover_enrollment
+    post("/discover/enroll", discover_enrollment_payload)
+  end
+
   def self.stats_fetched_at=(time_with_zone)
     Discourse.redis.set STATS_FETCHED_AT_KEY, time_with_zone.to_i
   end

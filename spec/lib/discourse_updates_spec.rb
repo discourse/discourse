@@ -67,7 +67,7 @@ RSpec.describe DiscourseUpdates do
       end
 
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { version }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe DiscourseUpdates do
     context "with old version check data" do
       shared_examples "queue version check and report that version is ok" do
         it "queues a version check" do
-          expect_enqueued_with(job: :version_check) { version }
+          expect_enqueued_with(job: :call_discourse_hub) { version }
         end
 
         it "reports 0 missing versions" do
@@ -105,7 +105,7 @@ RSpec.describe DiscourseUpdates do
 
     shared_examples "when last_installed_version is old" do
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { version }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
 
       it "reports 0 missing versions" do
