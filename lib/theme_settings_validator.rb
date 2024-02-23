@@ -51,6 +51,10 @@ class ThemeSettingsValidator
           errors:,
           translation_prefix: "string",
         )
+      when types[:objects]
+        errors.push(
+          ThemeSettingsObjectValidator.validate_objects(schema: opts[:schema], objects: value),
+        )
       end
 
       errors
