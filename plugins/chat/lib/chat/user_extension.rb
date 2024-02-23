@@ -24,7 +24,7 @@ module Chat
       channel_membership.following
     end
 
-    def use_chat?
+    def uses_chat?
       user_option.chat_enabled
     end
   end

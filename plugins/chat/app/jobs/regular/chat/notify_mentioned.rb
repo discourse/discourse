@@ -88,7 +88,7 @@ module Jobs
       end
 
       def should_notify?(mentioned_user)
-        return false if !mentioned_user.use_chat? || !mentioned_user.following?(@channel)
+        return false if !mentioned_user.uses_chat? || !mentioned_user.following?(@channel)
         return false if mentioned_user.suspended?
         if mentioned_user == @sender || mentioned_user.doesnt_want_to_hear_from(@sender)
           return false
