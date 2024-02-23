@@ -128,7 +128,13 @@ module Chat
 
     def all_users_reached_by_mentions
       @all_users_reached_by_mentions ||=
-        all_users_reached_by_mentions_info.map { |info| info[:user] }
+        begin
+          users = direct_mentions.to_a
+          users.concat(group_mentions.to_a)
+          users.concat(here_mentions.to_a)
+          users.concat(global_mentions.to_a)
+          users
+        end
     end
 
     def users_reached_by_group_mentions_info
