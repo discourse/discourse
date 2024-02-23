@@ -520,6 +520,14 @@ export default class ChatMessage extends Component {
           (if @message.highlighted "-highlighted")
           (if @message.streaming "-streaming")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
+          (if (eq @message.id this.currentUser.id) "is-by-current-user")
+          (if
+            (eq
+              @message.id
+              @message.channel.currentUserMembership.lastReadMessageId
+            )
+            "-last-read"
+          )
           (if @message.staged "-staged" "-persisted")
           (if @message.processed "-processed" "-not-processed")
           (if this.hasActiveState "-active")
