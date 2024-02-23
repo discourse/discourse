@@ -46,7 +46,9 @@ module Chat
     end
 
     def group_mentions
-      users_reached_by_group_mentions_info.map { |info| info[:user] }
+      group_ids = groups_to_mention.pluck(:id)
+      group_user_ids = GroupUser.where(group_id: group_ids).pluck(:user_id)
+      chat_users.where(id: group_user_ids)
     end
 
     def has_mass_mention
@@ -99,32 +101,7 @@ module Chat
         end
     end
 
-    def all_users_reached_by_mentions_info
-      @all_users_reached_by_mentions_info ||=
-        begin
-          users = users_reached_by_direct_mentions_info
-          users.concat(users_reached_by_group_mentions_info)
-          users.concat(users_reached_by_here_mentions_info)
-          users.concat(users_reached_by_global_mentions_info)
-          users
-        end
-    end
-
     private
-
-    def users_reached_by_here_mentions_info
-      here_mentions.to_a.map { |info| { user: info, type: "Chat::HereMention" } }
-    end
-
-    def users_reached_by_global_mentions_info
-      global_mentions.to_a.map { |user| { user: user, type: "Chat::AllMention" } }
-    end
-
-    def users_reached_by_direct_mentions_info
-      direct_mentions.to_a.map do |user|
-        { user: user, type: "Chat::UserMention", target_id: user.id }
-      end
-    end
 
     def all_users_reached_by_mentions
       @all_users_reached_by_mentions ||=
@@ -135,16 +112,6 @@ module Chat
           users.concat(global_mentions.to_a)
           users
         end
-    end
-
-    def users_reached_by_group_mentions_info
-      group_ids = groups_to_mention.pluck(:id)
-      group_users = GroupUser.where(group_id: group_ids).pluck(:user_id, :group_id).to_h
-
-      chat_users
-        .where(id: group_users.keys)
-        .where.not(username_lower: @sender.username)
-        .map { |user| { user: user, target_id: group_users[user.id], type: "Chat::GroupMention" } }
     end
 
     def chat_users
