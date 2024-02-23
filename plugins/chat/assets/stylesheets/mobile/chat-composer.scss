@@ -38,8 +38,9 @@
     height: auto;
     width: auto;
     margin-inline: 0.7rem;
-    padding: 0.425em 0.5em;
+    padding: 0.5rem;
     border-radius: 100%;
+    line-height: 0;
 
     .is-send-enabled.is-focused & {
       background-color: var(--tertiary-high);
