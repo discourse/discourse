@@ -43,7 +43,7 @@ module Chat
     end
 
     def direct_mentions
-      chat_users.where(username_lower: @parsed_direct_mentions)
+      User.where(username_lower: @parsed_direct_mentions)
     end
 
     def group_mentions
