@@ -1284,6 +1284,8 @@ class TopicQuery
         # ANY of the given tags:
         result = result.joins(:tags).where("tags.id in (?)", tags)
       end
+
+      @options[:tag_ids] = tags
     elsif @options[:no_tags]
       # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
       result = result.where.not(id: TopicTag.distinct.select(:topic_id))
