@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {

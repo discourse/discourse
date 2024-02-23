@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import HamburgerDropdown from "../sidebar/hamburger-dropdown";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default class HamburgerDropdownWrapper extends Component {
   @action

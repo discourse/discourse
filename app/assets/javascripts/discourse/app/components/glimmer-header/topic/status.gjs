@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import { escapeExpression } from "discourse/lib/utilities";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
-import concatClass from "discourse/helpers/concat-class";
 
 export default class Status extends Component {
   @service currentUser;
@@ -49,6 +49,7 @@ export default class Status extends Component {
   <template>
     <span class="topic-statuses">
       {{#each this.topicStatuses as |status|}}
+        {{! template-lint-disable no-invalid-interactive }}
         <span
           class={{concatClass status.klass "topic-status"}}
           {{on "click" this.togglePinnedForUser}}

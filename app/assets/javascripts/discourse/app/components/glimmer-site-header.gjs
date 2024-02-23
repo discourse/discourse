@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, schedule } from "@ember/runloop";
