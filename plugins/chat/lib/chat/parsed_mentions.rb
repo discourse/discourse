@@ -33,15 +33,13 @@ module Chat
 
     def global_mentions
       return User.none unless @has_global_mention
-      channel_members.where.not(username_lower: @parsed_direct_mentions)
+      @channel.members.where.not(username_lower: @parsed_direct_mentions)
     end
 
     def here_mentions
       return User.none unless @has_here_mention
 
-      channel_members
-        .where("last_seen_at > ?", 5.minutes.ago)
-        .where.not(username_lower: @parsed_direct_mentions)
+      @channel.members_here.where.not(username_lower: @parsed_direct_mentions)
     end
 
     def direct_mentions
@@ -142,15 +140,6 @@ module Chat
         .where(id: group_users.keys)
         .where.not(username_lower: @sender.username)
         .map { |user| { user: user, target_id: group_users[user.id], type: "Chat::GroupMention" } }
-    end
-
-    def channel_members
-      chat_users.includes(:user_chat_channel_memberships).where(
-        user_chat_channel_memberships: {
-          following: true,
-          chat_channel_id: @channel.id,
-        },
-      )
     end
 
     def chat_users
