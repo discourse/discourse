@@ -3,7 +3,6 @@
 require "file_store/s3_store"
 
 RSpec.describe Jobs::UpdateTopicHotScores do
-
   use_redis_snapshotting
   let(:job) { subject }
 
@@ -11,7 +10,6 @@ RSpec.describe Jobs::UpdateTopicHotScores do
 
   it "runs an update even if hot is missing from top_menu (once every 6 hours)" do
     SiteSetting.top_menu = "latest"
-    job.class.clear_once_a_day_cache!
     job.execute({})
 
     expect(TopicHotScore.where(topic_id: topic.id).count).to eq(1)
