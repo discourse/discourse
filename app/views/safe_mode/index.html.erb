@@ -34,7 +34,7 @@
     </p>
 
     <p>
-      <%= submit_tag t('safe_mode.enter'), class: 'btn btn-danger' %>
+      <%= submit_tag t('safe_mode.enter'), class: 'btn btn-danger', id: "btn-enter-safe-mode" %>
       <%- if flash[:must_select] %>
         <span class='safe-mode-warning'>
           ⚠️ <%= t 'safe_mode.must_select' %>
