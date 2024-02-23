@@ -54,9 +54,9 @@ module Jobs
 
       def notify(mention, mentioned_user)
         return if already_notified?(mentioned_user) || should_not_notify?(mention, mentioned_user)
+
         mention.create_notification_for(mentioned_user)
         @already_notified_user_ids << mentioned_user.id
-
         send_notifications(mention, mentioned_user)
       end
 
