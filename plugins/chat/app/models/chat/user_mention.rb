@@ -8,6 +8,8 @@ module Chat
       nil
     end
 
+    private
+
     def translation_suffix
       "direct"
     end
