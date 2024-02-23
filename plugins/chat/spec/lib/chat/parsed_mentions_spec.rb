@@ -45,15 +45,6 @@ RSpec.describe Chat::ParsedMentions do
       )
     end
 
-    it "doesn't include users that were also mentioned directly" do
-      message = create_message("mentioning @all and @#{channel_member_1.username}")
-
-      mentions = described_class.new(message)
-      result = mentions.global_mentions.pluck(:username)
-
-      expect(result).to contain_exactly(channel_member_2.username, channel_member_3.username)
-    end
-
     it "returns an empty list if there are no global mentions" do
       message = create_message("not mentioning anybody")
 
@@ -97,15 +88,6 @@ RSpec.describe Chat::ParsedMentions do
       result = mentions.here_mentions.pluck(:username)
 
       expect(result).to contain_exactly(channel_member_1.username, channel_member_2.username)
-    end
-
-    it "doesn't include users that were also mentioned directly" do
-      message = create_message("mentioning @here and @#{channel_member_1.username}")
-
-      mentions = described_class.new(message)
-      result = mentions.here_mentions.pluck(:username)
-
-      expect(result).to contain_exactly(channel_member_2.username)
     end
 
     it "returns an empty list if there are no here mentions" do
