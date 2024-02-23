@@ -45,15 +45,19 @@ module Jobs
         @parsed_mentions.all_users_reached_by_mentions_info.each do |info|
           mentioned_user = info[:user]
           mention = get_mention(info[:type], info[:target_id])
-
-          next if already_notified?(mentioned_user) || should_not_notify?(mention, mentioned_user)
-          mention.create_notification_for(mentioned_user)
-          @already_notified_user_ids << mentioned_user.id
           notify(mention, mentioned_user)
         end
       end
 
       def notify(mention, mentioned_user)
+        return if already_notified?(mentioned_user) || should_not_notify?(mention, mentioned_user)
+        mention.create_notification_for(mentioned_user)
+        @already_notified_user_ids << mentioned_user.id
+
+        send_notifications(mention, mentioned_user)
+      end
+
+      def send_notifications(mention, mentioned_user)
         membership = @channel.membership_for(mentioned_user) # fixme andrei take care of N + 1
         return if membership.muted?
 
