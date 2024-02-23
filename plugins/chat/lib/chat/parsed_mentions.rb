@@ -33,13 +33,12 @@ module Chat
 
     def global_mentions
       return User.none unless @has_global_mention
-      @channel.members.where.not(username_lower: @parsed_direct_mentions)
+      @channel.members
     end
 
     def here_mentions
       return User.none unless @has_here_mention
-
-      @channel.members_here.where.not(username_lower: @parsed_direct_mentions)
+      @channel.members_here
     end
 
     def direct_mentions
@@ -103,10 +102,10 @@ module Chat
     def all_users_reached_by_mentions_info
       @all_users_reached_by_mentions_info ||=
         begin
-          users = users_reached_by_global_mentions_info
-          users.concat(users_reached_by_direct_mentions_info)
+          users = users_reached_by_direct_mentions_info
           users.concat(users_reached_by_group_mentions_info)
           users.concat(users_reached_by_here_mentions_info)
+          users.concat(users_reached_by_global_mentions_info)
           users
         end
     end

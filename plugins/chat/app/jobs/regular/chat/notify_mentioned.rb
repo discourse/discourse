@@ -12,6 +12,7 @@ module Jobs
 
         @sender = @message.user
         @channel = @message.chat_channel
+        @already_notified_user_ids = Set.new
 
         notify_mentioned_users
         ::Chat::MentionsWarnings.send_for(@message)
@@ -20,7 +21,8 @@ module Jobs
       private
 
       def already_notified?(mention, mentioned_user)
-        mention.notifications.where(user_id: mentioned_user.id).present?
+        @already_notified_user_ids.include?(mentioned_user.id) ||
+          mention.notifications.where(user_id: mentioned_user.id).present?
       end
 
       def get_mention(type, target_id = nil)
@@ -37,6 +39,7 @@ module Jobs
             next
           end
           mention.create_notification_for(mentioned_user)
+          @already_notified_user_ids << mentioned_user.id
           notify(mention, mentioned_user)
         end
       end
