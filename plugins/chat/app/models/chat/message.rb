@@ -290,6 +290,10 @@ module Chat
       @parsed_mentions = nil
     end
 
+    def has_been_seen_by?(membership)
+      (membership.last_read_message_id || 0) >= id
+    end
+
     def self.notification_tag(channel_id)
       "#{Discourse.current_hostname}-chat-message-#{channel_id}"
     end

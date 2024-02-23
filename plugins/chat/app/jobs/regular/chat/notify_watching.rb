@@ -46,7 +46,7 @@ module Jobs
       def send_notifications(membership)
         user = membership.user
         return unless user.guardian.can_join_chat_channel?(@chat_channel)
-        return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
+        return if @chat_message.has_been_seen_by?(membership)
         return if online_user_ids.include?(user.id)
 
         translation_key =
