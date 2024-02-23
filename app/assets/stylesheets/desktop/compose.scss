@@ -252,3 +252,120 @@ a.toggle-preview {
 #file-uploading {
   text-align: right;
 }
+
+// fullscreen composer styles
+.fullscreen-composer {
+  overflow: hidden;
+
+  .profiler-results {
+    display: none;
+  }
+
+  #reply-control {
+    &.fullscreen {
+      // important needed because of inline styles when height is changed manually with grippie
+      height: 100vh !important;
+      max-height: 100%; // prevents devices from miscalculating using vh
+      z-index: z("header") + 1;
+
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
+
+      .d-editor-preview-wrapper {
+        margin-top: 1%;
+      }
+
+      .reply-to {
+        border-bottom: 1px solid var(--primary-low);
+        margin-bottom: 0;
+        padding-bottom: 8px;
+      }
+
+      .d-editor-textarea-wrapper {
+        border: none;
+      }
+      &.show-preview .d-editor-textarea-wrapper {
+        border-right: 1px solid var(--primary-low);
+      }
+      #draft-status,
+      #file-uploading {
+        margin-left: 0;
+        text-align: initial;
+      }
+      .composer-popup {
+        top: 30px;
+      }
+      &:before {
+        content: "";
+        background: var(--secondary);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -1;
+        left: 0;
+      }
+    }
+  }
+}
+
+.composer-fullscreen-prompt {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
+  position: fixed;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  .rtl & {
+    // R2 is not smart enough to support this swap
+    transform: translate(50%, 0);
+  }
+  z-index: z("header") + 1;
+  background: var(--primary-very-high);
+  color: var(--secondary);
+  padding: 0.5em 0.75em;
+  pointer-events: none;
+  border-radius: 2px;
+  kbd {
+    background: none;
+  }
+}
+
+@media screen and (min-width: $reply-area-max-width) {
+  .sidebar-wrapper .sidebar-container {
+    .has-sidebar-page & {
+      height: auto;
+    }
+  }
+  #reply-control:not(.fullscreen) {
+    .has-sidebar-page & {
+      width: auto;
+      max-width: calc(
+        (var(--d-max-width) + (var(--d-sidebar-width) / 2)) - 1.5rem
+      );
+      margin-left: 0;
+      margin-right: 0;
+      transform: translateX(
+        calc(
+          ((100vw - var(--d-max-width) - (var(--d-sidebar-width) / 0.5)) / 2) +
+            17em + 1rem
+        )
+      );
+
+      &.hide-preview {
+        max-width: calc(740px);
+        transform: translateX(
+          calc(
+            ((100vw - 740px - var(--d-sidebar-width)) / 2) +
+              var(--d-sidebar-width)
+          )
+        );
+      }
+    }
+  }
+}
