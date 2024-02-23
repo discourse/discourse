@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -39,9 +38,9 @@ export default class UserDropdown extends Component {
         aria-haspopup="true"
         aria-expanded={{@active}}
         href={{this.currentUser.path}}
-        aria-label={{concat
-          (or this.currentUser.name this.currentUser.username)
-          (i18n "user.account_possessive")
+        aria-label={{i18n
+          "user.account_possessive"
+          name=(or this.currentUser.name this.currentUser.username)
         }}
         data-auto-route="true"
         {{on "click" this.click}}
