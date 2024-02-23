@@ -6,6 +6,8 @@ module Jobs
       def execute(args)
         # fixme andrei preload stuff here to avoid N + 1's
         @message = ::Chat::Message.find(args[:message_id])
+        @timestamp = args[:timestamp]
+
         @parsed_mentions = @message.parsed_mentions
         return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
@@ -14,6 +16,7 @@ module Jobs
         @already_notified_user_ids = load_already_notified_user_ids
 
         notify_mentioned_users
+        notify_watching_users unless args[:is_edit]
         ::Chat::MentionsWarnings.send_for(@message)
       end
 
@@ -50,6 +53,14 @@ module Jobs
         end
 
         @channel.members.each { |user| notify(@message.all_mention, user) } if @message.all_mention
+      end
+
+      def notify_watching_users
+        except = @already_notified_user_ids << @sender.id
+        Jobs.enqueue(
+          Jobs::Chat::NotifyWatching,
+          { chat_message_id: @message.id, except_user_ids: except, timestamp: @timestamp.to_s },
+        )
       end
 
       def notify(mention, mentioned_user)
