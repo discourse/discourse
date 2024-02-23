@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import UserStatusMessage from "discourse/components/user-status-message";
 import { userPath } from "discourse/lib/url";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
-import UserStatusMessage from "discourse/components/user-status-message";
 
 export default class ChatUserInfo extends Component {
   get avatarSize() {
