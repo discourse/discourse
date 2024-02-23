@@ -12,7 +12,7 @@ module Jobs
 
         @sender = @message.user
         @channel = @message.chat_channel
-        @already_notified_user_ids = Set.new
+        @already_notified_user_ids = load_already_notified_user_ids
 
         notify_mentioned_users
         ::Chat::MentionsWarnings.send_for(@message)
@@ -20,13 +20,25 @@ module Jobs
 
       private
 
-      def already_notified?(mention, mentioned_user)
-        @already_notified_user_ids.include?(mentioned_user.id) ||
-          mention.notifications.where(user_id: mentioned_user.id).present?
+      def already_notified?(mentioned_user)
+        @already_notified_user_ids.include?(mentioned_user.id)
       end
 
       def get_mention(type, target_id = nil)
         @message.chat_mentions.where(type: type, target_id: target_id).first
+      end
+
+      def load_already_notified_user_ids
+        user_ids =
+          @message
+            .chat_mentions
+            .joins(
+              "LEFT OUTER JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = chat_mentions.id",
+            )
+            .joins("LEFT OUTER JOIN notifications n ON cmn.notification_id = n.id")
+            .where.not("n.user_id IS NULL")
+            .pluck("n.user_id")
+        Set.new(user_ids)
       end
 
       def notify_mentioned_users
@@ -34,10 +46,7 @@ module Jobs
           mentioned_user = info[:user]
           mention = get_mention(info[:type], info[:target_id])
 
-          if already_notified?(mention, mentioned_user) ||
-               should_not_notify?(mention, mentioned_user)
-            next
-          end
+          next if already_notified?(mentioned_user) || should_not_notify?(mention, mentioned_user)
           mention.create_notification_for(mentioned_user)
           @already_notified_user_ids << mentioned_user.id
           notify(mention, mentioned_user)
