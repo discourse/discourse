@@ -23,6 +23,10 @@ class ProblemCheckTracker < ActiveRecord::Base
 
     update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
   end
+
+  def check
+    ProblemCheck[identifier]
+  end
 end
 
 # == Schema Information

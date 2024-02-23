@@ -11,7 +11,7 @@ RSpec.describe ProblemCheckTracker do
   end
 
   describe ".[]" do
-    before { described_class.create!(identifier: "twitter_login") }
+    before { Fabricate(:problem_check_tracker, identifier: "twitter_login") }
 
     context "when the problem check tracker already exists" do
       it { expect(described_class[:twitter_login]).not_to be_new_record }
@@ -46,7 +46,7 @@ RSpec.describe ProblemCheckTracker do
 
   describe "#problem!" do
     let(:problem_tracker) do
-      described_class.create!(identifier: "twitter_login", **original_attributes)
+      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
     end
 
     let(:original_attributes) do
@@ -80,7 +80,7 @@ RSpec.describe ProblemCheckTracker do
 
   describe "#no_problem!" do
     let(:problem_tracker) do
-      described_class.create!(identifier: "twitter_login", **original_attributes)
+      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
     end
 
     let(:original_attributes) do
