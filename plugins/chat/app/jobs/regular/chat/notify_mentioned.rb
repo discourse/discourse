@@ -64,7 +64,10 @@ module Jobs
       end
 
       def notify(mention, mentioned_user)
-        return if already_notified?(mentioned_user) || should_not_notify?(mention, mentioned_user)
+        if already_notified?(mentioned_user) || !mention.should_notify?(mentioned_user) ||
+             !should_notify?(mentioned_user)
+          return
+        end
 
         mention.create_notification_for(mentioned_user)
         @already_notified_user_ids << mentioned_user.id
@@ -84,12 +87,14 @@ module Jobs
         end
       end
 
-      def should_not_notify?(mention, mentioned_user)
-        return true unless mentioned_user.use_chat?
-        return true unless mention.should_notify?(mentioned_user)
+      def should_notify?(mentioned_user)
+        return false if !mentioned_user.use_chat? || !mentioned_user.following?(@channel)
+        return false if mentioned_user.suspended?
+        if mentioned_user == @sender || mentioned_user.doesnt_want_to_hear_from(@sender)
+          return false
+        end
 
-        mentioned_user.suspended? || mentioned_user == @sender ||
-          mentioned_user.doesnt_want_to_hear_from(@sender) || !mentioned_user.following?(@channel)
+        true
       end
     end
   end
