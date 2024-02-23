@@ -19,7 +19,7 @@
     min-height: unset;
     .chat-composer.is-focused & {
       border-color: var(--primary-low);
-      box-shadow: 0px 0px 2px 0px rgba(10, 173, 255, 0.5);
+      box-shadow: 0 0 2px 0 rgba(var(--tertiary-rgb), 0.95);
     }
   }
   &__input-container {
