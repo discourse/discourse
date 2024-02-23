@@ -8,8 +8,7 @@ module Jobs
         @message = ::Chat::Message.find(args[:message_id])
         @timestamp = args[:timestamp]
 
-        @parsed_mentions = @message.parsed_mentions
-        return if @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
+        return if @message.parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
         @sender = @message.user
         @channel = @message.chat_channel
