@@ -47,6 +47,11 @@ module.exports = function (defaults) {
 
   const isProduction = EmberApp.env().includes("production");
 
+  const babelPlugins = [require.resolve("deprecation-silencer")];
+  if (process.env["USE_DECORATOR_TRANSFORMS"] !== "0") {
+    babelPlugins.push(require.resolve("decorator-transforms"));
+  }
+
   const app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
@@ -78,10 +83,13 @@ module.exports = function (defaults) {
 
     "ember-cli-babel": {
       throwUnlessParallelizable: true,
+      disableDecoratorTransforms:
+        process.env["USE_DECORATOR_TRANSFORMS"] !== "0",
     },
 
     babel: {
-      plugins: [require.resolve("deprecation-silencer")],
+      sourceMaps: false,
+      plugins: babelPlugins,
     },
 
     vendorFiles: {

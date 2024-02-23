@@ -152,13 +152,13 @@ export default class RenderGlimmer {
     component.name = "Widgets/RenderGlimmer";
     setComponentTemplate(template, component);
 
-    this._componentInfo = {
+    this._componentInfo = new ComponentInfo({
       element,
       component,
-      @tracked data: this.data,
+      data: this.data,
       setWrapperElementAttrs: (attrs) =>
         this.updateElementAttrs(element, attrs),
-    };
+    });
 
     this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
   }
@@ -208,4 +208,15 @@ export function registerWidgetShim(name, tagName, template) {
   };
 
   createWidgetFrom(RenderGlimmerShim, name, {});
+}
+
+class ComponentInfo {
+  @tracked data;
+  element;
+  component;
+  setWrapperElementAttrs;
+
+  constructor(params) {
+    Object.assign(this, params);
+  }
 }

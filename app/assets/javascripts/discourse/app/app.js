@@ -1,4 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
+import "decorator-transforms/globals";
 import "./loader-shims";
 import "./global-compat";
 /* eslint-enable simple-import-sort/imports */
