@@ -33,6 +33,10 @@
         .chat-user-display-name {
           margin-right: 0.5rem;
         }
+
+        .user-status-message-description {
+          color: var(--primary-medium);
+        }
       }
 
       &.-add-member {
