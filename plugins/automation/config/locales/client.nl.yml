@@ -169,6 +169,10 @@ nl:
               description: Wordt alleen geactiveerd als het topic het eerste topic is dat een gebruiker heeft gemaakt
           created: Gemaakt
           edited: Bewerkt
+        user_updated:
+          fields:
+            first_post_only:
+              label: Alleen eerste bericht
         category_created_edited:
           fields:
             restricted_category:

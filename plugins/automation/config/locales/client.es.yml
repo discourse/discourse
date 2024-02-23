@@ -169,6 +169,10 @@ es:
               description: Se activará solo si el tema es el primer tema que creó un usuario
           created: Creado
           edited: Editado
+        user_updated:
+          fields:
+            first_post_only:
+              label: Solo la primera publicación
         category_created_edited:
           fields:
             restricted_category:

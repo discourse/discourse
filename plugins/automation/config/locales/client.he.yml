@@ -147,6 +147,20 @@ he:
               description: יוקפץ רק אם הנושא הוא הנושא הראשון שיצר המשתמש
           created: נוצרו
           edited: נערכו
+        user_updated:
+          fields:
+            user_profile:
+              label: שדות פרופיל המשתמש
+              description: יוזנק רק אם המשתמש מילא את נתוני הפרופיל שלו
+            custom_fields:
+              label: להשתמש בשדות מותאמים אישית
+              description: יוזנק רק אם המשתמש מילא את השדה הזה שהותאם אישית
+            first_post_only:
+              label: פוסט ראשון בלבד
+              description: יוזנק רק אם הפוסט הזה הוא הפוסט הראשון שיצר המשתמש
+            automation_name:
+              label: שם הזנקת האוטומציה
+              description: מאפשר לך להקים מגוון אוטומציות משתמש. שם זהה יכול לגרום לבעיות.
         category_created_edited:
           fields:
             restricted_category:

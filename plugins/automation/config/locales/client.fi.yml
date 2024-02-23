@@ -169,6 +169,10 @@ fi:
               description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
           created: Luotu
           edited: Muokattu
+        user_updated:
+          fields:
+            first_post_only:
+              label: Vain ensimmäinen viesti
         category_created_edited:
           fields:
             restricted_category:

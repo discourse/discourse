@@ -44,6 +44,9 @@ he:
       after_post_cook:
         title: אחרי בישול פוסט
         description: כאשר תוכן פוסט מבושל האוטומציה תופעל
+      user_updated:
+        title: לאחר עדכון המשתמש
+        description: כאשר המשתמש מעדכן מידע האוטומציה תוזנק
     scriptables:
       post:
         title: יצירת פוסט

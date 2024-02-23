@@ -169,6 +169,10 @@ tr_TR:
               description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
           created: Oluşturuldu
           edited: Düzenlendi
+        user_updated:
+          fields:
+            first_post_only:
+              label: Sadece ilk gönderi
         category_created_edited:
           fields:
             restricted_category:

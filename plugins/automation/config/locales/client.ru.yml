@@ -171,6 +171,10 @@ ru:
               description: Срабатывает только в том случае, если это первая тема пользователя
           created: Создано
           edited: Изменено
+        user_updated:
+          fields:
+            first_post_only:
+              label: Только первая публикация
         category_created_edited:
           fields:
             restricted_category:

@@ -169,6 +169,10 @@ it:
               description: Si attiverà solo se l'argomento è il primo creato da un utente
           created: Creati
           edited: Modificati
+        user_updated:
+          fields:
+            first_post_only:
+              label: Solo il primo messaggio
         category_created_edited:
           fields:
             restricted_category:

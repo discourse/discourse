@@ -169,6 +169,10 @@ pt_BR:
               description: Ativa apenas se o tópico for o primeiro tópico criado pelo(a) usuário(a)
           created: Criado(a)
           edited: Editado(a)
+        user_updated:
+          fields:
+            first_post_only:
+              label: Apenas primeira postagem
         category_created_edited:
           fields:
             restricted_category:

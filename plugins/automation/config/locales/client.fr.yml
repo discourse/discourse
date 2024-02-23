@@ -169,6 +169,10 @@ fr:
               description: Se déclenchera uniquement si le sujet est le premier sujet créé par un utilisateur
           created: Créé
           edited: Édité
+        user_updated:
+          fields:
+            first_post_only:
+              label: Premier message uniquement
         category_created_edited:
           fields:
             restricted_category:

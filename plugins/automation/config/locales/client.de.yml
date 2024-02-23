@@ -169,6 +169,10 @@ de:
               description: Wird nur ausgelöst, wenn das Thema das erste Thema ist, das ein Benutzer erstellt hat
           created: Erstellt
           edited: Bearbeitet
+        user_updated:
+          fields:
+            first_post_only:
+              label: Nur erster Beitrag
         category_created_edited:
           fields:
             restricted_category:

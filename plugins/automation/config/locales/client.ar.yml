@@ -173,6 +173,10 @@ ar:
               description: لن يتم تشغيله إلا إذا كان الموضوع هو أول موضوع أنشأه المستخدم
           created: تم إنشاؤها
           edited: تم تحريرها
+        user_updated:
+          fields:
+            first_post_only:
+              label: المنشور الأول فقط
         category_created_edited:
           fields:
             restricted_category:

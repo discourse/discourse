@@ -168,6 +168,10 @@ ja:
               description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
           created: 作成
           edited: 編集
+        user_updated:
+          fields:
+            first_post_only:
+              label: 最初の投稿のみ
         category_created_edited:
           fields:
             restricted_category:
