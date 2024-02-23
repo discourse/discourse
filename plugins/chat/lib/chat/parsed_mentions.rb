@@ -42,7 +42,7 @@ module Chat
     end
 
     def direct_mentions
-      User.where(username_lower: @parsed_direct_mentions)
+      chat_users.where(username_lower: @parsed_direct_mentions)
     end
 
     def group_mentions
@@ -64,7 +64,7 @@ module Chat
     end
 
     def groups_with_disabled_mentions
-      @groups_with_disabled_mentions ||= (visible_groups - mentionable_groups).to_a
+      @groups_with_disabled_mentions ||= (visible_groups - mentionable_groups)
     end
 
     def groups_with_too_many_members
@@ -115,7 +115,7 @@ module Chat
     end
 
     def chat_users
-      User.distinct.includes(:user_option).real.where(user_options: { chat_enabled: true })
+      User.distinct.joins(:user_option).real.where(user_options: { chat_enabled: true })
     end
 
     def mentionable_groups
