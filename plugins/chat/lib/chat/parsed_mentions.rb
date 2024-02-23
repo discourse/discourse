@@ -72,18 +72,6 @@ module Chat
         mentionable_groups.where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
     end
 
-    def visible_groups
-      @visible_groups ||=
-        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@sender).to_a
-    end
-
-    def users_who_can_join_channel
-      @users_who_can_join_channel ||=
-        all_users_reached_by_mentions.filter do |user|
-          user.guardian.can_join_chat_channel?(@channel)
-        end
-    end
-
     def users_who_cannot_join_channel
       @users_who_cannot_join_channel ||=
         all_users_reached_by_mentions.filter do |user|
@@ -140,6 +128,18 @@ module Chat
       mentions.reduce([]) do |memo, mention|
         %w[@here @all].include?(mention.downcase) ? memo : (memo << mention[1..-1].downcase)
       end
+    end
+
+    def users_who_can_join_channel
+      @users_who_can_join_channel ||=
+        all_users_reached_by_mentions.filter do |user|
+          user.guardian.can_join_chat_channel?(@channel)
+        end
+    end
+
+    def visible_groups
+      @visible_groups ||=
+        Group.where("LOWER(name) IN (?)", @parsed_group_mentions).visible_groups(@sender).to_a
     end
   end
 end
