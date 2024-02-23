@@ -2,6 +2,7 @@ import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { schedule, scheduleOnce, throttle } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
@@ -23,6 +24,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     "topic.category.read_restricted:read_restricted",
     "topic.deleted:deleted-topic",
   ],
+  header: service(),
   menuVisible: true,
   SHORT_POST: 1200,
 
@@ -54,6 +56,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
 
   _hideTopicInHeader() {
     this.appEvents.trigger("header:hide-topic");
+    this.header.topic = null;
     this._lastShowTopic = false;
   },
 
@@ -62,6 +65,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       return;
     }
     this.appEvents.trigger("header:show-topic", topic);
+    this.header.topic = topic;
     this._lastShowTopic = true;
   },
 

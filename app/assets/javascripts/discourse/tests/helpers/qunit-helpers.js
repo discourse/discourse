@@ -18,6 +18,7 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
@@ -223,6 +224,7 @@ export function testCleanup(container, app) {
   clearToolbarCallbacks();
   resetNotificationTypeRenderers();
   resetSidebarPanels();
+  clearExtraGlimmerHeaderIcons();
   clearExtraHeaderIcons();
   resetOnKeyUpCallbacks();
   resetItemSelectCallbacks();
