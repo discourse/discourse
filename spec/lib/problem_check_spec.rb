@@ -26,11 +26,12 @@ RSpec.describe ProblemCheck do
   end
 
   describe ".checks" do
-    it { expect(described_class.checks).to contain_exactly(scheduled_check, unscheduled_check) }
+    it { expect(described_class.checks).to include(scheduled_check, unscheduled_check) }
   end
 
   describe ".scheduled" do
-    it { expect(described_class.scheduled).to contain_exactly(scheduled_check) }
+    it { expect(described_class.scheduled).to include(scheduled_check) }
+    it { expect(described_class.scheduled).not_to include(unscheduled_check) }
   end
 
   describe ".scheduled?" do

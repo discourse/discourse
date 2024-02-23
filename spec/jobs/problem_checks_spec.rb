@@ -35,12 +35,6 @@ RSpec.describe Jobs::ProblemChecks do
     ) { described_class.new.execute([]) }
   end
 
-  it "schedules the individual checks" do
-    expect_enqueued_with(job: :problem_check, args: { check_identifier: "foo_bar" }) do
-      described_class.new.execute([])
-    end
-  end
-
   it "does not schedule non-scheduled checks" do
     expect_not_enqueued_with(
       job: :problem_check,

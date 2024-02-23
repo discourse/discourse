@@ -3,6 +3,8 @@
 class ProblemCheck
   include ActiveSupport::Configurable
 
+  config_accessor :priority, default: "low", instance_writer: false
+
   # Determines if the check should be performed at a regular interval, and if
   # so how often. If left blank, the check will be performed every time the
   # admin dashboard is loaded, or the data is otherwise requested.
@@ -48,6 +50,27 @@ class ProblemCheck
   end
 
   def call
+    raise NotImplementedError
+  end
+
+  private
+
+  def problem
+    [
+      Problem.new(
+        I18n.t(translation_key, base_path: Discourse.base_path),
+        priority: self.config.priority,
+        identifier:,
+      ),
+    ]
+  end
+
+  def no_problem
+    []
+  end
+
+  def translation_key
+    # TODO: Infer a default based on class name, then move translations in locale file.
     raise NotImplementedError
   end
 end
