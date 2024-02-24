@@ -32,6 +32,7 @@ export default Component.extend({
   },
 
   showMessageInput: and("flag.is_custom_flag", "selected"),
+  showConfirmation: and("flag.isIllegal", "selected"),
   showDescription: not("showMessageInput"),
   isNotifyUser: equal("flag.name_key", "notify_user"),
 

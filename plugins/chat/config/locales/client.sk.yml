@@ -197,7 +197,7 @@ sk:
         back: "Späť"
         title: Kanály
         filter_all: Všetky
-        filter_open: Otvorené
+        filter_open: Zahájiť
         filter_closed: Zatvorené
         filter_archived: Archivované
         filter_input_placeholder: Vyhľadajte kanál podľa názvu

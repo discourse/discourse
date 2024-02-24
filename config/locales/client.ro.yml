@@ -32,15 +32,15 @@ ro:
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "Do MMMM "
+      full_no_year_no_time: "D MMMM"
       long_with_year: "DD MMM YYYY HH:mm"
-      long_with_year_no_time: "DD MMM YYYY"
-      full_with_year_no_time: "Do MMMM YYYY"
-      long_date_with_year: "DD MMM 'YY HH:mm"
-      long_date_without_year: "DD MMM HH:mm"
-      long_date_with_year_without_time: "DD MMM 'YY"
-      long_date_without_year_with_linebreak: "DD MMM<br/>HH:mm"
-      long_date_with_year_with_linebreak: "DD MMM 'YY<br/>HH:mm"
+      long_with_year_no_time: "DD-MMM-YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D-MMM-YYYY, HH:mm"
+      long_date_without_year: "D MMM, HH:mm"
+      long_date_with_year_without_time: "D-MMM-YYYY"
+      long_date_without_year_with_linebreak: "D MMM<br/>HH:mm"
+      long_date_with_year_with_linebreak: "D-MMM-YYYY <br/>HH:mm"
       wrap_ago: "%{date} în urmă"
       wrap_on: "pe %{date}"
       tiny:
@@ -85,8 +85,8 @@ ro:
           one: "%{count} an"
           few: "%{count} ani"
           other: "%{count} de ani"
-        date_month: "DD MMMM"
-        date_year: "MMM 'YY"
+        date_month: "D MMMM"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "mai puțin de %{count} minut"
@@ -124,7 +124,7 @@ ro:
           one: "aproape %{count} an"
           few: "aproape %{count} ani"
           other: "aproape %{count} de ani"
-        date_year: "D MM YYYY"
+        date_year: "D-MMM-YYYY"
       medium_with_ago:
         x_minutes:
           one: "acum %{count} minut"
@@ -199,13 +199,13 @@ ro:
         disabled: "Dezarhivat %{when}"
       pinned:
         enabled: "Fixat %{when}"
-        disabled: "De-fixat %{when}"
+        disabled: "Nefixat %{when}"
       pinned_globally:
         enabled: "Fixat la nivel global %{when}"
-        disabled: "De-fixat %{when}"
+        disabled: "Nefixat %{when}"
       visible:
         enabled: "Listat %{when}"
-        disabled: "De-listat %{when}"
+        disabled: "Nelistat %{when}"
       banner:
         enabled: "A făcut din acesta un banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
         disabled: "A eliminat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
@@ -272,7 +272,7 @@ ro:
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
-    show_more: "Arată mai mult"
+    show_more: "arată mai mult"
     show_help: "opțiuni"
     links: "Legături"
     links_lowercase:
@@ -1467,6 +1467,9 @@ ro:
           error: "Scuze, fișierul trebuie să fie în format CSV."
       confirm_access:
         incorrect_passkey: "Această cheie de acces este incorectă."
+        forgot_password: "Ți-ai uitat parola?"
+        password_reset_email_sent: "Emailul de resetare a parolei a fost trimis."
+        cannot_send_password_reset_email: "Nu am putut trimite emailul de resetare a parolei."
       password:
         title: "Parolă"
         too_short: "Parola este prea scurtă."
@@ -3512,6 +3515,8 @@ ro:
           all_filter: "Toate"
           active_filter: "Activi"
           inactive_filter: "Inactivă"
+          schema:
+            back_button: "Înapoi la %{name}"
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"

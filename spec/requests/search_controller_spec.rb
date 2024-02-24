@@ -495,6 +495,39 @@ RSpec.describe SearchController do
         end
       end
     end
+
+    context "with lazy loaded categories" do
+      fab!(:parent_category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category, parent_category: parent_category) }
+      fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
+
+      fab!(:post) do
+        with_search_indexer_enabled do
+          topic = Fabricate(:topic, category: category)
+          Fabricate(:post, topic: topic, raw: "hello world. first topic")
+        end
+      end
+
+      fab!(:other_post) do
+        with_search_indexer_enabled do
+          topic = Fabricate(:topic, category: other_category)
+          Fabricate(:post, topic: topic, raw: "hello world. second topic")
+        end
+      end
+
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+
+      it "returns extra categories and parent categories" do
+        get "/search.json", params: { q: "hello" }
+
+        categories = response.parsed_body["grouped_search_result"]["extra"]["categories"]
+        expect(categories.map { |c| c["id"] }).to contain_exactly(
+          parent_category.id,
+          category.id,
+          other_category.id,
+        )
+      end
+    end
   end
 
   context "with search priority" do

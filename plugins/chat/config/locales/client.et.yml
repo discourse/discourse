@@ -70,6 +70,7 @@ et:
         back: "Tagasi"
         title: Kanalid
         filter_all: Kõik
+        filter_open: Ava
         filter_closed: Suletud
       chat_message_separator:
         today: Täna

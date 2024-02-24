@@ -7,8 +7,8 @@
 ro:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    short_date: "D-MMM-YYYY"
+    long_date: "D MMMM YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -58,6 +58,19 @@ ro:
   themes:
     settings_errors:
       data_type_inclusion: "Setarea tipului `%{name}` nu este acceptată. Tipurile acceptate sunt `integer`, `bool`, `list`, `enum` și `upload`"
+      objects:
+        required: "trebuie să fie prezent"
+        invalid_type: "%{type} nu este un tip valid"
+        not_valid_string_value: "trebuie să fie un șir"
+        not_valid_integer_value: "trebuie sa fie un număr întreg"
+        not_valid_float_value: "trebuie să fie un număr cu virgulă mobilă"
+        not_valid_boolean_value: "trebuie să fie un boolean"
+        not_valid_enum_value: "trebuie să fie dintre următoarele: %{choices}"
+        string_value_not_valid_min: "trebuie să aibă cel puțin %{min} caractere"
+        string_value_not_valid_max: "trebuie să aibă cel mult %{max} caractere"
+        number_value_not_valid_min: "trebuie să fie mai mare sau egal cu %{min}"
+        number_value_not_valid_max: "trebuie să fie mai mic sau egal cu %{max}"
+        string_value_not_valid_url: "trebuie să fie un URL valid"
   emails:
     incoming:
       default_subject: "Acest subiect are nevoie de un titlu"
@@ -497,7 +510,8 @@ ro:
     inappropriate:
       title: "Necorespunzător"
     illegal:
-      email_title: 'O postare din "%{title}" necesită atenția echipei'
+      title: "Ilegal"
+      email_title: 'Un articol din „%{title}” necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Trimite-i un mesaj lui @%{username}"
@@ -531,7 +545,7 @@ ro:
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "Este ilegal"
+      title: "Ilegal"
       description: "Acest subiect necesită atenția echipei, deoarece cred că are conținut care este ilegal."
       short_description: "Acest lucru este ilegal"
       email_title: 'Un articol din „%{title}” necesită atenția echipei'
@@ -821,6 +835,7 @@ ro:
       other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
+    back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
@@ -929,7 +944,6 @@ ro:
     suggested_topics: "Numărul de subiecte sugerate în partea de jos a unui subiect."
     limit_suggested_to_category: "Arată doar subiectele din aceeași categorie, în subiecte sugerate."
     suggested_topics_max_days_old: "Subiectele sugerate nu trebuie să fie mai vechi de n zile."
-    clean_up_uploads: "șterge încărcările ne-referențiate orfane pentru a preveni găzduirea ilegală. ATENȚIE: înainte de a activa această setare faceți un backup la directorul /uploads ."
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncărcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3. IMPORTANT: necesită un acces valid (atât identificatorul cheii de acces cât și cheia secretă)."
@@ -976,6 +990,7 @@ ro:
     self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
     flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
     post_links_allowed_groups: "Grupuri cărora li se permite să includă legături în articole. Administratorii și moderatorii au voie să publice legături întotdeauna."
+    profile_background_allowed_groups: "Grupuri cărora li se permite să încarce un fundal de profil."
     user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
     invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
     ignore_allowed_groups: "Grupuri au voie să ignore alți utilizatori."
@@ -1163,7 +1178,7 @@ ro:
       invalid_integer_min_max: "Valoarea trebuie să fie între %{min} și %{max}."
       invalid_integer_min: "Valoarea trebuie să fie %{min} sau mai mare."
       invalid_integer_max: "Valoarea nu poate fi mai mare de %{max}."
-      invalid_integer: "Valoarea trebuie să fie un întreg."
+      invalid_integer: "Valoarea trebuie să fie un număr întreg."
       regex_mismatch: "Valoare nu se potrivește formatului cerut."
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
@@ -1197,6 +1212,7 @@ ro:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -1313,6 +1329,7 @@ ro:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
+    illegal: "Articolul tău a fost marcat ca fiind **ilegal**: comunitatea consideră că ar putea încălca legea."
     spam: "Postarea ta a fost marcată cu marcaj de avertizare **spam**: comunitatea crede că reprezintă o reclamă, ceva ce este de natura excesiv de promoțională, în loc să fie o postare utilă sau relevantă pentru subiect după cum se presupune."
     notify_moderators: "Postarea ta a fost marcată cu marcaj de avertizare **în atenția moderatorului**: comunitatea simte că există ceva legat de această postare care necesită intervenția manuală a unui membrul al echipei."
   flags_dispositions:

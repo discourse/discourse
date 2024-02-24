@@ -305,7 +305,7 @@ nl:
         back: "Terug"
         title: Kanalen
         filter_all: Alle
-        filter_open: Geopend
+        filter_open: Open
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
         filter_input_placeholder: Kanaal zoeken op naam

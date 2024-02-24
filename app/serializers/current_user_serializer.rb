@@ -74,7 +74,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :new_new_view_enabled?,
              :use_experimental_topic_bulk_actions?,
              :use_experimental_topic_bulk_actions?,
-             :use_admin_sidebar
+             :use_admin_sidebar,
+             :glimmer_header_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat

@@ -95,6 +95,9 @@ hu:
       string_value_not_valid_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
       string_value_not_valid_min: "Legalább %{min} karakter hosszúnak kell lennie."
       string_value_not_valid_max: "Legfeljebb %{max} karakter hosszúnak kell lennie."
+      objects:
+        required: "megadása kötelező"
+        not_valid_integer_value: "egész számnak kell lennie"
     locale_errors:
       top_level_locale: "A felsőszintű kulcsnak a területibeállítás-fájlban egyeznie kell a területi beállítás nevével"
       invalid_yaml: "A fordítási YAML érvénytelen"

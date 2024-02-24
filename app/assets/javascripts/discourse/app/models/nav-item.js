@@ -325,9 +325,9 @@ export default class NavItem extends EmberObject {
   }
 }
 
-class ExtraNavItem extends NavItem {
+export class ExtraNavItem extends NavItem {
   @tracked href;
-  count = 0;
+  @tracked count = 0;
   customFilter = null;
 }
 

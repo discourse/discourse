@@ -124,6 +124,9 @@ fr:
       string_value_not_valid_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
       string_value_not_valid_min: "La chaîne de caractères doit contenir au moins %{min} caractères."
       string_value_not_valid_max: "La chaîne de caractères doit contenir au plus %{max} caractères."
+      objects:
+        required: "doit être présent"
+        not_valid_integer_value: "doit être un entier"
     locale_errors:
       top_level_locale: "La clé de premier niveau dans un fichier de localisation doit correspondre au nom de locale"
       invalid_yaml: "Traduction YAML non valide"

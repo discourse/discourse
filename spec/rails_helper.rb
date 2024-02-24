@@ -152,6 +152,7 @@ module TestSetup
 
     Middleware::AnonymousCache.disable_anon_cache
     BlockRequestsMiddleware.allow_requests!
+    BlockRequestsMiddleware.current_example_location = nil
   end
 end
 
@@ -592,6 +593,15 @@ RSpec.configure do |config|
         ActiveRecord::Base.connection.schema_cache.add(table)
       end
 
+      ApplicationController.before_action(prepend: true) do
+        if BlockRequestsMiddleware.current_example_location && !request.xhr? &&
+             request.format == "html"
+          cookies[
+            BlockRequestsMiddleware::RSPEC_CURRENT_EXAMPLE_COOKIE_STRING
+          ] = BlockRequestsMiddleware.current_example_location
+        end
+      end
+
       system_tests_initialized = true
     end
 
@@ -609,6 +619,8 @@ RSpec.configure do |config|
     driven_by driver.join("_").to_sym
 
     setup_system_test
+
+    BlockRequestsMiddleware.current_example_location = example.location
   end
 
   config.after(:each, type: :system) do |example|

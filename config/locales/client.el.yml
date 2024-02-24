@@ -35,11 +35,8 @@ el:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} πριν"
       wrap_on: "στις %{date}"
       tiny:
@@ -75,7 +72,7 @@ el:
           one: "%{count}χ"
           other: "%{count}χ"
         date_month: "DD MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} λ"
@@ -86,7 +83,6 @@ el:
         x_days:
           one: "%{count} ημ"
           other: "%{count} ημ"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "πριν από %{count} λεπτό "

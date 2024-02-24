@@ -95,6 +95,9 @@ vi:
       string_value_not_valid_min_max: "Nó phải dài từ %{min} đến %{max} ký tự."
       string_value_not_valid_min: "Nó phải dài ít nhất %{min} ký tự."
       string_value_not_valid_max: "Nó phải dài tối đa %{max} ký tự."
+      objects:
+        required: "phải hiện hành"
+        not_valid_integer_value: "phải là một số nguyên"
     locale_errors:
       top_level_locale: "Khóa cấp cao nhất trong tệp ngôn ngữ phải khớp với tên ngôn ngữ"
       invalid_yaml: "Bản dịch YAML không hợp lệ"

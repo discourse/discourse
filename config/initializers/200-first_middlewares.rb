@@ -33,6 +33,10 @@ if Rails.env.test?
                                          RailsMultisite::DiscoursePatches.config
 
   class BlockRequestsMiddleware
+    RSPEC_CURRENT_EXAMPLE_COOKIE_STRING = "rspec_current_example_location"
+
+    cattr_accessor :current_example_location
+
     @@block_requests = false
 
     def self.block_requests!
@@ -48,8 +52,23 @@ if Rails.env.test?
     end
 
     def call(env)
-      if @@block_requests
-        [503, { "Content-Type" => "text/plain" }, ["Blocked by BlockRequestsMiddleware"]]
+      request = Rack::Request.new(env)
+
+      if (
+           @@block_requests ||
+             (
+               request.xhr? && self.class.current_example_location.present? &&
+                 self.class.current_example_location !=
+                   request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
+             )
+         )
+        [
+          503,
+          { "Content-Type" => "text/plain" },
+          [
+            "Blocked by BlockRequestsMiddleware for requests initiated by #{request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]} when running #{self.class.current_example_location}",
+          ],
+        ]
       else
         @app.call(env)
       end

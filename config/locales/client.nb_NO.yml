@@ -35,11 +35,8 @@ nb_NO:
       long_with_year: "D MMM YYYY LT"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       wrap_on: "på %{date}"
       tiny:
@@ -75,7 +72,7 @@ nb_NO:
           one: "%{count}år"
           other: "%{count}år"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minutt"
@@ -86,7 +83,6 @@ nb_NO:
         x_days:
           one: "%{count} dag"
           other: "%{count} dager"
-        date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minutt siden"

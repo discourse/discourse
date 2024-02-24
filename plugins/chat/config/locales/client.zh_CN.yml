@@ -297,7 +297,7 @@ zh_CN:
         back: "返回"
         title: 频道
         filter_all: 所有
-        filter_open: 已打开
+        filter_open: 开放
         filter_closed: 已关闭
         filter_archived: 已归档
         filter_input_placeholder: 按名称搜索频道

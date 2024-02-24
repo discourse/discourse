@@ -1127,6 +1127,30 @@ RSpec.describe CategoriesController do
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
     end
 
+    context "without include_ancestors" do
+      it "doesn't return ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo" }
+
+        expect(response.parsed_body).not_to have_key("ancestors")
+      end
+    end
+
+    context "with include_ancestors=false" do
+      it "returns ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: false }
+
+        expect(response.parsed_body).not_to have_key("ancestors")
+      end
+    end
+
+    context "with include_ancestors=true" do
+      it "returns ancestors" do
+        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: true }
+
+        expect(response.parsed_body).to have_key("ancestors")
+      end
+    end
+
     context "with term" do
       it "returns categories" do
         get "/categories/search.json", params: { term: "Foo" }
@@ -1247,6 +1271,27 @@ RSpec.describe CategoriesController do
         get "/categories/search.json", params: { limit: 2 }
 
         expect(response.parsed_body["categories"].size).to eq(2)
+      end
+    end
+
+    context "with order" do
+      fab!(:category1) { Fabricate(:category, name: "Category Ordered", parent_category: category) }
+      fab!(:category2) { Fabricate(:category, name: "Ordered Category", parent_category: category) }
+      fab!(:category3) { Fabricate(:category, name: "Category Ordered") }
+      fab!(:category4) { Fabricate(:category, name: "Ordered Category") }
+
+      before do
+        [category1, category2, category3, category4].each do |c|
+          SearchIndexer.index(c, force: true)
+        end
+      end
+
+      it "returns in correct order" do
+        get "/categories/search.json", params: { term: "ordered" }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+          [category4.id, category2.id, category3.id, category1.id],
+        )
       end
     end
 

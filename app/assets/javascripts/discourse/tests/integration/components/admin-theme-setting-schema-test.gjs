@@ -2,6 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 import AdminThemeSettingSchema from "admin/components/admin-theme-setting-schema";
 
 const schema = {
@@ -101,26 +102,32 @@ const data = [
   },
 ];
 
-function queryRenderedTree() {
-  return [...queryAll(".tree .item-container")].map((container) => {
-    const li = container.querySelector(".parent.node");
-    const active = li.classList.contains("active");
-    const children = [...container.querySelectorAll(".node.child")].map(
-      (child) => {
-        return {
-          text: child.textContent.trim(),
-          element: child,
-        };
-      }
-    );
+class TreeFromDOM {
+  constructor() {
+    this.refresh();
+  }
 
-    return {
-      text: li.textContent.trim(),
-      active,
-      children,
-      element: li,
-    };
-  });
+  refresh() {
+    this.nodes = [...queryAll(".tree .item-container")].map((container) => {
+      const li = container.querySelector(".parent.node");
+      const active = li.classList.contains("active");
+      const children = [...container.querySelectorAll(".node.child")].map(
+        (child) => {
+          return {
+            text: child.textContent.trim(),
+            element: child,
+          };
+        }
+      );
+
+      return {
+        text: li.textContent.trim(),
+        active,
+        children,
+        element: li,
+      };
+    });
+  }
 }
 
 module(
@@ -133,11 +140,11 @@ module(
         <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
       </template>);
 
-      const tree = queryRenderedTree();
+      const tree = new TreeFromDOM();
 
-      assert.equal(tree.length, 2);
-      assert.true(tree[0].active, "the first node is active");
-      assert.false(tree[1].active, "other nodes are not active");
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.true(tree.nodes[0].active, "the first node is active");
+      assert.false(tree.nodes[1].active, "other nodes are not active");
     });
 
     test("renders the 2nd level of nested items for the active item only", async function (assert) {
@@ -145,36 +152,36 @@ module(
         <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
       </template>);
 
-      let tree = queryRenderedTree();
+      const tree = new TreeFromDOM();
 
-      assert.true(tree[0].active);
-      assert.equal(
-        tree[0].children.length,
+      assert.true(tree.nodes[0].active);
+      assert.strictEqual(
+        tree.nodes[0].children.length,
         2,
         "the children of the active node are shown"
       );
 
-      assert.false(tree[1].active);
-      assert.equal(
-        tree[1].children.length,
+      assert.false(tree.nodes[1].active);
+      assert.strictEqual(
+        tree.nodes[1].children.length,
         0,
         "thie children of an active node aren't shown"
       );
 
-      await click(tree[1].element);
+      await click(tree.nodes[1].element);
 
-      tree = queryRenderedTree();
+      tree.refresh();
 
-      assert.false(tree[0].active);
-      assert.equal(
-        tree[0].children.length,
+      assert.false(tree.nodes[0].active);
+      assert.strictEqual(
+        tree.nodes[0].children.length,
         0,
         "thie children of an active node aren't shown"
       );
 
-      assert.true(tree[1].active);
-      assert.equal(
-        tree[1].children.length,
+      assert.true(tree.nodes[1].active);
+      assert.strictEqual(
+        tree.nodes[1].children.length,
         3,
         "the children of the active node are shown"
       );
@@ -185,75 +192,168 @@ module(
         <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
       </template>);
 
-      let tree = queryRenderedTree();
+      const tree = new TreeFromDOM();
 
-      assert.equal(tree.length, 2);
-      assert.equal(tree[0].text, "item 1");
-      assert.equal(tree[0].children.length, 2);
-      assert.equal(tree[0].children[0].text, "child 1-1");
-      assert.equal(tree[0].children[1].text, "child 1-2");
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+      assert.strictEqual(tree.nodes[0].children[0].text, "child 1-1");
+      assert.strictEqual(tree.nodes[0].children[1].text, "child 1-2");
 
-      assert.equal(tree[1].text, "item 2");
-      assert.equal(tree[1].children.length, 0);
+      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.strictEqual(tree.nodes[1].children.length, 0);
 
-      await click(tree[1].element);
+      await click(tree.nodes[1].element);
 
-      tree = queryRenderedTree();
+      tree.refresh();
 
-      assert.equal(tree.length, 2);
-      assert.equal(tree[0].text, "item 1");
-      assert.false(tree[0].active);
-      assert.equal(tree[0].children.length, 0);
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.false(tree.nodes[0].active);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree[1].text, "item 2");
-      assert.true(tree[1].active);
-      assert.equal(tree[1].children.length, 3);
-      assert.equal(tree[1].children[0].text, "child 2-1");
-      assert.equal(tree[1].children[1].text, "child 2-2");
-      assert.equal(tree[1].children[2].text, "child 2-3");
+      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.true(tree.nodes[1].active);
+      assert.strictEqual(tree.nodes[1].children.length, 3);
+      assert.strictEqual(tree.nodes[1].children[0].text, "child 2-1");
+      assert.strictEqual(tree.nodes[1].children[1].text, "child 2-2");
+      assert.strictEqual(tree.nodes[1].children[2].text, "child 2-3");
 
-      await click(tree[1].children[1].element);
+      await click(tree.nodes[1].children[1].element);
 
-      tree = queryRenderedTree();
-      assert.equal(tree.length, 3);
+      tree.refresh();
+      assert.strictEqual(tree.nodes.length, 3);
 
-      assert.equal(tree[0].text, "child 2-1");
-      assert.false(tree[0].active);
-      assert.equal(tree[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].text, "child 2-1");
+      assert.false(tree.nodes[0].active);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree[1].text, "child 2-2");
-      assert.true(tree[1].active);
-      assert.equal(tree[1].children.length, 4);
-      assert.equal(tree[1].children[0].text, "grandchild 2-2-1");
-      assert.equal(tree[1].children[1].text, "grandchild 2-2-2");
-      assert.equal(tree[1].children[2].text, "grandchild 2-2-3");
-      assert.equal(tree[1].children[3].text, "grandchild 2-2-4");
+      assert.strictEqual(tree.nodes[1].text, "child 2-2");
+      assert.true(tree.nodes[1].active);
+      assert.strictEqual(tree.nodes[1].children.length, 4);
+      assert.strictEqual(tree.nodes[1].children[0].text, "grandchild 2-2-1");
+      assert.strictEqual(tree.nodes[1].children[1].text, "grandchild 2-2-2");
+      assert.strictEqual(tree.nodes[1].children[2].text, "grandchild 2-2-3");
+      assert.strictEqual(tree.nodes[1].children[3].text, "grandchild 2-2-4");
 
-      assert.equal(tree[2].text, "child 2-3");
-      assert.false(tree[2].active);
-      assert.equal(tree[2].children.length, 0);
+      assert.strictEqual(tree.nodes[2].text, "child 2-3");
+      assert.false(tree.nodes[2].active);
+      assert.strictEqual(tree.nodes[2].children.length, 0);
 
-      await click(tree[1].children[1].element);
+      await click(tree.nodes[1].children[1].element);
 
-      tree = queryRenderedTree();
+      tree.refresh();
 
-      assert.equal(tree.length, 4);
+      assert.strictEqual(tree.nodes.length, 4);
 
-      assert.equal(tree[0].text, "grandchild 2-2-1");
-      assert.false(tree[0].active);
-      assert.equal(tree[0].children.length, 0);
+      assert.strictEqual(tree.nodes[0].text, "grandchild 2-2-1");
+      assert.false(tree.nodes[0].active);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.equal(tree[1].text, "grandchild 2-2-2");
-      assert.true(tree[1].active);
-      assert.equal(tree[1].children.length, 0);
+      assert.strictEqual(tree.nodes[1].text, "grandchild 2-2-2");
+      assert.true(tree.nodes[1].active);
+      assert.strictEqual(tree.nodes[1].children.length, 0);
 
-      assert.equal(tree[2].text, "grandchild 2-2-3");
-      assert.false(tree[2].active);
-      assert.equal(tree[2].children.length, 0);
+      assert.strictEqual(tree.nodes[2].text, "grandchild 2-2-3");
+      assert.false(tree.nodes[2].active);
+      assert.strictEqual(tree.nodes[2].children.length, 0);
 
-      assert.equal(tree[3].text, "grandchild 2-2-4");
-      assert.false(tree[3].active);
-      assert.equal(tree[3].children.length, 0);
+      assert.strictEqual(tree.nodes[3].text, "grandchild 2-2-4");
+      assert.false(tree.nodes[3].active);
+      assert.strictEqual(tree.nodes[3].children.length, 0);
+    });
+
+    test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
+      await render(<template>
+        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+      </template>);
+
+      assert.dom(".back-button").doesNotExist();
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[0].children[0].element);
+
+      assert.dom(".back-button").exists();
+      tree.refresh();
+      assert.strictEqual(tree.nodes[0].text, "child 1-1");
+
+      await click(tree.nodes[0].children[0].element);
+
+      tree.refresh();
+      assert.strictEqual(tree.nodes[0].text, "grandchild 1-1-1");
+      assert.dom(".back-button").exists();
+
+      await click(".back-button");
+
+      tree.refresh();
+      assert.strictEqual(tree.nodes[0].text, "child 1-1");
+      assert.dom(".back-button").exists();
+
+      await click(".back-button");
+
+      tree.refresh();
+      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.dom(".back-button").doesNotExist();
+    });
+
+    test("the back button navigates to the index of the active element at the previous level", async function (assert) {
+      await render(<template>
+        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      tree.refresh();
+      await click(tree.nodes[1].children[1].element);
+
+      await click(".back-button");
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+
+      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.false(tree.nodes[0].active);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
+
+      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.true(tree.nodes[1].active);
+      assert.strictEqual(tree.nodes[1].children.length, 3);
+    });
+
+    test("the back button label includes the name of the item at the previous level", async function (assert) {
+      await render(<template>
+        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      tree.refresh();
+      await click(tree.nodes[1].children[1].element);
+
+      assert.dom(".back-button").hasText(
+        I18n.t("admin.customize.theme.schema.back_button", {
+          name: "item 2",
+        })
+      );
+
+      tree.refresh();
+      await click(tree.nodes[1].children[0].element);
+
+      assert.dom(".back-button").hasText(
+        I18n.t("admin.customize.theme.schema.back_button", {
+          name: "child 2-2",
+        })
+      );
+
+      await click(".back-button");
+
+      assert.dom(".back-button").hasText(
+        I18n.t("admin.customize.theme.schema.back_button", {
+          name: "item 2",
+        })
+      );
     });
   }
 );

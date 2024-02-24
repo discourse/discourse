@@ -35,6 +35,7 @@ RSpec.describe Chat::CreateMessage do
     let(:context_post_ids) { nil }
     let(:params) do
       {
+        enforce_membership: false,
         guardian: guardian,
         chat_channel_id: channel.id,
         message: content,
@@ -208,6 +209,17 @@ RSpec.describe Chat::CreateMessage do
 
           context "when user is system" do
             fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
+          end
+
+          context "when membership is enforced" do
+            fab!(:user) { Fabricate(:user) }
+
+            before do
+              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+              params[:enforce_membership] = true
+            end
 
             it { is_expected.to be_a_success }
           end

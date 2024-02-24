@@ -35,11 +35,8 @@ hu:
       long_with_year: "YYYY. MMM D., HH:mm"
       long_with_year_no_time: "YYYY. MMM D."
       full_with_year_no_time: "YYYY. MMMM D."
-      long_date_with_year: "'YY. MMM D. HH:mm"
       long_date_without_year: "MMM D., HH:mm"
-      long_date_with_year_without_time: "'YY. MMM D."
       long_date_without_year_with_linebreak: "MMM D.<br />HH:mm"
-      long_date_with_year_with_linebreak: "'YY. MMM D.<br />HH:mm"
       wrap_ago: "ennyi ideje: %{date}"
       wrap_on: "ekkor: %{date}"
       tiny:
@@ -75,7 +72,7 @@ hu:
           one: "%{count} é"
           other: "%{count} é"
         date_month: "MMM D."
-        date_year: "'YY. MMM"
+        date_year: "YYYY. MMMM"
       medium:
         less_than_x_minutes:
           one: "kevesebb mint %{count} perc"
@@ -104,7 +101,6 @@ hu:
         almost_x_years:
           one: "majdnem %{count} év"
           other: "majdnem %{count} év"
-        date_year: "'YY. MMM D."
       medium_with_ago:
         x_minutes:
           one: "%{count} perce"

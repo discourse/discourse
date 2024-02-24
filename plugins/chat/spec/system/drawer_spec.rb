@@ -18,13 +18,13 @@ RSpec.describe "Drawer", type: :system do
     end
 
     context "when clicking channel title" do
-      it "opens channel info page" do
+      it "opens channel settings page" do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
         page.find(".c-navbar__channel-title").click
 
-        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/members")
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/settings")
       end
     end
   end

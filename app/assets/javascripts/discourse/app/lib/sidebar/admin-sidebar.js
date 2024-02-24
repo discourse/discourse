@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -89,7 +90,9 @@ function defineAdminSection(adminNavSectionData) {
     get links() {
       return this.sectionLinks.map(
         (sectionLinkData) =>
-          new SidebarAdminSectionLink({ adminSidebarNavLink: sectionLinkData })
+          new SidebarAdminSectionLink({
+            adminSidebarNavLink: sectionLinkData,
+          })
       );
     }
 
@@ -213,9 +216,15 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
 
+  @cached
   get sections() {
-    const currentUser = getOwnerWithFallback().lookup("service:current-user");
-    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
+    const session = getOwnerWithFallback(this).lookup("service:session");
     if (!currentUser.use_admin_sidebar) {
       return [];
     }
@@ -227,7 +236,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
-    navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+    if (!session.get("safe_mode")) {
+      navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+    }
 
     if (siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({

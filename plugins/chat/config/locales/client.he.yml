@@ -324,7 +324,7 @@ he:
         back: "חזרה"
         title: ערוצים
         filter_all: הכול
-        filter_open: נפתחו
+        filter_open: פתיחה
         filter_closed: סגורה
         filter_archived: בארכיון
         filter_input_placeholder: חיפוש ערוץ לפי שם

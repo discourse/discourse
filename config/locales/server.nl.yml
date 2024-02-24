@@ -124,6 +124,9 @@ nl:
       string_value_not_valid_min_max: "Deze moet tussen %{min} en %{max} tekens lang zijn."
       string_value_not_valid_min: "Deze moet minstens %{min} tekens lang zijn."
       string_value_not_valid_max: "Deze moet ten hoogste %{max} tekens lang zijn."
+      objects:
+        required: "mag niet leeg zijn"
+        not_valid_integer_value: "moet een integer zijn"
     locale_errors:
       top_level_locale: "De sleutel op het hoogste niveau in een taalbestand moet overeenkomen met de naam van de locale"
       invalid_yaml: "YAML van vertaling ongeldig"

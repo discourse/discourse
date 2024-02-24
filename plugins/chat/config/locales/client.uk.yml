@@ -336,7 +336,7 @@ uk:
         back: "Назад"
         title: Канали
         filter_all: Все
-        filter_open: Відкрито
+        filter_open: Відкрити
         filter_closed: Закриті
         filter_archived: Архівовано
         filter_input_placeholder: Пошук каналу за назвою

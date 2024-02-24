@@ -126,6 +126,19 @@ he:
       string_value_not_valid_min_max: "חייב להיות באורך של בין %{min} ל־%{max} תווים."
       string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות."
       string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר."
+      objects:
+        required: "חייב להיות מלא"
+        invalid_type: "%{type} זה לא סוג תקף"
+        not_valid_string_value: "חייב להיות מחרוזת"
+        not_valid_integer_value: "חייב להיות מספר שלם"
+        not_valid_float_value: "חייב להיות מספר עם נקודה עשרונית"
+        not_valid_boolean_value: "חייב להיות ערך בוליאני"
+        not_valid_enum_value: "חייב להיות אחד מהבאים: %{choices}"
+        string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות"
+        string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר"
+        number_value_not_valid_min: "חייב להיות גדול או שווה ל־%{min}"
+        number_value_not_valid_max: "חייב להיות קטן או שווה ל־%{max}"
+        string_value_not_valid_url: "חייבת להיות כתובת תקפה"
     locale_errors:
       top_level_locale: "המפתח העליון בקובץ הגדרות השפה חייב להתאים לשם השפה"
       invalid_yaml: "YAML התרגום פגום"
@@ -1000,7 +1013,7 @@ he:
       description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
     illegal:
-      title: "זה לא חוקי"
+      title: "לא חוקי"
       description: "הפוסט הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
       short_description: "זה לא חוקי"
       email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
@@ -1085,7 +1098,7 @@ he:
       email_title: 'הנושא „%{title}” דורש תשומת לב של מנחה'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      title: "זה לא חוקי"
+      title: "לא חוקי"
       description: "הנושא הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
       short_description: "זה לא חוקי"
       email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
@@ -1546,6 +1559,7 @@ he:
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
     category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
     ember_version_warning: "האתר פועל עם ההגדרה EMBER_VERSION=3 שאינה נתמכת. עלול להוביל לתקלות בלתי צפויות עם ערכות עיצוב/תוספים. נא להסיר את ההגדרה EMBER_VERSION מקובץ ה־app.yml ולבנות מחדש. כאן יש מידע נוסף <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
+    back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1720,6 +1734,7 @@ he:
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>)"
+    content_security_policy_strict_dynamic: "ניסיוני: להשתמש במדיניות אבטחת תוכן קשיחה-דינמית. יותר מודרני וגמיש מהגדרות ה־CSP שלנו כברירת מחדל. זה שימושי לחלוטית אבל עדיין לא נבדק מול כל ערכות העיצוב והתוספים."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -1950,6 +1965,7 @@ he:
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
     embedded_media_post_allowed_groups: "למשתמשים בקבוצות האלה מותר להטמיע פריטי מדיה בפוסט"
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
+    profile_background_allowed_groups: "קבוצות שמורשות להעלות רקע לפרופיל המשתמש."
     min_trust_level_to_allow_user_card_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לכרטיס המשתמש"
     user_card_background_allowed_groups: "קבוצות שמורשות להעלות רקע לכרטיס המשתמש."
     min_trust_level_to_allow_invite: "דרגת האמון המזערית הנדרשת להזמנת משתמשים"
@@ -2877,6 +2893,7 @@ he:
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"
+    illegal: "הפוסט שלך סומן כ**לא חוקי**: הקהילה חושבת שהוא כנראה עובר על החוק."
     spam: "הפוסט שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
     notify_moderators: "הפוסט שלך סומן בדגל **לתשומת לב מפקח**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של צוות האתר. "
     responder:

@@ -75,7 +75,7 @@ de:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D. MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "weniger als %{count} Min."
@@ -104,7 +104,7 @@ de:
         almost_x_years:
           one: "fast %{count} Jahr"
           other: "fast %{count} Jahre"
-        date_year: "D. MMM 'YY"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "vor %{count} Minute"
@@ -1734,6 +1734,9 @@ de:
         incorrect_password: "Das eingegebene Passwort ist falsch."
         incorrect_passkey: "Der Passkey ist falsch."
         logged_in_as: "Du bist angemeldet als: "
+        forgot_password: "Dein Passwort vergessen?"
+        password_reset_email_sent: "E-Mail zum Zurücksetzen des Passworts gesendet."
+        cannot_send_password_reset_email: "E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden."
         instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
         fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
       password:
@@ -3363,7 +3366,7 @@ de:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
           inappropriate: "Du hast das als „unangemessen“ gemeldet"
-          illegal: "Sie haben dies als illegal gemeldet"
+          illegal: "Du hast dies als illegal gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
       delete:

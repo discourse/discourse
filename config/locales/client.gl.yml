@@ -35,11 +35,8 @@ gl:
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do, MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
@@ -74,7 +71,7 @@ gl:
           one: "%{count}ano"
           other: "%{count}anos"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min."
@@ -85,7 +82,6 @@ gl:
         x_days:
           one: "%{count} día"
           other: "%{count} días"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "Hai %{count} min."

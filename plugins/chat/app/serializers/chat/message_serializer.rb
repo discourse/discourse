@@ -12,6 +12,7 @@ module Chat
       deleted_by_id
       thread_id
       chat_channel_id
+      streaming
     ]
     attributes(
       *(

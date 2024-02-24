@@ -107,6 +107,8 @@ id:
       string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
       string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
       string_value_not_valid_max: "Panjangnya harus maksimal %{max} karakter."
+      objects:
+        not_valid_integer_value: "harus integer"
     locale_errors:
       top_level_locale: "Kunci level teratas dalam file locale harus cocok dengan nama locale"
       invalid_yaml: "Terjemahan YAML tidak valid"

@@ -53,6 +53,10 @@ sl:
   components:
     enabled_filter: "Vključeno"
     disabled_filter: "Onemogočeno"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "mora biti celo število"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"

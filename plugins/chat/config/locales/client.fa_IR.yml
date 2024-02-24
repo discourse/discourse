@@ -151,7 +151,7 @@ fa_IR:
         back: "بازگشت"
         title: کانال‌ها
         filter_all: همه
-        filter_open: باز شد
+        filter_open: باز
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
