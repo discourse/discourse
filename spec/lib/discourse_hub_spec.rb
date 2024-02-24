@@ -33,6 +33,15 @@ RSpec.describe DiscourseHub do
     end
   end
 
+  describe ".discover_enrollment_payload" do
+    it "should return the correct payload" do
+      payload = DiscourseHub.discover_enrollment_payload
+      expect(payload[:forum_url]).to eq(Discourse.base_url)
+      expect(payload[:forum_title]).to eq(SiteSetting.title)
+      expect(payload[:locale]).to eq(I18n.locale)
+    end
+  end
+
   describe ".version_check_payload" do
     describe "when Discourse Hub has not fetched stats since past 7 days" do
       it "should include stats" do
