@@ -33,7 +33,7 @@
     <div class="install-theme-content">
       <ConditionalLoadingSection
         @isLoading={{this.loading}}
-        @title="Installing theme, this may take several minutes..."
+        @title={{i18n "admin.customize.theme.installing_message"}}
       >
         {{#if this.popular}}
           <div class="popular-theme-items">
