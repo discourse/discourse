@@ -15,7 +15,12 @@ module DiscourseHub
   end
 
   def self.discover_enrollment_payload
-    { include_in_discourse_discover: SiteSetting.include_in_discourse_discover? }
+    {
+      include_in_discourse_discover: SiteSetting.include_in_discourse_discover?,
+      forum_url: Discourse.base_url,
+      forum_title: SiteSetting.title,
+      locale: I18n.locale,
+    }
   end
 
   def self.discover_enrollment

@@ -9,6 +9,9 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addCustomHeaderClass } from "discourse/components/glimmer-header";
+import { addToHeaderIcons as addToGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
+import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
@@ -142,7 +145,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.26.0";
+export const PLUGIN_API_VERSION = "1.27.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -931,6 +934,10 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
+    // deprecated(
+    //   "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+    //   { id: "discourse.add-header-panel" }
+    // );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1775,17 +1782,36 @@ class PluginApi {
     addExtraIconRenderer(renderer);
   }
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * Adds a widget or a component to the header-icon ul.
+   *
+   * If adding a widget it must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
    * api.addToHeaderIcons(
-   *  createWidget('some-widget')
+   *  createWidget("some-widget")
+   * ```
+   *
+   * If adding a component you can pass the component directly. Additionally, you can
+   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * api.addToHeaderIcons(
+      <template>
+        <span>Icon</span>
+
+        <@panelPortal>
+          <div>Panel</div>
+        </@panelPortal>
+      </template>
+    );
    * ```
    *
    **/
   addToHeaderIcons(icon) {
     addToHeaderIcons(icon);
+    addToGlimmerHeaderIcons(icon);
   }
 
   /**
@@ -1965,6 +1991,7 @@ class PluginApi {
    */
   forceDropdownForMenuPanels(classNames) {
     forceDropdownForMenuPanels(classNames);
+    glimmerForceDropdownForMenuPanels(classNames);
   }
 
   /**
@@ -2774,6 +2801,19 @@ class PluginApi {
   addComposerImageWrapperButton(label, btnClass, icon, fn) {
     addImageWrapperButton(label, btnClass, icon);
     addApiImageWrapperButtonClickEvent(fn);
+  }
+
+  /**
+   * Add a custom css class to the header. The class or classes will live alongside the `d-header` class.
+   *
+   * ```
+   * api.addCustomHeaderClass("class-one");
+   * api.addCustomHeaderClass("class-two");
+   *
+   */
+
+  addCustomHeaderClass(klass) {
+    addCustomHeaderClass(klass);
   }
 }
 

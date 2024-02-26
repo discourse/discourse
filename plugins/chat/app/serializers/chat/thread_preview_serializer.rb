@@ -32,7 +32,7 @@ module Chat
     end
 
     def last_reply_user
-      object.last_message.user
+      object.last_message.user || Chat::NullUser.new
     end
 
     def include_participant_data?

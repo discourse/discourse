@@ -34,4 +34,13 @@ RSpec.describe Jobs::ProblemChecks do
       },
     ) { described_class.new.execute([]) }
   end
+
+  it "does not schedule non-scheduled checks" do
+    expect_not_enqueued_with(
+      job: :problem_check,
+      args: {
+        check_identifier: "non_scheduled_check",
+      },
+    ) { described_class.new.execute([]) }
+  end
 end

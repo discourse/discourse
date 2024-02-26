@@ -1,3 +1,4 @@
+// Deprecated in favor of app/assets/javascripts/discourse/app/services/docking.js
 import Mixin from "@ember/object/mixin";
 import { cancel } from "@ember/runloop";
 import discourseDebounce from "discourse-common/lib/debounce";
