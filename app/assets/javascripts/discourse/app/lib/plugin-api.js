@@ -9,7 +9,6 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addCustomHeaderClass } from "discourse/components/glimmer-header";
 import { addToHeaderIcons as addToGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
@@ -934,10 +933,10 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
-    // deprecated(
-    //   "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
-    //   { id: "discourse.add-header-panel" }
-    // );
+    deprecated(
+      "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+      { id: "discourse.add-header-panel" }
+    );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -2801,19 +2800,6 @@ class PluginApi {
   addComposerImageWrapperButton(label, btnClass, icon, fn) {
     addImageWrapperButton(label, btnClass, icon);
     addApiImageWrapperButtonClickEvent(fn);
-  }
-
-  /**
-   * Add a custom css class to the header. The class or classes will live alongside the `d-header` class.
-   *
-   * ```
-   * api.addCustomHeaderClass("class-one");
-   * api.addCustomHeaderClass("class-two");
-   *
-   */
-
-  addCustomHeaderClass(klass) {
-    addCustomHeaderClass(klass);
   }
 }
 

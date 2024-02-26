@@ -21,11 +21,6 @@ import PluginOutlet from "./plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
 
-let _customHeaderClasses = [];
-export function addCustomHeaderClass(className) {
-  _customHeaderClasses.push(className);
-}
-
 export default class GlimmerHeader extends Component {
   @service router;
   @service search;
@@ -52,10 +47,6 @@ export default class GlimmerHeader extends Component {
       );
     };
   });
-
-  get customHeaderClasses() {
-    return _customHeaderClasses.join(" ");
-  }
 
   @action
   headerKeyboardTrigger(msg) {
@@ -168,10 +159,7 @@ export default class GlimmerHeader extends Component {
   }
 
   <template>
-    <header
-      class={{concatClass this.customHeaderClasses "d-header"}}
-      {{this.appEventsListeners}}
-    >
+    <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
         <Contents
           @sidebarEnabled={{@sidebarEnabled}}
