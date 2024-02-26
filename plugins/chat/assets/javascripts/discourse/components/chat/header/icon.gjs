@@ -80,20 +80,22 @@ export default class ChatHeaderIcon extends Component {
   }
 
   <template>
-    <a
-      href={{this.href}}
-      tabindex="0"
-      class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
-      title={{this.title}}
-    >
-      {{~icon this.icon~}}
-      {{#if this.showUnreadIndicator}}
-        <ChatHeaderIconUnreadIndicator
-          @urgentCount={{@urgentCount}}
-          @unreadCount={{@unreadCount}}
-          @indicatorPreference={{@indicatorPreference}}
-        />
-      {{/if}}
-    </a>
+    <li class="header-dropdown-toggle chat-header-icon">
+      <a
+        href={{this.href}}
+        tabindex="0"
+        class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
+        title={{this.title}}
+      >
+        {{~icon this.icon~}}
+        {{#if this.showUnreadIndicator}}
+          <ChatHeaderIconUnreadIndicator
+            @urgentCount={{@urgentCount}}
+            @unreadCount={{@unreadCount}}
+            @indicatorPreference={{@indicatorPreference}}
+          />
+        {{/if}}
+      </a>
+    </li>
   </template>
 }
