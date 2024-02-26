@@ -1205,7 +1205,7 @@
   dependencies:
     ember-cli-babel "^7.26.6"
 
-"@ember/test-helpers@^3.2.1":
+"@ember/test-helpers@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-3.3.0.tgz#abf83ff2b111493d25266cb90327134498cb9090"
   integrity sha512-HEI28wtjnQuEj9+DstHUEEKPtqPAEVN9AAVr4EifVCd3DyEDy0m6hFT4qbap1WxAIktLja2QXGJg50lVWzZc5g==
