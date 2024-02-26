@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import Service from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
@@ -19,7 +18,6 @@ export default class SidebarState extends Service {
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
-  filteredOutSections = A([]);
 
   constructor() {
     super(...arguments);
@@ -68,10 +66,6 @@ export default class SidebarState extends Service {
   }
 
   clearFilter() {
-    const filteredOutSections = this.filteredOutSections.toArray();
-    filteredOutSections.forEach((section) =>
-      this.filteredOutSections.removeObject(section)
-    );
     this.filter = "";
   }
 }

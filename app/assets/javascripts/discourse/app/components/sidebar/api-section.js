@@ -17,18 +17,6 @@ export default class SidebarApiSection extends Component {
     }
     const shouldDisplay =
       this.sidebarState.filter.length === 0 || this.filteredLinks.length > 0;
-    const index = this.sidebarState.filteredOutSections.indexOf(
-      this.section.name
-    );
-    if (shouldDisplay) {
-      if (index !== -1) {
-        this.sidebarState.filteredOutSections.removeObject(this.section.name);
-      }
-    } else {
-      if (index === -1) {
-        this.sidebarState.filteredOutSections.pushObject(this.section.name);
-      }
-    }
     return shouldDisplay;
   }
 

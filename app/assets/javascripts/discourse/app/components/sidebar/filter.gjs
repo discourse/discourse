@@ -12,7 +12,6 @@ import { bind } from "discourse-common/utils/decorators";
 
 export default class Filter extends Component {
   @service sidebarState;
-  @tracked filteredOutSections = this.sidebarState.filteredOutSections;
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.filterable;
@@ -20,13 +19,6 @@ export default class Filter extends Component {
 
   get displayClearFilter() {
     return this.sidebarState.filter.length > 0;
-  }
-
-  get displayNoResults() {
-    return (
-      this.filteredOutSections.length ===
-      this.sidebarState.currentPanel.sections.length
-    );
   }
 
   @bind
@@ -61,9 +53,6 @@ export default class Filter extends Component {
           </DButton>
         {{/if}}
       </div>
-    {{/if}}
-
-    {{#if this.displayNoResults}}
       <div class="sidebar-no-results">
         <div class="sidebar-no-results__title">{{i18n
             "sidebar.no_results.title"

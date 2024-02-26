@@ -366,3 +366,11 @@
   &__description {
   }
 }
+.sidebar-no-results {
+  display: block;
+}
+.sidebar-sections:has(.sidebar-section-wrapper) {
+  .sidebar-no-results {
+    display: none;
+  }
+}
