@@ -255,10 +255,12 @@ const path = require("path");
       return page.type("#reply-control .d-editor-input", post);
     });
 
-    await exec("waiting for the preview", () => {
-      return page.waitForXPath(
-        "//div[contains(@class, 'd-editor-preview') and contains(.//p, 'I can even write a reply')]",
-        { visible: true }
+    await exec("waiting for the preview", async () => {
+      await page.waitForSelector("div.d-editor-preview", {
+        visible: true,
+      });
+      return page.waitForFunction(
+        "document.querySelector('div.d-editor-preview').innerText.includes('I can even write a reply')"
       );
     });
 
