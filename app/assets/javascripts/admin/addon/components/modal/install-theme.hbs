@@ -31,6 +31,7 @@
       </div>
     {{/unless}}
     <div class="install-theme-content">
+      <ConditionalLoadingSection @isLoading={{this.loading}} @title="Installing theme, this may take several minutes...">
       {{#if this.popular}}
         <div class="popular-theme-items">
           {{#each this.themes as |theme|}}
@@ -163,6 +164,7 @@
           <pre><code>{{this.uploadUrl}}</code></pre>
         </div>
       {{/if}}
+      </ConditionalLoadingSection>
     </div>
   </:body>
   <:footer>
