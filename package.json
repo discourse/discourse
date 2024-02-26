@@ -1,6 +1,6 @@
 {
   "name": "discourse",
-  "version": "1.0.0",
+  "private": true,
   "repository": "https://github.com/discourse/discourse",
   "author": "Discourse",
   "license": "GPL-2.0-only",
@@ -32,7 +32,9 @@
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
+    "patch-package": "^8.0.0",
     "pikaday": "1.8.2",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
     "puppeteer-core": "^21.0.3",
     "squoosh": "discourse/squoosh#dc9649d",
@@ -52,7 +54,30 @@
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "yarn lttf:output && npx html-pages ./lint-progress --no-cache",
-    "postinstall": "yarn --cwd app/assets/javascripts $(node -e 'const argv = JSON.parse(process.env.npm_config_argv).original; const passthrough = [`--frozen-lockfile`, `-s`].filter(arg => argv.includes(arg)); console.log(passthrough.join(` `));')"
+    "postinstall": "./app/assets/javascripts/run-patch-package && rm -rf app/assets/javascripts/node_modules"
+  },
+  "workspaces": [
+    "app/assets/javascripts/admin",
+    "app/assets/javascripts/bootstrap-json",
+    "app/assets/javascripts/deprecation-silencer",
+    "app/assets/javascripts/dialog-holder",
+    "app/assets/javascripts/discourse",
+    "app/assets/javascripts/discourse-common",
+    "app/assets/javascripts/discourse-hbr",
+    "app/assets/javascripts/discourse-i18n",
+    "app/assets/javascripts/discourse-markdown-it",
+    "app/assets/javascripts/discourse-plugins",
+    "app/assets/javascripts/discourse-widget-hbs",
+    "app/assets/javascripts/ember-cli-progress-ci",
+    "app/assets/javascripts/ember-production-deprecations",
+    "app/assets/javascripts/float-kit",
+    "app/assets/javascripts/pretty-text",
+    "app/assets/javascripts/select-kit",
+    "app/assets/javascripts/theme-transpiler",
+    "app/assets/javascripts/truth-helpers"
+  ],
+  "resolutions": {
+    "**/unset-value": "2.0.1"
   },
   "engines": {
     "node": "16.* || >= 18",
