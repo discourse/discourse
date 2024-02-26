@@ -1,106 +1,10 @@
-import { click, render } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
-import AdminThemeSettingSchema from "admin/components/admin-theme-setting-schema";
-
-const schema = {
-  name: "level1",
-  identifier: "name",
-  properties: {
-    name: {
-      type: "string",
-    },
-    children: {
-      type: "objects",
-      schema: {
-        name: "level2",
-        identifier: "name",
-        properties: {
-          name: {
-            type: "string",
-          },
-          grandchildren: {
-            type: "objects",
-            schema: {
-              name: "level3",
-              identifier: "name",
-              properties: {
-                name: {
-                  type: "string",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-const data = [
-  {
-    name: "item 1",
-    children: [
-      {
-        name: "child 1-1",
-        grandchildren: [
-          {
-            name: "grandchild 1-1-1",
-          },
-          {
-            name: "grandchild 1-1-2",
-          },
-        ],
-      },
-      {
-        name: "child 1-2",
-        grandchildren: [
-          {
-            name: "grandchild 1-2-1",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "item 2",
-    children: [
-      {
-        name: "child 2-1",
-        grandchildren: [
-          {
-            name: "grandchild 2-1-1",
-          },
-          {
-            name: "grandchild 2-1-2",
-          },
-        ],
-      },
-      {
-        name: "child 2-2",
-        grandchildren: [
-          {
-            name: "grandchild 2-2-1",
-          },
-          {
-            name: "grandchild 2-2-2",
-          },
-          {
-            name: "grandchild 2-2-3",
-          },
-          {
-            name: "grandchild 2-2-4",
-          },
-        ],
-      },
-      {
-        name: "child 2-3",
-        grandchildren: [],
-      },
-    ],
-  },
-];
+import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
 
 class TreeFromDOM {
   constructor() {
@@ -130,14 +34,33 @@ class TreeFromDOM {
   }
 }
 
+class InputFieldsFromDOM {
+  constructor() {
+    this.refresh();
+  }
+
+  refresh() {
+    this.fields = {};
+    this.count = 0;
+    [...queryAll(".schema-field")].forEach((field) => {
+      this.count += 1;
+      this.fields[field.dataset.name] = {
+        labelElement: field.querySelector("label"),
+        inputElement: field.querySelector(".input").children[0],
+      };
+    });
+  }
+}
+
 module(
-  "Integration | Component | admin-theme-settings-schema",
+  "Integration | Admin | Component | schema-theme-setting/editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("activates the first node by default", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -148,8 +71,9 @@ module(
     });
 
     test("renders the 2nd level of nested items for the active item only", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -188,8 +112,9 @@ module(
     });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -264,8 +189,9 @@ module(
     });
 
     test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       assert.dom(".back-button").doesNotExist();
@@ -297,8 +223,9 @@ module(
     });
 
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -322,8 +249,9 @@ module(
     });
 
     test("the back button label includes the name of the item at the previous level", async function (assert) {
+      const [schema, data] = schemaAndData(1);
       await render(<template>
-        <AdminThemeSettingSchema @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -354,6 +282,142 @@ module(
           name: "item 2",
         })
       );
+    });
+
+    test("input fields for items at different levels", async function (assert) {
+      const [schema, data] = schemaAndData(2);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
+
+      assert.dom(inputFields.fields.name.inputElement).hasValue("nice section");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("arrow");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      inputFields.refresh();
+      tree.refresh();
+
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
+
+      assert.dom(inputFields.fields.name.inputElement).hasValue("cool section");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("bell");
+
+      await click(tree.nodes[1].children[0].element);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(inputFields.count, 3);
+      assert.dom(inputFields.fields.text.labelElement).hasText("text");
+      assert.dom(inputFields.fields.url.labelElement).hasText("url");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
+
+      assert.dom(inputFields.fields.text.inputElement).hasValue("About");
+      assert
+        .dom(inputFields.fields.url.inputElement)
+        .hasValue("https://example.com/about");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("asterisk");
+    });
+
+    test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
+      const [schema, data] = schemaAndData(2);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const tree = new TreeFromDOM();
+
+      await fillIn(
+        inputFields.fields.name.inputElement,
+        "nice section is really nice"
+      );
+
+      assert.dom(tree.nodes[0].element).hasText("nice section is really nice");
+
+      await click(tree.nodes[0].children[0].element);
+
+      inputFields.refresh();
+      tree.refresh();
+
+      await fillIn(
+        inputFields.fields.text.inputElement,
+        "Security instead of Privacy"
+      );
+
+      assert.dom(tree.nodes[0].element).hasText("Security instead of Privacy");
+    });
+
+    test("edits are remembered when navigating between levels", async function (assert) {
+      const [schema, data] = schemaAndData(2);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const tree = new TreeFromDOM();
+
+      await fillIn(
+        inputFields.fields.name.inputElement,
+        "changed section name"
+      );
+
+      await click(tree.nodes[1].element);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      await fillIn(
+        inputFields.fields.name.inputElement,
+        "cool section is no longer cool"
+      );
+
+      await click(tree.nodes[1].children[1].element);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.dom(".back-button").hasText(
+        I18n.t("admin.customize.theme.schema.back_button", {
+          name: "cool section is no longer cool",
+        })
+      );
+
+      await fillIn(inputFields.fields.text.inputElement, "Talk to us");
+
+      await click(".back-button");
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.dom(tree.nodes[0].element).hasText("changed section name");
+      assert
+        .dom(tree.nodes[1].element)
+        .hasText("cool section is no longer cool");
+
+      assert.dom(tree.nodes[1].children[0].element).hasText("About");
+      assert.dom(tree.nodes[1].children[1].element).hasText("Talk to us");
+
+      assert
+        .dom(inputFields.fields.name.inputElement)
+        .hasValue("cool section is no longer cool");
+
+      await click(tree.nodes[1].children[1].element);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
     });
   }
 );
