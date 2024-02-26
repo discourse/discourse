@@ -11,11 +11,24 @@
 
   .chat-channel-icon {
     grid-area: avatar;
+    position: relative;
 
     .avatar {
       width: var(--channel-list-avatar-size);
       height: var(--channel-list-avatar-size);
     }
+  }
+
+  .avatar-flair.--threads {
+    position: absolute;
+    top: -4px;
+    right: -3px;
+    background: var(--primary-low);
+    border-radius: 50%;
+    padding: 0.2em;
+    line-height: var(--line-height-small);
+    border: 2px solid var(--secondary-very-high);
+    color: var(--primary-high);
   }
 
   .chat__thread-title-container {

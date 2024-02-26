@@ -54,6 +54,9 @@ export default class ChatChannelIcon extends Component {
             @user={{@channel.originalMessage.user}}
             @interactive={{false}}
           />
+          <div class="avatar-flair --threads">
+            {{icon "discourse-threads"}}
+          </div>
         </div>
       </div>
     {{/if}}
