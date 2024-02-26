@@ -967,7 +967,10 @@ class PluginApi {
   addHeaderPanel(name, toggle, transformAttrs) {
     deprecated(
       "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
-      { id: "discourse.add-header-panel" }
+      {
+        id: "discourse.add-header-panel",
+        url: "https://meta.discourse.org/t/296544",
+      }
     );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
