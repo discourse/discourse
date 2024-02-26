@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import Ember from "ember";
 import { actionModifier } from "./ember-action-modifier";
-import { EMBER_MAJOR_VERSION } from "./ember-version";
 
 /**
  * Classic Ember components (i.e. "@ember/component") rely upon "event
@@ -127,16 +126,13 @@ function rewireClassicComponentEvents(app) {
     allEventMethods[methodName] = event;
   }
 
-  const triggerOverrideMethod =
-    EMBER_MAJOR_VERSION < 4 ? "trigger" : "_trigger";
-
   // Avoid Component.reopen to stop `ember.component.reopen` deprecation warning
   EmberObject.reopen.call(Component, {
     /**
      * @param {string | typeof INTERNAL} name
      * @param {unknown[]} args
      */
-    [triggerOverrideMethod](name, ...args) {
+    _trigger(name, ...args) {
       if (name === INTERNAL) {
         if (this.element) {
           return this._super.call(this, ...args);
