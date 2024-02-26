@@ -29,13 +29,25 @@
       }
 
       &.-member {
-        .chat-user-avatar,
-        .chat-user-display-name {
+        .chat-user-avatar {
           margin-right: 0.5rem;
         }
 
-        .user-status-message-description {
+        .chat-user-display-name span:not(.-first) {
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
+          margin-left: 0.5rem;
+        }
+
+        .user-status-message {
           color: var(--primary-medium);
+          font-size: var(--font-down-2);
+          margin-left: 0.5rem;
+
+          .emoji {
+            height: var(--font-0);
+            width: var(--font-0);
+          }
         }
       }
 
