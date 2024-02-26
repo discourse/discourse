@@ -265,7 +265,7 @@ const path = require("path");
     });
 
     await exec("wait a little bit", () => {
-      return page.waitForTimeout(5000);
+      return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
     await exec("submit the reply", () => {
@@ -298,7 +298,7 @@ const path = require("path");
     });
 
     await exec("wait a little bit", () => {
-      return page.waitForTimeout(5000);
+      return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
     await exec("open composer to edit first post", () => {
@@ -320,7 +320,7 @@ const path = require("path");
     });
 
     await exec("update post raw in composer", () => {
-      let promise = page.waitForTimeout(5000);
+      let promise = new Promise((resolve) => setTimeout(resolve, 5000));
 
       promise = promise.then(() => {
         return page.type(
