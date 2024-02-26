@@ -12,7 +12,7 @@ require "monitor"
 # structures:
 #
 # `@flattened' is a Hash from [site, key] -> value
-# `@nested' is a Hash from site -> Hash from key -> value
+# `@nested' is a Hash from site -> Hash from key -> true
 #
 # In both cases, we exploit the ordered property of ruby hashes. `#shift` on a
 # hash pops the least recently inserted key-value pair. If all accesses delete
@@ -53,7 +53,7 @@ class SiteCache
 
       if found
         @flattened[[site_id, key]] = value
-        replace_nested(site_id, key, value)
+        replace_nested(site_id, key)
       else
         insert_non_existent(site_id, key, value)
       end
@@ -69,7 +69,7 @@ class SiteCache
 
       if found
         @flattened[[site_id, key]] = value
-        replace_nested(site_id, key, value)
+        replace_nested(site_id, key)
         value
       else
         nil
@@ -84,7 +84,7 @@ class SiteCache
 
       if found
         @flattened[[site_id, key]] = value
-        replace_nested(site_id, key, value)
+        replace_nested(site_id, key)
         value
       else
         value = yield
@@ -185,7 +185,7 @@ class SiteCache
   def insert_non_existent(site_id, key, value)
     @flattened[[site_id, key]] = value
     site_hash = (@nested[site_id] ||= {})
-    site_hash[key] = value
+    site_hash[key] = true
 
     while site_hash.size > @max_size_per_site
       evicted_key = site_hash.shift.first
@@ -198,10 +198,10 @@ class SiteCache
     end
   end
 
-  def replace_nested(site_id, key, value)
+  def replace_nested(site_id, key)
     site_hash = @nested[site_id]
     site_hash.delete(key)
-    site_hash[key] = value
+    site_hash[key] = true
   end
 
   def delete_nested(site_id, key)
