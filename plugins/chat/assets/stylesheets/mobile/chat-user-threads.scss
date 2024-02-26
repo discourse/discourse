@@ -1,49 +1,47 @@
-.c-user-threads {
-  .chat__thread-title {
-    justify-content: space-between;
-  }
-}
-
 .c-user-thread {
-  margin-inline: 1.5rem;
-  padding-block: 0.5rem;
+  display: grid;
+  grid-template-areas:
+    "avatar title timestamp"
+    "avatar category indicator"
+    "avatar excerpt excerpt";
+  grid-template-columns: auto 1fr auto;
+  grid-column-gap: 0.75em;
+  margin-inline: 0;
+  padding: 0.5rem 1.5rem;
 
-  .chat-message-thread-indicator__last-reply-avatar,
-  .chat-message-thread-indicator__last-reply-username,
-  .chat-message-thread-indicator__replies-count,
-  .chat-message-thread-indicator__last-reply-excerpt {
-    display: none;
+  .chat-channel-icon {
+    grid-area: avatar;
+
+    .avatar {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+    }
   }
 
-  .chat-message-thread-indicator {
-    grid-template-areas: "participants info";
-    background-color: unset;
-    margin-top: 0.5rem;
-    padding: 0;
+  .chat__thread-title-container {
+    @include ellipsis;
+    grid-area: title;
+    .chat__thread-title {
+      // justify-content: space-between;
+      &__name {
+        @include ellipsis;
+      }
+    }
   }
 
-  .chat-thread-participants {
-    justify-content: flex-start;
-    margin: 0;
-  }
-
-  .chat-message-thread-indicator__last-reply-info {
-    margin-left: auto;
-  }
-
-  .chat-user-avatar:not(:last-child) {
-    margin-right: -6px;
+  .chat-channel-title {
+    grid-area: category;
   }
 
   .chat-message-thread-indicator__last-reply-timestamp {
+    grid-area: timestamp;
     font-size: var(--font-down-2-rem);
+    align-self: center;
   }
-}
 
-.chat-thread-list-item {
-  padding-block: 0.5rem;
-
-  .chat-thread-list-item__title {
-    font-size: var(--font-up-1-rem);
+  .c-user-thread__excerpt {
+    @include ellipsis;
+    grid-area: excerpt;
+    padding-top: 0.25em;
   }
 }

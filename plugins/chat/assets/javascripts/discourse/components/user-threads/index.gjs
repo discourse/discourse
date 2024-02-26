@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import formatDate from "discourse/helpers/format-date";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
-import ThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ThreadTitle from "discourse/plugins/chat/discourse/components/thread-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
@@ -41,14 +42,15 @@ export default class UserThreads extends Component {
     >
       <list.Item as |thread|>
         <div class="c-user-thread" data-id={{thread.id}}>
+          <ChannelIcon @channel={{thread}} />
           <ThreadTitle @thread={{thread}} />
           <ChannelTitle @channel={{thread.channel}} />
-          <ThreadIndicator
-            @message={{thread.originalMessage}}
-            @interactiveUser={{false}}
-            @interactiveThread={{false}}
-            tabindex="-1"
-          />
+          <span class="chat-message-thread-indicator__last-reply-timestamp">
+            {{formatDate thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+          </span>
+          <div class="c-user-thread__excerpt">
+            {{thread.preview.lastReplyExcerpt}}
+          </div>
         </div>
       </list.Item>
       <list.EmptyState>
