@@ -157,8 +157,7 @@ class AdminDashboardData
                       :unreachable_themes,
                       :watched_words_check,
                       :google_analytics_version_check,
-                      :translation_overrides_check,
-                      :ember_version_check
+                      :translation_overrides_check
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -380,10 +379,6 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def ember_version_check
-    I18n.t("dashboard.ember_version_warning") if ENV["EMBER_VERSION"] == "3"
   end
 
   def out_of_date_themes
