@@ -25,7 +25,7 @@
     "node-fetch": "^3.3.2"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }

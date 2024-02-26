@@ -20,7 +20,7 @@
     "webpack": "^5.90.3"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }
