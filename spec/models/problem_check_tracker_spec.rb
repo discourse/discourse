@@ -59,15 +59,7 @@ RSpec.describe ProblemCheckTracker do
       }
     end
 
-    let(:updated_attributes) do
-      {
-        blips: 1,
-        last_problem_at: Time.current,
-        last_success_at: 24.hours.ago,
-        last_run_at: Time.current,
-        next_run_at: 24.hours.from_now,
-      }
-    end
+    let(:updated_attributes) { { blips: 1 } }
 
     it do
       freeze_time
@@ -93,15 +85,7 @@ RSpec.describe ProblemCheckTracker do
       }
     end
 
-    let(:updated_attributes) do
-      {
-        blips: 0,
-        last_problem_at: 1.week.ago,
-        last_success_at: Time.current,
-        last_run_at: Time.current,
-        next_run_at: 24.hours.from_now,
-      }
-    end
+    let(:updated_attributes) { { blips: 0 } }
 
     it do
       freeze_time
