@@ -300,7 +300,7 @@ createWidget("header-icons", {
 });
 
 createWidget("header-buttons", {
-  tagName: "span.header-buttons",
+  tagName: "span.auth-buttons",
 
   html(attrs) {
     if (this.currentUser) {
@@ -535,7 +535,22 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [this.attach("header-buttons", attrs), headerIcons];
+      const panels = [
+        h("span.header-buttons", [
+          new RenderGlimmer(
+            this,
+            "span.before-header-buttons",
+            hbs`<PluginOutlet @name="before-header-buttons"/>`
+          ),
+          this.attach("header-buttons", attrs),
+          new RenderGlimmer(
+            this,
+            "span.after-header-buttons",
+            hbs`<PluginOutlet @name="after-header-buttons"/>`
+          ),
+        ]),
+        headerIcons,
+      ];
 
       if (this.search.visible) {
         this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;
