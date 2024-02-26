@@ -31,7 +31,10 @@
       </div>
     {{/unless}}
     <div class="install-theme-content">
-      <ConditionalLoadingSection @isLoading={{this.loading}} @title="Installing theme, this may take several minutes...">
+      <ConditionalLoadingSection
+        @isLoading={{this.loading}}
+        @title="Installing theme, this may take several minutes..."
+      >
         {{#if this.popular}}
           <div class="popular-theme-items">
             {{#each this.themes as |theme|}}
@@ -141,9 +144,13 @@
         {{/if}}
         {{#if this.create}}
           <div class="inputs">
-            <div class="label">{{i18n "admin.customize.theme.create_name"}}</div>
+            <div class="label">{{i18n
+                "admin.customize.theme.create_name"
+              }}</div>
             <Input @value={{this.name}} placeholder={{this.placeholder}} />
-            <div class="label">{{i18n "admin.customize.theme.create_type"}}</div>
+            <div class="label">{{i18n
+                "admin.customize.theme.create_type"
+              }}</div>
             <ComboBox
               @valueProperty="value"
               @content={{this.createTypes}}
@@ -157,7 +164,8 @@
             <div class="label">
               {{html-safe
                 (i18n
-                  "admin.customize.theme.direct_install_tip" name=this.uploadName
+                  "admin.customize.theme.direct_install_tip"
+                  name=this.uploadName
                 )
               }}
             </div>
