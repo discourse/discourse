@@ -80,6 +80,7 @@
       padding: 0.5em 0;
       width: 2.5em;
       transition: background 0.2s, border-color 0.2s;
+      border-radius: var(--d-border-radius);
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px;
 
