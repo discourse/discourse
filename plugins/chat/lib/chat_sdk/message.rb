@@ -100,10 +100,7 @@ module ChatSDK
         on_failed_policy(:can_stop_streaming) do
           raise "User with id: `#{guardian.user.id}` can't stop streaming this message"
         end
-        on_failure do
-          p Chat::StepsInspector.new(result)
-          raise "Unexpected error"
-        end
+        on_failure { raise "Unexpected error" }
       end
     end
 
@@ -142,10 +139,7 @@ module ChatSDK
           end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
           on_success { result.message_instance }
-          on_failure do
-            p Chat::StepsInspector.new(result)
-            raise "Unexpected error"
-          end
+          on_failure { raise "Unexpected error" }
         end
 
       if streaming && block_given?
@@ -183,12 +177,7 @@ module ChatSDK
         message: self.message.message + raw,
         guardian: self.guardian,
         streaming: true,
-      ) do
-        on_failure do
-          p Chat::StepsInspector.new(result)
-          raise "Unexpected error"
-        end
-      end
+      ) { on_failure { raise "Unexpected error" } }
 
       self.message
     end
