@@ -47,20 +47,10 @@ export default class Filter extends Component {
           {{on "input" this.setFilter}}
         />
         {{#if this.displayClearFilter}}
-
           <DButton @action={{this.clearFilter}} class="sidebar-filter__clear">
             {{dIcon "times"}}
           </DButton>
         {{/if}}
-      </div>
-      <div class="sidebar-no-results">
-        <div class="sidebar-no-results__title">{{i18n
-            "sidebar.no_results.title"
-          }}</div>
-        <div class="sidebar-no-results__description">{{i18n
-            "sidebar.no_results.description"
-            filter=this.sidebarState.filter
-          }}</div>
       </div>
     {{/if}}
   </template>
