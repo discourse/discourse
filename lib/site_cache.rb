@@ -95,7 +95,6 @@ class SiteCache
   end
 
   def getset_bulk(site_id, keys, key_blk, &blk)
-    result = {}
     synchronize do
       hash = @nested[site_id] || {}
       missing_keys = keys.select { |key| !hash.key?(key_blk.call(key)) }
