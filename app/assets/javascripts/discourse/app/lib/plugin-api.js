@@ -146,6 +146,18 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 export const PLUGIN_API_VERSION = "1.27.0";
 
+const DEPRECATED_HEADER_WIDGETS = [
+  "header",
+  "site-header",
+  "header-contents",
+  "header-buttons",
+  "user-status-bubble",
+  "sidebar-toggle",
+  "header-icons",
+  "header-topic-info",
+  "header-notifications",
+];
+
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
@@ -182,6 +194,19 @@ function wrapWithErrorHandler(func, messageKey) {
       return;
     }
   };
+}
+
+function deprecatedHeaderWidgetOverride(widgetName, override) {
+  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+    deprecated(
+      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+      {
+        since: "v3.3.0.beta1-dev",
+        id: "discourse.header-widget-overrides",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
+  }
 }
 
 class PluginApi {
@@ -527,6 +552,9 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    const widgetName = name.split(":")[0];
+    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+
     decorateWidget(name, fn);
   }
 
@@ -555,6 +583,8 @@ class PluginApi {
       );
       return;
     }
+
+    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -873,6 +903,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
+    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -906,6 +937,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
+    deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
