@@ -24,6 +24,7 @@
         "name": { "type": "string" },
         "avatar_template": { "type": "string" },
         "username": { "type": "string" },
+        "custom_fields": { "type": ["object", "null"] },
         "can_chat": { "type": "boolean" },
         "has_chat_enabled": { "type": "boolean" }
       }
