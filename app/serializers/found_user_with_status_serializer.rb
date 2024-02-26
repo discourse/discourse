@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
 class FoundUserWithStatusSerializer < FoundUserSerializer
-  attributes :status
+  include UserStatusMixin
 
-  def include_status?
-    SiteSetting.enable_user_status && object.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(object.user_status, root: false)
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
   end
 end
