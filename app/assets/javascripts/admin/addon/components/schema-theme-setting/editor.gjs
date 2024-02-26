@@ -1,20 +1,25 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import I18n from "discourse-i18n";
+import FieldInput from "./field";
 
 class Node {
-  text = null;
-  index = null;
+  @tracked text;
+  object;
+  schema;
+  index;
   active = false;
   trees = [];
 
-  constructor({ text, index }) {
+  constructor({ text, index, object, schema }) {
     this.text = text;
     this.index = index;
+    this.object = object;
+    this.schema = schema;
   }
 }
 
@@ -23,11 +28,12 @@ class Tree {
   nodes = [];
 }
 
-export default class AdminThemeSettingSchema extends Component {
+export default class SchemaThemeSettingEditor extends Component {
   @tracked activeIndex = 0;
   @tracked backButtonText;
   history = [];
 
+  @cached
   get tree() {
     let schema = this.args.schema;
     let data = this.args.data;
@@ -38,15 +44,19 @@ export default class AdminThemeSettingSchema extends Component {
     }
 
     const tree = new Tree();
-    const idProperty = schema.identifier;
-    const childObjectsProperties = this.findChildObjectsProperties(
-      schema.properties
-    );
 
-    data.forEach((obj, index) => {
-      const node = new Node({ text: obj[idProperty], index });
+    data.forEach((object, index) => {
+      const node = new Node({
+        index,
+        schema,
+        object,
+        text: object[schema.identifier],
+      });
       if (index === this.activeIndex) {
         node.active = true;
+        const childObjectsProperties = this.findChildObjectsProperties(
+          schema.properties
+        );
         for (const childObjectsProperty of childObjectsProperties) {
           const subtree = new Tree();
           subtree.propertyName = childObjectsProperty.name;
@@ -54,8 +64,10 @@ export default class AdminThemeSettingSchema extends Component {
             (childObj, childIndex) => {
               subtree.nodes.push(
                 new Node({
-                  text: childObj[childObjectsProperty.idProperty],
+                  text: childObj[childObjectsProperty.schema.identifier],
                   index: childIndex,
+                  object: childObj,
+                  schema: childObjectsProperty.schema,
                 })
               );
             }
@@ -68,14 +80,36 @@ export default class AdminThemeSettingSchema extends Component {
     return tree;
   }
 
+  @cached
+  get activeNode() {
+    return this.tree.nodes.find((node, index) => {
+      return index === this.activeIndex;
+    });
+  }
+
+  get fields() {
+    const node = this.activeNode;
+    const list = [];
+    for (const [name, spec] of Object.entries(node.schema.properties)) {
+      if (spec.type === "objects") {
+        continue;
+      }
+      list.push({
+        name,
+        type: spec.type,
+        value: node.object[name],
+      });
+    }
+    return list;
+  }
+
   findChildObjectsProperties(properties) {
     const list = [];
     for (const [name, spec] of Object.entries(properties)) {
       if (spec.type === "objects") {
-        const subIdProperty = spec.schema.identifier;
         list.push({
           name,
-          idProperty: subIdProperty,
+          schema: spec.schema,
         });
       }
     }
@@ -110,6 +144,14 @@ export default class AdminThemeSettingSchema extends Component {
     } else {
       this.backButtonText = null;
     }
+  }
+
+  @action
+  inputFieldChanged(field, newVal) {
+    if (field.name === this.activeNode.schema.identifier) {
+      this.activeNode.text = newVal;
+    }
+    this.activeNode.object[field.name] = newVal;
   }
 
   <template>
@@ -149,6 +191,14 @@ export default class AdminThemeSettingSchema extends Component {
           </div>
         {{/each}}
       </ul>
+      {{#each this.fields as |field|}}
+        <FieldInput
+          @name={{field.name}}
+          @type={{field.type}}
+          @value={{field.value}}
+          @onValueChange={{fn this.inputFieldChanged field}}
+        />
+      {{/each}}
     </div>
   </template>
 }
