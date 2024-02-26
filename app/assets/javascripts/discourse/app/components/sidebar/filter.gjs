@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -56,13 +55,10 @@ export default class Filter extends Component {
           {{on "input" this.setFilter}}
         />
         {{#if this.displayClearFilter}}
-          <a
-            title={{i18n "sidebar.clear_filter"}}
-            class="sidebar-filter__clear"
-            {{on "click" this.clearFilter}}
-          >
+
+          <DButton @action={{this.clearFilter}} class="sidebar-filter__clear">
             {{dIcon "times"}}
-          </a>
+          </DButton>
         {{/if}}
       </div>
     {{/if}}

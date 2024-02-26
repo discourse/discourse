@@ -307,7 +307,7 @@
   }
 }
 
-.sidebar-filter {
+#d-sidebar .sidebar-filter {
   padding-right: 0.25rem;
   margin: 0 var(--d-sidebar-row-horizontal-padding) 1.35em
     var(--d-sidebar-row-horizontal-padding);
@@ -342,8 +342,18 @@
 
   &__clear {
     color: var(--primary-medium);
-    &:hover {
+    background-color: var(--secondary);
+    &:hover,
+    &.active {
       color: var(--primary-high);
+      background-color: var(--secondary);
+    }
+    svg {
+      color: var(--primary-medium);
+      &:hover,
+      &.active {
+        color: var(--primary-high);
+      }
     }
   }
 }
