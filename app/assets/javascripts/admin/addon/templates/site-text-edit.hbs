@@ -24,6 +24,7 @@
   {{/if}}
 
   <ExpandingTextArea
+    {{on "input" (action (mut this.buffered.value) value="target.value")}}
     value={{this.buffered.value}}
     rows="1"
     class="site-text-value"

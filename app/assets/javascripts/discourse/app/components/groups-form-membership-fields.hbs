@@ -42,6 +42,12 @@
       </label>
 
       <ExpandingTextArea
+        {{on
+          "input"
+          (action
+            (mut this.model.membership_request_template) value="target.value"
+          )
+        }}
         value={{this.model.membership_request_template}}
         name="membership-request-template"
         class="group-form-membership-request-template input-xxlarge"
