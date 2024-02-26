@@ -290,43 +290,43 @@ module(
         <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
-      const container = new InputFieldsFromDOM();
+      const inputFields = new InputFieldsFromDOM();
 
-      assert.strictEqual(container.count, 2);
-      assert.dom(container.fields.name.labelElement).hasText("name");
-      assert.dom(container.fields.icon.labelElement).hasText("icon");
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
 
-      assert.dom(container.fields.name.inputElement).hasValue("nice section");
-      assert.dom(container.fields.icon.inputElement).hasValue("arrow");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("nice section");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("arrow");
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
 
-      container.refresh();
+      inputFields.refresh();
       tree.refresh();
 
-      assert.strictEqual(container.count, 2);
-      assert.dom(container.fields.name.labelElement).hasText("name");
-      assert.dom(container.fields.icon.labelElement).hasText("icon");
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
 
-      assert.dom(container.fields.name.inputElement).hasValue("cool section");
-      assert.dom(container.fields.icon.inputElement).hasValue("bell");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("cool section");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("bell");
 
       await click(tree.nodes[1].children[0].element);
 
       tree.refresh();
-      container.refresh();
+      inputFields.refresh();
 
-      assert.strictEqual(container.count, 3);
-      assert.dom(container.fields.text.labelElement).hasText("text");
-      assert.dom(container.fields.url.labelElement).hasText("url");
-      assert.dom(container.fields.icon.labelElement).hasText("icon");
+      assert.strictEqual(inputFields.count, 3);
+      assert.dom(inputFields.fields.text.labelElement).hasText("text");
+      assert.dom(inputFields.fields.url.labelElement).hasText("url");
+      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
 
-      assert.dom(container.fields.text.inputElement).hasValue("About");
+      assert.dom(inputFields.fields.text.inputElement).hasValue("About");
       assert
-        .dom(container.fields.url.inputElement)
+        .dom(inputFields.fields.url.inputElement)
         .hasValue("https://example.com/about");
-      assert.dom(container.fields.icon.inputElement).hasValue("asterisk");
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("asterisk");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
@@ -335,11 +335,11 @@ module(
         <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
-      const container = new InputFieldsFromDOM();
+      const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
 
       await fillIn(
-        container.fields.name.inputElement,
+        inputFields.fields.name.inputElement,
         "nice section is really nice"
       );
 
@@ -347,11 +347,11 @@ module(
 
       await click(tree.nodes[0].children[0].element);
 
-      container.refresh();
+      inputFields.refresh();
       tree.refresh();
 
       await fillIn(
-        container.fields.text.inputElement,
+        inputFields.fields.text.inputElement,
         "Security instead of Privacy"
       );
 
@@ -364,25 +364,28 @@ module(
         <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
       </template>);
 
-      const container = new InputFieldsFromDOM();
+      const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
 
-      await fillIn(container.fields.name.inputElement, "changed section name");
+      await fillIn(
+        inputFields.fields.name.inputElement,
+        "changed section name"
+      );
 
       await click(tree.nodes[1].element);
 
       tree.refresh();
-      container.refresh();
+      inputFields.refresh();
 
       await fillIn(
-        container.fields.name.inputElement,
+        inputFields.fields.name.inputElement,
         "cool section is no longer cool"
       );
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
-      container.refresh();
+      inputFields.refresh();
 
       assert.dom(".back-button").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
@@ -390,12 +393,12 @@ module(
         })
       );
 
-      await fillIn(container.fields.text.inputElement, "Talk to us");
+      await fillIn(inputFields.fields.text.inputElement, "Talk to us");
 
       await click(".back-button");
 
       tree.refresh();
-      container.refresh();
+      inputFields.refresh();
 
       assert.dom(tree.nodes[0].element).hasText("changed section name");
       assert
@@ -406,15 +409,15 @@ module(
       assert.dom(tree.nodes[1].children[1].element).hasText("Talk to us");
 
       assert
-        .dom(container.fields.name.inputElement)
+        .dom(inputFields.fields.name.inputElement)
         .hasValue("cool section is no longer cool");
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
-      container.refresh();
+      inputFields.refresh();
 
-      assert.dom(container.fields.text.inputElement).hasValue("Talk to us");
+      assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
     });
   }
 );
