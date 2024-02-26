@@ -8,21 +8,19 @@ export default class AuthButtons extends Component {
   @service header;
 
   <template>
-    <span class="header-buttons">
-      {{#if (and @canSignUp (not this.header.topic))}}
-        <DButton
-          class="btn-primary btn-small sign-up-button"
-          @action={{@showCreateAccount}}
-          @label="sign_up"
-        />
-      {{/if}}
-
+    {{#if (and @canSignUp (not this.header.topic))}}
       <DButton
-        class="btn-primary btn-small login-button"
-        @action={{@showLogin}}
-        @label="log_in"
-        @icon="user"
+        class="btn-primary btn-small sign-up-button"
+        @action={{@showCreateAccount}}
+        @label="sign_up"
       />
-    </span>
+    {{/if}}
+
+    <DButton
+      class="btn-primary btn-small login-button"
+      @action={{@showLogin}}
+      @label="log_in"
+      @icon="user"
+    />
   </template>
 }
