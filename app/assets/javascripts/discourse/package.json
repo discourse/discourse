@@ -90,7 +90,7 @@
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^2.0.2",
     "ember-production-deprecations": "1.0.0",
-    "ember-qunit": "^6.2.0",
+    "ember-qunit": "^8.0.2",
     "ember-router-service-refresh-polyfill": "^1.1.0",
     "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
