@@ -2033,7 +2033,7 @@ ro:
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
         defer: "Amânare"
-        delete: "Șterge subiectele"
+        delete: "Șterge subiecte"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
         dismiss_button: "Abandonează..."
@@ -2043,7 +2043,7 @@ ro:
         toggle: "activează selecția multiplă a subiectelor"
         actions: "Acțiuni multiple"
         close_topics: "Închide subiectele"
-        archive_topics: "Arhivează subiectele"
+        archive_topics: "Arhivează subiecte"
         move_messages_to_inbox: "Mută în „Primite”"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:

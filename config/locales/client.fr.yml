@@ -2076,7 +2076,7 @@ fr:
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       passkey:
-        name: "Connectez-vous à l'aide d'une clé d'accès"
+        name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
