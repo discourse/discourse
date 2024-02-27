@@ -443,6 +443,22 @@ RSpec.describe ComposerMessagesFinder do
       SiteSetting.get_a_room_threshold = 2
     end
 
+    context "when user can't send private messages" do
+      let(:group) { Fabricate(:group) }
+      before { SiteSetting.personal_message_enabled_groups = group.id }
+
+      it "does not show the message " do
+        expect(
+          ComposerMessagesFinder.new(
+            user,
+            composer_action: "reply",
+            topic_id: topic.id,
+            post_id: op.id,
+          ).check_get_a_room(min_users_posted: 2),
+        ).to be_blank
+      end
+    end
+
     it "does not show the message for new topics" do
       finder = ComposerMessagesFinder.new(user, composer_action: "createTopic")
       expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
