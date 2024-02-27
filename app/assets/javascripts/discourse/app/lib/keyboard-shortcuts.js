@@ -471,7 +471,7 @@ export default {
   },
 
   filterSidebar() {
-    const filterInput = document.querySelector(".sidebar-filter input");
+    const filterInput = document.querySelector(".sidebar-filter__input");
 
     if (filterInput) {
       this._scrollTo(0);
