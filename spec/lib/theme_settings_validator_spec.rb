@@ -7,5 +7,30 @@ RSpec.describe ThemeSettingsValidator do
 
       expect(errors).to eq([])
     end
+
+    it "returns the right error messages when value is invalid for type `objects`" do
+      errors =
+        described_class.validate_value(
+          [{ name: "something" }],
+          ThemeSetting.types[:objects],
+          {
+            schema: {
+              name: "test",
+              properties: {
+                name: {
+                  type: "string",
+                  validations: {
+                    max_length: 1,
+                  },
+                },
+              },
+            },
+          },
+        )
+
+      expect(errors).to contain_exactly(
+        "The property at JSON Pointer '/0/name' must be at most 1 characters long.",
+      )
+    end
   end
 end
