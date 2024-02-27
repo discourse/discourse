@@ -433,8 +433,8 @@ html.composer-open {
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
-  max-width: 300px;
-  width: 300px;
+  max-width: 600px;
+  min-width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-dropdown);
