@@ -5986,14 +5986,6 @@ ember-router-generator@^2.0.0:
     "@babel/traverse" "^7.4.5"
     recast "^0.18.1"
 
-ember-router-service-refresh-polyfill@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ember-router-service-refresh-polyfill/-/ember-router-service-refresh-polyfill-1.1.0.tgz#cfed655c68040ad163a4d17225eae6d666da5454"
-  integrity sha512-MhrJnpyTTie+Uo9PWiEX4f0t5y70vBjjgcS56aLOvwlSwfInNCtOEgQ/zH89J2dnYUVidebm/1FTubQ2meSjbw==
-  dependencies:
-    "@embroider/macros" "^1.0.0"
-    ember-cli-babel "^7.26.11"
-
 ember-source-channel-url@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ember-source-channel-url/-/ember-source-channel-url-3.0.0.tgz#bcd5be72c63fa0b8c390b3121783b462063e2a1b"
