@@ -3,7 +3,7 @@
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
-  console.log("Expecting: node {smoke_test.js} {url}");
+  console.log("Expecting: node test/smoke-test.mjs {URL}");
   process.exit(1);
 }
 
@@ -11,13 +11,13 @@ const url = args[0];
 
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
-const chromeLauncher = require("chrome-launcher");
-const puppeteer = require("puppeteer-core");
-const path = require("path");
+import { Launcher } from "chrome-launcher";
+import path from "path";
+import puppeteer from "puppeteer-core";
 
 (async () => {
   const browser = await puppeteer.launch({
-    executablePath: chromeLauncher.Launcher.getInstallations()[0],
+    executablePath: Launcher.getInstallations()[0],
     // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
     args: ["--disable-local-storage", "--no-sandbox"],
