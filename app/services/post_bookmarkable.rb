@@ -59,6 +59,10 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.can_see?(guardian, bookmark)
+    can_see_bookmarkable?(guardian, bookmark.bookmarkable)
+  end
+
+  def self.can_see_bookmarkable?(guardian, bookmarkable)
     guardian.can_see_post?(bookmark.bookmarkable)
   end
 
