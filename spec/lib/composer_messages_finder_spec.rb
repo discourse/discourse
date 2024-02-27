@@ -441,10 +441,11 @@ RSpec.describe ComposerMessagesFinder do
       SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
       SiteSetting.get_a_room_threshold = 2
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
     end
 
     context "when user can't send private messages" do
-      let(:group) { Fabricate(:group) }
+      fab!(:group) { Fabricate(:group) }
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "does not show the message " do
