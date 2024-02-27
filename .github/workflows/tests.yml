@@ -368,7 +368,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
-        working-directory: ./app/assets/javascripts/discourse
         run: yarn install --frozen-lockfile
 
       - name: Ember Build
