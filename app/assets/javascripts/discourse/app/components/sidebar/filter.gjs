@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -23,7 +22,6 @@ export default class Filter extends Component {
 
   @bind
   teardown() {
-    super.willDestroy(...arguments);
     this.sidebarState.clearFilter();
   }
 

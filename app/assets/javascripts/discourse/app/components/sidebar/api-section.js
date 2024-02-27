@@ -21,15 +21,16 @@ export default class SidebarApiSection extends Component {
   }
 
   get filteredLinks() {
-    if (this.sidebarState.filter) {
-      return this.section.links.filter((link) => {
-        return link.text
-          .toString()
-          .toLowerCase()
-          .match(this.sidebarState.filter.toLowerCase());
-      });
-    } else {
+    if (!this.sidebarState.filter) {
       return this.section.links;
     }
+
+    const filterText = this.sidebarState.filter.toLowerCase();
+    if (this.section.text.toLowerCase().match(filterText)) {
+      return this.section.links;
+    }
+    return this.section.links.filter((link) => {
+      return link.text.toString().toLowerCase().match(filterText);
+    });
   }
 }

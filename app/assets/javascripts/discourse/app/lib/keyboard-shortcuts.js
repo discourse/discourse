@@ -41,7 +41,7 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
-  "command+/": { handler: "filterSidebar", anonymous: true },
+  "meta+/": { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },

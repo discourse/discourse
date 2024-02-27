@@ -84,7 +84,7 @@ export default class KeyboardShortcutsHelp extends Component {
             keysDelimiter: PLUS,
           }),
           filter_sidebar: buildShortcut("application.filter_sidebar", {
-            keys1: [CTRL, "/"],
+            keys1: [META, "/"],
             keysDelimiter: PLUS,
           }),
           help: buildShortcut("application.help", { keys1: ["?"] }),
