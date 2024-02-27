@@ -12,6 +12,7 @@
   {{on "dragend" this.dragEnd}}
   {{on "drop" this.dropItem}}
   role="row"
+  data-row-id={{@link.objectId}}
 >
   {{#unless this.site.mobileView}}
     <div class="draggable" data-link-name={{@link.name}}>

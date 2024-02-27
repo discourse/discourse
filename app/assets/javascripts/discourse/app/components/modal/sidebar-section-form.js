@@ -2,6 +2,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -367,6 +368,14 @@ export default class SidebarSectionForm extends Component {
       });
   }
 
+  focusNewRowInput(id) {
+    schedule("afterRender", () => {
+      document
+        .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
+        .focus();
+    });
+  }
+
   get activeLinks() {
     return this.transformedModel.links.filter((link) => !link._destroy);
   }
@@ -445,6 +454,8 @@ export default class SidebarSectionForm extends Component {
         segment: "primary",
       })
     );
+
+    this.focusNewRowInput(this.nextObjectId);
   }
 
   @action
@@ -457,6 +468,8 @@ export default class SidebarSectionForm extends Component {
         segment: "secondary",
       })
     );
+
+    this.focusNewRowInput(this.nextObjectId);
   }
 
   @action
