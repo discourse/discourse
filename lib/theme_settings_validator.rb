@@ -45,7 +45,7 @@ class ThemeSettingsValidator
         )
       when types[:string]
         validate_value_in_range!(
-          value.length,
+          value.to_s.length,
           min: opts[:min],
           max: opts[:max],
           errors:,
