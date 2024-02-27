@@ -49,6 +49,9 @@ export default class UserThreads extends Component {
             {{formatDate thread.preview.lastReplyCreatedAt leaveAgo="true"}}
           </span>
           <div class="c-user-thread__excerpt">
+            <div
+              class="c-user-thread__excerpt-poster"
+            >{{thread.preview.lastReplyUser.username}}<span>:</span></div>
             {{thread.preview.lastReplyExcerpt}}
           </div>
         </div>
