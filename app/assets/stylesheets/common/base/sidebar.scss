@@ -330,6 +330,7 @@
     border: 0;
     margin-bottom: 0;
     width: 50px;
+    height: 2em;
     &:focus-within {
       outline: 0;
     }
@@ -338,6 +339,7 @@
 
   &__clear {
     width: 2em;
+    height: 2em;
     color: var(--primary-medium);
     background-color: var(--secondary);
   }
