@@ -53,6 +53,7 @@ sq:
     enabled_filter: "Aktivizuar"
   themes:
     settings_errors:
+      number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
       objects:
         required: "must be present"
         not_valid_integer_value: "must be an integer"
