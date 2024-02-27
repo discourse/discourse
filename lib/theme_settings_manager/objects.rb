@@ -6,7 +6,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def value=(objects)
-    # TODO: Validate the objects against the schema
+    ensure_is_valid_value!(objects)
 
     record = has_record? ? db_record : create_record!
     record.json_value = objects
