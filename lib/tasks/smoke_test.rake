@@ -10,7 +10,7 @@ task "smoke:test" do
     abort err.message
   end
 
-  system("yarn install")
+  system("yarn install", exception: true)
 
   url = ENV["URL"]
   if !url
