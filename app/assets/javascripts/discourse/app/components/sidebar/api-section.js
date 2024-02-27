@@ -15,19 +15,20 @@ export default class SidebarApiSection extends Component {
     if (!this.sidebarState.currentPanel.filterable) {
       return true;
     }
-    return this.sidebarState.filter.length === 0 || this.filteredLinks.length > 0;
+    return (
+      this.sidebarState.filter.length === 0 || this.filteredLinks.length > 0
+    );
   }
 
   get filteredLinks() {
     if (!this.sidebarState.filter) {
       return this.section.links;
     }
-    const filterText = this.sidebarState.filter.toLowerCase();
-    if (this.section.text.toLowerCase().match(filterText)) {
+    if (this.section.text.toLowerCase().match(this.sidebarState.filter)) {
       return this.section.links;
     }
     return this.section.links.filter((link) => {
-      return link.text.toString().toLowerCase().match(filterText);
+      return link.text.toString().toLowerCase().match(this.sidebarState.filter);
     });
   }
 }

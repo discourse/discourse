@@ -5,6 +5,10 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FilterNoResulsts extends Component {
   @service sidebarState;
 
+  /**
+   * Component is rendered when panel is filtreable
+   * Visibility is additionally controlled by CSS rule `.sidebar-section-wrapper + .sidebar-no-results`
+   */
   get shouldDisplay() {
     return this.sidebarState.currentPanel.filterable;
   }
