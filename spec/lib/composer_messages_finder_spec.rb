@@ -448,7 +448,7 @@ RSpec.describe ComposerMessagesFinder do
       fab!(:group) { Fabricate(:group) }
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
-      it "does not show the message " do
+      it "does not show the message" do
         expect(
           ComposerMessagesFinder.new(
             user,
