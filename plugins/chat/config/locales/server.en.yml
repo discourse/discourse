@@ -94,6 +94,7 @@ en:
       original_message_not_found: "The ancestor of the message you are replying to cannot be found or has been deleted."
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
+      invalid_direct_message: "You are not allowed to create this direct message."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
