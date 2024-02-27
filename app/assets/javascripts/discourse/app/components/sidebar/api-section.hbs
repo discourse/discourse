@@ -10,7 +10,7 @@
     @displaySection={{this.section.displaySection}}
     @hideSectionHeader={{this.section.hideSectionHeader}}
   >
-    {{#each this.filteredLinks as |link|}}
+    {{#each this.filteredLinks key="name" as |link|}}
       <Sidebar::SectionLink
         @linkName={{link.name}}
         @linkClass={{link.classNames}}
