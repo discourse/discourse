@@ -23,6 +23,16 @@ te:
   themes:
     settings_errors:
       data_type_not_a_number: "%{name} టైపు కు మద్దతు లేదు. మద్దతు ఉన్న టేపులు `integer`, `bool`, `list`, `enum` మరియు `upload`"
+      default_value_missing: "సెట్టింగ్ `%{name}`కి డిఫాల్ట్ విలువ లేదు"
+      default_out_range: "సెట్టింగు `%{name}` డిఫాల్ట్ విలువ పేర్కొన్న పరిధిలో లేదు."
+      number_value_not_valid: "కొత్త విలువ అనుమతించబడిన పరిధిలో లేదు."
+      number_value_not_valid_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
+      number_value_not_valid_min: "ఇది తప్పనిసరిగా %{min} కంటే పెద్దదిగా లేదా సమానంగా ఉండాలి."
+      number_value_not_valid_max: "ఇది తప్పనిసరిగా %{max} కంటే చిన్నదిగా లేదా సమానంగా ఉండాలి."
+      string_value_not_valid: "కొత్త విలువ పొడవు అనుమతించబడిన పరిధిలో లేదు."
+      string_value_not_valid_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} అక్షరాల పొడవు ఉండాలి."
+      string_value_not_valid_min: "ఇది తప్పనిసరిగా కనీసం %{min} అక్షరాల పొడవు ఉండాలి."
+      string_value_not_valid_max: "ఇది తప్పనిసరిగా గరిష్టంగా %{max} అక్షరాల పొడవు ఉండాలి."
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
@@ -522,6 +532,7 @@ te:
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "
     queue_size_warning: "వరుసలో ఉన్న ఉద్యోగాల సంఖ్య %{queue_size}, ఏది ఆధిక్యత.ఈ సైడ్‌కిక్ ప్రక్రియ(లు) ఒక సమస్య సూచిస్తుంది , లేదా \nమీకు మరింతమంది సైడ్‌కిక్ కార్మికులు అవసరం కావచ్చు."
     memory_warning: "మీ సర్వరు ఒక జీబీ కన్నా తక్కువ మెమరీతో నడుస్తున్నది. కనీసం ఒక జీబీ అయినా ఉండుట మంచిది. "
+    ember_version_warning: "మీ సైట్ మద్దతు లేని EMBER_VERSION=3 కాన్ఫిగరేషన్‌తో అమలవుతోంది. ఇది థీమ్‌లు/ప్లగిన్‌లతో ఊహించని సమస్యలకు దారితీయవచ్చు. దయచేసి మీ app.yml ఫైల్ నుండి EMBER_VERSION కాన్ఫిగరేషన్‌ని తీసివేసి, పునర్నిర్మించండి. మరింత సమాచారం కోసం <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> ని చూడండి."
   site_settings:
     censored_words: "వీటితో పదాలు స్వయంచాలకంగా భర్తీ చేయబడతాయి &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "30 రోజుల కంటే ఎక్కువ దాగివున్న టపాలు స్వయంసిధ్ధంగా తొలగింపబడతాయి."
