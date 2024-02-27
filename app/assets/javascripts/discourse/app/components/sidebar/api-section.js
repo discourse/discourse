@@ -15,9 +15,7 @@ export default class SidebarApiSection extends Component {
     if (!this.sidebarState.currentPanel.filterable) {
       return true;
     }
-    const shouldDisplay =
-      this.sidebarState.filter.length === 0 || this.filteredLinks.length > 0;
-    return shouldDisplay;
+    return this.sidebarState.filter.length === 0 || this.filteredLinks.length > 0;
   }
 
   get filteredLinks() {
