@@ -1,6 +1,76 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeSettingsObjectValidator do
+  describe ".validate_objects" do
+    it "should return the right array of humanized error messages for objects that are invalid" do
+      schema = {
+        name: "section",
+        properties: {
+          title: {
+            type: "string",
+            required: true,
+            validations: {
+              min_length: 5,
+              max_length: 10,
+            },
+          },
+          category_property: {
+            type: "category",
+            required: true,
+          },
+          links: {
+            type: "objects",
+            schema: {
+              name: "link",
+              properties: {
+                position: {
+                  type: "integer",
+                  required: true,
+                },
+                float: {
+                  type: "float",
+                  required: true,
+                  validations: {
+                    min: 5.5,
+                    max: 11.5,
+                  },
+                },
+              },
+            },
+          },
+        },
+      }
+
+      category = Fabricate(:category)
+
+      error_messages =
+        described_class.validate_objects(
+          schema: schema,
+          objects: [
+            {
+              title: "1234",
+              category_property: category.id,
+              links: [{ position: 1, float: 4.5 }, { position: "string", float: 12 }],
+            },
+            { title: "12345678910", category_property: 99_999_999, links: [{ float: 5 }] },
+          ],
+        )
+
+      expect(error_messages).to eq(
+        [
+          "The property at JSON Pointer '/0/title' must be at least 5 characters long.",
+          "The property at JSON Pointer '/0/links/0/float' must be larger than or equal to 5.5.",
+          "The property at JSON Pointer '/0/links/1/position' must be an integer.",
+          "The property at JSON Pointer '/0/links/1/float' must be smaller than or equal to 11.5.",
+          "The property at JSON Pointer '/1/title' must be at most 10 characters long.",
+          "The property at JSON Pointer '/1/category_property' must be a valid category id.",
+          "The property at JSON Pointer '/1/links/0/position' must be present.",
+          "The property at JSON Pointer '/1/links/0/float' must be larger than or equal to 5.5.",
+        ],
+      )
+    end
+  end
+
   describe "#validate" do
     it "should return the right hash of error messages when properties are required but missing" do
       schema = {
@@ -46,8 +116,9 @@ RSpec.describe ThemeSettingsObjectValidator do
 
       errors = described_class.new(schema:, object: {}).validate
 
-      expect(errors[:description].full_messages).to contain_exactly("must be present")
-      expect(errors[:title].full_messages).to contain_exactly("must be present")
+      expect(errors.keys).to contain_exactly("/description", "/title")
+      expect(errors["/description"].full_messages).to contain_exactly("must be present")
+      expect(errors["/title"].full_messages).to contain_exactly("must be present")
 
       errors =
         described_class.new(
@@ -57,19 +128,30 @@ RSpec.describe ThemeSettingsObjectValidator do
           },
         ).validate
 
-      expect(errors[:title].full_messages).to contain_exactly("must be present")
-      expect(errors[:description].full_messages).to contain_exactly("must be present")
-      expect(errors[:links][0][:name].full_messages).to contain_exactly("must be present")
+      expect(errors.keys).to eq(
+        %w[
+          /title
+          /description
+          /links/0/name
+          /links/0/child_links/0/title
+          /links/0/child_links/1/title
+          /links/1/name
+        ],
+      )
 
-      expect(errors[:links][0][:child_links][0][:title].full_messages).to contain_exactly(
+      expect(errors["/title"].full_messages).to contain_exactly("must be present")
+      expect(errors["/description"].full_messages).to contain_exactly("must be present")
+      expect(errors["/links/0/name"].full_messages).to contain_exactly("must be present")
+
+      expect(errors["/links/0/child_links/0/title"].full_messages).to contain_exactly(
         "must be present",
       )
 
-      expect(errors[:links][0][:child_links][1][:title].full_messages).to contain_exactly(
+      expect(errors["/links/0/child_links/1/title"].full_messages).to contain_exactly(
         "must be present",
       )
 
-      expect(errors[:links][1][:name].full_messages).to contain_exactly("must be present")
+      expect(errors["/links/1/name"].full_messages).to contain_exactly("must be present")
     end
 
     context "for enum properties" do
@@ -95,7 +177,9 @@ RSpec.describe ThemeSettingsObjectValidator do
         errors =
           described_class.new(schema: schema, object: { enum_property: "random_value" }).validate
 
-        expect(errors[:enum_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/enum_property"])
+
+        expect(errors["/enum_property"].full_messages).to contain_exactly(
           "must be one of the following: [\"choice 1\", 2, false]",
         )
       end
@@ -103,7 +187,9 @@ RSpec.describe ThemeSettingsObjectValidator do
       it "should return the right hash of error messages when enum property is not present" do
         errors = described_class.new(schema: schema, object: {}).validate
 
-        expect(errors[:enum_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/enum_property"])
+
+        expect(errors["/enum_property"].full_messages).to contain_exactly(
           "must be one of the following: [\"choice 1\", 2, false]",
         )
       end
@@ -126,7 +212,8 @@ RSpec.describe ThemeSettingsObjectValidator do
         errors =
           described_class.new(schema: schema, object: { boolean_property: "string" }).validate
 
-        expect(errors[:boolean_property].full_messages).to contain_exactly("must be a boolean")
+        expect(errors.keys).to eq(["/boolean_property"])
+        expect(errors["/boolean_property"].full_messages).to contain_exactly("must be a boolean")
       end
     end
 
@@ -146,7 +233,8 @@ RSpec.describe ThemeSettingsObjectValidator do
       it "should return the right hash of error messages when value of property is not of type float" do
         errors = described_class.new(schema: schema, object: { float_property: "string" }).validate
 
-        expect(errors[:float_property].full_messages).to contain_exactly("must be a float")
+        expect(errors.keys).to eq(["/float_property"])
+        expect(errors["/float_property"].full_messages).to contain_exactly("must be a float")
       end
 
       it "should return the right hash of error messages when integer property does not satisfy min or max validations" do
@@ -165,13 +253,17 @@ RSpec.describe ThemeSettingsObjectValidator do
 
         errors = described_class.new(schema: schema, object: { float_property: 4.5 }).validate
 
-        expect(errors[:float_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/float_property"])
+
+        expect(errors["/float_property"].full_messages).to contain_exactly(
           "must be larger than or equal to 5.5",
         )
 
         errors = described_class.new(schema: schema, object: { float_property: 12.5 }).validate
 
-        expect(errors[:float_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/float_property"])
+
+        expect(errors["/float_property"].full_messages).to contain_exactly(
           "must be smaller than or equal to 11.5",
         )
       end
@@ -190,11 +282,13 @@ RSpec.describe ThemeSettingsObjectValidator do
         errors =
           described_class.new(schema: schema, object: { integer_property: "string" }).validate
 
-        expect(errors[:integer_property].full_messages).to contain_exactly("must be an integer")
+        expect(errors.keys).to eq(["/integer_property"])
+        expect(errors["/integer_property"].full_messages).to contain_exactly("must be an integer")
 
         errors = described_class.new(schema: schema, object: { integer_property: 1.0 }).validate
 
-        expect(errors[:integer_property].full_messages).to contain_exactly("must be an integer")
+        expect(errors.keys).to eq(["/integer_property"])
+        expect(errors["/integer_property"].full_messages).to contain_exactly("must be an integer")
       end
 
       it "should not return any error messages when the value of the integer property satisfies min and max validations" do
@@ -232,13 +326,17 @@ RSpec.describe ThemeSettingsObjectValidator do
 
         errors = described_class.new(schema: schema, object: { integer_property: 4 }).validate
 
-        expect(errors[:integer_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/integer_property"])
+
+        expect(errors["/integer_property"].full_messages).to contain_exactly(
           "must be larger than or equal to 5",
         )
 
         errors = described_class.new(schema: schema, object: { integer_property: 11 }).validate
 
-        expect(errors[:integer_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/integer_property"])
+
+        expect(errors["/integer_property"].full_messages).to contain_exactly(
           "must be smaller than or equal to 10",
         )
       end
@@ -257,7 +355,8 @@ RSpec.describe ThemeSettingsObjectValidator do
         schema = { name: "section", properties: { string_property: { type: "string" } } }
         errors = described_class.new(schema: schema, object: { string_property: 1 }).validate
 
-        expect(errors[:string_property].full_messages).to contain_exactly("must be a string")
+        expect(errors.keys).to eq(["/string_property"])
+        expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
       end
 
       it "should return the right hash of error messages when string property does not statisfy url validation" do
@@ -276,7 +375,8 @@ RSpec.describe ThemeSettingsObjectValidator do
         errors =
           described_class.new(schema: schema, object: { string_property: "not a url" }).validate
 
-        expect(errors[:string_property].full_messages).to contain_exactly("must be a valid URL")
+        expect(errors.keys).to eq(["/string_property"])
+        expect(errors["/string_property"].full_messages).to contain_exactly("must be a valid URL")
       end
 
       it "should not return any error messages when the value of the string property satisfies min_length and max_length validations" do
@@ -314,14 +414,18 @@ RSpec.describe ThemeSettingsObjectValidator do
 
         errors = described_class.new(schema: schema, object: { string_property: "1234" }).validate
 
-        expect(errors[:string_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/string_property"])
+
+        expect(errors["/string_property"].full_messages).to contain_exactly(
           "must be at least 5 characters long",
         )
 
         errors =
           described_class.new(schema: schema, object: { string_property: "12345678910" }).validate
 
-        expect(errors[:string_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/string_property"])
+
+        expect(errors["/string_property"].full_messages).to contain_exactly(
           "must be at most 10 characters long",
         )
       end
@@ -344,7 +448,9 @@ RSpec.describe ThemeSettingsObjectValidator do
         errors =
           described_class.new(schema: schema, object: { category_property: "string" }).validate
 
-        expect(errors[:category_property].full_messages).to contain_exactly(
+        expect(errors.keys).to eq(["/category_property"])
+
+        expect(errors["/category_property"].full_messages).to contain_exactly(
           "must be a valid category id",
         )
       end
@@ -390,19 +496,21 @@ RSpec.describe ThemeSettingsObjectValidator do
                 },
               ).validate
 
-            expect(errors[:category_property].full_messages).to contain_exactly(
+            expect(errors.keys).to eq(
+              %w[/category_property /category_property_2 /child_categories/0/category_property_3],
+            )
+
+            expect(errors["/category_property"].full_messages).to contain_exactly(
               "must be a valid category id",
             )
 
-            expect(errors[:category_property_2].full_messages).to contain_exactly(
+            expect(errors["/category_property_2"].full_messages).to contain_exactly(
               "must be a valid category id",
             )
 
             expect(
-              errors[:child_categories][0][:category_property_3].full_messages,
+              errors["/child_categories/0/category_property_3"].full_messages,
             ).to contain_exactly("must be a valid category id")
-
-            expect(errors[:child_categories][1]).to eq({})
           end
 
         # only 1 SQL query should be executed to check if category ids are valid
