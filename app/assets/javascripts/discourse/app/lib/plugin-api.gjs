@@ -14,6 +14,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import MountWidget from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
@@ -1844,9 +1845,18 @@ class PluginApi {
    * ```
    *
    **/
-  addToHeaderIcons(icon) {
-    addToHeaderIcons(icon);
-    addToGlimmerHeaderIcons(icon);
+  addToHeaderIcons(key, component, position) {
+    if (arguments.length === 1) {
+      // Old API - backwards compat
+      const widgetName = arguments[0];
+      addToHeaderIcons(widgetName);
+      addToGlimmerHeaderIcons(Symbol(), <template>
+        <MountWidget @widget={{widgetName}} />
+      </template>);
+    } else {
+      // addToHeaderIcons(); TODO backward compat?
+      addToGlimmerHeaderIcons(key, component, position);
+    }
   }
 
   /**
@@ -2443,6 +2453,10 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+
+
+
+
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
