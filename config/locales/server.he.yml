@@ -64,6 +64,10 @@ he:
     enabled_filter: "פעיל"
     disabled_filter: "כבוי"
     updates_available_filter: "עדכונים זמינים"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "חרג מהגודל המרבי על סך %{max_size} בתים."
   themes:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
@@ -114,18 +118,16 @@ he:
       invalid_yaml: "ה־YAML שסופק שגוי."
       data_type_inclusion: "סוג ההגדרה `%{name}` אינו נתמך. הסוגים הנתמכים הם: `integer`,‏ `bool`,‏ `list`,‏ `enum` ו־`upload`"
       name_too_long: "קיימת הגדרה עם שם ארוך מדי. האורך המרבי הוא 255"
-      default_value_missing: "להגדרה `%{name}` אין ערך בררת מחדל"
+      default_value_missing: "להגדרה `%{name}` אין ערך ברירת מחדל."
       default_not_match_type: "סוג ערך בררת המחדל של ההגדרה `%{name}` אינו תואם לסוג ההגדרה."
-      default_out_range: "ערך בררת המחדל של ההגדרה `%{name}` אינו בטווח שצוין."
+      default_value_not_valid: "הגדרת ערך ברירת המחדל `%{name}` אינו תקף. %{error_messages}"
       enum_value_not_valid: "הערך הנבחר אינו מבין אפשרויות המנייה."
-      number_value_not_valid: "הערך החדש אינו בטווח המורשה."
-      number_value_not_valid_min_max: "חייב להיות בין %{min} ל־%{max}."
-      number_value_not_valid_min: "חייב להיות גדול או שווה ל־%{min}."
-      number_value_not_valid_max: "חייב להיות קטן או שווה ל־%{max}."
-      string_value_not_valid: "אורך הערך החדש אינו בטווח המורשה."
-      string_value_not_valid_min_max: "חייב להיות באורך של בין %{min} ל־%{max} תווים."
-      string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות."
-      string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר."
+      number_value_not_valid_min_max: "הערך חייב להיות בין %{min} ל־%{max}."
+      number_value_not_valid_min: "הערך חייב להיות גדול או שווה ל־%{min}."
+      number_value_not_valid_max: "הערך חייב להיות קטן או שווה ל־%{max}."
+      string_value_not_valid_min_max: "הערך חייב להיות באורך של בין %{min} ל־%{max} תווים."
+      string_value_not_valid_min: "הערך חייב להיות באורך של %{min} תווים לפחות."
+      string_value_not_valid_max: "הערך חייב להיות באורך של %{max} תווים לכל היותר."
       objects:
         required: "חייב להיות מלא"
         invalid_type: "%{type} זה לא סוג תקף"
@@ -134,6 +136,7 @@ he:
         not_valid_float_value: "חייב להיות מספר עם נקודה עשרונית"
         not_valid_boolean_value: "חייב להיות ערך בוליאני"
         not_valid_enum_value: "חייב להיות אחד מהבאים: %{choices}"
+        not_valid_category_value: "חייב להיות מזהה של קטגוריה תקפה"
         string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות"
         string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר"
         number_value_not_valid_min: "חייב להיות גדול או שווה ל־%{min}"
@@ -1526,6 +1529,7 @@ he:
         qtt_like: לייקים שהתקבלו
       description: "10 המשתמשים המובילים שקיבלו לייקים ממגוון רחב של אנשים."
   dashboard:
+    twitter_login_warning: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
     group_email_credentials_warning: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
@@ -1558,7 +1562,6 @@ he:
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
     category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
-    ember_version_warning: "האתר פועל עם ההגדרה EMBER_VERSION=3 שאינה נתמכת. עלול להוביל לתקלות בלתי צפויות עם ערכות עיצוב/תוספים. נא להסיר את ההגדרה EMBER_VERSION מקובץ ה־app.yml ולבנות מחדש. כאן יש מידע נוסף <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
     back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
@@ -2460,6 +2463,7 @@ he:
       post_links_allowed_groups: "min_trust_to_post_links (דרגת אמון מזערית לפרסום קישורים)"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key (דרגת אמון מזערית למפתח API למשתמש)"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics (דרגת אמון מזערית לתיוג נושאים)"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background (דרגת אמון מזערית כדי לאפשר רקע לפרופיל)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -5077,14 +5081,14 @@ he:
         title: "לא לעשות דבר"
         description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
       approve:
-        title: "אשר"
+        title: "אישור"
       approve_post:
         title: "לאשר פוסט"
         confirm_closed: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
       reject_post:
         title: "לדחות פוסט"
       approve_user:
-        title: "לאשר משתמש"
+        title: "אישור משתמש"
       reject_user:
         title: "מחיקת משתמש…"
         delete:

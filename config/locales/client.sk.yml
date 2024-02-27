@@ -1623,6 +1623,12 @@ sk:
     topic_bulk_actions:
       close_topics:
         name: "Uzavrieť tému"
+      archive_topics:
+        name: "Archivuj témy"
+      unlist_topics:
+        name: "Dôverné témy"
+      delete_topics:
+        name: "Zmazať témy"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"

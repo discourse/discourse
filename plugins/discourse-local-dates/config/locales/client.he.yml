@@ -17,11 +17,11 @@ he:
       create:
         form:
           insert: כתיבה
-          advanced_mode: מצב מורחב
+          advanced_mode: מצב מתקדם
           simple_mode: מצב פשוט
           format_description: "תבנית המשמשת להצגת התאריך למשתמש. Z משמש להצגת ההפרש ו־zz לשם אזור הזמן."
-          timezones_title: אזורי זמן
-          timezones_description: באזורי זמן נעשה שימוש לטובת הצגת תאריך בתצוגה מקדימה וכבררת מחדל.
+          timezones_title: אזורי זמן להצגה
+          timezones_description: אזורי זמן משמשים להצגת תאריך בתצוגה מקדימה וכברירת מחדל.
           recurring_title: חזרה
           recurring_description: "הגדרת תדירות חזרת האירוע. ניתן גם לערוך ידנית את אפשרות החזרה שנוצרה על ידי הטופס ולהשתמש במפתחות הבאים: years,‏ quarters,‏ months,‏ weeks,‏ days,‏ hours,‏ minutes,‏ seconds,‏ milliseconds."
           recurring_none: ללא חזרה

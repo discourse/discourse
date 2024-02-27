@@ -84,7 +84,7 @@ he:
         count: "ספירה"
       options:
         label: "אפשרויות"
-      error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
+      error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
       error_while_exporting_results: "אירעה שגיאה בייצוא תוצאות הסקר."

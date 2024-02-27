@@ -2499,6 +2499,18 @@ hu:
     topic_bulk_actions:
       close_topics:
         name: "Témák lezárása"
+      archive_topics:
+        name: "Témák archiválása"
+      unlist_topics:
+        name: "Témák listázásnak megszüntetése"
+      relist_topics:
+        name: "Újralistázott témák"
+      append_tags:
+        name: "Címkék hozzáfűzése"
+      replace_tags:
+        name: "Címkék cseréje"
+      delete_topics:
+        name: "Témák törlése"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
