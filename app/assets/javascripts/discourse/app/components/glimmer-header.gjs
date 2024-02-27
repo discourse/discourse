@@ -17,6 +17,7 @@ import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrappe
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
+import PluginOutlet from "./plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
 
@@ -177,13 +178,21 @@ export default class GlimmerHeader extends Component {
           @toggleHamburger={{this.toggleHamburger}}
           @showSidebar={{@showSidebar}}
         >
-          {{#unless this.currentUser}}
-            <AuthButtons
-              @showCreateAccount={{@showCreateAccount}}
-              @showLogin={{@showLogin}}
-              @canSignUp={{@canSignUp}}
-            />
-          {{/unless}}
+
+          <span class="header-buttons">
+            <PluginOutlet @name="before-header-buttons" />
+
+            {{#unless this.currentUser}}
+              <AuthButtons
+                @showCreateAccount={{@showCreateAccount}}
+                @showLogin={{@showLogin}}
+                @canSignUp={{@canSignUp}}
+              />
+            {{/unless}}
+
+            <PluginOutlet @name="after-header-buttons" />
+          </span>
+
           {{#if
             (not (and this.siteSettings.login_required (not this.currentUser)))
           }}

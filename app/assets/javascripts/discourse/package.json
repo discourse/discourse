@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@glimmer/syntax": "^0.84.3",
+    "@glimmer/syntax": "^0.88.1",
     "@highlightjs/cdn-assets": "^11.9.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
@@ -90,7 +90,7 @@
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^2.0.2",
     "ember-production-deprecations": "1.0.0",
-    "ember-qunit": "^6.2.0",
+    "ember-qunit": "^8.0.2",
     "ember-router-service-refresh-polyfill": "^1.1.0",
     "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
@@ -109,7 +109,7 @@
     "select-kit": "1.0.0",
     "sinon": "^17.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.27.2",
+    "terser": "^5.28.1",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",

@@ -45,11 +45,15 @@ class ThemeSettingsValidator
         )
       when types[:string]
         validate_value_in_range!(
-          value.length,
+          value.to_s.length,
           min: opts[:min],
           max: opts[:max],
           errors:,
           translation_prefix: "string",
+        )
+      when types[:objects]
+        errors.push(
+          ThemeSettingsObjectValidator.validate_objects(schema: opts[:schema], objects: value),
         )
       end
 

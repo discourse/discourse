@@ -18,7 +18,12 @@ module Jobs
       problems = check.call
       raise RetrySignal if problems.present? && retry_count < check.max_retries
 
-      problems.each { |problem| AdminDashboardData.add_found_scheduled_check_problem(problem) }
+      if problems.present?
+        problems.each { |problem| AdminDashboardData.add_found_scheduled_check_problem(problem) }
+        ProblemCheckTracker[identifier].problem!(next_run_at: check.perform_every.from_now)
+      else
+        ProblemCheckTracker[identifier].no_problem!(next_run_at: check.perform_every.from_now)
+      end
     rescue RetrySignal
       Jobs.enqueue_in(
         check.retry_after,

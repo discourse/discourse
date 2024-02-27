@@ -208,6 +208,7 @@ class UserSearch
     ) x on uid = users.id",
       ).order("rn")
 
+    results = results.includes(:user_option)
     results = results.includes(:user_status) if SiteSetting.enable_user_status
 
     results

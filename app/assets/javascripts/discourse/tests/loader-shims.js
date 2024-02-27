@@ -5,3 +5,4 @@ import loaderShim from "discourse-common/lib/loader-shim";
 loaderShim("pretender", () => importSync("pretender"));
 loaderShim("qunit", () => importSync("qunit"));
 loaderShim("sinon", () => importSync("sinon"));
+loaderShim("ember-qunit", () => importSync("ember-qunit"));

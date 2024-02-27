@@ -255,15 +255,17 @@ const path = require("path");
       return page.type("#reply-control .d-editor-input", post);
     });
 
-    await exec("waiting for the preview", () => {
-      return page.waitForXPath(
-        "//div[contains(@class, 'd-editor-preview') and contains(.//p, 'I can even write a reply')]",
-        { visible: true }
+    await exec("waiting for the preview", async () => {
+      await page.waitForSelector("div.d-editor-preview", {
+        visible: true,
+      });
+      return page.waitForFunction(
+        "document.querySelector('div.d-editor-preview').innerText.includes('I can even write a reply')"
       );
     });
 
     await exec("wait a little bit", () => {
-      return page.waitForTimeout(5000);
+      return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
     await exec("submit the reply", () => {
@@ -296,7 +298,7 @@ const path = require("path");
     });
 
     await exec("wait a little bit", () => {
-      return page.waitForTimeout(5000);
+      return new Promise((resolve) => setTimeout(resolve, 5000));
     });
 
     await exec("open composer to edit first post", () => {
@@ -318,7 +320,7 @@ const path = require("path");
     });
 
     await exec("update post raw in composer", () => {
-      let promise = page.waitForTimeout(5000);
+      let promise = new Promise((resolve) => setTimeout(resolve, 5000));
 
       promise = promise.then(() => {
         return page.type(

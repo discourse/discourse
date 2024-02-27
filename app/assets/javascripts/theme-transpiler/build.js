@@ -50,7 +50,7 @@ esbuild
     bundle: true,
     minify: true,
     alias: {
-      util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
+      util: "./node_modules/@zxing/text-encoding",
     },
     define: {
       process: `{ "env": {} }`,

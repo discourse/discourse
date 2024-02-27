@@ -17,3 +17,32 @@ default_out_of_range:
 string_default_out_of_range:
   default: "abcdefg"
   min: 20
+
+invalid_default_objects_setting:
+  type: objects
+  default:
+    - min_5_chars_string: "12345"
+      children:
+        - required_integer: 1
+    - required_string: "some string"
+      min_5_chars_string: "123"
+      children:
+        - non_existent: "string"
+  schema:
+    name: parent
+    properties:
+      required_string:
+        type: string
+        required: true
+      min_5_chars_string:
+        type: string
+        validations:
+          min_length: 5
+      children:
+        type: objects
+        schema:
+          name: child
+          properties:
+            required_integer:
+              type: integer
+              required: true

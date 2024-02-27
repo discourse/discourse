@@ -48,6 +48,10 @@ describe "Thread preview", type: :system do
     end
 
     context "when the user of the preview has been deleted" do
+      fab!(:thread_1_message_1) do
+        Fabricate(:chat_message, thread: thread_1, in_reply_to: message_1, use_service: true)
+      end
+
       before { thread_1_message_1.user.destroy! }
 
       it "shows a deleted user" do
