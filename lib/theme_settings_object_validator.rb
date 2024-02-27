@@ -60,13 +60,13 @@ class ThemeSettingsObjectValidator
     end
   end
 
-  def initialize(schema:, object:, valid_category_ids: nil, json_pointer_prefix: "", errors: {})
+  def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: {})
     @object = object
     @schema_name = schema[:name]
     @properties = schema[:properties]
     @errors = errors
-    @valid_category_ids = valid_category_ids
     @json_pointer_prefix = json_pointer_prefix
+    @valid_ids_lookup = valid_ids_lookup
   end
 
   def validate
@@ -80,8 +80,8 @@ class ThemeSettingsObjectValidator
             .new(
               schema: property_attributes[:schema],
               object: child_object,
-              valid_category_ids:,
               json_pointer_prefix: "#{@json_pointer_prefix}#{property_name}/#{index}/",
+              valid_ids_lookup:,
               errors: @errors,
             )
             .validate
@@ -113,7 +113,7 @@ class ThemeSettingsObjectValidator
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "category"
+      when "integer", "category", "topic", "post", "group", "upload", "tag"
         value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
@@ -140,9 +140,9 @@ class ThemeSettingsObjectValidator
     value = @object[property_name]
 
     case type
-    when "category"
-      if !valid_category_ids.include?(value)
-        add_error(property_name, :not_valid_category_value)
+    when "topic", "category", "upload", "post", "group", "tag"
+      if !valid_ids(type).include?(value)
+        add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
     when "string"
@@ -194,13 +194,26 @@ class ThemeSettingsObjectValidator
     "/#{@json_pointer_prefix}#{property_name}"
   end
 
-  def valid_category_ids
-    @valid_category_ids ||=
-      Set.new(
-        Category.where(id: fetch_property_values_of_type(@properties, @object, "category")).pluck(
-          :id,
-        ),
-      )
+  def valid_ids_lookup
+    @valid_ids_lookup ||= {}
+  end
+
+  TYPE_TO_MODEL_MAP = {
+    "category" => Category,
+    "topic" => Topic,
+    "post" => Post,
+    "group" => Group,
+    "upload" => Upload,
+    "tag" => Tag,
+  }
+  private_constant :TYPE_TO_MODEL_MAP
+
+  def valid_ids(type)
+    valid_ids_lookup[type] ||= Set.new(
+      TYPE_TO_MODEL_MAP[type].where(
+        id: fetch_property_values_of_type(@properties, @object, type),
+      ).pluck(:id),
+    )
   end
 
   def fetch_property_values_of_type(properties, object, type)

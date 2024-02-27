@@ -431,6 +431,357 @@ RSpec.describe ThemeSettingsObjectValidator do
       end
     end
 
+    context "for topic properties" do
+      it "should not return any error message when the value of the property is a valid id of a topic record" do
+        topic = Fabricate(:topic)
+
+        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { topic_property: topic.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
+
+        errors = described_class.new(schema: schema, object: { topic_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/topic_property"])
+
+        expect(errors["/topic_property"].full_messages).to contain_exactly(
+          "must be a valid topic id",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a topic record" do
+        schema = {
+          name: "section",
+          properties: {
+            topic_property: {
+              type: "topic",
+            },
+            child_topics: {
+              type: "objects",
+              schema: {
+                name: "child_topic",
+                properties: {
+                  topic_property_2: {
+                    type: "topic",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            errors =
+              described_class.new(
+                schema:,
+                object: {
+                  topic_property: 99_999_999,
+                  child_topics: [{ topic_property_2: 99_999_999 }],
+                },
+              ).validate
+
+            expect(errors.keys).to eq(%w[/topic_property /child_topics/0/topic_property_2])
+
+            expect(errors["/topic_property"].full_messages).to contain_exactly(
+              "must be a valid topic id",
+            )
+
+            expect(errors["/child_topics/0/topic_property_2"].full_messages).to contain_exactly(
+              "must be a valid topic id",
+            )
+          end
+
+        # only 1 SQL query should be executed to check if topic ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
+
+    context "for upload properties" do
+      it "should not return any error message when the value of the property is a valid id of a upload record" do
+        upload = Fabricate(:upload)
+
+        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { upload_property: upload.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
+
+        errors = described_class.new(schema: schema, object: { upload_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/upload_property"])
+
+        expect(errors["/upload_property"].full_messages).to contain_exactly(
+          "must be a valid upload id",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a upload record" do
+        schema = {
+          name: "section",
+          properties: {
+            upload_property: {
+              type: "upload",
+            },
+            child_uploads: {
+              type: "objects",
+              schema: {
+                name: "child_upload",
+                properties: {
+                  upload_property_2: {
+                    type: "upload",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            errors =
+              described_class.new(
+                schema:,
+                object: {
+                  upload_property: 99_999_999,
+                  child_uploads: [{ upload_property_2: 99_999_999 }],
+                },
+              ).validate
+
+            expect(errors.keys).to eq(%w[/upload_property /child_uploads/0/upload_property_2])
+
+            expect(errors["/upload_property"].full_messages).to contain_exactly(
+              "must be a valid upload id",
+            )
+
+            expect(errors["/child_uploads/0/upload_property_2"].full_messages).to contain_exactly(
+              "must be a valid upload id",
+            )
+          end
+
+        # only 1 SQL query should be executed to check if upload ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
+
+    context "for tag properties" do
+      it "should not return any error message when the value of the property is a valid id of a tag record" do
+        tag = Fabricate(:tag)
+
+        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { tag_property: tag.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
+
+        errors = described_class.new(schema: schema, object: { tag_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/tag_property"])
+
+        expect(errors["/tag_property"].full_messages).to contain_exactly("must be a valid tag id")
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a tag record" do
+        schema = {
+          name: "section",
+          properties: {
+            tag_property: {
+              type: "tag",
+            },
+            child_tags: {
+              type: "objects",
+              schema: {
+                name: "child_tag",
+                properties: {
+                  tag_property_2: {
+                    type: "tag",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            errors =
+              described_class.new(
+                schema:,
+                object: {
+                  tag_property: 99_999_999,
+                  child_tags: [{ tag_property_2: 99_999_999 }],
+                },
+              ).validate
+
+            expect(errors.keys).to eq(%w[/tag_property /child_tags/0/tag_property_2])
+
+            expect(errors["/tag_property"].full_messages).to contain_exactly(
+              "must be a valid tag id",
+            )
+
+            expect(errors["/child_tags/0/tag_property_2"].full_messages).to contain_exactly(
+              "must be a valid tag id",
+            )
+          end
+
+        # only 1 SQL query should be executed to check if tag ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
+
+    context "for group properties" do
+      it "should not return any error message when the value of the property is a valid id of a group record" do
+        group = Fabricate(:group)
+
+        schema = { name: "section", properties: { group_property: { type: "group" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { group_property: group.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { group_property: { type: "group" } } }
+
+        errors = described_class.new(schema: schema, object: { group_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/group_property"])
+
+        expect(errors["/group_property"].full_messages).to contain_exactly(
+          "must be a valid group id",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a group record" do
+        schema = {
+          name: "section",
+          properties: {
+            group_property: {
+              type: "group",
+            },
+            child_groups: {
+              type: "objects",
+              schema: {
+                name: "child_group",
+                properties: {
+                  group_property_2: {
+                    type: "group",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            errors =
+              described_class.new(
+                schema:,
+                object: {
+                  group_property: 99_999_999,
+                  child_groups: [{ group_property_2: 99_999_999 }],
+                },
+              ).validate
+
+            expect(errors.keys).to eq(%w[/group_property /child_groups/0/group_property_2])
+
+            expect(errors["/group_property"].full_messages).to contain_exactly(
+              "must be a valid group id",
+            )
+
+            expect(errors["/child_groups/0/group_property_2"].full_messages).to contain_exactly(
+              "must be a valid group id",
+            )
+          end
+
+        # only 1 SQL query should be executed to check if group ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
+
+    context "for post properties" do
+      it "should not return any error message when the value of the property is a valid id of a post record" do
+        post = Fabricate(:post)
+
+        schema = { name: "section", properties: { post_property: { type: "post" } } }
+
+        expect(
+          described_class.new(schema: schema, object: { post_property: post.id }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not an integer" do
+        schema = { name: "section", properties: { post_property: { type: "post" } } }
+
+        errors = described_class.new(schema: schema, object: { post_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/post_property"])
+
+        expect(errors["/post_property"].full_messages).to contain_exactly("must be a valid post id")
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid id of a post record" do
+        schema = {
+          name: "section",
+          properties: {
+            post_property: {
+              type: "post",
+            },
+            child_posts: {
+              type: "objects",
+              schema: {
+                name: "child_post",
+                properties: {
+                  post_property_2: {
+                    type: "post",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        queries =
+          track_sql_queries do
+            errors =
+              described_class.new(
+                schema:,
+                object: {
+                  post_property: 99_999_999,
+                  child_posts: [{ post_property_2: 99_999_999 }],
+                },
+              ).validate
+
+            expect(errors.keys).to eq(%w[/post_property /child_posts/0/post_property_2])
+
+            expect(errors["/post_property"].full_messages).to contain_exactly(
+              "must be a valid post id",
+            )
+
+            expect(errors["/child_posts/0/post_property_2"].full_messages).to contain_exactly(
+              "must be a valid post id",
+            )
+          end
+
+        # only 1 SQL query should be executed to check if post ids are valid
+        expect(queries.length).to eq(1)
+      end
+    end
+
     context "for category properties" do
       it "should not return any error message when the value of the property is a valid id of a category record" do
         category = Fabricate(:category)
