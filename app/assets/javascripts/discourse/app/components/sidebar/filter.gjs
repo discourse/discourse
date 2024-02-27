@@ -33,6 +33,7 @@ export default class Filter extends Component {
   @action
   clearFilter() {
     this.sidebarState.clearFilter();
+    document.querySelector(".sidebar-filter__input").focus();
   }
 
   <template>
