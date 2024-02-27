@@ -2,7 +2,6 @@ import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -10,7 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import { sanitize } from "discourse/lib/text";
-import { bind } from "discourse-common/utils/decorators";
+import { afterRender, bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const FULL_RELOAD_LINKS_REGEX = [
@@ -368,14 +367,6 @@ export default class SidebarSectionForm extends Component {
       });
   }
 
-  focusNewRowInput(id) {
-    schedule("afterRender", () => {
-      document
-        .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
-        .focus();
-    });
-  }
-
   get activeLinks() {
     return this.transformedModel.links.filter((link) => !link._destroy);
   }
@@ -390,6 +381,13 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
+  }
+
+  @afterRender
+  focusNewRowInput(id) {
+    document
+      .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
+      .focus();
   }
 
   @bind
