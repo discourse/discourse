@@ -24,7 +24,6 @@ export default class SidebarApiSection extends Component {
     if (!this.sidebarState.filter) {
       return this.section.links;
     }
-
     const filterText = this.sidebarState.filter.toLowerCase();
     if (this.section.text.toLowerCase().match(filterText)) {
       return this.section.links;

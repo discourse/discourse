@@ -84,5 +84,11 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(all_links_count)
     expect(page).to have_no_css(".sidebar-no-results")
+
+    # When match section title, display all links
+    filter.filter("Backups")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(%w[Backups Logs])
   end
 end
