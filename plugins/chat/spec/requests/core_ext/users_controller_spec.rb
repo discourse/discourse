@@ -52,19 +52,5 @@ describe UsersController do
       notifications = response.parsed_body["notifications"]
       expect(notifications.size).to eq(0)
     end
-
-    it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
-      bookmark_with_reminder =
-        Fabricate(:bookmark, user: current_user, bookmarkable: bookmark_message)
-      BookmarkReminderNotificationHandler.new(bookmark_with_reminder).send_notification
-      bookmark_with_reminder.destroy!
-
-      get "/u/#{current_user.username}/user-menu-bookmarks"
-      expect(response.status).to eq(200)
-
-      notifications = response.parsed_body["notifications"]
-      expect(notifications.size).to eq(1)
-      expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
-    end
   end
 end

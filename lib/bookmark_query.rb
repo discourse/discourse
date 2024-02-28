@@ -109,8 +109,14 @@ class BookmarkQuery
     # First we want to group these by type into a hash to reduce queries:
     #
     # {
-    #   "Post": { ids: [1, 432, 221], records: [] },
-    #   "Topic": { ids: [1, 432, 221], records: [] },
+    #   "Post": {
+    #     1234: <Post>,
+    #     566: <Post>,
+    #   },
+    #   "Topic": {
+    #     123: <Topic>,
+    #     99: <Topic>,
+    #   }
     # }
     #
     # We may not need to do this most of the time. It depends mostly on
@@ -123,17 +129,15 @@ class BookmarkQuery
             notif.data_hash[:bookmarkable_type].present?
         end
         .inject({}) do |hash, notif|
-          hash[notif.data_hash[:bookmarkable_type]] ||= { ids: [], records: [] }
-          hash[notif.data_hash[:bookmarkable_type]][:ids] << notif.data_hash[:bookmarkable_id]
+          hash[notif.data_hash[:bookmarkable_type]] ||= {}
+          hash[notif.data_hash[:bookmarkable_type]][notif.data_hash[:bookmarkable_id]] = nil
           hash
         end
 
     # Then, we can actually find the associated records for each type in the database.
     deleted_bookmarkables.each do |type, bookmarkable|
-      deleted_bookmarkables[type][:records] = Bookmark
-        .registered_bookmarkable_from_type(type)
-        .model
-        .where(id: bookmarkable[:ids])
+      records = Bookmark.registered_bookmarkable_from_type(type).model.where(id: bookmarkable.keys)
+      records.each { |record| deleted_bookmarkables[type][record.id] = record }
     end
 
     reminder_notifications.select do |notif|
@@ -149,9 +153,10 @@ class BookmarkQuery
         # bookmarks' related bookmarkable (e.g. Post, Topic) to determine
         # secure access.
         bookmarkable =
-          deleted_bookmarkables
-            .dig(notif.data_hash[:bookmarkable_type], :records)
-            &.find { |record| record.id == notif.data_hash[:bookmarkable_id] }
+          deleted_bookmarkables.dig(
+            notif.data_hash[:bookmarkable_type],
+            notif.data_hash[:bookmarkable_id],
+          )
         bookmarkable.present? &&
           Bookmark.registered_bookmarkable_from_type(
             notif.data_hash[:bookmarkable_type],
