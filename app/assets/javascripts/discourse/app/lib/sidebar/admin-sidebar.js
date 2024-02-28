@@ -37,6 +37,10 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     return this.adminSidebarNavLink.href;
   }
 
+  get query() {
+    return this.adminSidebarNavLink.query;
+  }
+
   get models() {
     return this.adminSidebarNavLink.routeModels;
   }
@@ -111,28 +115,10 @@ export function useAdminNavConfig(navMap) {
       hideSectionHeader: true,
       links: [
         {
-          name: "admin_dashboard",
-          route: "admin.dashboard",
+          name: "admin_home",
+          route: "admin.dashboard.general",
           label: "admin.dashboard.title",
           icon: "home",
-        },
-        {
-          name: "admin_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.site_settings.title",
-          icon: "cog",
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.users.title",
-          icon: "users",
-        },
-        {
-          name: "admin_badges",
-          route: "adminBadges",
-          label: "admin.badges.title",
-          icon: "certificate",
         },
       ],
     },
