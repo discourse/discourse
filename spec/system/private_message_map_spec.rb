@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Topic Map - Private Message", type: :system do
-  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:last_post_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) do
@@ -21,6 +21,10 @@ describe "Topic Map - Private Message", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_map) { PageObjects::Components::TopicMap.new }
   let(:private_message_map) { PageObjects::Components::PrivateMessageMap.new }
+  let(:private_message_invite_modal) { PageObjects::Modals::PrivateMessageInvite.new }
+  let(:private_message_remove_participant_modal) do
+    PageObjects::Modals::PrivateMessageRemoveParticipant.new
+  end
 
   def avatar_url(user, size)
     URI(user.avatar_template_url.gsub("{size}", size.to_s)).path
@@ -89,11 +93,40 @@ describe "Topic Map - Private Message", type: :system do
     topic_page.visit_topic(topic)
 
     expect(topic_page).to have_private_message_map
-    #
-    # TODO private message participants that's allowed in group
-    #
-    # TODO can add or remove participants
-    #
-    # TODO can toggle on and off editing
+
+    # participants' links and avatars
+    private_message_map
+      .participants_details
+      .zip([user, other_user, last_post_user]) do |details, usr|
+        expect(details).to have_link(usr.username, href: "/u/#{usr.username}")
+        expect(details.find(".trigger-user-card")).to have_selector(
+          "img[src=\"#{avatar_url(usr, 24)}\"]",
+        )
+      end
+
+    # toggle ability to edit participants
+    private_message_map.toggle_edit_participants_button
+    expect(private_message_map).to have_invite_participants_button
+    private_message_map.toggle_edit_participants_button
+    expect(private_message_map).to have_no_invite_participants_button
+
+    # TODO: adding participants
+
+    # removing participants
+    private_message_map.toggle_edit_participants_button
+    private_message_map.participants_details.each do |details|
+      expect(details).to have_css(".remove-invited .d-icon-times")
+    end
+    private_message_map.click_remove_participant_button(other_user)
+    expect(private_message_remove_participant_modal).to be_opened
+    expect(private_message_remove_participant_modal.body).to have_text(
+      "Do you really want to remove #{other_user.username} from this message?",
+    )
+    private_message_remove_participant_modal.cancel
+    expect(private_message_map).to have_participant_details_for(other_user)
+
+    private_message_map.click_remove_participant_button(other_user)
+    private_message_remove_participant_modal.confirm_removal
+    expect(private_message_map).to have_no_participant_details_for(other_user)
   end
 end
