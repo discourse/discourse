@@ -61,7 +61,7 @@ class ThemeSettingsObjectValidator
   end
 
   def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: {})
-    @object = object
+    @object = object.with_indifferent_access
     @schema_name = schema[:name]
     @properties = schema[:properties]
     @errors = errors
