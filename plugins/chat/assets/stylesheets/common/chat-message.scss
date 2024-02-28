@@ -140,6 +140,10 @@
     width: 28px;
     height: 28px;
   }
+
+  pre {
+    scrollbar-color: var(--primary-300) transparent;
+  }
 }
 
 .touch .chat-message-container {
