@@ -3,7 +3,7 @@
     padding-top: 0.75rem;
     background: none;
     .chat-replying-indicator {
-      padding-left: calc(1rem + (2 * 5px) + 0.2rem + (2 * 0.65rem));
+      padding-left: calc(1rem + (2 * 5px) + 0.2rem + (2 * 0.65rem) + 1px);
     }
   }
   &__outer-container {
@@ -42,7 +42,8 @@
     border-radius: 100%;
     line-height: 0;
 
-    .is-send-enabled.is-focused & {
+    .is-send-enabled.is-focused &,
+    .is-send-enabled & {
       background-color: var(--tertiary-high);
       color: var(--secondary);
       .d-icon {
