@@ -21,7 +21,6 @@
     "ember-template-imports": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
     "@ember/optional-features": "^2.1.0",
     "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",
