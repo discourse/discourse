@@ -16,12 +16,19 @@ module("Discourse Chat | Component | chat-user-info", function (hooks) {
   });
 
   test("status message", async function (assert) {
-    this.currentUser.userStatus = { emoji: "smile", description: "happy" };
+    this.siteSettings.enable_user_status = true;
+
     this.set("user", this.currentUser);
 
-    await render(hbs`<ChatUserInfo @user={{this.user}} />`);
+    this.user.setProperties({
+      status: { description: "happy", emoji: "smile" },
+    });
 
-    assert.dom().containsText(this.user.userStatus.emoji);
-    assert.dom().containsText(this.user.userStatus.description);
+    await render(
+      hbs`<ChatUserInfo @user={{this.user}} @showStatus={{true}} @showStatusDescription={{true}} />`
+    );
+
+    assert.dom("img.emoji[alt='smile']").exists("it shows the emoji");
+    assert.dom().containsText("happy");
   });
 });
