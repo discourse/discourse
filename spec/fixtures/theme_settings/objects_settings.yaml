@@ -1,0 +1,33 @@
+objects_setting:
+  type: objects
+  default:
+    - name: "section 1"
+      links:
+        - name: "link 1"
+          url: "http://example.com"
+        - name: "link 2"
+          url: "http://example.com"
+    - name: "section 2"
+      links:
+        - name: "link 3"
+          url: "http://example.com"
+        - name: "link 4"
+          url: "http://example.com"
+  schema:
+    name: sections
+    properties:
+      name:
+        type: string
+        required: true
+      links:
+        type: objects
+        schema:
+          name: link
+          properties:
+            name:
+              type: string
+              required: true
+              validations:
+                max_length: 20
+            url:
+              type: string

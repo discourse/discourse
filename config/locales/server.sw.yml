@@ -62,14 +62,8 @@ sw:
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
       name_too_long: "Kuna mpangilio wenye jina lefu sana. Kiwango cha juu cha urefu ni 255"
-      default_value_missing: "Mpangilio wa `%{name}` hauna thamani"
-      default_out_range: "Mpangilio `%{name}` chaguo-msingi haupo kwenye namba zilizotajwa."
-      number_value_not_valid: "Namba uliyoiandika haipo kwenye eneo linaloruhusiwa."
-      number_value_not_valid_min_max: "Lazima iwe kati ya %{min} na %{max}."
-      number_value_not_valid_min: "Lazima iwe na ukubwa wa au zaidi ya %{min}."
-      number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
-      string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
-      string_value_not_valid_max: "Isizidi maneno %{max}."
+      default_value_missing: "Mpangilio wa `%{name}` hauna thamani."
+      number_value_not_valid_min_max: "Namba lazima ziwe kati ya %{min}na %{max}"
       objects:
         required: "lazima iwepo"
         not_valid_integer_value: "lazima iwe namba"

@@ -695,7 +695,12 @@ RSpec.configure do |config|
         lines << "\n"
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}\n" }
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"

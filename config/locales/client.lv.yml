@@ -1891,6 +1891,18 @@ lv:
     topic_bulk_actions:
       close_topics:
         name: "Slēgt tēmas"
+      archive_topics:
+        name: "Arhivēt tēmas"
+      unlist_topics:
+        name: "Izņemt no sarakstiem tēmas"
+      relist_topics:
+        name: "Atkal padarīt tēmas redzamas sarakstiem"
+      append_tags:
+        name: "Pievienot tagus"
+      replace_tags:
+        name: "Aizvietot tagus"
+      delete_topics:
+        name: "Dzēst tēmas"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"

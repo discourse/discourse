@@ -252,7 +252,7 @@ pl_PL:
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     critical_deprecation:
-      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>więcej informacji</a>)."
+      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
       theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
@@ -3010,9 +3010,27 @@ pl_PL:
     topic_bulk_actions:
       close_topics:
         name: "Zamknij tematy"
+      archive_topics:
+        name: "Zarchiwizuj tematy"
+      unlist_topics:
+        name: "Ukryj tematy"
+      relist_topics:
+        name: "Odśwież listę tematów"
+      remove_tags:
+        name: "Usuń tagi"
+      append_tags:
+        name: "Dodaj tagi"
+      replace_tags:
+        name: "Zmień tagi"
+      delete_topics:
+        name: "Usuń tematy"
       update_category:
         name: "Aktualizuj kategorię"
         description: "Wybierz nową kategorię dla wybranych tematów"
+      defer:
+        description: "Oznacz tematy jako nieprzeczytane"
+      update_notifications:
+        name: "Aktualizuj powiadomienia…"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5197,6 +5215,7 @@ pl_PL:
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
+          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
         group_user_event:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
@@ -5553,6 +5572,8 @@ pl_PL:
           active_filter: "Aktywni"
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
+          schema:
+            back_button: "Powrót do %{name}"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"

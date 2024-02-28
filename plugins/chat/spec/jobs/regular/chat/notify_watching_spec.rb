@@ -62,6 +62,29 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       )
     end
 
+    context "with chat_notification_translation_args plugin_modifier" do
+      let(:modifier_block) do
+        Proc.new do |args|
+          args[:username] = "Hijacked"
+          args
+        end
+      end
+      it "Allows for changes to the translation args" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:chat_notification_translation_args, &modifier_block)
+
+        messages = notification_messages_for(user2)
+
+        expect(messages.first.data[:translated_title]).to start_with("Hijacked")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :chat_notification_translation_args,
+          &modifier_block
+        )
+      end
+    end
+
     context "when the channel is muted via membership preferences" do
       before { membership2.update!(muted: true) }
 

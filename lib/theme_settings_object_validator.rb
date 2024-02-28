@@ -61,7 +61,7 @@ class ThemeSettingsObjectValidator
   end
 
   def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: {})
-    @object = object
+    @object = object.with_indifferent_access
     @schema_name = schema[:name]
     @properties = schema[:properties]
     @errors = errors
@@ -70,22 +70,15 @@ class ThemeSettingsObjectValidator
   end
 
   def validate
-    validate_properties
-
     @properties.each do |property_name, property_attributes|
       if property_attributes[:type] == "objects"
-        @object[property_name]&.each_with_index do |child_object, index|
-          self
-            .class
-            .new(
-              schema: property_attributes[:schema],
-              object: child_object,
-              json_pointer_prefix: "#{@json_pointer_prefix}#{property_name}/#{index}/",
-              valid_ids_lookup:,
-              errors: @errors,
-            )
-            .validate
-        end
+        validate_child_objects(
+          @object[property_name],
+          property_name:,
+          schema: property_attributes[:schema],
+        )
+      else
+        validate_property(property_name, property_attributes)
       end
     end
 
@@ -94,13 +87,27 @@ class ThemeSettingsObjectValidator
 
   private
 
-  def validate_properties
-    @properties.each do |property_name, property_attributes|
-      next if property_attributes[:type] == "objects"
-      next if property_attributes[:required] && !is_property_present?(property_name)
-      next if !has_valid_property_value_type?(property_attributes, property_name)
-      next if !has_valid_property_value?(property_attributes, property_name)
+  def validate_child_objects(objects, property_name:, schema:)
+    return if objects.blank?
+
+    objects.each_with_index do |object, index|
+      self
+        .class
+        .new(
+          schema:,
+          object:,
+          valid_ids_lookup:,
+          json_pointer_prefix: "#{@json_pointer_prefix}#{property_name}/#{index}/",
+          errors: @errors,
+        )
+        .validate
     end
+  end
+
+  def validate_property(property_name, property_attributes)
+    return if property_attributes[:required] && !is_property_present?(property_name)
+    return if !has_valid_property_value_type?(property_attributes, property_name)
+    !has_valid_property_value?(property_attributes, property_name)
   end
 
   def has_valid_property_value_type?(property_attributes, property_name)

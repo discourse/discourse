@@ -2438,6 +2438,16 @@ bg:
     topic_bulk_actions:
       close_topics:
         name: "Затвори темите"
+      archive_topics:
+        name: "Архивирай темите"
+      unlist_topics:
+        name: "Непоказани теми"
+      append_tags:
+        name: "Добави етикетите"
+      replace_tags:
+        name: "Замени етикетите"
+      delete_topics:
+        name: "Изтрий темите"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"

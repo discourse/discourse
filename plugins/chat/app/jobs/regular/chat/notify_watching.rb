@@ -60,6 +60,11 @@ module Jobs
 
         translation_args = { username: @creator.username }
         translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel
+        translation_args =
+          DiscoursePluginRegistry.apply_modifier(
+            :chat_notification_translation_args,
+            translation_args,
+          )
 
         payload = {
           username: @creator.username,
