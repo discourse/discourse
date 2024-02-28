@@ -21,7 +21,7 @@
             id="section-name"
             {{on
               "input"
-              (action (mut this.transformedModel.title) value="target.value")
+              (with-event-value (fn (mut this.transformedModel.title)))
             }}
           />
 

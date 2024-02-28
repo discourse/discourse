@@ -10,7 +10,7 @@ export default TextField.extend({
   init() {
     this._super(...arguments);
     deprecated(
-      `NumberField component is deprecated. Use native <input> elements instead.\ne.g. <input {{on "input" (action (mut this.value) value="target.value")}} type="number" value={{this.value}} />`,
+      `NumberField component is deprecated. Use native <input> elements instead.\ne.g. <input {{on "input" (with-event-value (fn (mut this.value)))}} type="number" value={{this.value}} />`,
       {
         id: "discourse.number-field",
         since: "3.2.0.beta5",

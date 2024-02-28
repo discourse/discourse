@@ -47,7 +47,7 @@
       @value={{@link.name}}
       class={{@link.nameCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.name.label"}}
-      {{on "input" (action (mut @link.name) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
       <div class="name warning">
@@ -62,7 +62,7 @@
       @value={{@link.value}}
       class={{@link.valueCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.value.label"}}
-      {{on "input" (action (mut @link.value) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
       <div class="value warning">
