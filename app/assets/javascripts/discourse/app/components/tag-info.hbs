@@ -7,7 +7,7 @@
             @id="edit-name"
             @value={{readonly this.tagInfo.name}}
             @maxlength={{this.siteSettings.max_tag_length}}
-            @input={{pick (fn (mut this.newTagName))}}
+            @input={{with-event-value (fn (mut this.newTagName))}}
             @autofocus="true"
           />
 
