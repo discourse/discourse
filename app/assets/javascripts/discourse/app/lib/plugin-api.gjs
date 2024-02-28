@@ -101,8 +101,8 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import {
-  addToHeaderIcons,
   attachAdditionalPanel,
+  headerIconsMap as widgetHeaderIconsMap,
 } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
@@ -1866,7 +1866,10 @@ class PluginApi {
    *
    **/
   get headerIcons() {
-    return headerIconsMap();
+    const currentUser = this._lookupContainer("service:current-user");
+    return currentUser?.glimmer_header_enabled
+      ? headerIconsMap()
+      : widgetHeaderIconsMap();
   }
 
   /**
@@ -1888,7 +1891,6 @@ class PluginApi {
       }
     );
 
-    addToHeaderIcons(icon);
     this.headerIcons.add(
       icon,
       <template><MountWidget @widget={{icon}} /></template>,
@@ -2490,33 +2492,6 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
    */
