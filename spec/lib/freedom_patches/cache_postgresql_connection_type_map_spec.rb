@@ -14,7 +14,10 @@ RSpec.describe "Caching PostgreSQL connection type map" do
         end
       end
 
-    expect do ActiveRecord::Base.connection.reconnect! end.not_to change { pg_type_queries.length }
+    expect do
+      ActiveRecord::Base.clear_active_connections!
+      ActiveRecord::Base.establish_connection
+    end.to change { pg_type_queries.length }.by(1) # There is some default pg_type query but if stuff was not cached, we would see 4 queries here
   ensure
     ActiveSupport::Notifications.unsubscribe(subscriber)
   end
