@@ -96,7 +96,7 @@ export default class SchemaThemeSettingEditor extends Component {
       }
       list.push({
         name,
-        type: spec.type,
+        spec,
         value: node.object[name],
       });
     }
@@ -194,8 +194,8 @@ export default class SchemaThemeSettingEditor extends Component {
       {{#each this.fields as |field|}}
         <FieldInput
           @name={{field.name}}
-          @type={{field.type}}
           @value={{field.value}}
+          @spec={{field.spec}}
           @onValueChange={{fn this.inputFieldChanged field}}
         />
       {{/each}}
