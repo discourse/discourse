@@ -78,6 +78,8 @@ module Jobs
         membership = @channel.membership_for(mentioned_user) # fixme andrei take care of N + 1
         return if membership.muted?
 
+        ::Chat::Publisher.publish_new_mention(mentioned_user.id, @channel.id, @message.id)
+
         payload = mention.notification_payload(mentioned_user)
         unless membership.desktop_notifications_never?
           ::PostAlerter.desktop_notification(mentioned_user, payload)
