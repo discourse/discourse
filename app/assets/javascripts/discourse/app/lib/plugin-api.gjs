@@ -9,7 +9,7 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { headerIconsMap } from "discourse/components/glimmer-header/icons";
+import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
@@ -102,7 +102,7 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import {
   attachAdditionalPanel,
-  headerIconsMap as widgetHeaderIconsMap,
+  headerIconsDAG as widgetHeaderIconsDAG,
 } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
@@ -1868,8 +1868,8 @@ class PluginApi {
   get headerIcons() {
     const currentUser = this._lookupContainer("service:current-user");
     return currentUser?.glimmer_header_enabled
-      ? headerIconsMap()
-      : widgetHeaderIconsMap();
+      ? headerIconsDAG()
+      : widgetHeaderIconsDAG();
   }
 
   /**
@@ -2492,6 +2492,15 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+
+
+
+
+
+
+
+
+
 
 
    */

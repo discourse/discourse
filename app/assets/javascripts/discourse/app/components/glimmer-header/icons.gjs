@@ -5,7 +5,6 @@ import getURL from "discourse-common/lib/get-url";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
-import MountWidget from "../mount-widget";
 import Dropdown from "./dropdown";
 import PanelPortal from "./panel-portal";
 import UserDropdown from "./user-dropdown";
@@ -21,7 +20,7 @@ function resetHeaderIcons() {
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
 }
 
-export function headerIconsMap() {
+export function headerIconsDAG() {
   return headerIcons;
 }
 

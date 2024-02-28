@@ -30,7 +30,7 @@ export function clearExtraHeaderIcons() {
   _extraHeaderIcons = new DAG();
 }
 
-export function headerIconsMap() {
+export function headerIconsDAG() {
   return _extraHeaderIcons;
 }
 
