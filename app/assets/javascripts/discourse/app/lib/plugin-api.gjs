@@ -2493,8 +2493,6 @@ class PluginApi {
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
 
-
-
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);

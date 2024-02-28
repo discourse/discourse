@@ -70,8 +70,6 @@ export default class Icons extends Component {
           <entry.value
             @panelPortal={{component PanelPortal panelElement=@panelElement}}
           />
-        {{else}}
-          {{log "nothing to render for" entry.key}}
         {{/if}}
       {{/each}}
     </ul>
