@@ -8,7 +8,7 @@ module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
   AUDIO_REGEX = /\A\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)\z/i
   VIDEO_REGEX = /\A\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)\z/i
-
+  HLS_REGEX = /\A\.(m3u8)\z/i
   # keep reloaders happy
   unless defined?(Oneboxer::Result)
     Result =
@@ -359,6 +359,14 @@ module Oneboxer
 
     normalized_url = ::Onebox::Helpers.normalize_url_for_output(url)
     case File.extname(URI(url).path || "")
+    when HLS_REGEX
+      <<-HTML
+      <div class="onebox video-onebox videoWrap evan-hls-video">
+        <video id='#{randomId}' class="video-js vjs-default-skin vjs-16-9" controls preload="auto" width="100%" data-setup='{"fluid": true}'>
+          <source src="#{@url}" type="application/x-mpegURL">
+        </video>
+      </div>
+      HTML
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
