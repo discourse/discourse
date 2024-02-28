@@ -7,7 +7,7 @@ RSpec.describe Admin::DashboardController do
 
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
-    Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
+    Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
   end
 
   def populate_new_features(date1 = nil, date2 = nil)

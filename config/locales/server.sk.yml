@@ -65,6 +65,11 @@ sk:
       too_many_files: "Počet súborov (%{count}) v téme prekročil maximálny povolený počet súborov (%{limit})"
       migrations:
         invalid_filename: "Nesprávny názov súboru pre migračný súbor: %{filename}. Názvy súborov musia začínať 4 číslicami, po ktorých nasleduje pomlčka a potom názov, ktorý obsahuje len alfanumerické znaky s pomlčkami."
+        name_too_long:
+          one: "Názov migrácie je príliš dlhý. Nemal by presiahnuť %{count} znak."
+          few: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znaky."
+          many: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znakov."
+          other: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znaky."
         too_many_pending_migrations: "V tejto téme je príliš veľa čakajúcich migrácií. Témy nesmú v jednej aktualizácii zaviesť viac ako 100 migrácií"
         out_of_sequence: "Migrácia '%{name}' je mimo poradia. Posledná migrácia pre túto tému mala číslo verzie %{current} , ktoré je vyššie ako nová migrácia."
         syntax_error: "Nepodarilo sa spustiť migráciu '%{name}', pretože obsahuje chybu syntaxe: %{error}"
@@ -78,6 +83,9 @@ sk:
         unknown_setting_returned_by_migration: "Migrácie '%{name}' vrátili nastavenie '%{setting_name}', ktoré nie je deklarované v súbore settings.yml témy"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
+      objects:
+        required: "musí existovať"
+        not_valid_integer_value: "musí byť číslo"
   emails:
     incoming:
       default_subject: "Táto téma musí mať názov"
@@ -519,8 +527,6 @@ sk:
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."
   change_email:
-    confirmed: "Vaša emailova adresa bola aktualizovaná"
-    please_continue: "Pokračujte na %{site_name}"
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš email už zmenený?"
     confirm: "Potvrďte"
@@ -547,6 +553,9 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Poslať @%{username} správu"
       email_title: 'Váš príspevok v "%{title}"'
@@ -586,6 +595,9 @@ sk:
       title: "Niečo iné"
       long_form: "označené do pozornosti moderátora"
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>"
@@ -1087,9 +1099,6 @@ sk:
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
     emoji_set: "Aké emoji chcete mať?"
-    approve_unless_trust_level: "Príspevky používateľov pod touto úrovňou důvery musia byť schválené"
-    approve_unless_allowed_groups: "Príspevky pre používateľov, ktorí nie sú v týchto skupinách, musia byť schválené"
-    approve_new_topics_unless_allowed_groups: "Nové témy pre používateľov, ktorí nie sú v týchto skupinách, musia byť schválené"
     reviewable_revision_reasons: "Zoznam dôvodov, ktoré je možné zvoliť pri odmietnutí recenzovateľného príspevku v rade s revíziou. Vždy je k dispozícii aj iné, čo umožňuje zadanie z vlastného dôvodu."
     auto_close_messages_post_count: "Maximálny počet povolených príspevkov v správe kým je automaticky uzavretá (0 znamená vypnuté)"
     auto_close_topics_post_count: "Maximálny počet povolených príspevkov v téme kým je automaticky uzavretá (0 znamená vypnuté)"

@@ -45,6 +45,7 @@ it:
       back_to_forum: "Forum"
       deleted_chat_username: eliminato
       dates:
+        yesterday: "Ieri"
         time_tiny: "h:mm"
       all_loaded: "Mostra tutti i messaggi"
       already_enabled: "La chat è già abilitata su questo argomento. Prova ad aggiornare."
@@ -302,7 +303,7 @@ it:
         back: "Indietro"
         title: Canali
         filter_all: Tutti
-        filter_open: Aperti
+        filter_open: Aperto
         filter_closed: Chiusi
         filter_archived: Archiviati
         filter_input_placeholder: Cerca canale per nome
@@ -389,8 +390,8 @@ it:
                     }
               other {
                       { userCount, plural,
-                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di {groupCount} altri gruppi?}
-                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di {groupCount} altri gruppi?}
+                          one {Aggiungere automaticamente {userCount} utente di {groupName} e altri {groupCount} gruppi?}
+                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e altri {groupCount} gruppi?}
                       }
                     }
             }
@@ -401,7 +402,7 @@ it:
           hint_1_group: 'Gli utenti in %{group} avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
           hint_2_groups: 'Gli utenti in %{group1} e %{group2} avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
           hint_multiple_groups:
-            one: 'Gli utenti in %{group} e un altro gruppo avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
+            one: 'Gli utenti in %{group} e %{count} altro gruppo avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
             other: 'Gli utenti in %{group} e altri %{count} gruppi avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
         create: "Crea canale"
         description: "Descrizione (facoltativa)"

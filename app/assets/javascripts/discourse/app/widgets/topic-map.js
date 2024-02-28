@@ -1,9 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
-import { dateNode, numberNode } from "discourse/helpers/node";
 import { replaceEmoji } from "discourse/widgets/emoji";
-import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -36,177 +34,13 @@ createWidget("topic-map-show-links", {
         title: "topic_map.links_shown",
         icon: "chevron-down",
         action: "showLinks",
-        className: "btn",
+        className: "btn btn-flat",
       })
     );
   },
 
   showLinks() {
     this.sendWidgetAction("showAllLinks");
-  },
-});
-
-createWidget("topic-map-summary", {
-  tagName: "section.map",
-
-  buildClasses(attrs, state) {
-    if (state.collapsed) {
-      return "map-collapsed";
-    }
-  },
-
-  html(attrs, state) {
-    const contents = [];
-    contents.push(
-      h("li.created-at", [
-        h(
-          "h4",
-          {
-            attributes: { role: "presentation" },
-          },
-          I18n.t("created_lowercase")
-        ),
-        h("div.topic-map-post.created-at", [
-          avatarFor("tiny", {
-            username: attrs.createdByUsername,
-            template: attrs.createdByAvatarTemplate,
-            name: attrs.createdByName,
-          }),
-          dateNode(attrs.topicCreatedAt),
-        ]),
-      ])
-    );
-    contents.push(
-      h(
-        "li.last-reply",
-        h("a", { attributes: { href: attrs.lastPostUrl } }, [
-          h(
-            "h4",
-            {
-              attributes: { role: "presentation" },
-            },
-            I18n.t("last_reply_lowercase")
-          ),
-          h("div.topic-map-post.last-reply", [
-            avatarFor("tiny", {
-              username: attrs.lastPostUsername,
-              template: attrs.lastPostAvatarTemplate,
-              name: attrs.lastPostName,
-            }),
-            dateNode(attrs.lastPostAt),
-          ]),
-        ])
-      )
-    );
-    contents.push(
-      h("li.replies", [
-        numberNode(attrs.topicReplyCount),
-        h(
-          "h4",
-          {
-            attributes: { role: "presentation" },
-          },
-          I18n.t("replies_lowercase", {
-            count: attrs.topicReplyCount,
-          }).toString()
-        ),
-      ])
-    );
-    contents.push(
-      h("li.secondary.views", [
-        numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
-        h(
-          "h4",
-          {
-            attributes: { role: "presentation" },
-          },
-          I18n.t("views_lowercase", { count: attrs.topicViews }).toString()
-        ),
-      ])
-    );
-
-    if (attrs.participantCount > 0) {
-      contents.push(
-        h("li.secondary.users", [
-          numberNode(attrs.participantCount),
-          h(
-            "h4",
-            {
-              attributes: { role: "presentation" },
-            },
-            I18n.t("users_lowercase", {
-              count: attrs.participantCount,
-            }).toString()
-          ),
-        ])
-      );
-    }
-
-    if (attrs.topicLikeCount) {
-      contents.push(
-        h("li.secondary.likes", [
-          numberNode(attrs.topicLikeCount),
-          h(
-            "h4",
-            {
-              attributes: { role: "presentation" },
-            },
-            I18n.t("likes_lowercase", {
-              count: attrs.topicLikeCount,
-            }).toString()
-          ),
-        ])
-      );
-    }
-
-    if (attrs.topicLinkLength > 0) {
-      contents.push(
-        h("li.secondary.links", [
-          numberNode(attrs.topicLinkLength),
-          h(
-            "h4",
-            {
-              attributes: { role: "presentation" },
-            },
-            I18n.t("links_lowercase", {
-              count: attrs.topicLinkLength,
-            }).toString()
-          ),
-        ])
-      );
-    }
-
-    if (
-      state.collapsed &&
-      attrs.topicPostsCount > 2 &&
-      attrs.participants &&
-      attrs.participants.length > 0
-    ) {
-      const participants = renderParticipants.call(
-        this,
-        "li.avatars",
-        "",
-        attrs.userFilters,
-        attrs.participants.slice(0, 3)
-      );
-      contents.push(participants);
-    }
-
-    const nav = h(
-      "nav.buttons",
-      this.attach("button", {
-        title: state.collapsed
-          ? "topic.expand_details"
-          : "topic.collapse_details",
-        icon: state.collapsed ? "chevron-down" : "chevron-up",
-        ariaExpanded: state.collapsed ? "false" : "true",
-        ariaControls: "topic-map-expanded",
-        action: "toggleMap",
-        className: "btn",
-      })
-    );
-
-    return [nav, h("ul", contents)];
   },
 });
 
@@ -326,7 +160,7 @@ export default createWidget("topic-map", {
   },
 
   html(attrs, state) {
-    const contents = [this.attach("topic-map-summary", attrs, { state })];
+    const contents = [this.buildTopicMapSummary(attrs, state)];
 
     if (!state.collapsed) {
       contents.push(this.attach("topic-map-expanded", attrs));
@@ -344,6 +178,29 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
+    this.scheduleRerender();
+  },
+
+  buildTopicMapSummary(attrs, state) {
+    const { collapsed } = state;
+    const wrapperClass = collapsed
+      ? "section.map.map-collapsed"
+      : "section.map";
+
+    return new RenderGlimmer(
+      this,
+      wrapperClass,
+      hbs`<TopicMap::TopicMapSummary
+        @postAttrs={{@data.postAttrs}}
+        @toggleMap={{@data.toggleMap}}
+        @collapsed={{@data.collapsed}}
+      />`,
+      {
+        toggleMap: this.toggleMap.bind(this),
+        postAttrs: attrs,
+        collapsed,
+      }
+    );
   },
 
   buildSummaryBox(attrs) {

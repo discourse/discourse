@@ -37,11 +37,8 @@ pl_PL:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} temu"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ pl_PL:
           many: "%{count}r"
           other: "%{count}r"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "mniej niż %{count} minutę"
@@ -144,7 +141,6 @@ pl_PL:
           few: "prawie %{count} lata"
           many: "prawie %{count} lat"
           other: "prawie %{count} lat"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "minutę temu"
@@ -244,7 +240,7 @@ pl_PL:
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
-      message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+      message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
     themes:
@@ -1605,6 +1601,18 @@ pl_PL:
         success_via_admin: "Wysłaliśmy wiadomość e-mail na ten adres. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości e-mail."
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
         back_to_preferences: "Powrót do preferencji"
+        confirm_success: "Twój email został zmieniony."
+        confirm: "Potwierdź"
+        authorizing_new:
+          description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
+          description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
+        authorizing_old:
+          title: "Zweryfikuj stary adres e-mail"
+          description: "Zweryfikuj swój stary adres e-mail, aby kontynuować zmianę adresu e-mail:"
+          description_add: "Zweryfikuj istniejący adres e-mail, aby kontynuować dodawanie alternatywnego adresu:"
+          old_email: "Stary adres e-mail: %{email}"
+          new_email: "Nowy adres e-mail: %{email}"
+          confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , na podstawie"
@@ -1874,6 +1882,9 @@ pl_PL:
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
         incorrect_passkey: "Ten passkey jest nieprawidłowy."
         logged_in_as: "Jesteś zalogowany jako: "
+        forgot_password: "Zapomniałeś hasła?"
+        password_reset_email_sent: "Wysłano wiadomość e-mail z resetem hasła."
+        cannot_send_password_reset_email: "Nie można wysłać wiadomości e-mail z resetem hasła."
         instructions: "Aby dokończyć tę czynność, potwierdź swoją tożsamość."
         fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
@@ -2317,10 +2328,11 @@ pl_PL:
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
       components:
-        tag_drop:
-          filter_for_more: Filtruj po więcej...
+        filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
+        bulk_select_topics_dropdown:
+          title: "Operacje grupowe"
     date_time_picker:
       from: Od
       to: Do
@@ -2890,6 +2902,7 @@ pl_PL:
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
+        confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
@@ -2964,6 +2977,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
+        silent: "Wykonaj tę akcję po cichu."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -2993,6 +3007,12 @@ pl_PL:
         hot: "Nie ma już gorących tematów."
         bookmarks: "Nie ma więcej zakładek."
         filter: "Nie ma więcej tematów."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zamknij tematy"
+      update_category:
+        name: "Aktualizuj kategorię"
+        description: "Wybierz nową kategorię dla wybranych tematów"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -3682,6 +3702,7 @@ pl_PL:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
           inappropriate: "Oznaczono jako niewłaściwe"
+          illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
       delete:
@@ -3950,6 +3971,7 @@ pl_PL:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
         spam: "Jest odebrane jako spam"
+        illegal: "To nielegalne"
       custom_placeholder_notify_user: "Napisz konkretnie, konstuktywnie i kulturalnie."
       notify_user_textarea_label: "Wiadomość dla użytkownika"
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
@@ -5175,14 +5197,13 @@ pl_PL:
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
-          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
         group_user_event:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
-          user_promoted: "Użytkownik został awansowany"
+          user_promoted: "Użytkownik zostaje awansowany"
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5608,7 +5629,7 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "Emaile"
-        settings: "Ustawienia"
+        settings: "Ustawienia e-mail"
         templates: "Szablony"
         templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -6267,7 +6288,6 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
-          visits: "Odwiedziny"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"
@@ -6577,6 +6597,8 @@ pl_PL:
         category_title: "Kategoria"
         tag_name: "Nazwa tagu"
         external_url: "Zewnętrzny lub względny adres URL"
+        user_id: "ID użytkownika"
+        username: "Nazwa użytkownika"
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?

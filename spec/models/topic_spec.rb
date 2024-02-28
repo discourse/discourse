@@ -12,7 +12,7 @@ RSpec.describe Topic do
   fab!(:evil_trout)
   fab!(:admin)
   fab!(:group)
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
+  fab!(:trust_level_2)
 
   it_behaves_like "it has custom fields"
 
@@ -308,6 +308,24 @@ RSpec.describe Topic do
       end
 
       after { Topic.slug_computed_callbacks.clear }
+    end
+  end
+
+  describe "slugless_url" do
+    fab!(:topic)
+
+    it "returns the correct url" do
+      expect(topic.slugless_url).to eq("/t/#{topic.id}")
+    end
+
+    it "works with post id" do
+      expect(topic.slugless_url(123)).to eq("/t/#{topic.id}/123")
+    end
+
+    it "works with subfolder install" do
+      set_subfolder "/forum"
+
+      expect(topic.slugless_url).to eq("/forum/t/#{topic.id}")
     end
   end
 

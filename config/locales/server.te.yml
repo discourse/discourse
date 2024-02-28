@@ -20,6 +20,11 @@ te:
   anonymous: "అనామక"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
+  themes:
+    settings_errors:
+      objects:
+        required: "తప్పనిసరిగా ఉండాలి"
+        not_valid_integer_value: "తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
@@ -261,8 +266,6 @@ te:
     success: "మీరు విజయవంతంగా మీ సంకేతపదం మార్చారు ఇంకా ఇప్పుడు లాగిన్ అయ్యారు కూడా."
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
   change_email:
-    confirmed: "మీ ఈమెయిల్ చిరునామా మారింది."
-    please_continue: "%{site_name} కు కొనసాగండి"
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
   activation:
     already_done: "క్షమించాలి. ఖాతా ధృవపరుచు లంకె కాలాతీతమైంది. బహుశా మీ ఖాతా ఇప్పటికే చేతనమై ఉందేమో?"
@@ -280,6 +283,8 @@ te:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "అసమంజసమైనది"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: '"%{title}" లో మీ టపా'
       email_body: "%{link}\n\n%{message}"
@@ -306,6 +311,8 @@ te:
       title: "వేరే ఏదో"
       long_form: "దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
       email_title: '"%{title}" విషయం నిర్వాహకుల దృష్టిలో ఉంది.'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>ఈ టపా కమ్యునిటీ కేతనించింది. తాత్కాలికంగా దాచబడింది</p>"

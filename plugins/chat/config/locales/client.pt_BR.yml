@@ -45,6 +45,7 @@ pt_BR:
       back_to_forum: "Fórum"
       deleted_chat_username: excluído(a)
       dates:
+        yesterday: "Ontem"
         time_tiny: "h:mm"
       all_loaded: "Mostrando todas as mensagens"
       already_enabled: "O chat já foi ativado neste tópico. Atualize."
@@ -116,6 +117,7 @@ pt_BR:
         direct_message_cta: "Inicie um chat pessoal"
         direct_message: "Você também pode iniciar um chat pessoal com um(as) ou mais usuários(as)."
         title: "Nenhum canal encontrado"
+        my_threads: "Você ainda não tem nenhum tópico. Tópicos em que você participa serão exibidos aqui."
       email_frequency:
         description: "Só enviaremos um e-mail mediante ausência nos últimos 15 minutos."
         never: "Nunca"
@@ -225,6 +227,7 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
+      no_direct_message_channels: "Você não entrou em nenhum canal de mensagem direta."
       no_public_channels: "Você não entrou em nenhum canal."
       kicked_from_channel: "Você não pode mais acessar este canal."
       only_chat_push_notifications:
@@ -302,7 +305,7 @@ pt_BR:
         back: "Voltar"
         title: Canais
         filter_all: Tudo
-        filter_open: Abertos
+        filter_open: Aberto
         filter_closed: Fechados
         filter_archived: Arquivados
         filter_input_placeholder: Pesquisar canal por nome
@@ -342,6 +345,7 @@ pt_BR:
         filter: "Filtro"
         cant_add_more_members: "Número máximo de membros alcançado"
         create_new_group_chat: "Criar chat em grupo"
+        group_with_too_many_members: "tem membros demais (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome
@@ -476,7 +480,12 @@ pt_BR:
           description: "As mensagens de todos os canais são exportadas."
           create_export: "Criar exportação"
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
+      my_threads:
+        title: Meus tópicos
+        aria_label: "Mudar para minha lista de tópicos"
       direct_messages:
+        title: "PV"
+        aria_label: "Mudar para mensagens diretas"
         new: "Criar um chat pessoal"
         create: "Ir"
         leave: "Sair deste chat pessoal"
@@ -484,6 +493,7 @@ pt_BR:
         cannot_create: "Desculpe, você não pode enviar mensagens diretas."
       channel_list:
         title: "Canais"
+        aria_label: "Mudar para lista de canais"
       incoming_webhooks:
         back: "Voltar"
         channel_placeholder: "Selecione um canal"

@@ -45,7 +45,7 @@ export default Controller.extend({
 
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
 
-    if (this.siteSettings.experimental_hot_topics) {
+    if (this.siteSettings.top_menu.split("|").includes("hot")) {
       USER_HOMES[8] = "hot";
     }
   },

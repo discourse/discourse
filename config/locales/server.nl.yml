@@ -110,7 +110,7 @@ nl:
       optimized_link: Geoptimaliseerde afbeeldingskoppelingen zijn kortstondig en dienen niet in broncode van thema's te worden opgenomen.
     settings_errors:
       invalid_yaml: "Opgegeven YAML is ongeldig."
-      data_type_not_a_number: "Type van instelling `%{name}` wordt niet ondersteund. Ondersteunde typen zijn `integer`, `bool`, `list`, `enum` en `upload`."
+      data_type_inclusion: "Type van instelling `%{name}` wordt niet ondersteund. Ondersteunde typen zijn `integer`, `bool`, `list`, `enum` en `upload`."
       name_too_long: "Er is een instelling met een te lange naam. Maximale lengte is 255."
       default_value_missing: "Instelling `%{name}` heeft geen standaardwaarde."
       default_not_match_type: "Type van standaardwaarde van instelling `%{name}` komt niet overeen met het type van de instelling."
@@ -124,6 +124,9 @@ nl:
       string_value_not_valid_min_max: "Deze moet tussen %{min} en %{max} tekens lang zijn."
       string_value_not_valid_min: "Deze moet minstens %{min} tekens lang zijn."
       string_value_not_valid_max: "Deze moet ten hoogste %{max} tekens lang zijn."
+      objects:
+        required: "mag niet leeg zijn"
+        not_valid_integer_value: "moet een integer zijn"
     locale_errors:
       top_level_locale: "De sleutel op het hoogste niveau in een taalbestand moet overeenkomen met de naam van de locale"
       invalid_yaml: "YAML van vertaling ongeldig"
@@ -372,7 +375,7 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen slechts één andere gebruiker noemen in een bericht."
     other: "Sorry, nieuwe gebruikers kunnen maximaal %{count} gebruikers noemen in een bericht."
-  no_embedded_media_allowed_trust: "Sorry, je kunt geen media-items insluiten in een bericht."
+  no_embedded_media_allowed_group: "Sorry, je kunt geen media-items insluiten in een bericht."
   no_embedded_media_allowed: "Sorry, nieuwe gebruikers kunnen geen media-items insluiten in berichten."
   too_many_embedded_media:
     one: "Sorry, nieuwe gebruikers kunnen slechts één ingesloten media-item in een bericht plaatsen."
@@ -851,27 +854,12 @@ nl:
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   change_email:
-    wrong_account_error: "Je bent aangemeld op het de verkeerde account. Meld je af en probeer het opnieuw."
-    confirmed: "Je e-mailadres is bijgewerkt."
-    please_continue: "Doorgaan naar %{site_name}"
     error: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Misschien is het adres al in gebruik?"
     doesnt_exist: "Dat e-mailadres is niet aan je account gekoppeld."
     error_staged: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Het adres is al in gebruik door een gefaseerde gebruiker."
     already_done: "Sorry, deze bevestigingslink is niet meer geldig. Misschien is je e-mailadres al gewijzigd?"
     confirm: "Bevestigen"
     max_secondary_emails_error: "Je hebt de maximaal toegestane limiet voor secundaire e-mailadressen bereikt."
-    authorizing_new:
-      title: "Bevestig je nieuwe e-mailadres"
-      description: "Bevestig dat je je e-mailadres wilt wijzigen naar:"
-      description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
-    authorizing_old:
-      title: "Je e-mailadres wijzigen"
-      description: "Bevestig de wijziging van je e-mailadres"
-      description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
-      old_email: "Oud e-mailadres: %{email}"
-      new_email: "Nieuw e-mailadres: %{email}"
-      almost_done_title: "Bevestig nieuw e-mailadres"
-      almost_done_description: "Er is een e-mail naar je nieuwe e-mailadres gestuurd om de wijziging te bevestigen!"
   associated_accounts:
     revoke_failed: "Intrekken van je account bij %{provider_name} is mislukt."
     connected: "(verbonden)"
@@ -908,6 +896,9 @@ nl:
       title: "Ongepast"
       description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend, hatelijk gedrag of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} een bericht sturen"
       description: "I wil rechtstreeks en persoonlijk met deze persoon over diens bericht praten."
@@ -986,6 +977,9 @@ nl:
       long_form: "heeft dit gemarkeerd voor aandacht van een moderator"
       short_description: "Dit bericht vereist aandacht van een medewerker om een andere reden"
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Je bericht is gemarkeerd door de community. <a href="%{path}">Bekijk je berichten</a>.</p>'
@@ -1840,6 +1834,7 @@ nl:
     flag_post_allowed_groups: "Groepen die topics mogen markeren."
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
+    embedded_media_post_allowed_groups: "De gebruikers in deze groepen mogen media-items opnemen in een bericht"
     min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
     min_trust_level_to_allow_user_card_background: "Het minimale vertrouwensniveau dat nodig is om een gebruikerskaartachtergrond te uploaden"
     user_card_background_allowed_groups: "Groepen die een gebruikerskaartachtergrond mogen uploaden."
@@ -1859,7 +1854,7 @@ nl:
     here_mention: "De naam die wordt gebruikt voor een @vermelding zodat gemachtigde gebruikers maximaal 'max_here_mentioned' mensen die aan de topic deelnemen op de hoogte kunnen stellen. Mag geen bestaande gebruikersnaam zijn."
     max_here_mentioned: "Maximaal aantal genoemde personen door @hier."
     min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @hier te vermelden."
-    here_mention_allowed_groups: "Groepen die @hier mogen vermelden."
+    here_mention_allowed_groups: "Groepen die @here mogen vermelden."
     create_thumbnails: "Miniaturen maken voor lightbox-afbeeldingen die te groot zijn om in een bericht te passen."
     email_time_window_mins: "(n) minuten wachten met het verzenden van meldingen per e-mail, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
     personal_email_time_window_seconds: "(n) minuten wachten met het verzenden van meldingen per e-mail voor persoonlijke berichten, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
@@ -2111,11 +2106,8 @@ nl:
     enable_inline_emoji_translation: "Schakelt vertaling voor inline emoji in (zonder voorafgaande spaties of interpunctie)"
     emoji_deny_list: "Deze emoji zijn niet beschikbaar voor gebruik in menu's of shortcodes."
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
-    approve_unless_trust_level: "Berichten voor gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    approve_unless_allowed_groups: "Berichten voor gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd"
-    approve_new_topics_unless_trust_level: "Nieuwe topics voor gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    approve_new_topics_unless_allowed_groups: "Nieuwe topics van gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd"
-    approve_unless_staged: "Nieuwe topics en berichten voor gefaseerde gebruikers moeten worden goedgekeurd"
+    approve_unless_trust_level: "Berichten gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
+    approve_unless_allowed_groups: "Berichten gemaakt door gebruikers niet in deze groepen moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     reviewable_revision_reasons: "Lijst van redenen die kunnen worden geselecteerd bij het afwijzen van een te beoordelen bericht in de wachtrij met een revisie. 'Anders' is ook altijd beschikbaar, waarmee een aangepaste reden kan worden ingevoerd."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
@@ -2198,6 +2190,7 @@ nl:
     tag_style: "Visuele stijl voor tagbadges."
     pm_tags_allowed_for_groups: "Sta leden van opgenomen groep(en) toe om elk persoonlijk bericht te taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
+    tag_topic_allowed_groups: "Groepen die onderwerpen mogen taggen."
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet weergeven"
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
@@ -2235,6 +2228,7 @@ nl:
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
+    navigation_menu: "Bepaal welk navigatiemenu je wilt gebruiken."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
@@ -2321,6 +2315,11 @@ nl:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3897,7 +3896,6 @@ nl:
     images:
       too_large: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size_kb} KB). Verklein de afbeelding en probeer het opnieuw."
       too_large_humanized: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size}). Verklein de afbeelding en probeer het opnieuw."
-      larger_than_x_megapixels: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale afmeting is %{max_image_megapixels} megapixels). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
     placeholders:
       too_large: "(afbeelding groter dan %{max_size_kb} KB)"
@@ -4663,9 +4661,17 @@ nl:
   onebox:
     discourse:
       user_joined_community: "Lid sinds %{date}"
+    gitlab:
+      truncated_file: "Dit bestand is afgekapt."
+      show_original: "toon origineel"
     github:
+      binary_file: "Dit bestand is binair."
+      truncated_file: "Dit bestand is afgekapt."
+      show_original: "toon origineel"
+      more_than_three_files: "Er zijn meer dan drie bestanden."
       opened: "geopend"
       closed: "gesloten"
+      review_by: "Review door"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

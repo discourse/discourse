@@ -25,6 +25,7 @@ fa_IR:
       back_to_forum: "انجمن"
       deleted_chat_username: حذف شد
       dates:
+        yesterday: "دیروز"
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
       already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
@@ -150,7 +151,7 @@ fa_IR:
         back: "بازگشت"
         title: کانال‌ها
         filter_all: همه
-        filter_open: باز شد
+        filter_open: باز
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید

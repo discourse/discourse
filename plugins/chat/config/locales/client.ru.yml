@@ -45,6 +45,7 @@ ru:
       back_to_forum: "Форум"
       deleted_chat_username: удалён
       dates:
+        yesterday: "Вчера"
         time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."
@@ -332,7 +333,7 @@ ru:
         back: "Назад"
         title: Каналы
         filter_all: Все
-        filter_open: Открытые
+        filter_open: Открыт
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию

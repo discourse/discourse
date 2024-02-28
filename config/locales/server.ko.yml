@@ -81,7 +81,7 @@ ko:
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
       invalid_yaml: "제공된 YAML이 유효하지 않습니다."
-      data_type_not_a_number: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은 `integer` , `bool` , `list` , `enum` 및 `upload` 입니다."
+      data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은`integer`,`bool`,`list`,`enum` 및`upload`입니다."
       name_too_long: "이름이 너무 긴 설정이 있습니다. 최대 길이는 255입니다"
       default_value_missing: "`%{name}` 설정에 디폴트값이 없습니다"
       default_not_match_type: "`%{name}` 디폴트값 유형 설정이 설정 유형과 일치하지 않습니다."
@@ -95,6 +95,9 @@ ko:
       string_value_not_valid_min_max: "%{min} ~ %{max}자 사이여야 합니다."
       string_value_not_valid_min: "%{min}자 이상이어야 합니다."
       string_value_not_valid_max: "%{max}자 이하여야 합니다."
+      objects:
+        required: "공백이 없어야 합니다."
+        not_valid_integer_value: "정수여야 함"
     locale_errors:
       top_level_locale: "로캘 파일의 최상위 키는 로캘 이름과 일치해야 합니다."
       invalid_yaml: "YAML 번역이 유효하지 않습니다"
@@ -296,7 +299,7 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_trust: "게시물에 미디어 항목을 임베드할 수 없습니다."
+  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
   no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
   too_many_embedded_media:
     other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
@@ -700,27 +703,12 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   change_email:
-    wrong_account_error: "잘못된 계정으로 로그인했습니다. 로그아웃한 후 다시 시도하세요."
-    confirmed: "이메일 주소가 업데이트되었습니다."
-    please_continue: "%{site_name}에서 계속하기"
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "이 이메일 주소는 내 계정과 연결되어 있지 않습니다."
     error_staged: "이메일 주소 변경 중에 오류가 발생했습니다. 스테이징된 사용자가 사용 중인 이메일일 수 있습니다."
     already_done: "이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
     max_secondary_emails_error: "허용되는 최대 보조 이메일 한도에 도달했습니다."
-    authorizing_new:
-      title: "새 이메일 확인"
-      description: "이메일 주소를 다음으로 변경할지 확인하세요."
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-    authorizing_old:
-      title: "이메일 주소 변경"
-      description: "이메일 주소 변경을 확인하세요"
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-      old_email: "기존 이메일: %{email}"
-      new_email: "새로운 이메일 : %{email}"
-      almost_done_title: "새 이메일 주소 확인"
-      almost_done_description: "변경사항을 확인하기 위해 새 이메일 주소로 이메일을 보냈습니다!"
   associated_accounts:
     revoke_failed: "%{provider_name}의 계정을 해지하지 못했습니다."
     connected: "(연결됨)"
@@ -756,6 +744,9 @@ ko:
     inappropriate:
       title: "부적절함"
       short_description: '<a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반'
+    illegal:
+      email_title: '"%{title}"에 운영진의 확인이 필요한 게시글이 있습니다'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} 님에게 메시지 전송"
       description: "이 사용자와 게시물에 대해 직접 개인적으로 이야기하고 싶습니다."
@@ -826,6 +817,9 @@ ko:
       long_form: "운영자의 확인을 위해 신고됨"
       short_description: "기타 이유로 운영진의 확인이 필요합니다"
       email_title: '"%{title}" 주제는 운영자의 확인이 필요합니다'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}"에 운영진의 확인이 필요한 게시글이 있습니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>커뮤니티에서 게시물을 신고했습니다. <a href="%{path}">메시지를 참조</a>하세요.</p>'
@@ -1815,9 +1809,6 @@ ko:
     enable_inline_emoji_translation: "인라인 이모티콘 번역 활성화(앞에 공백이나 구두점 없이)."
     emoji_deny_list: "이러한 이모티콘은 메뉴나 단축코드에 사용할 수 없습니다."
     approve_post_count: "승인을 받아야 하는 신규 또는 기본 사용자의 게시물 수"
-    approve_unless_trust_level: "이 신뢰 수준 미만의 사용자 게시물은 승인되어야 합니다"
-    approve_new_topics_unless_trust_level: "이 신뢰 수준 미만의 사용자 주제는 승인되어야 합니다"
-    approve_unless_staged: "스테이징된 사용자의 새 주제 및 게시물은 승인되어야 합니다"
     notify_about_queued_posts_after: "이 시간 이상 검토 대기 중인 게시물이 있는 경우 모든 운영자에게 알림을 보냅니다. 이러한 알림을 비활성화하려면 0으로 설정하세요."
     auto_close_messages_post_count: "자동으로 종료되기 전에 메시지에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
     auto_close_topics_post_count: "자동으로 종료되기 전에 주제에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
@@ -3328,7 +3319,6 @@ ko:
     images:
       too_large: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_size_kb}KB). 크기를 조정하고 다시 시도하세요."
       too_large_humanized: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_size}KB). 크기를 조정하고 다시 시도하세요."
-      larger_than_x_megapixels: "업로드하려는 이미지가 너무 큽니다(최대 크기: %{max_image_megapixels}메가픽셀). 크기를 조정하고 다시 시도하세요."
       size_not_found: "이미지 크기를 확인할 수 없습니다. 이미지가 손상되었을 수 있습니다."
     placeholders:
       too_large: "(%{max_size_kb}KB보다 큰 이미지)"

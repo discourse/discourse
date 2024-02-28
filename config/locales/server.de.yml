@@ -110,7 +110,7 @@ de:
       optimized_link: Optimierte Bildlinks sind flüchtig und sollten nicht in den Theme-Quellcode eingebunden werden.
     settings_errors:
       invalid_yaml: "Der YAML-Code ist ungültig."
-      data_type_not_a_number: "Typ der Einstellung `%{name}` wird nicht unterstützt. Unterstützte Typen sind `integer`, `bool`, `list`, `enum` und `upload`"
+      data_type_inclusion: "Die Einstellung des Typs \"%{name}\" wird nicht unterstützt. Unterstützte Typen sind `integer`, `bool`, `list`, `enum` und `upload`."
       name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
       default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
       default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
@@ -124,6 +124,9 @@ de:
       string_value_not_valid_min_max: "Er muss zwischen %{min} und %{max} Zeichen lang sein."
       string_value_not_valid_min: "Er muss mindestens %{min} Zeichen lang sein."
       string_value_not_valid_max: "Er darf maximal %{max} Zeichen lang sein."
+      objects:
+        required: "muss angegeben werden"
+        not_valid_integer_value: "muss eine Ganzzahl sein"
     locale_errors:
       top_level_locale: "Der Top-Level-Schlüssel in einer Locale-Datei muss mit dem Locale-Namen übereinstimmen"
       invalid_yaml: "Das YAML der Übersetzung ist ungültig."
@@ -372,7 +375,7 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
-  no_embedded_media_allowed_trust: "Entschuldige, du kannst keine Medienelemente in einen Beitrag einbetten."
+  no_embedded_media_allowed_group: "Entschuldige, du kannst keine Medienelemente in einen Beitrag einbetten."
   no_embedded_media_allowed: "Entschuldige, neue Benutzer können keine Medienelemente in Beiträge einbetten."
   too_many_embedded_media:
     one: "Entschuldige, neue Benutzer können leider nur ein eingebettetes Medienelement in einen Beitrag einfügen."
@@ -851,27 +854,12 @@ de:
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
   change_email:
-    wrong_account_error: "Du bist mit dem falschen Konto angemeldet. Bitte melde dich ab und versuche es noch einmal."
-    confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
-    please_continue: "Weiter zu %{site_name}"
     error: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Wird vielleicht diese Adresse bereits verwendet?"
     doesnt_exist: "Diese E-Mail-Adresse ist nicht mit deinem Konto verknüpft."
     error_staged: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Die Adresse wird bereits von einem vorbereiteten Benutzer verwendet."
     already_done: "Entschuldige, dieser Bestätigungs-Link ist nicht mehr gültig. Wurde vielleicht die E-Mail-Adresse bereits geändert?"
     confirm: "Bestätigen"
     max_secondary_emails_error: "Du hast das maximal erlaubte Limit für sekundäre E-Mails erreicht."
-    authorizing_new:
-      title: "Bestätige deine neue E-Mail-Adresse"
-      description: "Bitte bestätige, dass du deine E-Mail-Adresse ändern möchtest in:"
-      description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
-    authorizing_old:
-      title: "Ändere deine E-Mail-Adresse"
-      description: "Bitte bestätige die Änderung deiner E-Mail-Adresse"
-      description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
-      old_email: "Alte Adresse: %{email}"
-      new_email: "Neue Adresse: %{email}"
-      almost_done_title: "Bestätige neue E-Mail-Adresse"
-      almost_done_description: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
   associated_accounts:
     revoke_failed: "Das Widerrufen deines Kontos bei %{provider_name} ist fehlgeschlagen."
     connected: "(verbunden)"
@@ -908,6 +896,12 @@ de:
       title: "Unangemessen"
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend, hasserfüllt oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
+    illegal:
+      title: "Illegal"
+      description: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach illegale Inhalte enthält."
+      short_description: "Das ist illegal"
+      email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
       description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
@@ -986,6 +980,12 @@ de:
       long_form: "hast dies den Moderatoren gemeldet"
       short_description: "Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams"
       email_title: 'Das Thema „%{title}“ erfordert die Aufmerksamkeit eines Moderators'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Illegal"
+      description: "Dieses Thema erfordert die Aufmerksamkeit der Mitarbeiter, weil es meiner Meinung nach illegale Inhalte enthält."
+      short_description: "Das ist illegal"
+      email_title: 'Ein Beitrag in „%{title}“ erfordert die Aufmerksamkeit des Teams'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="%{path}">überprüfe deine Nachrichten</a>.</p>'
@@ -1440,6 +1440,8 @@ de:
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
     category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
+    ember_version_warning: "Deine Website läuft mit der nicht unterstützten Konfiguration EMBER_VERSION=3. Dies kann zu unerwarteten Problemen mit Themes/Plugins führen. Bitte entferne die EMBER_VERSION-Konfiguration aus deiner app.yml-Datei und erstelle sie neu. Siehe <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> für weitere Informationen."
+    back_from_logster_text: "Zurück zur Seite"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1614,6 +1616,7 @@ de:
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen (Positivliste). Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-Attacken mit Content Security Policy entschärfen</a> (CSP)."
+    content_security_policy_strict_dynamic: "EXPERIMENTELL: Verwende eine strikt dynamische Inhaltssicherheitsrichtlinie (CSP). Diese ist moderner und flexibler als unsere Standard-CSP-Konfiguration. Sie ist voll funktionsfähig, wurde aber noch nicht mit allen Themes und Plugins getestet."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
@@ -1840,8 +1843,9 @@ de:
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
     flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen."
     min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
-    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen."
+    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Admins und Moderatoren dürfen immer Links posten."
     min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
+    embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten"
     min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
     min_trust_level_to_allow_user_card_background: "Minimale Vertrauensstufe, die zum Hochladen eines Benutzerkartenhintergrunds erforderlich ist"
     user_card_background_allowed_groups: "Gruppen, die einen Benutzerkartenhintergrund hochladen dürfen."
@@ -2037,6 +2041,7 @@ de:
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
+    hide_user_activity_tab: "Blende die Registerkarte \"Aktivität\" in Benutzerprofilen, außer für Administratoren und den Benutzer selbst, aus."
     allow_featured_topic_on_user_profiles: "Erlaube Benutzern, ihrer Benutzerkarte und ihrem Profil einen Link zu einem Thema hinzuzufügen."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
@@ -2113,11 +2118,11 @@ de:
     enable_inline_emoji_translation: "Aktiviert die Übersetzung von Inline-Emojis (ohne ein Leerzeichen oder Satzzeichen davor)"
     emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
-    approve_unless_trust_level: "Beiträge von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
-    approve_unless_allowed_groups: "Beiträge für Benutzer, die nicht in diesen Gruppen sind, müssen genehmigt werden"
-    approve_new_topics_unless_trust_level: "Neue Themen von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
-    approve_new_topics_unless_allowed_groups: "Neue Themen für Benutzer, die nicht in diesen Gruppen sind, müssen genehmigt werden"
-    approve_unless_staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen genehmigt werden"
+    approve_unless_trust_level: "Beiträge, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
+    approve_unless_allowed_groups: "Beiträge von Benutzern, die nicht in diesen Gruppen sind, müssen genehmigt werden"
+    approve_new_topics_unless_trust_level: "Neue Themen, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
+    approve_new_topics_unless_allowed_groups: "Neue Themen, die von Benutzern erstellt werden, die nicht in diesen Gruppen sind, müssen genehmigt werden"
+    approve_unless_staged: "Neue Themen und Beiträge, die von vorbereiteten Benutzern erstellt werden, müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
     reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Überarbeitung abgelehnt wird. „Sonstiges“ ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
@@ -2125,6 +2130,7 @@ de:
     auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema basierend auf der Einstellung „auto close topics post count“ automatisch geschlossen wird"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
+    disable_watched_word_checking_in_user_fields: "Deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
@@ -2204,6 +2210,7 @@ de:
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
     pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppe(n) erlauben, jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
+    tag_topic_allowed_groups: "Gruppen, die Themen mit Schlüsselwörtern versehen dürfen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
@@ -2241,6 +2248,7 @@ de:
     use_name_for_username_suggestions: "Beim Vorschlagen von Benutzernamen den vollen Namen eines Benutzers verwenden."
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    navigation_menu: "Bestimme, welches Navigationsmenü du verwenden willst."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'EXPERIMENTELL: Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
@@ -2329,8 +2337,10 @@ de:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2723,6 +2733,7 @@ de:
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
     inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig, beleidigend oder hasserfüllt ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
+    illegal: "Dein Beitrag wurde als **illegal** gemeldet: Die Community denkt, dass er möglicherweise gegen das Gesetz verstößt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
     notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
     responder:

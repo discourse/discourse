@@ -110,7 +110,7 @@ es:
       optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
       invalid_yaml: "El YAML provisto no es válido."
-      data_type_not_a_number: "Tipo de ajuste «%{name}» no soportado. Los tipos soportados son «integer», «bool», «list», «enum» y «upload»"
+      data_type_inclusion: "Tipo de ajuste «%{name}» no soportado. Los tipos soportados son «integer», «bool», «list», «enum» y «upload»"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
       default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
       default_not_match_type: "El tipo de valor por defecto para el ajuste «%{name}» no coincide con el tipo de ajuste."
@@ -124,6 +124,9 @@ es:
       string_value_not_valid_min_max: "Debe tener entre %{min} y %{max} caracteres de longitud."
       string_value_not_valid_min: "Debe tener al menos de %{min} caracteres de longitud."
       string_value_not_valid_max: "Debe tener un máximo de %{max} caracteres de longitud."
+      objects:
+        required: "debe estar presente"
+        not_valid_integer_value: "debe ser un valor entero"
     locale_errors:
       top_level_locale: "La clave de nivel superior en un archivo local debe coincidir con el nombre local"
       invalid_yaml: "YAML de traducción no válido"
@@ -372,7 +375,7 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
-  no_embedded_media_allowed_trust: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
+  no_embedded_media_allowed_group: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
   no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
   too_many_embedded_media:
     one: "Lo sentimos, los nuevos usuarios solo pueden poner un elemento multimedia incrustado en una publicación."
@@ -851,27 +854,12 @@ es:
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   change_email:
-    wrong_account_error: "Iniciaste sesión en la cuenta equivocada. Cierra sesión e inténtalo de nuevo."
-    confirmed: "Se actualizó tu correo electrónico."
-    please_continue: "Continuar a %{site_name}"
     error: "Hubo un problema al cambiar tu dirección de correo electrónico. ¿Quizás la dirección ya está en uso?"
     doesnt_exist: "Ese correo electrónico no está asociado a tu cuenta."
     error_staged: "Se produjo un error al cambiar tu correo electrónico. La dirección ya está en uso por un usuario temporal."
     already_done: "Lo sentimos, este enlace de confirmación ya no es válido. ¿Quizá tu correo electrónico ya fue cambiado?"
     confirm: "Confirmar"
     max_secondary_emails_error: "Has llegado al límite de cuentas de correo electrónico secundarias."
-    authorizing_new:
-      title: "Confirmar tu nuevo correo electrónico"
-      description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
-      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
-    authorizing_old:
-      title: "Cambiar tu dirección de correo electrónico"
-      description: "Confirma el cambio de tu dirección de correo electrónico"
-      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
-      old_email: "Correo electrónico antiguo: %{email}"
-      new_email: "Correo electrónico nuevo: %{email}"
-      almost_done_title: "Confirmando la nueva dirección de correo electrónico"
-      almost_done_description: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
   associated_accounts:
     revoke_failed: "No pudo revocar tu cuenta con %{provider_name}."
     connected: "(conectados)"
@@ -908,6 +896,9 @@ es:
       title: "Inapropiado"
       description: 'Esta publicación tiene contenido que una persona razonable podría considerar ofensivo, abusivo, ser una conducta de odio o una violación de <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>.'
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
+    illegal:
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar un mensaje a @%{username}"
       description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
@@ -986,6 +977,9 @@ es:
       long_form: "denunciado para ser atendido por los moderadores"
       short_description: "Requiere atención del personal por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu publicación fue denunciada por la comunidad. Por favor, <a href="%{path}">revisa tus mensajes</a>.</p>'
@@ -2110,11 +2104,6 @@ es:
     enable_inline_emoji_translation: "Activa la traducción de emojis en línea (sin ningún espacio ni puntuación antes)"
     emoji_deny_list: "Estos emoji no estarán disponibles para su uso en menús o shortcodes."
     approve_post_count: "La cantidad de publicaciones de usuarios nuevos o de nivel básico que deben ser aprobadas"
-    approve_unless_trust_level: "Las publicaciones de usuarios con un nivel de confianza inferior a este deberán ser aprobadas"
-    approve_unless_allowed_groups: "Las publicaciones de usuarios que no pertenezcan a estos grupos deben ser aprobadas."
-    approve_new_topics_unless_trust_level: "Los temas nuevos de usuarios por debajo de este nivel de confianza deben ser aprobados"
-    approve_new_topics_unless_allowed_groups: "Los temas nuevos para usuarios que no pertenezcan a estos grupos deben ser aprobados"
-    approve_unless_staged: "Los temas y las publicaciones nuevas de usuarios temporales deben ser aprobadas"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
     reviewable_revision_reasons: "Lista de razones que pueden seleccionarse al rechazar una publicación en cola revisable con una revisión. También está siempre disponible Other, que permite introducir un motivo personalizado."
     auto_close_messages_post_count: "Número máximo de publicaciones permitidas en un mensaje antes de que se cierre automáticamente (0 para desactivar)"
@@ -3889,7 +3878,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
-      larger_than_x_megapixels: "Lo sentimos, la imagen que estas intentando subir es demasiado grande (tamaño máximo %{max_image_megapixels}-megapixels). Hazla mas pequeña e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"

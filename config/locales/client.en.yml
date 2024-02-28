@@ -42,15 +42,15 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "MMM D, 'YY LT"
+      long_date_with_year: "MMM D, YYYY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
 
       wrap_ago: "%{date} ago"
       wrap_on: "on %{date}"
@@ -90,7 +90,7 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "MMM D"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "less than %{count} min"
@@ -120,7 +120,7 @@ en:
           one: "almost %{count} year"
           other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM D, 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min ago"
@@ -209,7 +209,7 @@ en:
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
-      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
@@ -226,7 +226,9 @@ en:
     broken_plugin_alert: "Caused by plugin '%{name}'"
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes (<a target='_blank' href='https://meta.discourse.org/t/287211'>more info</a>)."
+      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identified plugin: '%{name}'"
 
@@ -1559,6 +1561,18 @@ en:
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
         back_to_preferences: "Back to preferences"
+        confirm_success: "Your email has been updated."
+        confirm: "Confirm"
+        authorizing_new:
+          description: "Please confirm you would like your email address changed to:"
+          description_add: "Please confirm you would like to add an alternate email address:"
+        authorizing_old:
+          title: "Verify old email address"
+          description: "Please verify your old email address to continue changing your email:"
+          description_add: "Please verify your existing email address to continue adding an alternate address:"
+          old_email: "Old email: %{email}"
+          new_email: "New email: %{email}"
+          confirm_success: "We have sent an email to your new email address to confirm the change!"
 
       change_avatar:
         title: "Change your profile picture"
@@ -1857,6 +1871,9 @@ en:
         incorrect_password: "The entered password is incorrect."
         incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
+        forgot_password: "Forgot your password?"
+        password_reset_email_sent: "Password reset email sent."
+        cannot_send_password_reset_email: "Could not send password reset email."
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
@@ -2982,9 +2999,32 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+      archive_topics:
+        name: "Archive Topics"
+      unlist_topics:
+        name: "Unlist Topics"
+      relist_topics:
+        name: "Relist Topics"
+      remove_tags:
+        name: "Remove Tags"
+      append_tags:
+        name: "Append Tags"
+      replace_tags:
+        name: "Replace Tags"
+      delete_topics:
+        name: "Delete Topics"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
+      reset_bump_dates:
+        name: "Reset Bump Dates"
+        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+      defer:
+        name: "Defer Topics"
+        description: "Mark topics as unread"
+      update_notifications:
+        name: "Update Notifications…"
+        description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
       filter_to:
@@ -3646,6 +3686,7 @@ en:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
+          illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
 
@@ -3928,10 +3969,13 @@ en:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
+        illegal: "It's Illegal"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
+      custom_placeholder_illegal: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
+      confirmation_illegal: "What I’ve written above is accurate and complete."
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -5008,7 +5052,7 @@ en:
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
-              show: Obtain information about an user.
+              show: Obtain information about a user.
               check_emails: List user emails.
               update: Update user profile information.
               log_out: Log out all sessions for a user.
@@ -5130,14 +5174,14 @@ en:
           post_liked: "When a user likes a post."
         notification_event:
           group_name: "Notification Events"
-          notification_created: "An user receives a notification in their feed"
+          notification_created: "A user receives a notification in their feed"
         group_user_event:
           group_name: "Group User Events"
-          user_added_to_group: "An user is added to a group"
-          user_removed_from_group: "An user is removed from a group"
+          user_added_to_group: "A user is added to a group"
+          user_removed_from_group: "A user is removed from a group"
         user_promoted_event:
           group_name: "User Promoted Events"
-          user_promoted: "An user is promoted"
+          user_promoted: "A user is promoted"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -5406,6 +5450,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          installing_message: "Installing theme, this may take several minutes..."
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create Placeholder"
@@ -5486,6 +5531,8 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
+          schema:
+            back_button: "Back to %{name}"
         colors:
           select_base:
             title: "Select base color palette"
@@ -5568,7 +5615,7 @@ en:
 
       email:
         title: "Emails"
-        settings: "Settings"
+        settings: "Email Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"
@@ -6248,7 +6295,7 @@ en:
             other: "In the last %{count} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
+          posts_read_days: "Posts Read: unique days"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -6563,6 +6610,8 @@ en:
         category_title: "Category"
         tag_name: "Tag name"
         external_url: "External or Relative URL"
+        user_id: "User ID"
+        username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?

@@ -29,6 +29,7 @@ zh_TW:
     chat:
       deleted_chat_username: 已刪除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
       already_enabled: "此主題已啟用聊天功能。請重新整理。"
@@ -124,7 +125,7 @@ zh_TW:
         back: "上一步"
         title: 頻道
         filter_all: 全部
-        filter_open: 已打開
+        filter_open: 開啟
         filter_closed: 不公開
         filter_archived: 已封存
       chat_message_separator:

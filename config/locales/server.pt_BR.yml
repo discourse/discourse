@@ -110,7 +110,7 @@ pt_BR:
       optimized_link: Links otimizados de imagem são temporários e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML informado é inválido."
-      data_type_not_a_number: "A configuração do tipo \"%{name}\" não é compatível. Os tipos compatíveis são \"integer\", \"bool\", \"list\", \"enum\" e \"upload\""
+      data_type_inclusion: "A configuração do tipo \"%{name}\" não é compatível. Os tipos compatíveis são \"integer\", \"bool\", \"list\", \"enum\" e \"upload\""
       name_too_long: "Esta é uma configuração com um nome muito longo. O comprimento máximo é de 255"
       default_value_missing: "A configuração \"%{name}\" não tem valor padrão"
       default_not_match_type: "O tipo de valor padrão da configuração \"%{name}\" não corresponde ao tipo de configuração."
@@ -124,6 +124,9 @@ pt_BR:
       string_value_not_valid_min_max: "Precisa ter entre %{min} e %{max} caracteres."
       string_value_not_valid_min: "Deve ser pelo menos %{min} caracteres."
       string_value_not_valid_max: "Deve ser no máximo %{max} caracteres."
+      objects:
+        required: "tem que ser preenchido"
+        not_valid_integer_value: "deve ser um inteiro"
     locale_errors:
       top_level_locale: "A chave de nível superior em um arquivo local deve corresponder ao nome do local"
       invalid_yaml: "Tradução YAML inválida"
@@ -372,7 +375,7 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_trust: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
+  no_embedded_media_allowed_group: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
   no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
   too_many_embedded_media:
     one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
@@ -851,27 +854,12 @@ pt_BR:
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
   change_email:
-    wrong_account_error: "Você entrou com a conta errada, saia e tente novamente."
-    confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
     error_staged: "Ocorreu um erro ao alterar o seu endereço de e-mail. O endereço já está usado por outro(a) usuário(a) encenado(a)."
     already_done: "Desculpe, este link de confirmação não é mais válido. Talvez o seu e-mail já tenha sido alterado?"
     confirm: "Confirmar"
     max_secondary_emails_error: "Você alcançou o limite máximo de e-mails secundários."
-    authorizing_new:
-      title: "Confirme seu novo e-mail"
-      description: "Confirme que gostaria de mudar seu endereço de e-mail para:"
-      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
-    authorizing_old:
-      title: "Troque seu endereço de e-mail"
-      description: "Confirme a alteração do seu endereço de e-mail"
-      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
-      old_email: "E-mail antigo: %{email}"
-      new_email: "Novo e-mail: %{email}"
-      almost_done_title: "Confirmando seu novo endereço de e-mail"
-      almost_done_description: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
     connected: "(conectado(a))"
@@ -908,6 +896,9 @@ pt_BR:
       title: "Inapropriado(a)"
       description: 'Esta postagem contém conteúdo que uma pessoa sensata consideraria ofensivo, abusivo, conduta odiosa ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">diretrizes da nossa comunidade</a>'
+    illegal:
+      email_title: 'Uma postagem em "%{title}" requer a atenção da equipe'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar uma mensagem para @%{username}"
       description: "Quero falar com esta pessoa direto e pessoalmente sobre a sua postagem."
@@ -986,6 +977,9 @@ pt_BR:
       long_form: "sinalizado(a) para atenção da moderação"
       short_description: "Requer atenção da equipe por outro motivo"
       email_title: 'O tópico "%{title}" requer atenção do(a) moderador(a)'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Uma postagem em "%{title}" requer a atenção da equipe'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Sua postagem foi sinalizada pela comunidade. <a href="%{path}">Veja suas mensagens</a>.</p>'
@@ -2111,11 +2105,6 @@ pt_BR:
     enable_inline_emoji_translation: "Permite a tradução de emojis em linha (sem qualquer espaço ou pontuação antes)"
     emoji_deny_list: "Estes emojis não estarão disponíveis para uso nos menus ou shortcodes."
     approve_post_count: "A quantidade de postagens de um(a) usuário(a) novo(a) ou básico(a) que devem ser aprovadas"
-    approve_unless_trust_level: "Postagens de usuários(as) abaixo deste nível de confiança devem ser aprovadas"
-    approve_unless_allowed_groups: "Postagens de usuários(as) que não estejam nestes grupos devem ser aprovadas"
-    approve_new_topics_unless_trust_level: "Novos tópicos de usuários(as) abaixo deste nível de confiança devem ser aprovados."
-    approve_new_topics_unless_allowed_groups: "Novos tópicos de usuários(as) que não estejam nestes grupos devem ser aprovados"
-    approve_unless_staged: "Novos tópicos e postagens para usuários(as) encenados(as) devem ser aprovados"
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por muitas horas, envie uma notificação a todos(as) os(as) moderadores(as). Defina como 0 para desativar essas notificações."
     reviewable_revision_reasons: "A lista de motivos que podem ser selecionados ao recusar uma postagem revisável na fila com uma revisão. Sempre há disponível uma opção alternativa para inserir um motivo personalizado."
     auto_close_messages_post_count: "Quantidade máxima de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"
@@ -3883,7 +3872,6 @@ pt_BR:
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é de %{max_size_kb} KB). Redimensione e tente novamente."
       too_large_humanized: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é de %{max_size}). Redimensione e tente novamente."
-      larger_than_x_megapixels: "Desculpe, a imagem que você está tentando enviar é muito grande (a dimensão máxima é de %{max_image_megapixels} megapixels). Redimensione e tente novamente."
       size_not_found: "Desculpe, mas não foi possível determinar o tamanho da imagem. O arquivo de imagem pode estar corrompido."
     placeholders:
       too_large: "(imagem maior do que %{max_size_kb} KB)"

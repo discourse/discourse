@@ -46,6 +46,9 @@ class Stat
       Stat.new("users", show_in_ui: true, expose_via_api: true) { Statistics.users },
       Stat.new("active_users", show_in_ui: true, expose_via_api: true) { Statistics.active_users },
       Stat.new("likes", show_in_ui: true, expose_via_api: true) { Statistics.likes },
+      Stat.new("discourse_discover", show_in_ui: false, expose_via_api: true) do
+        Statistics.discourse_discover
+      end,
     ]
   end
 

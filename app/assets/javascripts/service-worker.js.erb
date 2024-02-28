@@ -12,6 +12,8 @@
   workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
 %>
 
+<% if !GlobalSetting.disable_service_worker_cache %>
+
 importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
 
 workbox.setConfig({
@@ -20,8 +22,6 @@ workbox.setConfig({
 });
 
 var authUrls = ["auth", "session/sso_login", "session/sso", "srv/status"].map(path => `<%= Discourse.base_path %>/${path}`);
-var chatRegex = /\/chat\/channel\/(\d+)\//;
-var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 const oldCacheNames = [
   "discourse-1", "external-1"
@@ -143,6 +143,10 @@ workbox.routing.registerRoute(
     ],
   })
 );
+<% end %>
+
+var chatRegex = /\/chat\/channel\/(\d+)\//;
+var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 function showNotification(title, body, icon, badge, tag, baseUrl, url) {
   var notificationOptions = {

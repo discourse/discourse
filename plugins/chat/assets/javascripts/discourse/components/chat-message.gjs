@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -99,9 +100,7 @@ export default class ChatMessage extends Component {
   }
 
   get pane() {
-    return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatThreadPane
-      : this.chatChannelPane;
+    return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
   }
 
   get messageInteractor() {
@@ -251,11 +250,11 @@ export default class ChatMessage extends Component {
   @action
   initMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
-      if (user.isTrackingStatus()) {
+      if (user.statusManager.isTrackingStatus()) {
         return;
       }
 
-      user.trackStatus();
+      user.statusManager.trackStatus();
       user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
@@ -459,7 +458,7 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
-      this.args.context === MESSAGE_CONTEXT_THREAD ||
+      this.threadContext ||
       this.args.message?.inReplyTo?.id ===
         this.args.message?.previousMessage?.id ||
       this.threadingEnabled
@@ -475,16 +474,33 @@ export default class ChatMessage extends Component {
 
   get showThreadIndicator() {
     return (
-      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      !this.threadContext &&
       this.threadingEnabled &&
       this.args.message?.thread &&
       this.args.message?.thread.preview.replyCount > 0
     );
   }
 
+  get threadContext() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD;
+  }
+
+  get shouldRenderStopMessageStreamingButton() {
+    return (
+      this.args.message.streaming &&
+      (this.currentUser.admin ||
+        this.args.message.user.id === this.currentUser.id)
+    );
+  }
+
+  @action
+  stopMessageStreaming(message) {
+    this.chatApi.stopMessageStreaming(message.channel.id, message.id);
+  }
+
   #teardownMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
-      user.stopTrackingStatus();
+      user.statusManager.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
   }
@@ -502,7 +518,16 @@ export default class ChatMessage extends Component {
           "chat-message-container"
           (if this.pane.selectingMessages "-selectable")
           (if @message.highlighted "-highlighted")
+          (if @message.streaming "-streaming")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
+          (if (eq @message.id this.currentUser.id) "is-by-current-user")
+          (if
+            (eq
+              @message.id
+              @message.channel.currentUserMembership.lastReadMessageId
+            )
+            "-last-read"
+          )
           (if @message.staged "-staged" "-persisted")
           (if @message.processed "-processed" "-not-processed")
           (if this.hasActiveState "-active")
@@ -573,6 +598,7 @@ export default class ChatMessage extends Component {
                 <ChatMessageInfo
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
+                  @threadContext={{this.threadContext}}
                 />
 
                 <ChatMessageText
@@ -603,6 +629,18 @@ export default class ChatMessage extends Component {
                     </div>
                   {{/if}}
                 </ChatMessageText>
+
+                {{#if this.shouldRenderStopMessageStreamingButton}}
+                  <div class="stop-streaming-btn-container">
+                    <DButton
+                      @class="stop-streaming-btn"
+                      @icon="stop-circle"
+                      @label="cancel"
+                      @action={{fn this.stopMessageStreaming @message}}
+                    />
+
+                  </div>
+                {{/if}}
 
                 <ChatMessageError
                   @message={{@message}}

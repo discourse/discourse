@@ -22,6 +22,7 @@ export default {
       const siteSettings = owner.lookup("service:site-settings");
       const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");
+      const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
       // will eventually just be called lightbox
       const lightboxService = owner.lookup("service:lightbox");
@@ -118,7 +119,7 @@ export default {
           "btn-default",
           "btn",
           "btn-icon",
-          "no-text",
+          ...(props.label ? ["no-text"] : []),
         ];
 
         openPopupBtn.classList.add(...defaultClasses);
@@ -131,11 +132,18 @@ export default {
           openPopupBtn.title = I18n.t(props.title);
         }
 
+        if (props.label && capabilities.touch) {
+          openPopupBtn.innerHTML = `
+          <span class="d-button-label">
+            ${I18n.t(props.label)}
+          </div>`;
+        }
+
         if (props.icon) {
           const icon = create(
             iconNode(props.icon.name, { class: props.icon?.class })
           );
-          openPopupBtn.append(icon);
+          openPopupBtn.prepend(icon);
         }
 
         return openPopupBtn;
@@ -180,6 +188,7 @@ export default {
           const tableEditorBtn = _createButton({
             classes: ["btn-edit-table"],
             title: "table_builder.edit.btn_edit",
+            label: "table_builder.edit.btn_edit",
             icon: {
               name: "pencil-alt",
               class: "edit-table-icon",

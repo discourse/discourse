@@ -110,7 +110,7 @@ fi:
       optimized_link: Optimoidut kuvalinkit ovat lyhytikäisiä, eikä niitä tulisi sisällyttää teeman lähdekoodiin.
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
-      data_type_not_a_number: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
+      data_type_inclusion: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
       default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
@@ -124,6 +124,9 @@ fi:
       string_value_not_valid_min_max: "Sen täytyy olla %{min}–%{max} merkin pituinen."
       string_value_not_valid_min: "Sen täytyy olla vähintään %{min} merkkiä pitkä."
       string_value_not_valid_max: "Sen täytyy olla enintään %{max} merkkiä pitkä"
+      objects:
+        required: "pakollinen kenttä"
+        not_valid_integer_value: "täytyy olla kokonaisluku"
     locale_errors:
       top_level_locale: "Lokalisaatiotiedoston ylimmän tason avaimen täytyy olla sama kuin lokalisaation nimi"
       invalid_yaml: "Käännös-YAML ei kelpaa"
@@ -372,7 +375,7 @@ fi:
   too_many_mentions_newuser:
     one: "Uudet käyttäjät voivat mainita viestissä vain yhden muun käyttäjän."
     other: "Uudet käyttäjät voivat mainita viestissä vain %{count} käyttäjää."
-  no_embedded_media_allowed_trust: "Et voi upottaa mediaobjekteja viesteihin."
+  no_embedded_media_allowed_group: "Et voi upottaa mediaobjekteja viesteihin."
   no_embedded_media_allowed: "Uudet käyttäjät eivät voi upottaa mediaobjekteja viesteihin."
   too_many_embedded_media:
     one: "Uudet käyttäjät voivat upottaa vain yhden mediaobjektin viesteihin."
@@ -851,27 +854,12 @@ fi:
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
   change_email:
-    wrong_account_error: "Olet kirjautuneena väärällä tilillä. Kirjaudu ulos ja yritä uudelleen."
-    confirmed: "Sähköpostiosoite päivitetty."
-    please_continue: "Jatka sivustolle %{site_name}"
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
     doesnt_exist: "Sähköpostiosoitetta ei ole liitetty tiliisi."
     error_staged: "Sähköpostiosoitetta muutettaessa tapahtui virhe. Osoite on automaattisesti luodun esikäyttäjän käytössä."
     already_done: "Pahoittelut, tämä varmennuslinnkki ei ole enää voimassa. Ehkäpä sähköpostiosoitteesi on jo vaihdettu?"
     confirm: "Vahvista"
     max_secondary_emails_error: "Olet saavuttanut sallitun toissijaisten sähköpostiosoitteiden enimmäismäärän."
-    authorizing_new:
-      title: "Vahvista uusi sähköpostiosoite"
-      description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
-      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
-    authorizing_old:
-      title: "Vaihda sähköpostiosoitteesi"
-      description: "Vahvista sähköpostiosoitteesi muutos"
-      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
-      old_email: "Vanha sähköposti: %{email}"
-      new_email: "Uusi sähköposti: %{email}"
-      almost_done_title: "Vahvista uusi sähköpostiosoite"
-      almost_done_description: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
   associated_accounts:
     revoke_failed: "Tunnustasi palveluntarjoajalla %{provider_name} ei voitu perua."
     connected: "(yhdistetty)"
@@ -908,6 +896,9 @@ fi:
       title: "Sopimaton"
       description: 'Tässä viestissä on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana, vihamielisenä toimintana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
       short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
+    illegal:
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}"'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
@@ -986,6 +977,9 @@ fi:
       long_form: "liputit tämän valvojille tiedoksi"
       short_description: "Henkilökunnan tulisi huomioida muusta syystä"
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="%{path}">saapuneet viestisi</a>.</p>'
@@ -2059,8 +2053,8 @@ fi:
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen pysyvien linkkien sovittamista, esim. /(topic.*)\\?.*/\\1 poistaa hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
     global_notice: "Näytä kaikilla sivuilla kaikille käyttäjille KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri, jota ei voi piilottaa. Vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_system_edit_notifications: "Poistaa järjestelmäkäyttäjän muokkausilmoitukset käytöstä, kun 'download_remote_images_to_local' on asetettu."
-    disable_category_edit_notifications: "Poista aiheiden kategorioiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
-    disable_tags_edit_notifications: "Poista aiheiden tunnisteiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
+    disable_category_edit_notifications: "Poista aiheiden kategorioiden muokkausilmoitukset käytöstä. Tämä sisältää aiheet, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
+    disable_tags_edit_notifications: "Poista aiheiden tunnisteiden muokkausilmoitukset käytöstä. Tämä sisältää aiheet, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
     notification_consolidation_threshold: "Kuinka monta tykkäys- tai jäsenhakemusilmoitusta tulee saada, jotta ne yhdistetään yhdeksi. Arvo 0 poistaa käytöstä."
     likes_notification_consolidation_window_mins: "Kesto minuutteina, jonka aikana tykkäysilmoitukset yhdistetään yhdeksi ilmoitukseksi, kun raja on saavutettu. Rajan voi määrittää asetuksella `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
@@ -2111,11 +2105,6 @@ fi:
     enable_inline_emoji_translation: "Ota käyttöön emojien kääntäminen merkkijonojen keskeltä (ei väliä tai välimerkkejä ennen emojia)"
     emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
-    approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit täytyy hyväksyä"
-    approve_unless_allowed_groups: "Viestit käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
-    approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
-    approve_new_topics_unless_allowed_groups: "Uudet ketjut käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
-    approve_unless_staged: "Esikäyttäjien uudet ketjut ja viestit täytyy hyväksyä"
     notify_about_queued_posts_after: "Jos viestejä on ollut hyväksymättä näin monen tunnin ajan, lähetä ilmoitus valvojille. Poista ilmoitukset käytöstä asettamalla 0."
     reviewable_revision_reasons: "Listaus käytettävissä olevista syistä hylättäessä tarkistusjonon viestejä korjauksella. Myös \"Muu\" on aina käytettävissä, jolloin syy voidaan syöttää itse."
     auto_close_messages_post_count: "Maksimimäärä viestejä viestissä, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
@@ -3888,7 +3877,6 @@ fi:
     images:
       too_large: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size_kb} kt), pienennä kuvaa ja yritä uudestaan."
       too_large_humanized: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size}), pienennä kuvaa ja yritä uudestaan."
-      larger_than_x_megapixels: "Kuva, jonka yritit ladata, on liian suuri (maksimikoko on %{max_image_megapixels} megapikseliä). Muuta kuvan kokoa ja yritä uudelleen."
       size_not_found: "Emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
     placeholders:
       too_large: "(kuva on suurempi kuin %{max_size_kb} kt)"

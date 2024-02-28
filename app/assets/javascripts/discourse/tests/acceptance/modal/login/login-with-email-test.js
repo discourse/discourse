@@ -15,7 +15,6 @@ acceptance("Login with email", function (needs) {
   needs.settings({
     enable_local_logins_via_email: true,
     enable_facebook_logins: true,
-    enable_passkeys: false,
   });
 
   let userFound = false;

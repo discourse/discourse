@@ -56,7 +56,7 @@ module("Unit | Utility | formatter", function (hooks) {
   });
 
   test("formatting medium length dates", function (assert) {
-    const shortDateYear = shortDateTester("MMM D, 'YY");
+    const shortDateYear = shortDateTester("MMM D, YYYY");
 
     assert.strictEqual(
       strip(formatMins(1.4, { format: "medium", leaveAgo: true })),
@@ -152,7 +152,7 @@ module("Unit | Utility | formatter", function (hooks) {
   test("formatting tiny dates", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
 
-    const shortDateYear = shortDateTester("MMM 'YY");
+    const shortDateYear = shortDateTester("MMM YYYY");
     siteSettings.relative_date_duration = 14;
 
     assert.strictEqual(formatMins(0), "1m");

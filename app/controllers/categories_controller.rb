@@ -341,6 +341,12 @@ class CategoriesController < ApplicationController
       else
         true
       end
+    include_ancestors =
+      if params[:include_ancestors].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_ancestors])
+      else
+        false
+      end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
@@ -376,19 +382,33 @@ class CategoriesController < ApplicationController
 
     categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
 
-    categories = categories.order(<<~SQL) if prioritized_category_id.present?
-      CASE
-      WHEN id = #{prioritized_category_id} THEN 1
-      WHEN parent_category_id = #{prioritized_category_id} THEN 2
-      ELSE 3
-      END
-    SQL
-
-    categories = categories.order(:id)
-
     Category.preload_user_fields!(guardian, categories)
 
-    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    # Prioritize categories that start with the term, then top-level
+    # categories, then subcategories
+    categories =
+      categories.to_a.sort_by do |category|
+        [
+          category.name.downcase.starts_with?(term) ? 0 : 1,
+          category.parent_category_id.blank? ? 0 : 1,
+          category.id == prioritized_category_id ? 0 : 1,
+          category.parent_category_id == prioritized_category_id ? 0 : 1,
+          category.id,
+        ]
+      end
+
+    if include_ancestors
+      ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
+
+      render_json_dump(
+        {
+          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+          ancestors: serialize_data(ancestors, SiteCategorySerializer, scope: guardian),
+        },
+      )
+    else
+      render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    end
   end
 
   private

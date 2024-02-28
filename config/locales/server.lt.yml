@@ -81,7 +81,7 @@ lt:
       optimized_link: Optimizuotos vaizdo nuorodos yra trumpalaikės ir neturėtų būti įtrauktos į temos šaltinio kodą.
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."
-      data_type_not_a_number: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
+      data_type_inclusion: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
       default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės"
       default_not_match_type: "Nustatymas „%{name}“ numatytosios vertės tipas neatitinka nustatymo tipo."
@@ -95,6 +95,8 @@ lt:
       string_value_not_valid_min_max: "Turi būti tarp %{min} ir %{max} simbolių ilgio."
       string_value_not_valid_min: "Turi sudaryti mažiausia %{min} simbolių."
       string_value_not_valid_max: "Turi sudaryti daugiausia %{max} simbolių."
+      objects:
+        not_valid_integer_value: "privalo buti integruotas"
     locale_errors:
       top_level_locale: "Aukščiausio lygio raktas lokalės faile turi atitikti lokalės pavadinimą"
       invalid_yaml: "Vertimas YAML negaliojantis"
@@ -269,7 +271,7 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_embedded_media_allowed_trust: "Deja, jūs negalite įterpti medijos elementų į įrašą."
+  no_embedded_media_allowed_group: "Deja, jūs negalite įterpti medijos elementų į įrašą."
   no_embedded_media_allowed: "Atsiprašome, nauji vartotojai negali įterpti medijos elementų į įrašus."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
@@ -709,27 +711,12 @@ lt:
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
   change_email:
-    wrong_account_error: "Esate prisijungę prie netinkamos paskyros, atsijunkite ir bandykite dar kartą."
-    confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
-    please_continue: "Tęsti į %{site_name}"
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
     error_staged: "Keičiant el. pašto adresą įvyko klaida. Adresą jau naudoja suaktyvintas naudotojas."
     already_done: "Deja, ši patvirtinimo nuoroda nebegalioja. Galbūt jūsų el. pašto adresas jau buvo pakeistas?"
     confirm: "Patvirtinti"
     max_secondary_emails_error: "Pasiekėte didžiausią leistiną antrinių el. laiškų limitą."
-    authorizing_new:
-      title: "Patvirtinkite naują el. paštą"
-      description: "Patvirtinkite, kad norite, kad jūsų el. Pašto adresas būtų pakeistas į:"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-    authorizing_old:
-      title: "Pakeisti elektroninio pašto adresą"
-      description: "Patvirtinkite savo el. pašto adreso pakeitimą"
-      description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
-      old_email: "Senas el. Paštas: %{email}"
-      new_email: "Naujas el. paštas: %{email}"
-      almost_done_title: "Patvirtinamas naujas el. Pašto adresas"
-      almost_done_description: "Mes išsiuntėme laišką į jūsų naują elektroninio pašto adresą, kad patvirtintume pakeitimą!"
   associated_accounts:
     revoke_failed: "Nepavyko anuliuoti paskyros naudojant %{provider_name}."
     connected: "(prijungtas)"
@@ -763,6 +750,9 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -821,6 +811,9 @@ lt:
       long_form: "pažymėjo tai moderatoriaus dėmesiui"
       short_description: "Reikia darbuotojų dėmesio dėl kitos priežasties"
       email_title: 'Tema "%{title}" reikalauja moderatoriaus dėmesio'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Jūsų įrašą pažymėjo bendruomenė. Prašome <a href="%{path}">pamatyti savo pranešimus</a>.</p>'
@@ -1430,8 +1423,6 @@ lt:
     emoji_autocomplete_min_chars: "Minimalus simbolių skaičius, reikalingas automatinio užbaigimo jaustukų iššokančiam langui suaktyvinti"
     enable_inline_emoji_translation: "Įgalinamas įterptųjų jaustukų vertimas (be tarpų ar skyrybos ženklų prieš tai)"
     approve_post_count: "Naujo arba pagrindinio naudotojo įrašų, kuriuos reikia patvirtinti, skaičius"
-    approve_unless_trust_level: "Naudotojų įrašai žemiau šio pasitikėjimo lygio turi būti patvirtinti"
-    approve_new_topics_unless_trust_level: "Naujos temos vartotojams žemiau šio patikimumo lygio turi būti patvirtintos"
     auto_close_messages_post_count: "Maksimalus pranešimų skaičius, leidžiamas pranešime prieš jį automatiškai uždarant (0 išjungti)"
     auto_close_topics_create_linked_topic: "Sukurkite naują susietą temą, kai tema automatiškai uždaroma pagal nustatymą „Automatiškai uždarytų temų įrašų skaičių“"
     returning_user_notice_tl: "Minimalus patikimumo lygis, reikalingas norint pamatyti grįžtančius vartotojo pašto pranešimus."
@@ -2312,7 +2303,6 @@ lt:
     images:
       too_large: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB), pakeiskite jo dydį ir bandykite dar kartą."
       too_large_humanized: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (maksimalus dydis yra %{max_size}), pakeiskite jo dydį ir bandykite dar kartą."
-      larger_than_x_megapixels: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias matmuo yra %{max_image_megapixels}megapikselių), pakeiskite jo dydį ir bandykite dar kartą."
       size_not_found: "Atsiprašome, bet mes negalėjome nustatyti vaizdo dydžio. Gal jūsų vaizdas yra sugadintas?"
     placeholders:
       too_large: "(vaizdas didesnis nei %{max_size_kb}KB)"

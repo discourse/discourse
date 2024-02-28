@@ -46,13 +46,10 @@ html.rtl {
     left: var(--composer-right, 20px);
     right: 0;
   }
-
-  > * {
-    pointer-events: auto;
-  }
 }
 
 .chat-drawer {
+  pointer-events: auto;
   align-self: flex-end;
   width: 400px;
   min-width: 250px !important; // important to override inline styles

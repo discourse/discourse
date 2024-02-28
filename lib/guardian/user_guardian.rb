@@ -138,6 +138,7 @@ module UserGuardian
 
   def can_see_user_actions?(user, action_types)
     return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
   end
 
@@ -181,10 +182,8 @@ module UserGuardian
   end
 
   def can_upload_profile_header?(user)
-    (
-      is_me?(user) &&
-        user.has_trust_level?(SiteSetting.min_trust_level_to_allow_profile_background.to_i)
-    ) || is_staff?
+    (is_me?(user) && user.in_any_groups?(SiteSetting.profile_background_allowed_groups_map)) ||
+      is_staff?
   end
 
   def can_upload_user_card_background?(user)

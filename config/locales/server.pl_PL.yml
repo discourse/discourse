@@ -112,7 +112,7 @@ pl_PL:
       optimized_link: Zoptymalizowane łącza do obrazów są efemeryczne i nie powinny być zawarte w kodzie źródłowym motywu.
     settings_errors:
       invalid_yaml: "Wprowadzony YAML jest nieprawidłowy"
-      data_type_not_a_number: "Ustawienie typu `%{name}` nie jest obsługiwane. Poprawne typy to `integer`, `bool`, `list`, `enum` oraz `upload`"
+      data_type_inclusion: "Ustawienie typu `%{name}` nie jest obsługiwane. Poprawne typy to `integer`, `bool`, `list`, `enum` oraz `upload`"
       name_too_long: "Jedno z ustawień ma zbyt długą nazwę. Maksymalna długość to 255 znaków"
       default_value_missing: "Ustawienie `%{name}` nie ma domyślnej wartości"
       default_not_match_type: "Typ domyślnej wartości ustawienia \"%{name}\" nie odpowiada typowi ustawienia."
@@ -126,6 +126,9 @@ pl_PL:
       string_value_not_valid_min_max: "Wartość musi mieć długość pomiędzy %{min} a %{max} znaków."
       string_value_not_valid_min: "Wartość musi mieć co najmniej %{min} znaków."
       string_value_not_valid_max: "Wartość musi mieć co najwyżej %{max} znaków."
+      objects:
+        required: "musi zostać podana"
+        not_valid_integer_value: "musi być liczbą całkowitą"
     locale_errors:
       top_level_locale: "Klucz najwyższego poziomu w pliku ustawień regionalnych musi być zgodny z nazwą ustawień regionalnych"
       invalid_yaml: "Nieprawidłowy plik YAML z tłumaczeniem"
@@ -406,7 +409,7 @@ pl_PL:
     few: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     many: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     other: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach we wpisie.."
-  no_embedded_media_allowed_trust: "Przepraszamy, nie możesz osadzić elementów multimedialnych w poście."
+  no_embedded_media_allowed_group: "Przepraszamy, nie możesz osadzić elementów multimedialnych w poście."
   no_embedded_media_allowed: "Przepraszamy, nowi użytkownicy nie mogą osadzić elementów multimedialnych w poście."
   too_many_embedded_media:
     one: "Przepraszamy, nowi użytkownicy mogą dodawać tylko jeden element multimedialny do wpisu."
@@ -958,27 +961,12 @@ pl_PL:
       windows: "Microsoft Windows"
       unknown: "nieznany system operacyjny"
   change_email:
-    wrong_account_error: "Jesteś zalogowany ze złego konta, wyloguj się proszę i spróbuj ponownie."
-    confirmed: "Twój email został zmieniony."
-    please_continue: "Przejdź do %{site_name}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
     max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
-    authorizing_new:
-      title: "Potwierdź swój nowy adres e-mail"
-      description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
-      description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
-    authorizing_old:
-      title: "Zmień swój adres e-mail"
-      description: "Potwierdź zmianę adresu e-mail"
-      description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
-      old_email: "Stary adres e-mail: %{email}"
-      new_email: "Nowy adres e-mail: %{email}"
-      almost_done_title: "Potwierdzanie nowego adresu e-mail"
-      almost_done_description: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
   associated_accounts:
     revoke_failed: "Nie udało się unieważnić konta za pomocą %{provider_name}."
     connected: "(połączony)"
@@ -1015,6 +1003,11 @@ pl_PL:
       title: "Niewłaściwe"
       description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
+    illegal:
+      title: "Nielegalne"
+      short_description: "To jest nielegalne"
+      email_title: 'Wpis "%{title}" wymaga uwagi moderatora'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Wyślij wiadomość do @%{username}"
       description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
@@ -1093,6 +1086,11 @@ pl_PL:
       long_form: "oznaczył to dla uwagi moderatora"
       short_description: "Wymaga uwagi personelu z innego powodu."
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Nielegalne"
+      short_description: "To jest nielegalne"
+      email_title: 'Wpis "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. Sprawdź <a href="%{path}">swoje prywatne wiadomości</a>.</p>'
@@ -1549,6 +1547,8 @@ pl_PL:
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
     category_style_deprecated: "Twój Discourse używa obecnie przestarzałego stylu kategorii, który zostanie usunięty przed ostateczną wersją beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a>."
+    ember_version_warning: "Twoja witryna działa z nieobsługiwaną konfiguracją EMBER_VERSION=3. Może to prowadzić do nieoczekiwanych problemów z motywami/wtyczkami. Usuń konfigurację EMBER_VERSION z pliku app.yml i zrób rebuild Discourse. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
+    back_from_logster_text: "Powrót do strony"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -1949,7 +1949,7 @@ pl_PL:
     min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania wpisów"
     flag_post_allowed_groups: "Grupy, które mogą oznaczać posty flagami."
     min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
-    post_links_allowed_groups: "Grupy, które mogą umieszczać linki w postach."
+    post_links_allowed_groups: "Grupy, które mogą zawierać linki w postach. Administratorzy i moderatorzy zawsze mogą publikować linki."
     min_trust_to_post_embedded_media: "Minimalny poziom zaufania wymagany do osadzania elementów multimedialnych w poście"
     min_trust_level_to_allow_profile_background: "Minimalny poziom zaufania wymagany do przesłania tła profilu"
     min_trust_level_to_allow_user_card_background: "Minimalny poziom zaufania wymagany do przesłania tła karty użytkownika"
@@ -2222,11 +2222,6 @@ pl_PL:
     enable_inline_emoji_translation: "Włącza tłumaczenie wbudowanych emoji (bez spacji i znaków interpunkcyjnych przed)"
     emoji_deny_list: "Tych emoji nie będzie można używać w menu ani w shortcodes."
     approve_post_count: "Liczba wpisów od nowego lub podstawowego użytkownika, które muszą zostać zatwierdzone"
-    approve_unless_trust_level: "Wpisy użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
-    approve_unless_allowed_groups: "Posty użytkowników spoza tych grup muszą zostać zatwierdzone"
-    approve_new_topics_unless_trust_level: "Nowe tematy dodawane przez użytkowników z poziomem zaufania poniżej muszą zostać zaakceptowane"
-    approve_new_topics_unless_allowed_groups: "Nowe tematy dla użytkowników spoza tych grup muszą zostać zatwierdzone"
-    approve_unless_staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone"
     notify_about_queued_posts_after: "Jeśli są posty, które czekały na sprawdzenie dłużej niż tyle godzin, wyślij powiadomienie do wszystkich moderatorów. Ustaw na 0, aby wyłączyć te powiadomienia."
     reviewable_revision_reasons: "Lista powodów, które można wybrać w przypadku odrzucenia wpisu oczekującego w kolejce do sprawdzenia z poprawką. Zawsze dostępne są również inne, co pozwala na wprowadzenie niestandardowego powodu."
     auto_close_messages_post_count: "Maksymalna liczba wpisów dozwolonych w wiadomości przed automatycznym zamknięciem (0 aby wyłączyć)"
@@ -2313,6 +2308,7 @@ pl_PL:
     tag_style: "Styl etykiet tagów"
     pm_tags_allowed_for_groups: "Zezwalaj członkom uwzględnionych grup na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
+    tag_topic_allowed_groups: "Grupy, które mogą tagować tematy."
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
@@ -2350,6 +2346,7 @@ pl_PL:
     use_name_for_username_suggestions: "Proponując nazwy użytkownika, używaj imienia i nazwiska użytkownika."
     suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
     splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
+    navigation_menu: "Określ, którego menu nawigacyjnego użyć."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     experimental_new_new_view_groups: 'EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link "Wszystko" na pasku bocznym.'
@@ -4062,7 +4059,6 @@ pl_PL:
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
       too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
-      larger_than_x_megapixels: "Przepraszamy, obraz który próbujesz dodać jest zbyt duży (maksymalny wymiar to %{max_image_megapixels}-megapikseli), proszę zmienić rozmiar i spróbować ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"

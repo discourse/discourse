@@ -70,6 +70,10 @@ cs:
       asset_too_big: "Soubor %{filename} je větší než limit %{limit}"
       theme_too_big: "Motiv je větší než limit %{limit}"
       too_many_files: "Počet souborů (%{count}) v motivu překročil maximální povolený počet souborů (%{limit})"
+    settings_errors:
+      objects:
+        required: "nesmí být prázdný"
+        not_valid_integer_value: "musí být celé číslo"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"
@@ -148,13 +152,43 @@ cs:
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
   invite:
+    expired: "Platnost vaší pozvánky vypršela. Prosím <a href='%{base_url}/about'>kontaktujte redakci</a>."
+    not_found: "Vaše pozvánka je neplatná. Prosím <a href='%{base_url}/about'>kontaktujte redakci</a>."
+    not_found_json: "Vaše pozvánka je neplatná. Prosím kontaktujte redakci."
+    not_matching_email: "Vaše e-mailová adresa a e-mailová adresa spojená s pozvánkou se neshodují. Kontaktujte prosím redakci."
+    not_found_template: |
+      <p>Vaše pozvánka do <a href="%{base_url}">%{site_name}</a> již byla uplatněna.</p>
+
+      <p>Pokud si pamatujete své heslo, se můžete <a href="%{base_url}/login">přihlásit</a>.</p>
+
+      <p>V opačném případě prosím <a href="%{base_url}/password-reset">Obnovte své heslo</a>.</p>
+    not_found_template_link: |
+      <p>Tuto pozvánku na <a href="%{base_url}">%{site_name}</a> již nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku.</p>
+    existing_user_cannot_redeem: "Tuto pozvánku nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku."
+    existing_user_already_redemeed: "Tento odkaz s pozvánkou jste již uplatnili."
+    user_exists: "Není třeba zvát <b>%{email}</b>, účet již má!"
+    invite_exists: "<b>%{email}</b> jste již pozvali."
+    rate_limit:
+      one: "Za posledních 24 hodin jste již odeslali %{count} pozvánku, počkejte prosím %{time_left}, než to zkuste znovu."
+      few: "Za posledních 24 hodin jste již odeslali %{count} pozvánky, počkejte prosím %{time_left}, než to zkuste znovu."
+      many: "Za posledních 24 hodin jste již odeslali %{count} pozvánek, počkejte prosím %{time_left}, než to zkuste znovu."
+      other: "Za posledních 24 hodin jste již odeslali %{count} pozvánek, počkejte prosím %{time_left}, než to zkuste znovu."
+    cant_invite_to_group: "Do těchto skupin nemáte oprávnění zvát uživatele. Ujistěte se, že jste vlastníkem skupin, do kterých se pokoušíte zvát."
     disabled_errors:
+      discourse_connect_enabled: "Pozvánky jsou zakázány, protože je povolen DiscourseConnect."
       invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
+    requires_groups: "Pozvánka nebyla uložena, protože zadané téma je nepřístupné. Přidejte jednu z následujících skupin: %{groups}."
     max_invite_emails_limit_exceeded: "Požadavek se nezdařil, protože počet e-mailů překročil maximum (%{max})."
+    domain_not_allowed: "Váš e-mail nelze použít k uplatnění této pozvánky."
+    max_redemptions_allowed_one: "pro e-mailové pozvánky by mělo být 1."
+    existing_user_success: "Pozvánka byla úspěšně uplatněna"
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
+    max_rows: "Bylo odesláno prvních %{max_bulk_invites} pozvánek. Zkuste soubor rozdělit na menší části."
     error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
   topic_invite:
+    failed_to_invite: "Uživatele nelze pozvat do tohoto tématu, aniž by byl členem jedné z následujících skupin: %{group_names}."
+    not_pm: "Můžete zvát pouze do soukromých zpráv."
     user_exists: "Omlouváme se, uživatel byl již pozván. K tématu můžete pozvat uživatele jen jednou."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
@@ -277,6 +311,8 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       cant_allow_membership_requests: "Nemůžete povolit žádosti o členství pro skupinu bez žádných vlastníků."
+      no_invites_with_discourse_connect: "Pokud je povolena funkce DiscourseConnect, můžete zvát pouze registrované uživatele."
+      no_invites_without_local_logins: "Pokud je zakázáno místní přihlášování, můžete zvát pouze registrované uživatele"
     default_names:
       everyone: "kdokoliv"
       admins: "administrátoři"
@@ -573,8 +609,6 @@ cs:
     os:
       android: "Android"
   change_email:
-    confirmed: "Vaše emailová adresa bylo změněna."
-    please_continue: "Pokračovat na %{site_name}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     confirm: "Potvrdit"
   activation:
@@ -598,6 +632,8 @@ cs:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+    illegal:
+      email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
       title: "Poslat @%{username} zprávu"
       email_title: 'Váš příspěvek v „%{title}“'
@@ -633,6 +669,8 @@ cs:
       description: 'Toto téma vyžaduje obecnou pozornost redakce na základě <a href="%{base_path}/guidelines">pokynů</a>, <a href="%{tos_url}">podmínek použití</a>nebo z jiného důvodu, který není uveden výše.'
       long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
+      email_body: "%{link}\\n\\n%{message}\n"
+    illegal:
       email_body: "%{link}\\n\\n%{message}\n"
   archetypes:
     regular:
@@ -1089,6 +1127,8 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+  change_owner:
+    post_revision_text: "Převedeno vlastnictví"
   publish_page:
     slug_errors:
       blank: "nemůže zůstat prázdné"
@@ -1185,6 +1225,34 @@ cs:
 
 
       Pokud si přejete nadále dostávat e-mailové aktualizace, můžete tuto zprávu gnorovat.
+  invite_forum_mailer:
+    subject_template: "%{inviter_name} vás pozval/a na stránky %{site_domain_name}."
+    text_body_template: |
+      %{inviter_name} vás pozval/a na stránky
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Pokud máte zájem, klikněte na níže uvedený odkaz:
+
+      %{invite_link}
+  custom_invite_forum_mailer:
+    subject_template: "%{inviter_name} vás pozval/a na stránky %{site_domain_name}."
+    text_body_template: |
+      %{inviter_name} vás pozval/a na stránky
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      S touto poznámkou
+
+      > %{user_custom_message}
+
+      Pokud máte zájem, klikněte na níže uvedený odkaz:
+
+      %{invite_link}
   invite_password_instructions:
     text_body_template: |
       Děkujeme, že jste přijali pozvání do %{site_name} – vítejte!
@@ -1314,6 +1382,34 @@ cs:
       few: "%{participants} a %{count} další"
       many: "%{participants} a %{count} další"
       other: "%{participants} a %{count} dalších"
+    invited_to_private_message_body: |
+      %{username} vás pozval/a ke zprávě
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      na stránky
+
+      > %{site_title} -- %{site_description}
+
+      Chcete-li se připojit ke zprávě, klikněte na níže uvedený odkaz:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} vás pozval/a do diskuse
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      na stránky
+
+      > %{site_title} -- %{site_description}
+
+      Chcete-li se zapojit do diskuse, klikněte na níže uvedený odkaz:
+
+      %{topic_url}
     digest:
       why: "Krátký souhrn z webu %{site_link} od poslední návštěvy v %{last_seen_at}"
       since_last_visit: "Od vaší poslední návštěvy"

@@ -110,7 +110,7 @@ fr:
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_not_a_number: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
+      data_type_inclusion: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
       default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut"
       default_not_match_type: "Le type de la valeur par défaut du paramètre « %{name} » ne correspond pas au type du paramètre."
@@ -124,6 +124,9 @@ fr:
       string_value_not_valid_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
       string_value_not_valid_min: "La chaîne de caractères doit contenir au moins %{min} caractères."
       string_value_not_valid_max: "La chaîne de caractères doit contenir au plus %{max} caractères."
+      objects:
+        required: "doit être présent"
+        not_valid_integer_value: "doit être un entier"
     locale_errors:
       top_level_locale: "La clé de premier niveau dans un fichier de localisation doit correspondre au nom de locale"
       invalid_yaml: "Traduction YAML non valide"
@@ -372,7 +375,7 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_trust: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
+  no_embedded_media_allowed_group: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
   no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
   too_many_embedded_media:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
@@ -851,27 +854,12 @@ fr:
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   change_email:
-    wrong_account_error: "Vous êtes connecté(e) avec le mauvais compte, veuillez vous déconnecter et réessayer."
-    confirmed: "Votre adresse e-mail a été mise à jour."
-    please_continue: "Continuer vers %{site_name}"
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
     error_staged: "Une erreur est survenue lors de la modification de votre adresse e-mail. Cette adresse est déjà utilisée par un utilisateur distant."
     already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre adresse e-mail a peut-être déjà été modifiée ?"
     confirm: "Confirmer"
     max_secondary_emails_error: "Vous avez atteint la limite autorisée du nombre d'adresses e-mail secondaires."
-    authorizing_new:
-      title: "Confirmez votre nouvelle adresse e-mail"
-      description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
-      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
-    authorizing_old:
-      title: "Modifier votre adresse e-mail"
-      description: "Veuillez confirmer votre changement d'adresse e-mail"
-      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
-      old_email: "Adresse e-mail précédente : %{email}"
-      new_email: "Nouvelle adresse e-mail : %{email}"
-      almost_done_title: "Confirmer une nouvelle adresse e-mail"
-      almost_done_description: "Nous avons envoyé un e-mail à votre nouvelle adresse pour confirmer le changement !"
   associated_accounts:
     revoke_failed: "Échec de la révocation de votre compte avec %{provider_name}."
     connected: "(connecté)"
@@ -908,6 +896,9 @@ fr:
       title: "Répréhensible"
       description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envoyer un message à @%{username}"
       description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
@@ -986,6 +977,9 @@ fr:
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
@@ -2111,11 +2105,6 @@ fr:
     enable_inline_emoji_translation: "Active la traduction d'émojis en ligne (non précédés par un espace ou un signe de ponctuation)"
     emoji_deny_list: "Ces émojis ne seront pas disponibles dans les menus ou les shortcodes."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
-    approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
-    approve_unless_allowed_groups: "Les messages des utilisateurs qui ne font pas partie de ces groupes doivent être approuvés."
-    approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
-    approve_new_topics_unless_allowed_groups: "Les nouveaux sujets pour les utilisateurs qui ne font pas partie de ces groupes doivent être approuvés."
-    approve_unless_staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés"
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un e-mail à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces e-mails en renseignant la valeur « 0 »."
     reviewable_revision_reasons: "Liste des raisons qui peuvent être sélectionnées lors du rejet d'un message révisable en file d'attente avec une révision. L'option Autre est également toujours disponible, ce qui permet de saisir une raison personnalisée."
     auto_close_messages_post_count: "Nombre maximal de messages dans un message privé avant qu'il soit automatiquement fermé (0 pour désactiver)"
@@ -3902,7 +3891,6 @@ fr:
     images:
       too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
       too_large_humanized: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size}). Veuillez la redimensionner, puis réessayez."
-      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner puis réessayez."
       size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
       too_large: "(image plus grande que %{max_size_kb} Ko)"

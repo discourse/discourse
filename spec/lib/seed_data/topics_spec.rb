@@ -110,6 +110,18 @@ RSpec.describe SeedData::Topics do
 
       expect(SiteSetting.tos_topic_id).to_not eq(-1)
     end
+
+    it "creates FAQ topic" do
+      meta_category = Fabricate(:category, name: "Meta")
+      staff_category = Fabricate(:category, name: "Feedback")
+      SiteSetting.meta_category_id = meta_category.id
+      SiteSetting.staff_category_id = staff_category.id
+      create_topic("guidelines_topic_id")
+      topic = Topic.find(SiteSetting.guidelines_topic_id)
+      post = Post.find_by(topic_id: SiteSetting.guidelines_topic_id, post_number: 1)
+      expect(topic.title).to_not include("Translation missing")
+      expect(post.raw).to_not include("Translation missing")
+    end
   end
 
   describe "#update" do

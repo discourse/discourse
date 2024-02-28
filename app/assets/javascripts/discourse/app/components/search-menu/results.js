@@ -37,7 +37,7 @@ export default class Results extends Component {
 
   get resultTypesWithComponent() {
     let content = [];
-    this.args.results.resultTypes?.map((resultType) => {
+    this.search.results.resultTypes?.map((resultType) => {
       content.push({
         ...resultType,
         component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.componentName],

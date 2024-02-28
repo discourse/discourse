@@ -55,7 +55,7 @@ Once you've done the initial setup, you're ready to invite your founding members
 [] Members provide their name, bio and picture
 [] Create interesting topics (at least 5 topics and 30 replies recommended)
 [] Start talking in chat
-[] Talk in #feedback about how to use the site and how it is organized
+[] Talk in #site-feedback about how to use the site and how it is organized
 [] Review and edit the provided Community Guidelines (FAQ) 
 
 ### When you're ready, launch your community!

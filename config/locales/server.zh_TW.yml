@@ -90,6 +90,9 @@ zh_TW:
       string_value_not_valid_min_max: "它必須介於%{min}與%{max}個字元。"
       string_value_not_valid_min: "它最少必須比%{min}個字元長。"
       string_value_not_valid_max: "它最多必須比%{max}個字元短。"
+      objects:
+        required: "必須存在"
+        not_valid_integer_value: "必須是整數"
     locale_errors:
       top_level_locale: "本地檔案的最高階金鑰必須與本地名稱相符"
       invalid_yaml: "YAML 翻譯無效"
@@ -582,8 +585,6 @@ zh_TW:
       windows: "Microsoft Windows"
       unknown: "未知的運作系統"
   change_email:
-    confirmed: "你的電子郵箱已更新。"
-    please_continue: "繼續連接至 %{site_name}"
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
     error_staged: "在修改你的電子郵箱地址時出現了錯誤。這個郵箱已經被一個暫存使用者占用了。"
     already_done: "抱歉，此激活連結已經失效。可能你已經修改了郵箱？"
@@ -620,6 +621,9 @@ zh_TW:
     inappropriate:
       title: "不當內容"
       short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
+    illegal:
+      email_title: '"%{title}" 主題需要版主的注意'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "給 @%{username} 送出一則訊息"
       description: "我想要針對這位使用者的貼文直接和他們溝通。"
@@ -656,6 +660,9 @@ zh_TW:
       long_form: "標記為需版主注意"
       short_description: "需要管理員注意其他原因"
       email_title: '此討論話題 "%{title}" 需要板主注意'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}" 主題需要版主的注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的貼文被社群標記了。請<a href="%{path}">查看你的消息</a>。</p>'
@@ -1483,9 +1490,6 @@ zh_TW:
     emoji_autocomplete_min_chars: "觸發自動填充表情符號彈出燈箱，所需的最少字數"
     enable_inline_emoji_translation: "為表情符號啟用翻譯（前提條件為：沒有任何空格或標點符號）"
     approve_post_count: "新使用者或基礎使用者需要被審核的貼文數量"
-    approve_unless_trust_level: "該信任等級之下的使用者的貼文必須被審核"
-    approve_new_topics_unless_trust_level: "低於該信任等級的使用者的新貼文需要被審核"
-    approve_unless_staged: "使用者張貼新的討論話題或貼文需要分次審核"
     notify_about_queued_posts_after: "如果有貼文等待審核階段仍超過一定的時數，將向所有版主發送通知。設定為0，將不發通知。"
     auto_close_messages_post_count: "消息中貼子數上限，達到後自動關閉消息（0 為禁用）"
     auto_close_topics_post_count: "主題中貼子數上限，達到後自動關閉主題 ( 0 為禁用 )"
@@ -2573,7 +2577,6 @@ zh_TW:
       too_large: "抱歉，你試圖上傳的檔案太大了（最大限製為%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你試圖上傳的圖片太大了（最大限製為%{max_size_kb}%KB），請裁剪它並重試。"
-      larger_than_x_megapixels: "對不起，您試圖上傳的影像太大了（最大限制是%{max_image_megapixels} 百萬畫素），請調整大小後重試。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
     placeholders:
       too_large: "（圖片大於 %{max_size_kb}KB）"

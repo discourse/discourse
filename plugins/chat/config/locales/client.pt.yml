@@ -18,6 +18,7 @@ pt:
     chat:
       deleted_chat_username: eliminado
       dates:
+        yesterday: "Ontem"
         time_tiny: "hh:mm"
       all_loaded: "Mostrando todas as mensagens"
       already_enabled: "O Chat já está ativado neste tópico. Por favor atualize."
@@ -115,6 +116,7 @@ pt:
         back: "Retroceder"
         title: Canais
         filter_all: Tudo
+        filter_open: Abrir
         filter_closed: Fechado
       chat_message_separator:
         today: Hoje

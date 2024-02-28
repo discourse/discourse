@@ -10,6 +10,7 @@ pt_BR:
     poll_maximum_options: "Quantidade máxima de opções permitidas em uma enquete."
     poll_edit_window_mins: "Quantidade de minutos após a criação de uma postagem pelos quais as enquetes podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar votações."
+    poll_create_allowed_groups: "Os grupos com permissão para criar enquetes."
     poll_groupable_user_fields: "Um conjunto de nomes para o campo do(a) usuário(a) que podem ser usados para agrupar e filtrar os resultados da enquete."
     poll_export_data_explorer_query_id: "ID da consulta do Data Explorer para usar para exportar resultados de enquetes (0 para desativar)."
     poll_default_public: "Ao criar uma nova enquete, ative a opção \"mostrar quem votou\" por padrão."

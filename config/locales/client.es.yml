@@ -35,11 +35,9 @@ es:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "hace %{date}"
       wrap_on: "el %{date}"
       tiny:
@@ -75,7 +73,7 @@ es:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "hace menos de %{count} min"
@@ -104,7 +102,7 @@ es:
         almost_x_years:
           one: "casi %{count} año"
           other: "casi %{count} años"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "hace %{count} minuto"
@@ -188,7 +186,6 @@ es:
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
-      message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
     bootstrap_mode: "Cómo empezar"
     themes:
@@ -1456,6 +1453,15 @@ es:
         success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
         back_to_preferences: "Volver a preferencias"
+        confirm_success: "Se actualizó tu correo electrónico."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
+          description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
+        authorizing_old:
+          old_email: "Correo electrónico antiguo: %{email}"
+          new_email: "Correo electrónico nuevo: %{email}"
+          confirm_success: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basado en"
@@ -2134,10 +2140,11 @@ es:
         one: "Selecciona al menos %{count} elemento."
         other: "Selecciona al menos %{count} elementos."
       components:
-        tag_drop:
-          filter_for_more: Filtrar para más…
+        filter_for_more: Filtrar para más…
         categories_admin_dropdown:
           title: "Gestionar categorías"
+        bulk_select_topics_dropdown:
+          title: "Acciones en bloque"
     date_time_picker:
       from: Desde
       to: Hasta
@@ -2647,6 +2654,7 @@ es:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
@@ -2732,6 +2740,9 @@ es:
         top: "No hay más temas destacados."
         bookmarks: "No hay más temas guardados en marcadores."
         filter: "No hay más temas."
+    topic_bulk_actions:
+      close_topics:
+        name: "Cerrar temas"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -4622,7 +4633,6 @@ es:
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.
-              show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
               update: Actualizar información del perfil de usuario.
               log_out: Cerrar sesión todas las sesiones del usuario.
@@ -4743,14 +4753,10 @@ es:
           post_liked: "Cuando un usuario le da me gusta a una publicación."
         notification_event:
           group_name: "Eventos de notificación"
-          notification_created: "Un usuario recibe una notificación en su feed"
         group_user_event:
           group_name: "Eventos de usuario de grupo"
-          user_added_to_group: "Se ha añadido un usuario a un grupo"
-          user_removed_from_group: "Se ha eliminado un usuario de un grupo"
         user_promoted_event:
           group_name: "Eventos promovidos por el usuario"
-          user_promoted: "Se ha promocionado a un usuario"
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -5170,7 +5176,6 @@ es:
           instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
         title: "Correos electrónicos"
-        settings: "Ajustes"
         templates: "Plantillas"
         templates_title: "Plantillas de correo electrónico"
         preview_digest: "Vista previa resumen"
@@ -5817,7 +5822,6 @@ es:
             other: "En los últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas en los que ha comentado"
           topics_viewed: "Temas vistos"
@@ -6123,6 +6127,7 @@ es:
         category_title: "Categoría"
         tag_name: "Nombre de la etiqueta"
         external_url: "URL externa o relativa"
+        username: "Nombre de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar enlace permanente al portapapeles"
         delete_confirm: '¿Seguro que quieres eliminar este enlace permanente?'

@@ -433,7 +433,7 @@ module Jobs
 
       if @current_user
         post =
-          if upload
+          if upload&.errors&.empty?
             SystemMessage.create_from_system_user(
               @current_user,
               :csv_export_succeeded,

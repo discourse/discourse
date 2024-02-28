@@ -45,6 +45,7 @@ fi:
       back_to_forum: "Foorumi"
       deleted_chat_username: poistettu
       dates:
+        yesterday: "Eilen"
         time_tiny: "t:mm"
       all_loaded: "Näytetään kaikki viestit"
       already_enabled: "Chat on jo käytössä tässä ketjussa. Päivitä."
@@ -249,7 +250,7 @@ fi:
         back: "Takaisin"
         title: Kanavat
         filter_all: Kaikki
-        filter_open: Avattu
+        filter_open: Avoinna
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä

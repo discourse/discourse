@@ -409,7 +409,7 @@ RSpec.describe NewPostManager do
     it "calls custom enqueuing handlers" do
       SiteSetting.tagging_enabled = true
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       manager =
         NewPostManager.new(
@@ -467,7 +467,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "user needs approval?" do
-    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
     it "handles post_needs_approval? correctly" do
       user.user_stat = UserStat.new(post_count: 0, new_since: DateTime.now)

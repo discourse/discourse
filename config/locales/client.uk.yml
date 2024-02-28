@@ -33,15 +33,12 @@ uk:
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "Do MMMM"
+      full_no_year_no_time: "D MMM"
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YY, LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} тому"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ uk:
           many: "%{count}р."
           other: "%{count}р."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "менше %{count} хвилини тому"
@@ -144,7 +141,6 @@ uk:
           few: "майже %{count} роки"
           many: "майже %{count} років"
           other: "майже %{count} років"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} хв. тому"
@@ -244,7 +240,7 @@ uk:
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
     software_update_prompt:
-      message: "Ми оновили цей сайт, <span>оновіть сторінку</span>, інакше у вас може виникнути неочікувана поведінка."
+      message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
       dismiss: "Відхилити"
     bootstrap_mode: "Початок роботи"
     themes:
@@ -1135,6 +1131,7 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
+      account_possessive: "Обліковий запис %{name}"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -1606,6 +1603,18 @@ uk:
         success_via_admin: "Ми надіслали листа на цю скриньку. Будь ласка, виконайте інструкції з листа для підтвердження."
         success_staff: "Ми надіслали листа на вашу поточну скриньку. Будь ласка, виконайте інструкції щодо підтвердження."
         back_to_preferences: "Повернутися до налаштувань"
+        confirm_success: "Вашу адресу електронної пошти було оновлено."
+        confirm: "Підтвердити"
+        authorizing_new:
+          description: "Підтвердьте, що ви бажаєте змінити адресу електронної пошти на:"
+          description_add: "Будь ласка, підтвердьте, що ви хочете додати альтернативну адресу електронної пошти:"
+        authorizing_old:
+          title: "Перевірте стару адресу електронної пошти"
+          description: "Будь ласка, підтвердіть свою стару електронну адресу, щоб продовжити зміну електронної пошти:"
+          description_add: "Будь ласка, перевірте вашу існуючу адресу електронної пошти, щоб продовжити додавання альтернативної адреси:"
+          old_email: "Стара електронна пошта: %{email}"
+          new_email: "Нова електронна пошта: %{email}"
+          confirm_success: "Ми надіслали електронного листа на вашу нову адресу електронної пошти, щоб підтвердити зміни!"
       change_avatar:
         title: "Змінити своє зображення профілю"
         gravatar: "На основі <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
@@ -2318,10 +2327,11 @@ uk:
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елементів."
       components:
-        tag_drop:
-          filter_for_more: Шукати ще…
+        filter_for_more: Шукати ще…
         categories_admin_dropdown:
           title: "Керування розділами"
+        bulk_select_topics_dropdown:
+          title: "Масові дії"
     date_time_picker:
       from: Від
       to: До
@@ -2891,6 +2901,7 @@ uk:
     topics:
       new_messages_marker: "останнє відвідування"
       bulk:
+        confirm: "Підтвердити"
         select_all: "Обрати все"
         clear_all: "Очистити все"
         unlist_topics: "Виключити з усіх списків тем"
@@ -2965,6 +2976,7 @@ uk:
           few: "Обробка: <strong>%{count}</strong> теми"
           many: "Обробка: <strong>%{count}</strong> тем"
           other: "Обробка: <strong>%{count}</strong> тем"
+        silent: "Виконати цю дію без звуку."
       none:
         unread: "У вас немає непрочитаних тем."
         unseen: "У Вас немає не переглянутих тем."
@@ -2975,6 +2987,7 @@ uk:
         bookmarks: "У вас немає обраних тем."
         category: "В розділі %{category} немає тем."
         top: "Топових тем немає."
+        hot: "Нема гарячих тем."
         filter: "Немає тем."
         educate:
           new: '<p>Ваші нові теми з’являтимуться тут. Типово теми вважаються новими і показуватимуть індикатор <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, якщо її створено за останні 2 дні.</p><p>Відвідайте свої <a href="%{userPrefsUrl}">налаштування</a>, щоб змінити це.</p>'
@@ -2990,8 +3003,15 @@ uk:
         category: "Більше немає тем в розділі %{category}."
         tag: "Немає більше %{tag} тем."
         top: "Топових тем більше немає."
+        hot: "Гарячих тем більше немає."
         bookmarks: "Більше немає обраних тем."
         filter: "Більше немає тем."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрити теми"
+      update_category:
+        name: "Оновити категорію"
+        description: "Виберіть нову категорію для обраних тем"
     topic:
       filter_to:
         one: "%{count} допис в темі"
@@ -3681,6 +3701,7 @@ uk:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
           inappropriate: "Ви поскаржилися на це як на неприпустиме"
+          illegal: "Ви позначили це як незаконне"
           notify_moderators: "Ви позначили це для модерації"
           notify_user: "Ви надіслали повідомлення цьому користувачеві"
       delete:
@@ -3949,10 +3970,12 @@ uk:
         off_topic: "Це не по темі"
         inappropriate: "Це не прийнятно"
         spam: "Це спам"
+        illegal: "Це незаконно"
       custom_placeholder_notify_user: "Будьте конкретні, конструктивні та доброзичливі."
       notify_user_textarea_label: "Повідомлення для користувача"
       custom_placeholder_notify_moderators: "Поясніть суть проблеми: на що потрібно звернути увагу. Надайте відповідні посилання, якщо це можливо."
       notify_moderators_textarea_label: "Повідомлення для модераторів"
+      custom_placeholder_illegal: "Повідомте нам, чому ви вважаєте цей контент незаконним, і надайте відповідні посилання та приклади, де це можливо."
       custom_message:
         at_least:
           one: "Введіть хоча б %{count} символ"
@@ -4103,6 +4126,10 @@ uk:
         title: "Непереглянуті"
         lower_title: "непереглянуті"
         help: "нові теми і теми, які ви відстежуєте або які містять непрочитані дописи"
+      hot:
+        title: "Гаряче"
+        lower_title: "гаряче"
+        help: "топ останніх тем"
       new:
         lower_title_with_count:
           one: "%{count} нова"
@@ -5177,7 +5204,7 @@ uk:
           user_removed_from_group: "Користувача видалено з групи"
         user_promoted_event:
           group_name: "Події, запропоновані користувачем"
-          user_promoted: "Користувач просуває"
+          user_promoted: "Користувач отримав підвищення"
         delivery_status:
           title: "Стан доставки"
           inactive: "Неактивно"
@@ -5603,7 +5630,7 @@ uk:
           instructions: "Налаштування шаблону, в якому відображаються всі html-повідомлення e-mail пошти, та стиль за допомогою CSS."
       email:
         title: "Листи"
-        settings: "Налаштування"
+        settings: "Налаштування електронної пошти"
         templates: "Шаблони"
         templates_title: "Шаблони електронної пошти"
         preview_digest: "Стислий виклад новин"
@@ -6262,7 +6289,7 @@ uk:
             other: "За останні %{count} днів:"
           value_heading: "Значення"
           requirement_heading: "Вимога"
-          visits: "Відвідини"
+          posts_read_days: "Повідомлення Прочитано: унікальні дні"
           days: "днів"
           topics_replied_to: "Теми, на які відповів(ла)"
           topics_viewed: "Переглянуто Тем"
@@ -6572,6 +6599,8 @@ uk:
         category_title: "Розділ"
         tag_name: "Назва теґу"
         external_url: "Зовнішня або відносна URL-адреса"
+        user_id: "ID користувача"
+        username: "Імʼя користувача"
         destination: "Призначення"
         copy_to_clipboard: "Копіювати постійне посилання у буфер обміну"
         delete_confirm: Ви впевнені, що хочете видалити це постійне посилання?

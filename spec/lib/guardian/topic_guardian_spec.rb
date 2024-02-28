@@ -3,8 +3,8 @@
 RSpec.describe TopicGuardian do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:tl3_user) { Fabricate(:trust_level_3, refresh_auto_groups: true) }
-  fab!(:tl4_user) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+  fab!(:tl3_user) { Fabricate(:trust_level_3) }
+  fab!(:tl4_user) { Fabricate(:trust_level_4) }
   fab!(:moderator)
   fab!(:category)
   fab!(:group)
@@ -130,7 +130,7 @@ RSpec.describe TopicGuardian do
 
   describe "#can_edit_topic?" do
     context "when the topic is a shared draft" do
-      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
       before do
         SiteSetting.shared_drafts_category = category.id

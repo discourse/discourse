@@ -13,6 +13,8 @@ vi:
           never: "Không bao giờ"
     chat:
       deleted_chat_username: đã bị xóa
+      dates:
+        yesterday: "Hôm qua"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -56,6 +58,7 @@ vi:
       browse:
         back: "Quay lại"
         filter_all: All
+        filter_open: Mở
         filter_closed: Đã
       chat_message_separator:
         today: Hôm nay

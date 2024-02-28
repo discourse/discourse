@@ -74,6 +74,15 @@ class ContentSecurityPolicy
       @directives[directive] ||= []
 
       sources = Array(sources).map { |s| normalize_source(s) }
+
+      if SiteSetting.content_security_policy_strict_dynamic
+        # Strip any sources which are ignored under strict-dynamic
+        # If/when we make strict-dynamic the only option, we could print deprecation warnings
+        # asking plugin/theme authors to remove the unnecessary config
+        sources =
+          sources.reject { |s| s == "'unsafe-inline'" || s == "'self'" || !s.start_with?("'") }
+      end
+
       @directives[directive].concat(sources)
 
       @directives[directive].delete(:none) if @directives[directive].count > 1

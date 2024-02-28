@@ -13,6 +13,7 @@ sr:
           never: "Nikad"
     chat:
       dates:
+        yesterday: "Juče"
         time_tiny: "h:mm"
       cancel: "Odustani"
       channel_settings:
@@ -43,6 +44,7 @@ sr:
       browse:
         back: "Nazad"
         filter_all: sve
+        filter_open: Otvori
       chat_message_separator:
         today: Danas
         yesterday: Juče

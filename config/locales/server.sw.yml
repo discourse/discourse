@@ -70,6 +70,9 @@ sw:
       number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
       string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
       string_value_not_valid_max: "Isizidi maneno %{max}."
+      objects:
+        required: "lazima iwepo"
+        not_valid_integer_value: "lazima iwe namba"
   emails:
     incoming:
       default_subject: "Hii mada inaitaji kichwa cha maneno"
@@ -418,8 +421,6 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   change_email:
-    confirmed: "Barua pepe yako imesasishwa."
-    please_continue: "Endelea kwenye %{site_name}"
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
@@ -453,6 +454,9 @@ sw:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Haifai"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
@@ -486,6 +490,9 @@ sw:
       long_form: "imeripotiwa na itapitiwa na msimamizi"
       short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
       email_title: 'Mada "%{title}" inahitaji kupitiwa na msimamizi'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Chapisho lako limeripotiwa na jumuiya. Tafadhali <a href="%{path}">ona ujumbe wako</a>.</p>'
@@ -906,9 +913,6 @@ sw:
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
     approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
-    approve_unless_trust_level: "Namba za machapisho kutoka kwa mtumiaji mwenye kiwango hichi cha uaminifu lazima zipate kibali"
-    approve_new_topics_unless_trust_level: "Mada mpya za watumiaji wenge kiwango cha chini cha uaminifu lazima zipate kibali"
-    approve_unless_staged: "Mada na machapisho kwa ajili ya watumiaji waliokuwa staged lazima zipate kibali"
     notify_about_queued_posts_after: "Kama kuna machapisho ambayo yamekuwa yanasubirishwa kwa zaidi ya masaa haya, tuma taarifa kwa wasimamizi wote. Andika 0 kuzima hizi taarifa."
     auto_close_topics_post_count: "Idadi ya juu ya machapisho yanayoruhusiwa kwenye mada kabla haijafungwa (0 kuzima)"
     max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
@@ -1752,7 +1756,6 @@ sw:
       too_large: "Samahani, faili unalojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb})."
     images:
       too_large: "Samahani, picha unayojaribu kupakia ni kubwa sana (kiwangu cha juu ni KB %{max_size_kb}),tafadhali badilisha ukubwa na jaribu tena."
-      larger_than_x_megapixels: "Samahani, picha unayojaribu kupakia ni kubwa sana (kipimo cha juu ni %{max_image_megapixels} - megapixels),t afadhali badilisha ukubwa na jaribu tena."
       size_not_found: "Samahani ila hatujaweza kujua kipimo cha picha. Labda picha yako ina tatizo?"
     placeholders:
       too_large: "(picha kubwa zaidi ya KB %{max_size_kb})"

@@ -1536,7 +1536,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
-      Fabricate(:user, email: "existing@bar.com", trust_level: 3, refresh_auto_groups: true)
+      Fabricate(:user, email: "existing@bar.com", trust_level: TrustLevel[3])
       SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect { process(:existing_user) }.to raise_error(
         Email::Receiver::InsufficientTrustLevelError,
@@ -1681,8 +1681,8 @@ RSpec.describe Email::Receiver do
     it "works when approving is enabled" do
       SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
-      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3], refresh_auto_groups: true)
-      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4], refresh_auto_groups: true)
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
 
       category.set_permissions(Group[:trust_level_4] => :full)
       category.save!
@@ -1729,13 +1729,13 @@ RSpec.describe Email::Receiver do
     end
 
     it "lets an email in from a high-TL user" do
-      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4], refresh_auto_groups: true)
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
     it "fails on email from a low-TL user" do
       SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3], refresh_auto_groups: true)
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
   end

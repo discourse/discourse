@@ -22,6 +22,13 @@
     left: 0;
     padding-bottom: env(safe-area-inset-bottom);
 
+    html.footer-nav-ipad &,
+    html.footer-nav-visible & {
+      padding-bottom: calc(
+        env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
+      );
+    }
+
     &__item {
       display: flex;
       flex-direction: column;
@@ -30,6 +37,7 @@
       flex-shrink: 0;
       padding-block: 0.75rem;
       height: 100%;
+      position: relative;
 
       &.--active {
         .d-icon,
@@ -51,6 +59,19 @@
       .d-button-label {
         font-size: var(--font-down-1-rem);
         color: var(--primary-medium);
+      }
+
+      .chat-channel-unread-indicator,
+      .chat-channel-unread-indicator.-urgent {
+        top: 0.25rem;
+        right: unset;
+        left: 50%;
+        margin-left: 0.75rem;
+      }
+
+      .chat-channel-unread-indicator:not(.-urgent) {
+        width: 11px;
+        height: 11px;
       }
     }
   }

@@ -27,7 +27,10 @@ end
 
 task "db:environment:set" => [:load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
+    system(
+      "RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set",
+      exception: true,
+    )
   end
 end
 
@@ -56,7 +59,7 @@ end
 
 task "db:drop" => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop", exception: true)
   end
 end
 
@@ -266,7 +269,7 @@ task "db:migrate" => %w[
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:migrate")
+    system("RAILS_DB=discourse_test_multisite rake db:migrate", exception: true)
   end
 end
 

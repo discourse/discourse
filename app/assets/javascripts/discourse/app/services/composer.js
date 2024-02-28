@@ -483,6 +483,45 @@ export default class ComposerService extends Service {
     return uploadIcon(this.currentUser.staff, this.siteSettings);
   }
 
+  @discourseComputed(
+    "model.action",
+    "isWhispering",
+    "model.privateMessage",
+    "model.post.username"
+  )
+  ariaLabel(modelAction, isWhispering, privateMessage, postUsername) {
+    switch (modelAction) {
+      case "createSharedDraft":
+        return I18n.t("composer.create_shared_draft");
+      case "editSharedDraft":
+        return I18n.t("composer.edit_shared_draft");
+      case "createTopic":
+        return I18n.t("composer.composer_actions.create_topic.label");
+      case "privateMessage":
+        return I18n.t("user.new_private_message");
+      case "edit":
+        return I18n.t("composer.composer_actions.edit");
+      case "reply":
+        if (isWhispering) {
+          return `${I18n.t("composer.create_whisper")} ${this.site.get(
+            "whispers_allowed_groups_names"
+          )}`;
+        }
+        if (privateMessage) {
+          return I18n.t("composer.create_pm");
+        }
+        if (postUsername) {
+          return I18n.t("composer.composer_actions.reply_to_post.label", {
+            postUsername,
+          });
+        } else {
+          return I18n.t("composer.composer_actions.reply_to_topic.label");
+        }
+      default:
+        return I18n.t("keyboard_shortcuts_help.composing.title");
+    }
+  }
+
   // Use this to open the composer when you are not sure whether it is
   // already open and whether it already has a draft being worked on. Supports
   // options to append text once the composer is open if required.

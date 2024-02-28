@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
@@ -50,6 +51,11 @@ export default class UserThreads extends Component {
           />
         </div>
       </list.Item>
+      <list.EmptyState>
+        <div class="empty-state-threads">
+          {{i18n "chat.empty_state.my_threads"}}
+        </div>
+      </list.EmptyState>
     </List>
   </template>
 }

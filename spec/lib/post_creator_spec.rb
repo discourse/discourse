@@ -556,7 +556,7 @@ RSpec.describe PostCreator do
           context "when can create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "can create all tags if none exist" do
@@ -577,7 +577,7 @@ RSpec.describe PostCreator do
           context "when cannot create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "only uses existing tags" do
@@ -590,7 +590,7 @@ RSpec.describe PostCreator do
           context "when automatically tagging first posts" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
               Fabricate(:tag, name: "greetings")
               Fabricate(:tag, name: "hey")
               Fabricate(:tag, name: "about-art")

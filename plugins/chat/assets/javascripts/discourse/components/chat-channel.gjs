@@ -35,6 +35,7 @@ import {
   checkMessageTopVisibility,
 } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
+import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -254,9 +255,10 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  scrollToBottom() {
+  async scrollToBottom() {
     this._ignoreNextScroll = true;
-    scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scrollable);
+    this.debouncedUpdateLastReadMessage();
   }
 
   scrollToMessageId(messageId, options = {}) {
@@ -560,12 +562,17 @@ export default class ChatChannel extends Component {
     }
 
     try {
-      await this.chatApi.sendMessage(this.args.channel.id, {
+      const params = {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      });
+      };
+
+      await this.chatApi.sendMessage(
+        this.args.channel.id,
+        Object.assign({}, params, extractCurrentTopicInfo(this))
+      );
 
       if (!this.capabilities.isIOS) {
         this.scrollToLatestMessage();

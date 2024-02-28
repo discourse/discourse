@@ -34,11 +34,8 @@ zh_TW:
       long_with_year: "YYYY年M月D日 h:mm a"
       long_with_year_no_time: "YYYY年 M月 D日"
       full_with_year_no_time: "YYYY年 M月 D日"
-      long_date_with_year: "YYYY年 M月 D日 LT"
       long_date_without_year: "M月 D日 LT"
-      long_date_with_year_without_time: "YYYY年 M月 D日"
       long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
-      long_date_with_year_with_linebreak: "YYYY年 M月 D日<br/>LT"
       wrap_ago: "%{date}前"
       wrap_on: "在 %{date}"
       tiny:
@@ -84,7 +81,6 @@ zh_TW:
           other: "超過 %{count} 年"
         almost_x_years:
           other: "大約 %{count} 年"
-        date_year: "YYYY年 M月 D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -155,7 +151,6 @@ zh_TW:
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
-      message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
     themes:
       default_description: "預設"
@@ -1092,6 +1087,7 @@ zh_TW:
         error: "修改你的電子郵件地址時發生錯誤，可能此電子郵件地址已經有人使用?"
         success: "我們已經寄出一封郵件至此電子郵件地址，請遵照說明進行確認。"
         success_staff: "我們已傳送一封電子郵件至你目前的信箱。請根據確認指示進行操作。"
+        confirm_success: "你的電子郵箱已更新。"
       change_avatar:
         title: "設定個人資料圖片"
         letter_based: "系統分配的個人資料圖片"
@@ -1546,6 +1542,9 @@ zh_TW:
         other: "您只能選擇%{count}個項目"
       min_content_not_reached:
         other: "至少要選擇%{count}個項目"
+      components:
+        bulk_select_topics_dropdown:
+          title: "批次操作"
     date_time_picker:
       from: 自
       to: 至
@@ -1895,6 +1894,9 @@ zh_TW:
         tag: "%{tag} 分類已經沒有其它話題了。"
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
+    topic_bulk_actions:
+      close_topics:
+        name: "關閉話題"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -3459,7 +3461,6 @@ zh_TW:
           reset: "重設為預設值"
       email:
         title: "電子郵件"
-        settings: "設定"
         templates: "模板"
         preview_digest: "預覽文摘"
         advanced_test:
@@ -3927,7 +3928,6 @@ zh_TW:
             other: "這最近 %{count} 天："
           value_heading: "價值"
           requirement_heading: "要求"
-          visits: "造訪"
           days: "天"
           topics_replied_to: "話題回覆"
           topics_viewed: "已讀話題"
@@ -4166,6 +4166,7 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："

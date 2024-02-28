@@ -148,7 +148,6 @@
     padding: 15px 0;
     word-break: break-word;
     color: var(--primary);
-    margin-right: 0.5em;
   }
 
   .anon & {
@@ -225,6 +224,7 @@
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {
+      // important to prevent clicks registering on non-link elements and resulting in a full page reload
       pointer-events: none;
     }
 

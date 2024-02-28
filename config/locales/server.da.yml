@@ -78,7 +78,7 @@ da:
       optimized_link: Optimerede billedlinks er midlertidige og bør ikke indgå i tema kildekode.
     settings_errors:
       invalid_yaml: "Leveret YAML er ugyldig."
-      data_type_not_a_number: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
+      data_type_inclusion: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
       name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
       default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
       default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."
@@ -92,6 +92,9 @@ da:
       string_value_not_valid_min_max: "Det skal være mellem %{min} og %{max} tegn langt."
       string_value_not_valid_min: "Det skal være mindst %{min} tegn langt."
       string_value_not_valid_max: "Den skal højst være %{max} tegn langt."
+      objects:
+        required: "skal udfyldes"
+        not_valid_integer_value: "skal være et heltal"
     locale_errors:
       top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
       invalid_yaml: "Oversættelse YAML ugyldig"
@@ -308,7 +311,7 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
-  no_embedded_media_allowed_trust: "Beklager, du kan ikke integrere medieelementer i et indlæg."
+  no_embedded_media_allowed_group: "Beklager, du kan ikke integrere medieelementer i et indlæg."
   no_embedded_media_allowed: "Beklager, men nye brugere kan ikke integrere medieelementer i indlæg."
   too_many_embedded_media:
     one: "Beklager, nye brugere kan kun indsætte ét indlejret medieelement i et indlæg."
@@ -715,27 +718,12 @@ da:
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
   change_email:
-    wrong_account_error: "Du er logget ind på den forkerte konto, log venligst ud og prøv igen."
-    confirmed: "Din e-mail-adresse er blevet opdateret."
-    please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."
     error_staged: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     already_done: "Beklager, dette bekræftelseslink er ikke længere gyldigt. Måske er din email adresse allerede blevet ændret?"
     confirm: "Bekræft"
     max_secondary_emails_error: "Du har nået den maksimalt tilladte grænse for sekundære e-mails."
-    authorizing_new:
-      title: "Bekræft din nye e-mail"
-      description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-    authorizing_old:
-      title: "Skift din e-mailadresse"
-      description: "Bekræft venligst din e-mail adresse ændring"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-      old_email: "Gammel e-mail: %{email}"
-      new_email: "Ny e-mail: %{email}"
-      almost_done_title: "Bekræfter ny e-mailadresse"
-      almost_done_description: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
   associated_accounts:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
@@ -771,6 +759,9 @@ da:
     inappropriate:
       title: "Upassende"
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
+    illegal:
+      email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send @%{username} en besked"
       description: "Jeg vil gerne tale med denne person direkte og personligt om deres indlæg."
@@ -838,6 +829,9 @@ da:
       long_form: "anmeldte dette til moderator gennemsyn"
       short_description: "Kræver personalets opmærksomhed af en anden grund"
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dit indlæg blev anmeldt af fællesskabet. Venligst <a href="%{path}">se dine beskeder</a>.</p>'
@@ -2829,7 +2823,6 @@ da:
       too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:
       too_large: "Beklager, men billedet som du forsøger at overføre er for stort (den maksimale størrelse er %{max_size_kb}KB). Gør det venligst mindre og prøv igen."
-      larger_than_x_megapixels: "Beklager, det billede, du prøver at overføre, er for stort (maks. Dimension er %{max_image_megapixels}-megapixels), du bedes ændre størrelsen på det og prøve igen."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
     placeholders:
       too_large: "(Billede større end %{max_size_kb}KB)"

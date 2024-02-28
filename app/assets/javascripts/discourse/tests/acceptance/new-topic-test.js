@@ -3,13 +3,7 @@ import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("New Topic - Anonymous", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
-  });
-
+acceptance("New Topic - Anonymous", function () {
   test("accessing new-topic route when logged out", async function (assert) {
     await visit("/new-topic?title=topic%20title&body=topic%20body");
 

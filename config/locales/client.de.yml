@@ -75,7 +75,7 @@ de:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D. MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "weniger als %{count} Min."
@@ -104,7 +104,7 @@ de:
         almost_x_years:
           one: "fast %{count} Jahr"
           other: "fast %{count} Jahre"
-        date_year: "D. MMM 'YY"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "vor %{count} Minute"
@@ -188,7 +188,7 @@ de:
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
-      message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
+      message: "Wir haben diese Seite aktualisiert. <span>Bitte aktualisiere</span> , damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
     bootstrap_mode: "Erste Schritte"
     themes:
@@ -1457,6 +1457,18 @@ de:
         success_via_admin: "Wir haben eine E-Mail an diese Adresse gesendet. Der Benutzer muss den Bestätigungsanweisungen in der E-Mail folgen."
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
         back_to_preferences: "Zurück zu den Einstellungen"
+        confirm_success: "Deine E-Mail-Adresse wurde aktualisiert."
+        confirm: "Bestätigen"
+        authorizing_new:
+          description: "Bitte bestätige, dass du deine E-Mail-Adresse ändern möchtest in:"
+          description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
+        authorizing_old:
+          title: "Alte E-Mail-Adresse verifizieren"
+          description: "Bitte bestätige deine alte E-Mail-Adresse, um mit dem Ändern deiner E-Mail fortzufahren:"
+          description_add: "Bitte überprüfe deine bestehende E-Mail-Adresse, um mit dem Hinzufügen einer alternativen Adresse fortzufahren:"
+          old_email: "Alte Adresse: %{email}"
+          new_email: "Neue Adresse: %{email}"
+          confirm_success: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basierend auf"
@@ -1722,6 +1734,9 @@ de:
         incorrect_password: "Das eingegebene Passwort ist falsch."
         incorrect_passkey: "Der Passkey ist falsch."
         logged_in_as: "Du bist angemeldet als: "
+        forgot_password: "Dein Passwort vergessen?"
+        password_reset_email_sent: "E-Mail zum Zurücksetzen des Passworts gesendet."
+        cannot_send_password_reset_email: "E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden."
         instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
         fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
       password:
@@ -1839,7 +1854,7 @@ de:
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
       admin_guide:
         title: "Willkommen auf deiner neuen Website!"
-        content: "<a href=„%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
+        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um deine Website und deine Community weiter auszubauen."
         content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:
@@ -2135,10 +2150,11 @@ de:
         one: "Wähle mindestens %{count} Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
       components:
-        tag_drop:
-          filter_for_more: Filtern nach mehr …
+        filter_for_more: Filtern nach mehr …
         categories_admin_dropdown:
           title: "Kategorien verwalten"
+        bulk_select_topics_dropdown:
+          title: "Massenoperationen"
     date_time_picker:
       from: Von
       to: An
@@ -2648,6 +2664,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
@@ -2706,6 +2723,7 @@ de:
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
+        silent: "Führe diese Aktion lautlos durch."
       none:
         unread: "Du hast alle Themen gelesen."
         unseen: "Du hast keine ungesehenen Themen."
@@ -2735,6 +2753,12 @@ de:
         hot: "Es gibt keine heißen Themen mehr."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
+    topic_bulk_actions:
+      close_topics:
+        name: "Themen schließen"
+      update_category:
+        name: "Kategorie aktualisieren"
+        description: "Wähle die neue Kategorie für die ausgewählten Themen"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -3342,6 +3366,7 @@ de:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
           inappropriate: "Du hast das als „unangemessen“ gemeldet"
+          illegal: "Du hast dies als illegal gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
       delete:
@@ -3606,10 +3631,12 @@ de:
         off_topic: "Am Thema vorbei"
         inappropriate: "Unangemessen"
         spam: "Spam"
+        illegal: "Es ist illegal"
       custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
       notify_user_textarea_label: "Nachricht für den Benutzer"
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       notify_moderators_textarea_label: "Nachricht für die Moderatoren"
+      custom_placeholder_illegal: "Gib uns genau an, warum du glaubst, dass diese Inhalte illegal sind, und füge nach Möglichkeit relevante Links und Beispiele bei."
       custom_message:
         at_least:
           one: "gib mindestens %{count} Zeichen ein"
@@ -4630,7 +4657,7 @@ de:
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
-              show: Informationen über einen Benutzer abrufen.
+              show: Erhalte Informationen über einen Benutzer.
               check_emails: Benutzer-E-Mails auflisten.
               update: Benutzerprofil-Informationen aktualisieren.
               log_out: Alle Sitzungen für einen Benutzer abmelden.
@@ -4886,7 +4913,7 @@ de:
         explain_preview: "Website mit diesem Theme anschauen"
         syntax_error: "Syntaxfehler"
         settings_editor: "Einstellungseditor"
-        validation_settings_keys: "Jedes Element darf nur einen „Einstellungs“-Schlüssel und einen „Wert“-Schlüssel haben."
+        validation_settings_keys: "Jedes Element darf nur einen Schlüssel „Einstellung“ und einen Schlüssel „Wert“ haben."
         validation_settings_deleted: "Diese Einstellungen wurden gelöscht. Bitte stelle sie wieder her und versuche es erneut."
         validation_settings_added: "Diese Einstellungen wurden hinzugefügt. Bitte entferne sie und versuche es erneut."
         save: "Speichern"
@@ -5178,7 +5205,7 @@ de:
           instructions: "Passe die Vorlage an, mit der alle HTML-E-Mails erstellt werden, und den Stil per CSS."
       email:
         title: "E-Mails"
-        settings: "Einstellungen"
+        settings: "E-Mail-Einstellungen"
         templates: "Vorlagen"
         templates_title: "E-Mail-Vorlagen"
         preview_digest: "Vorschau der Zusammenfassung"
@@ -5825,7 +5852,7 @@ de:
             other: "In den letzten %{count} Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
-          visits: "Aufrufe"
+          posts_read_days: "Gelesene Beiträge: einzigartige Tage"
           days: "Tage"
           topics_replied_to: "Auf Themen geantwortet"
           topics_viewed: "Betrachtete Themen"
@@ -6131,6 +6158,8 @@ de:
         category_title: "Kategorie"
         tag_name: "Name des Schlagworts"
         external_url: "Externe oder relative URL"
+        user_id: "Benutzer-ID"
+        username: "Benutzername"
         destination: "Ziel"
         copy_to_clipboard: "Permalink in die Zwischenablage kopieren"
         delete_confirm: Möchtest du wirklich diesen Permalink löschen?

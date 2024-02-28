@@ -36,11 +36,8 @@ hr:
       long_with_year: "D MMM, YYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "prije %{date} "
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ hr:
           few: "%{count} godine"
           other: "%{count}godina"
         date_month: "D MMM"
-        date_year: "MMM, 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "manje od %{count} min"
@@ -124,7 +121,6 @@ hr:
           one: "skoro %{count} godina"
           few: "skoro %{count} godina"
           other: "skoro %{count} godina"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -210,7 +206,6 @@ hr:
     emails_are_disabled: "Svi emailovi prema van su blokirani od strane administratora. Ni jedna vrsta obavijesti putem emaila neće biti poslana."
     emails_are_disabled_non_staff: "Odlazna e-pošta onemogućena je za korisnike koji nisu zaposleni."
     software_update_prompt:
-      message: "Ažurirali smo ovu stranicu, <span>osvježite</span>ili ćete možda doživjeti neočekivano ponašanje."
       dismiss: "Skloni"
     themes:
       default_description: "Zadano"
@@ -1430,6 +1425,15 @@ hr:
         success: "Poslali smo e-mail na tu adresu. Molimo vas slijedite upute za potvrdu."
         success_via_admin: "Na tu smo adresu poslali e-poštu. Korisnik će morati slijediti upute za potvrdu u e-poruci."
         success_staff: "Poslali smo e-mail na vašu trenutnu adresu. Slijedite upute za potvrdu."
+        confirm_success: "Email vam je ažuriran."
+        confirm: "Potvrdi"
+        authorizing_new:
+          description: "Molimo potvrdite da želite da se vaša adresa e-pošte promijeni u:"
+          description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
+        authorizing_old:
+          old_email: "Stari email: %{email}"
+          new_email: "Novi email: %{email}"
+          confirm_success: "Poslali smo e-poruku na vašu novu adresu e-pošte kako bismo potvrdili promjenu!"
       change_avatar:
         title: "Promjeni sliku profila."
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na temelju"
@@ -2068,6 +2072,8 @@ hr:
       components:
         categories_admin_dropdown:
           title: "Upravljanje kategorijama"
+        bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
     date_time_picker:
       from: Od
       to: Za
@@ -2582,6 +2588,7 @@ hr:
     topics:
       new_messages_marker: "posljednji posjet"
       bulk:
+        confirm: "Potvrdi"
         select_all: "Odaberi sve"
         clear_all: "Očistiti sve"
         unlist_topics: "Poništite popis tema"
@@ -2656,6 +2663,9 @@ hr:
         tag: "Nema više %{tag} tema."
         top: "Nema više glavnih tema."
         bookmarks: "U oznakama nema više spremljenih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -4420,7 +4430,6 @@ hr:
             users:
               bookmarks: Navedite oznake korisnika. Vraća podsjetnike na oznake prilikom korištenja ICS formata.
               sync_sso: Sinkronizirajte korisnika pomoću DiscourseConnect.
-              show: Pribavite informacije o korisniku.
               check_emails: Popis e-adresa korisnika.
               update: Ažurirajte informacije korisničkog profila.
               log_out: Odjavite se sve sesije za korisnika.
@@ -4865,7 +4874,6 @@ hr:
           instructions: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a."
       email:
         title: "E-adrese"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Sažetak pregleda"
         advanced_test:
@@ -5444,7 +5452,6 @@ hr:
             other: "U zadnjih %{count} dana:"
           value_heading: "Vrijednost"
           requirement_heading: "Predispozicija"
-          visits: "Posjeta"
           days: "dana"
           topics_replied_to: "Odgovoreno u teme"
           topics_viewed: "Tema pogledano"
@@ -5727,6 +5734,7 @@ hr:
         category_title: "Kategorija"
         tag_name: "Naziv oznake"
         external_url: "Vanjski ili relativni URL"
+        username: "Korisničko ime"
         destination: "Odredište"
         copy_to_clipboard: "Kopirajte stalnu vezu u međuspremnik"
         delete_confirm: Jeste li sigurni da želite izbrisati ovu stalnu vezu?

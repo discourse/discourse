@@ -55,7 +55,7 @@ class TopicList
 
     @category = Category.find_by(id: @opts[:category_id]) if @opts[:category]
 
-    @tags = Tag.where(id: @opts[:tags]).all if @opts[:tags]
+    @tags = Tag.where(id: @opts[:tag_ids]).all if @opts[:tag_ids].present?
 
     @publish_read_state = !!@opts[:publish_read_state]
   end

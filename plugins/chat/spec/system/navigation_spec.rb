@@ -88,6 +88,24 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when visiting mobile only routes on desktop" do
+    it "redirects /chat/channels to ideal first channel" do
+      visit("/chat/channels")
+
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel.slug, category_channel.id),
+      )
+    end
+
+    it "redirects /chat/direct-messages to ideal first channel" do
+      visit("/chat/direct-messages")
+
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel.slug, category_channel.id),
+      )
+    end
+  end
+
   context "when opening chat" do
     it "opens the drawer by default" do
       visit("/")
@@ -417,7 +435,7 @@ RSpec.describe "Navigation", type: :system do
         thread.add(current_user)
       end
 
-      it "correctly closes the panel" do
+      it "correctly shows the thread panel" do
         chat_page.visit_thread(thread)
 
         expect(side_panel_page).to have_open_thread(thread)
@@ -425,7 +443,7 @@ RSpec.describe "Navigation", type: :system do
         find("#site-logo").click
         sidebar_component.switch_to_chat
 
-        expect(page).to have_no_css(".chat-side-panel")
+        expect(side_panel_page).to have_open_thread(thread)
       end
     end
   end

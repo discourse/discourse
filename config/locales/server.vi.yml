@@ -81,7 +81,7 @@ vi:
       optimized_link: Các liên kết hình ảnh được tối ưu hóa là không lâu và không nên được bao gồm trong mã nguồn theme.
     settings_errors:
       invalid_yaml: "YAML được cung cấp không hợp lệ."
-      data_type_not_a_number: "Thiết lập kiểu `%{name}` không được hỗ trợ. Các kiểu được hỗ trợ là `integer`, `bool`, `list`, `enum` và `upload`"
+      data_type_inclusion: "Thiết lập kiểu `%{name}` không được hỗ trợ. Các kiểu được hỗ trợ là `integer`, `bool`, `list`, `enum` và `upload`"
       name_too_long: "Có một cài đặt có tên quá dài. Chiều dài tối đa là 255"
       default_value_missing: "Cài đặt `%{name}'không có giá trị mặc định"
       default_not_match_type: "Đặt kiểu giá trị mặc định `%{name}` không khớp với kiểu cài đặt."
@@ -95,6 +95,9 @@ vi:
       string_value_not_valid_min_max: "Nó phải dài từ %{min} đến %{max} ký tự."
       string_value_not_valid_min: "Nó phải dài ít nhất %{min} ký tự."
       string_value_not_valid_max: "Nó phải dài tối đa %{max} ký tự."
+      objects:
+        required: "phải hiện hành"
+        not_valid_integer_value: "phải là một số nguyên"
     locale_errors:
       top_level_locale: "Khóa cấp cao nhất trong tệp ngôn ngữ phải khớp với tên ngôn ngữ"
       invalid_yaml: "Bản dịch YAML không hợp lệ"
@@ -283,7 +286,7 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
-  no_embedded_media_allowed_trust: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
+  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
   no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào bài viết."
   too_many_embedded_media:
     other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
@@ -590,8 +593,6 @@ vi:
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
   change_email:
-    confirmed: "Email của bạn đã được cập nhật."
-    please_continue: "Tiếp tục đến %{site_name}"
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
@@ -618,6 +619,9 @@ vi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Gửi tin nhắn cho @%{username}."
       email_title: 'Bài đăng của bạn trong "%{title}"'
@@ -660,6 +664,9 @@ vi:
       long_form: "đã đánh dấu cho điều hành viên xem xét"
       short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>"
@@ -1303,7 +1310,6 @@ vi:
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
-    approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"

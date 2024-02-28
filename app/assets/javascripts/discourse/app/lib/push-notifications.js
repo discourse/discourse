@@ -47,7 +47,7 @@ export function isPushNotificationsEnabled(user) {
   );
 }
 
-export function register(user, router) {
+export function register(user, router, appEvents) {
   if (!isPushNotificationsSupported()) {
     return;
   }
@@ -74,6 +74,7 @@ export function register(user, router) {
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
       router.transitionTo(event.data.url);
+      appEvents.trigger("push-notification-opened", { url: event.data.url });
     }
   });
 }

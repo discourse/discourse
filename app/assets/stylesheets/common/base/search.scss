@@ -177,6 +177,10 @@
           background-color: var(--tertiary-very-low);
         }
       }
+      .control-label {
+        font-weight: bold;
+        color: var(--primary-high);
+      }
     }
 
     details.search-advanced-additional-options {
@@ -243,6 +247,17 @@
 .fps-invalid {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.search-category {
+  .badge-category__wrapper,
+  .discourse-tags {
+    margin-left: 0.5em;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
 
 .fps-result {

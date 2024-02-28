@@ -81,7 +81,7 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_not_a_number: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
+      data_type_inclusion: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -95,6 +95,9 @@ hu:
       string_value_not_valid_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
       string_value_not_valid_min: "Legalább %{min} karakter hosszúnak kell lennie."
       string_value_not_valid_max: "Legfeljebb %{max} karakter hosszúnak kell lennie."
+      objects:
+        required: "megadása kötelező"
+        not_valid_integer_value: "egész számnak kell lennie"
     locale_errors:
       top_level_locale: "A felsőszintű kulcsnak a területibeállítás-fájlban egyeznie kell a területi beállítás nevével"
       invalid_yaml: "A fordítási YAML érvénytelen"
@@ -552,23 +555,9 @@ hu:
       android: "Android"
       chromeos: "Chrome OS"
   change_email:
-    confirmed: "Az e-mail címe frissítve lett."
-    please_continue: "Tovább a(z) %{site_name} oldalra"
     error: "Hiba történt az e-mail cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail cím nincs társítva a fiókodhoz."
     confirm: "Megerősít"
-    authorizing_new:
-      title: "Erősítse meg az új e-mail címét"
-      description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
-      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
-    authorizing_old:
-      title: "E-mail cím módosítása"
-      description: "Kérjük, erősítsd meg az e-mail címed megváltoztatását"
-      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
-      old_email: "Régi e-mail: %{email}"
-      new_email: "Új e-mail: %{email}"
-      almost_done_title: "Új e-mail cím megerősítése"
-      almost_done_description: "Küldtünk egy e-mailt az új e-mail címedre, hogy megerősítsük a változást!"
   associated_accounts:
     connected: "(kapcsolódva)"
   activation:
@@ -596,6 +585,8 @@ hu:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -624,6 +615,8 @@ hu:
     notify_moderators:
       title: "Valami más"
       email_title: 'A(z) „%{title}” téma moderátori figyelmet igényel'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Letiltott tartalom</p>"

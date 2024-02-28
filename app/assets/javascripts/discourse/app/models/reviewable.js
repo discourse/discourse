@@ -12,7 +12,13 @@ export const REJECTED = 2;
 export const IGNORED = 3;
 export const DELETED = 4;
 
-const Reviewable = RestModel.extend({
+export default class Reviewable extends RestModel {
+  static munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
+  }
+
   @discourseComputed("type", "topic")
   resolvedType(type, topic) {
     // Display "Queued Topic" if the post will create a topic
@@ -21,26 +27,26 @@ const Reviewable = RestModel.extend({
     }
 
     return type;
-  },
+  }
 
   @discourseComputed("resolvedType")
   humanType(resolvedType) {
     return I18n.t(`review.types.${underscore(resolvedType)}.title`, {
       defaultValue: "",
     });
-  },
+  }
 
   @discourseComputed("humanType")
   humanTypeCssClass(humanType) {
     return "-" + dasherize(humanType);
-  },
+  }
 
   @discourseComputed("resolvedType")
   humanNoun(resolvedType) {
     return I18n.t(`review.types.${underscore(resolvedType)}.noun`, {
       defaultValue: "reviewable",
     });
-  },
+  }
 
   @discourseComputed("humanNoun")
   flaggedReviewableContextQuestion(humanNoun) {
@@ -66,12 +72,12 @@ const Reviewable = RestModel.extend({
       reviewable_human_score_types: listOfQuestions,
       reviewable_type: humanNoun,
     });
-  },
+  }
 
   @discourseComputed("category_id")
   category() {
     return Category.findById(this.category_id);
-  },
+  }
 
   update(updates) {
     // If no changes, do nothing
@@ -92,15 +98,5 @@ const Reviewable = RestModel.extend({
 
       this.setProperties(updated);
     });
-  },
-});
-
-Reviewable.reopenClass({
-  munge(json) {
-    // ensure we are not overriding category computed property
-    delete json.category;
-    return json;
-  },
-});
-
-export default Reviewable;
+  }
+}

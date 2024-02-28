@@ -106,15 +106,35 @@ class Site
   end
 
   def categories
+    if @guardian.can_lazy_load_categories?
+      preloaded_category_ids = []
+      if @guardian.authenticated?
+        sidebar_category_ids = @guardian.user.secured_sidebar_category_ids(@guardian)
+        preloaded_category_ids.concat(
+          Category
+            .secured(@guardian)
+            .select(:parent_category_id)
+            .distinct
+            .where(id: sidebar_category_ids)
+            .pluck(:parent_category_id),
+        )
+        preloaded_category_ids.concat(sidebar_category_ids)
+      end
+    end
+
     @categories ||=
       begin
         categories = []
 
         self.class.all_categories_cache.each do |category|
-          if @guardian.can_see_serialized_category?(
-               category_id: category[:id],
-               read_restricted: category[:read_restricted],
-             )
+          if (
+               !@guardian.can_lazy_load_categories? ||
+                 preloaded_category_ids.include?(category[:id])
+             ) &&
+               @guardian.can_see_serialized_category?(
+                 category_id: category[:id],
+                 read_restricted: category[:read_restricted],
+               )
             categories << category
           end
         end

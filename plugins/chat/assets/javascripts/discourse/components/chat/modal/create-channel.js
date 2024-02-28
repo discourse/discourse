@@ -57,9 +57,7 @@ export default class ChatModalCreateChannel extends Component {
   }
 
   get categoryName() {
-    return this.categorySelected && isPresent(this.name)
-      ? escapeExpression(this.name)
-      : null;
+    return this.categorySelected ? escapeExpression(this.category?.name) : null;
   }
 
   @action

@@ -91,6 +91,10 @@ export default Component.extend({
       this.dialog.alert(message);
       return;
     }
+
+    if (typeof this.onFilesPicked === "function") {
+      this.onFilesPicked(files);
+    }
   },
 
   _haveAcceptedTypes(files) {

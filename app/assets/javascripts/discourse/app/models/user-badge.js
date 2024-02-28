@@ -7,34 +7,8 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const UserBadge = EmberObject.extend({
-  @discourseComputed
-  postUrl() {
-    if (this.topic_title) {
-      return "/t/-/" + this.topic_id + "/" + this.post_number;
-    }
-  }, // avoid the extra bindings for now
-
-  revoke() {
-    return ajax("/user_badges/" + this.id, {
-      type: "DELETE",
-    });
-  },
-
-  favorite() {
-    this.toggleProperty("is_favorite");
-    return ajax(`/user_badges/${this.id}/toggle_favorite`, {
-      type: "PUT",
-    }).catch((e) => {
-      // something went wrong, switch the UI back:
-      this.toggleProperty("is_favorite");
-      popupAjaxError(e);
-    });
-  },
-});
-
-UserBadge.reopenClass({
-  createFromJson(json) {
+export default class UserBadge extends EmberObject {
+  static createFromJson(json) {
     // Create User objects.
     if (json.users === undefined) {
       json.users = [];
@@ -105,7 +79,7 @@ UserBadge.reopenClass({
       }
       return userBadges;
     }
-  },
+  }
 
   /**
     Find all badges for a given username.
@@ -115,7 +89,7 @@ UserBadge.reopenClass({
     @param {Object} options
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByUsername(username, options) {
+  static findByUsername(username, options) {
     if (!username) {
       return Promise.resolve([]);
     }
@@ -126,7 +100,7 @@ UserBadge.reopenClass({
     return ajax(url).then(function (json) {
       return UserBadge.createFromJson(json);
     });
-  },
+  }
 
   /**
     Find all badge grants for a given badge ID.
@@ -135,7 +109,7 @@ UserBadge.reopenClass({
     @param {String} badgeId
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByBadgeId(badgeId, options) {
+  static findByBadgeId(badgeId, options) {
     if (!options) {
       options = {};
     }
@@ -146,7 +120,7 @@ UserBadge.reopenClass({
     }).then(function (json) {
       return UserBadge.createFromJson(json);
     });
-  },
+  }
 
   /**
     Grant the badge having id `badgeId` to the user identified by `username`.
@@ -156,7 +130,7 @@ UserBadge.reopenClass({
     @param {String} username username of the user to be granted the badge.
     @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
-  grant(badgeId, username, reason) {
+  static grant(badgeId, username, reason) {
     return ajax("/user_badges", {
       type: "POST",
       data: {
@@ -167,7 +141,29 @@ UserBadge.reopenClass({
     }).then(function (json) {
       return UserBadge.createFromJson(json);
     });
-  },
-});
+  }
 
-export default UserBadge;
+  @discourseComputed
+  postUrl() {
+    if (this.topic_title) {
+      return "/t/-/" + this.topic_id + "/" + this.post_number;
+    }
+  } // avoid the extra bindings for now
+
+  revoke() {
+    return ajax("/user_badges/" + this.id, {
+      type: "DELETE",
+    });
+  }
+
+  favorite() {
+    this.toggleProperty("is_favorite");
+    return ajax(`/user_badges/${this.id}/toggle_favorite`, {
+      type: "PUT",
+    }).catch((e) => {
+      // something went wrong, switch the UI back:
+      this.toggleProperty("is_favorite");
+      popupAjaxError(e);
+    });
+  }
+}

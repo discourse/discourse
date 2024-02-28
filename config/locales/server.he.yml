@@ -112,7 +112,7 @@ he:
       optimized_link: קישורים משופרים לתמונות הם בני חלוף ואין לכלול אותם בקוד המקור של ערכת העיצוב.
     settings_errors:
       invalid_yaml: "ה־YAML שסופק שגוי."
-      data_type_not_a_number: "סוג ההגדרה `%{name}` אינו נתמך. הסוגים הנתמכים הם: `integer`,‏ `bool`,‏ `list`,‏ `enum` ו־`upload`"
+      data_type_inclusion: "סוג ההגדרה `%{name}` אינו נתמך. הסוגים הנתמכים הם: `integer`,‏ `bool`,‏ `list`,‏ `enum` ו־`upload`"
       name_too_long: "קיימת הגדרה עם שם ארוך מדי. האורך המרבי הוא 255"
       default_value_missing: "להגדרה `%{name}` אין ערך בררת מחדל"
       default_not_match_type: "סוג ערך בררת המחדל של ההגדרה `%{name}` אינו תואם לסוג ההגדרה."
@@ -126,6 +126,19 @@ he:
       string_value_not_valid_min_max: "חייב להיות באורך של בין %{min} ל־%{max} תווים."
       string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות."
       string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר."
+      objects:
+        required: "חייב להיות מלא"
+        invalid_type: "%{type} זה לא סוג תקף"
+        not_valid_string_value: "חייב להיות מחרוזת"
+        not_valid_integer_value: "חייב להיות מספר שלם"
+        not_valid_float_value: "חייב להיות מספר עם נקודה עשרונית"
+        not_valid_boolean_value: "חייב להיות ערך בוליאני"
+        not_valid_enum_value: "חייב להיות אחד מהבאים: %{choices}"
+        string_value_not_valid_min: "חייב להיות באורך של %{min} תווים לפחות"
+        string_value_not_valid_max: "חייב להיות באורך של %{max} תווים לכל היותר"
+        number_value_not_valid_min: "חייב להיות גדול או שווה ל־%{min}"
+        number_value_not_valid_max: "חייב להיות קטן או שווה ל־%{max}"
+        string_value_not_valid_url: "חייבת להיות כתובת תקפה"
     locale_errors:
       top_level_locale: "המפתח העליון בקובץ הגדרות השפה חייב להתאים לשם השפה"
       invalid_yaml: "YAML התרגום פגום"
@@ -406,7 +419,7 @@ he:
     two: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     many: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
-  no_embedded_media_allowed_trust: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
+  no_embedded_media_allowed_group: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
   no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
   too_many_embedded_media:
     one: "משתמשים חדשים יכולים להוסיף רק פריט מדיה אחד מוטמע לפוסט, עמך הסליחה."
@@ -957,27 +970,12 @@ he:
       windows: "Windows מבית Microsoft"
       unknown: "מערכת הפעלה בלתי מוכרת"
   change_email:
-    wrong_account_error: "נכנסת לחשבון הלא נכון, נא לצאת ולנסות שוב."
-    confirmed: "כתובת הדוא״ל שלך עודכנה."
-    please_continue: "להמשיך אל %{site_name}"
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
     doesnt_exist: "כתובת דוא״ל זו אינה משויכת לחשבונך."
     error_staged: "אירעה שגיאה בהחלפת כתובת הדוא״ל שלך. הכתובת כבר נמצאת בשימוש על ידי משתמשים מבוימים במערכת."
     already_done: "קישור אימות זה אינו תקף עוד, עמך הסליחה. אולי כתובת הדוא״ל שלך כבר הוחלפה?"
     confirm: "אישור"
     max_secondary_emails_error: "הגעת למגבלת כתובות הדוא״ל המשניות."
-    authorizing_new:
-      title: "אישור כתובת הדוא״ל החדשה שלך"
-      description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
-      description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
-    authorizing_old:
-      title: "החלפת כתובת הדוא״ל שלך"
-      description: "נא לאשר את החלפת כתובת הדוא״ל שלך"
-      description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
-      old_email: "כתובת דוא״ל ישנה: %{email}"
-      new_email: "כתובת דוא״ל חדשה: %{email}"
-      almost_done_title: "אישור כתובת הדוא״ל החדשה"
-      almost_done_description: "שלחנו הודעה לכתובת הדוא״ל החדשה שלך כדי לאשר את השינוי!"
   associated_accounts:
     revoke_failed: "שלילת החשבון שלך מול %{provider_name} נכשלה."
     connected: "(מחובר)"
@@ -1014,6 +1012,12 @@ he:
       title: "לא ראוי"
       description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
+    illegal:
+      title: "לא חוקי"
+      description: "הפוסט הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
+      short_description: "זה לא חוקי"
+      email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
       description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
@@ -1092,6 +1096,12 @@ he:
       long_form: "סומן לתשומת לב של מפקח"
       short_description: "דורש תשומת לב של הצוות מסיבה אחרת"
       email_title: 'הנושא „%{title}” דורש תשומת לב של מנחה'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "לא חוקי"
+      description: "הנושא הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
+      short_description: "זה לא חוקי"
+      email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>הפוסט שלך סומן בדגל על ידי הקהילה. נא <a href="%{path}">לעיין בהודעות שלך</a>.</p>'
@@ -1548,6 +1558,8 @@ he:
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
     category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
+    ember_version_warning: "האתר פועל עם ההגדרה EMBER_VERSION=3 שאינה נתמכת. עלול להוביל לתקלות בלתי צפויות עם ערכות עיצוב/תוספים. נא להסיר את ההגדרה EMBER_VERSION מקובץ ה־app.yml ולבנות מחדש. כאן יש מידע נוסף <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
+    back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1722,6 +1734,7 @@ he:
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>)"
+    content_security_policy_strict_dynamic: "ניסיוני: להשתמש במדיניות אבטחת תוכן קשיחה-דינמית. יותר מודרני וגמיש מהגדרות ה־CSP שלנו כברירת מחדל. זה שימושי לחלוטית אבל עדיין לא נבדק מול כל ערכות העיצוב והתוספים."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -1948,9 +1961,11 @@ he:
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
     flag_post_allowed_groups: "קבוצות שמורשות לסמן פוסטים."
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
-    post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים."
+    post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים. מנהלים ומפקחים תמיד מורשים לפרסם קישורים."
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
+    embedded_media_post_allowed_groups: "למשתמשים בקבוצות האלה מותר להטמיע פריטי מדיה בפוסט"
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
+    profile_background_allowed_groups: "קבוצות שמורשות להעלות רקע לפרופיל המשתמש."
     min_trust_level_to_allow_user_card_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לכרטיס המשתמש"
     user_card_background_allowed_groups: "קבוצות שמורשות להעלות רקע לכרטיס המשתמש."
     min_trust_level_to_allow_invite: "דרגת האמון המזערית הנדרשת להזמנת משתמשים"
@@ -2145,6 +2160,7 @@ he:
     anonymous_account_duration_minutes: "כדי להגן על האלמוניות יש ליצור חשבון אלמוני חדש כל N דקות עבור כל משתמש. למשל: אם ההגדרה היא 600, בחלוף 600 דקות מהפוסט האחרון וגם אם המשתמש עבר למצב אלמוני, ייווצר חשבון אלמוני חדש."
     hide_user_profiles_from_public: "להשבית כרטיסי משתמשים, פרופילי משתמשים וספריית משתמשים עבור משתמשים אלמוניים."
     allow_users_to_hide_profile: "לאפשר למשתמשים להחביא את הפרופיל והנוכחות שלהם"
+    hide_user_activity_tab: "להסתיר את לשונית הפעילות בפרופילי משתמש למעט למנהלים ולעצמי."
     allow_featured_topic_on_user_profiles: "לאפשר למשתמשים להציג קישור לנושא בכרטיס המשתמש ובפרופיל שלהם."
     show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
     hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
@@ -2221,11 +2237,11 @@ he:
     enable_inline_emoji_translation: "הפעלת תרגום לאמוג׳י כחלק מהשורה (ללא רווחים או סימני פיסוק לפני)."
     emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
-    approve_unless_trust_level: "פוסטים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
-    approve_unless_allowed_groups: "פוסטים של משתמשים שאינם בקבוצות האלו דורשים אישור"
-    approve_new_topics_unless_trust_level: "נושאים חדשים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
-    approve_new_topics_unless_allowed_groups: "נושאים חדשים של משתמשים שאינם בקבוצות האלו דורשים אישור"
-    approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
+    approve_unless_trust_level: "פוסטים שנוצרו על ידי משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_unless_allowed_groups: "פוסטים שנוצרו על ידי משתמשים שאינם בקבוצות האלו דורשים אישור"
+    approve_new_topics_unless_trust_level: "נושאים חדשים שנוצרו על ידי משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_new_topics_unless_allowed_groups: "נושאים חדשים שנוצרו על ידי משתמשים שאינם בקבוצות האלו דורשים אישור"
+    approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים שנוצרו על ידי משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. 0 משבית את ההתראות האלה."
     reviewable_revision_reasons: "רשימת סיבות שניתן לבחור בעת דחיית פוסט לסקירה שעומד בתור עם מהדורה. ‚אחר’ תמיד זמין בנוסף, הוא מאפשר לך לציין סיבה משלך."
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
@@ -2233,6 +2249,7 @@ he:
     auto_close_topics_create_linked_topic: "ליצור נושא חדש מקושר כאשר נושא נסגר אוטומטית עקב ההגדרה ‚לסגור אוטומטית נושאים בהתאם לכמות פוסטים’"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
+    disable_watched_word_checking_in_user_fields: "השבתת בדיקת מילים במעקב בשדות המשתמשים"
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
     enable_fast_edit: "מוסיף כפתור לתפריט בחירת הפוסט כדי לערוך בחירה קטנה כחלק מהשורה."
@@ -2312,6 +2329,7 @@ he:
     tag_style: "סגנון ויזואלי לתג עיטורים."
     pm_tags_allowed_for_groups: "לאפשר לחברים מהקבוצות שנכללו לתייג כל הודעה פרטית שהיא"
     min_trust_level_to_tag_topics: "דרגת האמון המזערית שדרושה כדי לתייג נושאים"
+    tag_topic_allowed_groups: "קבוצות שמורשות לתייג נושאים."
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
@@ -2349,6 +2367,7 @@ he:
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
+    navigation_menu: "בחירה באיזה תפריט ניווט להשתמש."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
@@ -2437,8 +2456,10 @@ he:
       create_tag_allowed_groups: "min_trust_to_create_tag (דרגת אמון מזערית ליצירת תגיות)"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages (דרגת אמון מזערית לשליחת דוא״ל)"
       skip_review_media_groups: "review_media_unless_trust_level (סקירת מדיה למעט בדרגת אמון)"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media (דרגת אמון מזערית להטמעת מדיה בפוסט)"
       post_links_allowed_groups: "min_trust_to_post_links (דרגת אמון מזערית לפרסום קישורים)"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key (דרגת אמון מזערית למפתח API למשתמש)"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics (דרגת אמון מזערית לתיוג נושאים)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2872,6 +2893,7 @@ he:
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"
+    illegal: "הפוסט שלך סומן כ**לא חוקי**: הקהילה חושבת שהוא כנראה עובר על החוק."
     spam: "הפוסט שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
     notify_moderators: "הפוסט שלך סומן בדגל **לתשומת לב מפקח**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של צוות האתר. "
     responder:
@@ -4048,7 +4070,7 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
       too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
-      larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
+      larger_than_x_megapixels: "התמונה שניסית להעלות גדולה מדי (הגודל המרבי הוא %{max_image_megapixels} מגה-פיקסלים), נא לשנות את גודלה ולנסות שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"

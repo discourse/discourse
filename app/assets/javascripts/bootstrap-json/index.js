@@ -10,8 +10,11 @@ const { env } = require("node:process");
 const { glob } = require("glob");
 const { HTMLRewriter } = require("html-rewriter-wasm");
 
-async function listDistAssets() {
-  const files = await glob("**/*.js", { nodir: true, cwd: "dist/assets" });
+async function listDistAssets(outputPath) {
+  const files = await glob("**/*.js", {
+    nodir: true,
+    cwd: `${outputPath}/assets`,
+  });
   return new Set(files);
 }
 
@@ -77,8 +80,23 @@ function updateScriptReferences({
         entrypointName === "discourse" &&
         element.tagName.toLowerCase() === "script"
       ) {
+        let nonce = "";
+        for (const [attr, value] of element.attributes) {
+          if (attr === "nonce") {
+            nonce = value;
+            break;
+          }
+        }
+
+        if (!nonce) {
+          // eslint-disable-next-line no-console
+          console.error(
+            "Expected to find a nonce= attribute on the main discourse script tag, but none was found. ember-cli-live-reload may not work correctly."
+          );
+        }
+
         newElements.unshift(
-          `<script async src="${baseURL}ember-cli-live-reload.js"></script>`
+          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${nonce}"></script>`
         );
       }
 
@@ -89,7 +107,7 @@ function updateScriptReferences({
   });
 }
 
-async function handleRequest(proxy, baseURL, req, res) {
+async function handleRequest(proxy, baseURL, req, res, outputPath) {
   // x-forwarded-host is used in e.g. GitHub CodeSpaces
   let originalHost = req.headers["x-forwarded-host"] || req.headers.host;
 
@@ -156,7 +174,7 @@ async function handleRequest(proxy, baseURL, req, res) {
   }
 
   const csp = response.headers.get("content-security-policy");
-  if (csp) {
+  if (csp && !csp.includes("'strict-dynamic'")) {
     const emberCliAdditions = [
       `http://${originalHost}${baseURL}assets/`,
       `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
@@ -178,8 +196,8 @@ async function handleRequest(proxy, baseURL, req, res) {
   if (isHTML) {
     const [responseText, chunkInfoText, distAssets] = await Promise.all([
       response.text(),
-      fsPromises.readFile("dist/assets.json", "utf-8"),
-      listDistAssets(),
+      fsPromises.readFile(`${outputPath}/assets.json`, "utf-8"),
+      listDistAssets(outputPath),
     ]);
 
     const chunkInfos = JSON.parse(chunkInfoText);
@@ -233,6 +251,7 @@ module.exports = {
   serverMiddleware(config) {
     const app = config.app;
     let { proxy, rootURL, baseURL } = config.options;
+    const outputPath = config.options.path ?? config.options.outputPath;
 
     if (!proxy) {
       // eslint-disable-next-line no-console
@@ -268,7 +287,7 @@ to serve API requests. For example:
     app.use(pathRestrictedRawMiddleware, async (req, res, next) => {
       try {
         if (this.shouldHandleRequest(req, baseURL)) {
-          await handleRequest(proxy, baseURL, req, res);
+          await handleRequest(proxy, baseURL, req, res, outputPath);
         } else {
           // Fixes issues when using e.g. "localhost" instead of loopback IP address
           req.headers.host = "127.0.0.1";

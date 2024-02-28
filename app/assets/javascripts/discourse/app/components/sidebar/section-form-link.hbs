@@ -11,11 +11,14 @@
   {{on "dragleave" this.dragLeave}}
   {{on "dragend" this.dragEnd}}
   {{on "drop" this.dropItem}}
+  role="row"
 >
-  <div class="draggable" data-link-name={{@link.name}}>
-    {{d-icon "grip-lines"}}
-  </div>
-  <div class="input-group">
+  {{#unless this.site.mobileView}}
+    <div class="draggable" data-link-name={{@link.name}}>
+      {{d-icon "grip-lines"}}
+    </div>
+  {{/unless}}
+  <div class="input-group" role="cell">
     <IconPicker
       @name="icon"
       @value={{@link.icon}}
@@ -28,6 +31,7 @@
       class={{@link.iconCssClass}}
       @onlyAvailable={{true}}
       @onChange={{action (mut @link.icon)}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.icon.label"}}
     />
     {{#if @link.invalidIconMessage}}
       <div class="icon warning">
@@ -35,12 +39,13 @@
       </div>
     {{/if}}
   </div>
-  <div class="input-group">
+  <div class="input-group" role="cell">
     <Input
       name="link-name"
       @type="text"
       @value={{@link.name}}
       class={{@link.nameCssClass}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.name.label"}}
       {{on "input" (pick (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
@@ -49,12 +54,13 @@
       </div>
     {{/if}}
   </div>
-  <div class="input-group">
+  <div class="input-group" role="cell">
     <Input
       name="link-url"
       @type="text"
       @value={{@link.value}}
       class={{@link.valueCssClass}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.value.label"}}
       {{on "input" (pick (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
@@ -68,5 +74,6 @@
     @action={{fn @deleteLink @link}}
     @title="sidebar.sections.custom.links.delete"
     class="btn-flat delete-link"
+    role="cell"
   />
 </div>

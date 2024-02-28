@@ -80,7 +80,7 @@ pt:
       optimized_link: Os links de imagens otimizadas são efémeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
-      data_type_not_a_number: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
+      data_type_inclusion: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
       default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
@@ -94,6 +94,9 @@ pt:
       string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
       string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
       string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
+      objects:
+        required: "tem que estar preenchido"
+        not_valid_integer_value: "tem que ser um inteiro"
     locale_errors:
       top_level_locale: "A chave base de um ficheiro de locale deve coincidir com o nome do locale"
       invalid_yaml: "YAML de traduçaõ é inválido"
@@ -298,7 +301,7 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_embedded_media_allowed_trust: "Desculpe, você não pode incorporar itens de media num post."
+  no_embedded_media_allowed_group: "Desculpe, você não pode incorporar itens de media num post."
   no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
   too_many_embedded_media:
     one: "Sinto muito, novos usuários só podem colocar um item de mídia embutida por post."
@@ -595,8 +598,6 @@ pt:
     os:
       android: "Android"
   change_email:
-    confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, mas esta hiperligação de confirmação já não é valida. Talvez o seu email já tenha sido alterado?"
@@ -629,6 +630,9 @@ pt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
       email_title: 'A sua mensagem em "%{title}"'
@@ -661,6 +665,9 @@ pt:
       long_form: "sinalizou isto para obter a atenção do moderador"
       short_description: "Requer a atenção da equipa por outra razão"
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>"
@@ -1231,8 +1238,6 @@ pt:
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
     approve_post_count: "O número de publicações de um utilizador novo ou básico que devem ser aprovadas"
-    approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"

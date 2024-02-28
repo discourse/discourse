@@ -78,29 +78,11 @@ class ThemeSettingsManager
     record
   end
 
-  def is_valid_value?(new_value)
-    true
-  end
-
-  def invalid_value_error_message
-    name = type == @types[:integer] || type == @types[:float] ? "number" : type_name
-    primary_key = "themes.settings_errors.#{name}_value_not_valid"
-
-    secondary_key = primary_key
-    secondary_key += "_min" if has_min?
-    secondary_key += "_max" if has_max?
-
-    translation = I18n.t(primary_key)
-    return translation if secondary_key == primary_key
-
-    translation += " #{I18n.t(secondary_key, min: @opts[:min], max: @opts[:max])}"
-    translation
-  end
-
   def ensure_is_valid_value!(new_value)
-    unless is_valid_value?(new_value)
-      raise Discourse::InvalidParameters.new invalid_value_error_message
-    end
+    return if new_value.nil?
+
+    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts)
+    raise Discourse::InvalidParameters.new error_messages.join(" ") if error_messages.present?
   end
 
   def has_min?
@@ -111,141 +93,5 @@ class ThemeSettingsManager
   def has_max?
     max = @opts[:max]
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
-  end
-
-  class List < self
-    def list_type
-      @opts[:list_type]
-    end
-  end
-
-  class String < self
-    def is_valid_value?(new_value)
-      (@opts[:min]..@opts[:max]).include? new_value.to_s.length
-    end
-
-    def textarea
-      @opts[:textarea]
-    end
-
-    def json_schema
-      begin
-        JSON.parse(@opts[:json_schema])
-      rescue StandardError
-        false
-      end
-    end
-  end
-
-  class Bool < self
-    def self.cast(value)
-      [true, "true"].include?(value)
-    end
-
-    def value
-      self.class.cast(super)
-    end
-
-    def value=(new_value)
-      new_value = (self.class.cast(new_value)).to_s
-      super(new_value)
-    end
-  end
-
-  class Integer < self
-    def self.cast(value)
-      value.to_i
-    end
-
-    def value
-      self.class.cast(super)
-    end
-
-    def value=(new_value)
-      super(self.class.cast(new_value))
-    end
-
-    def is_valid_value?(new_value)
-      (@opts[:min]..@opts[:max]).include? new_value.to_i
-    end
-  end
-
-  class Float < self
-    def self.cast(value)
-      value.to_f
-    end
-
-    def value
-      self.class.cast(super)
-    end
-
-    def value=(new_value)
-      super(self.class.cast(new_value))
-    end
-
-    def is_valid_value?(new_value)
-      (@opts[:min]..@opts[:max]).include? new_value.to_f
-    end
-  end
-
-  class Enum < self
-    def value
-      val = super
-      match = choices.find { |choice| choice == val || choice.to_s == val }
-      match || val
-    end
-
-    def is_valid_value?(new_value)
-      choices.include?(new_value) || choices.map(&:to_s).include?(new_value)
-    end
-
-    def choices
-      @opts[:choices]
-    end
-  end
-
-  class Upload < self
-    def value
-      has_record? ? cdn_url(db_record.value) : default
-    end
-
-    def default
-      upload_id = default_upload_id
-      return if upload_id.blank?
-
-      cdn_url(upload_id)
-    end
-
-    def value=(new_value)
-      if new_value.present?
-        if new_value == default
-          new_value = default_upload_id
-        else
-          upload = ::Upload.find_by(url: new_value)
-          new_value = upload.id if upload.present?
-        end
-      end
-
-      super(new_value)
-    end
-
-    private
-
-    def cdn_url(upload_id)
-      return if upload_id.blank?
-
-      upload = ::Upload.find_by_id(upload_id.to_i)
-      return if upload.blank?
-
-      Discourse.store.cdn_url(upload.url)
-    end
-
-    def default_upload_id
-      theme_field =
-        theme.theme_fields.find_by(name: @default, type_id: ThemeField.types[:theme_upload_var])
-      return if theme_field.blank?
-
-      theme_field.upload_id
-    end
   end
 end

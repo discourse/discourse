@@ -103,6 +103,7 @@ TEXT
         :likes_7_days,
         :likes_30_days,
         :likes_count,
+        :discourse_discover_enrolled,
       )
     end
 
@@ -408,15 +409,9 @@ TEXT
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
-      plugin.register_asset("code.js")
-
-      plugin.register_asset("my_admin.js", :admin)
-      plugin.register_asset("my_admin2.js", :admin)
-
       plugin.activate!
 
-      expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
+      expect(DiscoursePluginRegistry.javascripts.count).to eq(1)
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)

@@ -26,8 +26,6 @@ be:
       time: "HH:mm"
       long_no_year_no_time: "D MMM"
       long_with_year_no_time: "D МММ, YYYY"
-      long_date_with_year_without_time: "D MMM YYYY"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} таму"
       tiny:
         half_a_minute: "< 1 хв"
@@ -58,7 +56,6 @@ be:
           few: " %{Count} дні"
           many: " %{Count} дзён"
           other: " %{Count} дзён"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_hours:
           one: "0%{count}:00 таму"
@@ -554,6 +551,7 @@ be:
         taken: "Выбачайце, гэты адрас не даступны."
         error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
         success: "Мы надсилалы ліст на гэтую скрыню. Выканайце інструкцыі па пидтердження."
+        confirm_success: "Ваш электронны адрас быў абноўлены."
       change_avatar:
         letter_based: "Ваша выява дададзена сістэмай"
         uploaded_avatar: "Іншая выява"
@@ -804,6 +802,9 @@ be:
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
     select_kit:
       delete_item: "Выдаліць %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "масавыя дзеянні"
     date_time_picker:
       from: ад
       to: да
@@ -955,6 +956,9 @@ be:
         tag: "Больш няма тым у катэгорыі %{tag}."
         top: "There are no more top topics."
         bookmarks: "Тэмы ў закладках адсутнічаюць."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыць тэму"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1673,7 +1677,6 @@ be:
             description: "Колер кнопкі \"Падабаецца\"."
       email:
         title: "Емейлы"
-        settings: "Налады"
         templates: "шаблоны"
         preview_digest: "Кароткі выклад навін"
         sent: "Sent"
@@ -1961,7 +1964,6 @@ be:
             other: "За апошнія %{count} дзён:"
           value_heading: "значэнне"
           requirement_heading: "патрабаванне"
-          visits: "наведванне"
           days: "дзён"
           topics_replied_to: "Тэмы, на якія адказаў (а)"
           topics_viewed: "прагледжана Тым"
@@ -2104,6 +2106,7 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
+        username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"

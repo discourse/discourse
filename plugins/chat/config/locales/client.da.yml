@@ -31,6 +31,7 @@ da:
       back_to_forum: "Forum"
       deleted_chat_username: slettet
       dates:
+        yesterday: "I går"
         time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
       already_enabled: "Chat er allerede aktiveret på dette emne. Opdater venligst."
@@ -124,6 +125,7 @@ da:
         back: "Tilbage"
         title: Kanaler
         filter_all: Alle
+        filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
       chat_message_separator:

@@ -85,6 +85,9 @@ ca:
       string_value_not_valid_min_max: "Ha de ser d'entre %{min} i %{max} caràcters de longitud."
       string_value_not_valid_min: "Ha de tenir almenys %{min} caràcters de longitud."
       string_value_not_valid_max: "Ha de ser com a màxim de %{max} caràcters de longitud."
+      objects:
+        required: "ha de ser-hi present"
+        not_valid_integer_value: "ha de ser un nombre enter "
     locale_errors:
       top_level_locale: "La clau del nivell més alt en un fitxer de localització ha de coincidir amb el nom de la localització (locale)."
       invalid_yaml: "Traducció YAML no vàlida"
@@ -598,22 +601,10 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   change_email:
-    wrong_account_error: "Heu iniciat sessió amb un compte equivocat. Tanqueu la sessió i torneu-ho a provar."
-    confirmed: "El vostre correu electrònic ha estat actualitzat."
-    please_continue: "Continua a %{site_name}"
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
     already_done: "Aquest enllaç de confirmació ja no és vàlid. Potser s'ha canviat el vostre correu electrònic."
     confirm: "Confirma"
-    authorizing_new:
-      title: "Confirmeu la vostra nova adreça electrònica"
-    authorizing_old:
-      title: "Canvieu la vostra adreça de correu electrònic"
-      description: "Confirmeu el canvi d’adreça electrònica"
-      old_email: "Adreça electrònica antiga: %{email}"
-      new_email: "Adreça electrònica nova: %{email}"
-      almost_done_title: "Confirmant la nova adreça electrònica"
-      almost_done_description: "Hem enviat un correu electrònic a la vostra nova adreça electrònica per a confirmar el canvi."
   associated_accounts:
     revoke_failed: "No s'ha pogut revocar el vostre compte amb %{provider_name}."
     connected: "(connectat)"
@@ -649,6 +640,9 @@ ca:
     inappropriate:
       title: "Inapropiat"
       short_description: 'Una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>'
+    illegal:
+      email_title: 'Una publicació en "%{title}" necessita la supervisió de l''equip responsable'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envia un missatge a @%{username}"
       description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
@@ -706,6 +700,9 @@ ca:
       long_form: "marcat amb bandera per a moderació"
       short_description: "Requereix l'atenció de l'equip responsable per un altre motiu"
       email_title: 'El tema "%{title}" necessita moderació'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Una publicació en "%{title}" necessita la supervisió de l''equip responsable'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p> La comunitat ha marcat la vostra publicació amb bandera. Consulteu <a href="%{path}">els vostres missatges</a> . </p>'
@@ -1559,9 +1556,6 @@ ca:
     emoji_autocomplete_min_chars: "Nombre mínim de caràcters necessaris per a activar el menú desplegable d'autocompleció d'emoji"
     enable_inline_emoji_translation: "Habilita la traducció per a emojis en línia (sense cap espai ni puntuació abans)"
     approve_post_count: "Nombre de publicacions d'un usuari nou o bàsic que cal aprovar."
-    approve_unless_trust_level: "Cal aprovar les publicacions per a usuaris amb aquest nivell de confiança"
-    approve_new_topics_unless_trust_level: "Cal aprovar els temes nous per a usuaris per sota d'aquest nivell de confiança"
-    approve_unless_staged: "Cal aprovar els temes i les publicacions noves per a usuaris ficticis"
     notify_about_queued_posts_after: "Si hi ha publicacions que han estat pendents de ser revisades durant més d'aquestes hores, envia una notificació a tots els moderadors. Poseu 0 per a inhabilitar aquestes notificacions."
     auto_close_messages_post_count: "Nombre màxim de publicacions permeses en un missatge abans no es tanqui automàticament (0 per desactivar)"
     auto_close_topics_post_count: "Nombre màxim de publicacions permeses en un tema abans no es tanqui automàticament (0 per desactivar)"
@@ -2515,7 +2509,6 @@ ca:
       too_large: "El fitxer que intenteu carregar és massa gran (la mida màxima és %{max_size_kb}KB)."
     images:
       too_large: "La imatge que proveu de carregar és massa gran (la mida màxima és %{max_size_kb}KB). Redimensioneu-la i torneu a provar-ho."
-      larger_than_x_megapixels: "La imatge que intenteu carregar és massa gran (la mida màxima és %{max_image_megapixels}-megapixels). Redimensioneu-la i torneu a provar-ho."
       size_not_found: "Ho sentim, però no podem determinar la mida de la imatge. Potser la imatge està malmesa."
     placeholders:
       too_large: "(imatge més gran de %{max_size_kb}KB)"

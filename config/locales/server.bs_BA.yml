@@ -84,6 +84,8 @@ bs_BA:
       string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
       string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
       string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
+      objects:
+        required: "must be present"
     locale_errors:
       top_level_locale: "Ključ gornjeg nivoa u datoteci locale mora odgovarati nazivu jezika"
       invalid_yaml: "Prevod YAML invalid"
@@ -314,8 +316,6 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   change_email:
-    confirmed: "Your email has been updated."
-    please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
     action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
@@ -336,6 +336,8 @@ bs_BA:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -363,6 +365,8 @@ bs_BA:
       description: 'Ova tema zahtijeva opću pažnju administratora na osnovu <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">TOS</a> ili iz drugog razloga koji nije gore naveden.'
       long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"

@@ -44,6 +44,13 @@ module PageObjects
         )
       end
 
+      def has_no_user_threads_section?
+        has_no_css?(
+          ".sidebar-section-link[data-link-name='user-threads'][href='/chat/threads']",
+          text: I18n.t("js.chat.my_threads.title"),
+        )
+      end
+
       def has_unread_user_threads?
         has_css?(
           ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-suffix.icon.unread",

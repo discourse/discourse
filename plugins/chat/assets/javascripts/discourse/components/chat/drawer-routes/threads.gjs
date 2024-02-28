@@ -17,10 +17,7 @@ export default class ChatDrawerRoutesThreads extends Component {
       <navbar.Title
         @title={{i18n "chat.my_threads.title"}}
         @icon="discourse-threads"
-        as |title|
-      >
-        <title.SubTitle @title={{this.chat.activeChannel.title}} />
-      </navbar.Title>
+      />
       <navbar.Actions as |action|>
         <action.ThreadsListButton />
         <action.ToggleDrawerButton />

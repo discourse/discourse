@@ -45,6 +45,7 @@ pl_PL:
       back_to_forum: "Forum"
       deleted_chat_username: usunięte
       dates:
+        yesterday: "Wczoraj"
         time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
       already_enabled: "Czat jest już włączony w tym temacie. Spróbuj odświeżyć strone."
@@ -55,6 +56,7 @@ pl_PL:
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
+      see_in: "Zobacz w"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -321,7 +323,7 @@ pl_PL:
         back: "Poprzednia"
         title: Kanały
         filter_all: Wszystkie
-        filter_open: Otwarty
+        filter_open: Otwórz
         filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy

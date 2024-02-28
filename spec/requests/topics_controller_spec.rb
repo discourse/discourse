@@ -18,9 +18,9 @@ RSpec.describe TopicsController do
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
-  fab!(:trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
-  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_4)
 
   fab!(:category)
   fab!(:tracked_category) { Fabricate(:category) }
@@ -5296,6 +5296,28 @@ RSpec.describe TopicsController do
         put "/t/#{topic.id}/reset-bump-date.json"
         expect(response.status).to eq(200)
         expect(topic.reload.bumped_at).to eq_time(timestamp)
+      end
+    end
+
+    context "with a post_id parameter" do
+      before { sign_in(admin) }
+
+      it "resets bump correctly" do
+        post1 = Fabricate(:post, user: post_author1, topic: topic, created_at: 2.days.ago)
+        post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
+
+        put "/t/#{topic.id}/reset-bump-date/#{post1.id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(post1.created_at)
+      end
+
+      it "does not raise an error for an inexistent post" do
+        id = (SecureRandom.random_number * 100_000_000).to_i
+        original_bumped_at = topic.bumped_at
+
+        put "/t/#{topic.id}/reset-bump-date/#{id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
       end
     end
   end

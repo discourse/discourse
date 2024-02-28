@@ -34,11 +34,9 @@ ja:
       long_with_year: "YYYY 年 MMM D 日 a h:mm"
       long_with_year_no_time: "YYYY 年 MMM D 日"
       full_with_year_no_time: "YYYY 年 MMMM D 日"
-      long_date_with_year: "'YY 年 MMM D 日 LT"
       long_date_without_year: "MMM D 日 LT"
-      long_date_with_year_without_time: "'YY 年 MMM D 日"
+      long_date_with_year_without_time: "YYYY 年 MMM D 日"
       long_date_without_year_with_linebreak: "MMM D 日 <br/>LT"
-      long_date_with_year_with_linebreak: "'YY 年 MMM D 日 <br/>LT"
       wrap_ago: "%{date}前"
       wrap_on: "%{date}"
       tiny:
@@ -64,7 +62,7 @@ ja:
         almost_x_years:
           other: "%{count} 年"
         date_month: "MMM D 日"
-        date_year: "'YY 年 MMM"
+        date_year: "YYYY 年 MMM"
       medium:
         less_than_x_minutes:
           other: "%{count} 分未満"
@@ -84,7 +82,7 @@ ja:
           other: "%{count} 年以上"
         almost_x_years:
           other: "ほぼ %{count} 年"
-        date_year: "'YY 年 MMM D 日"
+        date_year: "YYYY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -160,7 +158,6 @@ ja:
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     emails_are_disabled_non_staff: "スタッフ以外のユーザーの送信メールは無効になっています。"
     software_update_prompt:
-      message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
     bootstrap_mode: "はじめに"
     themes:
@@ -1381,6 +1378,15 @@ ja:
         success_via_admin: "このアドレスにメールを送信しました。ユーザーはメールに記載の確認手順に従う必要があります。"
         success_staff: "現在のメールアドレスにメールを送信しました。確認手順に従ってください。"
         back_to_preferences: "設定に戻る"
+        confirm_success: "メールアドレスが更新されました。"
+        confirm: "確認"
+        authorizing_new:
+          description: "メールアドレスを次のように変更することを確認してください:"
+          description_add: "代替メールアドレスを追加することを確認してください:"
+        authorizing_old:
+          old_email: "古いメール: %{email}"
+          new_email: "新しいメール: %{email}"
+          confirm_success: "新しいメールアドレスに変更を確認するためのメールを送信しました！"
       change_avatar:
         title: "プロファイル画像を変更する"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> 取得場所:"
@@ -1754,7 +1760,7 @@ ja:
       admin_guide:
         title: "新しいサイトへようこそ！"
         content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
-        content_no_url: "管理者ガイドを読み、サイトとコミュニティの構築を続けましょう。"
+        content_no_url: "管理者ガイドを読み、サイトとコミュニティーの構築を続けましょう。"
     loading: "読み込み中…"
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -2042,10 +2048,11 @@ ja:
       min_content_not_reached:
         other: "少なくとも %{count} 項目を選択してください。"
       components:
-        tag_drop:
-          filter_for_more: もっとフィルタ…
+        filter_for_more: もっとフィルタ…
         categories_admin_dropdown:
           title: "カテゴリの管理"
+        bulk_select_topics_dropdown:
+          title: "一括操作"
     date_time_picker:
       from: 開始
       to: 終了
@@ -2525,6 +2532,7 @@ ja:
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
+        confirm: "確認"
         select_all: "すべて選択"
         clear_all: "すべてクリア"
         unlist_topics: "トピックを非表示"
@@ -2602,6 +2610,9 @@ ja:
         top: "人気のトピックは以上です。"
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
+    topic_bulk_actions:
+      close_topics:
+        name: "トピックをクローズ"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4410,7 +4421,6 @@ ja:
             users:
               bookmarks: ユーザーブックマークを一覧表示します。ICS 形式を使用している場合は、ブックマークのリマインダーが返されます。
               sync_sso: DiscourseConnect を使用してユーザーを同期します。
-              show: ユーザーに関する情報を取得します。
               check_emails: ユーザーのメールを一覧表示します。
               update: ユーザープロファイル情報を更新します。
               log_out: ユーザーのすべてのセッションをログアウトします。
@@ -4531,14 +4541,10 @@ ja:
           post_liked: "ユーザーが投稿に「いいね！」した場合。"
         notification_event:
           group_name: "通知イベント"
-          notification_created: "ユーザーがフィードで通知を受け取った"
         group_user_event:
           group_name: "グループユーザーイベント"
-          user_added_to_group: "ユーザーがグループに追加された"
-          user_removed_from_group: "ユーザーがグループから削除された"
         user_promoted_event:
           group_name: "ユーザー昇格イベント"
-          user_promoted: "ユーザーが昇格された"
         delivery_status:
           title: "配信ステータス"
           inactive: "非アクティブ"
@@ -4955,7 +4961,6 @@ ja:
           instructions: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します。"
       email:
         title: "メール"
-        settings: "設定"
         templates: "テンプレート"
         templates_title: "メールのテンプレート"
         preview_digest: "要約をプレビュー"
@@ -5596,7 +5601,6 @@ ja:
             other: "過去 %{count} 日:"
           value_heading: "値"
           requirement_heading: "要件"
-          visits: "アクセス"
           days: "日"
           topics_replied_to: "返信するトピック"
           topics_viewed: "閲覧したトピック数"
@@ -5900,6 +5904,7 @@ ja:
         category_title: "カテゴリ"
         tag_name: "タグ名"
         external_url: "外部または相対 URL"
+        username: "ユーザー名"
         destination: "リンク先"
         copy_to_clipboard: "パーマリンクをクリップボードにコピー"
         delete_confirm: このパーマリンクを削除してもよろしいですか？

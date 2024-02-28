@@ -18,6 +18,8 @@ ro:
     chat:
       back_to_forum: "Forum"
       deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:
@@ -73,10 +75,11 @@ ro:
       exit: "înapoi"
       channel_status:
         closed: "Închis"
-        open: "Deschide sondajul"
+        open: "Deschis"
       browse:
         back: "Înapoi"
         filter_all: Toate
+        filter_open: Deschide
         filter_closed: Închis
       chat_message_separator:
         today: Astăzi

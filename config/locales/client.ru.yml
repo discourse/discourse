@@ -37,11 +37,9 @@ ru:
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YYYY, LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} назад"
       wrap_on: "%{date}"
       tiny:
@@ -244,7 +242,6 @@ ru:
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
-      message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
       dismiss: "Закрыть"
     bootstrap_mode: "Начало работы"
     themes:
@@ -668,7 +665,7 @@ ru:
         all:
           title: "Все"
       context_question:
-        is_this_post: "Это %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Эта %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "или"
         something_else_wrong: "Что-то не так со следующим: %{reviewable_type}?"
       types:
@@ -1606,6 +1603,15 @@ ru:
         success_via_admin: "На указанный адрес электронной почты отправлено письмо. Для подтверждения адреса пользователь должен следовать инструкциям в письме."
         success_staff: "На текущий адрес электронной почты отправлено письмо. Следуйте инструкциям по подтверждению в письме."
         back_to_preferences: "Вернуться в настройки"
+        confirm_success: "Адрес электронной почты обновлён."
+        confirm: "Подтвердить"
+        authorizing_new:
+          description: "Подтвердите изменение адреса электронной почты на новый:"
+          description_add: "Подтвердите добавление дополнительного адреса электронной почты:"
+        authorizing_old:
+          old_email: "Старая эл. почта: %{email}"
+          new_email: "Новая эл. почта: %{email}"
+          confirm_success: "Мы отправили письмо на новый адрес, чтобы подтвердить изменение!"
       change_avatar:
         title: "Изменить аватар"
         gravatar: "На основе <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
@@ -2318,10 +2324,11 @@ ru:
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элемента."
       components:
-        tag_drop:
-          filter_for_more: Больше тегов…
+        filter_for_more: Больше тегов…
         categories_admin_dropdown:
           title: "Управление категориями"
+        bulk_select_topics_dropdown:
+          title: "Массовые действия"
     date_time_picker:
       from: От
       to: До
@@ -2891,6 +2898,7 @@ ru:
     topics:
       new_messages_marker: "последнее посещение"
       bulk:
+        confirm: "Подтвердить"
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
         unlist_topics: "Скрыть темы"
@@ -2992,6 +3000,9 @@ ru:
         top: "Обсуждаемых тем больше нет."
         bookmarks: "Тем, помеченных закладкам,. больше нет."
         filter: "Тем больше нет."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыть темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -5049,7 +5060,6 @@ ru:
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.
-              show: Получение информации о пользователе.
               check_emails: Список электронных писем пользователя.
               update: Обновление информации в профиле пользователя.
               log_out: Завершение всех сессий пользователя.
@@ -5170,14 +5180,10 @@ ru:
           post_liked: "При пометке публикации лайком."
         notification_event:
           group_name: "События уведомления"
-          notification_created: "Пользователь получает уведомление в своей ленте"
         group_user_event:
           group_name: "События группы пользователей"
-          user_added_to_group: "Пользователь добавлен в группу"
-          user_removed_from_group: "Пользователь удален из группы"
         user_promoted_event:
           group_name: "События повышения уровня доверия"
-          user_promoted: "Уровень доверия к пользователю повышен"
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -5603,7 +5609,6 @@ ru:
           instructions: "Настройте шаблон, в котором отображаются все почтовые html-сообщения. Настройте стиль шаблона, используя CSS."
       email:
         title: "Письма"
-        settings: "Настройки"
         templates: "Шаблоны"
         templates_title: "Шаблоны электронных писем"
         preview_digest: "Предпросмотр сводки"
@@ -6272,7 +6277,6 @@ ru:
             other: "За последние %{count} дня:"
           value_heading: "Значение"
           requirement_heading: "Требование"
-          visits: "Посещений"
           days: "Дней"
           topics_replied_to: "Ответов на темы"
           topics_viewed: "Просмотров тем"
@@ -6582,6 +6586,7 @@ ru:
         category_title: "Категория"
         tag_name: "Имя тега"
         external_url: "Внешняя или относительная ссылка"
+        username: "Псевдоним"
         destination: "Назначения"
         copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: Удалить эту постоянную ссылку?

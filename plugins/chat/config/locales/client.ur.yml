@@ -13,6 +13,8 @@ ur:
           never: "کبھی نہیں"
     chat:
       deleted_chat_username: حذف کردہ
+      dates:
+        yesterday: "کَل"
       create: "بنائیں"
       cancel: "منسوخ"
       channel_settings:
@@ -50,6 +52,7 @@ ur:
       browse:
         back: "واپس"
         filter_all: تمام
+        filter_open: کھولیں
         filter_closed: بند
       chat_message_separator:
         today: آج

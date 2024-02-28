@@ -76,6 +76,40 @@ RSpec.describe TopicQuery do
   end
 
   describe "#list_hot" do
+    it "keeps pinned topics on top" do
+      pinned_topic =
+        Fabricate(
+          :topic,
+          created_at: 1.hour.ago,
+          pinned_at: 1.hour.ago,
+          pinned_globally: true,
+          like_count: 1,
+        )
+      _topic = Fabricate(:topic, created_at: 5.minute.ago, like_count: 100)
+      topic = Fabricate(:topic, created_at: 1.minute.ago, like_count: 100)
+
+      # pinned topic is older so generally it would not hit the batch without
+      # extra special logic
+      TopicHotScore.update_scores(2)
+
+      expect(TopicQuery.new(nil).list_hot.topics.map(&:id)).to eq([pinned_topic.id, topic.id])
+
+      SiteSetting.tagging_enabled = true
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+
+      TagUser.create!(
+        user_id: user.id,
+        tag_id: tag.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+
+      topic.update!(tags: [tag])
+
+      # even though it is muted, we should still show it cause we are filtered to it
+      expect(TopicQuery.new(user, { tags: [tag.name] }).list_hot.topics.map(&:id)).to eq([topic.id])
+    end
+
     it "excludes muted categories and topics" do
       muted_category = Fabricate(:category)
       muted_topic = Fabricate(:topic, category: muted_category)
@@ -1884,7 +1918,7 @@ RSpec.describe TopicQuery do
       end
 
       it "allow group members with enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[3])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
@@ -1893,7 +1927,7 @@ RSpec.describe TopicQuery do
       end
 
       it "doesn't allow group members without enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[2])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest

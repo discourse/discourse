@@ -2,7 +2,7 @@
 
 desc "ensure the asynchronously-created post_search_data index is present"
 task "annotate" => :environment do |task, args|
-  raise if !system "bin/annotate --models"
+  system("bin/annotate --models", exception: true)
   STDERR.puts "Annotate executed successfully"
 
   non_core_plugins =
@@ -27,9 +27,12 @@ task "annotate:clean" => :environment do |task, args|
   db = TemporaryDb.new
   db.start
   db.with_env do
-    raise if !system "RAILS_ENV=test LOAD_PLUGINS=0 bin/rake db:migrate"
-    raise if !system "RAILS_ENV=test LOAD_PLUGINS=0 bin/rake annotate:ensure_all_indexes"
-    raise if !system "RAILS_ENV=test LOAD_PLUGINS=0 bin/annotate --models --model-dir app/models"
+    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rake db:migrate", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=0 bin/rake annotate:ensure_all_indexes", exception: true)
+    system(
+      "RAILS_ENV=test LOAD_PLUGINS=0 bin/annotate --models --model-dir app/models",
+      exception: true,
+    )
   end
   STDERR.puts "Annotate executed successfully"
 ensure

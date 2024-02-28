@@ -2,6 +2,9 @@ export default function () {
   this.route("chat", function () {
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
       this.route("near-message", { path: "/:messageId" });
+      this.route("near-message-with-thread", {
+        path: "/:messageId/t/:threadId",
+      });
       this.route("threads", { path: "/t" });
       this.route("thread", { path: "/t/:threadId" }, function () {
         this.route("near-message", { path: "/:messageId" });
@@ -11,6 +14,8 @@ export default function () {
     this.route("direct-messages");
     this.route("channels");
     this.route("threads");
+
+    this.route("new-message");
 
     this.route(
       "channel.info",

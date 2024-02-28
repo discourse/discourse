@@ -26,6 +26,7 @@ hu:
     chat:
       deleted_chat_username: törölt
       dates:
+        yesterday: "Tegnap"
         time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
@@ -179,7 +180,7 @@ hu:
         back: "Vissza"
         title: Csatornák
         filter_all: Összes
-        filter_open: Nyitott
+        filter_open: Megnyitás
         filter_closed: Zárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint

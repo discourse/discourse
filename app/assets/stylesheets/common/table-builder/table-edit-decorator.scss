@@ -10,27 +10,23 @@
   opacity: 100%;
 }
 
-.mobile-view {
-  .btn-edit-table {
-    display: none;
-    z-index: 2;
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
+.fullscreen-table-wrapper {
+  .discourse-no-touch & {
+    &__buttons {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
   }
 
-  .fullscreen-table-wrapper {
-    position: relative;
+  .discourse-touch & {
+    display: flex;
+    flex-direction: column-reverse;
+    padding-bottom: 0.5em;
 
-    &:hover {
-      table {
-        opacity: 0.5;
-      }
-
-      .btn-edit-table {
-        display: block;
-        z-index: 2;
-      }
+    .open-popup-link {
+      left: 0;
+      margin: 0;
     }
   }
 }

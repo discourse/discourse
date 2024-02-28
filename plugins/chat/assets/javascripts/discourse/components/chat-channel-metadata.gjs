@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import I18n from "I18n";
 import ChatChannelUnreadIndicator from "./chat-channel-unread-indicator";
 
 export default class ChatChannelMetadata extends Component {
@@ -9,9 +10,7 @@ export default class ChatChannelMetadata extends Component {
   get lastMessageFormattedDate() {
     return moment(this.args.channel.lastMessage.createdAt).calendar(null, {
       sameDay: "LT",
-      nextDay: "[Tomorrow]",
-      nextWeek: "dddd",
-      lastDay: "[Yesterday]",
+      lastDay: `[${I18n.t("chat.dates.yesterday")}]`,
       lastWeek: "dddd",
       sameElse: "l",
     });

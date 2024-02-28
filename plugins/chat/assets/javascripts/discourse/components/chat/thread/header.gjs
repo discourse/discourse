@@ -53,7 +53,7 @@ export default class ChatThreadHeader extends Component {
   }
 
   <template>
-    <Navbar as |navbar|>
+    <Navbar @showFullTitle={{@showFullTitle}} as |navbar|>
       {{#if @thread}}
         <navbar.BackButton
           @route={{this.backLink.route}}

@@ -56,13 +56,43 @@ describe Chat::MessagesExporter do
     end
   end
 
+  context "with corrupted data" do
+    fab!(:message) { Fabricate(:chat_message) }
+
+    it "exports a message even its chat_channel doesn't exist" do
+      nonexistent_channel_id = Chat::Channel.pluck(:id).max + 1
+      message.chat_channel_id = nonexistent_channel_id
+      message.save!
+
+      exporter = Class.new.extend(Chat::MessagesExporter)
+      result = []
+      exporter.chat_message_export { |data_row| result << data_row }
+
+      expect(result.length).to be(1)
+      assert_exported_message(result[0], message)
+    end
+
+    it "exports a message even its author doesn't exist" do
+      nonexistent_user_id = User.pluck(:id).max + 1
+      message.user_id = nonexistent_user_id
+      message.save!
+
+      exporter = Class.new.extend(Chat::MessagesExporter)
+      result = []
+      exporter.chat_message_export { |data_row| result << data_row }
+
+      expect(result.length).to be(1)
+      assert_exported_message(result[0], message)
+    end
+  end
+
   def assert_exported_message(data_row, message)
     Chat::Channel.unscoped do
       expect(data_row[0]).to eq(message.id)
-      expect(data_row[1]).to eq(message.chat_channel.id)
-      expect(data_row[2]).to eq(message.chat_channel.name)
-      expect(data_row[3]).to eq(message.user.id)
-      expect(data_row[4]).to eq(message.user.username)
+      expect(data_row[1]).to eq(message.chat_channel&.id)
+      expect(data_row[2]).to eq(message.chat_channel&.name)
+      expect(data_row[3]).to eq(message.user&.id)
+      expect(data_row[4]).to eq(message.user&.username)
       expect(data_row[5]).to eq(message.message)
       expect(data_row[6]).to eq(message.cooked)
       expect(data_row[7]).to eq_time(message.created_at)

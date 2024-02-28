@@ -54,10 +54,20 @@ export default {
         });
 
         video.addEventListener("canplay", function () {
-          video.play();
+          if (caps.isIOS) {
+            // This is needed to fix video playback on iOS.
+            // Without it, videos will play, but they won't always be visible.
+            discourseLater(() => {
+              video.play();
+            }, 100);
+          } else {
+            video.play();
+          }
+
           wrapper.remove();
           video.style.display = "";
           parentDiv.classList.remove("video-placeholder-container");
+          parentDiv.style.backgroundImage = "none";
         });
       }
 
@@ -71,6 +81,15 @@ export default {
         );
 
         containers.forEach((container) => {
+          // Add video thumbnail image
+          if (container.dataset.thumbnailSrc) {
+            const thumbnail = new Image();
+            thumbnail.onload = function () {
+              container.style.backgroundImage = "url('" + thumbnail.src + "')";
+            };
+            thumbnail.src = container.dataset.thumbnailSrc;
+          }
+
           const wrapper = document.createElement("div"),
             overlay = document.createElement("div");
 

@@ -4,7 +4,9 @@ require "rotp"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user1) { Fabricate(:user, username: "someusername", refresh_auto_groups: true) }
+  fab!(:user1) do
+    Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago)
+  end
   fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
@@ -438,6 +440,7 @@ RSpec.describe UsersController do
 
         before do
           simulate_localhost_webauthn_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by visiting the email login page
           get "/u/password-reset/#{email_token.token}"
@@ -602,7 +605,7 @@ RSpec.describe UsersController do
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_posting = true
 
-      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true))
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
@@ -1974,7 +1977,7 @@ RSpec.describe UsersController do
     end
 
     it "returns success" do
-      user = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       Fabricate(:invite, invited_by: user)
 
       sign_in(user)
@@ -1986,7 +1989,7 @@ RSpec.describe UsersController do
     end
 
     it "filters by all if viewing self" do
-      inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
       sign_in(inviter)
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
@@ -2013,8 +2016,8 @@ RSpec.describe UsersController do
     end
 
     it "doesn't filter by email if another regular user" do
-      inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
-      sign_in(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
       redeemed_invite = Fabricate(:invite, email: "jimtom@example.com", invited_by: inviter)
@@ -2069,7 +2072,7 @@ RSpec.describe UsersController do
 
       context "with redeemed invites" do
         it "returns invited_users" do
-          inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+          inviter = Fabricate(:user, trust_level: TrustLevel[2])
           sign_in(inviter)
           invite = Fabricate(:invite, invited_by: inviter)
           _invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
@@ -2088,7 +2091,7 @@ RSpec.describe UsersController do
       context "with pending invites" do
         context "with permission to see pending invites" do
           it "returns invites" do
-            inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+            inviter = Fabricate(:user, trust_level: TrustLevel[2])
             invite = Fabricate(:invite, invited_by: inviter)
             sign_in(inviter)
 
@@ -2117,7 +2120,7 @@ RSpec.describe UsersController do
 
         context "with permission to see invite links" do
           it "returns own invites" do
-            inviter = sign_in(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
+            inviter = sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
             invite =
               Fabricate(
                 :invite,
@@ -2258,7 +2261,12 @@ RSpec.describe UsersController do
         fab!(:upload)
         fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-        before { sign_in(user) }
+        before do
+          User.set_callback(:create, :after, :ensure_in_trust_level_group)
+          sign_in(user)
+        end
+
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
         it "allows the update" do
           SiteSetting.tagging_enabled = true
@@ -5480,6 +5488,19 @@ RSpec.describe UsersController do
           expect(response_body["key"]).to be_present
           expect(response_body["qr"]).to be_present
         end
+
+        it "raises an error for a user created > 5 mins ago without a confirmed session" do
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not require confirming session for a user created < 5 mins ago" do
+          user1.update(created_at: Time.now.utc - 4.minutes)
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(200)
+        end
       end
     end
   end
@@ -5819,9 +5840,13 @@ RSpec.describe UsersController do
   end
 
   describe "#register_second_factor_security_key" do
+    before do
+      simulate_localhost_webauthn_challenge
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
+
     context "when creation parameters are valid" do
       it "creates a security key for the user" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5836,7 +5861,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow creating too many security keys" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5854,7 +5878,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow the security key name to exceed the limit" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -6071,7 +6094,10 @@ RSpec.describe UsersController do
   end
 
   describe "#register_passkey" do
-    before { SiteSetting.enable_passkeys = true }
+    before do
+      SiteSetting.enable_passkeys = true
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
 
     it "fails if user is not logged in" do
       stub_secure_session_confirmed
@@ -6440,8 +6466,12 @@ RSpec.describe UsersController do
           )
         end
 
-        it "returns a successful response for the correct user" do
+        before do
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
           simulate_localhost_passkey_challenge
+        end
+
+        it "returns a successful response for the correct user" do
           user1.create_or_fetch_secure_identifier
 
           post "/u/confirm-session.json",
@@ -6458,7 +6488,6 @@ RSpec.describe UsersController do
 
         it "returns invalid response when key belongs to a different user" do
           sign_in(user2)
-          simulate_localhost_passkey_challenge
           user2.create_or_fetch_secure_identifier
 
           post "/u/confirm-session.json",
@@ -6484,12 +6513,21 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "resopnds with a 'failed' result by default" do
+    it "responds with a 'failed' result by default" do
       sign_in(user1)
 
       get "/u/trusted-session.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "responds with a 'success' result if user was recently created" do
+      sign_in(user1)
+      user1.update(created_at: Time.now.utc - 4.minutes)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
     end
 
     it "response with 'success' on a confirmed session" do

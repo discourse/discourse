@@ -51,6 +51,11 @@ sq:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   components:
     enabled_filter: "Aktivizuar"
+  themes:
+    settings_errors:
+      objects:
+        required: "must be present"
+        not_valid_integer_value: "must be an integer"
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"
@@ -306,8 +311,6 @@ sq:
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   change_email:
-    confirmed: "Adresa e postës u azhornua."
-    please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
   activation:
@@ -330,6 +333,8 @@ sq:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "i papërshtatshëm"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Dërgoji @%{username} një mesazh"
       email_title: 'Postimi juaj në "%{title}"'
@@ -358,6 +363,8 @@ sq:
       title: "Diçka Tjetër"
       long_form: "shënoje për vëmendjen e moderatorëve"
       email_title: 'Tema "%{title}" kërkon redaktimin e një moderatori'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>"
@@ -791,7 +798,6 @@ sq:
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
-    approve_unless_trust_level: "Posts for users below this trust level must be approved"
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     default_topics_automatic_unpin: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes, e paracaktuar."

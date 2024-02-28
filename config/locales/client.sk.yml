@@ -37,11 +37,8 @@ sk:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "pred %{date}"
       wrap_on: "na %{date}"
       tiny:
@@ -97,7 +94,7 @@ sk:
           many: "%{count}r"
           other: "%{count}r"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minúta"
@@ -114,7 +111,6 @@ sk:
           few: "%{count} dni"
           many: "%{count} dní"
           other: "%{count} dní"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "pred %{count} minútou"
@@ -208,7 +204,6 @@ sk:
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     emails_are_disabled_non_staff: "Odchádzajúci e-mail bol zakázaný pre používateľov, ktorí nie sú zamestnancami."
     software_update_prompt:
-      message: "Aktualizovali sme túto stránku, <span>obnovte</span>, inak sa môže vyskytnúť neočakávané správanie."
       dismiss: "Zahodiť"
     bootstrap_mode: "Začíname"
     themes:
@@ -965,6 +960,8 @@ sk:
         error: "Pri zmene emailu nastala chyba. Je možné, že je email už použitý?"
         success: "Na email sme odoslali správu. Nasledujte prosím inštrukcie pre potvrdenie."
         success_staff: "Na váš aktuálny email sme odoslali správu. Nasledujte prosím inštrukcie pre potvrdenie."
+        confirm_success: "Vaša emailova adresa bola aktualizovaná"
+        confirm: "Potvrďte"
       change_avatar:
         title: "Zmeniť váš profilový obrázok"
         letter_based: "Systém pridelil profilový obrázok"
@@ -1381,8 +1378,9 @@ sk:
       filter_placeholder: Hľadať…
       filter_placeholder_with_any: Vyhľadajte alebo vytvorte…
       components:
-        tag_drop:
-          filter_for_more: Filtrovať pre viac…
+        filter_for_more: Filtrovať pre viac…
+        bulk_select_topics_dropdown:
+          title: "Hromadné akcie"
     date_time_picker:
       from: Od
       to: Komu
@@ -1574,6 +1572,7 @@ sk:
     topics:
       new_messages_marker: "posledná návševa"
       bulk:
+        confirm: "Potvrďte"
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
         unlist_topics: "Dôverné témy"
@@ -1621,6 +1620,9 @@ sk:
         tag: "Žiadne ďalšie témy v %{tag}."
         top: "Nie je už viac poulárnych tém"
         bookmarks: "Žiadne ďalšie témy v záložkách."
+    topic_bulk_actions:
+      close_topics:
+        name: "Uzavrieť tému"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -2131,6 +2133,11 @@ sk:
       custom_placeholder_notify_user: "Buďte konkrétny, buďte konštruktívny a buďte vždy milý."
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
+        more:
+          one: "ostáva %{count}"
+          few: "ostáva %{count}"
+          many: "ostáva %{count}"
+          other: "ostáva %{count}"
         left:
           one: "%{count} zostáva"
           few: "%{count} zostávajú"
@@ -2523,6 +2530,21 @@ sk:
         typeMismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
+        tooLong:
+          one: "Vstup musí mať menej ako %{count} znakov."
+          few: "Vstup musí mať menej ako %{count} znakov."
+          many: "Vstup musí mať menej ako %{count} znakov."
+          other: "Vstup musí mať menej ako %{count} znakov."
+        rangeOverflow:
+          one: "Vstup musí byť menší ako %{count}."
+          few: "Vstup musí byť menší ako %{count}."
+          many: "Vstup musí byť menší ako %{count}."
+          other: "Vstup musí byť menší ako %{count}."
+        rangeUnderflow:
+          one: "Vstup musí byť väčší ako %{count}."
+          few: "Vstup musí byť väčší ako %{count}."
+          many: "Vstup musí byť väčší ako %{count}."
+          other: "Vstup musí byť väčší ako %{count}."
     table_builder:
       title: "Zostavovač tabuľky"
       modal:
@@ -2774,14 +2796,10 @@ sk:
           post_liked: "Keď sa používateľovi páči príspevok."
         notification_event:
           group_name: "Udalosti upozornení"
-          notification_created: "Používateľ dostane upozornenie vo svojom informačnom kanáli"
         group_user_event:
           group_name: "Skupinové používateľské udalosti"
-          user_added_to_group: "Používateľ je pridaný do skupiny"
-          user_removed_from_group: "Používateľ je odstránený zo skupiny"
         user_promoted_event:
           group_name: "Udalosti podporované používateľom"
-          user_promoted: "Používateľ je povýšený"
         delivery_status:
           failed: "Nepodarilo sa"
           disabled: "Vypnuté"
@@ -2993,7 +3011,6 @@ sk:
           css: "CSS"
       email:
         title: "Email"
-        settings: "Nastavenia"
         templates: "Šablóny"
         preview_digest: "Súhrn"
         sending_test: "Odosiela sa testovací e-mail…"
@@ -3343,7 +3360,6 @@ sk:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"
           requirement_heading: "Požiadavka"
-          visits: "Návštev"
           days: "dní"
           topics_replied_to: "Témy na ktoré odpovedal"
           topics_viewed: "Zobrazených tém"
@@ -3567,6 +3583,7 @@ sk:
         post_title: "Príspevok"
         category_id: "ID kategórie"
         category_title: "Kategória"
+        username: "Používateľské meno"
         delete_confirm: Ste si istý, že chcete zmazať tento trvalý odkaz?
         form:
           label: "Nový:"

@@ -8,10 +8,12 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import and from "truth-helpers/helpers/and";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
+  @service chatTrackingStateManager;
   @service site;
   @service siteSettings;
   @service currentUser;
@@ -40,8 +42,12 @@ export default class ChannelsListPublic extends Component {
   }
 
   get hasUnreadThreads() {
-    return this.chatChannelsManager.publicMessageChannels.some(
-      (channel) => channel.unreadThreadsCount > 0
+    return this.chatTrackingStateManager.hasUnreadThreads;
+  }
+
+  get isThreadEnabledInAnyChannel() {
+    return this.currentUser?.chat_channels?.public_channels?.some(
+      (channel) => channel.threading_enabled
     );
   }
 
@@ -51,7 +57,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{#if this.site.desktopView}}
+    {{#if (and this.site.desktopView this.isThreadEnabledInAnyChannel)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
