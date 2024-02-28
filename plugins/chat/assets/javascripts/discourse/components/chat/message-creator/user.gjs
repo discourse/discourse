@@ -27,7 +27,7 @@ export default class ChatableUser extends Component {
       {{userStatus @item.model currentUser=this.currentUser}}
 
       {{#unless @item.enabled}}
-        <span class="chat-message-creator__chatable -disabled-chat">
+        <span class="chat-message-creator__disabled-warning">
           {{this.disabledUserLabel}}
         </span>
       {{/unless}}
