@@ -122,6 +122,8 @@ RSpec.describe TopicBookmarkable do
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
           bookmark_id: bookmark1.id,
+          bookmarkable_id: bookmark1.bookmarkable_id,
+          bookmarkable_type: bookmark1.bookmarkable_type,
         }.to_json,
       )
     end

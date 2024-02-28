@@ -66,7 +66,7 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.can_see_bookmarkable?(guardian, bookmarkable)
-    guardian.can_see_topic?(bookmark.bookmarkable)
+    guardian.can_see_topic?(bookmarkable)
   end
 
   def self.bookmark_metadata(bookmark, user)

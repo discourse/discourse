@@ -155,7 +155,7 @@ class BookmarkQuery
         bookmarkable.present? &&
           Bookmark.registered_bookmarkable_from_type(
             notif.data_hash[:bookmarkable_type],
-          ).can_see_bookmarkable?(bookmarkable)
+          ).can_see_bookmarkable?(@guardian, bookmarkable)
       end
     end
   end
