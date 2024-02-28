@@ -1819,7 +1819,7 @@ class User < ActiveRecord::Base
   def experimental_bookmark_redesign_enabled?
     in_any_groups?(SiteSetting.enable_experimental_bookmark_redesign_groups_map)
   end
-  
+
   def glimmer_header_enabled?
     in_any_groups?(SiteSetting.experimental_glimmer_header_groups_map)
   end
