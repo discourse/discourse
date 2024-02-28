@@ -14,4 +14,14 @@ module("Discourse Chat | Component | chat-user-info", function (hooks) {
     assert.dom().containsText(this.user.username);
     assert.dom().containsText(this.user.name);
   });
+
+  test("status message", async function (assert) {
+    this.currentUser.userStatus = { emoji: "smile", description: "happy" };
+    this.set("user", this.currentUser);
+
+    await render(hbs`<ChatUserInfo @user={{this.user}} />`);
+
+    assert.dom().containsText(this.user.userStatus.emoji);
+    assert.dom().containsText(this.user.userStatus.description);
+  });
 });
