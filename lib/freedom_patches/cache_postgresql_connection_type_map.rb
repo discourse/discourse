@@ -9,6 +9,12 @@
 # The latest attempt to fix the problem in Rails is in https://github.com/rails/rails/pull/46409 but it has gone stale.
 module FreedomPatches
   module PostgreSQLAdapter
+    # Definition as of writing: https://github.com/rails/rails/blob/5bf5344521a6f305ca17e0004273322a0a26f50a/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L316
+    def reload_type_map
+      self.class.type_map = nil
+      super
+    end
+
     # Definition as of writing: https://github.com/rails/rails/blob/5bf5344521a6f305ca17e0004273322a0a26f50a/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L614
     def initialize_type_map(m = type_map)
       if !self.class.type_map.nil?
