@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import { groupPath, userPath } from "discourse/lib/url";
+import { groupPath } from "discourse/lib/url";
 import dIcon from "discourse-common/helpers/d-icon";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 
@@ -116,10 +116,8 @@ export default class PrivateMessageMap extends Component {
 }
 
 class PmMapUserGroup extends Component {
-  @tracked isEditing = this.args.isEditing;
-
   get canRemoveLink() {
-    return this.isEditing && this.args.canRemoveAllowedUsers;
+    return this.args.isEditing && this.args.canRemoveAllowedUsers;
   }
 
   get groupUrl() {
@@ -169,7 +167,6 @@ class PmRemoveGroupLink extends Component {
 
 class PmMapUser extends Component {
   @service site;
-  @tracked isEditing = this.args.isEditing;
 
   get linkClass() {
     if (this.site.mobileView) {
@@ -179,14 +176,12 @@ class PmMapUser extends Component {
   }
 
   get userUrl() {
-    return userPath(this.args.model);
+    return this.args.model.path;
   }
 
   get avatarImage() {
     return htmlSafe(
-      avatarImg({
-        avatarTemplate: this.args.model.avatar_template,
-        size: "tiny",
+      tinyAvatar(this.args.model.avatar_template, {
         title: this.args.model.name || this.args.model.username,
       })
     );
@@ -198,14 +193,26 @@ class PmMapUser extends Component {
 
   get canRemoveLink() {
     return (
-      this.isEditing && (this.args.canRemoveAllowedUsers || this.isCurrentUser)
+      this.args.isEditing &&
+      (this.args.canRemoveAllowedUsers || this.isCurrentUser)
     );
   }
 
   <template>
     <div class="user">
       <a class={{this.linkClass}} href={{this.userUrl}}>
-        {{this.avatarImage}}
+        {{#if this.site.mobileView}}
+          {{this.avatarImage}}
+        {{else}}
+          <a
+            class="trigger-user-card"
+            data-user-card={{@model.username}}
+            title={{@model.username}}
+            aria-hidden="true"
+          >
+            {{this.avatarImage}}
+          </a>
+        {{/if}}
         <span class="username">{{@model.username}}</span>
       </a>
 
