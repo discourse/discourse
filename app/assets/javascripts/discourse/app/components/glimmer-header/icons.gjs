@@ -18,11 +18,11 @@ function resetHeaderIcons() {
 
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
-  headerIcons.add("user", undefined, { after: "hamburger" });
+  headerIcons.add("user-menu", undefined, { after: "hamburger" });
 }
 
-export function addToHeaderIcons(key, value, position = { before: "search" }) {
-  headerIcons.add(key, value, position);
+export function headerIconsMap() {
+  return headerIcons;
 }
 
 export function clearExtraHeaderIcons() {
@@ -38,7 +38,6 @@ export default class Icons extends Component {
   <template>
     <ul class="icons d-header-icons">
       {{#each (headerIcons.resolve) as |entry|}}
-        {{log entry.key entry.value}}
         {{#if (eq entry.key "search")}}
           <Dropdown
             @title="search.title"
@@ -61,7 +60,7 @@ export default class Icons extends Component {
               @className="hamburger-dropdown"
             />
           {{/if}}
-        {{else if (eq entry.key "user")}}
+        {{else if (eq entry.key "user-menu")}}
           {{#if this.currentUser}}
             <UserDropdown
               @active={{this.header.userVisible}}

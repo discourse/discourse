@@ -169,7 +169,7 @@ export default {
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       if (this.chatService.userCanChat) {
-        api.addToHeaderIcons("chat", ChatHeaderIcon, { after: "search" });
+        api.headerIconsMap().add("chat", ChatHeaderIcon, { before: "search" });
       }
 
       api.addStyleguideSection?.({

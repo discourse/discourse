@@ -9,12 +9,11 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addToHeaderIcons as addToGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
+import { headerIconsMap } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import MountWidget from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
@@ -968,7 +967,7 @@ class PluginApi {
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
     deprecated(
-      "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+      "addHeaderPanel has been removed. Use api.headerIconsMap instead.",
       {
         id: "discourse.add-header-panel",
         url: "https://meta.discourse.org/t/296544",
@@ -1817,10 +1816,42 @@ class PluginApi {
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
   }
+
   /**
-   * Adds a widget or a component to the header-icon ul.
+   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
-   * If adding a widget it must already be created. You can create new widgets
+   * Only the passing of components is supported, and by default the icons are added to the right of exisiting icons.
+   *
+   * Example: Add the chat icon to the header icons before the search icon
+   * ```
+   * api.headerIconsMap().add(
+   *  "chat",
+   *  ChatIconComponent,
+   *  { before: "search" }
+   * )
+   * ```
+   *
+   * Example: Remove the chat icon from the header icons
+   * ```
+   * api.headerIconsMap().delete("chat")
+   * ```
+   *
+   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
+   * ```
+   * api.headerIconsMap().reposition("chat", { before: "user-menu", after: "hamburger" })
+   * ```
+   *
+   * Example: Check if the chat icon is present in the header icons (returns true of false)
+   * ```
+   * api.headerIconsMap().has("chat")
+   * ```
+   **/
+  headerIconsMap() {
+    return headerIconsMap();
+  }
+
+  /**
+   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
@@ -1828,35 +1859,16 @@ class PluginApi {
    *  createWidget("some-widget")
    * ```
    *
-   * If adding a component you can pass the component directly. Additionally, you can
-   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
-   * you want create a button in the header that opens a dropdown panel with additional content.
-   *
-   * ```
-   * api.addToHeaderIcons(
-      <template>
-        <span>Icon</span>
-
-        <@panelPortal>
-          <div>Panel</div>
-        </@panelPortal>
-      </template>
-    );
-   * ```
-   *
    **/
-  addToHeaderIcons(key, component, position) {
-    if (arguments.length === 1) {
-      // Old API - backwards compat
-      const widgetName = arguments[0];
-      addToHeaderIcons(widgetName);
-      addToGlimmerHeaderIcons(Symbol(), <template>
-        <MountWidget @widget={{widgetName}} />
-      </template>);
-    } else {
-      // addToHeaderIcons(); TODO backward compat?
-      addToGlimmerHeaderIcons(key, component, position);
-    }
+  addToHeaderIcons(icon) {
+    deprecated(
+      "addToHeaderIcons has been removed. Use api.headerIconsMap instead.",
+      {
+        id: "discourse.add-header-icons",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
+    addToHeaderIcons(icon);
   }
 
   /**
@@ -2453,10 +2465,6 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
-
-
-
-
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);

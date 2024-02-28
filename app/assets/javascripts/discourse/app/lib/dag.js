@@ -37,7 +37,7 @@ export default class DAG {
    * @param {string | string[]} position.after A key or array of keys of items which should appear after this one.
    */
   reposition(key, { before, after }) {
-    const node = this.data.get(key);
+    const node = this.#rawData.get(key);
     if (node) {
       node.before = before;
       node.after = after;
