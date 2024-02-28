@@ -13,7 +13,9 @@ import { headerIconsMap } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import MountWidget, {
+  addWidgetCleanCallback,
+} from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
@@ -967,7 +969,7 @@ class PluginApi {
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
     deprecated(
-      "addHeaderPanel has been removed. Use api.headerIconsMap instead.",
+      "addHeaderPanel has been removed. Use api.headerIcons instead.",
       {
         id: "discourse.add-header-panel",
         url: "https://meta.discourse.org/t/296544",
@@ -1824,7 +1826,7 @@ class PluginApi {
    *
    * Example: Add the chat icon to the header icons before the search icon
    * ```
-   * api.headerIconsMap().add(
+   * api.headerIcons.add(
    *  "chat",
    *  ChatIconComponent,
    *  { before: "search" }
@@ -1833,20 +1835,37 @@ class PluginApi {
    *
    * Example: Remove the chat icon from the header icons
    * ```
-   * api.headerIconsMap().delete("chat")
+   * api.headerIcons.delete("chat")
    * ```
    *
    * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
    * ```
-   * api.headerIconsMap().reposition("chat", { before: "user-menu", after: "hamburger" })
+   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
    * ```
    *
    * Example: Check if the chat icon is present in the header icons (returns true of false)
    * ```
-   * api.headerIconsMap().has("chat")
+   * api.headerIcons.has("chat")
    * ```
+   *
+   * Additionally, you can utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * const IconWithDropdown = <template>
+   *   <DButton @icon="icon" @onClick={{this.toggleVisible}} />
+   *   {{#if this.visible}}
+   *     <@panelPortal>
+   *       <div>Panel</div>
+   *     </@panelPortal>
+   *   {{/if}}
+   * </template>;
+   *
+   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
+   * ```
+   *
    **/
-  headerIconsMap() {
+  get headerIcons() {
     return headerIconsMap();
   }
 
@@ -1862,13 +1881,19 @@ class PluginApi {
    **/
   addToHeaderIcons(icon) {
     deprecated(
-      "addToHeaderIcons has been removed. Use api.headerIconsMap instead.",
+      "addToHeaderIcons has been deprecated. Use api.headerIcons instead.",
       {
         id: "discourse.add-header-icons",
         url: "https://meta.discourse.org/t/296544",
       }
     );
+
     addToHeaderIcons(icon);
+    this.headerIcons.add(
+      icon,
+      <template><MountWidget @widget={{icon}} /></template>,
+      { before: "search" }
+    );
   }
 
   /**
@@ -2465,6 +2490,35 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
