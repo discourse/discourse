@@ -99,6 +99,9 @@
   display: flex;
   align-items: center;
   height: var(--chat-header-offset);
+  .d-icon {
+    color: var(--primary-low-mid);
+  }
 }
 
 .c-navbar__back-button ~ .c-navbar__title {
