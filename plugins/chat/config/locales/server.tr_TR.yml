@@ -99,6 +99,7 @@ tr_TR:
       original_message_not_found: "Yanıtladığınız mesajın atası bulunamıyor veya silinmiş."
       thread_invalid_for_channel: "Konu, sağlanan kanalın bir parçası değildir."
       thread_does_not_match_parent: "Konu ana mesajla eşleşmiyor."
+      invalid_direct_message: "Bu doğrudan mesajı oluşturmanıza izin verilmiyor."
     reviewables:
       message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
       actions:

@@ -17,10 +17,10 @@ export default class SidebarState extends Service {
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
+  @tracked filter = "";
 
   constructor() {
     super(...arguments);
-
     this.#reset();
   }
 
@@ -63,5 +63,9 @@ export default class SidebarState extends Service {
     this.currentPanelKey = currentPanelKey;
     this.panels = panels;
     this.mode = COMBINED_MODE;
+  }
+
+  clearFilter() {
+    this.filter = "";
   }
 }

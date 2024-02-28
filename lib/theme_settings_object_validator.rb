@@ -1,37 +1,72 @@
 # frozen_string_literal: true
 
 class ThemeSettingsObjectValidator
+  class << self
+    def validate_objects(schema:, objects:)
+      error_messages = []
+
+      objects.each_with_index do |object, index|
+        humanize_error_messages(
+          self.new(schema: schema, object: object).validate,
+          index:,
+          error_messages:,
+        )
+      end
+
+      error_messages
+    end
+
+    private
+
+    def humanize_error_messages(errors, index:, error_messages:)
+      errors.each do |property_json_pointer, error_details|
+        error_messages.push(*error_details.humanize_messages("/#{index}#{property_json_pointer}"))
+      end
+    end
+  end
+
   class ThemeSettingsObjectErrors
     def initialize
       @errors = []
     end
 
-    def add_error(key, i18n_opts = {})
-      @errors << ThemeSettingsObjectError.new(key, i18n_opts)
+    def add_error(error, i18n_opts = {})
+      @errors << ThemeSettingsObjectError.new(error, i18n_opts)
+    end
+
+    def humanize_messages(property_json_pointer)
+      @errors.map { |error| error.humanize_messages(property_json_pointer) }
     end
 
     def full_messages
       @errors.map(&:error_message)
     end
   end
-
   class ThemeSettingsObjectError
-    def initialize(key, i18n_opts = {})
-      @key = key
+    def initialize(error, i18n_opts = {})
+      @error = error
       @i18n_opts = i18n_opts
     end
 
+    def humanize_messages(property_json_pointer)
+      I18n.t(
+        "themes.settings_errors.objects.humanize_#{@error}",
+        @i18n_opts.merge(property_json_pointer:),
+      )
+    end
+
     def error_message
-      I18n.t("themes.settings_errors.objects.#{@key}", @i18n_opts)
+      I18n.t("themes.settings_errors.objects.#{@error}", @i18n_opts)
     end
   end
 
-  def initialize(schema:, object:, valid_category_ids: nil)
+  def initialize(schema:, object:, json_pointer_prefix: "", errors: {}, valid_ids_lookup: {})
     @object = object
     @schema_name = schema[:name]
     @properties = schema[:properties]
-    @errors = {}
-    @valid_category_ids = valid_category_ids
+    @errors = errors
+    @json_pointer_prefix = json_pointer_prefix
+    @valid_ids_lookup = valid_ids_lookup
   end
 
   def validate
@@ -39,15 +74,17 @@ class ThemeSettingsObjectValidator
 
     @properties.each do |property_name, property_attributes|
       if property_attributes[:type] == "objects"
-        @object[property_name]&.each do |child_object|
-          @errors[property_name] ||= []
-
-          @errors[property_name].push(
-            self
-              .class
-              .new(schema: property_attributes[:schema], object: child_object, valid_category_ids:)
-              .validate,
-          )
+        @object[property_name]&.each_with_index do |child_object, index|
+          self
+            .class
+            .new(
+              schema: property_attributes[:schema],
+              object: child_object,
+              json_pointer_prefix: "#{@json_pointer_prefix}#{property_name}/#{index}/",
+              valid_ids_lookup:,
+              errors: @errors,
+            )
+            .validate
         end
       end
     end
@@ -76,7 +113,7 @@ class ThemeSettingsObjectValidator
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "category"
+      when "integer", "category", "topic", "post", "group", "upload", "tag"
         value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
@@ -103,9 +140,9 @@ class ThemeSettingsObjectValidator
     value = @object[property_name]
 
     case type
-    when "category"
-      if !valid_category_ids.include?(value)
-        add_error(property_name, :not_valid_category_value)
+    when "topic", "category", "upload", "post", "group", "tag"
+      if !valid_ids(type).include?(value)
+        add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
     when "string"
@@ -148,17 +185,35 @@ class ThemeSettingsObjectValidator
   end
 
   def add_error(property_name, key, i18n_opts = {})
-    @errors[property_name] ||= ThemeSettingsObjectErrors.new
-    @errors[property_name].add_error(key, i18n_opts)
+    pointer = json_pointer(property_name)
+    @errors[pointer] ||= ThemeSettingsObjectErrors.new
+    @errors[pointer].add_error(key, i18n_opts)
   end
 
-  def valid_category_ids
-    @valid_category_ids ||=
-      Set.new(
-        Category.where(id: fetch_property_values_of_type(@properties, @object, "category")).pluck(
-          :id,
-        ),
-      )
+  def json_pointer(property_name)
+    "/#{@json_pointer_prefix}#{property_name}"
+  end
+
+  def valid_ids_lookup
+    @valid_ids_lookup ||= {}
+  end
+
+  TYPE_TO_MODEL_MAP = {
+    "category" => Category,
+    "topic" => Topic,
+    "post" => Post,
+    "group" => Group,
+    "upload" => Upload,
+    "tag" => Tag,
+  }
+  private_constant :TYPE_TO_MODEL_MAP
+
+  def valid_ids(type)
+    valid_ids_lookup[type] ||= Set.new(
+      TYPE_TO_MODEL_MAP[type].where(
+        id: fetch_property_values_of_type(@properties, @object, type),
+      ).pluck(:id),
+    )
   end
 
   def fetch_property_values_of_type(properties, object, type)

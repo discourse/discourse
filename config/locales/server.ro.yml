@@ -55,21 +55,57 @@ ro:
   components:
     enabled_filter: "Activat"
     disabled_filter: "Dezactivat"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "a depășit dimensiunea maximă de %{max_size} octeți."
   themes:
     settings_errors:
       data_type_inclusion: "Setarea tipului `%{name}` nu este acceptată. Tipurile acceptate sunt `integer`, `bool`, `list`, `enum` și `upload`"
+      default_value_missing: "Setarea `%{name}` nu are o valoare implicită."
+      default_value_not_valid: "Setarea valorii implicite `%{name}` nu este validă. %{error_messages}"
+      number_value_not_valid_min_max: "Valoarea trebuie să fie între %{min} și %{max}."
+      number_value_not_valid_min: "Valoarea trebuie să fie mai mare sau egală cu %{min}."
+      number_value_not_valid_max: "Valoarea trebuie să fie mai mică sau egală cu %{max}."
+      string_value_not_valid_min_max: "Valoarea trebuie să aibă o lungime cuprinsă între %{min} și %{max} caractere."
+      string_value_not_valid_min: "Valoarea trebuie să aibă cel puțin %{min} caractere."
+      string_value_not_valid_max: "Valoarea trebuie să aibă cel mult %{max} caractere."
       objects:
+        humanize_required: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie prezentă."
         required: "trebuie să fie prezent"
+        humanize_invalid_type: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie de tip %{type}."
         invalid_type: "%{type} nu este un tip valid"
+        humanize_not_valid_string_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un șir."
         not_valid_string_value: "trebuie să fie un șir"
+        humanize_not_valid_integer_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un întreg."
         not_valid_integer_value: "trebuie sa fie un număr întreg"
+        humanize_not_valid_float_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un număr cu virgulă mobilă."
         not_valid_float_value: "trebuie să fie un număr cu virgulă mobilă"
+        humanize_not_valid_boolean_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie o valoare booleană."
         not_valid_boolean_value: "trebuie să fie un boolean"
+        humanize_not_valid_enum_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie una dintre următoarele %{choices}."
         not_valid_enum_value: "trebuie să fie dintre următoarele: %{choices}"
+        humanize_not_valid_category_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de categorie."
+        not_valid_category_value: "trebuie să fie un ID de categorie valid"
+        humanize_not_valid_topic_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de subiect."
+        not_valid_topic_value: "trebuie să fie un ID valid de subiect"
+        humanize_not_valid_post_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de articol."
+        not_valid_post_value: "trebuie să fie un ID valid de articol"
+        humanize_not_valid_group_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de grup."
+        not_valid_group_value: "trebuie să fie un ID valid de grup"
+        humanize_not_valid_tag_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de etichetă."
+        not_valid_tag_value: "trebuie să fie un ID valid de etichetă"
+        humanize_not_valid_upload_value: "Proprietatea de la JSON Pointer „%{property_json_pointer}” trebuie să fie un ID valid de încărcare."
+        not_valid_upload_value: "trebuie să fie un ID valid de încărcare"
+        humanize_string_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă cel puțin %{min} caractere."
         string_value_not_valid_min: "trebuie să aibă cel puțin %{min} caractere"
+        humanize_string_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă maxim %{max} caractere."
         string_value_not_valid_max: "trebuie să aibă cel mult %{max} caractere"
+        humanize_number_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mare sau egală cu %{min}."
         number_value_not_valid_min: "trebuie să fie mai mare sau egal cu %{min}"
+        humanize_number_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mică sau egală cu %{max}."
         number_value_not_valid_max: "trebuie să fie mai mic sau egal cu %{max}"
+        humanize_string_value_not_valid_url: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un URL valid."
         string_value_not_valid_url: "trebuie să fie un URL valid"
   emails:
     incoming:
@@ -823,6 +859,7 @@ ro:
         user: Utilizatori
         qtt_like: Aprecieri primite
   dashboard:
+    twitter_login_warning: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate asincron de către sidekiq. Asigură-te că măcar un proces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Citește despre Sidekiq aici</a>.'

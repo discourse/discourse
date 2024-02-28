@@ -11,6 +11,7 @@ RSpec.describe Jobs::ProblemCheck do
     before do
       ::ProblemCheck::TestCheck =
         Class.new(::ProblemCheck) do
+          self.perform_every = 30.minutes
           self.max_retries = 0
 
           def call
@@ -39,6 +40,7 @@ RSpec.describe Jobs::ProblemCheck do
     before do
       ::ProblemCheck::TestCheck =
         Class.new(::ProblemCheck) do
+          self.perform_every = 30.minutes
           self.max_retries = 0
 
           def call
@@ -71,12 +73,19 @@ RSpec.describe Jobs::ProblemCheck do
     before do
       ::ProblemCheck::TestCheck =
         Class.new(::ProblemCheck) do
+          self.perform_every = 30.minutes
           self.max_retries = 2
 
           def call
             [::ProblemCheck::Problem.new("Yuge problem")]
           end
         end
+    end
+
+    it "does not yet update the problem check tracker" do
+      expect {
+        described_class.new.execute(check_identifier: :test_check, retry_count: 1)
+      }.not_to change { ProblemCheckTracker.where("blips > ?", 0).count }
     end
 
     it "schedules a retry" do
@@ -94,6 +103,7 @@ RSpec.describe Jobs::ProblemCheck do
     before do
       ::ProblemCheck::TestCheck =
         Class.new(::ProblemCheck) do
+          self.perform_every = 30.minutes
           self.max_retries = 1
 
           def call
@@ -102,9 +112,15 @@ RSpec.describe Jobs::ProblemCheck do
         end
     end
 
+    it "updates the problem check tracker" do
+      expect {
+        described_class.new.execute(check_identifier: :test_check, retry_count: 1)
+      }.to change { ProblemCheckTracker.where("blips > ?", 0).count }.by(1)
+    end
+
     it "does not schedule a retry" do
       expect_not_enqueued_with(job: :problem_check) do
-        described_class.new.execute(check_identifier: :test_identifier, retry_count: 1)
+        described_class.new.execute(check_identifier: :test_check, retry_count: 1)
       end
     end
   end

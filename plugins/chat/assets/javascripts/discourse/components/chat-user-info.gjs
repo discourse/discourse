@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import UserStatusMessage from "discourse/components/user-status-message";
 import { userPath } from "discourse/lib/url";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
@@ -16,6 +17,14 @@ export default class ChatUserInfo extends Component {
     return this.args.interactive ?? false;
   }
 
+  get showStatus() {
+    return this.args.showStatus ?? false;
+  }
+
+  get showStatusDescription() {
+    return this.args.showStatusDescription ?? false;
+  }
+
   <template>
     {{#if @user}}
       <ChatUserAvatar
@@ -30,6 +39,13 @@ export default class ChatUserInfo extends Component {
         </a>
       {{else}}
         <ChatUserDisplayName @user={{@user}} />
+      {{/if}}
+
+      {{#if this.showStatus}}
+        <UserStatusMessage
+          @status={{@user.status}}
+          @showDescription={{this.showStatusDescription}}
+        />
       {{/if}}
     {{/if}}
   </template>

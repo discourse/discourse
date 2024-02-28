@@ -67,6 +67,7 @@ fa_IR:
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
       ssh_key_gone: "شما برای نصب پوسته بیش از حد طولانی صبر کردید و کلید SSH منقضی شده است. لطفا دوباره امتحان کنید."
     settings_errors:
+      number_value_not_valid_min_max: "مقدار باید بین %{min} و %{max} باشد."
       objects:
         required: "باید حاضر باشد"
         not_valid_integer_value: "باید یک عدد صحیح باشد"

@@ -62,6 +62,19 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           expect(page).to have_selector(".c-channel-members__list-item", count: 1, text: "cat")
         end
       end
+
+      context "with user status" do
+        it "renders status next to name" do
+          SiteSetting.enable_user_status = true
+          current_user.set_status!("walking the dog", "dog")
+
+          chat_page.visit_channel_members(channel_1)
+
+          expect(page).to have_selector(
+            ".-member .user-status-message img[alt='#{current_user.user_status.emoji}']",
+          )
+        end
+      end
     end
   end
 

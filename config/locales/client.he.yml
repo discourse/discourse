@@ -256,7 +256,9 @@ he:
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     critical_deprecation:
-      notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>למידע נוסף</a>)."
+      notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse."
+      id: "(מזהה:<em>%{id}</em>)"
+      linked_id: "(מזהה:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "זוהתה ערכת עיצוב: <a target='_blank' href='%{path}'>‚%{name}’</a>."
       plugin_source: "זוהה תוסף: ‚%{name}’"
     s3:
@@ -3018,9 +3020,31 @@ he:
     topic_bulk_actions:
       close_topics:
         name: "סגירת נושאים"
+      archive_topics:
+        name: "ארכוב נושאים"
+      unlist_topics:
+        name: "הסרת נושאים"
+      relist_topics:
+        name: "רשימה מחדש של נושאים"
+      remove_tags:
+        name: "הסרת תגיות"
+      append_tags:
+        name: "הוספת תגיות"
+      replace_tags:
+        name: "החלפת תגיות"
+      delete_topics:
+        name: "מחיקת נושאים"
       update_category:
         name: "עדכון קטגוריה"
         description: "נא לבחור קטגוריה חדשה לנושאים הנבחרים"
+      reset_bump_dates:
+        name: "איפוס תאריכי הקפצה"
+        description: "איפוס תאריכי הקפצת הנושאים לתאריך של הפוסט האחרון שנוצר, מה שמשפיע על הסדר ברשימת הנושאים"
+      defer:
+        name: "דחיית נושאים"
+        description: "סימון נושאים כנקראו"
+      update_notifications:
+        name: "עדכון התראות…"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -3985,6 +4009,7 @@ he:
       custom_placeholder_notify_moderators: "נשמח לשמוע בדיוק מה מטריד אותך ולספק קישורים מתאימים ודוגמאות היכן שניתן."
       notify_moderators_textarea_label: "הודעה למפקחים"
       custom_placeholder_illegal: "נשמח לשמוע בדיוק למה לדעתך התוכן הזה לא חוקי ולספק קישורים מתאימים ודוגמאות היכן שניתן."
+      confirmation_illegal: "מה שכתבתי למעלה הוא מדויק ומלא."
       custom_message:
         at_least:
           one: "הכניסו לפחות תו אחד"

@@ -1173,6 +1173,12 @@ sq:
     topic_bulk_actions:
       close_topics:
         name: "Mbyll temat"
+      archive_topics:
+        name: "Arkivo temat"
+      unlist_topics:
+        name: "Hiq temat nga lista"
+      delete_topics:
+        name: "Fshi temat"
     topic:
       filter_to:
         one: "%{count} postim në temë"
