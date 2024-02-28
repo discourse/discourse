@@ -249,7 +249,7 @@ export default class NavItem extends EmberObject {
     let count = this.count || 0;
 
     if (
-      name === "latest" &&
+      this.name === "latest" &&
       (!Site.currentProp("mobileView") || this.tagId !== undefined)
     ) {
       count = 0;
@@ -325,9 +325,9 @@ export default class NavItem extends EmberObject {
   }
 }
 
-class ExtraNavItem extends NavItem {
+export class ExtraNavItem extends NavItem {
   @tracked href;
-  count = 0;
+  @tracked count = 0;
   customFilter = null;
 }
 

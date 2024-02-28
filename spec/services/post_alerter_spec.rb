@@ -1386,6 +1386,59 @@ RSpec.describe PostAlerter do
   end
 
   describe ".create_notification_alert" do
+    before { evil_trout.update_columns(last_seen_at: 10.minutes.ago) }
+
+    it "publishes notification to notification-alert MessageBus channel" do
+      messages =
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            excerpt: "excerpt",
+            username: "username",
+          )
+        end
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:username]).to eq("username")
+      expect(messages.first.data[:post_url]).to eq(post.url)
+    end
+
+    let(:modifier_block) do
+      Proc.new do |payload|
+        payload[:username] = "gotcha"
+        payload[:post_url] = "stolen_url"
+        payload
+      end
+    end
+
+    it "applies the post_alerter_live_notification_payload modifier" do
+      plugin_instance = Plugin::Instance.new
+      plugin_instance.register_modifier(:post_alerter_live_notification_payload, &modifier_block)
+
+      messages =
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            excerpt: "excerpt",
+            username: "username",
+          )
+        end
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:username]).to eq("gotcha")
+      expect(messages.first.data[:post_url]).to eq("stolen_url")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :post_alerter_live_notification_payload,
+        &modifier_block
+      )
+    end
+
     it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
 

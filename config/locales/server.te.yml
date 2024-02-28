@@ -20,6 +20,11 @@ te:
   anonymous: "అనామక"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
+  themes:
+    settings_errors:
+      objects:
+        required: "తప్పనిసరిగా ఉండాలి"
+        not_valid_integer_value: "తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
@@ -278,6 +283,8 @@ te:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "అసమంజసమైనది"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: '"%{title}" లో మీ టపా'
       email_body: "%{link}\n\n%{message}"
@@ -304,6 +311,8 @@ te:
       title: "వేరే ఏదో"
       long_form: "దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
       email_title: '"%{title}" విషయం నిర్వాహకుల దృష్టిలో ఉంది.'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>ఈ టపా కమ్యునిటీ కేతనించింది. తాత్కాలికంగా దాచబడింది</p>"

@@ -66,17 +66,13 @@ nb_NO:
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
       name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
-      default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
+      default_value_missing: "Innstilling `%{name}` har ingen standardverdi."
       default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
-      default_out_range: "Innstilling `%{name}` sin standardverdi er utenfor de tillatte grenseverdiene."
       enum_value_not_valid: "Den valgte verdien er ikke en av de oppførte valgmulighetene."
-      number_value_not_valid: "Ny verdi er utenfor de tillatte grenseverdiene."
-      number_value_not_valid_min_max: "Den må være mellom %{min} og %{max}."
-      number_value_not_valid_min: "Den må være større enn eller lik %{min}."
-      number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
-      string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
-      string_value_not_valid_min: "Den må være minst %{min} tegn lang."
-      string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
+      number_value_not_valid_min_max: "Verdien må være mellom %{min} og %{max}."
+      objects:
+        required: "Må være til stede"
+        not_valid_integer_value: "må være ett heltall"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -547,6 +543,9 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
@@ -581,6 +580,9 @@ nb_NO:
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
       email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'

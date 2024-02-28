@@ -112,18 +112,13 @@ fr:
       invalid_yaml: "Le YAML est invalide"
       data_type_inclusion: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
-      default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut"
+      default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut."
       default_not_match_type: "Le type de la valeur par défaut du paramètre « %{name} » ne correspond pas au type du paramètre."
-      default_out_range: "La valeur par défaut de paramètre « %{name} » n'est pas dans la plage spécifiée."
       enum_value_not_valid: "La valeur sélectionnée ne fait pas partie de la liste des choix possibles."
-      number_value_not_valid: "La nouvelle valeur n'est comprise pas dans la plage autorisée."
       number_value_not_valid_min_max: "La valeur doit être comprise entre %{min} et %{max}."
-      number_value_not_valid_min: "La valeur doit être supérieure ou égale à %{min}."
-      number_value_not_valid_max: "La valeur doit être inférieure ou égale à %{max}."
-      string_value_not_valid: "La longueur de la nouvelle valeur n'est pas comprise dans la plage autorisée."
-      string_value_not_valid_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
-      string_value_not_valid_min: "La chaîne de caractères doit contenir au moins %{min} caractères."
-      string_value_not_valid_max: "La chaîne de caractères doit contenir au plus %{max} caractères."
+      objects:
+        required: "doit être présent"
+        not_valid_integer_value: "doit être un entier"
     locale_errors:
       top_level_locale: "La clé de premier niveau dans un fichier de localisation doit correspondre au nom de locale"
       invalid_yaml: "Traduction YAML non valide"
@@ -893,6 +888,9 @@ fr:
       title: "Répréhensible"
       description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envoyer un message à @%{username}"
       description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
@@ -971,6 +969,9 @@ fr:
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
@@ -3882,7 +3883,6 @@ fr:
     images:
       too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
       too_large_humanized: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size}). Veuillez la redimensionner, puis réessayez."
-      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner puis réessayez."
       size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
       too_large: "(image plus grande que %{max_size_kb} Ko)"

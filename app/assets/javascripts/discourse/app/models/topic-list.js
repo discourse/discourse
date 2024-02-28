@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
@@ -121,6 +122,7 @@ export default class TopicList extends RestModel {
 
   @service session;
 
+  @tracked loadingBefore = false;
   @notEmpty("more_topics_url") canLoadMore;
 
   forEachNew(topics, callback) {
@@ -210,15 +212,19 @@ export default class TopicList extends RestModel {
   }
 
   // loads topics with these ids "before" the current topics
-  loadBefore(topic_ids, storeInSession) {
-    // refresh dupes
-    this.topics.removeObjects(
-      this.topics.filter((topic) => topic_ids.includes(topic.id))
-    );
+  async loadBefore(topic_ids, storeInSession) {
+    this.loadingBefore = topic_ids.length;
 
-    const url = `/${this.filter}.json?topic_ids=${topic_ids.join(",")}`;
+    try {
+      const url = `/${this.filter}.json?topic_ids=${topic_ids.join(",")}`;
 
-    return ajax({ url, data: this.params }).then((result) => {
+      const result = await ajax({ url, data: this.params });
+
+      // refresh dupes
+      this.topics.removeObjects(
+        this.topics.filter((topic) => topic_ids.includes(topic.id))
+      );
+
       let i = 0;
       this.forEachNew(TopicList.topicsFrom(this.store, result), (t) => {
         // highlight the first of the new topics so we can get a visual feedback
@@ -230,6 +236,8 @@ export default class TopicList extends RestModel {
       if (storeInSession) {
         this.session.set("topicList", this);
       }
-    });
+    } finally {
+      this.loadingBefore = false;
+    }
   }
 }

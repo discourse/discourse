@@ -24,6 +24,7 @@ register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
+register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
@@ -140,6 +141,15 @@ after_initialize do
     include_condition: -> do
       return @can_chat if defined?(@can_chat)
       @can_chat = SiteSetting.chat_enabled && scope.can_chat?
+    end,
+  ) { true }
+
+  add_to_serializer(
+    :current_user,
+    :can_direct_message,
+    include_condition: -> do
+      return @can_direct_message if defined?(@can_direct_message)
+      @can_direct_message = SiteSetting.chat_enabled && scope.can_direct_message?
     end,
   ) { true }
 

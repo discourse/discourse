@@ -12,10 +12,13 @@
   {{on "dragend" this.dragEnd}}
   {{on "drop" this.dropItem}}
   role="row"
+  data-row-id={{@link.objectId}}
 >
-  <div class="draggable" data-link-name={{@link.name}}>
-    {{d-icon "grip-lines"}}
-  </div>
+  {{#unless this.site.mobileView}}
+    <div class="draggable" data-link-name={{@link.name}}>
+      {{d-icon "grip-lines"}}
+    </div>
+  {{/unless}}
   <div class="input-group" role="cell">
     <IconPicker
       @name="icon"
@@ -44,7 +47,7 @@
       @value={{@link.name}}
       class={{@link.nameCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.name.label"}}
-      {{on "input" (action (mut @link.name) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
       <div class="name warning">
@@ -59,7 +62,7 @@
       @value={{@link.value}}
       class={{@link.valueCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.value.label"}}
-      {{on "input" (action (mut @link.value) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
       <div class="value warning">

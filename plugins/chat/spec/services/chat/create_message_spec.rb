@@ -31,8 +31,18 @@ RSpec.describe Chat::CreateMessage do
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
+    let(:context_topic_id) { nil }
+    let(:context_post_ids) { nil }
     let(:params) do
-      { guardian: guardian, chat_channel_id: channel.id, message: content, upload_ids: [upload.id] }
+      {
+        enforce_membership: false,
+        guardian: guardian,
+        chat_channel_id: channel.id,
+        message: content,
+        upload_ids: [upload.id],
+        context_topic_id: context_topic_id,
+        context_post_ids: context_post_ids,
+      }
     end
     let(:message) { result[:message_instance].reload }
 
@@ -91,8 +101,27 @@ RSpec.describe Chat::CreateMessage do
           instance_of(Chat::Message),
           channel,
           user,
+          anything,
         )
+
         result
+      end
+
+      context "when context given" do
+        let(:context_post_ids) { [1, 2] }
+        let(:context_topic_id) { 3 }
+
+        it "triggers a Discourse event with context if given" do
+          DiscourseEvent.expects(:trigger).with(
+            :chat_message_created,
+            instance_of(Chat::Message),
+            channel,
+            user,
+            { context: { post_ids: context_post_ids, topic_id: context_topic_id } },
+          )
+
+          result
+        end
       end
 
       it "processes the direct message channel" do
@@ -180,6 +209,17 @@ RSpec.describe Chat::CreateMessage do
 
           context "when user is system" do
             fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
+          end
+
+          context "when membership is enforced" do
+            fab!(:user) { Fabricate(:user) }
+
+            before do
+              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+              params[:enforce_membership] = true
+            end
 
             it { is_expected.to be_a_success }
           end

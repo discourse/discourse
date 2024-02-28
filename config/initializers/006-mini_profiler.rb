@@ -88,6 +88,13 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
 
   Rack::MiniProfiler.config.max_traces_to_show = 100 if Rails.env.development?
 
+  Rack::MiniProfiler.config.content_security_policy_nonce =
+    Proc.new do |env, headers|
+      if csp = headers["Content-Security-Policy"]
+        csp[/script-src[^;]+'nonce-([^']+)'/, 1]
+      end
+    end
+
   Rack::MiniProfiler.counter_method(Redis::Client, :call) { "redis" }
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
   # Rack::MiniProfiler.counter_method(Array, 'uniq')

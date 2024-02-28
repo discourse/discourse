@@ -759,6 +759,18 @@ aside.quote {
     }
   }
 
+  .link-summary .btn {
+    width: 100%;
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+      }
+    }
+  }
+
   .controls {
     display: flex;
     align-items: center;

@@ -7,7 +7,7 @@ module Chat
   # Only the thread title can be updated.
   #
   # @example
-  #  Chat::UpdateThread.call(thread_id: 88, channel_id: 2, guardian: guardian, title: "Restaurant for Saturday")
+  #  Chat::UpdateThread.call(thread_id: 88, guardian: guardian, title: "Restaurant for Saturday")
   #
   class UpdateThread
     include Service::Base
@@ -30,17 +30,16 @@ module Chat
     # @!visibility private
     class Contract
       attribute :thread_id, :integer
-      attribute :channel_id, :integer
       attribute :title, :string
 
-      validates :thread_id, :channel_id, presence: true
+      validates :thread_id, presence: true
       validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
 
     private
 
     def fetch_thread(contract:, **)
-      Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
+      Chat::Thread.find_by(id: contract.thread_id)
     end
 
     def can_view_channel(guardian:, thread:, **)

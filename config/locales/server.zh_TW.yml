@@ -78,18 +78,12 @@ zh_TW:
     settings_errors:
       invalid_yaml: "提供的 YAML 無效"
       name_too_long: "此設定名稱過長，長度上限為 255"
-      default_value_missing: "`%{name}` 設定沒有預設數值"
       default_not_match_type: "`%{name}` 設定的預設值類型與此設定類型不相符。"
-      default_out_range: "`%{name}` 設定的預設值超出指定範圍。"
       enum_value_not_valid: "已選擇的值不是 enum 中的選擇。"
-      number_value_not_valid: "新數值超出核可範圍。"
-      number_value_not_valid_min_max: "它必須介於%{min}與%{max}之間。"
-      number_value_not_valid_min: "它必須大於或等於%{min}。"
-      number_value_not_valid_max: "它必須小於或等於%{max}。"
-      string_value_not_valid: "新值的長度超出核可範圍。"
-      string_value_not_valid_min_max: "它必須介於%{min}與%{max}個字元。"
-      string_value_not_valid_min: "它最少必須比%{min}個字元長。"
-      string_value_not_valid_max: "它最多必須比%{max}個字元短。"
+      number_value_not_valid_min_max: "數值必須介於 %{min} 與 %{max} 之間"
+      objects:
+        required: "必須存在"
+        not_valid_integer_value: "必須是整數"
     locale_errors:
       top_level_locale: "本地檔案的最高階金鑰必須與本地名稱相符"
       invalid_yaml: "YAML 翻譯無效"
@@ -618,6 +612,9 @@ zh_TW:
     inappropriate:
       title: "不當內容"
       short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
+    illegal:
+      email_title: '"%{title}" 主題需要版主的注意'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "給 @%{username} 送出一則訊息"
       description: "我想要針對這位使用者的貼文直接和他們溝通。"
@@ -654,6 +651,9 @@ zh_TW:
       long_form: "標記為需版主注意"
       short_description: "需要管理員注意其他原因"
       email_title: '此討論話題 "%{title}" 需要板主注意'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}" 主題需要版主的注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的貼文被社群標記了。請<a href="%{path}">查看你的消息</a>。</p>'
@@ -2568,7 +2568,6 @@ zh_TW:
       too_large: "抱歉，你試圖上傳的檔案太大了（最大限製為%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你試圖上傳的圖片太大了（最大限製為%{max_size_kb}%KB），請裁剪它並重試。"
-      larger_than_x_megapixels: "對不起，您試圖上傳的影像太大了（最大限制是%{max_image_megapixels} 百萬畫素），請調整大小後重試。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
     placeholders:
       too_large: "（圖片大於 %{max_size_kb}KB）"

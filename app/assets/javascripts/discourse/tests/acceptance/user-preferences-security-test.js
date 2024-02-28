@@ -21,6 +21,10 @@ acceptance("User Preferences - Security", function (needs) {
     server.get("/u/trusted-session.json", () => {
       return helper.response({ failed: "FAILED" });
     });
+
+    server.post("/session/forgot_password.json", () => {
+      return helper.response({ success: "Ok" });
+    });
   });
 
   test("recently connected devices", async function (assert) {
@@ -143,6 +147,16 @@ acceptance("User Preferences - Security", function (needs) {
     assert
       .dom(".dialog-body .confirm-session__passkey")
       .exists("dialog includes a passkey button");
+
+    assert
+      .dom(".dialog-body .confirm-session__reset")
+      .exists("dialog includes a link to reset the password");
+
+    await click(".dialog-body .confirm-session__reset-btn");
+
+    assert
+      .dom(".confirm-session__reset-email-sent")
+      .exists("shows reset email confirmation message");
 
     await click(".dialog-close");
 

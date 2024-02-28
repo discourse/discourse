@@ -39,11 +39,9 @@ ar:
       long_with_year: "D ‏MMMM ‏YYYY، ‏h:mm ‏a"
       long_with_year_no_time: "D ‏MMMM ‏YYYY"
       full_with_year_no_time: "D ‏MMMM ‏YYYY"
-      long_date_with_year: "D ‏MMMM ‏YYYY، ‏LT"
       long_date_without_year: "D ‏MMMM، LT"
       long_date_with_year_without_time: "D ‏MMMM ‏YYYY"
       long_date_without_year_with_linebreak: "D MMMM <br/>LT"
-      long_date_with_year_with_linebreak: "D ‏MMMM ‏YYYY <br/>LT"
       wrap_ago: "منذ %{date}"
       wrap_on: "في %{date}"
       tiny:
@@ -300,7 +298,6 @@ ar:
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
     software_update_prompt:
-      message: "لقد حدَّثنا هذا الموقع، <span>يُرجى التحديث </span>، أو قد تواجه سلوكًا غير متوقَّع."
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
     themes:
@@ -312,7 +309,6 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     critical_deprecation:
-      notice: "<b>[إشعار المسؤول]</b> تحتاج إحدى سماتك أو مكوِّناتك الإضافية إلى التحديث للتوافق مع التغييرات الجوهرية في Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>المزيد من المعلومات</a>)."
       theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
@@ -3265,6 +3261,18 @@ ar:
     topic_bulk_actions:
       close_topics:
         name: "إغلاق الموضوعات"
+      archive_topics:
+        name: "أرشفة الموضوعات"
+      unlist_topics:
+        name: "إلغاء إدراج الموضوعات"
+      relist_topics:
+        name: "إعادة إدراج الموضوعات"
+      append_tags:
+        name: "إضافة الوسوم"
+      replace_tags:
+        name: "استبدال الوسوم"
+      delete_topics:
+        name: "حذف الموضوعات"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"

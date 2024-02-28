@@ -22,8 +22,8 @@
 
     {{#if this.composer.model.viewOpenOrFullscreen}}
       <div
-        role="form"
-        aria-label={{i18n this.composer.saveLabel}}
+        role="dialog"
+        aria-label={{this.composer.ariaLabel}}
         class="reply-area
           {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
           {{if

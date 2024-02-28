@@ -11,6 +11,10 @@
     }
   }
 
+  .autocomplete {
+    max-width: 600px;
+  }
+
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
   }

@@ -112,18 +112,12 @@ nl:
       invalid_yaml: "Opgegeven YAML is ongeldig."
       data_type_inclusion: "Type van instelling `%{name}` wordt niet ondersteund. Ondersteunde typen zijn `integer`, `bool`, `list`, `enum` en `upload`."
       name_too_long: "Er is een instelling met een te lange naam. Maximale lengte is 255."
-      default_value_missing: "Instelling `%{name}` heeft geen standaardwaarde."
       default_not_match_type: "Type van standaardwaarde van instelling `%{name}` komt niet overeen met het type van de instelling."
-      default_out_range: "Standaardwaarde van instelling `%{name}` ligt niet binnen het opgegeven bereik."
       enum_value_not_valid: "Geselecteerde waarde is niet een van de enum-keuzes."
-      number_value_not_valid: "Nieuwe waarde ligt niet binnen het toegestane bereik."
-      number_value_not_valid_min_max: "Deze moet tussen %{min} en %{max} liggen."
-      number_value_not_valid_min: "Deze moet groter dan of gelijk zijn aan %{min}."
-      number_value_not_valid_max: "Deze moet kleiner dan of gelijk zijn %{max}."
-      string_value_not_valid: "Lengte van nieuwe waarde ligt niet binnen het toegestane bereik."
-      string_value_not_valid_min_max: "Deze moet tussen %{min} en %{max} tekens lang zijn."
-      string_value_not_valid_min: "Deze moet minstens %{min} tekens lang zijn."
-      string_value_not_valid_max: "Deze moet ten hoogste %{max} tekens lang zijn."
+      number_value_not_valid_min_max: "Waarde moet tussen %{min} en %{max} zijn."
+      objects:
+        required: "mag niet leeg zijn"
+        not_valid_integer_value: "moet een integer zijn"
     locale_errors:
       top_level_locale: "De sleutel op het hoogste niveau in een taalbestand moet overeenkomen met de naam van de locale"
       invalid_yaml: "YAML van vertaling ongeldig"
@@ -893,6 +887,9 @@ nl:
       title: "Ongepast"
       description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend, hatelijk gedrag of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} een bericht sturen"
       description: "I wil rechtstreeks en persoonlijk met deze persoon over diens bericht praten."
@@ -971,6 +968,9 @@ nl:
       long_form: "heeft dit gemarkeerd voor aandacht van een moderator"
       short_description: "Dit bericht vereist aandacht van een medewerker om een andere reden"
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Een bericht in ''%{title}'' vereist aandacht van een medewerker'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Je bericht is gemarkeerd door de community. <a href="%{path}">Bekijk je berichten</a>.</p>'
@@ -1824,7 +1824,6 @@ nl:
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     flag_post_allowed_groups: "Groepen die topics mogen markeren."
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
-    post_links_allowed_groups: "Groepen die links in berichten mogen opnemen."
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
     embedded_media_post_allowed_groups: "De gebruikers in deze groepen mogen media-items opnemen in een bericht"
     min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
@@ -3888,7 +3887,6 @@ nl:
     images:
       too_large: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size_kb} KB). Verklein de afbeelding en probeer het opnieuw."
       too_large_humanized: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size}). Verklein de afbeelding en probeer het opnieuw."
-      larger_than_x_megapixels: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale afmeting is %{max_image_megapixels} megapixels). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
     placeholders:
       too_large: "(afbeelding groter dan %{max_size_kb} KB)"

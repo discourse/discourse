@@ -112,18 +112,13 @@ fi:
       invalid_yaml: "Annettu YAML ei kelpaa"
       data_type_inclusion: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
-      default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
+      default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa."
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
-      default_out_range: "Asetuksen \"%{name}\" oletusarvo ei ole sallituissa rajoissa."
       enum_value_not_valid: "Valittu arvo ei ole enum-arvojen listalla."
-      number_value_not_valid: "Uusi arvo ei ole sallituissa rajoissa."
-      number_value_not_valid_min_max: "Sen täytyy olla vähintään %{min} ja enintään %{max}."
-      number_value_not_valid_min: "Sen täytyy olla suurempi tai yhtä suuri kuin %{min}."
-      number_value_not_valid_max: "Sen täytyy olla pienempi tai yhtä suuri kuin %{max}."
-      string_value_not_valid: "Uuden arvon pituus ei ole sallituissa rajoissa."
-      string_value_not_valid_min_max: "Sen täytyy olla %{min}–%{max} merkin pituinen."
-      string_value_not_valid_min: "Sen täytyy olla vähintään %{min} merkkiä pitkä."
-      string_value_not_valid_max: "Sen täytyy olla enintään %{max} merkkiä pitkä"
+      number_value_not_valid_min_max: "Arvon pitää olla välillä %{min}–%{max}."
+      objects:
+        required: "pakollinen kenttä"
+        not_valid_integer_value: "täytyy olla kokonaisluku"
     locale_errors:
       top_level_locale: "Lokalisaatiotiedoston ylimmän tason avaimen täytyy olla sama kuin lokalisaation nimi"
       invalid_yaml: "Käännös-YAML ei kelpaa"
@@ -893,6 +888,9 @@ fi:
       title: "Sopimaton"
       description: 'Tässä viestissä on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana, vihamielisenä toimintana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
       short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
+    illegal:
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}"'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
@@ -971,6 +969,9 @@ fi:
       long_form: "liputit tämän valvojille tiedoksi"
       short_description: "Henkilökunnan tulisi huomioida muusta syystä"
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="%{path}">saapuneet viestisi</a>.</p>'
@@ -3868,7 +3869,6 @@ fi:
     images:
       too_large: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size_kb} kt), pienennä kuvaa ja yritä uudestaan."
       too_large_humanized: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size}), pienennä kuvaa ja yritä uudestaan."
-      larger_than_x_megapixels: "Kuva, jonka yritit ladata, on liian suuri (maksimikoko on %{max_image_megapixels} megapikseliä). Muuta kuvan kokoa ja yritä uudelleen."
       size_not_found: "Emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
     placeholders:
       too_large: "(kuva on suurempi kuin %{max_size_kb} kt)"

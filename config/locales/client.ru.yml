@@ -37,11 +37,9 @@ ru:
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YYYY, LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} назад"
       wrap_on: "%{date}"
       tiny:
@@ -244,7 +242,6 @@ ru:
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
-      message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
       dismiss: "Закрыть"
     bootstrap_mode: "Начало работы"
     themes:
@@ -256,7 +253,6 @@ ru:
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>подробнее</a>)."
       theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Выявленный плагин: '%{name}'"
     s3:
@@ -3006,6 +3002,20 @@ ru:
     topic_bulk_actions:
       close_topics:
         name: "Закрыть темы"
+      archive_topics:
+        name: "Архивировать темы"
+      unlist_topics:
+        name: "Скрыть темы"
+      relist_topics:
+        name: "Показать темы"
+      remove_tags:
+        name: "Удалить теги"
+      append_tags:
+        name: "Добавить теги"
+      replace_tags:
+        name: "Заменить теги"
+      delete_topics:
+        name: "Удалить темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"

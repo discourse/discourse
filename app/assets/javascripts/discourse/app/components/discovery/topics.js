@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DismissNew from "discourse/components/modal/dismiss-new";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
@@ -14,6 +16,8 @@ export default class DiscoveryTopics extends Component {
   @service currentUser;
   @service topicTrackingState;
   @service site;
+
+  @tracked loadingNew;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
@@ -56,7 +60,7 @@ export default class DiscoveryTopics extends Component {
     dismissTopics = false,
     untrack = false
   ) {
-    const tracked =
+    const isTracked =
       (this.router.currentRoute.queryParams["f"] ||
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
@@ -65,7 +69,7 @@ export default class DiscoveryTopics extends Component {
       this.args.category,
       !this.args.noSubcategories,
       {
-        tracked,
+        tracked: isTracked,
         tag: this.args.tag,
         topicIds,
         dismissPosts,
@@ -99,13 +103,22 @@ export default class DiscoveryTopics extends Component {
 
   // Show newly inserted topics
   @action
-  showInserted(event) {
+  async showInserted(event) {
     event?.preventDefault();
-    const tracker = this.topicTrackingState;
 
-    // Move inserted into topics
-    this.args.model.loadBefore(tracker.get("newIncoming"), true);
-    tracker.resetTracking();
+    if (this.args.model.loadingBefore) {
+      return; // Already loading
+    }
+
+    const { topicTrackingState } = this;
+
+    try {
+      const topicIds = [...topicTrackingState.newIncoming];
+      await this.args.model.loadBefore(topicIds, true);
+      topicTrackingState.clearIncoming(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   get showTopicsAndRepliesToggle() {

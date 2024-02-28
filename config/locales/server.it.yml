@@ -112,18 +112,13 @@ it:
       invalid_yaml: "Il codice YAML fornito non è valido."
       data_type_inclusion: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`,` bool`, `list`,` enum` e `upload`"
       name_too_long: "Una delle impostazioni ha un nome troppo lungo. La lunghezza massima è 255 caratteri"
-      default_value_missing: "L'impostazione `%{name}` non ha alcun valore predefinito"
+      default_value_missing: "L'impostazione `%{name}` non ha alcun valore predefinito."
       default_not_match_type: "L'impostazione del valore predefinito `%{name}` non corrisponde al tipo di impostazione."
-      default_out_range: "L'impostazione del valore predefinito `%{name}` non è nell'intervallo specificato."
       enum_value_not_valid: "Il valore selezionato non è una delle opzioni enum."
-      number_value_not_valid: "Il nuovo valore non è compreso nell'intervallo consentito."
-      number_value_not_valid_min_max: "Deve essere compreso tra %{min} e %{max}."
-      number_value_not_valid_min: "Deve essere maggiore o uguale a %{min}."
-      number_value_not_valid_max: "Deve essere minore o uguale a %{max}."
-      string_value_not_valid: "La nuova lunghezza del valore non rientra nell'intervallo consentito."
-      string_value_not_valid_min_max: "Deve essere lungo da %{min} a %{max} caratteri."
-      string_value_not_valid_min: "Deve contenere almeno %{min} caratteri."
-      string_value_not_valid_max: "Deve contenere al massimo %{max} caratteri."
+      number_value_not_valid_min_max: "Il valore deve essere tra %{min} e %{max}."
+      objects:
+        required: "deve essere presente"
+        not_valid_integer_value: "deve essere un intero"
     locale_errors:
       top_level_locale: "La chiave di primo livello in un file di localizzazione deve corrispondere al nome della localizzazione"
       invalid_yaml: "Traduzione YAML non valida"
@@ -893,6 +888,9 @@ it:
       title: "Inappropriato"
       description: 'Questo messaggio presenta contenuti che una persona ragionevole potrebbe ritenere offensivi, aggressivi, oppure di incitamento all''odio o in violazione delle nostre <a href="%{base_path}/guidelines">linee guida della community</a>.'
       short_description: 'Una violazione delle <a href="%{base_path}/guidelines">linee guida della nostra comunità</a>'
+    illegal:
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Invia un messaggio a @%{username}"
       description: "Voglio parlare direttamente con questa persona a proposito del suo messaggio."
@@ -971,6 +969,9 @@ it:
       long_form: "segnalato all'attenzione dei moderatori"
       short_description: "Richiede l'attenzione dello staff per un altro motivo"
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Un messaggio in "%{title}" richiede l''attenzione dello staff'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. Per favore <a href="%{path}">controlla i tuoi messaggi</a>.</p>'
@@ -3726,7 +3727,6 @@ it:
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
       too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
-      larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"

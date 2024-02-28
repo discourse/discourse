@@ -112,18 +112,23 @@ sv:
       invalid_yaml: "Angivet YAML är ogiltigt."
       data_type_inclusion: "Det går inte att ställa in typen `%{name}`. Typer som stöds är `integer`, `bool`, `list` , `enum` och `upload`"
       name_too_long: "En inställning har ett namn som är för långt. Maximal längd är 255"
-      default_value_missing: "Inställningen `%{name}` har inget standardvärde"
+      default_value_missing: "Inställningen `%{name}` har inget standardvärde."
       default_not_match_type: "Standardvärdestypen i inställningen `%{name}` överensstämmer inte med inställningstypen."
-      default_out_range: "Standardvärdet för inställningen `%{name}` ligger inte inom angivet intervall."
       enum_value_not_valid: "Valt värde är inte ett av enum-valen."
-      number_value_not_valid: "Nytt värde ligger inte inom tillåtet intervall."
-      number_value_not_valid_min_max: "Det måste vara mellan %{min} och %{max}."
-      number_value_not_valid_min: "Det måste vara större än eller lika med %{min}."
-      number_value_not_valid_max: "Det måste vara mindre än eller lika med %{max}."
-      string_value_not_valid: "Den nya värdelängden ligger inte inom tillåtet intervall."
-      string_value_not_valid_min_max: "Den måste vara mellan %{min} och %{max} tecken lång."
-      string_value_not_valid_min: "Den måste vara minst %{min} tecken lång."
-      string_value_not_valid_max: "Den måste vara högst %{max} tecken lång."
+      number_value_not_valid_min_max: "Värdet måste vara mellan %{min} och %{max}."
+      objects:
+        required: "måste finnas"
+        invalid_type: "%{type} är inte en giltig typ"
+        not_valid_string_value: "måste vara en sträng"
+        not_valid_integer_value: "måste vara ett tal"
+        not_valid_float_value: "måste vara ett flyttal"
+        not_valid_boolean_value: "måste vara booleskt"
+        not_valid_enum_value: "måste vara något av följande: %{choices}"
+        string_value_not_valid_min: "måste vara minst %{min} tecken långt"
+        string_value_not_valid_max: "måste vara högst %{max} tecken långt"
+        number_value_not_valid_min: "måste vara större än eller lika med %{min}"
+        number_value_not_valid_max: "måste vara mindre än eller lika med %{max}"
+        string_value_not_valid_url: "måste vara en giltig URL"
     locale_errors:
       top_level_locale: "Den övre nivån i en språkfil måste matcha språkets namn"
       invalid_yaml: "Översättning av YAML är ogiltig"
@@ -893,6 +898,12 @@ sv:
       title: "Olämpligt"
       description: 'Detta inlägg innehåller saker som en förnuftig person skulle anse vara stötande, kränkande, hatiskt uppförande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
+    illegal:
+      title: "Olagligt"
+      description: "Det här inlägget kräver personalens uppmärksamhet eftersom jag tror att det innehåller innehåll som är olagligt."
+      short_description: "Detta är olagligt"
+      email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Skicka ett meddelande till @%{username}"
       description: "Jag vill prata med den här personen direkt och privat om inlägget."
@@ -971,6 +982,12 @@ sv:
       long_form: "flaggade det här för granskning av moderator"
       short_description: "Kräver personals uppmärksamhet av annan orsak"
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Olagligt"
+      description: "Det här ämnet kräver personalens uppmärksamhet eftersom jag tror att det innehåller innehåll som är olagligt."
+      short_description: "Detta är olagligt"
+      email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Ditt inlägg blev flaggat av andra medlemmar i forumet. <a href="%{path}">Se över dina meddelanden</a>.</p>'
@@ -1425,7 +1442,7 @@ sv:
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
     v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
     category_style_deprecated: "Din Discourse använder för närvarande en utfasad kategoristil som tas bort innan den sista betaversionen av Discourse 3.2 kommer ut. Se <a href='https://meta.discourse.org/t/282441'>Flytta till en enskild webbplatsinställning för kategoristil</a> för instruktioner om hur du behåller din valda kategoristil."
-    ember_version_warning: "Din webbplats körs med EMBER_VERSION=3-konfigurationen som inte stöds. Detta kan leda till oväntade problem med teman/tillägg. Ta bort EMBER_VERSION-konfigurationen från din app.yml-fil och bygg om. Se mer information i <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a>."
+    back_from_logster_text: "Tillbaka till webbplatsen"
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
@@ -1600,6 +1617,7 @@ sv:
     content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
     content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
     content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a> (CSP)"
+    content_security_policy_strict_dynamic: "EXPERIMENTELLT: Använd en strikt dynamisk säkerhetspolicy för innehåll. Detta är modernare och mer flexibelt än vår standard-CSP-konfiguration. Detta är fullt fungerande, men har ännu inte testats med alla teman och tillägg."
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
@@ -1826,10 +1844,11 @@ sv:
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     flag_post_allowed_groups: "Grupper som får flagga inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
-    post_links_allowed_groups: "Grupper som får inkludera länkar i inlägg."
+    post_links_allowed_groups: "Grupper som får inkludera länkar i inlägg. Administratörer och moderatorer får alltid lägga upp länkar."
     min_trust_to_post_embedded_media: "Lägsta förtroendenivå som krävs för att bädda in medieobjekt i ett inlägg"
     embedded_media_post_allowed_groups: "Användarna i dessa grupper får bädda in mediaobjekt i ett inlägg"
     min_trust_level_to_allow_profile_background: "Lägsta förtroendenivå som krävs för att ladda upp en profilbakgrund"
+    profile_background_allowed_groups: "Grupper som får ladda upp en profilbakgrund."
     min_trust_level_to_allow_user_card_background: "Lägsta förtroendenivå som krävs för att ladda upp en bakgrund på användarkort"
     user_card_background_allowed_groups: "Grupper som får ladda upp en bakgrund med användarkort."
     min_trust_level_to_allow_invite: "Lägsta förtroendenivå som krävs för att bjuda in användare"
@@ -2024,6 +2043,7 @@ sv:
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N:e minut för varje användare för att skydda anonymiteten. Exempel: om detta ställs in till 600, så skapas ett nytt anonymt konto så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon."
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarkataloger för anonyma användare."
     allow_users_to_hide_profile: "Tillåt att användare döljer sin profil och närvaro"
+    hide_user_activity_tab: "Dölj aktivitetsfliken på användarprofiler utom för administratörer och användaren själv."
     allow_featured_topic_on_user_profiles: "Tillåt att användarna visar en länk till ett ämne från sitt användarkort och profil."
     show_inactive_accounts: "Tillåt att inloggade användare bläddrar bland profiler av inaktiva konton."
     hide_suspension_reasons: "Visa inte avstängningsskäl offentligt i användarprofiler."
@@ -2323,6 +2343,7 @@ sv:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2691,6 +2712,7 @@ sv:
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **irrelevant**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av rubriken och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande, hatiskt uppförande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
+    illegal: "Ditt inlägg flaggades som **olagligt**: forumet tror att det kan bryta mot lagen."
     spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
     notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
     responder:

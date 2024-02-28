@@ -23,19 +23,19 @@ class Stylesheet::Manager
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/theme/)
   end
 
   def self.clear_color_scheme_cache!
-    cache.hash.keys.select { |k| k =~ /color_definitions/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/color_definitions/)
   end
 
   def self.clear_core_cache!(targets)
-    cache.hash.keys.select { |k| k =~ /#{targets.join("|")}/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/#{targets.join("|")}/)
   end
 
   def self.clear_plugin_cache!(plugin)
-    cache.hash.keys.select { |k| k =~ /#{plugin}/ }.each { |k| cache.delete(k) }
+    cache.clear_regex(/#{plugin}/)
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)
@@ -352,27 +352,26 @@ class Stylesheet::Manager
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
     cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id)
-    stylesheets = cache[cache_key]
-    return stylesheets if stylesheets.present?
 
-    stylesheet = { color_scheme_id: color_scheme.id }
+    cache.defer_get_set(cache_key) do
+      stylesheet = { color_scheme_id: color_scheme.id }
 
-    theme = get_theme(theme_id)
+      theme = get_theme(theme_id)
 
-    builder =
-      Builder.new(
-        target: target,
-        theme: get_theme(theme_id),
-        color_scheme: color_scheme,
-        manager: self,
-      )
+      builder =
+        Builder.new(
+          target: target,
+          theme: get_theme(theme_id),
+          color_scheme: color_scheme,
+          manager: self,
+        )
 
-    builder.compile unless File.exist?(builder.stylesheet_fullpath)
+      builder.compile unless File.exist?(builder.stylesheet_fullpath)
 
-    href = builder.stylesheet_absolute_url
-    stylesheet[:new_href] = href
-    cache.defer_set(cache_key, stylesheet.freeze)
-    stylesheet
+      href = builder.stylesheet_absolute_url
+      stylesheet[:new_href] = href
+      stylesheet.freeze
+    end
   end
 
   def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = "all")

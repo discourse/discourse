@@ -7,7 +7,7 @@
             @id="edit-name"
             @value={{readonly this.tagInfo.name}}
             @maxlength={{this.siteSettings.max_tag_length}}
-            @input={{action (mut this.newTagName) value="target.value"}}
+            @input={{with-event-value (fn (mut this.newTagName))}}
             @autofocus="true"
           />
 
@@ -16,10 +16,7 @@
             @value={{readonly this.tagInfo.descriptionWithNewLines}}
             placeholder={{i18n "tagging.description"}}
             maxlength={{1000}}
-            {{on
-              "input"
-              (action (mut this.newTagDescription) value="target.value")
-            }}
+            {{on "input" (with-event-value (fn (mut this.newTagDescription)))}}
             autofocus="true"
           />
 

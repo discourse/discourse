@@ -83,6 +83,10 @@ sk:
         unknown_setting_returned_by_migration: "Migrácie '%{name}' vrátili nastavenie '%{setting_name}', ktoré nie je deklarované v súbore settings.yml témy"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
+      number_value_not_valid_min_max: "Hodnota musí byť medzi %{min} a %{max}."
+      objects:
+        required: "musí existovať"
+        not_valid_integer_value: "musí byť číslo"
   emails:
     incoming:
       default_subject: "Táto téma musí mať názov"
@@ -550,6 +554,9 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Poslať @%{username} správu"
       email_title: 'Váš príspevok v "%{title}"'
@@ -589,6 +596,9 @@ sk:
       title: "Niečo iné"
       long_form: "označené do pozornosti moderátora"
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>"

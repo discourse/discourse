@@ -83,18 +83,12 @@ lt:
       invalid_yaml: "Nurodytas YAML negalimas."
       data_type_inclusion: "“%{name}” tipo nustatymas nepalaikomas. Palaikomi tipai yra `integer`, `bool`, `list`, `enum` ir `upload`"
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
-      default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės"
+      default_value_missing: "Nustatymas „%{name}“ neturi numatytosios vertės."
       default_not_match_type: "Nustatymas „%{name}“ numatytosios vertės tipas neatitinka nustatymo tipo."
-      default_out_range: "Numatytosios vertės „%{name}“ nustatymas nėra nurodytame intervale."
       enum_value_not_valid: "Pasirinkta vertė nėra viena iš enum pasirinkimų."
-      number_value_not_valid: "Nauja vertė neatitinka leidžiamo diapazono."
-      number_value_not_valid_min_max: "Turi būti nuo %{min} iki %{max}."
-      number_value_not_valid_min: "Turi būti didesnis arba lygus %{min}."
-      number_value_not_valid_max: "Turi būti mažesnis arba lygus %{max}."
-      string_value_not_valid: "Naujos vertės ilgis neatitinka leidžiamo intervalo."
-      string_value_not_valid_min_max: "Turi būti tarp %{min} ir %{max} simbolių ilgio."
-      string_value_not_valid_min: "Turi sudaryti mažiausia %{min} simbolių."
-      string_value_not_valid_max: "Turi sudaryti daugiausia %{max} simbolių."
+      number_value_not_valid_min_max: "Vertė turi būti nuo %{min} iki %{max}."
+      objects:
+        not_valid_integer_value: "privalo buti integruotas"
     locale_errors:
       top_level_locale: "Aukščiausio lygio raktas lokalės faile turi atitikti lokalės pavadinimą"
       invalid_yaml: "Vertimas YAML negaliojantis"
@@ -748,6 +742,9 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -806,6 +803,9 @@ lt:
       long_form: "pažymėjo tai moderatoriaus dėmesiui"
       short_description: "Reikia darbuotojų dėmesio dėl kitos priežasties"
       email_title: 'Tema "%{title}" reikalauja moderatoriaus dėmesio'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Įrašas „%{title}“ reikalauja darbuotojų dėmesio'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Jūsų įrašą pažymėjo bendruomenė. Prašome <a href="%{path}">pamatyti savo pranešimus</a>.</p>'
@@ -2295,7 +2295,6 @@ lt:
     images:
       too_large: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB), pakeiskite jo dydį ir bandykite dar kartą."
       too_large_humanized: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (maksimalus dydis yra %{max_size}), pakeiskite jo dydį ir bandykite dar kartą."
-      larger_than_x_megapixels: "Atsiprašome, vaizdas, kurį bandote įkelti, yra per didelis (didžiausias matmuo yra %{max_image_megapixels}megapikselių), pakeiskite jo dydį ir bandykite dar kartą."
       size_not_found: "Atsiprašome, bet mes negalėjome nustatyti vaizdo dydžio. Gal jūsų vaizdas yra sugadintas?"
     placeholders:
       too_large: "(vaizdas didesnis nei %{max_size_kb}KB)"

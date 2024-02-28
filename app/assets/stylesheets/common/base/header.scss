@@ -106,6 +106,10 @@
     align-items: center;
     margin-top: 0.2em;
     white-space: nowrap;
+
+    .auth-buttons {
+      display: flex;
+    }
   }
 
   .login-button,
@@ -438,4 +442,14 @@ $mobile-avatar-height: 1.532em;
     color: var(--header_primary-high);
     background: transparent;
   }
+}
+
+#additional-panel-wrapper {
+  position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
+  overflow: auto;
 }

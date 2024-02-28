@@ -19,6 +19,7 @@ export default class Flag extends Component {
   @tracked userDetails;
   @tracked selected;
   @tracked message;
+  @tracked isConfirmed = false;
   @tracked isWarning = false;
   @tracked spammerDetails;
 
@@ -98,6 +99,10 @@ export default class Flag extends Component {
 
     if (!this.selected.is_custom_flag) {
       return true;
+    }
+
+    if (this.selected.isIllegal && !this.isConfirmed) {
+      return false;
     }
 
     const len = this.message?.length || 0;

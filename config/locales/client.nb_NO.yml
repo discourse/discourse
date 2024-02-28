@@ -35,11 +35,8 @@ nb_NO:
       long_with_year: "D MMM YYYY LT"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       wrap_on: "på %{date}"
       tiny:
@@ -75,7 +72,7 @@ nb_NO:
           one: "%{count}år"
           other: "%{count}år"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minutt"
@@ -86,7 +83,6 @@ nb_NO:
         x_days:
           one: "%{count} dag"
           other: "%{count} dager"
-        date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minutt siden"
@@ -161,7 +157,6 @@ nb_NO:
     skip_to_main_content: "Gå til hovedinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
-      message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
     themes:
       default_description: "Forvalg"
@@ -2129,6 +2124,18 @@ nb_NO:
     topic_bulk_actions:
       close_topics:
         name: "Lukk emner"
+      archive_topics:
+        name: "Arkiver emner"
+      unlist_topics:
+        name: "Fjern emner fra lister"
+      relist_topics:
+        name: "Før opp igjen emner i lister"
+      append_tags:
+        name: "Legg til stikkord"
+      replace_tags:
+        name: "Erstatt stikkord"
+      delete_topics:
+        name: "Slett emner"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"

@@ -95,18 +95,11 @@ id:
       invalid_yaml: "YAML yang diberikan tidak valid."
       data_type_inclusion: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
       name_too_long: "Ada pengaturan dengan nama yang terlalu panjang. Panjang maksimum adalah 255"
-      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan"
+      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan."
       default_not_match_type: "Pengaturan jenis nilai bawaan `%{name}` tidak cocok dengan jenis pengaturan."
-      default_out_range: "Pengaturan nilai bawaan `%{name}` tidak dalam rentang yang ditentukan."
       enum_value_not_valid: "Nilai yang dipilih bukan salah satu pilihan enum."
-      number_value_not_valid: "Nilai baru tidak berada dalam rentang yang diizinkan."
-      number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
-      number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
-      number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
-      string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
-      string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
-      string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
-      string_value_not_valid_max: "Panjangnya harus maksimal %{max} karakter."
+      objects:
+        not_valid_integer_value: "harus integer"
     locale_errors:
       top_level_locale: "Kunci level teratas dalam file locale harus cocok dengan nama locale"
       invalid_yaml: "Terjemahan YAML tidak valid"
@@ -765,6 +758,9 @@ id:
       title: "Tidak pantas"
       description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
       description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
@@ -835,6 +831,9 @@ id:
       long_form: "menandai sebagai membutuhkan perhatian moderator"
       short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Konten yang diabaikan</p>"

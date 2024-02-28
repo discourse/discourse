@@ -65,10 +65,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def google_tag_manager_nonce_placeholder
-    placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
-    placeholder
+  def csp_nonce_placeholder
+    response.headers[
+      ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
+    ] ||= "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
   end
 
   def shared_session_key
@@ -150,16 +150,17 @@ module ApplicationHelper
 
   def preload_script_url(url, entrypoint: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
+    nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
     if GlobalSetting.preload_link_header
       <<~HTML.html_safe
-        <script defer src="#{url}" #{entrypoint_attribute}></script>
+        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
       HTML
     else
       <<~HTML.html_safe
-        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute}>
-        <script defer src="#{url}" #{entrypoint_attribute}></script>
+        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute} #{nonce_attribute}>
+        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
       HTML
     end
   end
@@ -586,6 +587,7 @@ module ApplicationHelper
       mobile_view? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -595,6 +597,7 @@ module ApplicationHelper
       :translations,
       I18n.locale,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -604,6 +607,7 @@ module ApplicationHelper
       :extra_js,
       nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 

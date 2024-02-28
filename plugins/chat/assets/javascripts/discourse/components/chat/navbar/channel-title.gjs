@@ -4,7 +4,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 const ChatNavbarChannelTitle = <template>
   {{#if @channel}}
     <LinkTo
-      @route="chat.channel.info.members"
+      @route="chat.channel.info.settings"
       @models={{@channel.routeModels}}
       class="c-navbar__channel-title"
     >

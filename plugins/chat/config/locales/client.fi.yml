@@ -250,7 +250,7 @@ fi:
         back: "Takaisin"
         title: Kanavat
         filter_all: Kaikki
-        filter_open: Avattu
+        filter_open: Avoinna
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä

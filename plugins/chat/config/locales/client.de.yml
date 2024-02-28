@@ -56,6 +56,7 @@ de:
       cancel_reply: "Antwort verwerfen"
       chat_channels: "Kanäle"
       browse_all_channels: "Alle Kanäle durchsuchen"
+      see_in: "Siehe in"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:

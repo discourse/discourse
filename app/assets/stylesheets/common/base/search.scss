@@ -177,6 +177,10 @@
           background-color: var(--tertiary-very-low);
         }
       }
+      .control-label {
+        font-weight: bold;
+        color: var(--primary-high);
+      }
     }
 
     details.search-advanced-additional-options {

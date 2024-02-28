@@ -48,7 +48,9 @@ class TopicHotScore < ActiveRecord::Base
         AND topics.deleted_at IS NULL
         AND topics.archetype <> :private_message
         AND topics.created_at <= :now
-      ORDER BY topics.bumped_at desc
+      ORDER BY
+        CASE WHEN topics.pinned_at IS NOT NULL THEN 0 ELSE 1 END ASC,
+        topics.bumped_at desc
       LIMIT :max
     SQL
 

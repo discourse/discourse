@@ -36,7 +36,7 @@ export default DiscourseRoute.extend({
     return user
       .findDetails()
       .then(() => user.findStaffInfo())
-      .then(() => user.trackStatus())
+      .then(() => user.statusManager.trackStatus())
       .catch(() => this.router.replaceWith("/404"));
   },
 
@@ -76,7 +76,7 @@ export default DiscourseRoute.extend({
       `/u/${user.username_lower}/counters`,
       this.onUserCountersMessage
     );
-    user.stopTrackingStatus();
+    user.statusManager.stopTrackingStatus();
 
     // Remove the search context
     this.searchService.searchContext = null;

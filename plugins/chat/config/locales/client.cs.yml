@@ -15,6 +15,7 @@ cs:
       site_settings:
         chat_separate_sidebar_mode:
           always: "Vždy"
+          fullscreen: "Když je chat na celé obrazovce"
           never: "Nikdy"
       logs:
         staff_actions:
@@ -27,9 +28,20 @@ cs:
           descriptions:
             chat:
               create_message: "Vytvořit chatovací zprávu v určeném kanálu."
+      web_hooks:
+        chat_event:
+          group_name: "Události chatu"
+          chat_message_created: "Zpráva je vytvořena"
+          chat_message_edited: "Zpráva je upravena"
+          chat_message_trashed: "Zpráva je vyhozena do koše"
+          chat_message_restored: "Zpráva je obnovena"
     about:
+      chat_messages_count: "Zprávy v chatu"
       chat_channels_count: "Kanály chatu"
+      chat_users_count: "Uživatelé chatu"
     chat:
+      text_copied: Zkopírováno do schránky
+      link_copied: Odkaz zkopírován do schránky
       back_to_forum: "Fórum"
       deleted_chat_username: smazáno
       dates:
@@ -95,6 +107,7 @@ cs:
         back: "Zpět"
         title: Kanály
         filter_all: Celkem
+        filter_open: Otevřít
         filter_closed: Uzavřeno
       chat_message_separator:
         today: Dnes
