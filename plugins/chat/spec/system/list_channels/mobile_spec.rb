@@ -211,7 +211,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     end
 
     context "when user can't use direct messages" do
-      before { SiteSetting.direct_message_enabled_groups_map }
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
 
       it "redirects to channels" do
         visit("/chat")
@@ -222,7 +222,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   context "when chat_preferred_mobile_index is not set" do
-    it "loads public channels" do
+    it "redirects to channels" do
       visit("/chat")
 
       expect(page).to have_current_path("/chat/channels")
@@ -230,9 +230,15 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   context "when chat_preferred_mobile_index is set to my_threads" do
-    before { SiteSetting.chat_preferred_mobile_index = "my_threads" }
+    before do
+      SiteSetting.chat_threads_enabled = true
+      SiteSetting.chat_preferred_mobile_index = "my_threads"
+    end
 
     it "redirects to threads" do
+      channel = Fabricate(:chat_channel, threading_enabled: true)
+      channel.add(current_user)
+
       visit("/chat")
 
       expect(page).to have_current_path("/chat/threads")
@@ -241,7 +247,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     context "when no threads" do
       before { SiteSetting.chat_threads_enabled = false }
 
-      it "redirects to channels if no threads" do
+      it "redirects to channels" do
         visit("/chat")
 
         expect(page).to have_current_path("/chat/channels")
