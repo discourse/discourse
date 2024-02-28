@@ -5699,7 +5699,7 @@ ember-cli-typescript@^4.1.0:
     stagehand "^1.0.0"
     walk-sync "^2.2.0"
 
-ember-cli-typescript@^5.0.0, ember-cli-typescript@^5.2.1:
+ember-cli-typescript@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/ember-cli-typescript/-/ember-cli-typescript-5.2.1.tgz#553030f1ce3e8958b8e4fc34909acd1218cb35f2"
   integrity sha512-qqp5TAIuPHxHiGXJKL+78Euyhy0zSKQMovPh8sJpN/ZBYx0H90pONufHR3anaMcp1snVfx4B+mb9+7ijOik8ZA==
@@ -5894,15 +5894,6 @@ ember-exam@^9.0.0:
     rimraf "^5.0.0"
     semver "^7.3.2"
     silent-error "^1.1.1"
-
-ember-functions-as-helper-polyfill@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/ember-functions-as-helper-polyfill/-/ember-functions-as-helper-polyfill-2.1.2.tgz#5f7a7c7f87b87d4df785c53d1ee0810693c89b6b"
-  integrity sha512-yvW6xykvZEIYzzwlrC/g9yu6LtLkkj5F+ho6U+BDxN1uREMgoMOZnji7sSILn5ITVpaJ055DPcO+utEFD7IZOA==
-  dependencies:
-    ember-cli-babel "^7.26.11"
-    ember-cli-typescript "^5.0.0"
-    ember-cli-version-checker "^5.1.2"
 
 ember-load-initializers@^2.1.1:
   version "2.1.2"

@@ -85,7 +85,6 @@
     "ember-cli-terser": "^4.0.2",
     "ember-decorators": "^6.1.1",
     "ember-exam": "^9.0.0",
-    "ember-functions-as-helper-polyfill": "^2.1.2",
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^2.0.2",
