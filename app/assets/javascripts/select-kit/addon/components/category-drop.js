@@ -9,6 +9,7 @@ import DiscourseURL, {
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import I18n from "discourse-i18n";
+import CategoryDropCollection from "select-kit/components/category-drop-collection";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
@@ -42,6 +43,10 @@ export default ComboBoxComponent.extend({
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
     allowUncategorized: "allowUncategorized",
+  },
+
+  modifyComponentForCollection() {
+    return CategoryDropCollection;
   },
 
   modifyComponentForRow() {
@@ -154,7 +159,9 @@ export default ComboBoxComponent.extend({
           parentCategoryId,
           includeUncategorized: this.siteSettings.allow_uncategorized_topics,
           includeAncestors: true,
-          limit: 15,
+          // Show all categories if possible (up to 20), otherwise show just
+          // first 15 and let CategoryDropCollection show the "show more" link
+          limit: this.site.categories_count < 20 ? 20 : 15,
         })
       ).categories;
 

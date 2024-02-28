@@ -178,6 +178,10 @@ class Site
       end
   end
 
+  def categories_count
+    @categories_count ||= Category.secured(@guardian).count
+  end
+
   def groups
     query =
       Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(

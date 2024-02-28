@@ -1037,6 +1037,8 @@ en:
       all: "all categories"
       all_subcategories: "all"
       no_subcategory: "none"
+      plus_more_count: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
