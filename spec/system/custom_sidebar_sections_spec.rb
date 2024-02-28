@@ -127,6 +127,19 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("Faq", target: "_blank")
   end
 
+  it "accessibility - when new row is added in custom section, first new input is focused" do
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+    sidebar.click_add_link_button
+
+    is_focused =
+      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+
+    expect(is_focused).to be true
+  end
+
   it "allows the user to edit custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")

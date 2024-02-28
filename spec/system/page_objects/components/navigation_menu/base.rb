@@ -138,6 +138,10 @@ module PageObjects
           click_button(add_section_button_text)
         end
 
+        def click_add_link_button
+          click_button(add_link_button_text)
+        end
+
         def has_no_add_section_button?
           page.has_no_button?(add_section_button_text)
         end
@@ -182,6 +186,10 @@ module PageObjects
 
         def add_section_button_text
           I18n.t("js.sidebar.sections.custom.add")
+        end
+
+        def add_link_button_text
+          I18n.t("js.sidebar.sections.custom.links.add")
         end
       end
     end
