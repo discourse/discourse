@@ -16,7 +16,7 @@
             @value={{readonly this.tagInfo.descriptionWithNewLines}}
             placeholder={{i18n "tagging.description"}}
             maxlength={{1000}}
-            {{on "input" (pick (fn (mut this.newTagDescription)))}}
+            {{on "input" (with-event-value (fn (mut this.newTagDescription)))}}
             autofocus="true"
           />
 

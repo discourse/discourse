@@ -25,7 +25,7 @@ module("Integration | Component | char-counter", function (hooks) {
         @value={{this.charCounterContent}}
         @max={{this.max}}
       >
-        <textarea {{on "input" (pick (fn (mut this.charCounterContent)))}}></textarea>
+        <textarea {{on "input" (with-event-value (fn (mut this.charCounterContent)))}}></textarea>
       </CharCounter>
     `);
 

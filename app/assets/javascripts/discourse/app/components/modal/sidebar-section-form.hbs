@@ -19,7 +19,10 @@
             @value={{this.transformedModel.title}}
             class={{this.transformedModel.titleCssClass}}
             id="section-name"
-            {{on "input" (pick (fn (mut this.transformedModel.title)))}}
+            {{on
+              "input"
+              (with-event-value (fn (mut this.transformedModel.title)))
+            }}
           />
 
           {{#if this.transformedModel.invalidTitleMessage}}

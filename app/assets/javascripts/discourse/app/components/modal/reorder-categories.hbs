@@ -22,7 +22,7 @@
             <td>
               <div class="reorder-categories-actions">
                 <input
-                  {{on "change" (pick (fn this.change entry))}}
+                  {{on "change" (with-event-value (fn this.change entry))}}
                   value={{entry.position}}
                   type="number"
                   min="0"

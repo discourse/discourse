@@ -41,7 +41,7 @@
               @value={{readonly this.nameInput}}
               placeholder={{i18n "directory.filter_name"}}
               class="filter-name no-blur"
-              {{on "input" (pick this.onUsernameFilterChanged)}}
+              {{on "input" (with-event-value this.onUsernameFilterChanged)}}
             />
             {{#if this.showGroupFilter}}
               <ComboBox

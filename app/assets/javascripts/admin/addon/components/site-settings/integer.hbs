@@ -1,5 +1,5 @@
 <input
-  {{on "input" (pick (fn (mut this.value)))}}
+  {{on "input" (with-event-value (fn (mut this.value)))}}
   type="number"
   value={{this.value}}
   min={{if this.setting.min this.setting.min null}}
