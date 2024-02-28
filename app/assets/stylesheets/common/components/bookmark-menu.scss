@@ -7,9 +7,7 @@
   }
 }
 
-.bookmark-menu {
-  position: relative;
-
+.bookmark-menu-content {
   &__notice {
     position: absolute;
     top: -1.5rem;
@@ -25,121 +23,91 @@
     }
   }
 
-  &-shim {
-    .tippy-box {
+  .bookmark-menu__body {
+    background: var(--secondary);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    color: var(--primary);
+
+    .bookmark-menu__actions {
       margin: 0;
-      border: 0;
-
-      .tippy-content {
-        padding: 0;
-      }
-    }
-
-    .tippy-svg-arrow {
-      top: 1px !important;
-      z-index: z("dropdown") + 1;
-    }
-
-    .bookmark-menu__trigger {
-      &.-bookmarked {
-        .d-icon {
-          color: var(--tertiary);
-        }
-      }
-    }
-
-    .bookmark-menu__body {
-      border: 1px solid var(--primary-low);
-      z-index: z("dropdown");
-      background: var(--secondary);
+      padding: 0;
       list-style: none;
-      display: flex;
-      flex-direction: column;
-      color: var(--primary);
-      width: max-content;
-      max-width: 200px;
-      text-align: left;
-      margin: 0;
+    }
+  }
 
-      .bookmark-menu__actions {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
+  .bookmark-menu {
+    &__text {
+      display: flex;
+      align-items: left;
     }
 
-    .bookmark-menu {
-      &__text {
-        display: flex;
-        align-items: left;
+    &__row {
+      border-bottom: 1px solid var(--primary-low);
+      width: 100%;
+      display: flex;
+      align-items: left;
+
+      &:hover,
+      &:focus {
+        background: var(--tertiary-very-low) !important;
       }
 
-      &__row {
-        border-bottom: 1px solid var(--primary-low);
-        width: 100%;
-        display: flex;
-        align-items: left;
+      &-title-row {
+        background: var(--primary-100) !important;
+      }
 
+      &-btn {
+        margin: 0 !important;
+        padding: 0.75rem !important;
+        width: 100%;
+        text-align: left;
+        justify-content: left;
+
+        .d-icon {
+          color: var(--primary);
+        }
+
+        .d-button-label {
+          color: var(--primary);
+          font-size: var(--font-down-1);
+        }
         &:hover,
         &:focus {
           background: var(--tertiary-very-low) !important;
         }
+      }
 
-        &-title-row {
-          background: var(--primary-100) !important;
-        }
-
-        &-btn {
-          margin: 0 !important;
-          padding: 0.75em !important;
-          width: 100%;
-          text-align: left;
-          justify-content: left;
-
-          .d-icon {
-            color: var(--primary);
-          }
-
-          .d-button-label {
-            color: var(--primary);
-            font-size: var(--font-down-1);
-          }
-          &:hover,
-          &:focus {
-            background: var(--tertiary-very-low) !important;
-          }
-        }
-
-        &.-edit {
-          .d-icon {
-            margin-right: 5px;
-          }
-        }
-
-        &.-remove {
-          .d-icon {
-            color: var(--danger);
-          }
-
-          &:hover,
-          &:focus {
-            background: var(--danger-low) !important;
-          }
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        &.-no-reminder {
-          border-bottom: 2px solid var(--primary-low);
+      &.-edit {
+        .d-icon {
+          margin-right: 5px;
         }
       }
-    }
 
-    .bookmark-menu__row-title {
-      font-weight: 900;
-      padding: 0.75em;
+      &.-remove {
+        .d-icon {
+          color: var(--danger);
+        }
+
+        &:hover,
+        &:focus {
+          background: var(--danger-low) !important;
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.-no-reminder {
+        border-bottom: 2px solid var(--primary-low);
+      }
     }
+  }
+
+  .bookmark-menu__row-title {
+    font-weight: 900;
+    padding: 0.75rem;
   }
 }

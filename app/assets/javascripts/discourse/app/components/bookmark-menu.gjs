@@ -100,6 +100,7 @@ export default class BookmarkMenu extends Component {
 
   <template>
     <DMenu
+      @identifier="bookmark-menu"
       @triggers={{array "click"}}
       @arrow="true"
       {{on "click" this.onBookmark}}

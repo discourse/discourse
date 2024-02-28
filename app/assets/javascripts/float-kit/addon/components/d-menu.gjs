@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { concat } from "@ember/helper";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -57,6 +58,7 @@ export default class DMenu extends Component {
       class={{concatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
+        (concat this.options.identifier "-trigger")
       }}
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
@@ -79,7 +81,10 @@ export default class DMenu extends Component {
       <DFloatBody
         @instance={{this.menuInstance}}
         @trapTab={{this.options.trapTab}}
-        @mainClass="fk-d-menu"
+        @mainClass={{concatClass
+          "fk-d-menu"
+          (concat this.options.identifier "-content")
+        }}
         @innerClass="fk-d-menu__inner-content"
         @role="dialog"
         @inline={{this.options.inline}}
