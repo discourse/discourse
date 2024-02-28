@@ -23,6 +23,7 @@
     .discourse-no-touch & {
       opacity: 0.7;
       transition: background 0.25s, opacity 0.7s ease-in-out;
+      animation: none; // replaces jsuites animation on .fade-out
     }
     .discourse-touch & {
       opacity: 1;
