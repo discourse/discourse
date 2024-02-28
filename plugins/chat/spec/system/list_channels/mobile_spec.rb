@@ -201,6 +201,60 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     end
   end
 
+  context "when chat_preferred_mobile_index is set to direct_messages" do
+    before { SiteSetting.chat_preferred_mobile_index = "direct_messages" }
+
+    it "changes the default index" do
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/direct-messages")
+    end
+
+    context "when user can't use direct messages" do
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "redirects to channels" do
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/channels")
+      end
+    end
+  end
+
+  context "when chat_preferred_mobile_index is not set" do
+    it "redirects to channels" do
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/channels")
+    end
+  end
+
+  context "when chat_preferred_mobile_index is set to my_threads" do
+    before do
+      SiteSetting.chat_threads_enabled = true
+      SiteSetting.chat_preferred_mobile_index = "my_threads"
+    end
+
+    it "redirects to threads" do
+      channel = Fabricate(:chat_channel, threading_enabled: true)
+      channel.add(current_user)
+
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/threads")
+    end
+
+    context "when no threads" do
+      before { SiteSetting.chat_threads_enabled = false }
+
+      it "redirects to channels" do
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/channels")
+      end
+    end
+  end
+
   it "has a new dm channel button" do
     visit("/chat/direct-messages")
     find(".c-navbar__new-dm-button").click
