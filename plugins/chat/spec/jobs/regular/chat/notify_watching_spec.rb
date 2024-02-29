@@ -85,6 +85,16 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       end
     end
 
+    context "with push_notification_filter registered to block push notifications" do
+      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+
+      it "doesn't send notification alert via MessageBus" do
+        Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
+
+        expect(notification_messages_for(user2)).to be_empty
+      end
+    end
+
     context "when the channel is muted via membership preferences" do
       before { membership2.update!(muted: true) }
 
