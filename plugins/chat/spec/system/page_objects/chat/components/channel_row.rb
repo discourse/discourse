@@ -24,10 +24,7 @@ module PageObjects
 
         def leave
           component(class: ".can-leave").hover
-          btn = component.find(".chat-channel-leave-btn", visible: :all)
-          btn.style("display", "block")
-          btn.click
-          btn.style("display", "")
+          component.find(".chat-channel-leave-btn", visible: :all).click
         end
 
         def component(**args)
