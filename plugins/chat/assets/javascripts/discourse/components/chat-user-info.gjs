@@ -1,17 +1,11 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { modifier } from "ember-modifier";
 import UserStatusMessage from "discourse/components/user-status-message";
 import { userPath } from "discourse/lib/url";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 export default class ChatUserInfo extends Component {
-  constructor() {
-    super(...arguments);
-    this.startTrackingStatus();
-  }
-
   get avatarSize() {
     return this.args.avatarSize ?? "medium";
   }
@@ -32,15 +26,13 @@ export default class ChatUserInfo extends Component {
     return this.args.showStatusDescription ?? false;
   }
 
-  @action
-  startTrackingStatus() {
-    this.args.user.statusManager.trackStatus();
-  }
+  trackUserStatus = modifier((element, [user]) => {
+    user.statusManager.trackStatus();
 
-  @action
-  stopTrackingStatus() {
-    this.args.user.statusManager.stopTrackingStatus();
-  }
+    return () => {
+      user.statusManager.stopTrackingStatus();
+    }
+  });
 
   <template>
     {{#if @user}}
@@ -59,11 +51,12 @@ export default class ChatUserInfo extends Component {
       {{/if}}
 
       {{#if this.showStatus}}
-        <UserStatusMessage
-          @status={{@user.status}}
-          @showDescription={{this.showStatusDescription}}
-          {{willDestroy this.stopTrackingStatus}}
-        />
+        <div class="user-status" {{this.trackUserStatus @user}}>
+          <UserStatusMessage
+            @status={{@user.status}}
+            @showDescription={{this.showStatusDescription}}
+          />
+        </div>
       {{/if}}
     {{/if}}
   </template>
