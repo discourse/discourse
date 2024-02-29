@@ -106,27 +106,40 @@ describe "Topic Map - Private Message", type: :system do
 
     # toggle ability to edit participants
     private_message_map.toggle_edit_participants_button
-    expect(private_message_map).to have_invite_participants_button
+    expect(private_message_map).to have_add_participants_button
     private_message_map.toggle_edit_participants_button
-    expect(private_message_map).to have_no_invite_participants_button
-
-    # TODO: adding participants
+    expect(private_message_map).to have_no_add_participants_button
 
     # removing participants
     private_message_map.toggle_edit_participants_button
     private_message_map.participants_details.each do |details|
       expect(details).to have_css(".remove-invited .d-icon-times")
     end
-    private_message_map.click_remove_participant_button(other_user)
-    expect(private_message_remove_participant_modal).to be_opened
+    private_message_map.click_remove_participant_button(last_post_user)
+    expect(private_message_remove_participant_modal).to be_open
     expect(private_message_remove_participant_modal.body).to have_text(
-      "Do you really want to remove #{other_user.username} from this message?",
+      I18n.t("js.private_message_info.remove_allowed_user", name: last_post_user.username),
     )
     private_message_remove_participant_modal.cancel
-    expect(private_message_map).to have_participant_details_for(other_user)
-
-    private_message_map.click_remove_participant_button(other_user)
+    expect(private_message_map).to have_participant_details_for(last_post_user)
+    private_message_map.click_remove_participant_button(last_post_user)
+    expect(private_message_remove_participant_modal).to be_open
     private_message_remove_participant_modal.confirm_removal
-    expect(private_message_map).to have_no_participant_details_for(other_user)
+    expect(private_message_map).to have_no_participant_details_for(last_post_user)
+
+    # adding participants
+    expect {
+      expect(private_message_map).to have_add_participants_button
+      private_message_map.click_add_participants_button
+      expect(private_message_invite_modal).to be_open
+      private_message_invite_modal.select_invitee(other_user)
+      private_message_invite_modal.click_primary_button
+      expect(private_message_invite_modal).to have_invitee_already_exists_error
+      private_message_invite_modal.select_invitee(last_post_user)
+      private_message_invite_modal.click_primary_button #sends invite
+      expect(private_message_invite_modal).to have_successful_invite_message
+      private_message_invite_modal.click_primary_button #closes modal
+      expect(private_message_invite_modal).to be_closed
+    }.to change(private_message_map, :participants_count).by 1
   end
 end
