@@ -6,6 +6,14 @@ import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-use
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 export default class ChatUserInfo extends Component {
+  trackUserStatus = modifier((element, [user]) => {
+    user.statusManager.trackStatus();
+
+    return () => {
+      user.statusManager.stopTrackingStatus();
+    };
+  });
+
   get avatarSize() {
     return this.args.avatarSize ?? "medium";
   }
@@ -25,14 +33,6 @@ export default class ChatUserInfo extends Component {
   get showStatusDescription() {
     return this.args.showStatusDescription ?? false;
   }
-
-  trackUserStatus = modifier((element, [user]) => {
-    user.statusManager.trackStatus();
-
-    return () => {
-      user.statusManager.stopTrackingStatus();
-    }
-  });
 
   <template>
     {{#if @user}}
