@@ -24,7 +24,15 @@ module PageObjects
 
         def leave
           component(class: ".can-leave").hover
-          component.find(".chat-channel-leave-btn", visible: :all).click
+          btn = component.find(".chat-channel-leave-btn", visible: :all)
+          # style manipulation is necessary to have it working with @media(hover: hover) on CI
+          page.execute_script(
+            "document.querySelector('#{build_selector} .chat-channel-leave-btn').style.display = 'block';",
+          )
+          btn.click
+          page.execute_script(
+            "document.querySelector('#{build_selector} .chat-channel-leave-btn').style.display = '';",
+          )
         end
 
         def component(**args)
