@@ -29,8 +29,11 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
+  const includeTests =
+    process.env["DISABLE_EMBER_CLI_TESTS"] === "1" ? false : true;
 
   const app = new EmberApp(defaults, {
+    tests: includeTests,
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,
@@ -96,13 +99,6 @@ module.exports = function (defaults) {
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
-  const testStylesheetTree = mergeTrees([
-    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-    discourseScss(
-      `${discourseRoot}/app/assets/stylesheets`,
-      "qunit-custom.scss"
-    ),
-  ]);
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
@@ -121,8 +117,19 @@ module.exports = function (defaults) {
     ),
     applyTerser(generateScriptsTree(app)),
     applyTerser(discoursePluginsTree),
-    testStylesheetTree,
   ];
+
+  if (includeTests) {
+    extraPublicTrees.push(
+      mergeTrees([
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+        discourseScss(
+          `${discourseRoot}/app/assets/stylesheets`,
+          "qunit-custom.scss"
+        ),
+      ])
+    );
+  }
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
   const cachebusterHash = crypto

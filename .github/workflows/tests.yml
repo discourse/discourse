@@ -223,6 +223,10 @@ jobs:
           name: ember-exam-execution-plugins-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
+      - name: Set environment for Ember build
+        if: matrix.build_type == 'system' && matrix.target != 'core'
+        run: echo "DISABLE_EMBER_CLI_TESTS=1" >> "$GITHUB_ENV"
+
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
