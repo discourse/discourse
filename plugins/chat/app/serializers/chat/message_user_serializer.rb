@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class MessageUserSerializer < BasicUserWithStatusSerializer
+  class MessageUserSerializer < BasicUserSerializer
     attributes :moderator?, :admin?, :staff?, :moderator?, :new_user?, :primary_group_name
 
     def moderator?

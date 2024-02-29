@@ -38,7 +38,8 @@ module Chat
     end
 
     def can_stop_streaming(guardian:, message:, **)
-      guardian.is_admin? || message.in_reply_to && message.in_reply_to.user_id == guardian.user.id
+      guardian.is_admin? || message.user.id == guardian.user.id ||
+        message.in_reply_to && message.in_reply_to.user_id == guardian.user.id
     end
 
     def stop_message_streaming(message:, **)

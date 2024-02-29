@@ -18,5 +18,13 @@ globalThis.deprecationWorkflow.config = {
       handler: "silence",
       matchId: "deprecate-implicit-route-model",
     },
+    {
+      handler: "silence",
+      matchId: "discourse.add-header-panel",
+    },
+    {
+      handler: "silence",
+      matchId: "discourse.header-widget-overrides",
+    },
   ],
 };

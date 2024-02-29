@@ -6,7 +6,7 @@ RSpec.describe Admin::VersionsController do
   fab!(:user)
 
   before do
-    Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
+    Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
     DiscourseUpdates.stubs(:updated_at).returns(2.hours.ago)
     DiscourseUpdates.stubs(:latest_version).returns("1.2.33")
     DiscourseUpdates.stubs(:critical_updates_available?).returns(false)

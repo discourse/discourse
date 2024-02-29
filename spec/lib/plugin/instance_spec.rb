@@ -103,6 +103,7 @@ TEXT
         :likes_7_days,
         :likes_30_days,
         :likes_count,
+        :discourse_discover_enrolled,
       )
     end
 

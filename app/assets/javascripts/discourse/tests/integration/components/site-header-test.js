@@ -1,3 +1,5 @@
+// deprecated in favor of spec/system/header/site_header_spec.rb
+
 import {
   click,
   render,

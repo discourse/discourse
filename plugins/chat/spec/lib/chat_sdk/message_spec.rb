@@ -47,9 +47,9 @@ describe ChatSDK::Message do
 
     context "when membership is enforced" do
       it "works" do
+        SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
         params[:enforce_membership] = true
         params[:guardian] = Fabricate(:user).guardian
-        SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
 
         message = described_class.create(**params)
 
@@ -87,7 +87,7 @@ describe ChatSDK::Message do
 
           edit =
             MessageBus
-              .track_publish("/chat/#{channel_1.id}") { helper.stream(raw: "test") }
+              .track_publish("/chat/#{channel_1.id}") { helper.stream(raw: " test") }
               .find { |m| m.data["type"] == "edit" }
 
           expect(edit.data["chat_message"]["message"]).to eq("something test")
@@ -95,6 +95,90 @@ describe ChatSDK::Message do
 
       expect(created_message.streaming).to eq(false)
       expect(created_message.message).to eq("something test")
+    end
+  end
+
+  describe ".stop_stream" do
+    fab!(:message_1) { Fabricate(:chat_message, message: "first") }
+
+    before do
+      SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+      message_1.update!(streaming: true)
+    end
+
+    it "stop streaming message" do
+      described_class.stop_stream(message_id: message_1.id, guardian: message_1.user.guardian)
+
+      expect(message_1.reload.streaming).to eq(false)
+    end
+
+    context "when user can't stop streaming" do
+      it "fails" do
+        user = Fabricate(:user)
+        message_1.chat_channel.add(user)
+
+        expect {
+          described_class.stop_stream(message_id: message_1.id, guardian: user.guardian)
+        }.to raise_error("User with id: `#{user.id}` can't stop streaming this message")
+      end
+    end
+
+    context "when user can't join channel" do
+      fab!(:message_1) do
+        Fabricate(:chat_message, chat_channel: Fabricate(:private_category_channel))
+      end
+
+      it "fails" do
+        user = Fabricate(:user)
+
+        expect {
+          described_class.stop_stream(message_id: message_1.id, guardian: user.guardian)
+        }.to raise_error("User with id: `#{user.id}` can't join this channel")
+      end
+    end
+  end
+
+  describe ".start_stream" do
+    fab!(:message_1) { Fabricate(:chat_message, message: "first") }
+
+    it "enables streaming" do
+      initial_message = message_1.message
+
+      edit =
+        MessageBus
+          .track_publish("/chat/#{message_1.chat_channel.id}") do
+            described_class.start_stream(
+              message_id: message_1.id,
+              guardian: message_1.user.guardian,
+            )
+          end
+          .find { |m| m.data["type"] == "edit" }
+
+      expect(edit.data["chat_message"]["message"]).to eq("first")
+      expect(message_1.reload.streaming).to eq(true)
+    end
+  end
+
+  describe ".stream" do
+    fab!(:message_1) { Fabricate(:chat_message, message: "first") }
+    before { message_1.update!(streaming: true) }
+
+    it "streams" do
+      initial_message = message_1.message
+
+      edit =
+        MessageBus
+          .track_publish("/chat/#{message_1.chat_channel.id}") do
+            described_class.stream(
+              raw: " test",
+              message_id: message_1.id,
+              guardian: message_1.user.guardian,
+            )
+          end
+          .find { |m| m.data["type"] == "edit" }
+
+      expect(edit.data["chat_message"]["message"]).to eq("first test")
+      expect(message_1.reload.streaming).to eq(true)
     end
   end
 end

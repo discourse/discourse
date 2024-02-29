@@ -144,7 +144,7 @@ function isIdle() {
 }
 
 // Call-in point from message bus
-async function onNotification(data, siteSettings, user) {
+async function onNotification(data, siteSettings, user, appEvents) {
   if (!liveEnabled) {
     return;
   }
@@ -187,6 +187,7 @@ async function onNotification(data, siteSettings, user) {
   });
   notification.onclick = () => {
     DiscourseURL.routeTo(data.post_url);
+    appEvents.trigger("desktop-notification-opened", { url: data.post_url });
     notification.close();
   };
 

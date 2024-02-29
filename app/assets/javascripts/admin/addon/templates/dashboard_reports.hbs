@@ -6,7 +6,7 @@
         class="filter-reports-input"
         placeholder={{i18n "admin.dashboard.filter_reports"}}
         autofocus={{true}}
-        {{on "input" (action "filterReports" value="target.value")}}
+        {{on "input" (with-event-value this.filterReports)}}
       />
     </div>
 

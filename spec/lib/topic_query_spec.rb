@@ -93,6 +93,21 @@ RSpec.describe TopicQuery do
       TopicHotScore.update_scores(2)
 
       expect(TopicQuery.new(nil).list_hot.topics.map(&:id)).to eq([pinned_topic.id, topic.id])
+
+      SiteSetting.tagging_enabled = true
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+
+      TagUser.create!(
+        user_id: user.id,
+        tag_id: tag.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+
+      topic.update!(tags: [tag])
+
+      # even though it is muted, we should still show it cause we are filtered to it
+      expect(TopicQuery.new(user, { tags: [tag.name] }).list_hot.topics.map(&:id)).to eq([topic.id])
     end
 
     it "excludes muted categories and topics" do

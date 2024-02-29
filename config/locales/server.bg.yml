@@ -59,6 +59,7 @@ bg:
     import_error:
       unpack_failed: "Неуспешно разопаковане на файла"
     settings_errors:
+      number_value_not_valid_min_max: "Стойността трябва да мъде между %{min} и %{max}."
       objects:
         required: "Трябва да присъства"
         not_valid_integer_value: "трябва да бъде число"

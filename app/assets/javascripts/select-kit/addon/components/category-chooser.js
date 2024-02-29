@@ -17,8 +17,7 @@ export default ComboBoxComponent.extend({
 
   selectKitOptions: {
     filterable: true,
-    autoInsertNoneItem: false,
-    allowUncategorized: "allowUncategorizedTopics",
+    allowUncategorized: false,
     allowSubCategories: true,
     permissionType: PermissionType.FULL,
     excludeCategoryId: null,
@@ -55,7 +54,10 @@ export default ComboBoxComponent.extend({
           I18n.t(isString ? this.selectKit.options.none : "category.none")
         )
       );
-    } else if (this.selectKit.options.allowUncategorized) {
+    } else if (
+      this.allowUncategorizedTopics ||
+      this.selectKit.options.allowUncategorized
+    ) {
       return Category.findUncategorized();
     } else {
       const defaultCategoryId = parseInt(
@@ -92,7 +94,6 @@ export default ComboBoxComponent.extend({
   search(filter) {
     if (this.site.lazy_load_categories) {
       return Category.asyncSearch(this._normalize(filter), {
-        includeUncategorized: this.allowUncategorizedTopics,
         scopedCategoryId: this.selectKit.options?.scopedCategoryId,
         prioritizedCategoryId: this.selectKit.options?.prioritizedCategoryId,
       });

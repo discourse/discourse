@@ -2328,6 +2328,12 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  experimental_glimmer_header_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
@@ -3141,10 +3147,6 @@ dashboard:
   verbose_user_stat_count_logging:
     hidden: true
     default: false
-  experimental_hot_topics:
-    hidden: true
-    default: false
-    client: true
   hot_topics_gravity:
     hidden: true
     default: 1.2

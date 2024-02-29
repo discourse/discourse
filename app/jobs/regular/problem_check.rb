@@ -13,16 +13,27 @@ module Jobs
       retry_count = args[:retry_count].to_i
       identifier = args[:check_identifier].to_sym
 
-      check = AdminDashboardData.problem_scheduled_check_klasses[identifier]
+      check = ::ProblemCheck[identifier]
 
-      AdminDashboardData.execute_scheduled_check(identifier) do |problems|
-        raise RetrySignal if retry_count < check.max_retries
+      problems = check.call
+      raise RetrySignal if problems.present? && retry_count < check.max_retries
+
+      if problems.present?
+        problems.each { |problem| AdminDashboardData.add_found_scheduled_check_problem(problem) }
+        ProblemCheckTracker[identifier].problem!(next_run_at: check.perform_every.from_now)
+      else
+        ProblemCheckTracker[identifier].no_problem!(next_run_at: check.perform_every.from_now)
       end
     rescue RetrySignal
       Jobs.enqueue_in(
-        check.retry_wait,
+        check.retry_after,
         :problem_check,
         args.merge(retry_count: retry_count + 1).stringify_keys,
+      )
+    rescue StandardError => err
+      Discourse.warn_exception(
+        err,
+        message: "A scheduled admin dashboard problem check (#{identifier}) errored.",
       )
     end
   end

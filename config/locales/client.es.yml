@@ -197,7 +197,6 @@ es:
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     critical_deprecation:
-      notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>más información</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>«%{name}»</a>."
       plugin_source: "Plugin identificado: «%{name}»"
     s3:
@@ -2743,6 +2742,20 @@ es:
     topic_bulk_actions:
       close_topics:
         name: "Cerrar temas"
+      archive_topics:
+        name: "Archivar temas"
+      unlist_topics:
+        name: "Hacer invisibles"
+      relist_topics:
+        name: "Hacer visibles de nuevo"
+      remove_tags:
+        name: "Quitar etiquetas"
+      append_tags:
+        name: "Añadir etiquetas"
+      replace_tags:
+        name: "Remplazar etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"

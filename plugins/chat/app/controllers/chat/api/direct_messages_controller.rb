@@ -17,6 +17,9 @@ class Chat::Api::DirectMessagesController < Chat::ApiController
       on_failed_policy(:satisfies_dms_max_users_limit) do |policy|
         render_json_dump({ error: policy.reason }, status: 400)
       end
+      on_failed_policy(:can_create_direct_message) do |policy|
+        render_json_dump({ error: I18n.t("chat.errors.invalid_direct_message") }, status: 400)
+      end
       on_failed_policy(:actor_allows_dms) do
         render_json_error(I18n.t("chat.errors.actor_disallowed_dms"))
       end

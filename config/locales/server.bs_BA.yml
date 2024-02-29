@@ -72,18 +72,10 @@ bs_BA:
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
       name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
-      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
+      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost."
       default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
-      default_out_range: "Postavka `%{name}` default uobičajena vrijednost nije u specificiranim granicama (range)."
       enum_value_not_valid: "Označena vrijednost nije jedna od enum izbora"
-      number_value_not_valid: "Nova vrijednost nije unutar dozvoljenih granica (range)."
-      number_value_not_valid_min_max: "Mora biti izmeđi %{min} i %{max}."
-      number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
-      number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
-      string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
-      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
-      string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
-      string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
+      number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
       objects:
         required: "must be present"
     locale_errors:

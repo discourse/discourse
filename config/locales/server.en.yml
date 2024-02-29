@@ -137,18 +137,41 @@ en:
       string_value_not_valid_min: "Value must be at least %{min} characters long."
       string_value_not_valid_max: "Value must be at most %{max} characters long."
       objects:
+        humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
+        humanize_invalid_type: "The property at JSON Pointer '%{property_json_pointer}' must be of type %{type}."
         invalid_type: "%{type} is not a valid type"
+        humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
+        humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
+        humanize_not_valid_float_value: "The property at JSON Pointer '%{property_json_pointer}' must be a float."
         not_valid_float_value: "must be a float"
+        humanize_not_valid_boolean_value: "The property at JSON Pointer '%{property_json_pointer}' must be a boolean."
         not_valid_boolean_value: "must be a boolean"
+        humanize_not_valid_enum_value: "The property at JSON Pointer '%{property_json_pointer}' must be one of the following %{choices}."
         not_valid_enum_value: "must be one of the following: %{choices}"
+        humanize_not_valid_category_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid category id."
         not_valid_category_value: "must be a valid category id"
+        humanize_not_valid_topic_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid topic id."
+        not_valid_topic_value: "must be a valid topic id"
+        humanize_not_valid_post_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid post id."
+        not_valid_post_value: "must be a valid post id"
+        humanize_not_valid_group_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid group id."
+        not_valid_group_value: "must be a valid group id"
+        humanize_not_valid_tag_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid tag id."
+        not_valid_tag_value: "must be a valid tag id"
+        humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
+        not_valid_upload_value: "must be a valid upload id"
+        humanize_string_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{min} characters long."
         string_value_not_valid_min: "must be at least %{min} characters long"
+        humanize_string_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{max} characters long."
         string_value_not_valid_max: "must be at most %{max} characters long"
+        humanize_number_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be larger than or equal to %{min}."
         number_value_not_valid_min: "must be larger than or equal to %{min}"
+        humanize_number_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be smaller than or equal to %{max}."
         number_value_not_valid_max: "must be smaller than or equal to %{max}"
+        humanize_string_value_not_valid_url: "The property at JSON Pointer '%{property_json_pointer}' must be a valid URL."
         string_value_not_valid_url: "must be a valid URL"
     locale_errors:
       top_level_locale: "The top level key in a locale file must match the locale name"
@@ -1506,6 +1529,7 @@ en:
       description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
+    twitter_login_warning: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
     group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -1536,7 +1560,6 @@ en:
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
-    ember_version_warning: "Your site is running with the unsupported EMBER_VERSION=3 configuration. This may lead to unexpected issues with themes/plugins. Please remove the EMBER_VERSION configuration from your app.yml file and rebuild. See <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> for more information."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -2523,6 +2546,7 @@ en:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+    experimental_glimmer_header_groups: "EXPERIMENTAL: Render the site header as glimmer components."
 
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."

@@ -22,7 +22,7 @@
         @value={{readonly this.filter}}
         placeholder={{i18n "groups.index.all"}}
         class="groups-header-filters-name no-blur"
-        {{on "input" (action "onFilterChanged" value="target.value")}}
+        {{on "input" (with-event-value this.onFilterChanged)}}
         @type="search"
         aria-description={{i18n "groups.index.search_results"}}
       />

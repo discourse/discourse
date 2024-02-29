@@ -255,9 +255,10 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  scrollToBottom() {
+  async scrollToBottom() {
     this._ignoreNextScroll = true;
-    scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scrollable);
+    this.debouncedUpdateLastReadMessage();
   }
 
   scrollToMessageId(messageId, options = {}) {
