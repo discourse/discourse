@@ -171,8 +171,7 @@ export default createWidget("topic-map", {
     }
 
     if (attrs.showPMMap) {
-      // contents.push(this.buildPrivateMessageMap(attrs));
-      contents.push(this.attach("private-message-map", attrs));
+      contents.push(this.buildPrivateMessageMap(attrs));
     }
     return contents;
   },
