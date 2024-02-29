@@ -32,9 +32,12 @@
                 @isLogin={{true}}
               >
                 <SecondFactorInput
-                  @value={{this.secondFactorToken}}
+                  {{on
+                    "input"
+                    (with-event-value (fn (mut this.secondFactorToken)))
+                  }}
                   @secondFactorMethod={{this.secondFactorMethod}}
-                  @backupEnabled={{this.backupEnabled}}
+                  value={{this.secondFactorToken}}
                 />
               </SecondFactorForm>
             {{/if}}

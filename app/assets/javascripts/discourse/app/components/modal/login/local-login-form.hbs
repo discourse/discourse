@@ -87,11 +87,11 @@
       />
     {{else}}
       <SecondFactorInput
-        @value={{@secondFactorToken}}
-        @inputId="login-second-factor"
-        @secondFactorMethod={{@secondFactorMethod}}
-        @backupEnabled={{@backupEnabled}}
         {{on "keydown" this.loginOnEnter}}
+        {{on "input" (with-event-value (fn (mut @secondFactorToken)))}}
+        @secondFactorMethod={{@secondFactorMethod}}
+        value={{@secondFactorToken}}
+        id="login-second-factor"
       />
     {{/if}}
   </SecondFactorForm>
