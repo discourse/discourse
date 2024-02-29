@@ -57,6 +57,11 @@ class PostAlerter
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
 
+    # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
+    # If the subscriber of this event wants to filter usage by push_notification_filters as well,
+    # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)
+    DiscourseEvent.trigger(:push_notification, user, payload)
+
     if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
          !filter.call(user, payload)
        }
@@ -90,8 +95,6 @@ class PostAlerter
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end
-
-    DiscourseEvent.trigger(:push_notification, user, payload)
   end
 
   def initialize(default_opts = {})
