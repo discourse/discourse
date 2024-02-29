@@ -23,12 +23,9 @@ module PageObjects
         end
 
         def leave
-          p "will leave"
-          p component(class: ".can-leave")
-          p component(class: ".can-leave")["outerHTML"]
           element = component(class: ".can-leave")
           element.hover
-          element.find(".chat-channel-leave-btn").click
+          element.find(".chat-channel-leave-btn", visible: :all).click
         end
 
         def component(**args)
