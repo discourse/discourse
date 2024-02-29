@@ -23,18 +23,19 @@ module PageObjects
         end
 
         def leave
-          component.hover
+          component(class: ".can-leave").hover
           component.find(".chat-channel-leave-btn").click
         end
 
-        def component
-          find(build_selector)
+        def component(**args)
+          find(build_selector(**args))
         end
 
         private
 
         def build_selector(**args)
           selector = SELECTOR
+          selector += args[:class] if args[:class]
           selector += "[data-chat-channel-id=\"#{self.id}\"]" if self.id
           selector
         end
