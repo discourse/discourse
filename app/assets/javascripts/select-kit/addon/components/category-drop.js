@@ -154,18 +154,23 @@ export default ComboBoxComponent.extend({
         parentCategoryId = -1;
       }
 
-      const results = (
-        await Category.asyncSearch(filter, {
-          parentCategoryId,
-          includeUncategorized: this.siteSettings.allow_uncategorized_topics,
-          includeAncestors: true,
-          // Show all categories if possible (up to 20), otherwise show just
-          // first 15 and let CategoryDropCollection show the "show more" link
-          limit: this.site.categories_count < 20 ? 20 : 15,
-        })
-      ).categories;
+      const result = await Category.asyncSearch(filter, {
+        parentCategoryId,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+        includeAncestors: true,
+        // Show all categories if possible (up to 18), otherwise show just
+        // first 15 and let CategoryDropCollection show the "show more" link
+        limit: 18,
+      });
 
-      return this.shortcuts.concat(results);
+      const categories =
+        result.categoriesCount > 15
+          ? result.categories.slice(0, 15)
+          : result.categories;
+
+      this.selectKit.totalCount = result.categoriesCount;
+
+      return this.shortcuts.concat(categories);
     }
 
     const opts = {

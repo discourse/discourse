@@ -48,7 +48,6 @@ class SiteSerializer < ApplicationSerializer
     :privacy_policy_url,
     :system_user_avatar_template,
     :lazy_load_categories,
-    :categories_count,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -352,14 +351,6 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_lazy_load_categories?
-    scope.can_lazy_load_categories?
-  end
-
-  def categories_count
-    object.categories_count
-  end
-
-  def include_categories_count?
     scope.can_lazy_load_categories?
   end
 

@@ -400,6 +400,7 @@ export default class Category extends RestModel {
         categories: result["categories"].map((category) =>
           Site.current().updateCategory(category)
         ),
+        categoriesCount: result["categories_count"],
       };
     } else {
       return result["categories"].map((category) =>

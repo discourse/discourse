@@ -24,19 +24,21 @@ export default class CategoryDropCollection extends Component {
       // Not all categories are displayed only when lazy_load_categories is enabled
       this.site.lazy_load_categories &&
       this.args.collection.identifier === MAIN_COLLECTION &&
-      // Show just for the first CategoryDrop (first breadcrumb)
-      !this.args.selectKit.options.parentCategory &&
       this.moreCount > 0
     );
   }
 
   get moreCount() {
+    if (!this.args.selectKit.totalCount) {
+      return 0;
+    }
+
     const currentCount = this.args.collection.content.filter(
       (category) =>
         category.id !== NO_CATEGORIES_ID && category.id !== ALL_CATEGORIES_ID
     ).length;
 
-    return this.site.categories_count - currentCount;
+    return this.args.selectKit.totalCount - currentCount;
   }
 
   <template>

@@ -392,6 +392,8 @@ class CategoriesController < ApplicationController
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
+    categories_count = categories.count
+
     categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
 
     Category.preload_user_fields!(guardian, categories)
@@ -409,18 +411,17 @@ class CategoriesController < ApplicationController
         ]
       end
 
+    response = {
+      categories_count: categories_count,
+      categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+    }
+
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
-
-      render_json_dump(
-        {
-          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
-          ancestors: serialize_data(ancestors, SiteCategorySerializer, scope: guardian),
-        },
-      )
-    else
-      render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+      response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
     end
+
+    render_json_dump(response)
   end
 
   private
