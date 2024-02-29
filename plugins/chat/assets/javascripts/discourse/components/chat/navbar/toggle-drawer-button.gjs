@@ -19,7 +19,7 @@ export default class ChatNavbarToggleDrawerButton extends Component {
         "chat.collapse"
         "chat.expand"
       }}
-      class="btn-flat no-text c-navbar__toggle-drawer-button"
+      class="btn-transparent no-text c-navbar__toggle-drawer-button"
     />
   </template>
 }
