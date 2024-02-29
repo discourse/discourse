@@ -1861,7 +1861,7 @@ en:
 
     enable_discord_logins: "Allow users to authenticate using Discord?"
     discord_client_id: 'Discord Client ID (need one? visit <a href="https://discordapp.com/developers/applications/me">the Discord developer portal</a>)'
-    discord_secret: "Discord Client Secret Key Used for authenticating and enabling Discord related features on the site, such as Discord logins. This secret key corresponds to the Discord application created for the website, and is necessary for securely communicating with the Discord API. Misuse may lead to unauthorized access so handle it carefully."
+    discord_secret: "Discord Client Secret Key Used for authenticating and enabling Discord related features on the site, such as Discord logins. This secret key corresponds to the Discord application created for the website, and is necessary for securely communicating with the Discord API."
     discord_trusted_guilds: 'Only allow members of these Discord guilds to log in via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
     enable_backups: "Allow administrators to create backups of the forum"
@@ -2330,7 +2330,7 @@ en:
     app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
 
-    share_anonymized_statistics: "Enable sharing of anonymized usage statistics. When this setting is enabled, data concerning the usage of the site is collected and shared in anonymized form, ensuring no personal information is disclosed."
+    share_anonymized_statistics: "Enable sharing of anonymized usage statistics with CDCK, Inc. (“Discourse”). When this setting is enabled, data concerning the usage of the site is collected and shared in anonymized form, ensuring no personal information is disclosed."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
@@ -2371,7 +2371,7 @@ en:
     secure_uploads_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure uploads allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
-    enable_emoji: "Toggle the display and use of emojis in your Discourse instance. When enabled, users have the ability to insert emojis into their posts and other text-related fields, enhancing expressive communication. This also enables the emoji autocomplete function in the text editor. If disabled, emojis will not be rendered and users will not be able to access or use them."
+    enable_emoji: "Enable the display and use of emojis in your Discourse instance. If disabled, emojis will not be rendered and users will not be able to access or use them in text fields."
     enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "Select your preferred style of emoji. Different emoji sets can provide unique appearances to the emojis displayed on the site."
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
