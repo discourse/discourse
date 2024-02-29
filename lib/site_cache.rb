@@ -25,6 +25,7 @@ class SiteCache
 
     raise ArgumentError.new(:max_global_size) if max_global_size < 1
     raise ArgumentError.new(:max_size_per_site) if max_size_per_site < 1
+    raise ArgumentError.new if max_size_per_site > max_global_size
 
     @max_global_size = max_global_size
     @max_size_per_site = max_size_per_site
