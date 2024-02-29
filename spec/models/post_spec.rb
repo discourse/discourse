@@ -2202,7 +2202,7 @@ RSpec.describe Post do
 
   describe "public_posts_count_per_day" do
     before do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:post)
       Fabricate(:post, created_at: 1.day.ago)

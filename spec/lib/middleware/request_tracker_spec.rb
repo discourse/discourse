@@ -260,7 +260,7 @@ RSpec.describe Middleware::RequestTracker do
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
-      freeze_time DateTime.parse("2021-01-01 01:00")
+      freeze_time_safe
     end
 
     use_redis_snapshotting

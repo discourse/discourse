@@ -73,7 +73,7 @@ describe Chat::Statistics do
     Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(62.days), user: user4)
   end
 
-  before { freeze_time(DateTime.parse("2022-07-08 09:30:00")) }
+  before { freeze_time_safe }
 
   describe "#about_messages" do
     it "counts non-deleted messages created in all status channels in the time period accurately" do
