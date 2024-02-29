@@ -224,7 +224,7 @@ class BulkImport::Base
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = last_id(Group)
-    group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
+    @group_names_lower = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
     @last_user_id = last_id(User)
@@ -232,7 +232,7 @@ class BulkImport::Base
     @last_sso_record_id = last_id(SingleSignOnRecord)
     @emails = UserEmail.pluck(:email, :user_id).to_h
     @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
-    @usernames_and_groupnames_lower = User.unscoped.pluck(:username_lower).to_set.merge(group_names)
+    @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @anonymized_user_suffixes =
       DB.query_single(
         "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
@@ -245,6 +245,9 @@ class BulkImport::Base
         .to_h
     @last_user_avatar_id = last_id(UserAvatar)
     @last_upload_id = last_id(Upload)
+    @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
+    @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
+    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -352,6 +355,19 @@ class BulkImport::Base
 
   def user_id_from_imported_id(id)
     @users[id.to_i]
+  end
+
+  def user_id_from_original_username(username)
+    normalized_username = User.normalize_username(@mapped_usernames[username] || username)
+    @user_ids_by_username_lower[normalized_username]
+  end
+
+  def username_from_id(id)
+    @usernames_by_id[id]
+  end
+
+  def user_full_name_from_id(id)
+    @user_full_names_by_id[id]
   end
 
   def category_id_from_imported_id(id)
@@ -546,6 +562,8 @@ class BulkImport::Base
   CATEGORY_GROUP_COLUMNS ||= %i[id category_id group_id permission_type created_at updated_at]
 
   CATEGORY_TAG_GROUP_COLUMNS ||= %i[category_id tag_group_id created_at updated_at]
+
+  CATEGORY_USER_COLUMNS ||= %i[category_id user_id notification_level last_seen_at]
 
   TOPIC_COLUMNS ||= %i[
     id
@@ -745,6 +763,7 @@ class BulkImport::Base
     post_id
     category_id
     tag_id
+    user_id
     external_url
     created_at
     updated_at
@@ -822,6 +841,10 @@ class BulkImport::Base
 
   def create_category_tag_groups(rows, &block)
     create_records(rows, "category_tag_group", CATEGORY_TAG_GROUP_COLUMNS, &block)
+  end
+
+  def create_category_users(rows, &block)
+    create_records(rows, "category_user", CATEGORY_USER_COLUMNS, &block)
   end
 
   def create_topics(rows, &block)
@@ -925,9 +948,9 @@ class BulkImport::Base
 
     group[:name] = fix_name(group[:name])
 
-    unless @usernames_and_groupnames_lower.add?(group[:name].downcase)
+    if group_or_user_exist?(group[:name])
       group_name = group[:name] + "_1"
-      group_name.next! until @usernames_and_groupnames_lower.add?(group_name.downcase)
+      group_name.next! while group_or_user_exist?(group_name)
       group[:name] = group_name
     end
 
@@ -943,6 +966,12 @@ class BulkImport::Base
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
     group
+  end
+
+  def group_or_user_exist?(name)
+    name_lowercase = name.downcase
+    return true if @usernames_lower.include?(name_lowercase)
+    @group_names_lower.add?(name_lowercase).nil?
   end
 
   def process_user(user)
@@ -976,9 +1005,9 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    unless @usernames_and_groupnames_lower.add?(user[:username].downcase)
+    if user_exist?(user[:username])
       username = user[:username] + "_1"
-      username.next! until @usernames_and_groupnames_lower.add?(username.downcase)
+      username.next! while user_exist?(username)
       user[:username] = username
     end
 
@@ -998,7 +1027,16 @@ class BulkImport::Base
       user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
     end
 
+    @user_ids_by_username_lower[user[:username_lower]] = user[:id]
+    @usernames_by_id[user[:id]] = user[:username]
+    @user_full_names_by_id[user[:id]] = user[:name] if user[:name].present?
+
     user
+  end
+
+  def user_exist?(username)
+    username_lowercase = username.downcase
+    @usernames_lower.add?(username_lowercase).nil?
   end
 
   def process_user_email(user_email)
@@ -1161,6 +1199,10 @@ class BulkImport::Base
     category_tag_group[:created_at] = NOW
     category_tag_group[:updated_at] = NOW
     category_tag_group
+  end
+
+  def process_category_user(category_user)
+    category_user
   end
 
   def process_topic(topic)
@@ -1682,21 +1724,22 @@ class BulkImport::Base
 
     cooked = @markdown.render(cooked).scrub.strip
 
-    cooked.gsub!(%r{\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[/QUOTE\]}im) do
-      username, post_id, topic_id, quote = $1, $2, $3, $4
+    cooked.gsub!(
+      %r{\[QUOTE=(?:"|&quot;)?(.+?)(?:, post:(\d+), topic:(\d+))?(?:, username:(.+?))?(?:"|&quot;)?\](.+?)\[/QUOTE\]}im,
+    ) do
+      name_or_username, post_id, topic_id, username, quote = $1, $2, $3, $4, $5
+      username ||= name_or_username
 
       quote = quote.scrub.strip
       quote.gsub!(/^(<br>\n?)+/, "")
       quote.gsub!(/(<br>\n?)+$/, "")
-
-      user = User.find_by(username: username)
 
       if post_id.present? && topic_id.present?
         <<-HTML
           <aside class="quote" data-post="#{post_id}" data-topic="#{topic_id}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : username}:
+              #{name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
@@ -1706,7 +1749,7 @@ class BulkImport::Base
           <aside class="quote no-group" data-username="#{username}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : username}:
+              #{name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
@@ -1726,8 +1769,8 @@ class BulkImport::Base
       upload_sha1 = Upload.sha1_from_short_url(short_url)
       upload_base62 = Upload.base62_sha1(upload_sha1)
       upload_id = @uploads_by_sha1[upload_sha1]
-      upload_url = @upload_urls_by_id[upload_id]
-      cdn_url = Discourse.store.cdn_url(upload_url)
+      upload_url = upload_id ? @upload_urls_by_id[upload_id] : nil
+      cdn_url = upload_url ? Discourse.store.cdn_url(upload_url) : ""
 
       attributes = +%{loading="lazy"}
       attributes << %{ alt="#{alt}"} if alt.present?
@@ -1744,9 +1787,9 @@ class BulkImport::Base
       name = @mapped_usernames[$1] || $1
       normalized_name = User.normalize_username(name)
 
-      if User.where(username_lower: normalized_name).exists?
+      if @usernames_lower.include?(normalized_name)
         %|<a class="mention" href="/u/#{normalized_name}">@#{name}</a>|
-      elsif Group.where("LOWER(name) = ?", normalized_name).exists?
+      elsif @group_names_lower.include?(normalized_name)
         %|<a class="mention-group" href="/groups/#{normalized_name}">@#{name}</a>|
       else
         "@#{name}"
@@ -1761,7 +1804,8 @@ class BulkImport::Base
 
   def user_avatar(user)
     url = user.avatar_template.gsub("{size}", "45")
-    "<img alt=\"\" width=\"20\" height=\"20\" src=\"#{url}\" class=\"avatar\"> #{user.username}"
+    # TODO name/username preference check
+    "<img alt=\"\" width=\"20\" height=\"20\" src=\"#{url}\" class=\"avatar\"> #{user.name.presence || user.username}"
   end
 
   def pre_fancy(title)
