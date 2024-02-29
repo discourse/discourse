@@ -199,7 +199,9 @@ def spec(plugin, parallel: false, argv: nil)
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
 
     Rake::FileUtilsExt.verbose(!parallel) do
-      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
+      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}") do |ok, status|
+        fail "Spec command failed with status (#{status.exitstatus})" if !ok
+      end
     end
   else
     abort "No specs found."
