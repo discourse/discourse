@@ -627,10 +627,10 @@ class PluginApi {
    *
    * ```
    *
-   * action: may be a string or a function. If it is a string, a wiget action
+   * action: may be a string or a function. If it is a string, a widget action
    * will be triggered. If it is function, the function will be called.
    *
-   * function will recieve a single argument:
+   * function will receive a single argument:
    *  {
    *    post:
    *    showFeedback:

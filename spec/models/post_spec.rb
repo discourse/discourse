@@ -716,7 +716,7 @@ RSpec.describe Post do
           SiteSetting.max_mentions_per_post = 1
         end
 
-        it "allows vmax_mentions_per_post mentions" do
+        it "allows max_mentions_per_post mentions" do
           post_with_one_mention.user.trust_level = TrustLevel[1]
           expect(post_with_one_mention).to be_valid
         end
