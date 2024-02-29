@@ -39,7 +39,7 @@ export default class ChatableUser extends Component {
       <div class="user-status" {{this.trackUserStatus @item.model}}>
         <UserStatusMessage
           @status={{@item.model.status}}
-          @showDescription={{false}}
+          @showDescription={{true}}
         />
       </div>
 
