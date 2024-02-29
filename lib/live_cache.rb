@@ -57,10 +57,15 @@ class LiveCache
   )
     @manager = manager
     @hash_key = hash_key
-    @data = SiteCache.new(live_cache_multiplier * max_size_per_site, max_size_per_site)
     @manager.register(hash_key, self)
     @identity = SecureRandom.hex
     @namespace = namespace
+
+    @data =
+      SiteCache.new(
+        max_global_size: live_cache_multiplier * max_size_per_site,
+        max_size_per_site: max_size_per_site,
+      )
   end
 
   def getset(key, &blk)

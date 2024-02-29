@@ -27,7 +27,8 @@ class CachePathGenerator
 
   def initialize(global_limit, site_limit, path)
     @path = path
-    @cache = MethodLogger.new(SiteCache.new(global_limit, site_limit))
+    @cache =
+      MethodLogger.new(SiteCache.new(max_global_size: global_limit, max_size_per_site: site_limit))
     @keys = Hash.new { |h, k| h[k] = [] }
   end
 
@@ -168,7 +169,7 @@ RSpec.describe SiteCache do
 
   describe "getset" do
     it "caches nil" do
-      cache = SiteCache.new(2, 2)
+      cache = SiteCache.new(max_global_size: 2, max_size_per_site: 2)
 
       cache.getset("site", "test") { nil }
       cache.getset("site", "test") { raise }
@@ -244,7 +245,7 @@ RSpec.describe SiteCache do
     end
 
     it "doesn't clear other sites" do
-      cache = SiteCache.new(3, 2)
+      cache = SiteCache.new(max_global_size: 3, max_size_per_site: 2)
       site1_id = Object.new
       site2_id = Object.new
       key = Object.new

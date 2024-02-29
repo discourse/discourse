@@ -20,7 +20,7 @@ require "monitor"
 class SiteCache
   include MonitorMixin
 
-  def initialize(max_global_size, max_size_per_site)
+  def initialize(max_global_size:, max_size_per_site:)
     mon_initialize
 
     raise ArgumentError.new(:max_global_size) if max_global_size < 1
