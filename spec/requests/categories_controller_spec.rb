@@ -66,7 +66,7 @@ RSpec.describe CategoriesController do
       )
     end
 
-    it "does not returns subcatgories without permission" do
+    it "does not returns subcategories without permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
       subcategory.set_permissions(admins: :full)
       subcategory.save!
