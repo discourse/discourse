@@ -16,20 +16,23 @@ module PageObjects
         participants_details.length
       end
 
+      def controls
+        find("#{PRIVATE_MESSAGE_MAP_KLASS} .controls")
+      end
+
       def toggle_edit_participants_button
-        # find_button("add-remove-participant").click
-        find(".add-remove-participant-btn").click
+        controls.click_button(class: "add-remove-participant-btn")
       end
 
       def has_add_participants_button?
-        has_css?("#{PRIVATE_MESSAGE_MAP_KLASS} .controls .add-participant-btn")
+        controls.has_button?(class: "add-participant-btn")
       end
 
       def has_no_add_participants_button?
-        has_no_css?("#{PRIVATE_MESSAGE_MAP_KLASS} .controls .add-participant-btn")
+        controls.has_no_button?(class: "add-participant-btn")
       end
       def click_add_participants_button
-        find("#{PRIVATE_MESSAGE_MAP_KLASS} .controls .add-participant-btn").click
+        controls.click_button(class: "add-participant-btn")
       end
 
       def click_remove_participant_button(user)

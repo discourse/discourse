@@ -98,7 +98,6 @@ export default class PrivateMessageMap extends Component {
         <DButton
           @action={{this.actionAllowed}}
           @label={{this.actionAllowedLabel}}
-          id="add-remove-participant"
           class="btn btn-default add-remove-participant-btn"
         />
 
@@ -106,7 +105,6 @@ export default class PrivateMessageMap extends Component {
           <DButton
             @action={{@showInvite}}
             @icon="plus"
-            id="add-participant"
             class="btn btn-default no-text btn-icon add-participant-btn"
           />
         {{/if}}
