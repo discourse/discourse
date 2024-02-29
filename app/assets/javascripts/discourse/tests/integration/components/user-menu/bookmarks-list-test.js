@@ -27,17 +27,13 @@ module(
       assert.ok(items[1].classList.contains("bookmark"));
     });
 
-    test("show all link", async function (assert) {
+    test("show all button for bookmark notifications", async function (assert) {
       await render(template);
       const link = query(".panel-body-bottom .show-all");
-      assert.ok(
-        link.href.endsWith("/u/eviltrout/activity/bookmarks"),
-        "links to the bookmarks page"
-      );
       assert.strictEqual(
         link.title,
         I18n.t("user_menu.view_all_bookmarks"),
-        "has a title"
+        "has the correct title"
       );
     });
 
