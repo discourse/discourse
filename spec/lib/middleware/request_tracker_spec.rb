@@ -329,7 +329,7 @@ RSpec.describe Middleware::RequestTracker do
       stub_const(
         Middleware::RequestTracker,
         "STATIC_IP_SKIPPER",
-        "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) },
+        "177.33.14.73 191.209.88.192/30".split.map { |ip| IPAddr.new(ip) },
       ) do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
         global_setting :max_reqs_per_ip_mode, "block"
