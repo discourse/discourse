@@ -39,8 +39,8 @@ class PostAlerter
 
       if user.allow_live_notifications?
         send_notification =
-          !DiscoursePluginRegistry.push_notification_filters.any? do |filter|
-            !filter.call(user, payload)
+          DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+            filter.call(user, payload)
           end
 
         if send_notification
