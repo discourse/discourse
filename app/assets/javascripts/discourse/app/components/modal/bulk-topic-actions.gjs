@@ -277,6 +277,13 @@ export default class BulkTopicActions extends Component {
               />{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
+
+        <DButton
+          @action={{@closeModal}}
+          @label="cancel"
+          class="btn-transparent d-modal-cancel"
+          id="bulk-topics-cancel"
+        />
         <DButton
           @action={{this.performAction}}
           @icon="check"
