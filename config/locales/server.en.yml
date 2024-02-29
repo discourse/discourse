@@ -1742,7 +1742,7 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    content_security_policy: "Activates the Content-Security-Policy (CSP), an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. When enabled, the server provides the security policy in the form of a 'Content-Security-Policy' HTTP header."
+    content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
