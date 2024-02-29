@@ -38,13 +38,19 @@ class PostAlerter
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
 
       if user.allow_live_notifications?
-        payload =
-          DiscoursePluginRegistry.apply_modifier(
-            :post_alerter_live_notification_payload,
-            payload,
-            user,
-          )
-        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        send_notification =
+          DiscoursePluginRegistry.push_notification_filters.any? do |filter|
+            !filter.call(user, payload)
+          end
+        if send_notification
+          payload =
+            DiscoursePluginRegistry.apply_modifier(
+              :post_alerter_live_notification_payload,
+              payload,
+              user,
+            )
+          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        end
       end
 
       push_notification(user, payload)
