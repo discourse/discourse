@@ -45,6 +45,10 @@ module PageObjects
           find(@context).find("#{SELECTOR}__last-reply-excerpt", text: text)
         end
 
+        def has_user?(user)
+          find(@context).find("#{SELECTOR}__last-reply-username", text: user.username)
+        end
+
         def excerpt
           find(@context).find("#{SELECTOR}__last-reply-excerpt")
         end

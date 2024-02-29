@@ -130,6 +130,7 @@ RSpec.describe "User threads", type: :system do
       expect(indicator).to have_reply_count(4)
       expect(indicator).to have_participant(last_user)
       expect(indicator).to have_excerpt(last_message.excerpt)
+      expect(indicator).to have_user(last_user)
     end
   end
 
