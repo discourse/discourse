@@ -303,5 +303,27 @@ RSpec.describe GroupUser do
       # keep in mind that we do not restore tl3, cause reqs can be lost
       expect(user.reload.trust_level).to eq(2)
     end
+
+    it "protects user trust level if all requirements are met" do
+      Promotion.stubs(:tl2_met?).returns(true)
+
+      user = Fabricate(:user)
+      expect(user.trust_level).to eq(1)
+
+      group.update!(grant_trust_level: 1)
+
+      Promotion.recalculate(user)
+      expect(user.reload.trust_level).to eq(2)
+
+      group_user = Fabricate(:group_user, group: group, user: user)
+      expect_not_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: user.id,
+          message_type: "tl2_promotion_message",
+        },
+      ) { group_user.destroy! }
+      expect(user.reload.trust_level).to eq(2)
+    end
   end
 end
