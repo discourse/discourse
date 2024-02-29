@@ -39,9 +39,10 @@ class PostAlerter
 
       if user.allow_live_notifications?
         send_notification =
-          DiscoursePluginRegistry.push_notification_filters.any? do |filter|
+          !DiscoursePluginRegistry.push_notification_filters.any? do |filter|
             !filter.call(user, payload)
           end
+
         if send_notification
           payload =
             DiscoursePluginRegistry.apply_modifier(
