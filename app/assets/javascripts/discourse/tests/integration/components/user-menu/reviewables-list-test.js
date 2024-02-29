@@ -14,7 +14,7 @@ module(
 
     test("show all button for reviewable notifications", async function (assert) {
       await render(template);
-      const showAll = query(".panel-body-bottom a.show-all");
+      const showAll = query(".panel-body-bottom .show-all");
       assert.strictEqual(
         showAll.title,
         I18n.t("user_menu.reviewable.view_all"),
