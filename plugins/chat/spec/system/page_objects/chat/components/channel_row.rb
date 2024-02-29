@@ -23,7 +23,7 @@ module PageObjects
         end
 
         def leave
-          component(class: ".can-leave").hover
+          component(class: ".can-leave").find(".chat-channel-row__content").hover
           component.find(".chat-channel-leave-btn").click
         end
 
