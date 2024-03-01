@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import HomeLogo from "discourse/components/glimmer-header/home-logo";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";

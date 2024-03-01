@@ -5,7 +5,6 @@ import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
-import Session from "discourse/models/session";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import Logo from "./logo";
