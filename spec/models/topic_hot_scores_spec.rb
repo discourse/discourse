@@ -29,8 +29,7 @@ RSpec.describe TopicHotScore do
     end
 
     it "can correctly update like counts and post counts and account for activity" do
-      # freeze to specific date + time to avoid flakiness from leap years
-      freeze_time(DateTime.parse("2024-02-01 01:00"))
+      freeze_time_safe
 
       TopicHotScore.create!(topic_id: -1, score: 0.0, recent_likes: 99, recent_posters: 0)
 

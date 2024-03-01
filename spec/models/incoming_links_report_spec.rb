@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe IncomingLinksReport do
-  before { freeze_time DateTime.parse("2010-01-01 6:00") }
+  before { freeze_time_safe }
 
   describe "integration" do
     it "runs correctly" do

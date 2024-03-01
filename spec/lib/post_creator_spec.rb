@@ -680,8 +680,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "whispers do not mess up the public view" do
-      # turns out this can fail on leap years if we don't do this
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
@@ -760,7 +759,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "silent do not mess up the public view" do
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
