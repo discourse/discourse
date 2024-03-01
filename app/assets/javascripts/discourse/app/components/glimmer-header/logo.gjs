@@ -1,8 +1,7 @@
-import { concat } from "@ember/helper";
 import getURL from "discourse-common/lib/get-url";
 import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 import eq from "truth-helpers/helpers/eq";
+import not from "truth-helpers/helpers/not";
 
 const LogoElement = <template>
   {{#if (and @darkUrl (not (eq @url @darkUrl)))}}

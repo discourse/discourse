@@ -1,9 +1,9 @@
 import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import HomeLogo from "discourse/components/glimmer-header/home-logo";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import HomeLogo from "discourse/components/glimmer-header/home-logo";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -38,7 +38,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
-    const args = { minimized: true };
+    const minimized = true;
 
     await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count("img.logo-small"), 1);
@@ -51,7 +51,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
-    const args = { minimized: false };
+    const minimized = false;
 
     await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count("h1#site-text-logo.text-logo"), 1);
@@ -62,7 +62,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
-    const args = { minimized: true };
+    const minimized = true;
 
     await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count(".d-icon-home"), 1);
