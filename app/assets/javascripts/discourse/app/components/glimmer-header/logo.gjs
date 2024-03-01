@@ -1,10 +1,10 @@
 import getURL from "discourse-common/lib/get-url";
 import and from "truth-helpers/helpers/and";
+import notEq from "truth-helpers/helpers/not-eq";
 import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
 
-const LogoElement = <template>
-  {{#if (and @darkUrl (not (eq @url @darkUrl)))}}
+const Logo = <template>
+  {{#if (and @darkUrl (notEq @url @darkUrl))}}
     <picture>
       <source srcset={{getURL @darkUrl}} media="(prefers-color-scheme: dark)" />
       <img
@@ -26,4 +26,4 @@ const LogoElement = <template>
   {{/if}}
 </template>;
 
-export default LogoElement;
+export default Logo;

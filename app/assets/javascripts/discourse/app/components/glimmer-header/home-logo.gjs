@@ -11,13 +11,12 @@ import getURL from "discourse-common/lib/get-url";
 import Logo from "./logo";
 
 export default class HomeLogo extends Component {
+  @service session;
   @service site;
   @service siteSettings;
 
   href = getURL("/");
-  session = Session.current();
-  darkModeAvailable = Session.current().darkModeAvailable;
-  title = this.siteSettings.title;
+  darkModeAvailable = this.session.darkModeAvailable;
 
   get showMobileLogo() {
     return this.site.mobileView && this.logoResolver("mobile_logo").length > 0;
@@ -56,7 +55,7 @@ export default class HomeLogo extends Component {
     // try dark logos first when color scheme is dark
     // this is independent of browser dark mode
     // hence the fallback to normal logos
-    if (Session.currentProp("defaultColorSchemeIsDark")) {
+    if (this.session.defaultColorSchemeIsDark) {
       return (
         this.siteSettings[`site_${name}_dark_url`] ||
         this.siteSettings[`site_${name}_url`] ||
@@ -75,7 +74,6 @@ export default class HomeLogo extends Component {
 
     e.preventDefault();
     DiscourseURL.routeToTag(e.target.closest("a"));
-    return false;
   }
 
   <template>
@@ -90,7 +88,7 @@ export default class HomeLogo extends Component {
             <Logo
               @key="logo-small"
               @url={{this.logoSmallUrl}}
-              @title={{this.title}}
+              @title={{this.siteSettings.title}}
               @darkUrl={{this.logoSmallUrlDark}}
             />
           {{else}}
@@ -100,19 +98,19 @@ export default class HomeLogo extends Component {
           <Logo
             @key="logo-mobile"
             @url={{this.mobileLogoUrl}}
-            @title={{this.title}}
+            @title={{this.siteSettings.title}}
             @darkUrl={{this.mobileLogoUrlDark}}
           />
         {{else if this.logoUrl}}
           <Logo
             @key="logo-big"
             @url={{this.logoUrl}}
-            @title={{this.title}}
+            @title={{this.siteSettings.title}}
             @darkUrl={{this.logoUrlDark}}
           />
         {{else}}
           <h1 id="site-text-logo" class="text-logo">
-            {{this.title}}
+            {{this.siteSettings.title}}
           </h1>
         {{/if}}
       </a>

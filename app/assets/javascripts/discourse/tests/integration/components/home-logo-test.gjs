@@ -25,47 +25,43 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
-    const minimized = false;
 
-    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
-    assert.strictEqual(count(".title"), 1);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
-    assert.strictEqual(query("#site-logo").getAttribute("alt"), title);
+    await render(<template><HomeLogo @minimized={{false}} /></template>);
+    assert.dom(".title").exists({ count: 1 });
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", bigLogo);
+    assert.dom("#site-logo").hasAttribute("alt", title);
   });
 
   test("basics - minimized", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
-    const minimized = true;
 
-    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
-    assert.strictEqual(count("img.logo-small"), 1);
-    assert.strictEqual(query("img.logo-small").getAttribute("src"), smallLogo);
-    assert.strictEqual(query("img.logo-small").getAttribute("alt"), title);
-    assert.strictEqual(query("img.logo-small").getAttribute("width"), "36");
+    await render(<template><HomeLogo @minimized={{true}} /></template>);
+    assert.dom("img.logo-small").exists({ count: 1 });
+    assert.dom("img.logo-small").hasAttribute("src", smallLogo);
+    assert.dom("img.logo-small").hasAttribute("alt", title);
+    assert.dom("img.logo-small").hasAttribute("width", "36");
   });
 
   test("no logo", async function (assert) {
     this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
-    const minimized = false;
 
-    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
-    assert.strictEqual(count("h1#site-text-logo.text-logo"), 1);
-    assert.strictEqual(query("#site-text-logo").innerText, title);
+    await render(<template><HomeLogo @minimized={{false}} /></template>);
+    assert.dom("h1#site-text-logo.text-logo").exists({ count: 1 });
+    assert.dom("#site-text-logo").hasText(title, "has title as text logo");
   });
 
   test("no logo - minimized", async function (assert) {
     this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
-    const minimized = true;
 
-    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
-    assert.strictEqual(count(".d-icon-home"), 1);
+    await render(<template><HomeLogo @minimized={{true}} /></template>);
+    assert.dom(".d-icon-home").exists({ count: 1 });
   });
 
   test("mobile logo", async function (assert) {
@@ -74,8 +70,8 @@ module("Integration | Component | home-logo", function (hooks) {
     this.site.mobileView = true;
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-mobile"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), mobileLogo);
+    assert.dom("img#site-logo.logo-mobile").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", mobileLogo);
   });
 
   test("mobile without logo", async function (assert) {
@@ -83,8 +79,8 @@ module("Integration | Component | home-logo", function (hooks) {
     this.site.mobileView = true;
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", bigLogo);
   });
 
   test("logo with dark mode alternative", async function (assert) {
@@ -93,19 +89,18 @@ module("Integration | Component | home-logo", function (hooks) {
     this.session.set("darkModeAvailable", true);
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
-
-    assert.strictEqual(
-      query("picture source").getAttribute("media"),
-      prefersDark,
-      "includes dark mode media attribute"
-    );
-    assert.strictEqual(
-      query("picture source").getAttribute("srcset"),
-      darkLogo,
-      "includes dark mode alternative logo source"
-    );
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", bigLogo);
+    assert
+      .dom("picture source")
+      .hasAttribute("media", prefersDark, "includes dark mode media attribute");
+    assert
+      .dom("picture source")
+      .hasAttribute(
+        "srcset",
+        darkLogo,
+        "includes dark mode alternative logo source"
+      );
   });
 
   test("mobile logo with dark mode alternative", async function (assert) {
@@ -117,18 +112,18 @@ module("Integration | Component | home-logo", function (hooks) {
     this.site.mobileView = true;
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), mobileLogo);
 
-    assert.strictEqual(
-      query("picture source").getAttribute("media"),
-      prefersDark,
-      "includes dark mode media attribute"
-    );
-    assert.strictEqual(
-      query("picture source").getAttribute("srcset"),
-      darkLogo,
-      "includes dark mode alternative logo source"
-    );
+    assert.dom("#site-logo").hasAttribute("src", mobileLogo);
+    assert
+      .dom("picture source")
+      .hasAttribute("media", prefersDark, "includes dark mode media attribute");
+    assert
+      .dom("picture source")
+      .hasAttribute(
+        "srcset",
+        darkLogo,
+        "includes dark mode alternative logo source"
+      );
   });
 
   test("dark mode enabled but no dark logo set", async function (assert) {
@@ -137,9 +132,9 @@ module("Integration | Component | home-logo", function (hooks) {
     this.session.set("darkModeAvailable", true);
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
-    assert.ok(!exists("picture"), "does not include alternative logo");
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", bigLogo);
+    assert.dom("picture").doesNotExist("does not include alternative logo");
   });
 
   test("dark logo set but no dark mode", async function (assert) {
@@ -147,9 +142,9 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_logo_dark_url = darkLogo;
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
-    assert.ok(!exists("picture"), "does not include alternative logo");
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", bigLogo);
+    assert.dom("picture").doesNotExist("does not include alternative logo");
   });
 
   test("dark color scheme and dark logo set", async function (assert) {
@@ -158,13 +153,9 @@ module("Integration | Component | home-logo", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(
-      query("#site-logo").getAttribute("src"),
-      darkLogo,
-      "uses dark logo"
-    );
-    assert.ok(!exists("picture"), "does not add dark mode alternative");
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert.dom("#site-logo").hasAttribute("src", darkLogo, "uses dark logo");
+    assert.dom("picture").doesNotExist("does not add dark mode alternative");
   });
 
   test("dark color scheme and dark logo not set", async function (assert) {
@@ -173,11 +164,13 @@ module("Integration | Component | home-logo", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
 
     await render(<template><HomeLogo /></template>);
-    assert.strictEqual(count("img#site-logo.logo-big"), 1);
-    assert.strictEqual(
-      query("#site-logo").getAttribute("src"),
-      bigLogo,
-      "uses regular logo on dark scheme if no dark logo"
-    );
+    assert.dom("img#site-logo.logo-big").exists({ count: 1 });
+    assert
+      .dom("#site-logo")
+      .hasAttribute(
+        "src",
+        bigLogo,
+        "uses regular logo on dark scheme if no dark logo"
+      );
   });
 });
