@@ -15,7 +15,7 @@
       </label>
       <CategoryChooser
         @value={{@topicTimer.category_id}}
-        @onChange={{action (mut @topicTimer.category_id)}}
+        @onChange={{fn (mut @topicTimer.category_id)}}
         @options={{hash excludeCategoryId=this.excludeCategoryId}}
       />
     </div>
@@ -40,7 +40,7 @@
         {{i18n "topic.topic_status_update.duration"}}
       </label>
       <RelativeTimePicker
-        @onChange={{action "durationChanged"}}
+        @onChange={{this.durationChanged}}
         @durationMinutes={{readonly @topicTimer.duration_minutes}}
       />
     </div>
