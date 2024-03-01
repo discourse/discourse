@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import { Promise } from "rsvp";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
@@ -171,7 +171,7 @@ export default class BulkTopicActions extends Component {
       this.toasts.error({
         duration: 3000,
         data: { message: i18n("generic_error") },
-      })
+      });
     } else {
       this.toasts.success({
         duration: 3000,
@@ -274,7 +274,9 @@ export default class BulkTopicActions extends Component {
                       @selection={{this.notificationLevelId}}
                     />
                     <strong>{{level.name}}</strong>
-                    <div class="description">{{htmlSafe level.description}}</div>
+                    <div class="description">{{htmlSafe
+                        level.description
+                      }}</div>
                   </label>
                 </div>
               {{/each}}
@@ -282,7 +284,10 @@ export default class BulkTopicActions extends Component {
           {{/if}}
 
           {{#if this.isTagAction}}
-            <p><TagChooser @tags={{this.tags}} @categoryId={{@categoryId}} /></p>
+            <p><TagChooser
+                @tags={{this.tags}}
+                @categoryId={{@categoryId}}
+              /></p>
           {{/if}}
         </ConditionalLoadingSection>
       </:body>
