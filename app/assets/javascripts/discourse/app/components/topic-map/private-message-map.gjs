@@ -82,14 +82,14 @@ export default class PrivateMessageMap extends Component {
         <DButton
           @action={{this.actionAllowed}}
           @label={{this.actionAllowedLabel}}
-          class="btn btn-default add-remove-participant-btn"
+          class="btn-default add-remove-participant-btn"
         />
 
         {{#if (and this.canInvite this.isEditing)}}
           <DButton
             @action={{@showInvite}}
             @icon="plus"
-            class="btn btn-default no-text btn-icon add-participant-btn"
+            class="btn-default add-participant-btn"
           />
         {{/if}}
       </div>
