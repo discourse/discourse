@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import I18n from "discourse-i18n";
@@ -19,23 +18,35 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 export default class EditTopicTimer extends Component {
   @service currentUser;
 
-  @tracked
-  topicTimer = new TrackedObject(
-    this.args.model.topic?.topic_timer || this.createDefaultTimer()
-  );
   @tracked loading = false;
   @tracked flash;
 
-  get defaultStatusType() {
-    return this.publicTimerTypes[0].id;
+  constructor() {
+    super(...arguments);
+
+    // if (!this.topicTimer) {
+    //   this.createDefaultTimer();
+    // }
   }
 
+  get topic() {
+    return this.args.model.topic;
+  }
+
+  get topicTimer() {
+    return this.topic.topic_timer;
+  }
+
+  @cached
   get publicTimerTypes() {
     const types = [];
-    const { closed, category, isPrivateMessage, invisible } =
-      this.args.model.topic;
 
-    if (!closed) {
+    if (this.topic.closed) {
+      types.push({
+        id: OPEN_STATUS_TYPE,
+        name: I18n.t("topic.auto_reopen.title"),
+      });
+    } else {
       types.push({
         id: CLOSE_STATUS_TYPE,
         name: I18n.t("topic.auto_close.title"),
@@ -46,14 +57,7 @@ export default class EditTopicTimer extends Component {
       });
     }
 
-    if (closed) {
-      types.push({
-        id: OPEN_STATUS_TYPE,
-        name: I18n.t("topic.auto_reopen.title"),
-      });
-    }
-
-    if (this.args.model.topic.details.can_delete) {
+    if (this.topic.details.can_delete) {
       types.push({
         id: DELETE_STATUS_TYPE,
         name: I18n.t("topic.auto_delete.title"),
@@ -65,21 +69,19 @@ export default class EditTopicTimer extends Component {
       name: I18n.t("topic.auto_bump.title"),
     });
 
-    if (this.args.model.topic.details.can_delete) {
+    if (this.topic.details.can_delete) {
       types.push({
         id: DELETE_REPLIES_TYPE,
         name: I18n.t("topic.auto_delete_replies.title"),
       });
     }
 
-    if (closed) {
+    if (this.topic.closed) {
       types.push({
         id: CLOSE_STATUS_TYPE,
         name: I18n.t("topic.temp_open.title"),
       });
-    }
-
-    if (!closed) {
+    } else {
       types.push({
         id: OPEN_STATUS_TYPE,
         name: I18n.t("topic.temp_close.title"),
@@ -87,9 +89,9 @@ export default class EditTopicTimer extends Component {
     }
 
     if (
-      (category && category.read_restricted) ||
-      isPrivateMessage ||
-      invisible
+      this.topic.category?.read_restricted ||
+      this.topic.isPrivateMessage ||
+      this.topic.invisible
     ) {
       types.push({
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
@@ -100,50 +102,49 @@ export default class EditTopicTimer extends Component {
     return types;
   }
 
-  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
+  async setTimer(
+    statusType,
+    time,
+    durationMinutes,
+    basedOnLastPost,
+    categoryId
+  ) {
     this.loading = true;
 
-    TopicTimer.update(
-      this.args.model.topic.id,
-      time,
-      basedOnLastPost,
-      statusType,
-      categoryId,
-      durationMinutes
-    )
-      .then((result) => {
-        if (time || durationMinutes) {
-          this.args.model.updateTopicTimerProperty(
-            "execute_at",
-            result.execute_at
-          );
-          this.args.model.updateTopicTimerProperty(
-            "duration_minutes",
-            result.duration_minutes
-          );
-          this.args.model.updateTopicTimerProperty(
-            "category_id",
-            result.category_id
-          );
-          this.args.model.updateTopicTimerProperty("closed", result.closed);
-          this.args.closeModal();
-        } else {
-          const topicTimer = this.createDefaultTimer();
-          this.topicTime = topicTimer;
-          this.args.model.setTopicTimer(topicTimer);
-          this.onChangeInput(null, null);
-        }
-      })
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
+    try {
+      const result = await TopicTimer.update(
+        this.topic.id,
+        time,
+        basedOnLastPost,
+        statusType,
+        categoryId,
+        durationMinutes
+      );
+
+      if (time || durationMinutes) {
+        this.topicTimer.setProperties({
+          execute_at: result.execute_at,
+          duration_minutes: result.duration_minutes,
+          category_id: result.category_id,
+          closed: result.closed,
+        });
+        this.args.closeModal();
+      } else {
+        this.createDefaultTimer();
+        this.topicTimer.set("time", null);
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  @action
   createDefaultTimer() {
     const defaultTimer = TopicTimer.create({
-      status_type: this.defaultStatusType,
+      status_type: this.publicTimerTypes[0].id,
     });
-    this.args.model.setTopicTimer(defaultTimer);
+    this.topic.set("topic_timer", defaultTimer);
     return defaultTimer;
   }
 
@@ -151,33 +152,29 @@ export default class EditTopicTimer extends Component {
   onChangeStatusType(value) {
     const basedOnLastPost = CLOSE_AFTER_LAST_POST_STATUS_TYPE === value;
     this.topicTimer.based_on_last_post = basedOnLastPost;
-    this.args.model.updateTopicTimerProperty(
-      "based_on_last_post",
-      basedOnLastPost
-    );
+    this.topicTimer.set("based_on_last_post", basedOnLastPost);
     this.topicTimer.status_type = value;
-    this.args.model.updateTopicTimerProperty("status_type", value);
+    this.topicTimer.set("status_type", value);
   }
 
   @action
-  onChangeInput(_type, time) {
-    if (moment.isMoment(time)) {
-      time = time.format(FORMAT);
-    }
-    this.topicTimer.updateTime = time;
-    this.args.model.updateTopicTimerProperty("updateTime", time);
+  onChangeInput(_, time) {
+    this.topicTimer.set(
+      "time",
+      moment.isMoment(time) ? time.format(FORMAT) : time
+    );
   }
 
   @action
   async saveTimer() {
     this.flash = null;
 
-    if (!this.topicTimer.updateTime && !this.topicTimer.duration_minutes) {
+    if (!this.topicTimer.time && !this.topicTimer.duration_minutes) {
       this.flash = I18n.t("topic.topic_status_update.time_frame_required");
       return;
     }
 
-    if (this.topicTimer.duration_minutes && !this.topicTimer.updateTime) {
+    if (this.topicTimer.duration_minutes && !this.topicTimer.time) {
       if (this.topicTimer.duration_minutes <= 0) {
         this.flash = I18n.t("topic.topic_status_update.min_duration");
         return;
@@ -195,10 +192,10 @@ export default class EditTopicTimer extends Component {
       statusType = CLOSE_STATUS_TYPE;
     }
 
-    await this._setTimer(
-      this.topicTimer.updateTime,
-      this.topicTimer.duration_minutes,
+    await this.setTimer(
       statusType,
+      this.topicTimer.time,
+      this.topicTimer.duration_minutes,
       this.topicTimer.based_on_last_post,
       this.topicTimer.category_id
     );
@@ -210,7 +207,7 @@ export default class EditTopicTimer extends Component {
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }
-    await this._setTimer(null, null, statusType);
+    await this.setTimer(statusType);
     // timer has been removed and we are removing `execute_at`
     // which will hide the remove timer button from the modal
     this.topicTimer.execute_at = null;

@@ -15,7 +15,6 @@ import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 acceptance("Topic - Edit timer", function (needs) {
-  let clock = null;
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/t/280/timer", () =>
@@ -36,14 +35,14 @@ acceptance("Topic - Edit timer", function (needs) {
     server.get("/t/54077.json", () => helper.response(topicResponse));
   });
 
-  needs.hooks.beforeEach(() => {
+  needs.hooks.beforeEach(function () {
     const timezone = loggedInUser().user_option.timezone;
     const tuesday = "2100-06-15T08:00:00";
-    clock = fakeTime(tuesday, timezone, true);
+    this.clock = fakeTime(tuesday, timezone, true);
   });
 
-  needs.hooks.afterEach(() => {
-    clock.restore();
+  needs.hooks.afterEach(function () {
+    this.clock.restore();
   });
 
   test("autoclose - specific time", async function (assert) {
