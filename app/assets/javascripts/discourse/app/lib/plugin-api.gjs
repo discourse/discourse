@@ -804,16 +804,16 @@ class PluginApi {
   }
 
   /**
-   Called whenever the "page" changes. This allows us to set up analytics
-   and other tracking.
-
-   To get notified when the page changes, you can install a hook like so:
-
-   ```javascript
-   api.onPageChange((url, title) => {
-        console.log('the page changed to: ' + url + ' and title ' + title);
-      });
-   ```
+   * Called whenever the "page" changes. This allows us to set up analytics
+   * and other tracking.
+   *
+   * To get notified when the page changes, you can install a hook like so:
+   *
+   * ```javascript
+   * api.onPageChange((url, title) => {
+   *   console.log('the page changed to: ' + url + ' and title ' + title);
+   * });
+   * ```
    **/
   onPageChange(fn) {
     const callback = wrapWithErrorHandler(fn, "broken_page_change_alert");
@@ -821,13 +821,13 @@ class PluginApi {
   }
 
   /**
-   Listen for a triggered `AppEvent` from Discourse.
-
-   ```javascript
-   api.onAppEvent('inserted-custom-html', () => {
-        console.log('a custom footer was rendered');
-      });
-   ```
+   * Listen for a triggered `AppEvent` from Discourse.
+   *
+   * ```javascript
+   * api.onAppEvent('inserted-custom-html', () => {
+   *   console.log('a custom footer was rendered');
+   * });
+   * ```
    **/
   onAppEvent(name, fn) {
     const appEvents = this._lookupContainer("service:app-events");
@@ -835,18 +835,18 @@ class PluginApi {
   }
 
   /**
-   Registers a function to generate custom avatar CSS classes
-   for a particular user.
-
-   Takes a function that will accept a user as a parameter
-   and return an array of CSS classes to apply.
-
-   ```javascript
-   api.customUserAvatarClasses(user => {
-      if (get(user, 'primary_group_name') === 'managers') {
-        return ['managers'];
-      }
-    });
+   * Registers a function to generate custom avatar CSS classes
+   * for a particular user.
+   *
+   * Takes a function that will accept a user as a parameter
+   * and return an array of CSS classes to apply.
+   *
+   * ```javascript
+   * api.customUserAvatarClasses(user => {
+   *   if (get(user, 'primary_group_name') === 'managers') {
+   *     return ['managers'];
+   *   }
+   * });
    **/
   customUserAvatarClasses(fn) {
     registerCustomAvatarHelper(fn);
@@ -1690,11 +1690,12 @@ class PluginApi {
    *
    * Example:
    *
+   * ```javascript
    * let aPlugin = {
-       'after:highlightElement': ({ el, result, text }) => {
-         console.log(el);
-       }
-     }
+   *   "after:highlightElement": ({ el, result, text }) => {
+   *     console.log(el);
+   *   }
+   * }
    * api.registerHighlightJSPlugin(aPlugin);
    **/
   registerHighlightJSPlugin(plugin) {
@@ -1707,7 +1708,6 @@ class PluginApi {
    * Example:
    *
    * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
-   *
    **/
   addGlobalNotice(text, id, options) {
     addGlobalNotice(text, id, options);
@@ -1746,7 +1746,6 @@ class PluginApi {
    * ```
    *
    * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
-   *
    **/
   decoratePluginOutlet(outletName, callback, opts) {
     deprecated(
@@ -1806,14 +1805,13 @@ class PluginApi {
   /**
    * Allows adding icons to the category-link html
    *
-   * ```
+   * ```javascript
    * api.addCategoryLinkIcon((category) => {
-   *  if (category.someProperty) {
-        return "eye"
-      }
+   *   if (category.someProperty) {
+   *     return "eye"
+   *   }
    * });
    * ```
-   *
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
@@ -2081,17 +2079,17 @@ class PluginApi {
   /**
    * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
-   * ```
-   * api.downloadCalendar("title of the event", [
-   * {
-        startsAt: "2021-10-12T15:00:00.000Z",
-        endsAt: "2021-10-12T16:00:00.000Z",
-      },
-   * ],
-   * "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
+   * ```javascript
+   * api.downloadCalendar("title of the event",
+   *   [
+   *     {
+   *       startsAt: "2021-10-12T15:00:00.000Z",
+   *       endsAt: "2021-10-12T16:00:00.000Z",
+   *     },
+   *   ],
+   *   "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
    * );
    * ```
-   *
    */
   downloadCalendar(title, dates, recurrenceRule = null) {
     downloadCalendar(title, dates, recurrenceRule);
@@ -2152,9 +2150,10 @@ class PluginApi {
    * Add custom user search options.
    * It is heavily correlated with `register_groups_callback_for_users_search_controller_action` which allows defining custom filter.
    * Example usage:
+   *
    * ```
    * api.addUserSearchOption("adminsOnly");
-
+   *
    * register_groups_callback_for_users_search_controller_action(:admins_only) do |groups, user|
    *   groups.where(name: "admins")
    * end
@@ -2475,7 +2474,7 @@ class PluginApi {
    * This is intended to replace the admin-menu plugin outlet from
    * the old admin horizontal nav.
    *
-   * ```
+   * ```javascript
    * api.addAdminSidebarSectionLink("root", {
    *   name: "unique_link_name",
    *   label: "admin.some.i18n.label.key",
@@ -2483,7 +2482,7 @@ class PluginApi {
    *   href: "(optional) can be used instead of the route",
    * }
    * ```
-
+   *
    * @param {String} sectionName - The name of the admin sidebar section to add the link to.
    * @param {Object} link - A link object representing a section link for the sidebar.
    * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
@@ -2492,11 +2491,6 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
-
-
-
-
-
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
