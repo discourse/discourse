@@ -17,10 +17,12 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 export default class BulkTopicActions extends Component {
   @service router;
+  @service toasts;
   @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
   @tracked loading;
+  @tracked errors;
 
   notificationLevelId = null;
 
@@ -41,6 +43,7 @@ export default class BulkTopicActions extends Component {
       return this._processChunks(operation);
     } catch {
       this.dialog.alert(i18n("generic_error"));
+      this.errors = true;
     } finally {
       this.processedTopicCount = 0;
       this.showProgress = false;
@@ -163,6 +166,20 @@ export default class BulkTopicActions extends Component {
     }
   }
 
+  showToast() {
+    if (this.errors) {
+      this.toasts.error({
+        duration: 3000,
+        data: { message: i18n("generic_error") },
+      })
+    } else {
+      this.toasts.success({
+        duration: 3000,
+        data: { message: "Bulk operations completed successfully!" },
+      });
+    }
+  }
+
   @action
   async forEachPerformed(operation, cb) {
     const topics = await this.perform(operation);
@@ -172,6 +189,7 @@ export default class BulkTopicActions extends Component {
       this.args.model.refreshClosure?.();
       this.args.closeModal();
       this.args.model.bulkSelectHelper.toggleBulkSelect();
+      this.showToast();
     }
   }
 
@@ -182,6 +200,7 @@ export default class BulkTopicActions extends Component {
     this.args.model.refreshClosure?.();
     this.args.closeModal();
     this.args.model.bulkSelectHelper.toggleBulkSelect();
+    this.showToast();
   }
 
   @computed("action")
