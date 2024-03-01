@@ -146,7 +146,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.27.0";
+export const PLUGIN_API_VERSION = "1.28.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -2492,6 +2492,8 @@ class PluginApi {
    * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
    * @param {string} [link.href] - The href attribute for the link.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+
+
 
    */
   addAdminSidebarSectionLink(sectionName, link) {
