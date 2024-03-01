@@ -159,10 +159,29 @@ RSpec.describe Chat::ListChannelMessages do
     context "when threads are disabled" do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
 
-      before { channel.update!(threading_enabled: false) }
+      before do
+        channel.update!(threading_enabled: false)
+        thread_1.add(user)
+      end
 
       it "returns empty tracking" do
-        expect(result.tracking).to eq({})
+        Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+
+        expect(result.tracking.thread_tracking).to eq(
+          { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 0 } },
+        )
+      end
+
+      context "when thread is forced" do
+        before { thread_1.update!(force: true) }
+
+        it "returns tracking" do
+          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+
+          expect(result.tracking.thread_tracking).to eq(
+            { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 1 } },
+          )
+        end
       end
     end
 

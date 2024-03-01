@@ -46,7 +46,7 @@ module Chat
     end
 
     def threading_enabled_for_channel(thread:, **)
-      thread.channel.threading_enabled
+      thread.channel.threading_enabled || thread.force
     end
 
     def fetch_membership(thread:, guardian:, **)
