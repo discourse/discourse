@@ -1,10 +1,9 @@
-// deprecated in favor of discourse/tests/integration/components/home-logo-test.gjs
 import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import HomeLogo from "discourse/components/glimmer-header/home-logo";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -13,7 +12,7 @@ const darkLogo = "/images/d-logo-sketch.png?dark";
 const title = "Cool Forum";
 const prefersDark = "(prefers-color-scheme: dark)";
 
-module("Integration | Component | Widget | home-logo", function (hooks) {
+module("Integration | Component | home-logo", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
@@ -26,12 +25,9 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
-    const args = { minimized: false };
+    const minimized = false;
 
-    await render(<template>
-      <MountWidget @widget="home-logo" @args={{args}} />
-    </template>);
-
+    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count(".title"), 1);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
@@ -44,10 +40,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.title = title;
     const args = { minimized: true };
 
-    await render(<template>
-      <MountWidget @widget="home-logo" @args={{args}} />
-    </template>);
-
+    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count("img.logo-small"), 1);
     assert.strictEqual(query("img.logo-small").getAttribute("src"), smallLogo);
     assert.strictEqual(query("img.logo-small").getAttribute("alt"), title);
@@ -60,10 +53,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.title = title;
     const args = { minimized: false };
 
-    await render(<template>
-      <MountWidget @widget="home-logo" @args={{args}} />
-    </template>);
-
+    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count("h1#site-text-logo.text-logo"), 1);
     assert.strictEqual(query("#site-text-logo").innerText, title);
   });
@@ -74,10 +64,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.title = title;
     const args = { minimized: true };
 
-    await render(<template>
-      <MountWidget @widget="home-logo" @args={{args}} />
-    </template>);
-
+    await render(<template><HomeLogo @minimized={{minimized}} /></template>);
     assert.strictEqual(count(".d-icon-home"), 1);
   });
 
@@ -86,8 +73,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_small_url = smallLogo;
     this.site.mobileView = true;
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-mobile"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), mobileLogo);
   });
@@ -96,8 +82,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.site.mobileView = true;
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
   });
@@ -107,8 +92,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_dark_url = darkLogo;
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
 
@@ -132,8 +116,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
 
     this.site.mobileView = true;
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(query("#site-logo").getAttribute("src"), mobileLogo);
 
     assert.strictEqual(
@@ -153,8 +136,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_dark_url = "";
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
     assert.ok(!exists("picture"), "does not include alternative logo");
@@ -164,8 +146,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(query("#site-logo").getAttribute("src"), bigLogo);
     assert.ok(!exists("picture"), "does not include alternative logo");
@@ -176,8 +157,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_dark_url = darkLogo;
     this.session.set("defaultColorSchemeIsDark", true);
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(
       query("#site-logo").getAttribute("src"),
@@ -192,8 +172,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_dark_url = "";
     this.session.set("defaultColorSchemeIsDark", true);
 
-    await render(<template><MountWidget @widget="home-logo" /></template>);
-
+    await render(<template><HomeLogo /></template>);
     assert.strictEqual(count("img#site-logo.logo-big"), 1);
     assert.strictEqual(
       query("#site-logo").getAttribute("src"),
