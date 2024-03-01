@@ -176,6 +176,25 @@ export default class Category extends RestModel {
     return category;
   }
 
+  static async asyncFindBySlugPath(slugPath, opts = {}) {
+    const data = { slug_path: slugPath };
+    if (opts.includePermissions) {
+      data.include_permissions = true;
+    }
+
+    const result = await ajax("/categories/find", { data });
+
+    const categories = result["categories"].map((category) => {
+      category = Site.current().updateCategory(category);
+      if (opts.includePermissions) {
+        category.setupGroupsAndPermissions();
+      }
+      return category;
+    });
+
+    return categories[categories.length - 1];
+  }
+
   static async asyncFindBySlugPathWithID(slugPathWithID) {
     const result = await ajax("/categories/find", {
       data: { slug_path_with_id: slugPathWithID },
@@ -365,6 +384,7 @@ export default class Category extends RestModel {
       select_category_ids: opts.selectCategoryIds,
       reject_category_ids: opts.rejectCategoryIds,
       include_subcategories: opts.includeSubcategories,
+      include_ancestors: opts.includeAncestors,
       prioritized_category_id: opts.prioritizedCategoryId,
       limit: opts.limit,
     };
@@ -372,9 +392,20 @@ export default class Category extends RestModel {
     const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
       await ajax("/categories/search", { data }));
 
-    return result["categories"].map((category) =>
-      Site.current().updateCategory(category)
-    );
+    if (opts.includeAncestors) {
+      return {
+        ancestors: result["ancestors"].map((category) =>
+          Site.current().updateCategory(category)
+        ),
+        categories: result["categories"].map((category) =>
+          Site.current().updateCategory(category)
+        ),
+      };
+    } else {
+      return result["categories"].map((category) =>
+        Site.current().updateCategory(category)
+      );
+    }
   }
 
   permissions = null;

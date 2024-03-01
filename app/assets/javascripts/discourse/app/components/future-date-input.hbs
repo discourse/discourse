@@ -33,7 +33,7 @@
         class="time-input"
         @value={{this._time}}
         disabled={{this.timeInputDisabled}}
-        {{on "input" (action "onChangeTime" value="target.value")}}
+        {{on "input" (with-event-value this.onChangeTime)}}
       />
     </div>
   {{/if}}

@@ -1,4 +1,7 @@
-<AddCategoryTagClasses @category={{@category}} @tags={{array @tag.id}} />
+<AddCategoryTagClasses
+  @category={{@category}}
+  @tags={{if @tag (array @tag.id)}}
+/>
 
 {{#if @category}}
   <PluginOutlet

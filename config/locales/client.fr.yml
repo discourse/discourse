@@ -35,11 +35,9 @@ fr:
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "DD MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
       wrap_on: "le %{date}"
       tiny:
@@ -75,7 +73,7 @@ fr:
           one: "%{count} an"
           other: "%{count} ans"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "moins de %{count} minute"
@@ -104,7 +102,7 @@ fr:
         almost_x_years:
           one: "presque %{count} an"
           other: "presque %{count} ans"
-        date_year: "D MMM 'YY"
+        date_year: "DD MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "il y a %{count} minute"
@@ -188,7 +186,6 @@ fr:
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
-      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     themes:
@@ -200,7 +197,6 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>plus d'informations</a>)."
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -2076,7 +2072,7 @@ fr:
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       passkey:
-        name: "Connectez-vous à l'aide d'une clé d'accès"
+        name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -2746,6 +2742,20 @@ fr:
     topic_bulk_actions:
       close_topics:
         name: "Fermer les sujets"
+      archive_topics:
+        name: "Archiver les sujets"
+      unlist_topics:
+        name: "Rendre les sujets invisibles"
+      relist_topics:
+        name: "Lister les sujets"
+      remove_tags:
+        name: "Supprimer des étiquettes"
+      append_tags:
+        name: "Ajouter des étiquettes"
+      replace_tags:
+        name: "Remplacer des étiquettes"
+      delete_topics:
+        name: "Supprimer les sujets"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"

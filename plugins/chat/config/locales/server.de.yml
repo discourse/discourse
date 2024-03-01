@@ -99,6 +99,7 @@ de:
       original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
       thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
       thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
+      invalid_direct_message: "Du bist nicht berechtigt, diese Direktnachricht zu erstellen."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:

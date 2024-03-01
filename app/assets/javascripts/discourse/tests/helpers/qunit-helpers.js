@@ -18,6 +18,7 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
@@ -223,6 +224,7 @@ export function testCleanup(container, app) {
   clearToolbarCallbacks();
   resetNotificationTypeRenderers();
   resetSidebarPanels();
+  clearExtraGlimmerHeaderIcons();
   clearExtraHeaderIcons();
   resetOnKeyUpCallbacks();
   resetItemSelectCallbacks();
@@ -344,7 +346,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().trackStatus();
+        User.current().statusManager.trackStatus();
       }
 
       if (settingChanges) {
@@ -372,7 +374,7 @@ export function acceptance(name, optionsOrCallback) {
       let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
-        User.current().stopTrackingStatus();
+        User.current().statusManager.stopTrackingStatus();
       }
       testCleanup(this.container, app);
 

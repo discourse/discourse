@@ -44,6 +44,7 @@ sr:
       browse:
         back: "Nazad"
         filter_all: sve
+        filter_open: Otvori
       chat_message_separator:
         today: Danas
         yesterday: Juče

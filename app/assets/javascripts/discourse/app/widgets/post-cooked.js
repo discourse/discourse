@@ -407,14 +407,14 @@ export default class PostCooked {
 
   _trackMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.trackStatus?.();
+      user.statusManager?.trackStatus?.();
       user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.stopTrackingStatus?.();
+      user.statusManager?.stopTrackingStatus?.();
       user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }

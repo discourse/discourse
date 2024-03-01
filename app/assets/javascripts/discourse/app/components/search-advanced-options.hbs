@@ -85,7 +85,7 @@
                   )
                 }}
               />
-              <label for="matching-title-only">
+              <label class="checkbox-label" for="matching-title-only">
                 {{i18n "search.advanced.filters.title"}}
               </label>
             </div>
@@ -103,7 +103,7 @@
                   )
                 }}
               />
-              <label for="matching-liked">{{i18n
+              <label class="checkbox-label" for="matching-liked">{{i18n
                   "search.advanced.filters.likes"
                 }}</label>
             </div>
@@ -122,7 +122,7 @@
                   )
                 }}
               />
-              <label for="matching-in-messages">{{i18n
+              <label class="checkbox-label" for="matching-in-messages">{{i18n
                   "search.advanced.filters.private"
                 }}</label>
             </div>
@@ -140,7 +140,7 @@
                   )
                 }}
               />
-              <label for="matching-seen">{{i18n
+              <label class="checkbox-label" for="matching-seen">{{i18n
                   "search.advanced.filters.seen"
                 }}</label>
             </div>
@@ -246,10 +246,7 @@
           id="search-min-post-count"
           placeholder={{i18n "search.advanced.post.min.placeholder"}}
           aria-label={{i18n "search.advanced.post.min.aria_label"}}
-          {{on
-            "input"
-            (action "onChangeSearchTermMinPostCount" value="target.value")
-          }}
+          {{on "input" (with-event-value this.onChangeSearchTermMinPostCount)}}
         />
         {{d-icon "arrows-alt-h"}}
         <Input
@@ -259,10 +256,7 @@
           id="search-max-post-count"
           placeholder={{i18n "search.advanced.post.max.placeholder"}}
           aria-label={{i18n "search.advanced.post.max.aria_label"}}
-          {{on
-            "input"
-            (action "onChangeSearchTermMaxPostCount" value="target.value")
-          }}
+          {{on "input" (with-event-value this.onChangeSearchTermMaxPostCount)}}
         />
       </div>
     </div>
@@ -278,10 +272,7 @@
           id="search-min-views"
           placeholder={{i18n "search.advanced.min_views.placeholder"}}
           aria-label={{i18n "search.advanced.min_views.aria_label"}}
-          {{on
-            "input"
-            (action "onChangeSearchTermMinViews" value="target.value")
-          }}
+          {{on "input" (with-event-value this.onChangeSearchTermMinViews)}}
         />
         {{d-icon "arrows-alt-h"}}
         <Input
@@ -291,10 +282,7 @@
           id="search-max-views"
           placeholder={{i18n "search.advanced.max_views.placeholder"}}
           aria-label={{i18n "search.advanced.max_views.aria_label"}}
-          {{on
-            "input"
-            (action "onChangeSearchTermMaxViews" value="target.value")
-          }}
+          {{on "input" (with-event-value this.onChangeSearchTermMaxViews)}}
         />
       </div>
     </div>

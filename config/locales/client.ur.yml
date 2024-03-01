@@ -35,11 +35,8 @@ ur:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} قبل"
       wrap_on: "%{date}پر"
       tiny:
@@ -75,7 +72,7 @@ ur:
           one: "%{count} سال"
           other: "%{count} سال"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} منٹ"
@@ -86,7 +83,6 @@ ur:
         x_days:
           one: "%{count} دن"
           other: "%{count} دن"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} منٹ قبل"
@@ -164,7 +160,6 @@ ur:
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_non_staff: "باہر جانے والی ای میل غیر عملہ صارفین کے لیے غیر فعال کر دی گئی ہیں"
     software_update_prompt:
-      message: "ہم نے اس سائٹ کواپڈیٹ کردیا <span>براہ مہربانی ریفریش کریں</span> ، یا آپ کا تجربہ غیر متوقع ہو سکتا ہے۔"
       dismiss: "بر خاست کریں"
     themes:
       default_description: "ڈِیفالٹ"
@@ -2280,6 +2275,18 @@ ur:
     topic_bulk_actions:
       close_topics:
         name: "ٹاپکس بند کریں"
+      archive_topics:
+        name: "ٹاپکس آر کائیو کریں"
+      unlist_topics:
+        name: "ٹاپکس کو فہرست سے ہٹائیں"
+      relist_topics:
+        name: "ٹاپک دوبارہ فہرست کریں"
+      append_tags:
+        name: "ٹیگز میں اضافہ کریں"
+      replace_tags:
+        name: "ٹیگز بدلیں"
+      delete_topics:
+        name: "ٹاپکس مٹائیں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"

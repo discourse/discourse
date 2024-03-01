@@ -305,7 +305,7 @@ pt_BR:
         back: "Voltar"
         title: Canais
         filter_all: Tudo
-        filter_open: Abertos
+        filter_open: Aberto
         filter_closed: Fechados
         filter_archived: Arquivados
         filter_input_placeholder: Pesquisar canal por nome

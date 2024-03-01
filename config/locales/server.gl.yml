@@ -80,18 +80,13 @@ gl:
       invalid_yaml: "O YAML proporcionado non é válido."
       data_type_inclusion: "Tipo de axuste `%{name}` non compatible. Os tipos compatibles son `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Hai un axuste cun nome demasiado longo. A lonxitude máxima é de 255 caracteres"
-      default_value_missing: "O axuste '%{name}' non ten un valor predefinido"
+      default_value_missing: "O axuste '%{name}' non ten un valor predefinido."
       default_not_match_type: "O tipo de valor predefinido para o axuste `%{name}` non coincide co tipo de axuste."
-      default_out_range: "O valor por defecto do axuste `%{name}` non está no intervalo especificado."
       enum_value_not_valid: "O valor seleccionado non é unha das opcións enumeradas."
-      number_value_not_valid: "O novo valor non está dentro do intervalo permitido."
-      number_value_not_valid_min_max: "Debe ser entre %{min} e %{max}."
-      number_value_not_valid_min: "Debe ser maior ou igual que %{min}."
-      number_value_not_valid_max: "Debe ser menor ou igual que %{max}."
-      string_value_not_valid: "A lonxitude do novo valor non está no intervalo permitido."
-      string_value_not_valid_min_max: "Debe ter entre %{min} e %{max} caracteres de lonxitude."
-      string_value_not_valid_min: "Debe ter polo menos %{min} caracteres."
-      string_value_not_valid_max: "Debe ter un máximo de %{max} caracteres."
+      number_value_not_valid_min_max: "O valor debe ser entre %{min} e %{max}."
+      objects:
+        required: "debe estar presente"
+        not_valid_integer_value: "debe ser un número enteiro"
     locale_errors:
       top_level_locale: "A chave de nivel superior nun ficheiro local debe coincidir co nome local"
       invalid_yaml: "YAML de tradución non válido"
@@ -744,6 +739,9 @@ gl:
     inappropriate:
       title: "Inapropiado"
       short_description: 'Unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>'
+    illegal:
+      email_title: 'Unha publicación en «%{title}» require a atención do equipo'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviarlle unha mensaxe a @%{username}"
       description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
@@ -802,6 +800,9 @@ gl:
       long_form: "denunciou isto para que sexa estudado polos moderadores"
       short_description: "Require a atención do equipo por outro motivo"
       email_title: 'O tema "%{title}" require a atención do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Unha publicación en «%{title}» require a atención do equipo'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>A súa publicación foi denunciada pola comunidade. Por favor, <a href="%{path}">revise as súas mensaxes</a>.</p>'
@@ -3198,7 +3199,6 @@ gl:
       too_large: "Sentímolo, o ficheiro que tenta subir é grande de máis (o tamaño máximo é de %{max_size_kb} KB)."
     images:
       too_large: "Sentímolo, a imaxe que tenta subir é grande de máis (o tamaño máximo é de %{max_size_kb} KB); redimensiónea e vólvao tentar."
-      larger_than_x_megapixels: "Sentímolo, a imaxe que tenta subir é grande de máis (o tamaño máximo é de %{max_image_megapixels} megapíxeles); redimensiónea e vólvao tentar."
       size_not_found: "Sentímolo, mais non puidemos determinar o tamaño da imaxe. Estará se cadra danada?"
     placeholders:
       too_large: "(imaxe máis grande que %{max_size_kb} KB)"

@@ -309,7 +309,7 @@ RSpec.describe Chat::UpdateMessage do
         expect(mentioned_user["id"]).to eq(user2.id)
         expect(mentioned_user["username"]).to eq(user2.username)
         expect(mentioned_user["status"]).to be_present
-        expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+        expect(mentioned_user["status"].symbolize_keys.slice(:description, :emoji)).to eq(status)
       end
 
       it "doesn't add mentioned user's status to the message bus message when status is disabled" do

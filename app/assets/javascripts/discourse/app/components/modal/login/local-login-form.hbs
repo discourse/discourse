@@ -32,16 +32,16 @@
     </div>
     <div class="input-group">
       <PasswordField
+        {{on "keydown" this.loginOnEnter}}
         @value={{@loginPassword}}
-        @type={{if this.maskPassword "password" "text"}}
-        class={{value-entered @loginPassword}}
-        id="login-account-password"
+        @capsLockOn={{this.capsLockOn}}
+        type={{if this.maskPassword "password" "text"}}
+        disabled={{this.disableLoginFields}}
         autocomplete="current-password"
         maxlength="200"
-        @capsLockOn={{this.capsLockOn}}
-        disabled={{this.disableLoginFields}}
         tabindex="1"
-        {{on "keydown" this.loginOnEnter}}
+        id="login-account-password"
+        class={{value-entered @loginPassword}}
       />
       <label class="alt-placeholder" for="login-account-password">
         {{i18n "login.password"}}
@@ -87,11 +87,11 @@
       />
     {{else}}
       <SecondFactorInput
-        @value={{@secondFactorToken}}
-        @inputId="login-second-factor"
-        @secondFactorMethod={{@secondFactorMethod}}
-        @backupEnabled={{@backupEnabled}}
         {{on "keydown" this.loginOnEnter}}
+        {{on "input" (with-event-value (fn (mut @secondFactorToken)))}}
+        @secondFactorMethod={{@secondFactorMethod}}
+        value={{@secondFactorToken}}
+        id="login-second-factor"
       />
     {{/if}}
   </SecondFactorForm>

@@ -43,6 +43,13 @@ export default class BaseCustomSidebarPanel {
     this.hidden || this.#notImplemented();
   }
 
+  /**
+   * @returns {boolean} Controls whether the filter is shown
+   */
+  get filterable() {
+    return false;
+  }
+
   #notImplemented() {
     throw "not implemented";
   }

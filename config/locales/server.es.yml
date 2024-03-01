@@ -112,18 +112,13 @@ es:
       invalid_yaml: "El YAML provisto no es válido."
       data_type_inclusion: "Tipo de ajuste «%{name}» no soportado. Los tipos soportados son «integer», «bool», «list», «enum» y «upload»"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
-      default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
+      default_value_missing: "El ajuste «%{name}» no tiene valor por defecto."
       default_not_match_type: "El tipo de valor por defecto para el ajuste «%{name}» no coincide con el tipo de ajuste."
-      default_out_range: "El valor por defecto del ajuste «%{name}» no está en el rango específicado."
       enum_value_not_valid: "El valor seleccionado no es una de las opciones enumeradas."
-      number_value_not_valid: "El nuevo valor no está dentro del rango permitido."
-      number_value_not_valid_min_max: "Debe ser entre %{min} y %{max}."
-      number_value_not_valid_min: "Debe ser mayor o igual que %{min}."
-      number_value_not_valid_max: "Debe ser menor o igual que %{max}."
-      string_value_not_valid: "La nueva longitud del valor no está dentro del rango permitido."
-      string_value_not_valid_min_max: "Debe tener entre %{min} y %{max} caracteres de longitud."
-      string_value_not_valid_min: "Debe tener al menos de %{min} caracteres de longitud."
-      string_value_not_valid_max: "Debe tener un máximo de %{max} caracteres de longitud."
+      number_value_not_valid_min_max: "El valor debe estar establecido entre %{min} y %{max}."
+      objects:
+        required: "debe estar presente"
+        not_valid_integer_value: "debe ser un valor entero"
     locale_errors:
       top_level_locale: "La clave de nivel superior en un archivo local debe coincidir con el nombre local"
       invalid_yaml: "YAML de traducción no válido"
@@ -893,6 +888,12 @@ es:
       title: "Inapropiado"
       description: 'Esta publicación tiene contenido que una persona razonable podría considerar ofensivo, abusivo, ser una conducta de odio o una violación de <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>.'
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
+    illegal:
+      title: "Ilegal"
+      description: "Esta publicación requiere la atención del personal porque creo que contiene contenido ilegal."
+      short_description: "Esto es ilegal"
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar un mensaje a @%{username}"
       description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
@@ -971,6 +972,12 @@ es:
       long_form: "denunciado para ser atendido por los moderadores"
       short_description: "Requiere atención del personal por otro motivo"
       email_title: 'El tema «%{title}» requiere la atención de un moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Ilegal"
+      description: "Esta publicación requiere la atención del personal porque creo que contiene contenido ilegal."
+      short_description: "Esto es ilegal"
+      email_title: 'Una publicación en «%{title}» requiere atención del personal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu publicación fue denunciada por la comunidad. Por favor, <a href="%{path}">revisa tus mensajes</a>.</p>'
@@ -1425,6 +1432,7 @@ es:
     watched_word_regexp_error: "Expresión regular no válida para las palabras vigiladas con acción de «%{action}». Por favor, revisa los <a href='%{base_path}/admin/customize/watched_words'>ajustes sobre palabras vigiladas</a> o desactiva el ajuste «watched words regular expressions»."
     v3_analytics_deprecated: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
     category_style_deprecated: "Tu Discourse utiliza actualmente un estilo de categoría obsoleto que se eliminará antes de la versión beta final de Discourse 3.2. Consulta <a href='https://meta.discourse.org/t/282441'>Cambiar a una configuración de sitio de estilo de categoría única</a> para obtener instrucciones sobre cómo mantener el estilo de categoría seleccionado."
+    back_from_logster_text: "Volver al sitio"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -1823,6 +1831,7 @@ es:
     min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para denunciar publicaciones"
     flag_post_allowed_groups: "Grupos que pueden denunciar publicaciones."
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
+    post_links_allowed_groups: "Grupos a los que se les permite incluir enlaces en las publicaciones. Los administradores y moderadores siempre pueden publicar enlaces."
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
     min_trust_level_to_allow_profile_background: "Nivel confianza mínimo para subir un fondo de perfil"
     min_trust_level_to_allow_user_card_background: "Nivel confianza mínimo para subir un fondo de tarjeta de usuario"
@@ -2689,6 +2698,7 @@ es:
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
+    illegal: "Tu publicación fue marcada como **ilegal**: la comunidad piensa que puede estar infringiendo la ley."
     spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
     notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del equipo."
     responder:
@@ -3869,7 +3879,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
-      larger_than_x_megapixels: "Lo sentimos, la imagen que estas intentando subir es demasiado grande (tamaño máximo %{max_image_megapixels}-megapixels). Hazla mas pequeña e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"

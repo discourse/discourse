@@ -5,6 +5,7 @@ describe "Changing email", type: :system do
   fab!(:user) { Fabricate(:user, active: true, password: password) }
   let(:new_email) { "newemail@example.com" }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
+  let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
 
   before { Jobs.run_immediately! }
 
@@ -45,7 +46,8 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(user.reload.email).to eq(new_email)
+    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
+    expect(user_preferences_page).to have_primary_email(new_email)
   end
 
   it "works when user has totp 2fa" do
@@ -60,12 +62,15 @@ describe "Changing email", type: :system do
 
     find("button[type=submit]").click
 
-    try_until_success { expect(current_url).to match("/u/#{user.username}/preferences/account") }
-
-    expect(user.reload.email).to eq(new_email)
+    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
+    expect(user_preferences_page).to have_primary_email(new_email)
   end
 
   it "works when user has webauthn 2fa" do
+    # enforced 2FA flow needs a user created > 5 minutes ago
+    user.created_at = 6.minutes.ago
+    user.save!
+
     sign_in user
 
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
@@ -94,9 +99,8 @@ describe "Changing email", type: :system do
 
     find("#security-key-authenticate-button").click
 
-    try_until_success { expect(current_url).to match("/u/#{user.username}/preferences/account") }
-
-    expect(user.reload.email).to eq(new_email)
+    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
+    expect(user_preferences_page).to have_primary_email(new_email)
   ensure
     authenticator.remove!
   end
@@ -117,8 +121,7 @@ describe "Changing email", type: :system do
 
     find("button[type=submit]").click
 
-    try_until_success { expect(current_url).to match("/latest") }
-
+    expect(page).to have_current_path("/latest")
     expect(user.reload.email).to eq(new_email)
   end
 

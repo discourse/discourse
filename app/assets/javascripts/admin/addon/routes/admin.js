@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -7,6 +8,7 @@ export default class AdminRoute extends DiscourseRoute {
   @service sidebarState;
   @service siteSettings;
   @service currentUser;
+  @tracked initialSidebarState;
 
   titleToken() {
     return I18n.t("admin_title");

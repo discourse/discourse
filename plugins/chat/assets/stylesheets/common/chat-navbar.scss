@@ -98,9 +98,9 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-
-  > .btn {
-    height: var(--chat-header-offset);
+  height: var(--chat-header-offset);
+  .d-icon {
+    color: var(--primary-low-mid);
   }
 }
 

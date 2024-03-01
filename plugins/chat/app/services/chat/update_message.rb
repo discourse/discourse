@@ -38,6 +38,8 @@ module Chat
 
       attribute :upload_ids, :array
 
+      attribute :streaming, :boolean, default: false
+
       attribute :process_inline, :boolean, default: Rails.env.test?
     end
 
@@ -98,6 +100,8 @@ module Chat
     end
 
     def save_revision(message:, guardian:, **)
+      return false if message.streaming_before_last_save
+
       prev_message = message.message_before_last_save || message.message_was
       return if !should_create_revision(message, prev_message, guardian)
 
@@ -135,6 +139,7 @@ module Chat
       edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
+
       DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, message.user)
 
       if contract.process_inline

@@ -10,13 +10,7 @@ task "assets:precompile:build" do
   if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
     ember_version = ENV["EMBER_VERSION"] || "5"
 
-    raise "Unknown ember version '#{ember_version}'" if !%w[3 5].include?(ember_version)
-
-    if ember_version == "3"
-      puts "Downgrading to Ember 3..."
-      system("script/switch_ember_version", ember_version, exception: true, chdir: Rails.root)
-      system("yarn install", exception: true, chdir: "app/assets/javascripts/discourse")
-    end
+    raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
     compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
 

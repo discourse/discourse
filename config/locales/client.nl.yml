@@ -35,11 +35,9 @@ nl:
       long_with_year: "D MMM YYYY HH.mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY HH.mm"
       long_date_without_year: "D MMM HH.mm"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>HH.mm"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH.mm"
       wrap_ago: "%{date} geleden"
       wrap_on: "op %{date}"
       tiny:
@@ -75,7 +73,7 @@ nl:
           one: "%{count} j"
           other: "%{count} j"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "minder dan %{count} min."
@@ -104,7 +102,7 @@ nl:
         almost_x_years:
           one: "bijna %{count} jaar"
           other: "bijna %{count} jaar"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min. geleden"
@@ -188,7 +186,6 @@ nl:
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
     software_update_prompt:
-      message: "We hebben deze site bijgewerkt, dus <span>vernieuw de pagina</span>, anders kan er onverwacht gedrag optreden."
       dismiss: "Negeren"
     bootstrap_mode: "Aan de slag"
     themes:
@@ -200,7 +197,6 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     critical_deprecation:
-      notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>meer informatie</a>)."
       theme_source: "Geïdentificeerd thema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Geïdentificeerde plug-in: '%{name}'"
     s3:
@@ -2753,6 +2749,20 @@ nl:
     topic_bulk_actions:
       close_topics:
         name: "Topics sluiten"
+      archive_topics:
+        name: "Topics archiveren"
+      unlist_topics:
+        name: "Topics onzichtbaar maken"
+      relist_topics:
+        name: "Topics opnieuw weergeven"
+      remove_tags:
+        name: "Tags verwijderen"
+      append_tags:
+        name: "Tags toevoegen"
+      replace_tags:
+        name: "Tags vervangen"
+      delete_topics:
+        name: "Topics verwijderen"
       update_category:
         name: "Categorie bijwerken"
         description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"

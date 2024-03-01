@@ -66,6 +66,11 @@ fa_IR:
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
       ssh_key_gone: "شما برای نصب پوسته بیش از حد طولانی صبر کردید و کلید SSH منقضی شده است. لطفا دوباره امتحان کنید."
+    settings_errors:
+      number_value_not_valid_min_max: "مقدار باید بین %{min} و %{max} باشد."
+      objects:
+        required: "باید حاضر باشد"
+        not_valid_integer_value: "باید یک عدد صحیح باشد"
   emails:
     incoming:
       default_subject: "این موضوع نیاز به عنوان دارد"
@@ -556,6 +561,9 @@ fa_IR:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "نامناسب"
+    illegal:
+      email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "فرستادن پیام به @%{username}"
       email_title: 'فرسته‌ی شما در « %{title} »'
@@ -589,6 +597,9 @@ fa_IR:
       long_form: "این را برای توجه مدیر پرچم گذاری کن"
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
       email_title: 'موضوع "%{title}" نیاز به توجه مدیر دارد. '
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>این نوشته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
@@ -1974,7 +1985,6 @@ fa_IR:
       too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده {max_size_kb}% کیلوبایت است.)"
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
-      larger_than_x_megapixels: "با عرض پوزش، تصویری که در حال بارگذاری آن هستید بزرگتر از حد مجاز است. (حداکثر اندازه تصویر %{max_image_megapixels} مگاپیکسل) است - لطفا بعد از تغییر اندازه دوباره تلاش کنید."
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما مشکل دارد. "
   avatar:
     missing: "با عرض پوزش، نمی‌توانیم آواتار مرتبطی با این ایمیل پیدا کنیم. لطفا دوباره آپلود کنید."

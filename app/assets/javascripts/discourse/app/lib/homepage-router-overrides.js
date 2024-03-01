@@ -21,12 +21,14 @@ export default function applyRouterHomepageOverrides(router) {
   }
 }
 
+const homepageRewriteParam = "_discourse_homepage_rewrite";
+
 /**
  * Returns a magic URL which `discovery-index` will redirect to.
  * We watch for this, and then perform the rewrite in the router.
  */
 export function homepageDestination() {
-  return `/${defaultHomepage()}?_discourse_homepage_rewrite=1`;
+  return `/${defaultHomepage()}?${homepageRewriteParam}=1`;
 }
 
 function rewriteIfNeeded(url, transition) {
@@ -34,12 +36,16 @@ function rewriteIfNeeded(url, transition) {
   if (
     intentUrl?.startsWith(homepageDestination()) ||
     (transition?.intent.name === `discovery.${defaultHomepage()}` &&
-      transition?.intent.queryParams["_discourse_homepage_rewrite"])
+      transition?.intent.queryParams[homepageRewriteParam])
   ) {
-    const params = url.split("?", 2)[1];
+    const params = (intentUrl || url).split("?", 2)[1];
     url = "/";
     if (params) {
-      url += `?${params}`;
+      const searchParams = new URLSearchParams(params);
+      searchParams.delete(homepageRewriteParam);
+      if (searchParams.size) {
+        url += `?${searchParams.toString()}`;
+      }
     }
   }
   return url;

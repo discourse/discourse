@@ -58,6 +58,8 @@ module Chat
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
+      attribute :streaming, :boolean, default: false
+      attribute :enforce_membership, :boolean, default: false
       attribute :incoming_chat_webhook
       attribute :process_inline, :boolean, default: Rails.env.test?
 
@@ -75,18 +77,18 @@ module Chat
       Chat::Channel.find_by_id_or_slug(contract.chat_channel_id)
     end
 
-    def allowed_to_join_channel(guardian:, channel:, **)
-      guardian.can_join_chat_channel?(channel)
-    end
-
-    def enforce_system_membership(guardian:, channel:, **)
-      if guardian.user&.is_system_user?
+    def enforce_system_membership(guardian:, channel:, contract:, **)
+      if guardian.user&.is_system_user? || contract.enforce_membership
         channel.add(guardian.user)
 
         if channel.direct_message_channel?
           channel.chatable.direct_message_users.find_or_create_by!(user: guardian.user)
         end
       end
+    end
+
+    def allowed_to_join_channel(guardian:, channel:, **)
+      guardian.can_join_chat_channel?(channel)
     end
 
     def fetch_channel_membership(guardian:, channel:, **)
@@ -138,6 +140,7 @@ module Chat
         thread: thread,
         cooked: ::Chat::Message.cook(contract.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
+        streaming: contract.streaming,
       )
     end
 

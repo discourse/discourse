@@ -95,7 +95,10 @@ export default class AssistantItem extends Component {
   @debounce(100)
   itemSelected() {
     let updatedTerm = "";
-    if (this.args.slug && this.args.suggestionKeyword) {
+    if (
+      this.args.slug &&
+      (this.args.suggestionKeyword || this.args.concatSlug)
+    ) {
       updatedTerm = this.prefix.concat(this.args.slug);
     } else {
       updatedTerm = this.prefix.trim();

@@ -339,7 +339,7 @@ class TopicQuery
   end
 
   def list_hot
-    create_list(:hot, unordered: true) do |topics|
+    create_list(:hot, unordered: true, prioritize_pinned: true) do |topics|
       topics = remove_muted_topics(topics, user)
       topics = remove_muted_categories(topics, user, exclude: options[:category])
       TopicQuery.remove_muted_tags(topics, user, options)
@@ -506,10 +506,12 @@ class TopicQuery
       DiscoursePluginRegistry.apply_modifier(:topic_query_create_list_topics, topics, options, self)
 
     options = options.merge(@options)
-    if %w[activity default].include?(options[:order] || "activity") && !options[:unordered] &&
-         filter != :private_messages
-      topics = prioritize_pinned_topics(topics, options)
-    end
+
+    apply_pinning = filter != :private_messages
+    apply_pinning &&= %w[activity default].include?(options[:order] || "activity")
+    apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
+
+    topics = prioritize_pinned_topics(topics, options) if apply_pinning
 
     topics = topics.to_a
 
@@ -1283,9 +1285,7 @@ class TopicQuery
         result = result.joins(:tags).where("tags.id in (?)", tags)
       end
 
-      # TODO: this is very side-effecty and should be changed
-      # It is done cause further up we expect normalized tags
-      @options[:tags] = tags
+      @options[:tag_ids] = tags
     elsif @options[:no_tags]
       # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
       result = result.where.not(id: TopicTag.distinct.select(:topic_id))

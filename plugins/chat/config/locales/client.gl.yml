@@ -49,6 +49,7 @@ gl:
       browse:
         back: "Volver"
         filter_all: Todas
+        filter_open: Abrir
         filter_closed: Pechado
       chat_message_separator:
         today: Hoxe

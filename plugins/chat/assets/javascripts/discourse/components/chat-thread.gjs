@@ -489,15 +489,15 @@ export default class ChatThread extends Component {
   }
 
   @action
-  scrollToBottom() {
+  async scrollToBottom() {
     this._ignoreNextScroll = true;
-    scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scrollable);
   }
 
   @action
-  scrollToTop() {
+  async scrollToTop() {
     this._ignoreNextScroll = true;
-    scrollListToTop(this.scrollable);
+    await scrollListToTop(this.scrollable);
   }
 
   @action

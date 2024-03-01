@@ -12,8 +12,4 @@ class ThemeSettingsManager::Float < ThemeSettingsManager
   def value=(new_value)
     super(self.class.cast(new_value))
   end
-
-  def is_valid_value?(new_value)
-    (@opts[:min]..@opts[:max]).include? new_value.to_f
-  end
 end

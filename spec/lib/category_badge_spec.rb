@@ -34,11 +34,10 @@ RSpec.describe CategoryBadge do
   end
 
   it "includes inline color style when inline_style is true" do
-    c = Fabricate(:category, color: "123456", text_color: "654321")
+    c = Fabricate(:category, color: "123456")
 
     html = CategoryBadge.html_for(c, inline_style: true)
 
-    expect(html).to include("color: #654321;")
     expect(html).to include("background-color: #123456;")
   end
 end

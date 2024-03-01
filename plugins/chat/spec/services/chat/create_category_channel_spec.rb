@@ -16,6 +16,21 @@ RSpec.describe Chat::CreateCategoryChannel do
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, category_id: category_id, name: "cool channel" } }
 
+    it "can create several channels with empty slugs" do
+      SiteSetting.slug_generation_method = "none"
+      expect do
+        described_class.call(params.merge(name: "channel 1", slug: nil))
+      end.not_to raise_error
+      expect do
+        described_class.call(params.merge(name: "channel 2", slug: nil))
+      end.not_to raise_error
+    end
+
+    it "can create several channels with unicode names" do
+      expect do described_class.call(params.merge(name: "マイキ")) end.not_to raise_error
+      expect do described_class.call(params.merge(name: "境界")) end.not_to raise_error
+    end
+
     context "when public channels are disabled" do
       fab!(:current_user) { Fabricate(:user) }
 

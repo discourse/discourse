@@ -7,8 +7,8 @@
 ro:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    short_date: "D-MMM-YYYY"
+    long_date: "D MMMM YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -55,6 +55,58 @@ ro:
   components:
     enabled_filter: "Activat"
     disabled_filter: "Dezactivat"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "a depășit dimensiunea maximă de %{max_size} octeți."
+  themes:
+    settings_errors:
+      data_type_inclusion: "Setarea tipului `%{name}` nu este acceptată. Tipurile acceptate sunt `integer`, `bool`, `list`, `enum` și `upload`"
+      default_value_missing: "Setarea `%{name}` nu are o valoare implicită."
+      default_value_not_valid: "Setarea valorii implicite `%{name}` nu este validă. %{error_messages}"
+      number_value_not_valid_min_max: "Valoarea trebuie să fie între %{min} și %{max}."
+      number_value_not_valid_min: "Valoarea trebuie să fie mai mare sau egală cu %{min}."
+      number_value_not_valid_max: "Valoarea trebuie să fie mai mică sau egală cu %{max}."
+      string_value_not_valid_min_max: "Valoarea trebuie să aibă o lungime cuprinsă între %{min} și %{max} caractere."
+      string_value_not_valid_min: "Valoarea trebuie să aibă cel puțin %{min} caractere."
+      string_value_not_valid_max: "Valoarea trebuie să aibă cel mult %{max} caractere."
+      objects:
+        humanize_required: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie prezentă."
+        required: "trebuie să fie prezent"
+        humanize_invalid_type: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie de tip %{type}."
+        invalid_type: "%{type} nu este un tip valid"
+        humanize_not_valid_string_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un șir."
+        not_valid_string_value: "trebuie să fie un șir"
+        humanize_not_valid_integer_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un întreg."
+        not_valid_integer_value: "trebuie sa fie un număr întreg"
+        humanize_not_valid_float_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un număr cu virgulă mobilă."
+        not_valid_float_value: "trebuie să fie un număr cu virgulă mobilă"
+        humanize_not_valid_boolean_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie o valoare booleană."
+        not_valid_boolean_value: "trebuie să fie un boolean"
+        humanize_not_valid_enum_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie una dintre următoarele %{choices}."
+        not_valid_enum_value: "trebuie să fie dintre următoarele: %{choices}"
+        humanize_not_valid_category_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de categorie."
+        not_valid_category_value: "trebuie să fie un ID de categorie valid"
+        humanize_not_valid_topic_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de subiect."
+        not_valid_topic_value: "trebuie să fie un ID valid de subiect"
+        humanize_not_valid_post_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de articol."
+        not_valid_post_value: "trebuie să fie un ID valid de articol"
+        humanize_not_valid_group_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de grup."
+        not_valid_group_value: "trebuie să fie un ID valid de grup"
+        humanize_not_valid_tag_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de etichetă."
+        not_valid_tag_value: "trebuie să fie un ID valid de etichetă"
+        humanize_not_valid_upload_value: "Proprietatea de la JSON Pointer „%{property_json_pointer}” trebuie să fie un ID valid de încărcare."
+        not_valid_upload_value: "trebuie să fie un ID valid de încărcare"
+        humanize_string_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă cel puțin %{min} caractere."
+        string_value_not_valid_min: "trebuie să aibă cel puțin %{min} caractere"
+        humanize_string_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă maxim %{max} caractere."
+        string_value_not_valid_max: "trebuie să aibă cel mult %{max} caractere"
+        humanize_number_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mare sau egală cu %{min}."
+        number_value_not_valid_min: "trebuie să fie mai mare sau egal cu %{min}"
+        humanize_number_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mică sau egală cu %{max}."
+        number_value_not_valid_max: "trebuie să fie mai mic sau egal cu %{max}"
+        humanize_string_value_not_valid_url: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un URL valid."
+        string_value_not_valid_url: "trebuie să fie un URL valid"
   emails:
     incoming:
       default_subject: "Acest subiect are nevoie de un titlu"
@@ -493,6 +545,10 @@ ro:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Necorespunzător"
+    illegal:
+      title: "Ilegal"
+      email_title: 'Un articol din „%{title}” necesită atenția echipei'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Trimite-i un mesaj lui @%{username}"
       email_title: 'Postarea ta din "%{title}"'
@@ -523,6 +579,12 @@ ro:
       description: 'Acest subiect necesită atenția generală a personalului pe baza regulilor <a href="%{base_path}/guidelines"></a>, <a href="%{tos_url}">TOS</a>, sau dintr-un alt motiv care nu este enumerat mai sus.'
       long_form: "marcat cu marcaj de avertizare în atenția moderatorilor"
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "Ilegal"
+      description: "Acest subiect necesită atenția echipei, deoarece cred că are conținut care este ilegal."
+      short_description: "Acest lucru este ilegal"
+      email_title: 'Un articol din „%{title}” necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Această postare a fost marcată de către comunitate cu marcaj de avertizare și a fost ascunsă temporar.</p>"
@@ -797,6 +859,7 @@ ro:
         user: Utilizatori
         qtt_like: Aprecieri primite
   dashboard:
+    twitter_login_warning: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate asincron de către sidekiq. Asigură-te că măcar un proces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Citește despre Sidekiq aici</a>.'
@@ -809,6 +872,7 @@ ro:
       other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
+    back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
@@ -917,7 +981,6 @@ ro:
     suggested_topics: "Numărul de subiecte sugerate în partea de jos a unui subiect."
     limit_suggested_to_category: "Arată doar subiectele din aceeași categorie, în subiecte sugerate."
     suggested_topics_max_days_old: "Subiectele sugerate nu trebuie să fie mai vechi de n zile."
-    clean_up_uploads: "șterge încărcările ne-referențiate orfane pentru a preveni găzduirea ilegală. ATENȚIE: înainte de a activa această setare faceți un backup la directorul /uploads ."
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncărcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3. IMPORTANT: necesită un acces valid (atât identificatorul cheii de acces cât și cheia secretă)."
@@ -963,6 +1026,8 @@ ro:
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
     self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
     flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
+    post_links_allowed_groups: "Grupuri cărora li se permite să includă legături în articole. Administratorii și moderatorii au voie să publice legături întotdeauna."
+    profile_background_allowed_groups: "Grupuri cărora li se permite să încarce un fundal de profil."
     user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
     invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
     ignore_allowed_groups: "Grupuri au voie să ignore alți utilizatori."
@@ -1150,7 +1215,7 @@ ro:
       invalid_integer_min_max: "Valoarea trebuie să fie între %{min} și %{max}."
       invalid_integer_min: "Valoarea trebuie să fie %{min} sau mai mare."
       invalid_integer_max: "Valoarea nu poate fi mai mare de %{max}."
-      invalid_integer: "Valoarea trebuie să fie un întreg."
+      invalid_integer: "Valoarea trebuie să fie un număr întreg."
       regex_mismatch: "Valoare nu se potrivește formatului cerut."
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
@@ -1184,6 +1249,7 @@ ro:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -1300,6 +1366,7 @@ ro:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
+    illegal: "Articolul tău a fost marcat ca fiind **ilegal**: comunitatea consideră că ar putea încălca legea."
     spam: "Postarea ta a fost marcată cu marcaj de avertizare **spam**: comunitatea crede că reprezintă o reclamă, ceva ce este de natura excesiv de promoțională, în loc să fie o postare utilă sau relevantă pentru subiect după cum se presupune."
     notify_moderators: "Postarea ta a fost marcată cu marcaj de avertizare **în atenția moderatorului**: comunitatea simte că există ceva legat de această postare care necesită intervenția manuală a unui membrul al echipei."
   flags_dispositions:
@@ -1713,6 +1780,7 @@ ro:
       too_large: "Ne pare rău, dar fișierul pe care încerci să îl încarci este prea mare (mărimea maximă este de %{max_size_kb}KB)."
     images:
       too_large: "Ne pare rău, dar imaginea pe care încerci să o încarci este prea mare (mărimea maximă este de %{max_size_kb}KB), te rugăm să o redimensionezi și apoi să încerci din nou."
+      larger_than_x_megapixels: "Ne pare rău, imaginea pe care încerci să o încarci este prea mare (dimensiunea maximă este %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
       size_not_found: "Ne pare rău, nu am putut determina mărimea imaginii. Poate este coruptă?"
   avatar:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"

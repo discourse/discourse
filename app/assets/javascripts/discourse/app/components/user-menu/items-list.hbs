@@ -10,13 +10,14 @@
   </ul>
   <div class="panel-body-bottom">
     {{#if this.showAllHref}}
-      <a
-        class="btn btn-default btn-icon no-text show-all"
-        href={{this.showAllHref}}
-        title={{this.showAllTitle}}
+      <DButton
+        class="show-all"
+        @action={{this.showAll}}
+        @translatedAriaLabel={{this.showAllTitle}}
+        @translatedTitle={{this.showAllTitle}}
       >
         {{d-icon "chevron-down" aria-label=this.showAllTitle}}
-      </a>
+      </DButton>
     {{/if}}
     {{#if this.showDismiss}}
       <button
@@ -24,6 +25,7 @@
         class="btn btn-default notifications-dismiss btn-icon-text"
         title={{this.dismissTitle}}
         {{on "click" this.dismissButtonClick}}
+        {{auto-focus}}
       >
         {{d-icon "check"}}
         {{i18n "user.dismiss"}}

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
 import {
+  addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
@@ -8,6 +9,8 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addToHeaderIcons as addToGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
+import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
@@ -132,6 +135,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
+import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -140,7 +144,19 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.24.0";
+export const PLUGIN_API_VERSION = "1.27.0";
+
+const DEPRECATED_HEADER_WIDGETS = [
+  "header",
+  "site-header",
+  "header-contents",
+  "header-buttons",
+  "user-status-bubble",
+  "sidebar-toggle",
+  "header-icons",
+  "header-topic-info",
+  "header-notifications",
+];
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -178,6 +194,19 @@ function wrapWithErrorHandler(func, messageKey) {
       return;
     }
   };
+}
+
+function deprecatedHeaderWidgetOverride(widgetName, override) {
+  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+    deprecated(
+      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+      {
+        since: "v3.3.0.beta1-dev",
+        id: "discourse.header-widget-overrides",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
+  }
 }
 
 class PluginApi {
@@ -523,6 +552,9 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    const widgetName = name.split(":")[0];
+    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+
     decorateWidget(name, fn);
   }
 
@@ -551,6 +583,8 @@ class PluginApi {
       );
       return;
     }
+
+    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -593,10 +627,10 @@ class PluginApi {
    *
    * ```
    *
-   * action: may be a string or a function. If it is a string, a wiget action
+   * action: may be a string or a function. If it is a string, a widget action
    * will be triggered. If it is function, the function will be called.
    *
-   * function will recieve a single argument:
+   * function will receive a single argument:
    *  {
    *    post:
    *    showFeedback:
@@ -869,6 +903,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
+    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -902,6 +937,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
+    deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -929,6 +965,13 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
+    deprecated(
+      "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
+      {
+        id: "discourse.add-header-panel",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1001,6 +1044,72 @@ class PluginApi {
    */
   renderInOutlet(outletName, klass) {
     extraConnectorComponent(outletName, klass);
+  }
+
+  /**
+   * Render a component before the content of a wrapper outlet and does not override it's content
+   *
+   * For example, if the outlet is `discovery-list-area`, you could register
+   * a component like
+   *
+   * ```javascript
+   * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
+   * api.renderBeforeWrapperOutlet('discovery-list-area', MyComponent);
+   * ```
+   *
+   * Alternatively, a component could be defined inline using gjs:
+   *
+   * ```javascript
+   * api.renderBeforeWrapperOutlet('discovery-list-area', <template>Before the outlet</template>);
+   * ```
+   *
+   * Note:
+   * - the content of the outlet is not overridden when using this API, and unlike the main outlet,
+   *   multiple connectors can be registered for the same outlet.
+   * - this API only works with wrapper outlets. It won't have any effect on standard outlets.
+   * - when passing a component definition to an outlet like this, the default
+   * `@connectorTagName` of the outlet is not used. If you need a wrapper element, you'll
+   * need to add it to your component's template.
+   *
+   * @param {string} outletName - Name of plugin outlet to render into
+   * @param {Component} klass - Component class definition to be rendered
+   *
+   */
+  renderBeforeWrapperOutlet(outletName, klass) {
+    this.renderInOutlet(`${outletName}__before`, klass);
+  }
+
+  /**
+   * Render a component after the content of a wrapper outlet and does not override it's content
+   *
+   * For example, if the outlet is `discovery-list-area`, you could register
+   * a component like
+   *
+   * ```javascript
+   * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
+   * api.renderAfterWrapperOutlet('discovery-list-area', MyComponent);
+   * ```
+   *
+   * Alternatively, a component could be defined inline using gjs:
+   *
+   * ```javascript
+   * api.renderAfterWrapperOutlet('discovery-list-area', <template>After the outlet</template>);
+   * ```
+   *
+   * Note:
+   * - the content of the outlet is not overridden when using this API, and unlike the main outlet,
+   *   multiple connectors can be registered for the same outlet.
+   * - this API only works with wrapper outlets. It won't have any effect on standard outlets.
+   * - when passing a component definition to an outlet like this, the default
+   * `@connectorTagName` of the outlet is not used. If you need a wrapper element, you'll
+   * need to add it to your component's template.
+   *
+   * @param {string} outletName - Name of plugin outlet to render into
+   * @param {Component} klass - Component class definition to be rendered
+   *
+   */
+  renderAfterWrapperOutlet(outletName, klass) {
+    this.renderInOutlet(`${outletName}__after`, klass);
   }
 
   /**
@@ -1707,17 +1816,36 @@ class PluginApi {
     addExtraIconRenderer(renderer);
   }
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
+   * Adds a widget or a component to the header-icon ul.
+   *
+   * If adding a widget it must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
    * api.addToHeaderIcons(
-   *  createWidget('some-widget')
+   *  createWidget("some-widget")
+   * ```
+   *
+   * If adding a component you can pass the component directly. Additionally, you can
+   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * api.addToHeaderIcons(
+      <template>
+        <span>Icon</span>
+
+        <@panelPortal>
+          <div>Panel</div>
+        </@panelPortal>
+      </template>
+    );
    * ```
    *
    **/
   addToHeaderIcons(icon) {
     addToHeaderIcons(icon);
+    addToGlimmerHeaderIcons(icon);
   }
 
   /**
@@ -1897,6 +2025,7 @@ class PluginApi {
    */
   forceDropdownForMenuPanels(classNames) {
     forceDropdownForMenuPanels(classNames);
+    glimmerForceDropdownForMenuPanels(classNames);
   }
 
   /**
@@ -2686,6 +2815,26 @@ class PluginApi {
     this.container
       .lookup("service:admin-custom-user-fields")
       .addProperty(userFieldProperty);
+  }
+
+  /**
+   * Adds a custom button to the composer preview's image wrapper
+   *
+   *
+   * ```
+   * api.addComposerImageWrapperButton(
+   *   "My Custom Button",
+   *   "custom-button-class"
+   *   "lock"
+   *   (event) => { console.log("Custom button clicked", event)
+   * });
+   *
+   * ```
+   *
+   */
+  addComposerImageWrapperButton(label, btnClass, icon, fn) {
+    addImageWrapperButton(label, btnClass, icon);
+    addApiImageWrapperButtonClickEvent(fn);
   }
 }
 

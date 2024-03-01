@@ -82,18 +82,13 @@ ur:
       invalid_yaml: "فراہم کردہ YAML غلط ہے۔"
       data_type_inclusion: "`%{name}` قسم کی ترتیب غیر تعاون یافتہ ہے۔ تائید شدہ اقسام ہیں `انٹیجر`، `بول`، `لسٹ`، `اینم` اور `اپ لوڈ`"
       name_too_long: "بہت طویل نام کے ساتھ ایک ترتیب موجود ہے۔ زیادہ سے زیادہ لمبائی 255 ہے"
-      default_value_missing: "ترتیب `%{name}` کی کوئی ڈِیفالٹ قدر نہیں ہے"
+      default_value_missing: "ترتیب `%{name}` کی کوئی ڈِیفالٹ قدر نہیں ہے."
       default_not_match_type: "ترتیب `%{name}` کی ڈِیفالٹ قدر کی قِسم، ترتیب قِسم سے مَیچ نہیں کرتی۔"
-      default_out_range: "ترتیب `%{name}` کی ڈِیفالٹ قدر مخصوص رَینج میں نہیں ہے۔"
       enum_value_not_valid: "منتخب کردہ قدر enum انتخاب میں سے ایک نہیں ہے۔"
-      number_value_not_valid: "نئی قدر اجازت یافتہ رَینج کے اندر نہیں ہے۔"
-      number_value_not_valid_min_max: "یہ %{min} اور %{max} کے درمیان ہونی ضروری ہے۔"
-      number_value_not_valid_min: "اِس کا %{min} سے زیادہ یا اِس کے برابر ہونا لازمی ہے۔"
-      number_value_not_valid_max: "اِس کا %{max} سے کم یا اِس کے برابر ہونا لازمی ہے۔"
-      string_value_not_valid: "نئی قدر کی لمبائی اجازت یافتہ رَینج کے اندر نہیں ہے۔"
-      string_value_not_valid_min_max: "اِس کا %{min} اور %{max} حروف لمبائی کے درمیان ہونا لازمی ہے۔"
-      string_value_not_valid_min: "کم از کم %{min} حروف لمبا ہونا لازمی ہے۔"
-      string_value_not_valid_max: "یہ زیادہ سے زیادہ %{max} حروف کا ہونا چاہیے۔"
+      number_value_not_valid_min_max: "قدر کا %{min} اور %{max} کے درمیان ہونا ضروری ہے۔"
+      objects:
+        required: "موجود ہونا لازمی ہے"
+        not_valid_integer_value: "اِنٹیجَر ہونا لازمی ہے"
     locale_errors:
       top_level_locale: "ایک لوکیل فائل میں سب سے اوپر کی سطح کی کِی کا نام لوکیل نام سے ملنا چاہیے"
       invalid_yaml: "ترجمہ YAML غلط"
@@ -786,6 +781,9 @@ ur:
     inappropriate:
       title: "نامناسب"
       short_description: '<a href="%{base_path}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کی خلاف ورزی'
+    illegal:
+      email_title: '"%{title}" میں ایک پوسٹ پر اسٹاف کی توجہ درکار ہے'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "@%{username} کو ایک پیغام بھیجیں"
       description: "میں اِس شخص سے اُس کی پوسٹ کے بارے میں براہ راست اور ذاتی طور پر بات کرنا چاہتا ہوں۔"
@@ -856,6 +854,9 @@ ur:
       long_form: "اِس کو ماڈریٹر کی توجہ کیلئے فلَیگ کیا گیا"
       short_description: "اسٹاف کی توجہ کسی اور وجہ کی بناہ پر درکار ہے"
       email_title: 'ٹاپک "%{title}" پر اسٹاف کی توجہ درکار ہے'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: '"%{title}" میں ایک پوسٹ پر اسٹاف کی توجہ درکار ہے'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>آپ کی پوسٹ کمیونٹی کی طرف سے فلَیگ کی گئی تھی۔ براہ مہربانی <a href="%{path}">اپنے پیغامات دیکھیے</a>۔</p>'
@@ -2972,7 +2973,6 @@ ur:
       too_large: "معذرت، جو فائل آپ اَپ لوڈ کرنے کے کوشش کر رہے ہیں وہ بہت بڑی ہے (زیادہ سے زیادہ سائز %{max_size_kb} KB ہے)۔"
     images:
       too_large: "معذرت، جو فائل آپ اَپ لوڈ کرنے کے کوشش کر رہے ہیں وہ بہت بڑی ہے (زیادہ سے زیادہ سائز %{max_size_kb} KB ہے)، براہ کرم اِس کا سائز تبدیل کریں اور دوبارہ کوشش کریں۔"
-      larger_than_x_megapixels: "معذرت، جو فائل آپ اَپ لوڈ کرنے کے کوشش کر رہے ہیں وہ بہت بڑی ہے (زیادہ سے زیادہ طول و عرض %{max_image_megapixels}-مَیگا پِکسل ہے)، براہ کرم اِس کا سائز تبدیل کریں اور دوبارہ کوشش کریں۔"
       size_not_found: "معذرت، لیکن ہم تصویر کا سائز جان نہیں سکے۔ شاید آپ کی تصویر خراب ہے؟"
     placeholders:
       too_large: "(%{max_size_kb}KB سے بڑی تصویر)"

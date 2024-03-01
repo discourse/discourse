@@ -137,9 +137,9 @@
             {{#if this.passwordRequired}}
               <PasswordField
                 @value={{this.accountPassword}}
-                @type={{if this.maskPassword "password" "text"}}
-                @autocomplete="current-password"
                 @capsLockOn={{this.capsLockOn}}
+                type={{if this.maskPassword "password" "text"}}
+                autocomplete="current-password"
                 aria-describedby="password-validation password-validation-more-info"
                 aria-invalid={{this.passwordValidation.failed}}
                 id="new-account-password"

@@ -194,6 +194,18 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Stop streaming of a message
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  stopMessageStreaming(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/streaming`
+    );
+  }
+
+  /**
    * Trashes (soft deletes) a chat message.
    * @param {number} channelId - ID of the channel.
    * @param {number} messageId - ID of the message.
@@ -310,8 +322,14 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  leaveChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  async leaveChannel(channelId) {
+    await this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+    const channel = await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
+    if (channel) {
+      this.chatChannelsManager.remove(channel);
+    }
   }
 
   /**

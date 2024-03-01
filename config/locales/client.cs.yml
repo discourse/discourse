@@ -37,11 +37,8 @@ cs:
       long_with_year: "D. M. YYYY, H:mm"
       long_with_year_no_time: "D. M. YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D. M. YYYY, H:mm"
       long_date_without_year: "D. MMMM, H:mm"
-      long_date_with_year_without_time: "D. M. YYYY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>H:mm"
-      long_date_with_year_with_linebreak: "D. M. YYYY <br/>H:mm"
       wrap_ago: "před %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ cs:
           many: "%{count}let"
           other: "%{count}let"
         date_month: "D. MMMM"
-        date_year: "MMMM YYYY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "méně než %{count} minuta"
@@ -124,7 +121,6 @@ cs:
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
-        date_year: "D. M. YYYY"
       medium_with_ago:
         x_minutes:
           one: "před %{count} minutou"
@@ -219,7 +215,6 @@ cs:
     emails_are_disabled: "Všechny odchozí e-maily byly globálně zakázány správcem. Nebudou zasílána žádná e-mailová oznámení jakéhokoli druhu."
     emails_are_disabled_non_staff: "Odchozí e-maily byly zakázány pro uživatele, kteří nejsou personál."
     software_update_prompt:
-      message: "Aktualizovali jsme tento web, <span>prosím obnovte stránku</span>, jinak může dojít k neočekávanému chování."
       dismiss: "Označit jako přečtené"
     bootstrap_mode: "Začínáme"
     themes:
@@ -231,7 +226,6 @@ cs:
     broken_page_change_alert: "Handler onPageChange vyvolal chybu. Další informace najdete v nástrojích pro vývojáře prohlížeče."
     broken_plugin_alert: "Způsobeno pluginem '%{name}'"
     critical_deprecation:
-      notice: "<b>[Upozornění správce]</b> Jeden z vašich motivů nebo pluginů potřebuje aktualizaci, aby byl kompatibilní s nadcházejícími změnami jádra Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>další informace</a>)."
       theme_source: "Identifikovaný motiv: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identifikovaný plugin: '%{name}'"
     s3:
@@ -1059,6 +1053,7 @@ cs:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil uživatele %{username}"
+      account_possessive: "Účet uživatele %{name}"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive:
@@ -2814,6 +2809,18 @@ cs:
     topic_bulk_actions:
       close_topics:
         name: "Zavřít téma"
+      archive_topics:
+        name: "Archivovat témata"
+      unlist_topics:
+        name: "Odebrat témata ze seznamu"
+      relist_topics:
+        name: "Znovunačíst seznam témat"
+      append_tags:
+        name: "Přidat štítky"
+      replace_tags:
+        name: "Zaměnit štítky"
+      delete_topics:
+        name: "Smazat témata"
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"

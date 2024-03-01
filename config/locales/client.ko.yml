@@ -34,11 +34,9 @@ ko:
       long_with_year: "YYYY MMM D a h:mm"
       long_with_year_no_time: "YYYY MMM D"
       full_with_year_no_time: "YYYY MMMM Do"
-      long_date_with_year: "'YY MMM D. LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "'YY MMM D"
+      long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "'YY MMM D <br/>LT"
       wrap_ago: "%{date} 전"
       wrap_on: "%{date}"
       tiny:
@@ -64,7 +62,7 @@ ko:
         almost_x_years:
           other: "%{count}년"
         date_month: "MMM D"
-        date_year: "'YY MMM"
+        date_year: "YYYY MMM"
       medium:
         less_than_x_minutes:
           other: "%{count}분 미만"
@@ -84,7 +82,7 @@ ko:
           other: "%{count}년 이상"
         almost_x_years:
           other: "대략 %{count}년"
-        date_year: "'YY MMM D"
+        date_year: "YYYY MMM D"
       medium_with_ago:
         x_minutes:
           other: "%{count}분 전"
@@ -154,7 +152,6 @@ ko:
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
-      message: "사이트가 업데이트되어 <span>새로고침</span>이 필요합니다. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
       dismiss: "무시"
     themes:
       default_description: "기본"
@@ -2271,6 +2268,20 @@ ko:
     topic_bulk_actions:
       close_topics:
         name: "글 닫기"
+      archive_topics:
+        name: "글 보관"
+      unlist_topics:
+        name: "목록에서 글 숨기기"
+      relist_topics:
+        name: "목록에서 글 다시 보이기"
+      remove_tags:
+        name: "태그 제거"
+      append_tags:
+        name: "태그 추가"
+      replace_tags:
+        name: "태그 바꾸기"
+      delete_topics:
+        name: "글 삭제"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"

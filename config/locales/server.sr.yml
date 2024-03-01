@@ -44,6 +44,10 @@ sr:
   remove_posts_deleted_by_author: "Izbrisano od strane autora"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "mora biti ceo broj"
   emails:
     incoming:
       default_subject: "Ovoj temi je potreban naslov"

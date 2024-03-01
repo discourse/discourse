@@ -12,11 +12,13 @@ module Chat
       deleted_by_id
       thread_id
       chat_channel_id
+      streaming
     ]
     attributes(
       *(
         BASIC_ATTRIBUTES +
           %i[
+            user
             mentioned_users
             reactions
             bookmark
@@ -29,7 +31,6 @@ module Chat
       ),
     )
 
-    has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
@@ -37,11 +38,12 @@ module Chat
     def mentioned_users
       object
         .user_mentions
+        .includes(user: :user_option)
         .limit(SiteSetting.max_mentions_per_chat_message)
         .map(&:user)
         .compact
         .sort_by(&:id)
-        .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+        .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json
     end
 
@@ -50,7 +52,8 @@ module Chat
     end
 
     def user
-      object.user || Chat::NullUser.new
+      user = object.user || Chat::NullUser.new
+      MessageUserSerializer.new(user, root: false, include_status: true).as_json
     end
 
     def excerpt
@@ -60,6 +63,7 @@ module Chat
     def reactions
       object
         .reactions
+        .includes(user: :user_option)
         .group_by(&:emoji)
         .map do |emoji, reactions|
           next unless Emoji.exists?(emoji)
@@ -168,7 +172,7 @@ module Chat
 
         if sym == :notify_user &&
              (
-               scope.current_user == user || user.bot? ||
+               scope.current_user == user || object.user.bot? ||
                  !scope.current_user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
              )
           next
