@@ -11,7 +11,7 @@
       </label>
 
       <ExpandingTextArea
-        {{on "input" (action (mut this.reason) value="target.value")}}
+        {{on "input" (with-event-value (fn (mut this.reason)))}}
         value={{this.reason}}
         maxlength="5000"
       />

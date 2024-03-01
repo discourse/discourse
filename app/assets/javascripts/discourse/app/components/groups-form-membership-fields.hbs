@@ -44,9 +44,7 @@
       <ExpandingTextArea
         {{on
           "input"
-          (action
-            (mut this.model.membership_request_template) value="target.value"
-          )
+          (with-event-value (fn (mut this.model.membership_request_template)))
         }}
         value={{this.model.membership_request_template}}
         name="membership-request-template"
