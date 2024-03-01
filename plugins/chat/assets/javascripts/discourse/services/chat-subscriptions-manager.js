@@ -225,7 +225,6 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   _onNewThreadMessage(busData) {
-    console.log(busData);
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       if (!channel.threadingEnabled && !busData.force_thread) {
         return;
