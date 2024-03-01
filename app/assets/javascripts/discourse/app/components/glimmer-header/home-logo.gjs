@@ -79,6 +79,7 @@ export default class HomeLogo extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <div
       class={{concatClass (if @minimized "title--minimized") "title"}}
       {{on "click" this.click}}
