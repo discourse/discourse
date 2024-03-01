@@ -467,7 +467,8 @@ export default class ChatMessage extends Component {
 
   get threadingEnabled() {
     return (
-      this.args.message?.channel?.threadingEnabled &&
+      (this.args.message?.channel?.threadingEnabled ||
+        this.args.message?.thread?.force) &&
       !!this.args.message?.thread
     );
   }

@@ -53,7 +53,7 @@ module Chat
           AND chat_messages.deleted_at IS NULL
           AND chat_messages.thread_id IS NOT NULL
           AND chat_messages.id != chat_threads.original_message_id
-          AND chat_channels.threading_enabled
+          AND (chat_channels.threading_enabled OR chat_threads.force = true)
           AND user_chat_thread_memberships.notification_level NOT IN (:quiet_notification_levels)
           AND original_message.deleted_at IS NULL
           AND user_chat_channel_memberships.muted = false

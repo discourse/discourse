@@ -15,7 +15,7 @@ module Chat
     end
 
     def self.calculate_publish_targets(channel, message)
-      return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel)
+      return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel, message)
 
       if message.thread_om?
         [
@@ -30,8 +30,8 @@ module Chat
       end
     end
 
-    def self.allow_publish_to_thread?(channel)
-      channel.threading_enabled
+    def self.allow_publish_to_thread?(channel, message)
+      channel.threading_enabled || message.thread&.force
     end
 
     def self.publish_new!(chat_channel, chat_message, staged_id)
@@ -42,7 +42,7 @@ module Chat
         serialize_message_with_type(chat_message, :sent).merge(staged_id: staged_id),
       )
 
-      if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel)
+      if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
@@ -59,13 +59,14 @@ module Chat
         )
       end
 
-      if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
+      if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
             type: "thread",
             channel_id: chat_channel.id,
             thread_id: chat_message.thread_id,
+            force_thread: chat_message.thread.force,
             message:
               Chat::MessageSerializer.new(
                 chat_message,
