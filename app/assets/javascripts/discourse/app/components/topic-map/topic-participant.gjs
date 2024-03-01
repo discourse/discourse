@@ -48,7 +48,7 @@ export default class TopicParticipant extends Component {
   }
 
   get userUrl() {
-    userPath(this.args.participant);
+    return userPath(this.args.participant.username);
   }
 
   <template>
