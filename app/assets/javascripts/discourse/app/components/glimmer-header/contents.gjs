@@ -7,6 +7,7 @@ import MountWidget from "../mount-widget";
 import PluginOutlet from "../plugin-outlet";
 import SidebarToggle from "./sidebar-toggle";
 import TopicInfo from "./topic/info";
+import HomeLogo from "./home-logo";
 
 export default class Contents extends Component {
   @service site;
@@ -28,10 +29,7 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <MountWidget
-            @widget="home-logo"
-            @args={{hash minimized=this.topicPresent}}
-          />
+          <HomeLogo @minimized={{this.topicPresent}} />
         </PluginOutlet>
       </div>
 
