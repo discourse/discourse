@@ -695,7 +695,12 @@ RSpec.configure do |config|
         lines << "\n"
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}\n" }
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
@@ -774,6 +779,14 @@ def set_cdn_url(cdn_url)
     Rails.configuration.action_controller.asset_host = nil
     ActionController::Base.asset_host = nil
   end
+end
+
+# Time.now can cause flaky tests, especially in cases like
+# leap days. This method freezes time at a "safe" specific
+# time (the Discourse 1.1 release date), so it will not be
+# affected by further temporal disruptions.
+def freeze_time_safe
+  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
 end
 
 def freeze_time(now = Time.now)

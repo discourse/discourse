@@ -207,5 +207,35 @@ RSpec.describe PushNotificationPusher do
         )
       end
     end
+
+    describe "push_notification_pusher_title_payload modifier" do
+      let(:modifier_block) do
+        Proc.new do |payload|
+          payload[:username] = "super_hijacked"
+          payload
+        end
+      end
+      it "Allows modifications to the payload passed to the translation" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:push_notification_pusher_title_payload, &modifier_block)
+
+        message = execute_push(notification_type: Notification.types[:mentioned], post_number: 2)
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.mentioned",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: "super_hijacked",
+          ),
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :push_notification_pusher_title_payload,
+          &modifier_block
+        )
+      end
+    end
   end
 end

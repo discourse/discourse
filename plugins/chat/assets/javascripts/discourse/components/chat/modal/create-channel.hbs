@@ -17,7 +17,7 @@
         class="chat-modal-create-channel__input"
         @type="text"
         @value={{this.name}}
-        {{on "input" (action this.onNameChange value="target.value")}}
+        {{on "input" (with-event-value this.onNameChange)}}
       />
     </div>
 

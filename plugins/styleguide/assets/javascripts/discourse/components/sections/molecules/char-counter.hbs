@@ -1,10 +1,7 @@
 <StyleguideExample @title="<CharCounter>">
   <CharCounter @max="50" @value={{@dummy.charCounterContent}}>
     <textarea
-      {{on
-        "input"
-        (action (mut @dummy.charCounterContent) value="target.value")
-      }}
+      {{on "input" (with-event-value (fn (mut @dummy.charCounterContent)))}}
       class="styleguide--char-counter"
     ></textarea>
   </CharCounter>

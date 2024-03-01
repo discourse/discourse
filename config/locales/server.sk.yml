@@ -83,6 +83,7 @@ sk:
         unknown_setting_returned_by_migration: "Migrácie '%{name}' vrátili nastavenie '%{setting_name}', ktoré nie je deklarované v súbore settings.yml témy"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
+      number_value_not_valid_min_max: "Hodnota musí byť medzi %{min} a %{max}."
       objects:
         required: "musí existovať"
         not_valid_integer_value: "musí byť číslo"

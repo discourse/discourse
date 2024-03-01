@@ -1778,6 +1778,7 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
   profile_background_allowed_groups:
     default: "3|10" # auto group staff and trust_level_0
     type: group_list

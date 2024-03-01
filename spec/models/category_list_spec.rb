@@ -27,21 +27,21 @@ RSpec.describe CategoryList do
 
     it "doesn't show topics that you can't view" do
       public_cat = Fabricate(:category_with_definition) # public category
-      Fabricate(:topic, category: public_cat)
+      topic_in_public_cat = Fabricate(:topic, category: public_cat)
 
       private_cat = Fabricate(:category_with_definition) # private category
-      Fabricate(:topic, category: private_cat)
+      topic_in_private_cat = Fabricate(:topic, category: private_cat)
       private_cat.set_permissions(admins: :full)
       private_cat.save
 
       secret_subcat = Fabricate(:category_with_definition, parent_category_id: public_cat.id) # private subcategory
-      Fabricate(:topic, category: secret_subcat)
+      topic_in_secret_subcat = Fabricate(:topic, category: secret_subcat)
       secret_subcat.set_permissions(admins: :full)
       secret_subcat.save
 
       muted_tag = Fabricate(:tag) # muted tag
       SiteSetting.default_tags_muted = muted_tag.name
-      Fabricate(:topic, category: public_cat, tags: [muted_tag])
+      topic_in_public_cat_2 = Fabricate(:topic, category: public_cat, tags: [muted_tag])
 
       muted_tag_2 = Fabricate(:tag)
       TagUser.create!(
@@ -58,16 +58,21 @@ RSpec.describe CategoryList do
           .categories
           .find { |x| x.name == public_cat.name }
           .displayable_topics
-          .count,
-      ).to eq(3)
+          .map(&:id),
+      ).to contain_exactly(
+        topic_in_public_cat.id,
+        topic_in_secret_subcat.id,
+        topic_in_public_cat_2.id,
+      )
+
       expect(
         CategoryList
           .new(Guardian.new(admin), include_topics: true)
           .categories
           .find { |x| x.name == private_cat.name }
           .displayable_topics
-          .count,
-      ).to eq(1)
+          .map(&:id),
+      ).to contain_exactly(topic_in_private_cat.id)
 
       expect(
         CategoryList
@@ -75,8 +80,9 @@ RSpec.describe CategoryList do
           .categories
           .find { |x| x.name == public_cat.name }
           .displayable_topics
-          .count,
-      ).to eq(2)
+          .map(&:id),
+      ).to contain_exactly(topic_in_public_cat.id, topic_in_public_cat_2.id)
+
       expect(
         CategoryList
           .new(Guardian.new(user), include_topics: true)
@@ -90,8 +96,9 @@ RSpec.describe CategoryList do
           .categories
           .find { |x| x.name == public_cat.name }
           .displayable_topics
-          .count,
-      ).to eq(1)
+          .map(&:id),
+      ).to contain_exactly(topic_in_public_cat.id)
+
       expect(
         CategoryList
           .new(Guardian.new(nil), include_topics: true)
@@ -112,8 +119,8 @@ RSpec.describe CategoryList do
           .categories
           .find { |x| x.name == cat.name }
           .displayable_topics
-          .count,
-      ).to eq(1)
+          .map(&:id),
+      ).to contain_exactly(topic.id)
 
       TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:muted])
 

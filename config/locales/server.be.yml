@@ -64,14 +64,6 @@ be:
     errors:
       component_no_user_selectable: "Тэма кампаненты не могуць быць выбіраеш карыстальнікам"
     settings_errors:
-      number_value_not_valid: "Новае значэнне не знаходзіцца ў межах дапушчальнага дыяпазону."
-      number_value_not_valid_min_max: "Гэта павінна быць паміж %{min}і %{max}."
-      number_value_not_valid_min: "Гэта павінна быць больш або роўна %{min}."
-      number_value_not_valid_max: "Яно павінна быць менш або роўна {% макс}."
-      string_value_not_valid: "Новая даўжыня значэння не знаходзіцца ў межах дапушчальнага дыяпазону."
-      string_value_not_valid_min_max: "Яно павінна быць паміж% {мін} і {% макс} знакаў."
-      string_value_not_valid_min: "Яна павінна быць не менш% {мін} знакаў."
-      string_value_not_valid_max: "Яно павінна быць не больш% {макс} знакаў."
       objects:
         required: "павінны прысутнічаць"
         not_valid_integer_value: "павінна быць цэлым лікам"

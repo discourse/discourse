@@ -18,7 +18,7 @@ export default class ChatNavbarCloseDrawerButton extends Component {
       @icon="times"
       @action={{this.closeDrawer}}
       @title="chat.close"
-      class="btn-flat no-text c-navbar__close-drawer-button"
+      class="btn-transparent no-text c-navbar__close-drawer-button"
     />
   </template>
 }

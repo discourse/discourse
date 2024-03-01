@@ -11,11 +11,7 @@
 
   <div class="sources">
     {{#each this.sources as |source|}}
-      <ShareSource
-        @source={{source}}
-        @title={{this.topic.title}}
-        @action={{action "share"}}
-      />
+      <ShareSource @source={{source}} @action={{this.share}} />
     {{/each}}
   </div>
 </div>

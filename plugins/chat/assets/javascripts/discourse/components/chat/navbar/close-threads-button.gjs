@@ -12,7 +12,7 @@ export default class ChatNavbarCloseThreadsButton extends Component {
   <template>
     {{#if this.site.desktopView}}
       <LinkTo
-        class="c-navbar__close-threads-button btn-flat btn btn-icon no-text"
+        class="c-navbar__close-threads-button btn-transparent btn btn-icon no-text"
         @route="chat.channel"
         @models={{@channel.routeModels}}
         title={{this.closeButtonTitle}}

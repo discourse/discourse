@@ -14,7 +14,12 @@ module Jobs
       # not be re-added by the relevant checker, and will be cleared.
       AdminDashboardData.clear_found_scheduled_check_problems
 
-      ::ProblemCheck.scheduled.each do |check|
+      scheduled_checks =
+        ProblemCheckTracker.all.filter_map do |tracker|
+          tracker.check if tracker.check.scheduled? && tracker.ready_to_run?
+        end
+
+      scheduled_checks.each do |check|
         Jobs.enqueue(:problem_check, check_identifier: check.identifier.to_s)
       end
     end

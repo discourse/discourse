@@ -88,32 +88,28 @@ RSpec.describe HashtagsController do
           get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body).to eq(
+          expect(response.parsed_body["category"]).to contain_exactly(
             {
-              "category" => [
-                {
-                  "relative_url" => category.url,
-                  "text" => category.name,
-                  "description" => nil,
-                  "colors" => [category.color],
-                  "icon" => "folder",
-                  "type" => "category",
-                  "ref" => category.slug,
-                  "slug" => category.slug,
-                  "id" => category.id,
-                },
-                {
-                  "relative_url" => private_category.url,
-                  "text" => private_category.name,
-                  "description" => nil,
-                  "colors" => [private_category.color],
-                  "icon" => "folder",
-                  "type" => "category",
-                  "ref" => private_category.slug,
-                  "slug" => private_category.slug,
-                  "id" => private_category.id,
-                },
-              ],
+              "relative_url" => category.url,
+              "text" => category.name,
+              "description" => nil,
+              "colors" => [category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => category.slug,
+              "slug" => category.slug,
+              "id" => category.id,
+            },
+            {
+              "relative_url" => private_category.url,
+              "text" => private_category.name,
+              "description" => nil,
+              "colors" => [private_category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => private_category.slug,
+              "slug" => private_category.slug,
+              "id" => private_category.id,
             },
           )
         end

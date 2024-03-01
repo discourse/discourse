@@ -478,6 +478,7 @@ RSpec.describe Admin::ApiController do
           "/t/:slug/:topic_id/last (GET)",
           "/t/:topic_id/posts (GET)",
           "/latest.rss (GET)",
+          "/t/:topic_id/recover (PUT)",
         ]
 
         topic_routes.each do |route|
@@ -486,6 +487,9 @@ RSpec.describe Admin::ApiController do
 
         expect(scopes["posts"].any? { |h| h["urls"].include?("/posts (GET)") }).to be_truthy
         expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
+        expect(
+          scopes["posts"].any? { |h| h["urls"].include?("/posts/:post_id/recover (PUT)") },
+        ).to be_truthy
 
         expect(scopes["users"].find { _1["key"] == "update" }["urls"]).to contain_exactly(
           "/users/:username (PUT)",

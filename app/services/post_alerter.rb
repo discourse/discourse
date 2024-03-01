@@ -38,7 +38,20 @@ class PostAlerter
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
 
       if user.allow_live_notifications?
-        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        send_notification =
+          DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+            filter.call(user, payload)
+          end
+
+        if send_notification
+          payload =
+            DiscoursePluginRegistry.apply_modifier(
+              :post_alerter_live_notification_payload,
+              payload,
+              user,
+            )
+          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        end
       end
 
       push_notification(user, payload)
@@ -50,6 +63,11 @@ class PostAlerter
 
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
+
+    # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
+    # If the subscriber of this event wants to filter usage by push_notification_filters as well,
+    # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)
+    DiscourseEvent.trigger(:push_notification, user, payload)
 
     if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
          !filter.call(user, payload)
@@ -84,8 +102,6 @@ class PostAlerter
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end
-
-    DiscourseEvent.trigger(:push_notification, user, payload)
   end
 
   def initialize(default_opts = {})

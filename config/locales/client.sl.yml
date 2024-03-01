@@ -2301,6 +2301,20 @@ sl:
     topic_bulk_actions:
       close_topics:
         name: "Zapri teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Izloči temo iz seznamov"
+      relist_topics:
+        name: "Postavi temo nazaj na seznam"
+      remove_tags:
+        name: "Odstrani oznake"
+      append_tags:
+        name: "Dodaj oznake"
+      replace_tags:
+        name: "Zamenjaj oznake"
+      delete_topics:
+        name: "Izbriši teme"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"
