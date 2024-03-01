@@ -40,6 +40,7 @@ export const NOTIFICATION_TYPES = {
   question_answer_user_commented: 35,
   watching_category_or_tag: 36,
   new_features: 37,
+  admin_problems: 38,
   following: 800,
   following_created_topic: 801,
   following_replied: 802,

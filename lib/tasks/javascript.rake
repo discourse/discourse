@@ -16,23 +16,50 @@ def library_src
   "#{Rails.root}/node_modules"
 end
 
-def html_for_section(group)
-  icons =
-    group["icons"].map do |icon|
-      class_attr = icon["diversity"] ? " class=\"diversity\"" : ""
-      "    {{replace-emoji \":#{icon["name"]}:\" (hash lazy=true#{class_attr} tabIndex=\"0\")}}"
+def gjs_for_emoji_sections(groups_json)
+  constants =
+    groups_json.map do |group|
+      section_name = group["name"]
+
+      js = +"    { name: \"#{section_name}\", icons: ["
+
+      group["icons"].each do |icon|
+        js += "      ['#{icon["name"]}',"
+        js += icon["diversity"] ? "true]," : "],"
+      end
+
+      js += "    ] }"
     end
 
-  <<~HTML
-    <div class="section" data-section="#{group["name"]}">
-      <div class="section-header">
-        <span class="title">{{i18n "emoji_picker.#{group["name"]}"}}</span>
-      </div>
-      <div class="section-group">
-        #{icons.join("\n").strip}
-      </div>
-    </div>
-  HTML
+  <<~GJS
+    import { concat, get, hash } from "@ember/helper";
+    import replaceEmoji from "discourse/helpers/replace-emoji";
+    import i18n from "discourse-common/helpers/i18n";
+
+    const EMOJI_GROUP_SECTIONS = [
+      #{constants.join(",\n")}
+    ]
+
+    export default <template>
+      {{#each EMOJI_GROUP_SECTIONS as |section|}}
+        <div class="section" data-section={{section.name}}>
+          <div class="section-header">
+            <span class="title">{{i18n (concat "emoji_picker." section.name)}}</span>
+          </div>
+
+          <div class="section-group">
+            {{#each section.icons as |icon|}}
+              {{#if (get icon "1")}}
+                {{replaceEmoji (concat ":" (get icon "0") ":") (hash lazy=true tabIndex="0" class="diversity")}}
+              {{else}}
+                {{replaceEmoji (concat ":" (get icon "0") ":") (hash lazy=true tabIndex="0")}}
+              {{/if}}
+            {{/each}}
+          </div>
+        </div>
+      {{/each}}
+    </template>
+  GJS
 end
 
 def write_template(path, task_name, template)
@@ -193,11 +220,14 @@ task "javascript:update_constants" => :environment do
 			</button>
     HTML
 
-  emoji_sections = groups_json.map { |group| html_for_section(group) }
-
   components_dir = "discourse/app/components"
   write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
-  write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
+
+  write_template(
+    "#{components_dir}/emoji-group-sections.gjs",
+    task_name,
+    gjs_for_emoji_sections(groups_json),
+  )
 end
 
 task "javascript:update" => "clean_up" do
