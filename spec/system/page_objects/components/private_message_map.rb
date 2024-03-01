@@ -40,11 +40,17 @@ module PageObjects
       end
 
       def has_participant_details_for?(user)
-        find("#{PRIVATE_MESSAGE_MAP_KLASS} .participants").has_link?(user.username)
+        find("#{PRIVATE_MESSAGE_MAP_KLASS} .participants").has_link?(
+          class: "user-link",
+          href: "/u/#{user.username}",
+        )
       end
 
       def has_no_participant_details_for?(user)
-        find("#{PRIVATE_MESSAGE_MAP_KLASS} .participants").has_no_link?(user.username)
+        find("#{PRIVATE_MESSAGE_MAP_KLASS} .participants").has_no_link?(
+          class: "user-link",
+          href: "/u/#{user.username}",
+        )
       end
     end
   end

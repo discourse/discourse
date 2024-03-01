@@ -7,6 +7,10 @@ module PageObjects
         has_css?("#dialog-holder .dialog-content")
       end
 
+      def closed?
+        has_no_css?("#dialog-holder .dialog-content")
+      end
+
       def body
         find("#dialog-holder .dialog-content .dialog-body")
       end

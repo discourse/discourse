@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import avatar from "discourse/helpers/bound-avatar-template";
 import { groupPath } from "discourse/lib/url";
 import dIcon from "discourse-common/helpers/d-icon";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 
@@ -16,14 +15,11 @@ export default class PrivateMessageMap extends Component {
   @tracked isEditing = false;
 
   get participantsClasses() {
-    if (
-      !this.isEditing &&
+    return !this.isEditing &&
       this.site.mobileView &&
       this.args.postAttrs.allowedGroups.length > 4
-    ) {
-      return "participants hide-names";
-    }
-    return "participants";
+      ? "participants hide-names"
+      : "participants";
   }
 
   get canInvite() {
@@ -42,29 +38,17 @@ export default class PrivateMessageMap extends Component {
   }
 
   get actionAllowed() {
-    return this._actionMap[this._actionAllowedKey()].bind(this);
-  }
-
-  _actionAllowedKey() {
-    if (this.canInvite && this.canRemove) {
-      return "edit";
-    }
-    if (!this.canInvite && this.canRemove) {
-      return "remove";
-    }
-    return "add";
-  }
-
-  get _actionMap() {
-    return {
-      edit: this.toggleEditing,
-      remove: this.toggleEditing,
-      add: this.args.showInvite,
-    };
+    return this.canRemove ? this.toggleEditing : this.args.showInvite;
   }
 
   get actionAllowedLabel() {
-    return `private_message_info.${this._actionAllowedKey()}`;
+    if (this.canInvite && this.canRemove) {
+      return "private_message_info.edit";
+    }
+    if (!this.canInvite && this.canRemove) {
+      return "private_message_info.remove";
+    }
+    return "private_message_info.add";
   }
 
   @action
@@ -128,13 +112,13 @@ class PmMapUserGroup extends Component {
         {{dIcon "users"}}
         <span class="group-name">{{@model.name}}</span>
       </a>
+      {{#if this.canRemoveLink}}
+        <PmRemoveGroupLink
+          @model={{@model}}
+          @removeAllowedGroup={{@removeAllowedGroup}}
+        />
+      {{/if}}
     </div>
-    {{#if this.canRemoveLink}}
-      <PmRemoveGroupLink
-        @model={{@model}}
-        @removeAllowedGroup={{@removeAllowedGroup}}
-      />
-    {{/if}}
   </template>
 }
 
@@ -153,36 +137,17 @@ class PmRemoveGroupLink extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    <a
-      class="remove-invited no-text btn-icon btn"
-      {{on "click" this.showConfirmDialog}}
-    >
-      {{dIcon "times"}}
-    </a>
+    <DButton
+      class="remove-invited"
+      @action={{this.showConfirmDialog}}
+      @icon="times"
+    />
   </template>
 }
 
 class PmMapUser extends Component {
-  @service site;
-
-  get linkClass() {
-    if (this.site.mobileView) {
-      return "";
-    }
-    return "user-link";
-  }
-
-  get userUrl() {
-    return this.args.model.path;
-  }
-
-  get avatarImage() {
-    return htmlSafe(
-      tinyAvatar(this.args.model.avatar_template, {
-        title: this.args.model.name || this.args.model.username,
-      })
-    );
+  get avatarTitle() {
+    return this.args.model.name || this.args.model.username;
   }
 
   get isCurrentUser() {
@@ -198,19 +163,15 @@ class PmMapUser extends Component {
 
   <template>
     <div class="user">
-      <a class={{this.linkClass}} href={{this.userUrl}}>
-        {{#if this.site.mobileView}}
-          {{this.avatarImage}}
-        {{else}}
-          <a
-            class="trigger-user-card"
-            data-user-card={{@model.username}}
-            title={{@model.username}}
-            aria-hidden="true"
-          >
-            {{this.avatarImage}}
-          </a>
-        {{/if}}
+      <a class="user-link" href={{@model.path}}>
+        <a
+          class="trigger-user-card"
+          data-user-card={{@model.username}}
+          title={{@model.username}}
+          aria-hidden="true"
+        >
+          {{avatar @model.avatar_template "tiny" (hash title=this.avatarTitle)}}
+        </a>
         <span class="username">{{@model.username}}</span>
       </a>
 
@@ -231,11 +192,11 @@ class PmRemoveLink extends Component {
   @action
   showConfirmDialog() {
     const messageKey = this.args.isCurrentUser
-      ? "leave_message"
-      : "remove_allowed_user";
+      ? "private_message_info.leave_message"
+      : "private_message_info.remove_allowed_user";
 
     this.dialog.deleteConfirm({
-      message: I18n.t(`private_message_info.${messageKey}`, {
+      message: I18n.t(messageKey, {
         name: this.args.model.username,
       }),
       confirmButtonLabel: this.args.isCurrentUser
@@ -244,14 +205,11 @@ class PmRemoveLink extends Component {
       didConfirm: () => this.args.removeAllowedUser(this.args.model),
     });
   }
-
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    <a
-      class="remove-invited no-text btn-icon btn"
-      {{on "click" this.showConfirmDialog}}
-    >
-      {{dIcon "times"}}
-    </a>
+    <DButton
+      class="remove-invited"
+      @action={{this.showConfirmDialog}}
+      @icon="times"
+    />
   </template>
 }

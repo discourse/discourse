@@ -232,11 +232,11 @@ export default createWidget("topic-map", {
       />`,
       {
         postAttrs: attrs,
-        showInvite: (() => this.sendWidgetAction("showInvite")).bind(this),
-        removeAllowedGroup: ((group) =>
-          this.sendWidgetAction("removeAllowedGroup", group)).bind(this),
-        removeAllowedUser: ((user) =>
-          this.sendWidgetAction("removeAllowedUser", user)).bind(this),
+        showInvite: () => this.sendWidgetAction("showInvite"),
+        removeAllowedGroup: (group) =>
+          this.sendWidgetAction("removeAllowedGroup", group),
+        removeAllowedUser: (user) =>
+          this.sendWidgetAction("removeAllowedUser", user),
       }
     );
   },

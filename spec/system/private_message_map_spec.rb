@@ -121,6 +121,7 @@ describe "Topic Map - Private Message", type: :system do
       I18n.t("js.private_message_info.remove_allowed_user", name: last_post_user.username),
     )
     private_message_remove_participant_modal.cancel
+    expect(private_message_remove_participant_modal).to be_closed
     expect(private_message_map).to have_participant_details_for(last_post_user)
     private_message_map.click_remove_participant_button(last_post_user)
     expect(private_message_remove_participant_modal).to be_open
