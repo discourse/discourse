@@ -202,6 +202,7 @@
 
     &[editing] {
       opacity: 1;
+      pointer-events: auto;
     }
 
     .scale-btn-container,
