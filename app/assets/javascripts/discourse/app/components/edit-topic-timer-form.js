@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { equal, or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
@@ -27,21 +26,6 @@ export default class EditTopicTimerForm extends Component {
 
   @tracked timerType;
 
-  @equal("statusType", OPEN_STATUS_TYPE) autoOpen;
-  @equal("statusType", CLOSE_STATUS_TYPE) autoClose;
-  @equal("statusType", CLOSE_AFTER_LAST_POST_STATUS_TYPE)
-  autoCloseAfterLastPost;
-  @equal("statusType", DELETE_STATUS_TYPE) autoDelete;
-  @equal("statusType", BUMP_TYPE) autoBump;
-  @equal("statusType", PUBLISH_TO_CATEGORY_STATUS_TYPE) publishToCategory;
-  @equal("statusType", DELETE_REPLIES_TYPE) autoDeleteReplies;
-  @or("autoOpen", "autoDelete", "autoBump") showTimeOnly;
-  @or("showTimeOnly", "publishToCategory", "autoClose") showFutureDateInput;
-  @or("isBasedOnLastPost", "autoDeleteReplies", "autoCloseAfterLastPost")
-  useDuration;
-  @equal("timerType", "custom") isCustom;
-  @equal("statusType", "close_after_last_post") isBasedOnLastPost;
-
   duration = (() => {
     if (!this.useDuration || !this.args.topicTimer.duration_minutes) {
       return null;
@@ -57,6 +41,54 @@ export default class EditTopicTimerForm extends Component {
 
     KeyboardShortcuts.pause();
     this._itsatrap = new ItsATrap();
+  }
+
+  get showTimeOnly() {
+    return this.autoOpen || this.autoDelete || this.autoBump;
+  }
+
+  get showFutureDateInput() {
+    return this.showTimeOnly || this.publishToCategory || this.autoClose;
+  }
+
+  get useDuration() {
+    return (
+      this.autoCloseAfterLastPost ||
+      this.autoDeleteReplies ||
+      this.autoCloseAfterLastPost
+    );
+  }
+
+  get isCustom() {
+    return this.timerType === "custom";
+  }
+
+  get autoOpen() {
+    return this.statusType === OPEN_STATUS_TYPE;
+  }
+
+  get autoClose() {
+    return this.statusType === CLOSE_STATUS_TYPE;
+  }
+
+  get autoCloseAfterLastPost() {
+    return this.statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE;
+  }
+
+  get autoDelete() {
+    return this.statusType === DELETE_STATUS_TYPE;
+  }
+
+  get autoBump() {
+    return this.statusType === BUMP_TYPE;
+  }
+
+  get publishToCategory() {
+    return this.statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE;
+  }
+
+  get autoDeleteReplies() {
+    return this.statusType === DELETE_REPLIES_TYPE;
   }
 
   get statusType() {
@@ -115,7 +147,7 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get willCloseImmediately() {
-    if (this.isBasedOnLastPost && this.args.topicTimer.duration_minutes) {
+    if (this.autoCloseAfterLastPost && this.args.topicTimer.duration_minutes) {
       let closeDate = moment(this.args.topic.last_posted_at);
       closeDate = closeDate.add(
         this.args.topicTimer.duration_minutes,
@@ -126,7 +158,7 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get willCloseI18n() {
-    if (this.isBasedOnLastPost) {
+    if (this.autoCloseAfterLastPost) {
       const diff = Math.round(
         (new Date() - new Date(this.args.topic.last_posted_at)) /
           (1000 * 60 * 60)
