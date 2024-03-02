@@ -43,6 +43,13 @@ export default class EditTopicTimerForm extends Component {
     this._itsatrap = new ItsATrap();
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    this._itsatrap.destroy();
+    KeyboardShortcuts.unpause();
+  }
+
   get showTimeOnly() {
     return this.autoOpen || this.autoDelete || this.autoBump;
   }
@@ -93,13 +100,6 @@ export default class EditTopicTimerForm extends Component {
 
   get statusType() {
     return this.args.topicTimer.status_type;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    this._itsatrap.destroy();
-    KeyboardShortcuts.unpause();
   }
 
   get durationType() {
