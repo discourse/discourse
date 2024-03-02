@@ -3,7 +3,6 @@ import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   fakeTime,
   loggedInUser,
   query,
@@ -58,7 +57,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex.test(html));
+    assert.true(regex.test(html));
   });
 
   test("autoclose", async function (assert) {
@@ -74,7 +73,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html1 = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex1.test(html1));
+    assert.true(regex1.test(html1));
 
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
@@ -83,7 +82,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html2 = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex2.test(html2));
+    assert.true(regex2.test(html2));
 
     const timerType = selectKit(".select-kit.timer-type");
     await timerType.expand();
@@ -96,7 +95,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     const regex3 = /last post in the topic is already/g;
     const html3 = query(".edit-topic-timer-modal .warning").innerHTML.trim();
-    assert.ok(regex3.test(html3));
+    assert.true(regex3.test(html3));
   });
 
   test("close temporarily", async function (assert) {
@@ -116,7 +115,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html1 = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex1.test(html1));
+    assert.true(regex1.test(html1));
 
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
@@ -125,7 +124,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html2 = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex2.test(html2));
+    assert.true(regex2.test(html2));
   });
 
   test("schedule publish to category - visible for a PM", async function (assert) {
@@ -257,10 +256,11 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    assert.notOk(
-      exists("#tap_tile_last_custom"),
-      "it does not show last custom if the custom date and time was not filled before"
-    );
+    assert
+      .dom("#tap_tile_last_custom")
+      .doesNotExist(
+        "it does not show last custom if the custom date and time was not filled before"
+      );
 
     await click(".modal-close");
     await click(".toggle-admin-menu");
@@ -273,13 +273,12 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.ok(
-      exists("#tap_tile_last_custom"),
-      "it show last custom because the custom date and time was valid"
-    );
+    assert
+      .dom("#tap_tile_last_custom")
+      .exists("it show last custom because the custom date and time was valid");
     const text = query("#tap_tile_last_custom").innerText.trim();
     const regex = /Nov 24, 10:30 am/g;
-    assert.ok(regex.test(text));
+    assert.true(regex.test(text));
   });
 
   test("schedule publish to category - does not show for a public topic", async function (assert) {
@@ -291,7 +290,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".admin-topic-timer-update button");
 
     await timerType.expand();
-    assert.notOk(
+    assert.false(
       timerType.rowByValue("publish_to_category").exists(),
       "publish to category is not shown for a public topic"
     );
@@ -308,7 +307,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await timerType.expand();
 
-    assert.ok(!timerType.rowByValue("delete").exists());
+    assert.false(timerType.rowByValue("delete").exists());
   });
 
   test("Category Moderator can auto-delete replies", async function (assert) {
@@ -322,7 +321,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await timerType.expand();
 
-    assert.ok(timerType.rowByValue("delete_replies").exists());
+    assert.true(timerType.rowByValue("delete_replies").exists());
   });
 
   test("TL4 can't auto-delete replies", async function (assert) {
@@ -336,7 +335,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await timerType.expand();
 
-    assert.ok(!timerType.rowByValue("delete_replies").exists());
+    assert.false(timerType.rowByValue("delete_replies").exists());
   });
 
   test("Category Moderator can auto-delete", async function (assert) {
@@ -350,7 +349,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await timerType.expand();
 
-    assert.ok(timerType.rowByValue("delete").exists());
+    assert.true(timerType.rowByValue("delete").exists());
   });
 
   test("auto delete", async function (assert) {
@@ -370,7 +369,7 @@ acceptance("Topic - Edit timer", function (needs) {
     const html = query(
       ".edit-topic-timer-modal .topic-timer-info"
     ).innerHTML.trim();
-    assert.ok(regex.test(html));
+    assert.true(regex.test(html));
   });
 
   test("Inline delete timer", async function (assert) {
@@ -386,7 +385,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.strictEqual(removeTimerButton.getAttribute("title"), "remove timer");
 
     await click(".topic-timer-info .topic-timer-remove");
-    assert.ok(!exists(".topic-timer-info .topic-timer-remove"));
+    assert.dom(".topic-timer-info .topic-timer-remove").doesNotExist();
   });
 
   test("Shows correct time frame options", async function (assert) {
@@ -424,7 +423,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("close_after_last_post");
 
-    assert.notOk(exists(".topic-timer-heading"));
+    assert.dom(".topic-timer-heading").doesNotExist();
   });
 
   test("Close timer removed after manual close", async function (assert) {
@@ -439,7 +438,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-close button");
 
-    assert.notOk(exists(".topic-timer-heading"));
+    assert.dom(".topic-timer-heading").doesNotExist();
   });
 
   test("Open timer removed after manual open", async function (assert) {
@@ -457,7 +456,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-open button");
 
-    assert.notOk(exists(".topic-timer-heading"));
+    assert.dom(".topic-timer-heading").doesNotExist();
   });
 
   test("timer removed after manual toggle close and open", async function (assert) {
@@ -475,6 +474,6 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-open button");
 
-    assert.notOk(exists(".topic-timer-heading"));
+    assert.dom(".topic-timer-heading").doesNotExist();
   });
 });
