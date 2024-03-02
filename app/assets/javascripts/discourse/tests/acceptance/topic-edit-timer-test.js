@@ -53,11 +53,9 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const regex = /will automatically close in/g;
-    const html = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex.test(html));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will automatically close in/g);
   });
 
   test("autoclose", async function (assert) {
@@ -69,20 +67,16 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const regex1 = /will automatically close in/g;
-    const html1 = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex1.test(html1));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will automatically close in/g);
 
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
 
-    const regex2 = /will automatically close in/g;
-    const html2 = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex2.test(html2));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will automatically close in/g);
 
     const timerType = selectKit(".select-kit.timer-type");
     await timerType.expand();
@@ -93,9 +87,9 @@ acceptance("Topic - Edit timer", function (needs) {
     await interval.selectRowByValue("hours");
     await fillIn(".relative-time-duration", "2");
 
-    const regex3 = /last post in the topic is already/g;
-    const html3 = query(".edit-topic-timer-modal .warning").innerHTML.trim();
-    assert.true(regex3.test(html3));
+    assert
+      .dom(".edit-topic-timer-modal .warning")
+      .matchesText(/last post in the topic is already/g);
   });
 
   test("close temporarily", async function (assert) {
@@ -111,20 +105,16 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const regex1 = /will automatically open in/g;
-    const html1 = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex1.test(html1));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will automatically open in/g);
 
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
 
-    const regex2 = /will automatically open in/g;
-    const html2 = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex2.test(html2));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will automatically open in/g);
   });
 
   test("schedule publish to category - visible for a PM", async function (assert) {
@@ -276,9 +266,8 @@ acceptance("Topic - Edit timer", function (needs) {
     assert
       .dom("#tap_tile_last_custom")
       .exists("it show last custom because the custom date and time was valid");
-    const text = query("#tap_tile_last_custom").innerText.trim();
-    const regex = /Nov 24, 10:30 am/g;
-    assert.true(regex.test(text));
+
+    assert.dom("#tap_tile_last_custom").matchesText(/Nov 24, 10:30 am/g);
   });
 
   test("schedule publish to category - does not show for a public topic", async function (assert) {
@@ -365,11 +354,9 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_two_weeks");
 
-    const regex = /will be automatically deleted/g;
-    const html = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerHTML.trim();
-    assert.true(regex.test(html));
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .matchesText(/will be automatically deleted/g);
   });
 
   test("Inline delete timer", async function (assert) {
@@ -381,8 +368,9 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_start_of_next_business_week");
     await click(".edit-topic-timer-modal button.btn-primary");
 
-    const removeTimerButton = query(".topic-timer-info .topic-timer-remove");
-    assert.strictEqual(removeTimerButton.getAttribute("title"), "remove timer");
+    assert
+      .dom(".topic-timer-info .topic-timer-remove")
+      .hasAttribute("title", "remove timer");
 
     await click(".topic-timer-info .topic-timer-remove");
     assert.dom(".topic-timer-info .topic-timer-remove").doesNotExist();
