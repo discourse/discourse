@@ -148,8 +148,7 @@ export default class EditTopicTimerForm extends Component {
 
   get willCloseImmediately() {
     if (this.autoCloseAfterLastPost && this.args.topicTimer.duration_minutes) {
-      let closeDate = moment(this.args.topic.last_posted_at);
-      closeDate = closeDate.add(
+      const closeDate = moment(this.args.topic.last_posted_at).add(
         this.args.topicTimer.duration_minutes,
         "minutes"
       );
