@@ -175,7 +175,7 @@ export default class BulkTopicActions extends Component {
     } else {
       this.toasts.success({
         duration: 3000,
-        data: { message: "Bulk operations completed successfully!" },
+        data: { message: i18n("topics.bulk.completed") },
       });
     }
   }

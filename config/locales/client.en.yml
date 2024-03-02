@@ -2966,6 +2966,7 @@ en:
           other: "Progress: <strong>%{count}</strong> topics"
         silent: "Perform this action silently."
         performing: "Performing…"
+        completed: "Bulk operations completed successfully!"
 
       none:
         unread: "You have no unread topics."
