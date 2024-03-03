@@ -56,6 +56,12 @@ acceptance("Managing Group Membership", function (needs) {
     );
 
     assert.strictEqual(
+      count(".group-form-anonymous-user-inheritance"),
+      1,
+      "it should display group anonymous user inheritance checkbox"
+    );
+
+    assert.strictEqual(
       count(".group-form-public-exit"),
       1,
       "it should display group public exit input"
@@ -173,6 +179,12 @@ acceptance("Managing Group Membership", function (needs) {
       count(".group-form-public-admission"),
       1,
       "it should display group public admission input"
+    );
+
+    assert.strictEqual(
+      count(".group-form-anonymous-user-inheritance"),
+      1,
+      "it should display group anonymous user inheritance checkbox"
     );
 
     assert.strictEqual(

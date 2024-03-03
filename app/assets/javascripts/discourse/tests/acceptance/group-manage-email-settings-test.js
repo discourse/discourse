@@ -230,6 +230,7 @@ acceptance(
             visible: true,
             public_admission: true,
             public_exit: false,
+            anonymous_user_inheritance: false,
             flair_url: "fa-adjust",
             is_group_owner: true,
             mentionable: true,

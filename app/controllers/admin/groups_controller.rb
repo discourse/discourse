@@ -135,6 +135,7 @@ class Admin::GroupsController < Admin::StaffController
       usernames
       publish_read_state
       notify_users
+      anonymous_user_inheritance
     ]
     custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
