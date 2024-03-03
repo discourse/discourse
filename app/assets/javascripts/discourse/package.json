@@ -120,7 +120,7 @@
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
     "workbox-sw": "^7.0.0",
-    "xss": "^1.0.14"
+    "xss": "^1.0.15"
   },
   "engines": {
     "node": ">= 18",
