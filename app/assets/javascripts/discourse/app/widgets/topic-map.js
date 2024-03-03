@@ -164,6 +164,7 @@ export default createWidget("topic-map", {
 
     if (!state.collapsed) {
       contents.push(this.attach("topic-map-expanded", attrs));
+      // contents.push(this.buildTopicMapExpanded(attrs));
     }
 
     if (attrs.hasTopRepliesSummary || attrs.summarizable) {
@@ -199,6 +200,19 @@ export default createWidget("topic-map", {
         toggleMap: this.toggleMap.bind(this),
         postAttrs: attrs,
         collapsed,
+      }
+    );
+  },
+
+  buildTopicMapExpanded(attrs) {
+    return new RenderGlimmer(
+      this,
+      "div.topic-map",
+      hbs`<TopicMap::TopicMapExpanded
+        @postAttrs={{data.postAttrs}}
+      />`,
+      {
+        postAttrs: attrs,
       }
     );
   },
