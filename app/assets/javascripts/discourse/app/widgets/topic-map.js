@@ -207,9 +207,9 @@ export default createWidget("topic-map", {
   buildTopicMapExpanded(attrs) {
     return new RenderGlimmer(
       this,
-      "div.topic-map",
+      "section.topic-map-expanded",
       hbs`<TopicMap::TopicMapExpanded
-        @postAttrs={{data.postAttrs}}
+        @postAttrs={{@data.postAttrs}}
       />`,
       {
         postAttrs: attrs,
