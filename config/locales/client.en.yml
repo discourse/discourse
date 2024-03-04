@@ -1034,9 +1034,11 @@ en:
       "15": "Drafts"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
       plus_more_count: "+%{count} more"
       view_all: "view all"
       category: "Category"

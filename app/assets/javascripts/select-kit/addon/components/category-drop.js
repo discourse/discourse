@@ -21,7 +21,7 @@ export default ComboBoxComponent.extend({
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  noCategoriesLabel: I18n.t("categories.no_subcategory"),
+  noCategoriesLabel: I18n.t("categories.no_subcategories"),
   navigateToEdit: false,
   editingCategory: false,
   editingCategoryTab: null,
@@ -90,6 +90,15 @@ export default ComboBoxComponent.extend({
         });
       }
 
+      // If there is a single shortcut, we can have a single "remove filter"
+      // option
+      if (
+        (this.category || this.selectKit.options.noSubcategories) &&
+        shortcuts.length === 1
+      ) {
+        shortcuts[0].name = I18n.t("categories.remove_filter");
+      }
+
       return shortcuts;
     }
   ),
@@ -101,9 +110,17 @@ export default ComboBoxComponent.extend({
 
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
-      return this.defaultItem(NO_CATEGORIES_ID, this.noCategoriesLabel);
+      return this.defaultItem(
+        NO_CATEGORIES_ID,
+        I18n.t("categories.no_subcategories")
+      );
     } else {
-      return this.defaultItem(ALL_CATEGORIES_ID, this.allCategoriesLabel);
+      return this.defaultItem(
+        ALL_CATEGORIES_ID,
+        this.selectKit.options.subCategory
+          ? I18n.t("categories.subcategories_label")
+          : I18n.t("categories.categories_label")
+      );
     }
   },
 
