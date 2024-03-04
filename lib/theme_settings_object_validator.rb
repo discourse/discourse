@@ -163,7 +163,7 @@ class ThemeSettingsObjectValidator
         return false
       end
 
-      if validations&.dig(:url) && !value.match?(URI.regexp)
+      if validations&.dig(:url) && !UrlHelper.relaxed_parse(value)
         add_error(property_name, :string_value_not_valid_url)
         return false
       end
