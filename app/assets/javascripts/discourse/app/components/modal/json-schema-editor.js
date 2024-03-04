@@ -8,12 +8,12 @@ import { afterRender } from "discourse-common/utils/decorators";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;
-  @tracked value = this.args.value;
+  @tracked value = this.args.model.value;
   @tracked flash;
   @tracked flashType;
 
   get settingName() {
-    return this.args.settingName.replace(/\_/g, " ");
+    return this.args.model.settingName.replace(/\_/g, " ");
   }
 
   @action
@@ -34,7 +34,7 @@ export default class JsonSchemaEditorModal extends Component {
 
     if (!errors.length) {
       this.value = JSON.stringify(this.editor.getValue());
-      this.args.updateValue(this.value);
+      this.args.model.updateValue(this.value);
       this.args.closeModal();
     } else {
       this.flash = errors.mapBy("message").join("\n");
@@ -53,7 +53,7 @@ export default class JsonSchemaEditorModal extends Component {
     JSONEditor.defaults.options.iconlib = "discourseIcons";
 
     this.editor = new JSONEditor(editor, {
-      schema: this.args.jsonSchema,
+      schema: this.args.model.jsonSchema,
       disable_array_delete_all_rows: true,
       disable_array_delete_last_row: true,
       disable_array_reorder: false,

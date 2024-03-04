@@ -14,4 +14,8 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
     theme.reload
     record.json_value
   end
+
+  def schema
+    @opts[:schema]
+  end
 end

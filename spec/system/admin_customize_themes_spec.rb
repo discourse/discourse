@@ -5,12 +5,13 @@ describe "Admin Customize Themes", type: :system do
   fab!(:theme)
   fab!(:admin)
 
+  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+
   before { sign_in(admin) }
 
   describe "when visiting the page to customize themes" do
     fab!(:theme_2) { Fabricate(:theme) }
     fab!(:theme_3) { Fabricate(:theme) }
-    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
     let(:delete_themes_confirm_modal) { PageObjects::Modals::DeleteThemesConfirm.new }
 
     it "should allow admin to bulk delete inactive themes" do
@@ -82,6 +83,34 @@ describe "Admin Customize Themes", type: :system do
 
       ace_content = find(".ace_content")
       expect(ace_content.text).to eq("console.log('test')")
+    end
+  end
+
+  describe "when editing a theme setting of objects type" do
+    let(:objects_setting) do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+      )
+
+      theme.save!
+      theme.settings[:objects_setting]
+    end
+
+    before do
+      SiteSetting.experimental_objects_type_for_theme_settings = true
+      objects_setting
+    end
+
+    it "should allow admin to edit the theme setting of objecst type" do
+      visit("/admin/customize/themes/#{theme.id}")
+
+      admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
+
+      expect(page).to have_current_path(
+        "/admin/customize/themes/#{theme.id}/schema/objects_setting",
+      )
     end
   end
 end
