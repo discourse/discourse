@@ -156,6 +156,7 @@ const DEPRECATED_HEADER_WIDGETS = [
   "header-icons",
   "header-topic-info",
   "header-notifications",
+  "home-logo",
 ];
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
