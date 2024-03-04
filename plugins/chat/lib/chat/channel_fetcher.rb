@@ -199,7 +199,7 @@ module Chat
           .where(id: scoped_channels)
           .includes(
             last_message: [:uploads],
-            chatable: [{ direct_message_users: [user: :user_option] }, :users],
+            chatable: [{ direct_message_users: [user: %i[user_option group_users]] }, :users],
           )
           .joins(
             "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
