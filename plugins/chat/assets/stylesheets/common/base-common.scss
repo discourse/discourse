@@ -162,13 +162,12 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 }
 
 .avatar {
-  border: 1px solid transparent;
-  padding: 0;
   box-sizing: border-box;
 
   .is-online & {
-    border: 1px solid var(--secondary);
-    box-shadow: 0px 0px 0px 1px var(--success);
+    padding: 2px;
+    box-shadow: inset 0px 0px 0px 1px var(--success),
+      inset 0px 0px 0px 2px var(--secondary);
   }
 }
 
