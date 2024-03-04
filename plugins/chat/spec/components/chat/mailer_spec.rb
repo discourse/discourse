@@ -235,13 +235,13 @@ describe Chat::Mailer do
       assert_only_queued_once
     end
 
-    context "with send_chat_mailer_summary_user modifier" do
+    context "with chat_mailer_send_summary_to_user modifier" do
       let(:modifier_block) { Proc.new { |_| false } }
       it "skips when modifier evaluates to false" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
         plugin_instance = Plugin::Instance.new
-        plugin_instance.register_modifier(:send_chat_mailer_summary_user, &modifier_block)
+        plugin_instance.register_modifier(:chat_mailer_send_summary_to_user, &modifier_block)
 
         described_class.send_unread_mentions_summary
 
@@ -249,7 +249,7 @@ describe Chat::Mailer do
       ensure
         DiscoursePluginRegistry.unregister_modifier(
           plugin_instance,
-          :send_chat_mailer_summary_user,
+          :chat_mailer_send_summary_to_user,
           &modifier_block
         )
       end
