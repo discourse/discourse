@@ -2,6 +2,7 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerButtonsDAG } from "discourse/components/glimmer-header";
 import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -26,8 +27,15 @@ export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 let _extraHeaderIcons;
 clearExtraHeaderIcons();
 
+let _extraHeaderButtons;
+clearExtraHeaderButtons();
+
 export function clearExtraHeaderIcons() {
   _extraHeaderIcons = headerIconsDAG();
+}
+
+export function clearExtraHeaderButtons() {
+  _extraHeaderButtons = headerButtonsDAG();
 }
 
 export const dropdown = {
@@ -496,6 +504,14 @@ export default createWidget("header", {
   buildKey: () => `header`,
   services: ["router", "search"],
 
+  init() {
+    registerWidgetShim(
+      "extra-button",
+      "div.wrapper",
+      hbs`<LegacyHeaderButtonShim @component={{@data.component}} />`
+    );
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,
@@ -531,22 +547,19 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [
-        h("span.header-buttons", [
-          new RenderGlimmer(
-            this,
-            "span.before-header-buttons",
-            hbs`<PluginOutlet @name="before-header-buttons"/>`
-          ),
-          this.attach("header-buttons", attrs),
-          new RenderGlimmer(
-            this,
-            "span.after-header-buttons",
-            hbs`<PluginOutlet @name="after-header-buttons"/>`
-          ),
-        ]),
-        headerIcons,
-      ];
+      const panels = [];
+      const buttons = [];
+
+      const resolvedButtons = _extraHeaderButtons.resolve();
+      resolvedButtons.forEach((button) => {
+        if (button.key === "auth") {
+          return;
+        }
+        buttons.push(this.attach("extra-button", { component: button.value }));
+      });
+
+      buttons.push(this.attach("header-buttons", attrs));
+      panels.push(h("span.header-buttons", buttons), headerIcons);
 
       if (this.search.visible) {
         this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;

@@ -10,6 +10,7 @@ import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
+import { headerButtonsDAG } from "discourse/components/glimmer-header";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
@@ -1862,6 +1863,40 @@ class PluginApi {
    **/
   get headerIcons() {
     return headerIconsDAG();
+  }
+
+  /**
+   * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
+   *
+   * Only the passing of components is supported, and by default the buttons are added to the left of exisiting buttons.
+   *
+   * Example: Add a button to the header buttons after the auth buttons
+   * ```
+   * api.headerButtons.add(
+   *  "foo",
+   *  FooComponent,
+   *  { after: "auth" }
+   * )
+   * ```
+   *
+   * Example: Remove the `foo` button from the header buttons
+   * ```
+   * api.headerButtons.delete("foo")
+   * ```
+   *
+   * Example: Reposition the `foo` button to be before the `bar` and after the `baz` button
+   * ```
+   * api.headerButtons.reposition("foo", { before: "bar", after: "baz" })
+   * ```
+   *
+   * Example: Check if the `foo` button is present in the header buttons (returns true of false)
+   * ```
+   * api.headerButtons.has("foo")
+   * ```
+   *
+   **/
+  get headerButtons() {
+    return headerButtonsDAG();
   }
 
   /**

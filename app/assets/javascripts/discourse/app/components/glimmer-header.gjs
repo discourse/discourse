@@ -3,11 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
+import DAG from "discourse/lib/dag";
 import { modifier } from "ember-modifier";
 import { and, not, or } from "truth-helpers";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import and from "truth-helpers/helpers/and";
+import eq from "truth-helpers/helpers/eq";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 import AuthButtons from "./glimmer-header/auth-buttons";
 import Contents from "./glimmer-header/contents";
 import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
@@ -17,6 +22,22 @@ import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 import PluginOutlet from "./plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
+
+let headerButtons;
+resetHeaderButtons();
+
+function resetHeaderButtons() {
+  headerButtons = new DAG({ defaultPosition: { before: "auth" } });
+  headerButtons.add("auth");
+}
+
+export function headerButtonsDAG() {
+  return headerButtons;
+}
+
+export function clearExtraHeaderButtons() {
+  resetHeaderButtons();
+}
 
 export default class GlimmerHeader extends Component {
   @service router;
@@ -165,17 +186,17 @@ export default class GlimmerHeader extends Component {
         >
 
           <span class="header-buttons">
-            <PluginOutlet @name="before-header-buttons" />
-
-            {{#unless this.currentUser}}
-              <AuthButtons
-                @showCreateAccount={{@showCreateAccount}}
-                @showLogin={{@showLogin}}
-                @canSignUp={{@canSignUp}}
-              />
-            {{/unless}}
-
-            <PluginOutlet @name="after-header-buttons" />
+            {{#each (headerButtons.resolve) as |entry|}}
+              {{#if (and (eq entry.key "auth") (not this.currentUser))}}
+                <AuthButtons
+                  @showCreateAccount={{@showCreateAccount}}
+                  @showLogin={{@showLogin}}
+                  @canSignUp={{@canSignUp}}
+                />
+              {{else if entry.value}}
+                <entry.value />
+              {{/if}}
+            {{/each}}
           </span>
 
           {{#if
