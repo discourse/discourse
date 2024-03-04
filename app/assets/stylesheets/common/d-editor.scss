@@ -166,8 +166,8 @@
   --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  .desktop-view & {
-    // need the extra space on mobile because controls are always visible
+  .discourse-no-touch & {
+    // on hover-capable devices we position the controls within the padding
     padding-bottom: var(--resizer-height);
     margin-bottom: calc(var(--resizer-height) * -1);
   }
@@ -178,7 +178,6 @@
 
   &:hover {
     .button-wrapper {
-      pointer-events: auto;
       opacity: 1;
     }
   }
@@ -198,11 +197,9 @@
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
     background: var(--secondary); // for when images are wider than controls
-    pointer-events: none; // the controls shouldn't be usable while invisible
 
     &[editing] {
       opacity: 1;
-      pointer-events: auto;
     }
 
     .scale-btn-container,
@@ -313,9 +310,8 @@
   }
 }
 
-.mobile-view .d-editor-preview .image-wrapper .button-wrapper {
+.discourse-touch .d-editor-preview .image-wrapper .button-wrapper {
   opacity: 1;
-  pointer-events: auto;
 }
 
 // d-editor bar button sizing
