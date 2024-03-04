@@ -1,6 +1,10 @@
 import DAGMap from "dag-map";
 import { bind } from "discourse-common/utils/decorators";
 
+function ensureArray(val) {
+  return Array.isArray(val) ? val : [val];
+}
+
 export default class DAG {
   #defaultPosition;
   #rawData = new Map();
@@ -12,6 +16,17 @@ export default class DAG {
     this.#defaultPosition = args?.defaultPosition || {};
   }
 
+  #defaultPositionForKey(key) {
+    const pos = { ...this.#defaultPosition };
+    if (ensureArray(pos.before).includes(key)) {
+      delete pos.before;
+    }
+    if (ensureArray(pos.after).includes(key)) {
+      delete pos.after;
+    }
+    return pos;
+  }
+
   /**
    * Adds a key/value pair to the map. Can optionally specify before/after position requirements.
    *
@@ -21,27 +36,15 @@ export default class DAG {
    * @param {string | string[]} position.before A key or array of keys of items which should appear before this one.
    * @param {string | string[]} position.after A key or array of keys of items which should appear after this one.
    */
-  add(key, value, position = this.#defaultPosition) {
-    const beforeWithDefaultPosition =
-      position.before === key || !this.has(position.before)
-        ? undefined
-        : position.before;
-    const afterWithDefaultPosition =
-      position.after === key || !this.has(position.after)
-        ? undefined
-        : position.after;
-
+  add(key, value, position) {
+    position ||= this.#defaultPositionForKey(key);
+    const { before, after } = position;
     this.#rawData.set(key, {
       value,
-      before: beforeWithDefaultPosition,
-      after: afterWithDefaultPosition,
+      before,
+      after,
     });
-    this.#dag.add(
-      key,
-      value,
-      beforeWithDefaultPosition,
-      afterWithDefaultPosition
-    );
+    this.#dag.add(key, value, before, after);
   }
 
   /**

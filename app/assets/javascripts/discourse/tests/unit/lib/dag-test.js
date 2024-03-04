@@ -59,7 +59,7 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("allows for custom before and after default positioning", function (assert) {
     dag = new DAG({ defaultPosition: { before: "key3", after: "key2" } });
-    dag.add("key1", "value1");
+    dag.add("key1", "value1", {});
     dag.add("key2", "value2", { after: "key1" });
     dag.add("key3", "value3", { after: "key2" });
     dag.add("key4", "value4");
@@ -70,13 +70,12 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(keys, ["key1", "key2", "key4", "key3"]);
   });
 
-  test("handles bad positioning", function (assert) {
+  test("throws on bad positioning", function (assert) {
     dag = new DAG();
-    dag.add("key1", "value1", { before: "key1" });
 
-    const resolved = dag.resolve();
-    const keys = resolved.map((pair) => pair.key);
-
-    assert.deepEqual(keys, ["key1"]);
+    assert.throws(
+      () => dag.add("key1", "value1", { before: "key1" }),
+      /cycle detected/
+    );
   });
 });
