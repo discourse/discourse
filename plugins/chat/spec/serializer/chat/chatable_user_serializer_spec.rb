@@ -3,7 +3,10 @@ RSpec.describe Chat::ChatableUserSerializer do
   fab!(:user)
   subject(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
 
-  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+  before do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+  end
 
   it "serializes a user" do
     expect(serializer.as_json).to eq(
@@ -15,7 +18,7 @@ RSpec.describe Chat::ChatableUserSerializer do
         custom_fields: {
         },
         can_chat: false,
-        has_chat_enabled: false,
+        has_chat_enabled: true,
       },
     )
   end
