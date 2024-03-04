@@ -1,1 +1,5 @@
-{{discourse-tag this.rowValue noHref=true count=this.item.count}}
+{{#if this.isTag}}
+  {{discourse-tag this.rowValue noHref=true count=this.item.count}}
+{{else}}
+  <span class="name">{{this.item.name}}</span>
+{{/if}}

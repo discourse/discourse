@@ -92,10 +92,7 @@ export default ComboBoxComponent.extend({
 
       // If there is a single shortcut, we can have a single "remove filter"
       // option
-      if (
-        (this.category || this.selectKit.options.noSubcategories) &&
-        shortcuts.length === 1
-      ) {
+      if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
         shortcuts[0].name = I18n.t("categories.remove_filter");
       }
 

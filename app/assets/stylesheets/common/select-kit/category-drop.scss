@@ -10,6 +10,10 @@
       }
 
       .category-drop-header {
+        &[data-value=""] {
+          color: var(--primary-high);
+        }
+
         &.is-none .selected-name {
           color: inherit;
         }
