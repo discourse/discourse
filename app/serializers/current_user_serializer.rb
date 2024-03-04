@@ -75,7 +75,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_experimental_topic_bulk_actions?,
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
-             :glimmer_header_enabled?
+             :glimmer_header_enabled?,
+             :can_view_raw_email
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -315,5 +316,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def use_experimental_topic_bulk_actions?
     scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
+  end
+
+  def can_view_raw_email
+    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 end
