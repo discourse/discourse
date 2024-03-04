@@ -547,9 +547,7 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [];
       const buttons = [];
-
       const resolvedButtons = _extraHeaderButtons.resolve();
       resolvedButtons.forEach((button) => {
         if (button.key === "auth") {
@@ -559,6 +557,8 @@ export default createWidget("header", {
       });
 
       buttons.push(this.attach("header-buttons", attrs));
+
+      const panels = [];
       panels.push(h("span.header-buttons", buttons), headerIcons);
 
       if (this.search.visible) {
