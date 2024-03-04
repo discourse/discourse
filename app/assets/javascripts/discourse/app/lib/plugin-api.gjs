@@ -100,10 +100,7 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import {
-  attachAdditionalPanel,
-  headerIconsDAG as widgetHeaderIconsDAG,
-} from "discourse/widgets/header";
+import { attachAdditionalPanel } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -969,7 +966,7 @@ class PluginApi {
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
     deprecated(
-      "addHeaderPanel has been removed. Use api.headerIcons instead.",
+      "addHeaderPanel will be removed as part of the glimmer header upgrade. Use api.headerIcons instead.",
       {
         id: "discourse.add-header-panel",
         url: "https://meta.discourse.org/t/296544",
@@ -1820,14 +1817,14 @@ class PluginApi {
   /**
    * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
-   * Only the passing of components is supported, and by default the icons are added to the right of exisiting icons.
+   * Only the passing of components is supported, and by default the icons are added to the left of exisiting icons.
    *
-   * Example: Add the chat icon to the header icons before the search icon
+   * Example: Add the chat icon to the header icons after the search icon
    * ```
    * api.headerIcons.add(
    *  "chat",
    *  ChatIconComponent,
-   *  { before: "search" }
+   *  { after: "search" }
    * )
    * ```
    *
@@ -1864,10 +1861,7 @@ class PluginApi {
    *
    **/
   get headerIcons() {
-    const currentUser = this._lookupContainer("service:current-user");
-    return currentUser?.glimmer_header_enabled
-      ? headerIconsDAG()
-      : widgetHeaderIconsDAG();
+    return headerIconsDAG();
   }
 
   /**

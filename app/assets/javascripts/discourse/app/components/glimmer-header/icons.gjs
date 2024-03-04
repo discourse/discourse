@@ -13,8 +13,7 @@ let headerIcons;
 resetHeaderIcons();
 
 function resetHeaderIcons() {
-  headerIcons = new DAG();
-
+  headerIcons = new DAG({ defaultFirstPosition: true });
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });

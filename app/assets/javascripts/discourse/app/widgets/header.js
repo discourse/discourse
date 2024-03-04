@@ -2,8 +2,8 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import DAG from "discourse/lib/dag";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
 import { logSearchLinkClick } from "discourse/lib/search";
@@ -27,11 +27,7 @@ let _extraHeaderIcons;
 clearExtraHeaderIcons();
 
 export function clearExtraHeaderIcons() {
-  _extraHeaderIcons = new DAG();
-}
-
-export function headerIconsDAG() {
-  return _extraHeaderIcons;
+  _extraHeaderIcons = headerIconsDAG();
 }
 
 export const dropdown = {
@@ -251,6 +247,11 @@ createWidget("header-icons", {
 
     const icons = [];
 
+    // we have to delete these icons from the dag because they are
+    // being included as widgets in the header
+    _extraHeaderIcons.delete("search");
+    _extraHeaderIcons.delete("user-menu");
+    _extraHeaderIcons.delete("hambuger");
     const resolvedIcons = _extraHeaderIcons.resolve();
     resolvedIcons.forEach((icon) => {
       icons.push(this.attach("extra-icon", { component: icon.value }));

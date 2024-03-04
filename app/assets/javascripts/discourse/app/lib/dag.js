@@ -2,8 +2,19 @@ import DAGMap from "dag-map";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class DAG {
-  #dag = new DAGMap();
+  defaultFirstPosition;
   #rawData = new Map();
+  #dag = new DAGMap();
+
+  constructor(args) {
+    this.defaultFirstPosition = args?.defaultFirstPosition;
+  }
+
+  get firstItemKey() {
+    return this.#rawData.size > 0
+      ? this.#rawData.entries().next().value[0]
+      : undefined;
+  }
 
   /**
    * Adds a key/value pair to the map. Can optionally specify before/after position requirements.
@@ -15,6 +26,10 @@ export default class DAG {
    * @param {string | string[]} position.after A key or array of keys of items which should appear after this one.
    */
   add(key, value, { before, after } = {}) {
+    // if defaultFirstPosition is set, and no before/after is specified, use the first item as before
+    if (!before && !after && this.defaultFirstPosition) {
+      before = this.firstItemKey;
+    }
     this.#rawData.set(key, { value, before, after });
     this.#dag.add(key, value, before, after);
   }
