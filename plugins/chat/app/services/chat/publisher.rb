@@ -66,7 +66,7 @@ module Chat
             type: "thread",
             channel_id: chat_channel.id,
             thread_id: chat_message.thread_id,
-            force_thread: chat_message.thread.force,
+            force_thread: chat_message.thread&.force,
             message:
               Chat::MessageSerializer.new(
                 chat_message,

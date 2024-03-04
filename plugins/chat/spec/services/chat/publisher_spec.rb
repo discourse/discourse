@@ -281,6 +281,7 @@ describe Chat::Publisher do
               type: "thread",
               channel_id: channel.id,
               thread_id: thread.id,
+              force_thread: false,
               message:
                 Chat::MessageSerializer.new(
                   message_1,

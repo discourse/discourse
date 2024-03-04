@@ -182,6 +182,10 @@ module Chat
       end
     end
 
+    def include_thread_id?
+      channel.threading_enabled || object.thread&.force
+    end
+
     def include_thread?
       include_thread_id? && object.thread_om? && object.thread.present?
     end
