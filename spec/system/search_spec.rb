@@ -95,16 +95,16 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
-    it "soft loads last topic results after navigating away, then back" do
+    it "still displays last topic search results after navigating away, then back" do
       visit("/")
       search_page.click_search_icon
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
-      expect(search_page).to have_css(".search-menu .results .search-result-topic")
+      expect(search_page).to have_topic_title_for_first_search_result(topic.title)
 
-      search_page.find(".topic-list-body tr:first-of-type").click
+      search_page.click_first_topic
       search_page.click_search_icon
-      expect(search_page).to have_css(".search-menu .results .search-result-topic")
+      expect(search_page).to have_topic_title_for_first_search_result(topic.title)
     end
   end
 end

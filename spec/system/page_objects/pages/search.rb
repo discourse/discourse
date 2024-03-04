@@ -38,7 +38,15 @@ module PageObjects
         find(".d-header #search-button").click
       end
 
+      def click_first_topic
+        find(".topic-list-body tr:first-of-type").click
+      end
+
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
+
+      def has_topic_title_for_first_search_result?(title)
+        page.has_css?(".search-menu .results .search-result-topic", text: title)
+      end
 
       def has_search_result?
         page.has_selector?(SEARCH_RESULT_SELECTOR)
