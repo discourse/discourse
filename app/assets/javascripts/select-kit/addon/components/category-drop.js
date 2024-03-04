@@ -9,12 +9,15 @@ import DiscourseURL, {
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import I18n from "discourse-i18n";
-import CategoryDropCollection from "select-kit/components/category-drop-collection";
+import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
+
+const MORE_COLLECTION = "MORE_COLLECTION";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
@@ -45,8 +48,16 @@ export default ComboBoxComponent.extend({
     allowUncategorized: "allowUncategorized",
   },
 
-  modifyComponentForCollection() {
-    return CategoryDropCollection;
+  init() {
+    this._super(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_COLLECTION) {
+      return CategoryDropMoreCollection;
+    }
   },
 
   modifyComponentForRow() {
@@ -173,7 +184,7 @@ export default ComboBoxComponent.extend({
         includeUncategorized: this.siteSettings.allow_uncategorized_topics,
         includeAncestors: true,
         // Show all categories if possible (up to 18), otherwise show just
-        // first 15 and let CategoryDropCollection show the "show more" link
+        // first 15 and let CategoryDropMoreCollection show the "show more" link
         limit: 18,
       });
 
