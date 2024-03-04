@@ -69,4 +69,14 @@ module("Unit | Lib | DAG", function (hooks) {
 
     assert.deepEqual(keys, ["key1", "key2", "key4", "key3"]);
   });
+
+  test("handles bad positioning", function (assert) {
+    dag = new DAG();
+    dag.add("key1", "value1", { before: "key1" });
+
+    const resolved = dag.resolve();
+    const keys = resolved.map((pair) => pair.key);
+
+    assert.deepEqual(keys, ["key1"]);
+  });
 });
