@@ -7,7 +7,7 @@ module Chat
 
       users_with_unprocessed_unread_mentions.find_each do |user|
         # Apply modifier to `true` -- this allows other plugins to block the chat summary email send
-        next if !DiscoursePluginRegistry.apply_modifier(:chat_mailer_summary_user, true, user)
+        next if !DiscoursePluginRegistry.apply_modifier(:send_chat_mailer_summary_user, true, user)
 
         # user#memberships_with_unread_messages is a nested array that looks like [[membership_id, unread_message_id]]
         # Find the max unread id per membership.
