@@ -17,7 +17,7 @@ RSpec.describe Chat::ChatableUserSerializer do
         avatar_template: user.avatar_template,
         custom_fields: {
         },
-        can_chat: false,
+        can_chat: true,
         has_chat_enabled: true,
       },
     )
