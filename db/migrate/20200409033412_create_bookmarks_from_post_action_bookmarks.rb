@@ -2,7 +2,20 @@
 
 class CreateBookmarksFromPostActionBookmarks < ActiveRecord::Migration[6.0]
   def up
-    SiteSetting.enable_bookmarks_with_reminders = true
+    bookmarks_with_reminders_val =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'enable_bookmarks_with_reminders'",
+      )
+
+    if bookmarks_with_reminders_val.present?
+      DB.exec("UPDATE site_settings SET value = 't' WHERE name = 'enable_bookmarks_with_reminders'")
+    else
+      # data_type 5 is boolean
+      DB.exec(<<~SQL)
+        INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
+        VALUES('enable_bookmarks_with_reminders', 't', 5, NOW(), NOW())
+      SQL
+    end
 
     bookmarks_to_create = []
     loop do
