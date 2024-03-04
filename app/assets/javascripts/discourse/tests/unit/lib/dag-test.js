@@ -57,17 +57,16 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(keys, ["key1", "key2", "key3"]);
   });
 
-  test("should use the first item as before if defaultFirstPosition is set and no before/after is specified", function (assert) {
-    dag = new DAG({ defaultFirstPosition: true });
+  test("allows for custom before and after default positioning", function (assert) {
+    dag = new DAG({ defaultPosition: { before: "key3", after: "key2" } });
     dag.add("key1", "value1");
     dag.add("key2", "value2", { after: "key1" });
     dag.add("key3", "value3", { after: "key2" });
-    // key4 has no before/after specified, use the first item as before
     dag.add("key4", "value4");
 
     const resolved = dag.resolve();
     const keys = resolved.map((pair) => pair.key);
 
-    assert.deepEqual(keys, ["key4", "key1", "key2", "key3"]);
+    assert.deepEqual(keys, ["key1", "key2", "key4", "key3"]);
   });
 });

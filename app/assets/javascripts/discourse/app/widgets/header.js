@@ -247,13 +247,11 @@ createWidget("header-icons", {
 
     const icons = [];
 
-    // we have to delete these icons from the dag because they are
-    // being included as widgets in the header
-    _extraHeaderIcons.delete("search");
-    _extraHeaderIcons.delete("user-menu");
-    _extraHeaderIcons.delete("hambuger");
     const resolvedIcons = _extraHeaderIcons.resolve();
     resolvedIcons.forEach((icon) => {
+      if (["search", "user-menu", "hamburger"].includes(icon.key)) {
+        return;
+      }
       icons.push(this.attach("extra-icon", { component: icon.value }));
     });
 
