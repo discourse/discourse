@@ -1,27 +1,24 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import DObject, { attr } from "discourse/lib/d-object";
 
-export default class Wizard {
-  static async load() {
-    return Wizard.parse((await ajax({ url: "/wizard.json" })).wizard);
+export default class Wizard extends DObject {
+  static async load(owner) {
+    return Wizard.parse(owner, (await ajax({ url: "/wizard.json" })).wizard);
   }
 
-  static parse({ current_color_scheme, steps, ...payload }) {
-    return new Wizard({
+  static parse(owner, { current_color_scheme, steps, ...payload }) {
+    return new Wizard(owner, {
       ...payload,
       currentColorScheme: current_color_scheme,
-      steps: steps.map((step) => Step.parse(step)),
+      steps: steps.map((step) => Step.parse(owner, step)),
     });
   }
 
-  constructor(payload) {
-    safeAssign(this, payload, [
-      "start",
-      "completed",
-      "steps",
-      "currentColorScheme",
-    ]);
-  }
+  @attr start;
+  @attr completed;
+  @attr steps;
+  @attr currentColorScheme;
 
   get totalSteps() {
     return this.steps.length;
@@ -66,29 +63,25 @@ const ValidStates = {
   VALID: 2,
 };
 
-export class Step {
-  static parse({ fields, ...payload }) {
-    return new Step({
+export class Step extends DObject {
+  static parse(owner, { fields, ...payload }) {
+    return new Step(owner, {
       ...payload,
-      fields: fields.map((field) => Field.parse(field)),
+      fields: fields.map((field) => Field.parse(owner, field)),
     });
   }
 
-  @tracked _validState = ValidStates.UNCHECKED;
+  @attr id;
+  @attr next;
+  @attr previous;
+  @attr description;
+  @attr title;
+  @attr index;
+  @attr banner;
+  @attr emoji;
+  @attr fields;
 
-  constructor(payload) {
-    safeAssign(this, payload, [
-      "id",
-      "next",
-      "previous",
-      "description",
-      "title",
-      "index",
-      "banner",
-      "emoji",
-      "fields",
-    ]);
-  }
+  @tracked _validState = ValidStates.UNCHECKED;
 
   get valid() {
     return this._validState === ValidStates.VALID;
@@ -158,15 +151,30 @@ export class Step {
   }
 }
 
-export class Field {
-  static parse({ extra_description, show_in_sidebar, choices, ...payload }) {
-    return new Field({
+export class Field extends DObject {
+  static parse(
+    owner,
+    { extra_description, show_in_sidebar, choices, ...payload }
+  ) {
+    return new Field(owner, {
       ...payload,
       extraDescription: extra_description,
       showInSidebar: show_in_sidebar,
-      choices: choices?.map((choice) => Choice.parse(choice)),
+      choices: choices?.map((choice) => Choice.parse(owner, choice)),
     });
   }
+
+  @attr id;
+  @attr type;
+  @attr required;
+  @attr label;
+  @attr placeholder;
+  @attr description;
+  @attr extraDescription;
+  @attr icon;
+  @attr disabled;
+  @attr showInSidebar;
+  @attr choices;
 
   @tracked _value = null;
   @tracked _validState = ValidStates.UNCHECKED;
@@ -174,27 +182,11 @@ export class Field {
 
   _listeners = [];
 
-  constructor(payload) {
-    safeAssign(this, payload, [
-      "id",
-      "type",
-      "required",
-      "value",
-      "label",
-      "placeholder",
-      "description",
-      "extraDescription",
-      "icon",
-      "disabled",
-      "showInSidebar",
-      "choices",
-    ]);
-  }
-
   get value() {
     return this._value;
   }
 
+  @attr
   set value(newValue) {
     this._value = newValue;
 
@@ -252,20 +244,15 @@ export class Field {
   }
 }
 
-export class Choice {
-  static parse({ extra_label, ...payload }) {
-    return new Choice({ ...payload, extraLabel: extra_label });
+export class Choice extends DObject {
+  static parse(owner, { extra_label, ...payload }) {
+    return new Choice(owner, { ...payload, extraLabel: extra_label });
   }
 
-  constructor({ id, label, extraLabel, description, icon, data }) {
-    Object.assign(this, { id, label, extraLabel, description, icon, data });
-  }
-}
-
-function safeAssign(object, payload, permittedKeys) {
-  for (const [key, value] of Object.entries(payload)) {
-    if (permittedKeys.includes(key)) {
-      object[key] = value;
-    }
-  }
+  @attr id;
+  @attr label;
+  @attr extraLabel;
+  @attr description;
+  @attr icon;
+  @attr data;
 }
