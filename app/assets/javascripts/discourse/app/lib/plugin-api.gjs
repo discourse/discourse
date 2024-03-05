@@ -144,7 +144,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.28.0";
+export const PLUGIN_API_VERSION = "1.29.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -1870,7 +1870,7 @@ class PluginApi {
    *
    * Only the passing of components is supported, and by default the buttons are added to the left of exisiting buttons.
    *
-   * Example: Add a button to the header buttons after the auth buttons
+   * Example: Add a `foo` button to the header buttons after the auth buttons
    * ```
    * api.headerButtons.add(
    *  "foo",
