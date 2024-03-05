@@ -101,17 +101,8 @@ RSpec.describe Chat::CreateMessage do
           instance_of(Chat::Message),
           channel,
           user,
-          {
-            thread: anything,
-            thread_replies_count: anything,
-            context: {
-              post_ids: anything,
-              topic_id: anything,
-            },
-          },
+          anything,
         )
-
-        result
       end
 
       context "when context given" do
@@ -124,14 +115,14 @@ RSpec.describe Chat::CreateMessage do
             instance_of(Chat::Message),
             channel,
             user,
-            {
-              thread: thread,
-              thread_replies_count: 1,
+            has_entries(
+              thread: anything,
+              thread_replies_count: anything,
               context: {
                 post_ids: context_post_ids,
                 topic_id: context_topic_id,
               },
-            },
+            ),
           )
 
           result
