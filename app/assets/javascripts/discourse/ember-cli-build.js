@@ -228,6 +228,14 @@ module.exports = function (defaults) {
         ],
       },
     },
+    skipBabel: [
+      {
+        package: "qunit",
+      },
+      {
+        package: "sinon",
+      },
+    ],
   });
 
   return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);
