@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "PinTopic" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scriptable::PIN_TOPIC) }

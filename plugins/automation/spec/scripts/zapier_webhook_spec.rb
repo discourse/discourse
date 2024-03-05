@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "ZapierWebhook" do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scriptable::ZAPIER_WEBHOOK)

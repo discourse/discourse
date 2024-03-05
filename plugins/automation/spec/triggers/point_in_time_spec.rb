@@ -3,8 +3,8 @@
 require_relative "../discourse_automation_helper"
 
 describe "PointInTime" do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:topic)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME)
   end

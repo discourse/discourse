@@ -5,7 +5,7 @@ require_relative "../discourse_automation_helper"
 describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
   before { SiteSetting.discourse_automation_enabled = true }
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
   let(:topic) { post.topic }
   let(:parent_category) { Fabricate(:category_with_definition) }
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }

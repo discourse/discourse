@@ -9,7 +9,7 @@ describe "PMCreated" do
     Group.refresh_automatic_groups!
   end
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::PM_CREATED)
   end

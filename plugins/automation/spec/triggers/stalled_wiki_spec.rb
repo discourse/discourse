@@ -62,7 +62,7 @@ describe "StalledWiki" do
       end
 
       context "when trigger has a category" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
 
         before do
           automation.upsert_field!(

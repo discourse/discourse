@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "DiscourseAutomation | smoke test", type: :system, js: true do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "test") }
   fab!(:badge) { Fabricate(:badge, name: "badge") }
 

@@ -5,7 +5,7 @@ require_relative "../discourse_automation_helper"
 describe DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN do
   before { SiteSetting.discourse_automation_enabled = true }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:topic) { post.topic }
 
   fab!(:automation) do

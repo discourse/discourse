@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "TopicRequiredWords" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:automation) do
@@ -57,7 +57,7 @@ describe "TopicRequiredWords" do
   end
 
   describe "moving posts" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:first_post) { Fabricate(:post, topic: topic, raw: "this is quite cool #foo") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "this is quite cool #bar") }
     fab!(:destination_topic) { Fabricate(:post).topic }

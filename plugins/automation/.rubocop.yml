@@ -1,2 +1,7 @@
 inherit_gem:
   rubocop-discourse: stree-compat.yml
+
+Discourse/Plugins/NamespaceConstants:
+  Exclude:
+    - lib/discourse_automation/triggers/**/*
+    - lib/discourse_automation/scripts/**/*

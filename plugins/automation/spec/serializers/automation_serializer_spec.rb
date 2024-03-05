@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe DiscourseAutomation::AutomationSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:automation) do
     Fabricate(
       :automation,

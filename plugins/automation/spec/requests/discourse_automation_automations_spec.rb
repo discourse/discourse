@@ -6,7 +6,7 @@ describe DiscourseAutomation::AdminAutomationsController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#trigger" do
-    fab!(:automation) { Fabricate(:automation) }
+    fab!(:automation)
 
     describe "access" do
       context "when user is not logged in" do
@@ -76,7 +76,7 @@ describe DiscourseAutomation::AdminAutomationsController do
     end
 
     describe "params as context" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
       fab!(:automation) { Fabricate(:automation, trigger: "api_call") }
 
       before do

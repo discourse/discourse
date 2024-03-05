@@ -2,9 +2,9 @@
 
 module DiscourseAutomation
   module PostExtension
-    def self.prepended(base)
-      base.class_eval { validate :discourse_automation_topic_required_words }
-    end
+    extend ActiveSupport::Concern
+
+    prepended { validate :discourse_automation_topic_required_words }
 
     def discourse_automation_topic_required_words
       return if !SiteSetting.discourse_automation_enabled

@@ -10,12 +10,7 @@ describe "AddUserTogroupThroughCustomField" do
     Fabricate(:user_field, name: "groupity_group", field_type: "text", description: "a nice field")
   end
 
-  fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD,
-    )
-  end
+  fab!(:automation) { Fabricate(:automation, script: "add_user_to_group_through_custom_field") }
 
   before do
     automation.upsert_field!(
@@ -73,12 +68,7 @@ describe "AddUserTogroupThroughCustomField" do
   end
 
   context "with user_first_logged_in trigger" do
-    fab!(:automation) do
-      Fabricate(
-        :automation,
-        script: DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD,
-      )
-    end
+    fab!(:automation) { Fabricate(:automation, script: "add_user_to_group_through_custom_field") }
 
     context "with existing custom fields" do
       before do

@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "AutoTagTopic" do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }
   fab!(:tag3) { Fabricate(:tag, name: "tag3") }

@@ -9,7 +9,7 @@ describe "SuspendUserByEmail" do
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL)
   end
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before do
     automation.upsert_field!("suspend_until", "date_time", { value: suspend_until })

@@ -6,7 +6,7 @@ describe DiscourseAutomation::AppendLastCheckedByController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#post_checked" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:topic) { post.topic }
 
     it "updates the topic custom fields" do

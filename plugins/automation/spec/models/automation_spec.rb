@@ -59,7 +59,7 @@ describe DiscourseAutomation::Automation do
   end
 
   describe "#detach_custom_field" do
-    fab!(:automation) { Fabricate(:automation) }
+    fab!(:automation)
 
     it "expects a User/Topic/Post instance" do
       expect { automation.detach_custom_field(Invite.new) }.to raise_error(RuntimeError)
@@ -67,7 +67,7 @@ describe DiscourseAutomation::Automation do
   end
 
   describe "#attach_custom_field" do
-    fab!(:automation) { Fabricate(:automation) }
+    fab!(:automation)
 
     it "expects a User/Topic/Post instance" do
       expect { automation.attach_custom_field(Invite.new) }.to raise_error(RuntimeError)

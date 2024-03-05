@@ -3,8 +3,8 @@
 require_relative "../discourse_automation_helper"
 
 describe "GroupCategoryNotificationDefault" do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:category)
+  fab!(:group)
 
   before { SiteSetting.discourse_automation_enabled = true }
 

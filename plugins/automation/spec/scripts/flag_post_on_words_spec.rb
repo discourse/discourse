@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "FlagPostsOnWords" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category_id: category.id) }
   fab!(:automation) do
@@ -28,7 +28,7 @@ describe "FlagPostsOnWords" do
 
   context "when editing/creating a post" do
     context "when editing a post" do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post)
 
       context "when post has flagged words" do
         it "flags the post" do

@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "UserAddedToGroup" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:tracked_group) { Fabricate(:group) }
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP)

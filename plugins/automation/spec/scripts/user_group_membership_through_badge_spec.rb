@@ -3,9 +3,9 @@
 require_relative "../discourse_automation_helper"
 
 describe "UserGroupMembershipThroughBadge" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_users) { Fabricate.times(5, :user) }
-  fab!(:badge) { Fabricate(:badge) }
+  fab!(:badge)
   fab!(:target_group) { Fabricate(:group, title: "Target Title", flair_icon: "ad") }
 
   fab!(:automation) do

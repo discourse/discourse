@@ -8,7 +8,7 @@ describe "BannerTopic" do
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scriptable::BANNER_TOPIC)
   end
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   context "when banner until is set" do
     before do

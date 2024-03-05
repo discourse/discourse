@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe "UserBadgeGranted" do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:tracked_badge) { Fabricate(:badge) }
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)

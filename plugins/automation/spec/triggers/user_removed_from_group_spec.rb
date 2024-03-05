@@ -3,8 +3,8 @@
 require_relative "../discourse_automation_helper"
 
 describe "UserRemovedFromGroup" do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:group)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
   end

@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe DiscourseAutomation::AdminAutomationsController do
-  fab!(:automation) { Fabricate(:automation) }
+  fab!(:automation)
 
   before { SiteSetting.discourse_automation_enabled = true }
 
@@ -164,7 +164,7 @@ describe DiscourseAutomation::AdminAutomationsController do
   end
 
   describe "#destroy" do
-    fab!(:automation) { Fabricate(:automation) }
+    fab!(:automation)
 
     context "when logged in as an admin" do
       before { sign_in(Fabricate(:admin)) }

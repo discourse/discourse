@@ -12,9 +12,7 @@ describe "PostCreatedEdited" do
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED)
-  end
+  fab!(:automation) { Fabricate(:automation, trigger: "post_created_edited") }
 
   context "when filtering on first post only" do
     before do
@@ -355,7 +353,7 @@ describe "PostCreatedEdited" do
       end
 
       context "when category is not allowed" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
 
         it "doesn’t fire the trigger" do
           list =

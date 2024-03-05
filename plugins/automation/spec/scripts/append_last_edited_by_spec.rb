@@ -4,7 +4,7 @@ require_relative "../discourse_automation_helper"
 
 describe "AppendLastEditedBy" do
   fab!(:post) { Fabricate(:post, raw: "this is a post with no edit") }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
 
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scriptable::APPEND_LAST_EDITED_BY)
