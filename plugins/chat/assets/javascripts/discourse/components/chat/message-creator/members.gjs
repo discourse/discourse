@@ -3,9 +3,9 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { eq } from "truth-helpers";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
-import { eq } from "truth-helpers";
 import { getNext, getPrevious } from "./lib/iterate-list";
 import Member from "./member";
 
