@@ -44,27 +44,29 @@ export default class TopicMapExpanded extends Component {
       <section class="links">
         <h3>{{i18n "topic_map.links_title"}}</h3>
         <table class="topic-links">
-          {{#each this.linksToShow as |link|}}
-            <tr>
-              <td>
-                <span
-                  class="badge badge-notification clicks"
-                  title={{i18n "topic_map.clicks" count=link.clicks}}
-                >
-                  {{link.clicks}}
-                </span>
-              </td>
-              <td>
-                <TopicMapLink
-                  @attachment={{link.attachment}}
-                  @title={{link.title}}
-                  @rootDomain={{link.root_domain}}
-                  @url={{link.url}}
-                  @userId={{link.user_id}}
-                />
-              </td>
-            </tr>
-          {{/each}}
+          <tbody>
+            {{#each this.linksToShow as |link|}}
+              <tr>
+                <td>
+                  <span
+                    class="badge badge-notification clicks"
+                    title={{i18n "topic_map.clicks" count=link.clicks}}
+                  >
+                    {{link.clicks}}
+                  </span>
+                </td>
+                <td>
+                  <TopicMapLink
+                    @attachment={{link.attachment}}
+                    @title={{link.title}}
+                    @rootDomain={{link.root_domain}}
+                    @url={{link.url}}
+                    @userId={{link.user_id}}
+                  />
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
         </table>
         {{#if
           (and
@@ -111,7 +113,7 @@ class TopicMapLink extends Component {
       data-user-id={{@userId}}
       data-ignore-post-id="true"
       target="_blank"
-      rel="nofollow ugc noopener"
+      rel="nofollow ugc noopener noreferrer"
     >
       {{#if @title}}
         {{replaceEmoji this.truncatedContent}}
