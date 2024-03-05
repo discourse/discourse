@@ -255,7 +255,7 @@
     width: 100%;
     flex-wrap: wrap;
 
-    .chat-user-display-name__name {
+    span[class^="chat-user-display-name__"]:not(.-first) {
       color: var(--primary-high);
       font-size: var(--font-down-1-rem);
     }
