@@ -78,7 +78,11 @@ export default class ChatThreadList extends Component {
   @cached
   get sortedThreads() {
     return this.threadsManager.threads
-      .filter((thread) => !thread.originalMessage.deletedAt)
+      .filter(
+        (thread) =>
+          !thread.originalMessage.deletedAt &&
+          thread.originalMessage?.id !== thread.lastMessageId
+      )
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {

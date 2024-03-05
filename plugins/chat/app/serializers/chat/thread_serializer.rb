@@ -12,7 +12,8 @@ module Chat
                :meta,
                :reply_count,
                :current_user_membership,
-               :preview
+               :preview,
+               :last_message_id
 
     def initialize(object, opts)
       super(object, opts)
