@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Chat::Api::HintsController < ApplicationController
+  requires_plugin Chat::PLUGIN_NAME
+
   before_action :ensure_logged_in
 
   def check_group_mentions

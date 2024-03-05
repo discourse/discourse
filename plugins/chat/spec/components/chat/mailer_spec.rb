@@ -235,6 +235,26 @@ describe Chat::Mailer do
       assert_only_queued_once
     end
 
+    context "with chat_mailer_send_summary_to_user modifier" do
+      let(:modifier_block) { Proc.new { |_| false } }
+      it "skips when modifier evaluates to false" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:chat_mailer_send_summary_to_user, &modifier_block)
+
+        described_class.send_unread_mentions_summary
+
+        assert_summary_skipped
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :chat_mailer_send_summary_to_user,
+          &modifier_block
+        )
+      end
+    end
+
     describe "update the user membership after we send the email" do
       before { Jobs.run_immediately! }
 

@@ -42,8 +42,12 @@
       </label>
 
       <ExpandingTextArea
-        @name="membership-request-template"
-        @value={{this.model.membership_request_template}}
+        {{on
+          "input"
+          (with-event-value (fn (mut this.model.membership_request_template)))
+        }}
+        value={{this.model.membership_request_template}}
+        name="membership-request-template"
         class="group-form-membership-request-template input-xxlarge"
       />
     </div>

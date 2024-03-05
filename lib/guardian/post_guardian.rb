@@ -358,7 +358,7 @@ module PostGuardian
   end
 
   def can_view_raw_email?(post)
-    post && is_staff?
+    post && @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 
   def can_unhide?(post)

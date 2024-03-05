@@ -359,6 +359,38 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
       end
 
+      it "should not return an empty hash when string property satsify url validation" do
+        schema = {
+          name: "section",
+          properties: {
+            string_property: {
+              type: "string",
+              validations: {
+                url: true,
+              },
+            },
+          },
+        }
+
+        expect(
+          described_class.new(
+            schema: schema,
+            object: {
+              string_property: "https://www.example.com",
+            },
+          ).validate,
+        ).to eq({})
+
+        expect(
+          described_class.new(
+            schema: schema,
+            object: {
+              string_property: "/some-path/to/some-where",
+            },
+          ).validate,
+        ).to eq({})
+      end
+
       it "should return the right hash of error messages when string property does not statisfy url validation" do
         schema = {
           name: "section",

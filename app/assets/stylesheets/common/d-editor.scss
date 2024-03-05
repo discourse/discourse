@@ -166,8 +166,8 @@
   --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  .desktop-view & {
-    // need the extra space on mobile because controls are always visible
+  .discourse-no-touch & {
+    // on hover-capable devices we position the controls within the padding
     padding-bottom: var(--resizer-height);
     margin-bottom: calc(var(--resizer-height) * -1);
   }
@@ -185,12 +185,10 @@
   .button-wrapper {
     min-width: 10em;
     width: 100%;
-
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     gap: 0 0.5em;
-
     position: absolute;
     height: calc(var(--resizer-height) + 0.5em);
     bottom: 0;
@@ -312,7 +310,7 @@
   }
 }
 
-.mobile-view .d-editor-preview .image-wrapper .button-wrapper {
+.discourse-touch .d-editor-preview .image-wrapper .button-wrapper {
   opacity: 1;
 }
 

@@ -781,6 +781,14 @@ def set_cdn_url(cdn_url)
   end
 end
 
+# Time.now can cause flaky tests, especially in cases like
+# leap days. This method freezes time at a "safe" specific
+# time (the Discourse 1.1 release date), so it will not be
+# affected by further temporal disruptions.
+def freeze_time_safe
+  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
+end
+
 def freeze_time(now = Time.now)
   time = now
   datetime = now

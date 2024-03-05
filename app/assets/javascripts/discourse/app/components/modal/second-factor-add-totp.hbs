@@ -45,27 +45,26 @@
             "user.second_factor.name"
           }}</label>
         <div class="controls">
-          <SecondFactorInput
+          <input
+            {{on "input" (with-event-value (fn (mut this.secondFactorName)))}}
+            value={{this.secondFactorName}}
+            type="text"
+            placeholder={{i18n "user.second_factor.totp.default_name"}}
             maxlength={{this.maxSecondFactorNameLength}}
-            @value={{this.secondFactorName}}
-            @inputId="second-factor-name"
-            @placeholder={{i18n "user.second_factor.totp.default_name"}}
+            id="second-factor-name"
           />
         </div>
 
-        <label class="control-label input-prepend">{{i18n
-            "user.second_factor.label"
-          }}</label>
+        <label class="control-label input-prepend">
+          {{i18n "user.second_factor.label"}}
+        </label>
         <div class="controls">
-          <TextField
-            class="second-factor-token-input"
-            maxlength={{6}}
-            @value={{this.secondFactorToken}}
-            @inputId="second-factor-token"
+          <SecondFactorInput
+            {{on "input" (with-event-value (fn (mut this.secondFactorToken)))}}
+            @secondFactorMethod={{this.totpType}}
+            value={{this.secondFactorToken}}
             placeholder="123456"
-            autocorrect="off"
-            autocapitalize="off"
-            autofocus="autofocus"
+            id="second-factor-token"
           />
         </div>
       </div>

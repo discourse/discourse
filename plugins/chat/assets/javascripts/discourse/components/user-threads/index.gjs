@@ -7,12 +7,11 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ThreadTitle from "discourse/plugins/chat/discourse/components/thread-title";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 
 export default class UserThreads extends Component {
   @service chat;
   @service chatApi;
+  @service chatChannelsManager;
 
   @cached
   get threadsCollection() {
@@ -22,9 +21,10 @@ export default class UserThreads extends Component {
   @bind
   handleLoadedThreads(result) {
     return result.threads.map((threadObject) => {
-      const channel = ChatChannel.create(threadObject.channel);
-      const thread = ChatThread.create(channel, threadObject);
+      const channel = this.chatChannelsManager.store(threadObject.channel);
+      const thread = channel.threadsManager.add(channel, threadObject);
       const tracking = result.tracking[thread.id];
+
       if (tracking) {
         thread.tracking.mentionCount = tracking.mention_count;
         thread.tracking.unreadCount = tracking.unread_count;

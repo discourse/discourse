@@ -24,7 +24,7 @@ export default class ChatNavbarFullPageButton extends Component {
     {{#if this.chatStateManager.isDrawerExpanded}}
       <DButton
         @icon="discourse-expand"
-        class="btn-flat no-text c-navbar__full-page-button"
+        class="btn-transparent no-text c-navbar__full-page-button"
         @title="chat.open_full_page"
         @action={{this.openInFullPage}}
       />

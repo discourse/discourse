@@ -9,12 +9,13 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addCustomHeaderClass } from "discourse/components/glimmer-header";
-import { addToHeaderIcons as addToGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
+import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import MountWidget, {
+  addWidgetCleanCallback,
+} from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
@@ -99,10 +100,7 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import {
-  addToHeaderIcons,
-  attachAdditionalPanel,
-} from "discourse/widgets/header";
+import { attachAdditionalPanel } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -145,7 +143,20 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.27.0";
+export const PLUGIN_API_VERSION = "1.28.0";
+
+const DEPRECATED_HEADER_WIDGETS = [
+  "header",
+  "site-header",
+  "header-contents",
+  "header-buttons",
+  "user-status-bubble",
+  "sidebar-toggle",
+  "header-icons",
+  "header-topic-info",
+  "header-notifications",
+  "home-logo",
+];
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -183,6 +194,19 @@ function wrapWithErrorHandler(func, messageKey) {
       return;
     }
   };
+}
+
+function deprecatedHeaderWidgetOverride(widgetName, override) {
+  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+    deprecated(
+      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+      {
+        since: "v3.3.0.beta1-dev",
+        id: "discourse.header-widget-overrides",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
+  }
 }
 
 class PluginApi {
@@ -528,6 +552,9 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    const widgetName = name.split(":")[0];
+    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+
     decorateWidget(name, fn);
   }
 
@@ -556,6 +583,8 @@ class PluginApi {
       );
       return;
     }
+
+    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -598,10 +627,10 @@ class PluginApi {
    *
    * ```
    *
-   * action: may be a string or a function. If it is a string, a wiget action
+   * action: may be a string or a function. If it is a string, a widget action
    * will be triggered. If it is function, the function will be called.
    *
-   * function will recieve a single argument:
+   * function will receive a single argument:
    *  {
    *    post:
    *    showFeedback:
@@ -772,16 +801,16 @@ class PluginApi {
   }
 
   /**
-   Called whenever the "page" changes. This allows us to set up analytics
-   and other tracking.
-
-   To get notified when the page changes, you can install a hook like so:
-
-   ```javascript
-   api.onPageChange((url, title) => {
-        console.log('the page changed to: ' + url + ' and title ' + title);
-      });
-   ```
+   * Called whenever the "page" changes. This allows us to set up analytics
+   * and other tracking.
+   *
+   * To get notified when the page changes, you can install a hook like so:
+   *
+   * ```javascript
+   * api.onPageChange((url, title) => {
+   *   console.log('the page changed to: ' + url + ' and title ' + title);
+   * });
+   * ```
    **/
   onPageChange(fn) {
     const callback = wrapWithErrorHandler(fn, "broken_page_change_alert");
@@ -789,13 +818,13 @@ class PluginApi {
   }
 
   /**
-   Listen for a triggered `AppEvent` from Discourse.
-
-   ```javascript
-   api.onAppEvent('inserted-custom-html', () => {
-        console.log('a custom footer was rendered');
-      });
-   ```
+   * Listen for a triggered `AppEvent` from Discourse.
+   *
+   * ```javascript
+   * api.onAppEvent('inserted-custom-html', () => {
+   *   console.log('a custom footer was rendered');
+   * });
+   * ```
    **/
   onAppEvent(name, fn) {
     const appEvents = this._lookupContainer("service:app-events");
@@ -803,18 +832,18 @@ class PluginApi {
   }
 
   /**
-   Registers a function to generate custom avatar CSS classes
-   for a particular user.
-
-   Takes a function that will accept a user as a parameter
-   and return an array of CSS classes to apply.
-
-   ```javascript
-   api.customUserAvatarClasses(user => {
-      if (get(user, 'primary_group_name') === 'managers') {
-        return ['managers'];
-      }
-    });
+   * Registers a function to generate custom avatar CSS classes
+   * for a particular user.
+   *
+   * Takes a function that will accept a user as a parameter
+   * and return an array of CSS classes to apply.
+   *
+   * ```javascript
+   * api.customUserAvatarClasses(user => {
+   *   if (get(user, 'primary_group_name') === 'managers') {
+   *     return ['managers'];
+   *   }
+   * });
    **/
   customUserAvatarClasses(fn) {
     registerCustomAvatarHelper(fn);
@@ -874,6 +903,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
+    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -907,6 +937,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
+    deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -934,10 +965,13 @@ class PluginApi {
    *
    **/
   addHeaderPanel(name, toggle, transformAttrs) {
-    // deprecated(
-    //   "addHeaderPanel has been removed. Use api.addToHeaderIcons instead.",
-    //   { id: "discourse.add-header-panel" }
-    // );
+    deprecated(
+      "addHeaderPanel will be removed as part of the glimmer header upgrade. Use api.headerIcons instead.",
+      {
+        id: "discourse.add-header-panel",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1653,11 +1687,12 @@ class PluginApi {
    *
    * Example:
    *
+   * ```javascript
    * let aPlugin = {
-       'after:highlightElement': ({ el, result, text }) => {
-         console.log(el);
-       }
-     }
+   *   "after:highlightElement": ({ el, result, text }) => {
+   *     console.log(el);
+   *   }
+   * }
    * api.registerHighlightJSPlugin(aPlugin);
    **/
   registerHighlightJSPlugin(plugin) {
@@ -1670,7 +1705,6 @@ class PluginApi {
    * Example:
    *
    * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
-   *
    **/
   addGlobalNotice(text, id, options) {
     addGlobalNotice(text, id, options);
@@ -1709,7 +1743,6 @@ class PluginApi {
    * ```
    *
    * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
-   *
    **/
   decoratePluginOutlet(outletName, callback, opts) {
     deprecated(
@@ -1769,22 +1802,70 @@ class PluginApi {
   /**
    * Allows adding icons to the category-link html
    *
-   * ```
+   * ```javascript
    * api.addCategoryLinkIcon((category) => {
-   *  if (category.someProperty) {
-        return "eye"
-      }
+   *   if (category.someProperty) {
+   *     return "eye"
+   *   }
    * });
    * ```
-   *
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
   }
+
   /**
-   * Adds a widget or a component to the header-icon ul.
+   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
-   * If adding a widget it must already be created. You can create new widgets
+   * Only the passing of components is supported, and by default the icons are added to the left of exisiting icons.
+   *
+   * Example: Add the chat icon to the header icons after the search icon
+   * ```
+   * api.headerIcons.add(
+   *  "chat",
+   *  ChatIconComponent,
+   *  { after: "search" }
+   * )
+   * ```
+   *
+   * Example: Remove the chat icon from the header icons
+   * ```
+   * api.headerIcons.delete("chat")
+   * ```
+   *
+   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
+   * ```
+   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
+   * ```
+   *
+   * Example: Check if the chat icon is present in the header icons (returns true of false)
+   * ```
+   * api.headerIcons.has("chat")
+   * ```
+   *
+   * Additionally, you can utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * const IconWithDropdown = <template>
+   *   <DButton @icon="icon" @onClick={{this.toggleVisible}} />
+   *   {{#if this.visible}}
+   *     <@panelPortal>
+   *       <div>Panel</div>
+   *     </@panelPortal>
+   *   {{/if}}
+   * </template>;
+   *
+   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
+   * ```
+   *
+   **/
+  get headerIcons() {
+    return headerIconsDAG();
+  }
+
+  /**
+   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
    *
    * ```
@@ -1792,26 +1873,21 @@ class PluginApi {
    *  createWidget("some-widget")
    * ```
    *
-   * If adding a component you can pass the component directly. Additionally, you can
-   * utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
-   * you want create a button in the header that opens a dropdown panel with additional content.
-   *
-   * ```
-   * api.addToHeaderIcons(
-      <template>
-        <span>Icon</span>
-
-        <@panelPortal>
-          <div>Panel</div>
-        </@panelPortal>
-      </template>
-    );
-   * ```
-   *
    **/
   addToHeaderIcons(icon) {
-    addToHeaderIcons(icon);
-    addToGlimmerHeaderIcons(icon);
+    deprecated(
+      "addToHeaderIcons has been deprecated. Use api.headerIcons instead.",
+      {
+        id: "discourse.add-header-icons",
+        url: "https://meta.discourse.org/t/296544",
+      }
+    );
+
+    this.headerIcons.add(
+      icon,
+      <template><MountWidget @widget={{icon}} /></template>,
+      { before: "search" }
+    );
   }
 
   /**
@@ -1997,17 +2073,17 @@ class PluginApi {
   /**
    * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
-   * ```
-   * api.downloadCalendar("title of the event", [
-   * {
-        startsAt: "2021-10-12T15:00:00.000Z",
-        endsAt: "2021-10-12T16:00:00.000Z",
-      },
-   * ],
-   * "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
+   * ```javascript
+   * api.downloadCalendar("title of the event",
+   *   [
+   *     {
+   *       startsAt: "2021-10-12T15:00:00.000Z",
+   *       endsAt: "2021-10-12T16:00:00.000Z",
+   *     },
+   *   ],
+   *   "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
    * );
    * ```
-   *
    */
   downloadCalendar(title, dates, recurrenceRule = null) {
     downloadCalendar(title, dates, recurrenceRule);
@@ -2068,9 +2144,10 @@ class PluginApi {
    * Add custom user search options.
    * It is heavily correlated with `register_groups_callback_for_users_search_controller_action` which allows defining custom filter.
    * Example usage:
+   *
    * ```
    * api.addUserSearchOption("adminsOnly");
-
+   *
    * register_groups_callback_for_users_search_controller_action(:admins_only) do |groups, user|
    *   groups.where(name: "admins")
    * end
@@ -2391,7 +2468,7 @@ class PluginApi {
    * This is intended to replace the admin-menu plugin outlet from
    * the old admin horizontal nav.
    *
-   * ```
+   * ```javascript
    * api.addAdminSidebarSectionLink("root", {
    *   name: "unique_link_name",
    *   label: "admin.some.i18n.label.key",
@@ -2399,7 +2476,7 @@ class PluginApi {
    *   href: "(optional) can be used instead of the route",
    * }
    * ```
-
+   *
    * @param {String} sectionName - The name of the admin sidebar section to add the link to.
    * @param {Object} link - A link object representing a section link for the sidebar.
    * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
@@ -2801,19 +2878,6 @@ class PluginApi {
   addComposerImageWrapperButton(label, btnClass, icon, fn) {
     addImageWrapperButton(label, btnClass, icon);
     addApiImageWrapperButtonClickEvent(fn);
-  }
-
-  /**
-   * Add a custom css class to the header. The class or classes will live alongside the `d-header` class.
-   *
-   * ```
-   * api.addCustomHeaderClass("class-one");
-   * api.addCustomHeaderClass("class-two");
-   *
-   */
-
-  addCustomHeaderClass(klass) {
-    addCustomHeaderClass(klass);
   }
 }
 

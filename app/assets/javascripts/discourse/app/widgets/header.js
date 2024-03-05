@@ -2,6 +2,7 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
@@ -22,14 +23,11 @@ import I18n from "discourse-i18n";
 const SEARCH_BUTTON_ID = "search-button";
 export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
-let _extraHeaderIcons = [];
-
-export function addToHeaderIcons(icon) {
-  _extraHeaderIcons.push(icon);
-}
+let _extraHeaderIcons;
+clearExtraHeaderIcons();
 
 export function clearExtraHeaderIcons() {
-  _extraHeaderIcons = [];
+  _extraHeaderIcons = headerIconsDAG();
 }
 
 export const dropdown = {
@@ -249,15 +247,13 @@ createWidget("header-icons", {
 
     const icons = [];
 
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach((icon) => {
-        if (typeof icon === "string") {
-          icons.push(this.attach(icon));
-        } else {
-          icons.push(this.attach("extra-icon", { component: icon }));
-        }
-      });
-    }
+    const resolvedIcons = _extraHeaderIcons.resolve();
+    resolvedIcons.forEach((icon) => {
+      if (["search", "user-menu", "hamburger"].includes(icon.key)) {
+        return;
+      }
+      icons.push(this.attach("extra-icon", { component: icon.value }));
+    });
 
     const search = this.attach("header-dropdown", {
       title: "search.title",

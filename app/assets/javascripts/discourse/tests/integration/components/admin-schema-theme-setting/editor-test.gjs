@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
 
@@ -47,6 +48,7 @@ class InputFieldsFromDOM {
       this.fields[field.dataset.name] = {
         labelElement: field.querySelector("label"),
         inputElement: field.querySelector(".input").children[0],
+        selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
   }
@@ -327,6 +329,93 @@ module(
         .dom(inputFields.fields.url.inputElement)
         .hasValue("https://example.com/about");
       assert.dom(inputFields.fields.icon.inputElement).hasValue("asterisk");
+    });
+
+    test("input fields of type integer", async function (assert) {
+      const [schema, data] = schemaAndData(3);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.integer_field.labelElement)
+        .hasText("integer_field");
+      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("92");
+      assert
+        .dom(inputFields.fields.integer_field.inputElement)
+        .hasAttribute("type", "number");
+      await fillIn(inputFields.fields.integer_field.inputElement, "922229");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("820");
+
+      tree.refresh();
+      await click(tree.nodes[0].element);
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.integer_field.inputElement)
+        .hasValue("922229");
+    });
+
+    test("input fields of type boolean", async function (assert) {
+      const [schema, data] = schemaAndData(3);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.boolean_field.labelElement)
+        .hasText("boolean_field");
+      assert.dom(inputFields.fields.boolean_field.inputElement).isChecked();
+      await click(inputFields.fields.boolean_field.inputElement);
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      inputFields.refresh();
+      assert
+        .dom(inputFields.fields.boolean_field.labelElement)
+        .hasText("boolean_field");
+      assert.dom(inputFields.fields.boolean_field.inputElement).isNotChecked();
+
+      tree.refresh();
+      await click(tree.nodes[0].element);
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.boolean_field.inputElement).isNotChecked();
+    });
+
+    test("input fields of type enum", async function (assert) {
+      const [schema, data] = schemaAndData(3);
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const enumSelector = selectKit(
+        `${inputFields.fields.enum_field.selector} .select-kit`
+      );
+      assert.strictEqual(enumSelector.header().value(), "awesome");
+
+      await enumSelector.expand();
+      await enumSelector.selectRowByValue("nice");
+      assert.strictEqual(enumSelector.header().value(), "nice");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+      assert.strictEqual(enumSelector.header().value(), "cool");
+
+      tree.refresh();
+
+      await click(tree.nodes[0].element);
+      assert.strictEqual(enumSelector.header().value(), "nice");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {

@@ -98,16 +98,23 @@ class WebHookEventType < ActiveRecord::Base
   def self.active
     ids_to_exclude = []
     unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
-      ids_to_exclude << TYPES[:solved_accept_unaccept]
+      ids_to_exclude.concat([TYPES[:solved_accepted_solution], TYPES[:solved_unaccepted_solution]])
     end
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
-      ids_to_exclude << TYPES[:assign_assign_unassign]
+      ids_to_exclude.concat([TYPES[:assign_assigned], TYPES[:assign_unassigned]])
     end
     unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
-      ids_to_exclude << TYPES[:voting_voted_unvoted]
+      ids_to_exclude.concat([TYPES[:voting_topic_upvote], TYPES[:voting_topic_unvote]])
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
-      ids_to_exclude << TYPES[:chat_message]
+      ids_to_exclude.concat(
+        [
+          TYPES[:chat_message_created],
+          TYPES[:chat_message_edited],
+          TYPES[:chat_message_trashed],
+          TYPES[:chat_message_restored],
+        ],
+      )
     end
     self.where.not(id: ids_to_exclude)
   end
