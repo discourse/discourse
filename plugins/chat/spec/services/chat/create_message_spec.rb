@@ -101,8 +101,10 @@ RSpec.describe Chat::CreateMessage do
           instance_of(Chat::Message),
           channel,
           user,
-          anything,
+          has_entries(thread: anything, thread_replies_count: anything, context: anything),
         )
+
+        result
       end
 
       context "when context given" do
