@@ -76,6 +76,10 @@
       }
     }
   }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
 }
 
 .category-heading {
