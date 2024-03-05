@@ -2122,7 +2122,7 @@ de:
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
     review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
-    skip_review_media_groups: "Benutzer, die keiner dieser Gruppen angehören, werden ihre Beiträge zur Überprüfung an die Mitarbeiter gesendet, wenn der Beitrag eingebettete Medien enthält."
+    skip_review_media_groups: "Wenn Benutzer keiner dieser Gruppen angehören und der Beitrag eingebettete Medien enthält, werden ihre Beiträge zur Überprüfung ans Team gesendet."
     blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
     enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
     show_published_pages_login_required: "Anonyme Benutzer können veröffentlichte Seiten sehen, auch wenn eine Anmeldung erforderlich ist."

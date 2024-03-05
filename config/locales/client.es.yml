@@ -2746,6 +2746,8 @@ es:
     topic_bulk_actions:
       close_topics:
         name: "Cerrar temas"
+      update_category:
+        name: "Actualizar Categoría"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
