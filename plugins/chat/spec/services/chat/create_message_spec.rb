@@ -102,11 +102,11 @@ RSpec.describe Chat::CreateMessage do
           channel,
           user,
           {
+            thread_id: anything,
+            thread_replies_count: anything,
             context: {
               post_ids: anything,
               topic_id: anything,
-              thread_id: anything,
-              thread_replies_count: anything,
             },
           },
         )
@@ -125,11 +125,11 @@ RSpec.describe Chat::CreateMessage do
             channel,
             user,
             {
+              thread_id: thread.id,
+              thread_replies_count: 1,
               context: {
                 post_ids: context_post_ids,
                 topic_id: context_topic_id,
-                thread_id: thread.id,
-                thread_replies_count: 1,
               },
             },
           )
