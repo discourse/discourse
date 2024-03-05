@@ -102,7 +102,7 @@ RSpec.describe Chat::CreateMessage do
           channel,
           user,
           {
-            thread_id: anything,
+            thread: anything,
             thread_replies_count: anything,
             context: {
               post_ids: anything,
@@ -125,7 +125,7 @@ RSpec.describe Chat::CreateMessage do
             channel,
             user,
             {
-              thread_id: thread.id,
+              thread: thread,
               thread_replies_count: 1,
               context: {
                 post_ids: context_post_ids,

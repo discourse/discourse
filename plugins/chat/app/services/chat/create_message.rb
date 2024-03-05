@@ -199,7 +199,7 @@ module Chat
         channel,
         message_instance.user,
         {
-          thread_id: thread&.id,
+          thread: thread,
           thread_replies_count: thread&.replies_count_cache || 0,
           context: {
             post_ids: contract.context_post_ids,
