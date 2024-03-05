@@ -233,6 +233,8 @@ export default class ChatSubscriptionsManager extends Service {
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
+          thread.lastMessageId = busData.message.id;
+
           if (busData.message.user.id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
