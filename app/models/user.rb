@@ -1816,10 +1816,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def experimental_bookmark_redesign_enabled?
-    in_any_groups?(SiteSetting.enable_experimental_bookmark_redesign_groups_map)
-  end
-
   def glimmer_header_enabled?
     in_any_groups?(SiteSetting.experimental_glimmer_header_groups_map)
   end

@@ -72,7 +72,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :experimental_bookmark_redesign_enabled?,
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :glimmer_header_enabled?,

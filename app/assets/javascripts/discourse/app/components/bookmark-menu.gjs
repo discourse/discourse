@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import BookmarkModal from "discourse/components/modal/bookmark";
 import concatClass from "discourse/helpers/concat-class";
-import { BookmarkFormData } from "discourse/lib/bookmark";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
@@ -13,11 +14,11 @@ import {
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import DMenu from "float-kit/components/d-menu";
-import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
 
 export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
+  @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
   timeShortcuts = timeShortcuts(this.currentUser.timezone || moment.tz.guess());
@@ -30,61 +31,62 @@ export default class BookmarkMenu extends Component {
   ];
 
   get existingBookmark() {
-    return this.bookmarkManager.bookmark.id
-      ? this.bookmarkManager.bookmark
+    return this.bookmarkManager.trackedBookmark.id
+      ? this.bookmarkManager.trackedBookmark
       : null;
+  }
+
+  get showEditDeleteMenu() {
+    return this.existingBookmark && !this.quicksaved;
   }
 
   @action
   onBookmark(event) {
-    // eslint-disable-next-line no-console
-    console.log("on bookmark");
     event.target.blur();
 
-    if (this.existingBookmark) {
-      // this should do nothing if existing...
-    } else {
-      // handle create bookmark
+    // We show the menu with Edit/Delete options if the bokmark exists,
+    // so this "quicksave" will do nothing in that case.
+    if (!this.existingBookmark) {
+      this.bookmarkManager.create().then(() => {
+        // NOTE: Need a nicer way to handle this; otherwise as soon as you save
+        // a bookmark, it switches to the other Edit/Delete menu.
+        //
+        // Also we have the opposite problem -- when closing the DMenu we have
+        // no on-close hook, so we can't reset this.
+        this.quicksaved = true;
+      });
     }
   }
 
   @action
   onEditBookmark() {
-    // eslint-disable-next-line no-console
-    console.log("on edit reminder");
-
     this._openBookmarkModal();
   }
 
   @action
   onRemoveBookmark() {
-    // eslint-disable-next-line no-console
-    console.log("on remove bookmark");
+    this.bookmarkManager.delete().then(() => {
+      this.bookmarkManager.afterDelete();
+    });
   }
 
   @action
   onChooseReminderOption(option) {
-    // eslint-disable-next-line no-console
-    console.log(option);
-
+    // NOTE: We need to handle here:
+    //   * Bookmark already created since we opened the menu, so we are just
+    //   updating it with whatever quick option is chosen.
+    //   * Same as above, but Custom option is chosen, so we open the modal
+    //   for "editing" the bookmark.
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     }
   }
 
   _openBookmarkModal() {
-    const bookmark = this.bookmarkManager.bookmark;
-
-    // TODO (martin) Really all this needs to be redone/cleaned up, it's only
-    // here to launch the new modal so it can be seen.
     this.modal
-      .show(BookmarkRedesignModal, {
+      .show(BookmarkModal, {
         model: {
-          bookmark: new BookmarkFormData(bookmark),
-          context: this.bookmarkManager.model,
-          // TODO: Maybe find a nicer way of doing this -- for post it will be topic title,
-          // for chat message it will be channel.
-          contextTitle: this.bookmarkManager.contextTitle,
+          bookmark: this.bookmarkManager.trackedBookmark,
           afterSave: (savedData) => {
             return this.bookmarkManager.afterSave(savedData);
           },
@@ -106,35 +108,19 @@ export default class BookmarkMenu extends Component {
       {{on "click" this.onBookmark}}
       class={{concatClass
         "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
-        (if this.bookmarkManager.model.bookmarked "-bookmarked")
+        (if this.existingBookmark "bookmarked")
       }}
     >
       <:trigger>
-        {{#if this.bookmarkManager.model.bookmarkReminderAt}}
+        {{#if this.bookmarkManager.trackedBookmark.reminderAt}}
           {{dIcon "discourse-bookmark-clock"}}
         {{else}}
           {{dIcon "bookmark"}}
         {{/if}}
       </:trigger>
       <:content>
-        {{!--
-		TODO: This will be a Toast now instead or alternatively reuse the post-copy Link copied! popup
-    {{#if this.bookmarkedNotice}}
-      <span
-        class={{concatClass
-          "bookmark-menu__notice"
-          (if this.slideOutBookmarkNotice "-slide-out")
-        }}
-        {{this.scheduleSlideOut}}
-        {{this.scheduleRemove}}
-      >
-        Bookmarked!
-      </span>
-    {{/if}}
-	--}}
-
         <div class="bookmark-menu__body">
-          {{#if this.bookmarkManager.model.bookmarked}}
+          {{#if this.showEditDeleteMenu}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit">
                 <DButton
