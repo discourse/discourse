@@ -21,7 +21,7 @@ acceptance("Header API - authenticated", function (needs) {
   });
 });
 
-acceptance("Header API - anonymous", function (needs) {
+acceptance("Header API - anonymous", function () {
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
       api.headerButtons.add("test", <template>
@@ -43,9 +43,9 @@ acceptance("Header API - anonymous", function (needs) {
     await visit("/");
     const testButton = document.querySelector(".test-button");
     const authButtons = document.querySelector(".auth-buttons");
-    assert.ok(
-      testButton.compareDocumentPosition(authButtons) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
+    assert.equal(
+      testButton.compareDocumentPosition(authButtons),
+      Node.DOCUMENT_POSITION_FOLLOWING,
       "Test button is positioned before auth-buttons"
     );
   });
@@ -84,8 +84,9 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-button");
     const test2 = document.querySelector(".test2-button");
-    assert.ok(
-      test2.compareDocumentPosition(test1) & Node.DOCUMENT_POSITION_FOLLOWING,
+    assert.equal(
+      test2.compareDocumentPosition(test1),
+      Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 button is positioned before Test1 button"
     );
   });

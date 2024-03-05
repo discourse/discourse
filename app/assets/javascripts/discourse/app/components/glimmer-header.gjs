@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
-import DAG from "discourse/lib/dag";
 import { modifier } from "ember-modifier";
+import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -18,7 +18,6 @@ import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrappe
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
-import PluginOutlet from "./plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
 
