@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 

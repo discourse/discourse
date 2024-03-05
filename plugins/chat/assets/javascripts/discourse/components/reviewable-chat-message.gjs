@@ -3,11 +3,11 @@ import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import { or } from "truth-helpers";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-import or from "truth-helpers/helpers/or";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
