@@ -3585,6 +3585,7 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Do:"
     form_templates:
       upload_field:

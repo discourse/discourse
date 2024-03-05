@@ -4161,6 +4161,7 @@ hr:
               content: "Osvrt"
               title: "Označene objave i druge stavke u redu čekanja"
               pending_count: "%{count} na čekanju"
+      filter: "Filter"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."

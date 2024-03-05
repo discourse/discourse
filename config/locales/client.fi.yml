@@ -4288,6 +4288,9 @@ fi:
       panels:
         forum:
           label: Keskustelualuea
+      filter: "Suodatin"
+      no_results:
+        title: "Ei tuloksia"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."

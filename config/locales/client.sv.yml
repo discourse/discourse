@@ -4311,6 +4311,7 @@ sv:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."

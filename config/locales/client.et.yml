@@ -2592,6 +2592,7 @@ et:
       panels:
         forum:
           label: Foorum
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Laadi üles"

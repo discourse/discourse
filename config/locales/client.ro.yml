@@ -2901,6 +2901,7 @@ ro:
         hamburger_menu: "%{shortcut} Deschide meniu hamburger"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
         show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
+        filter_sidebar: "%{shortcut} Filtru bară laterală"
         help: "%{shortcut} Deschide ajutor tastatură"
         dismiss_topics: "%{shortcut} Abandonează subiecte"
         log_out: "%{shortcut} Ieșire"
@@ -3128,6 +3129,11 @@ ro:
       panels:
         forum:
           label: Forum
+      filter: "Filtru"
+      clear_filter: "Elimină filtrul"
+      no_results:
+        title: "Fără rezultate"
+        description: "Nu am găsit nimic care să corespundă cu „%{filter}”"
     until: "Pana cand:"
     form_templates:
       upload_field:
@@ -3316,6 +3322,10 @@ ro:
         scopes:
           action: țiune
           descriptions:
+            topics:
+              recover: Recuperează un subiect.
+            posts:
+              recover: Recuperează un articol.
             logs:
               messages: Listează mesajele din /logs sau obține un anumit mesaj din jurnal.
       web_hooks:
