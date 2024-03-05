@@ -216,7 +216,6 @@
 
     @media screen and (min-width: 767px) {
       max-width: calc(var(--d-max-width) / 2);
-      margin-right: 1.5em;
     }
 
     .badge-contents {
@@ -269,6 +268,7 @@
   flex-direction: row;
   margin-bottom: 2em;
   margin-top: 1em;
+  gap: 1em;
 
   .badge-grant-info {
     &.hidden {
@@ -285,23 +285,42 @@
   }
 
   .badge-set-title {
+    flex: 0 1 auto;
     padding: 1.5em;
     border: 1px solid var(--primary-low);
 
-    .user-content {
-      padding: 0;
-      .control-group {
-        margin-bottom: 1em;
+    .badge-title {
+      height: 100%;
+      &__saved {
+        color: var(--success);
       }
     }
-  }
 
-  .badge-title .form-horizontal .controls {
-    margin-left: 0;
-  }
+    .control-group:last-child {
+      margin: auto 0 0;
+    }
 
-  .form-horizontal {
-    margin-bottom: 0;
+    .form-horizontal {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
+      margin: 0;
+      button:last-of-type {
+        margin-right: auto;
+      }
+    }
+
+    .combobox {
+      width: 100%;
+    }
   }
 }
 

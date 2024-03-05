@@ -22,7 +22,7 @@ export default class ChatNavbarOpenDrawerButton extends Component {
       <DButton
         @icon="discourse-compress"
         @title="chat.close_full_page"
-        class="c-navbar__open-drawer-button btn-flat"
+        class="c-navbar__open-drawer-button btn-transparent"
         @action={{this.openDrawer}}
       />
     {{/if}}

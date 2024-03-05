@@ -20,9 +20,9 @@
   {{else if (or this.showTotpForm this.showBackupCodesForm)}}
     <form class={{this.inputFormClass}}>
       <SecondFactorInput
-        @value={{this.secondFactorToken}}
+        {{on "input" (with-event-value (fn (mut this.secondFactorToken)))}}
         @secondFactorMethod={{this.shownSecondFactorMethod}}
-        @onTokenInput={{action "onTokenInput"}}
+        value={{this.secondFactorToken}}
       />
       <DButton
         @action={{this.authenticateToken}}

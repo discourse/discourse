@@ -5,10 +5,7 @@
         {{i18n "category.position"}}
       </label>
       <input
-        {{on
-          "input"
-          (action (mut this.category.position) value="target.value")
-        }}
+        {{on "input" (with-event-value (fn (mut this.category.position)))}}
         value={{this.category.position}}
         type="number"
         min="0"
@@ -42,7 +39,7 @@
     <input
       {{on
         "input"
-        (action (mut this.category.num_featured_topics) value="target.value")
+        (with-event-value (fn (mut this.category.num_featured_topics)))
       }}
       value={{this.category.num_featured_topics}}
       type="number"
@@ -197,9 +194,8 @@
     <input
       {{on
         "input"
-        (action
-          (mut this.category.category_setting.num_auto_bump_daily)
-          value="target.value"
+        (with-event-value
+          (fn (mut this.category.category_setting.num_auto_bump_daily))
         )
       }}
       value={{this.category.category_setting.num_auto_bump_daily}}
@@ -216,9 +212,8 @@
     <input
       {{on
         "input"
-        (action
-          (mut this.category.category_setting.auto_bump_cooldown_days)
-          value="target.value"
+        (with-event-value
+          (fn (mut this.category.category_setting.auto_bump_cooldown_days))
         )
       }}
       value={{this.category.category_setting.auto_bump_cooldown_days}}

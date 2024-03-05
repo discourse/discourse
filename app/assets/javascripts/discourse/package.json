@@ -28,8 +28,8 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/standalone": "^7.23.10",
+    "@babel/core": "^7.24.0",
+    "@babel/standalone": "^7.24.0",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -39,8 +39,8 @@
     "@ember/render-modifiers": "^2.1.0",
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^3.3.0",
-    "@embroider/compat": "^3.4.4",
-    "@embroider/core": "^3.4.4",
+    "@embroider/compat": "^3.4.5",
+    "@embroider/core": "^3.4.5",
     "@embroider/macros": "^1.13.1",
     "@embroider/router": "^2.1.4",
     "@embroider/webpack": "^3.2.2",
@@ -59,6 +59,7 @@
     "@uppy/xhr-upload": "3.1.1",
     "a11y-dialog": "8.0.4",
     "admin": "1.0.0",
+    "autosize": "^6.0.1",
     "babel-import-util": "^2.0.1",
     "babel-plugin-ember-template-compilation": "^2.2.1",
     "bootstrap": "3.4.1",
@@ -85,7 +86,6 @@
     "ember-cli-terser": "^4.0.2",
     "ember-decorators": "^6.1.1",
     "ember-exam": "^9.0.0",
-    "ember-functions-as-helper-polyfill": "^2.1.2",
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^2.0.2",
@@ -120,7 +120,7 @@
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
     "workbox-sw": "^7.0.0",
-    "xss": "^1.0.14"
+    "xss": "^1.0.15"
   },
   "engines": {
     "node": ">= 18",

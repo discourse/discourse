@@ -19,13 +19,13 @@
       <label>{{i18n "category.parent"}}</label>
       <CategoryChooser
         @value={{this.category.parent_category_id}}
-        @categories={{this.parentCategories}}
         @allowSubCategories={{true}}
         @allowRestrictedCategories={{true}}
         @onChange={{action (mut this.category.parent_category_id)}}
         @options={{hash
           allowUncategorized=false
           excludeCategoryId=this.category.id
+          autoInsertNoneItem=true
           none=true
         }}
       />

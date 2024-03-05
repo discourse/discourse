@@ -4,7 +4,7 @@ RSpec.describe UserSearch do
   before_all { SearchIndexer.enable } # Enable for prefabrication
   before { SearchIndexer.enable } # Enable for each test
 
-  fab!(:topic) { Fabricate :topic }
+  fab!(:topic)
   fab!(:topic2) { Fabricate :topic }
   fab!(:topic3) { Fabricate :topic }
   fab!(:topic4) { Fabricate :topic }
@@ -29,7 +29,7 @@ RSpec.describe UserSearch do
   fab!(:inactive) { Fabricate :user, username: "Ghost", active: false }
   fab!(:admin) { Fabricate :admin, username: "theadmin" }
   fab!(:moderator) { Fabricate :moderator, username: "themod" }
-  fab!(:staged) { Fabricate :staged }
+  fab!(:staged)
 
   def search_for(*args)
     # mapping "username" so it's easier to debug

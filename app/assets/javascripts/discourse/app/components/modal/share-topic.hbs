@@ -34,12 +34,8 @@
 
     <div class="link-share-actions">
       <div class="sources">
-        {{#each this.sources as |s|}}
-          <ShareSource
-            @source={{s}}
-            @title={{this.topic.title}}
-            @action={{action "share"}}
-          />
+        {{#each this.sources as |source|}}
+          <ShareSource @source={{source}} @action={{this.share}} />
         {{/each}}
 
         {{#if this.allowInvites}}

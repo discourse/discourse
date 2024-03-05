@@ -176,6 +176,25 @@ export default class Category extends RestModel {
     return category;
   }
 
+  static async asyncFindBySlugPath(slugPath, opts = {}) {
+    const data = { slug_path: slugPath };
+    if (opts.includePermissions) {
+      data.include_permissions = true;
+    }
+
+    const result = await ajax("/categories/find", { data });
+
+    const categories = result["categories"].map((category) => {
+      category = Site.current().updateCategory(category);
+      if (opts.includePermissions) {
+        category.setupGroupsAndPermissions();
+      }
+      return category;
+    });
+
+    return categories[categories.length - 1];
+  }
+
   static async asyncFindBySlugPathWithID(slugPathWithID) {
     const result = await ajax("/categories/find", {
       data: { slug_path_with_id: slugPathWithID },

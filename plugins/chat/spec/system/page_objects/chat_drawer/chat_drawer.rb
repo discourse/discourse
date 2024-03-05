@@ -24,6 +24,16 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .c-navbar__back-button").click
       end
 
+      def visit_index
+        visit("/")
+        PageObjects::Pages::Chat.new.open_from_header
+      end
+
+      def visit_channel(channel)
+        visit_index
+        open_channel(channel)
+      end
+
       def open_channel(channel)
         channel_index.open_channel(channel)
         has_no_css?(".chat-skeleton")

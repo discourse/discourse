@@ -159,6 +159,40 @@ export default function schemaAndData(version = 1) {
         ],
       },
     ];
+  } else if (version === 3) {
+    schema = {
+      name: "something",
+      identifier: "name",
+      properties: {
+        name: {
+          type: "string",
+        },
+        integer_field: {
+          type: "integer",
+        },
+        boolean_field: {
+          type: "boolean",
+        },
+        enum_field: {
+          type: "enum",
+          choices: ["nice", "awesome", "cool"]
+        }
+      },
+    };
+    data = [
+      {
+        name: "lamb",
+        integer_field: 92,
+        boolean_field: true,
+        enum_field: "awesome"
+      },
+      {
+        name: "cow",
+        integer_field: 820,
+        boolean_field: false,
+        enum_field: "cool"
+      },
+    ];
   } else {
     throw new Error("unknown fixture version");
   }

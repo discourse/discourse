@@ -403,11 +403,8 @@
   display: flex;
   margin: 0.5em 0;
   flex-wrap: wrap;
-  font-size: var(--font-0-rem);
-
-  button {
-    margin-right: 0.5em;
-  }
+  font-size: var(--font-down-1);
+  gap: 0.5em;
 }
 
 div.education {

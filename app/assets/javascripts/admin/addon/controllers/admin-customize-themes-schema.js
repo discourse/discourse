@@ -4,6 +4,9 @@ export default class AdminCustomizeThemesSchemaController extends Controller {
   data = [
     {
       name: "item 1",
+      width: 143,
+      is_valid: true,
+      enum_prop: 11,
       children: [
         {
           name: "child 1-1",
@@ -25,6 +28,9 @@ export default class AdminCustomizeThemesSchemaController extends Controller {
     },
     {
       name: "item 2",
+      width: 803,
+      is_valid: false,
+      enum_prop: 22,
       children: [
         {
           name: "child 2-1",
@@ -52,6 +58,16 @@ export default class AdminCustomizeThemesSchemaController extends Controller {
     properties: {
       name: {
         type: "string",
+      },
+      width: {
+        type: "integer",
+      },
+      is_valid: {
+        type: "boolean",
+      },
+      enum_prop: {
+        type: "enum",
+        choices: [11, 22],
       },
       children: {
         type: "objects",

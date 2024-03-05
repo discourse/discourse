@@ -24,6 +24,7 @@ export default ComboBoxComponent.extend({
   navigateToEdit: false,
   editingCategory: false,
   editingCategoryTab: null,
+  allowUncategorized: setting("allow_uncategorized_topics"),
 
   selectKitOptions: {
     filterable: true,
@@ -40,7 +41,7 @@ export default ComboBoxComponent.extend({
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
-    allowUncategorized: setting("allow_uncategorized_topics"),
+    allowUncategorized: "allowUncategorized",
   },
 
   modifyComponentForRow() {

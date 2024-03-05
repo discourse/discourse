@@ -35,7 +35,7 @@
       ariaLabel={{i18n "sidebar.sections.custom.links.icon.label"}}
     />
     {{#if @link.invalidIconMessage}}
-      <div class="icon warning">
+      <div class="icon warning" role="alert" aria-live="assertive">
         {{@link.invalidIconMessage}}
       </div>
     {{/if}}
@@ -47,10 +47,10 @@
       @value={{@link.name}}
       class={{@link.nameCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.name.label"}}
-      {{on "input" (action (mut @link.name) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
-      <div class="name warning">
+      <div class="name warning" role="alert" aria-live="assertive">
         {{@link.invalidNameMessage}}
       </div>
     {{/if}}
@@ -62,10 +62,10 @@
       @value={{@link.value}}
       class={{@link.valueCssClass}}
       ariaLabel={{i18n "sidebar.sections.custom.links.value.label"}}
-      {{on "input" (action (mut @link.value) value="target.value")}}
+      {{on "input" (with-event-value (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
-      <div class="value warning">
+      <div class="value warning" role="alert" aria-live="assertive">
         {{@link.invalidValueMessage}}
       </div>
     {{/if}}

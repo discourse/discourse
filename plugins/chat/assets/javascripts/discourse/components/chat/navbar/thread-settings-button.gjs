@@ -30,7 +30,7 @@ export default class ChatNavbarThreadSettingsButton extends Component {
         @action={{this.openThreadSettings}}
         @icon="cog"
         @title="chat.thread.settings"
-        class="btn-flat c-navbar__thread-settings-button"
+        class="btn-transparent c-navbar__thread-settings-button"
       />
     {{/if}}
   </template>

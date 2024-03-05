@@ -55,7 +55,7 @@ export default class AdminPlugin {
   get nameTitleized() {
     // The category name is better in a lot of cases, as it's a human-inputted
     // translation, and we can handle things like SAML instead of showing them
-    // as Saml from discourse-saml. We can fall back to the programattic version
+    // as Saml from discourse-saml. We can fall back to the programmatic version
     // though if needed.
     let name;
     if (this.translatedCategoryName) {

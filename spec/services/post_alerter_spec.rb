@@ -1188,21 +1188,29 @@ RSpec.describe PostAlerter do
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
+      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+
       it "sends push notifications when all filters pass" do
+        evil_trout.update!(last_seen_at: 10.minutes.ago)
         Plugin::Instance.new.register_push_notification_filter { |user, payload| true }
 
-        expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
-        DiscoursePluginRegistry.reset!
+        alerts =
+          MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+            expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+          end
+
+        expect(alerts).not_to be_empty
       end
 
       it "does not send push notifications when a filters returns false" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
-        expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
 
-        events = DiscourseEvent.track_events { mention_post }
-        expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
+        alerts =
+          MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+            expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+          end
 
-        DiscoursePluginRegistry.reset!
+        expect(alerts).to be_empty
       end
     end
 

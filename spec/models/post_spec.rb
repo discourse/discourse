@@ -716,7 +716,7 @@ RSpec.describe Post do
           SiteSetting.max_mentions_per_post = 1
         end
 
-        it "allows vmax_mentions_per_post mentions" do
+        it "allows max_mentions_per_post mentions" do
           post_with_one_mention.user.trust_level = TrustLevel[1]
           expect(post_with_one_mention).to be_valid
         end
@@ -2202,7 +2202,7 @@ RSpec.describe Post do
 
   describe "public_posts_count_per_day" do
     before do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:post)
       Fabricate(:post, created_at: 1.day.ago)

@@ -537,7 +537,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       @action={{this.onArchiveChannel}}
                       @label="chat.channel_settings.archive_channel"
                       @icon="archive"
-                      class="archive-btn chat-form__btn btn-flat"
+                      class="archive-btn chat-form__btn btn-transparent"
                     />
                   </:action>
                 </section.row>
@@ -550,14 +550,14 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       @action={{this.onToggleChannelState}}
                       @label="chat.channel_settings.close_channel"
                       @icon="lock"
-                      class="close-btn chat-form__btn btn-flat"
+                      class="close-btn chat-form__btn btn-transparent"
                     />
                   {{else}}
                     <DButton
                       @action={{this.onToggleChannelState}}
                       @label="chat.channel_settings.open_channel"
                       @icon="unlock"
-                      class="open-btn chat-form__btn btn-flat"
+                      class="open-btn chat-form__btn btn-transparent"
                     />
                   {{/if}}
                 </:action>
@@ -569,7 +569,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                     @action={{this.onDeleteChannel}}
                     @label="chat.channel_settings.delete_channel"
                     @icon="trash-alt"
-                    class="delete-btn chat-form__btn btn-flat"
+                    class="delete-btn chat-form__btn btn-transparent"
                   />
                 </:action>
               </section.row>

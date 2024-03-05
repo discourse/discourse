@@ -14,14 +14,13 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.24.0",
     "ember-auto-import": "^2.7.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
     "@ember/optional-features": "^2.1.0",
     "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",

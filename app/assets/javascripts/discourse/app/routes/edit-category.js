@@ -7,11 +7,9 @@ export default DiscourseRoute.extend({
   router: service(),
 
   model(params) {
-    return Category.reloadCategoryWithPermissions(
-      params,
-      this.store,
-      this.site
-    );
+    return this.site.lazy_load_categories
+      ? Category.asyncFindBySlugPath(params.slug, { includePermissions: true })
+      : Category.reloadCategoryWithPermissions(params, this.store, this.site);
   },
 
   afterModel(model) {

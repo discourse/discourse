@@ -756,6 +756,16 @@ RSpec.describe Email::Receiver do
       MD
     end
 
+    it "tries not to repeat duplicate attachments" do
+      SiteSetting.authorized_extensions = "jpg"
+
+      expect { process(:logo_1) }.to change { UploadReference.count }.by(1)
+      expect(topic.posts.last.raw).to match %r{upload://}
+
+      expect { process(:logo_2) }.not_to change { UploadReference.count }
+      expect(topic.posts.last.raw).not_to match %r{upload://}
+    end
+
     it "works with removed attachments" do
       SiteSetting.authorized_extensions = "jpg"
 

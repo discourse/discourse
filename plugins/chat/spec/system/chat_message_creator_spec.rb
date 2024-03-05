@@ -6,6 +6,8 @@ RSpec.describe "Flag message", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   before do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.chat_max_direct_message_users = 3
     chat_system_bootstrap
     sign_in(current_user)

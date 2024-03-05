@@ -70,7 +70,7 @@ export default class NotificationConsentBanner extends Component {
             @icon="times"
             @action={{this.dismiss}}
             @title="banner.close"
-            class="btn-flat close"
+            class="btn-transparent close"
           />
         </div>
       </div>

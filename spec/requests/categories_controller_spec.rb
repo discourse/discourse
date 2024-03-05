@@ -66,7 +66,7 @@ RSpec.describe CategoriesController do
       )
     end
 
-    it "does not returns subcatgories without permission" do
+    it "does not returns subcategories without permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
       subcategory.set_permissions(admins: :full)
       subcategory.save!
@@ -1217,6 +1217,12 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly("Foo")
       end
+
+      it "works with empty categories list" do
+        get "/categories/search.json", params: { select_category_ids: [""] }
+
+        expect(response.parsed_body["categories"].size).to eq(0)
+      end
     end
 
     context "with reject_category_ids" do
@@ -1228,6 +1234,18 @@ RSpec.describe CategoriesController do
           "Uncategorized",
           "Foo",
           "Foobar",
+        )
+      end
+
+      it "works with empty categories list" do
+        get "/categories/search.json", params: { reject_category_ids: [""] }
+
+        expect(response.parsed_body["categories"].size).to eq(4)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+          "Notfoo",
         )
       end
     end

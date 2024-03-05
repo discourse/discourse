@@ -40,7 +40,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
         expect(thread_page.messages).to have_message(text: "user1reply")
       end
 
-      using_session(:user_2) do
+      using_session(:user_2) do |session|
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
@@ -49,12 +49,14 @@ RSpec.describe "Reply to message - smoke", type: :system do
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
+
+        session.quit
       end
 
       using_session(:user_1) do
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(thread_page.messages).to have_message(text: "user2reply")
-        expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
+        expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(3)
       end
     end
   end
