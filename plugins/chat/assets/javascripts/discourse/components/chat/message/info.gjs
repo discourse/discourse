@@ -10,7 +10,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import and from "truth-helpers/helpers/and";
+import { and } from "truth-helpers";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
 

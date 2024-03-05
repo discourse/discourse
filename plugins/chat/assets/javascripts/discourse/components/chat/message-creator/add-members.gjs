@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
-import gte from "truth-helpers/helpers/gte";
+import { gte } from "truth-helpers";
 import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 

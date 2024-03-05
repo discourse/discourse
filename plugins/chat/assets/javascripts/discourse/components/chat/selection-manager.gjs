@@ -8,7 +8,7 @@ import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import not from "truth-helpers/helpers/not";
+import { not } from "truth-helpers";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
 export default class ChatSelectionManager extends Component {

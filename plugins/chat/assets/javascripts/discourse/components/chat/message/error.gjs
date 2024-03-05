@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
 import i18n from "discourse-common/helpers/i18n";
-import eq from "truth-helpers/helpers/eq";
+import { eq } from "truth-helpers";
 
 const Error = <template>
   {{#if @message.error}}

@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import { groupPath } from "discourse/lib/url";
 import dIcon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 
 export default class PrivateMessageMap extends Component {
   @service site;

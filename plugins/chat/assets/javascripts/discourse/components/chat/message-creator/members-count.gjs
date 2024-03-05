@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
-import gte from "truth-helpers/helpers/gte";
+import { gte } from "truth-helpers";
 
 export default class MembersCount extends Component {
   get countLabel() {

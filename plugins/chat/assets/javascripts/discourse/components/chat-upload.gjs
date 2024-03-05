@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
-import eq from "truth-helpers/helpers/eq";
+import { eq } from "truth-helpers";
 
 export default class ChatUpload extends Component {
   @service siteSettings;

@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import and from "truth-helpers/helpers/and";
+import { and } from "truth-helpers";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {

@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
+import { eq } from "truth-helpers";
 import Channel from "./channel";
 import Group from "./group";
 import ListAction from "./list-action";
