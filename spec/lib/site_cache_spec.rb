@@ -16,8 +16,12 @@ class MethodLogger
   end
 end
 
+# This is for exhaustive testing
+#
+# It allows you to assert that something is true after a number of operations
+# no matter what those operations are.
 class CachePathGenerator
-  def self.complete(global_limit, site_limit, &blk)
+  def self.complete(global_limit:, site_limit:, &blk)
     Concurrency::Logic::Complete.run do |path|
       blk.call(CachePathGenerator.new(global_limit, site_limit, path))
     end
@@ -156,7 +160,7 @@ end
 
 RSpec.describe SiteCache do
   it "produces values from lookups and deletes that were previously inserted" do
-    CachePathGenerator.complete(3, 2) do |g|
+    CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
       operations = g.generate_operations(upto: 4)
       last_op = g.generate_lookup
 
@@ -167,7 +171,7 @@ RSpec.describe SiteCache do
     end
   end
 
-  describe "getset" do
+  describe "#getset" do
     it "caches nil" do
       cache = SiteCache.new(max_global_size: 2, max_size_per_site: 2)
 
@@ -180,7 +184,7 @@ RSpec.describe SiteCache do
 
   describe "#keys" do
     it "reports all and only the keys that exist according to get/delete" do
-      CachePathGenerator.complete(3, 2) do |g|
+      CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
         operations = g.generate_operations(upto: 4)
         keys = g.cache.keys
         last_op = g.generate_lookup
@@ -197,7 +201,7 @@ RSpec.describe SiteCache do
     end
 
     it "never has more than the global limit on the number of keys" do
-      CachePathGenerator.complete(3, 2) do |g|
+      CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
         g.generate_operations(upto: 4)
         keys = g.cache.keys
 
@@ -206,7 +210,7 @@ RSpec.describe SiteCache do
     end
 
     it "never has more than the per site limit on the number of keys" do
-      CachePathGenerator.complete(3, 2) do |g|
+      CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
         g.generate_operations(upto: 4)
 
         g
@@ -222,7 +226,7 @@ RSpec.describe SiteCache do
 
   describe "#clear" do
     it "causes future lookups to return nil" do
-      CachePathGenerator.complete(3, 2) do |g|
+      CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
         g.generate_operations(upto: 4)
         g.cache.clear
         last_op = g.generate_lookup
@@ -234,7 +238,7 @@ RSpec.describe SiteCache do
 
   describe "#clear_site" do
     it "causes future lookups for that site to return nil" do
-      CachePathGenerator.complete(3, 2) do |g|
+      CachePathGenerator.complete(global_limit: 3, site_limit: 2) do |g|
         site_id, key, value = g.insert_new
         g.generate_operations(upto: 3)
         g.cache.clear_site(site_id)
