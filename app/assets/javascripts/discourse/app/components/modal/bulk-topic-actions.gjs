@@ -40,10 +40,10 @@ export default class BulkTopicActions extends Component {
     }
 
     try {
-      return this._processChunks(operation);
+      return await this._processChunks(operation);
     } catch {
-      this.dialog.alert(i18n("generic_error"));
       this.errors = true;
+      this.showToast();
     } finally {
       this.processedTopicCount = 0;
       this.showProgress = false;
@@ -167,6 +167,7 @@ export default class BulkTopicActions extends Component {
   }
 
   showToast() {
+    this.loading = false;
     if (this.errors) {
       this.toasts.error({
         duration: 3000,
