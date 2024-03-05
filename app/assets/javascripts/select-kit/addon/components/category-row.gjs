@@ -64,7 +64,7 @@ export default class CategoryRow extends Component {
   }
 
   get label() {
-    return this.args.item?.name;
+    return this.args.item?.name || this.args.item?.label;
   }
 
   get displayCategoryDescription() {

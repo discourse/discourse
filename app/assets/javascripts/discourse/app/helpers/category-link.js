@@ -135,10 +135,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
-  html += `<span 
-    ${dataAttributes} 
-    data-drop-close="true" 
-    class="${classNames}" 
+  html += `<span
+    ${dataAttributes}
+    data-drop-close="true"
+    class="${classNames}"
     ${
       opts.previewColor
         ? `style="--category-badge-color: #${category.color}"`
@@ -167,6 +167,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   if (opts.topicCount) {
     html += buildTopicCount(opts.topicCount);
+  }
+
+  if (opts.subcategoryCount) {
+    html += `<span class="plus-subcategories">${I18n.t(
+      "category_row.subcategory_count",
+      { count: opts.subcategoryCount }
+    )}</span>`;
   }
 
   if (href) {
