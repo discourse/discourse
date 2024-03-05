@@ -71,6 +71,16 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
+  onCloseMenu() {
+    console.log("close");
+  }
+
+  @action
+  onShowMenu() {
+    console.log("show");
+  }
+
+  @action
   onEditBookmark() {
     this._openBookmarkModal();
   }
@@ -122,6 +132,8 @@ export default class BookmarkMenu extends Component {
         "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
         (if this.existingBookmark "bookmarked")
       }}
+      @onClose={{this.onCloseMenu}}
+      @onShow={{this.onShowMenu}}
     >
       <:trigger>
         {{#if this.bookmarkManager.trackedBookmark.reminderAt}}

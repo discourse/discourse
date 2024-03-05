@@ -17,6 +17,10 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
   }
 
+  async function close() {
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+  }
+
   test("@label", async function (assert) {
     await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
@@ -38,8 +42,30 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     assert.dom(".fk-d-tooltip").hasText("content");
   });
 
+  test("@onShow", async function (assert) {
+    this.test = false;
+    this.onShow = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onShow={{this.onShow}} />`);
+
+    await hover();
+
+    assert.strictEqual(this.test, true);
+  });
+
+  test("@onClose", async function (assert) {
+    this.test = false;
+    this.onClose = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onClose={{this.onClose}} />`);
+    await hover();
+    await close();
+
+    assert.strictEqual(this.test, true);
+  });
+
   test("-expanded class", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").doesNotHaveClass("-expanded");
 
@@ -140,7 +166,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{true}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
     assert.dom(".fk-d-tooltip").doesNotExist();
 
@@ -148,7 +174,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
     assert.dom(".fk-d-tooltip").exists();
   });

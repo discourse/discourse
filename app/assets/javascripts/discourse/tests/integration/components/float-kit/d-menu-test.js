@@ -17,6 +17,10 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await triggerEvent(".fk-d-menu__trigger", "click");
   }
 
+  async function close() {
+    await triggerEvent(".fk-d-menu__trigger.-expanded", "click");
+  }
+
   test("@label", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
@@ -36,6 +40,27 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu").hasText("content");
+  });
+
+  test("@onShow", async function (assert) {
+    this.test = false;
+    this.onShow = () => (this.test = true);
+
+    await render(hbs`<DMenu @inline={{true}} @onShow={{this.onShow}} />`);
+    await open();
+
+    assert.strictEqual(this.test, true);
+  });
+
+  test("@onClose", async function (assert) {
+    this.test = false;
+    this.onClose = () => (this.test = true);
+
+    await render(hbs`<DMenu @inline={{true}} @onClose={{this.onClose}} />`);
+    await open();
+    await close();
+
+    assert.strictEqual(this.test, true);
   });
 
   test("-expanded class", async function (assert) {
