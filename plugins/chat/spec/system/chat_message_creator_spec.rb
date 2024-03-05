@@ -128,4 +128,20 @@ RSpec.describe "Flag message", type: :system do
     chat_page.message_creator.click_row(group)
     expect(chat_page.message_creator).to be_listing(group)
   end
+
+  it "displays users status next to names" do
+    SiteSetting.enable_user_status = true
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+
+    current_user.set_status!("gone surfing", "ocean")
+
+    visit("/")
+    chat_page.open_new_message
+    chat_page.message_creator.filter(current_user.username)
+
+    expect(chat_page).to have_selector(
+      ".user-status-message img[alt='#{current_user.user_status.emoji}']",
+    )
+  end
 end
