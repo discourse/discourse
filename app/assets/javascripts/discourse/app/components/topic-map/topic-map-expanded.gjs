@@ -20,7 +20,6 @@ export default class TopicMapExpanded extends Component {
     this.allLinksShown = true;
   }
 
-  //TODO: refactor TopicParticipants to take i18n string and pass that within a h3 heading if title exists
   get participantsTitle() {
     return htmlSafe(`<h3>${I18n.t("topic_map.participants_title")}</h3>`);
   }
