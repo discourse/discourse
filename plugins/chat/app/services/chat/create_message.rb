@@ -190,7 +190,7 @@ module Chat
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def process(channel:, message_instance:, contract:, **)
+    def process(channel:, message_instance:, contract:, thread:, **)
       ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
 
       DiscourseEvent.trigger(
@@ -198,7 +198,14 @@ module Chat
         message_instance,
         channel,
         message_instance.user,
-        { context: { post_ids: contract.context_post_ids, topic_id: contract.context_topic_id } },
+        {
+          context: {
+            post_ids: contract.context_post_ids,
+            topic_id: contract.context_topic_id,
+            thread_id: thread&.id,
+            thread_replies_count: thread&.replies_count_cache || 0,
+          },
+        },
       )
 
       if contract.process_inline
