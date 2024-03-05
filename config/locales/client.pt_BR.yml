@@ -4300,6 +4300,9 @@ pt_BR:
       panels:
         forum:
           label: Fórum
+      filter: "Filtro"
+      no_results:
+        title: "Nenhum resultado"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."

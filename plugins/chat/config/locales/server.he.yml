@@ -31,6 +31,7 @@ he:
     chat_editing_grace_period: "במשך (n) שניות לאחר שליחת הודעה בצ׳אט, העריכה לא תציג את התגית (הערוכה) על ידי הודעת הצ׳אט."
     chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
+    chat_preferred_mobile_index: "לשונית מועדפת בעת טעינת ‎/chat במכשיר נייד."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
@@ -105,6 +106,7 @@ he:
       original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
       thread_invalid_for_channel: "השרשור הוא לא חלק מהערוץ שסופק."
       thread_does_not_match_parent: "השרשור לא תואם להודעת ההורה."
+      invalid_direct_message: "אסור לך ליצור הודעה ישירה."
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:

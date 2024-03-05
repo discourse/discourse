@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ko:
+  spoiler_alert:
+    excerpt_spoiler: "스포일러"
