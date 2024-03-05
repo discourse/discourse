@@ -221,6 +221,27 @@
         background: var(--tertiary-very-low);
       }
     }
+
+    .user-status {
+      display: flex;
+      align-items: center;
+      .fk-d-tooltip__trigger-container div {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+
+        .emoji {
+          width: var(--font-down-2-rem);
+          height: var(--font-down-2-rem);
+        }
+        .user-status-message-description {
+          @include ellipsis;
+          font-size: var(--font-down-2-rem);
+          color: var(--primary-high);
+          margin: 0;
+        }
+      }
+    }
   }
 
   &__group-name {
