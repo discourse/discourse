@@ -45,6 +45,7 @@ end
 class Plugin::Instance
   attr_accessor :path, :metadata
   attr_reader :admin_route
+  attr_reader :admin_config_nav_routes
 
   # Memoized array readers
   %i[
@@ -105,8 +106,12 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = { label: label, location: location }.merge(opts.slice(:use_new_show_route))
+  end
+
+  def register_admin_config_nav_routes(plugin_id, nav)
+    @admin_config_nav_routes = nav.each { |n| n[:model] = plugin_id }
   end
 
   def configurable?
