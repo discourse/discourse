@@ -7,6 +7,7 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import concatClass from "discourse/helpers/concat-class";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
@@ -18,6 +19,7 @@ import DMenu from "float-kit/components/d-menu";
 export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
+  @service toasts;
   @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
@@ -41,20 +43,30 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  onBookmark(event) {
+  async onBookmark(event) {
     event.target.blur();
 
-    // We show the menu with Edit/Delete options if the bokmark exists,
-    // so this "quicksave" will do nothing in that case.
-    if (!this.existingBookmark) {
-      this.bookmarkManager.create().then(() => {
-        // NOTE: Need a nicer way to handle this; otherwise as soon as you save
-        // a bookmark, it switches to the other Edit/Delete menu.
-        //
-        // Also we have the opposite problem -- when closing the DMenu we have
-        // no on-close hook, so we can't reset this.
-        this.quicksaved = true;
+    if (this.existingBookmark) {
+      return;
+    }
+
+    try {
+      await this.bookmarkManager.create();
+      // We show the menu with Edit/Delete options if the bokmark exists,
+      // so this "quicksave" will do nothing in that case.
+      // NOTE: Need a nicer way to handle this; otherwise as soon as you save
+      // a bookmark, it switches to the other Edit/Delete menu.
+      //
+      // Also we have the opposite problem -- when closing the DMenu we have
+      // no on-close hook, so we can't reset this.
+      this.quicksaved = true;
+
+      this.toasts.success({
+        duration: 3000,
+        data: { message: "Bookmarked!" },
       });
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
