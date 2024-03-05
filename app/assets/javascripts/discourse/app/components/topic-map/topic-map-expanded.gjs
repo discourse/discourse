@@ -1,40 +1,35 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import lt from "truth-helpers/helpers/lt";
 import not from "truth-helpers/helpers/not";
 
+const TRUNCATED_LINKS_LIMIT = 5;
+
 export default class TopicMapExpanded extends Component {
   @tracked allLinksShown = false;
-  truncatedLinksLimit = 5;
 
   @action
   showAllLinks() {
     this.allLinksShown = true;
   }
 
-  get participantsTitle() {
-    return htmlSafe(`<h3>${I18n.t("topic_map.participants_title")}</h3>`);
-  }
-
   get linksToShow() {
     return this.allLinksShown
       ? this.args.postAttrs.topicLinks
-      : this.args.postAttrs.topicLinks.slice(0, this.truncatedLinksLimit);
+      : this.args.postAttrs.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
   }
 
   <template>
     {{#if @postAttrs.participants}}
       <section class="avatars">
         <TopicParticipants
-          @title={{this.participantsTitle}}
+          @title={{i18n "topic_map.participants_title"}}
           @userFilters={{@postAttrs.userFilters}}
           @participants={{@postAttrs.participants}}
         />
@@ -71,7 +66,7 @@ export default class TopicMapExpanded extends Component {
         {{#if
           (and
             (not this.allLinksShown)
-            (lt this.truncatedLinksLimit @postAttrs.topicLinks.length)
+            (lt TRUNCATED_LINKS_LIMIT @postAttrs.topicLinks.length)
           )
         }}
           <div class="link-summary">
