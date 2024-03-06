@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -23,6 +24,7 @@ export default class BulkTopicActions extends Component {
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
+  @tracked isSilent = false;
 
   notificationLevelId = null;
 
@@ -69,8 +71,8 @@ export default class BulkTopicActions extends Component {
     const topicIds = [];
     const options = {};
 
-    if (this.args.model.allowSilent === true) {
-      options.silent = true;
+    if (this.isSilent) {
+      operation = { type: "silent_close" };
     }
 
     const tasks = topicChunks.map((topics) => async () => {
@@ -300,10 +302,10 @@ export default class BulkTopicActions extends Component {
               for="topic-bulk-action-options__silent"
               class="checkbox-label"
             >
-              <input
-                class=""
+              <Input
                 id="topic-bulk-action-options__silent"
-                type="checkbox"
+                @type="checkbox"
+                @checked={{this.isSilent}}
               />{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
