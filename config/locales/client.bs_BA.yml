@@ -3048,6 +3048,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Sve do:"
     form_templates:
       upload_field:

@@ -271,26 +271,26 @@ table.group-category-permissions {
 
 .group-smtp-email-settings,
 .group-imap-email-settings {
-  .groups-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    margin-bottom: 0;
-
-    &.groups-form-imap {
-      grid-template-columns: 1fr 1fr 2fr;
-    }
-  }
-
   background-color: var(--primary-very-low);
   padding: 1em;
   margin: 1em 0;
   border: 1px solid var(--primary-low);
 
-  .group-imap-mailboxes {
-    .combo-box {
-      width: 50%;
+  .groups-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13em, 1fr));
+    margin-bottom: 0;
+    gap: 0 1em;
+
+    details,
+    .ember-text-field {
+      width: 100%;
     }
   }
+}
+
+.groups-form__enable-ssl {
+  margin-bottom: 1em;
 }
 
 .group-manage-email-additional-settings-wrapper {

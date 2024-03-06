@@ -3598,6 +3598,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
+      filter: "Lọc"
     until: "Cho đến khi:"
     form_templates:
       upload_field:

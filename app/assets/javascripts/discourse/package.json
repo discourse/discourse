@@ -59,6 +59,7 @@
     "@uppy/xhr-upload": "3.1.1",
     "a11y-dialog": "8.0.4",
     "admin": "1.0.0",
+    "autosize": "^6.0.1",
     "babel-import-util": "^2.0.1",
     "babel-plugin-ember-template-compilation": "^2.2.1",
     "bootstrap": "3.4.1",
@@ -93,7 +94,7 @@
     "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
     "float-kit": "1.0.0",
-    "html-entities": "^2.4.0",
+    "html-entities": "^2.5.2",
     "imports-loader": "^5.0.0",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
@@ -119,7 +120,7 @@
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
     "workbox-sw": "^7.0.0",
-    "xss": "^1.0.14"
+    "xss": "^1.0.15"
   },
   "engines": {
     "node": ">= 18",

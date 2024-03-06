@@ -26,6 +26,7 @@ export default class ChatThread {
   @tracked staged;
   @tracked channel;
   @tracked originalMessage;
+  @tracked lastMessageId;
   @tracked threadMessageBusLastId;
   @tracked replyCount;
   @tracked tracking;
@@ -50,6 +51,8 @@ export default class ChatThread {
     if (this.originalMessage) {
       this.originalMessage.thread = this;
     }
+
+    this.lastMessageId = args.last_message_id;
 
     this.title = args.title;
 

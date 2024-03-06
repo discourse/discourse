@@ -26,14 +26,14 @@ module PageObjects
       end
 
       def dismiss_unread(untrack: false)
-        click_button("dismiss-topics-bottom")
+        click_button("dismiss-topics-top")
         find(".dismiss-read-modal__stop-tracking").click if untrack
         click_button("dismiss-read-confirm")
         self
       end
 
       def dismiss_new
-        click_button("dismiss-new-bottom")
+        click_button("dismiss-new-top")
         self
       end
     end

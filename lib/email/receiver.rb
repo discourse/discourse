@@ -1359,6 +1359,12 @@ module Email
     def add_attachments(raw, user, options = {})
       raw = raw.dup
 
+      previous_upload_ids =
+        UploadReference
+          .where(target_id: Post.where(topic_id: options[:topic_id]).select(:id))
+          .pluck(:upload_id)
+          .uniq
+
       rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
@@ -1384,10 +1390,10 @@ module Email
                 end
               elsif raw[/\[image:[^\]]*\]/i]
                 raw.sub!(/\[image:[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
-              else
+              elsif !previous_upload_ids.include?(upload.id)
                 raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
-            else
+            elsif !previous_upload_ids.include?(upload.id)
               raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
             end
           else

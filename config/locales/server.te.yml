@@ -9,24 +9,103 @@ te:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
+  date:
+    month_names:
+    -
+    - జనవరి
+    - ఫిబ్రవరి
+    - మార్చి
+    - ఏప్రిల్
+    - మే
+    - జూన్
+    - జూలై
+    - ఆగస్టు
+    - సెప్టెంబర్
+    - అక్టోబర్
+    - నవంబర్
+    - డిసెంబర్
+    <<: *datetime_formats
+  time:
+    am: "ఉదయం"
+    pm: "సాయంత్రం"
+    <<: *datetime_formats
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"
   views: "చూపులు"
   loading: "లోడవుతోంది"
+  powered_by_html: '<a href="https://www.discourse.org">డిస్కోర్స్</a> ద్వారా ఆధారితం. జావాస్క్రిప్ట్ తో ఉత్తమంగా పనిచేస్తుంది'
   sign_up: "సైన్ అప్"
   log_in: "లాగిన్"
+  submit: "సమర్పించండి"
+  purge_reason: "రద్దు చేయబడిన, నిష్క్రియం చేయబడిన ఖాతాగా స్వయంచాలకంగా తొలగించబడింది"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   anonymous: "అనామక"
+  remove_posts_deleted_by_author: "రచయిత ద్వారా తొలగించబడింది"
+  redirect_warning: "మీరు ఎంచుకున్న లింక్ వాస్తవానికి ఫోరమ్‌లో పోస్ట్ చేయబడిందని మేము ధృవీకరించలేకపోయాము. మీరు ఏమైనప్పటికీ కొనసాగించాలనుకుంటే, దిగువ లింక్‌ని ఎంచుకోండి."
+  on_another_topic: "మరొక విషయంపై"
+  topic_category_changed: "%{from} నుండి %{to} వరకు"
+  topic_tag_changed:
+    added: "%{added} జోడించబడింది"
+    removed: "తీసివేయబడింది %{removed}"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
+  components:
+    enabled_filter: "ప్రారంభించబడింది"
+    disabled_filter: "నిలిపివేయబడింది"
+    updates_available_filter: "అప్‌డేట్‌లు అందుబాటులో ఉన్నాయి"
   themes:
+    other_error: "థీమ్‌ను నవీకరిస్తున్నప్పుడు ఏదో తప్పు జరిగింది"
+    import_error:
+      theme_too_big: "థీమ్ %{limit} పరిమితి కంటే పెద్దది"
+    errors:
+      component_no_default: "థీమ్ భాగాలు డిఫాల్ట్ థీమ్ కాకూడదు"
+      component_no_color_scheme: "థీమ్ భాగాలు రంగుల పాలెట్‌లను కలిగి ఉండకూడదు"
     settings_errors:
+      invalid_yaml: "అందించిన YAML చెల్లదు."
+      default_value_missing: "సెట్టింగ్ `%{name}` కి డిఫాల్ట్ విలువ లేదు."
       objects:
         required: "తప్పనిసరిగా ఉండాలి"
+        invalid_type: "%{type} చెల్లుబాటు అయ్యే రకం కాదు"
+        not_valid_string_value: "ఒక స్ట్రింగ్ అయి ఉండాలి"
         not_valid_integer_value: "తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి"
+        not_valid_float_value: "ఫ్లోట్ అయి ఉండాలి"
+        not_valid_boolean_value: "బూలియన్ అయి ఉండాలి"
+        not_valid_category_value: "చెల్లుబాటు అయ్యే వర్గం ఐడి ఉండాలి"
+        not_valid_post_value: "చెల్లుబాటు అయ్యే పోస్ట్ ఐడి ఉండాలి"
+        not_valid_group_value: "చెల్లుబాటు అయ్యే సమూహ ఐడి ఉండాలి"
+        not_valid_tag_value: "చెల్లుబాటు అయ్యే ట్యాగ్ ఐడి ఉండాలి"
+        not_valid_upload_value: "చెల్లుబాటు అయ్యే అప్లోడ్ ఐడి ఉండాలి"
+        string_value_not_valid_min: "కనీసం %{min} అక్షరాల పొడవు ఉండాలి"
+        string_value_not_valid_max: "అత్యధికంగా %{max} అక్షరాల పొడవు ఉండాలి"
+        number_value_not_valid_min: "%{min} కంటే పెద్దదిగా లేదా సమానంగా ఉండాలి"
+        number_value_not_valid_max: "%{max} కంటే చిన్నదిగా లేదా సమానంగా ఉండాలి"
+        string_value_not_valid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
+    locale_errors:
+      invalid_yaml: "YAML అనువాదం చెల్లదు"
+  emails:
+    incoming:
+      show_trimmed_content: "కత్తిరించిన కంటెంట్‌ను చూపండి"
+      no_subject: "(విషయం లేదు)"
+      no_body: "(బాడీ లేదు)"
+      missing_attachment: "(అటాచ్‌మెంట్ %{filename} లేదు)"
+      errors:
+        inactive_user_error: "పంపినవారు యాక్టివ్‌గా లేనప్పుడు జరుగుతుంది."
+        silenced_user_error: "పంపిన వ్యక్తి నిశ్శబ్దం చేయబడినప్పుడు జరుగుతుంది."
+      unrecognized_error: "గుర్తించబడని లోపం"
+    view_redacted_media: "మీడియాను వీక్షించండి"
   errors: &errors
     format: ! "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "%{max} అక్షరాలకే పరిమితము. మీరు %{length} అక్షరాలు రాసారు."
       invalid_boolean: "చెల్లని బూలియన్"
@@ -44,12 +123,15 @@ te:
       has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది"
       inclusion: జాబితాలో జతపర్చబడలేదు
       invalid: చెల్లనిది
+      invalid_timezone: "'%{tz}' చెల్లుబాటు అయ్యే టైమ్‌జోన్ కాదు"
       less_than: '%{count} కన్నా తక్కువ ఉండాలి'
       less_than_or_equal_to: '%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి'
       not_a_number: సంఖ్య కాదు
       not_an_integer: తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి
       odd: తప్పనిసరి బేసి సంఖ్య కావాలి
       record_invalid: ! "సరిజూత విఫలమైంది: %{errors}"
+      emojis_disabled: "ఎమోజీని కలిగి ఉండకూడదు"
+      ip_address_already_screened: "ఇప్పటికే ఉన్న నియమంలో చేర్చి ఉన్నది"
       restrict_dependent_destroy:
         one: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
         other: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
@@ -70,9 +152,43 @@ te:
         other: ! "%{count} దోషాల వల్ల %{model} భద్రపరుచుట వీలవలేదు"
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
+    site_settings:
+      invalid_site_setting: "'%{name}' పేరుతో సెట్టింగ్ ఏదీ లేదు"
+      invalid_category_id: "మీరు ఉనికిలో లేని వర్గాన్ని పేర్కొన్నారు"
+      invalid_choice:
+        one: "'%{name}' అనేది చెల్లని ఎంపిక."
+        other: "'%{name}' చెల్లని ఎంపికలు."
+      default_categories_already_selected: "మీరు మరొక జాబితాలో ఉపయోగించిన వర్గాన్ని ఎంచుకోలేరు."
+      default_tags_already_selected: "మీరు మరొక జాబితాలో ఉపయోగించిన వర్గాన్ని ఎంచుకోలేరు."
+      s3_upload_bucket_is_required: "మీరు 's3_upload_bucket'ని అందించకపోతే S3కి అప్‌లోడ్‌లను ప్రారంభించలేరు."
+      enable_s3_uploads_is_required: "మీరు S3 అప్‌లోడ్‌లను ఎనేబుల్ చేస్తే తప్ప S3 ఇన్వెంటరీ వినియోగాన్ని ప్రారంభించలేరు."
+      page_publishing_requirements: "సురక్షిత అప్‌లోడ్‌లు ప్రారంభించబడితే పేజీ ప్రచురణ ప్రారంభించబడదు."
+      s3_backup_requires_s3_settings: "మీరు '%{setting_name}'ని అందించకపోతే S3ని బ్యాకప్ స్థానంగా ఉపయోగించలేరు."
+      s3_bucket_reused: "మీరు 's3_upload_bucket' మరియు 's3_backup_bucket' కోసం ఒకే బకెట్‌ని ఉపయోగించలేరు. వేరొక బకెట్‌ని ఎంచుకోండి లేదా ప్రతి బకెట్‌కు వేరే మార్గాన్ని ఉపయోగించండి."
+      secure_uploads_requirements: "సురక్షిత అప్‌లోడ్‌లను ప్రారంభించే ముందు S3 అప్‌లోడ్‌లు మరియు S3 ACLలు తప్పనిసరిగా ప్రారంభించబడాలి."
+      s3_use_acls_requirements: "సురక్షిత అప్‌లోడ్‌లు ప్రారంభించబడినప్పుడు మీరు తప్పనిసరిగా S3 ACLలను ప్రారంభించాలి."
+      share_quote_facebook_requirements: "Facebook కోసం కోట్ షేరింగ్‌ని ప్రారంభించడానికి మీరు తప్పనిసరిగా Facebook యాప్ ఐడిని సెట్ చేయాలి."
+      second_factor_cannot_enforce_with_socials: "మీరు సామాజిక లాగిన్‌లను ప్రారంభించి 2FAని అమలు చేయలేరు. మీరు ముందుగా దీని ద్వారా లాగిన్‌ను నిలిపివేయాలి: %{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "స్థానిక లాగిన్‌లు నిలిపివేయబడినట్లయితే మీరు 2FAని అమలు చేయలేరు."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "డిస్కోర్సెకనెక్ట్ ప్రారంభించబడితే మీరు 2FA ను అమలు చేయలేరు."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "2FA అమలు చేయబడితే మీరు స్థానిక లాగిన్‌ని నిలిపివేయలేరు. స్థానిక లాగిన్‌లను నిలిపివేయడానికి ముందు అమలు చేయబడిన 2FAని నిలిపివేయండి."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 అప్‌లోడ్‌లు ఇప్పటికే ప్రపంచవ్యాప్తంగా ప్రారంభించబడినందున మీరు S3 అప్‌లోడ్‌లను ప్రారంభించలేరు మరియు ఈ సైట్-స్థాయిని ప్రారంభించడం వలన అప్‌లోడ్‌లతో క్లిష్టమైన సమస్యలు ఏర్పడవచ్చు"
+      cors_origins_should_not_have_trailing_slash: "మీరు CORS మూలాలకు వెనుకబడిన స్లాష్ (/)ని జోడించకూడదు."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "చట్టబద్ధమైన వినియోగదారులను ప్రమాదవశాత్తూ రేట్-పరిమితం చేయడాన్ని నివారించడానికి వినియోగదారు ఏజెంట్‌లు తప్పనిసరిగా కనీసం 3 అక్షరాల పొడవు ఉండాలి."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "మీరు సెట్టింగ్‌కు కింది విలువల్లో దేనినీ జోడించలేరు: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'కంపోజర్ మీడియా ఆప్టిమైజేషన్ ఇమేజ్ ఎనేబుల్' ప్రారంభించబడితే మీరు స్ట్రిప్ ఇమేజ్ మెటాడేటాను డిజేబుల్ చేయలేరు. స్ట్రిప్ ఇమేజ్ మెటాడేటాను డిసేబుల్ చేయడానికి ముందు 'కంపోజర్ మీడియా ఆప్టిమైజేషన్ ఇమేజ్ ఎనేబుల్ చేయబడింది' అని డిజేబుల్ చేయండి."
+      twitter_summary_large_image_no_svg: "Twitter కోసం ఉపయోగించే Twitter సారాంశం చిత్రాలు:ఇమేజ్ మెటాడేటా .svg చిత్రం కాకూడదు."
+  word_connector:
+    comma: ", "
   invite:
+    generic_error_response: "మీ అభ్యర్థనతో సమస్య ఉంది."
     disabled_errors:
       invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
+    max_redemptions_allowed_one: "ఇమెయిల్ కోసం ఆహ్వానాలు 1 ఉండాలి."
+  bulk_invite:
+    file_should_be_csv: "అప్‌లోడ్ చేసిన ఫైల్ csv ఫార్మాట్‌లో ఉండాలి."
+  topic_invite:
+    muted_topic: "క్షమించండి, ఆ సభ్యుడు ఈ విషయాన్నీ మ్యూట్ చేసారు."
   backup:
     operation_already_running: "ఒక పరిక్రియ ప్రస్తుతం జరుగుతోంది. కొత్త పని ఇప్పుడు మొదలుపెట్టవీలవదు."
     backup_file_should_be_tar_gz: "బ్యాకప్ దస్త్రం తప్పనిసరి .tar.gz కట్ట అయి ఉండాలి."
@@ -81,6 +197,10 @@ te:
   not_found: "అభ్యర్థించిన URL లేదా వనరు దొరకలేదు."
   invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
   read_only_mode_enabled: "సైటు కేవలం చదివే రీతిలో ఉంది. చర్చలు ఇప్పుడు అచేతనం."
+  not_in_group:
+    request_membership: "సభ్యత్వాన్ని అభ్యర్థించండి"
+    join_group: "సమూహంలో చేరండి"
+  reading_time: "చదివే సమయం"
   likes: "ఇష్టాలు"
   too_many_replies:
     one: "క్షమించాలి. కొత్త సభ్యులు తాత్కాలికంగా ఒక విషయానికి ఒక జవాబుకు మాత్రమే పరిమితం చేయబడ్డారు"
@@ -88,13 +208,26 @@ te:
   embed:
     start_discussion: "చర్చ మొదలుపెట్టు"
     continue: "చర్చ కొనసాగించు"
+    error: "పొందుపరచడంలో లోపం"
+    referer: "రెఫరర్:"
+    no_hosts: "పొందుపరచడానికి హోస్ట్‌లు ఏవీ సెటప్ చేయబడలేదు."
+    configure: "పొందుపరచడాన్ని కాన్ఫిగర్ చేయండి"
     more_replies:
       one: "మరో జవాబు ఉంది"
       other: "ఇంకా %{count} జవాబులు ఉన్నాయి"
+    loading: "చర్చ లోడ్ అవుతోంది…"
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} ప్రత్యుత్తరం"
+      other: "%{count} ప్రత్యుత్తరాలు"
+    likes:
+      one: "%{count} ఇష్టం"
+      other: "%{count} ఇష్టాలు"
+    last_reply: "చివరి ప్రత్యుత్తరం"
     created: "సృష్టించిన"
+    new_topic: "కొత్త విషయం సృష్టించండి"
   no_mentions_allowed: "క్షమించాలి. మీరు ఇతర సభ్యులను ప్రస్తావించలేరు"
   no_mentions_allowed_newuser: "క్షమించాలి. కొత్త సభ్యులు ఇతర సభ్యులను ప్రస్తావించలేరు."
   no_attachments_allowed: "క్షమించాలి. కొత్త సభ్యులు టపాలో జోడింపులు ఉంచవీలవదు."
@@ -102,27 +235,65 @@ te:
   spamming_host: "క్షమించాలి. ఆ అతిధికి మీరు లంకె టపా చెయ్యలేరు."
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
+  watched_words_auto_tag: "స్వయంచాలకంగా ట్యాగ్ చేసిన విషయం"
+  slow_mode_enabled: "ఈ విషయం స్లో మోడ్‌లో ఉంది."
   just_posted_that: "ఇది ఇప్పుడే రాసిన విషయంలా ఉంది. డూప్లికేటు టపా?"
   invalid_characters: "చెల్లని అక్షరాలు ఉన్నాయి."
   next_page: "తరువాతి పుట →"
   prev_page: "← గత పుట"
   page_num: "పుట %[num]"
+  home_title: "మొదటి పేజీ"
   topics_in_category: "'%{category}' వర్గంలోని విషయాలు"
   rss_posts_in_topic: "'%{topic}' యొక్క ఆర్ యస్ యస్ వడ్డన"
   rss_num_posts:
     one: "%{count} టపా"
     other: "%{count} టపాలు"
+  rss_num_participants:
+    one: "%{count} పాల్గొనేవారు"
+    other: "%{count} పాల్గొనేవారు"
   read_full_topic: "పూర్తి విషయం చదువు"
+  private_message_abbrev: "సందేశం"
   rss_description:
     latest: "తాజా విషయాలు"
-  too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
+    top: "అగ్ర విషయాలు"
+    top_all: "ఆల్ టైమ్ అగ్ర విషయాలు"
+    top_yearly: "వార్షిక అగ్ర విషయాలు"
+    top_quarterly: "త్రైమాసిక అగ్ర విషయాలు"
+    top_monthly: "నెలవారీ అగ్ర విషయాలు"
+    top_weekly: "వారపు అగ్ర విషయాలు"
+    top_daily: "రోజువారీ అగ్ర విషయాలు"
+    posts: "తాజా పోస్ట్‌లు"
+    private_posts: "తాజా వ్యక్తిగత సందేశాలు"
+    group_posts: "%{group_name} నుండి తాజా పోస్ట్‌లు"
+    group_mentions: "%{group_name} నుండి తాజా ప్రస్తావనలు"
+    tag: "ట్యాగ్ చేయబడిన విషయాలు"
+    badge: "%{site_title} లో %{display_name} బ్యాడ్జ్"
+  too_late_to_edit: "ఆ పోస్ట్ చాలా కాలం క్రితం సృష్టించబడింది. ఇది ఇకపై సవరించబడదు లేదా తొలగించబడదు."
+  reverted_to_version: "సంస్కరణ #%{version} కి మార్చబడింది"
   excerpt_image: "బొమ్మ"
   bookmarks:
+    errors:
+      time_must_be_provided: "అన్ని రిమైండర్‌లకు తప్పనిసరిగా సమయం కేటాయించాలి"
+      invalid_bookmarkable: "%{type} ను బుక్మార్క్ చేయలేము."
     reminders:
+      at_desktop: "తదుపరిసారి నేను నా డెస్క్‌టాప్‌లో ఉన్నపుడు"
+      later_today: "తరువాత, ఈ రోజు"
+      next_business_day: "తదుపరి వ్యాపార రోజు"
       tomorrow: "రేపు"
       next_week: "వచ్చే వారం"
       next_month: "వచ్చే నెల"
+      custom: "అనుకూల తేదీ & సమయం"
   groups:
+    success:
+      bulk_add:
+        one: "%{count} సభ్యుడు సమూహానికి జోడించబడ్డారు."
+        other: "%{count} సభ్యులు సమూహానికి జోడించబడ్డారు."
+    errors:
+      invalid_domain: "'%{domain}' చెల్లుబాటు అయ్యే డొమైన్ కాదు."
+      adding_too_many_users:
+        one: "గరిష్ట %{count} సభ్యుడిని ఒకేసారి జోడించవచ్చు"
+        other: "గరిష్ట %{count} సభ్యులను ఒకేసారి జోడించవచ్చు"
+      usernames_or_emails_required: "సభ్యనామాలు లేదా ఇమెయిల్‌లు తప్పనిసరిగా ఉండాలి"
     default_names:
       everyone: "ప్రతీఒక్కరూ"
       admins: "అధికారులు"
@@ -135,14 +306,66 @@ te:
       trust_level_4: "నమ్మకం_స్థాయి_4"
   education:
     until_posts:
-      one: "ఒక టపా"
-      other: "%{count} టపాలు"
+      one: "%{count} పోస్ట్"
+      other: "%{count} పోస్ట్‌లు"
+    "new-topic": |
+      %{site_name} &mdash; కు స్వాగతం **క్రొత్త సంభాషణను ప్రారంభించినందుకు ధన్యవాదాలు!**
+
+      - మీరు బిగ్గరగా చదివితే శీర్షిక ఆసక్తికరంగా అనిపిస్తుందా? ఇది మంచి సారాంశమా?
+
+      - దీనిపై ఎవరు ఆసక్తి చూపుతారు? ఇది ఎందుకు ముఖ్యం? మీకు ఎలాంటి స్పందనలు కావాలి?
+
+      - సాధారణంగా ఉపయోగించే పదాలను మీ విషయంలో చేర్చండి, తద్వారా ఇతరులు *దీనిని కనుగొనవచ్చు*. సంబంధిత విషయాలతో మీ విషయాన్ని సమూహపరచడానికి, ఒక వర్గం (లేదా ట్యాగ్) ఎంచుకోండి.
+
+      మరిన్ని కోసం, [మా సంఘం మార్గదర్శకాలను చూడండి] (%{base_path}/guidelines). ఈ ప్యానెల్ మీ మొదటి %{education_posts_text} కోసం మాత్రమే కనిపిస్తుంది.
+    "new-reply": |
+      %{site_name} &mdash; కి స్వాగతం!**
+
+      - మీ తోటి సంఘం సభ్యుల పట్ల దయతో ఉండండి
+
+      - మీ ప్రత్యుత్తరం సంభాషణను మెరుగుపరుస్తుందా?
+
+      - నిర్మాణాత్మక విమర్శలు స్వాగతించబడతాయి, అయితే *ఆలోచనలను* విమర్శించండి, వ్యక్తులను కాదు.
+
+      మరిన్నింటి కోసం, [మా సంఘం మార్గదర్శకాలను చూడండి](%{base_path}/guidelines). ఈ ప్యానెల్ మీ మొదటి %{education_posts_text} కోసం మాత్రమే కనిపిస్తుంది.
+    avatar: |
+      ### మీ ఖాతా కోసం చిత్రం ఎలా ఉంటుంది?
+
+      మీరు కొన్ని విషయాలు మరియు ప్రత్యుత్తరాలను పోస్ట్ చేసారు, కానీ మీ ప్రొఫైల్ చిత్రం మీలాగా ప్రత్యేకంగా లేదు.
+
+      మీరు **[మీ ప్రొఫైల్‌ని సందర్శించడం](%{profile_path})** మరియు మీకు ప్రాతినిధ్యం వహించే చిత్రాన్ని అప్‌లోడ్ చేయడం గురించి ఆలోచించారా?
+
+      ప్రతిఒక్కరూ ప్రత్యేకమైన ప్రొఫైల్ చిత్రాన్ని కలిగి ఉన్నప్పుడు చర్చలను అనుసరించడం మరియు సంభాషణలలో ఆసక్తికరమైన వ్యక్తులను కనుగొనడం సులభం!
+    sequential_replies: |
+      ### అనేక పోస్ట్‌లకు ఒకేసారి ప్రత్యుత్తరం ఇవ్వడాన్ని పరిగణించండి
+
+      ఒక విషయానికి వరుసగా అనేక ప్రత్యుత్తరాలు కాకుండా, దయచేసి మునుపటి పోస్ట్‌లు లేదా @పేరు సూచనల నుండి కోట్‌లను కలిగి ఉన్న ఒకే ప్రత్యుత్తరాన్ని పరిగణించండి.
+
+      మీరు టెక్స్ట్‌ను హైలైట్ చేసి, కనిపించే <b>కోట్ ప్రత్యుత్తరం</b> బటన్‌ను ఎంచుకోవడం ద్వారా కోట్‌ను జోడించడానికి మీ మునుపటి ప్రత్యుత్తరాన్ని సవరించవచ్చు.
+
+      చాలా చిన్న, వ్యక్తిగత ప్రత్యుత్తరాల కంటే తక్కువ లోతైన ప్రత్యుత్తరాలు ఉన్న విషయాలను చదవడం అందరికీ సులభం.
+    dominating_topic: మీరు ఈ విషయంలో చాలా పోస్ట్ చేసారు! ఇతరులకు ఇక్కడ ప్రత్యుత్తరం ఇవ్వడానికి మరియు ఒకరితో ఒకరు చర్చించుకోవడానికి అవకాశం ఇవ్వడాన్ని పరిగణించండి.
+    get_a_room: మీరు @%{reply_username} %{count} సార్లు ప్రత్యుత్తరం ఇచ్చారు, బదులుగా మీరు వారికి వ్యక్తిగత సందేశాన్ని పంపవచ్చని మీకు తెలుసా?
+    dont_feed_the_trolls: మోడరేటర్ దృష్టికి ఈ పోస్ట్ ఇప్పటికే ఫిర్యాదు చేయబడింది. మీరు ఖచ్చితంగా దానికి ప్రత్యుత్తరం ఇవ్వాలనుకుంటున్నారా? ప్రతికూల కంటెంట్‌కు ప్రత్యుత్తరాలు మరింత ప్రతికూల ప్రవర్తనను ప్రోత్సహిస్తాయి.
+    too_many_replies: |
+      ### మీరు ఈ విషయానికి సంబంధించిన ప్రత్యుత్తర పరిమితిని చేరుకున్నారు
+
+      క్షమించండి, కానీ కొత్త సభ్యులు తాత్కాలికంగా అదే విషయంలో %{newuser_max_replies_per_topic} ప్రత్యుత్తరాలకు పరిమితం చేయబడ్డారు.
+
+      మరొక ప్రత్యుత్తరాన్ని జోడించే బదులు, దయచేసి మీ మునుపటి ప్రత్యుత్తరాలను సవరించడం లేదా ఇతర విషయాలను సందర్శించడం గురించి ఆలోచించండి.
+    reviving_old_topic: |
+      ### ఈ విషయాన్ని పునరుద్ధరించాలా?
+
+      ఈ విషయానికి చివరి ప్రత్యుత్తరం **%{time_ago}**. మీ ప్రత్యుత్తరం విషయానికి దాని లిస్ట్‌లో అగ్రభాగానికి పంపుతుంది మరియు గతంలో సంభాషణలో పాల్గొన్న ఎవరికైనా తెలియజేస్తుంది.
+
+      మీరు ఖచ్చితంగా ఈ పాత సంభాషణను కొనసాగించాలనుకుంటున్నారా?
   activerecord:
     attributes:
       category:
         name: "వర్గం పేరు"
       topic:
         title: "శీర్షిక"
+        featured_link: "ఫీచర్ చేయబడిన లింక్"
         category_id: "వర్గం"
       post:
         raw: "శరీరం"
@@ -155,33 +378,74 @@ te:
             base:
               too_many_users: "మీరు హెచ్చరికలు ఒక పర్యాయం కేవలం ఒక సభ్యునికి మాత్రమే పంపగలరు."
               no_user_selected: "మీరు ఒక సభ్యుడిని ఎంచుకోవాలి."
+              reply_by_email_disabled: "ఇమెయిల్ ద్వారా ప్రత్యుత్తరం నిలిపివేయబడింది."
+              unable_to_update: "ఆ విషయాన్ని నవీకరిస్తున్నప్పుడు లోపం ఏర్పడింది."
         user:
           attributes:
             password:
               common: "ఇది పదివేలు తరచూ వాడే సంకేతపదాలలో ఒకటి. దయచేసి మరింత భద్రమైన సంకేతపదం వాడండి."
               same_as_username: "మీ వినియోగదారు పేరు అదే ఉంది. మరింత సురక్షిత సంకేతపదం ఉపయోగించండి."
               same_as_email: "మీ ఈ-మెయిల్ అదే ఉంది. మరింత సురక్షిత సంకేతపదం ఉపయోగించండి."
+              same_as_name: "పాస్‌వర్డ్ మీ పేరు వలె ఉంది"
         color_scheme_color:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
+        custom_emoji:
+          attributes:
+            name:
+              taken: ఇది ఇప్పటికే మరొక ఎమోజి ద్వారా వాడుకలో ఉంది
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "భవిష్యత్తులో ఉండాలి."
+            duration_minutes:
+              cannot_be_zero: "0 కంటే ఎక్కువగా ఉండాలి."
+        watched_word:
+          attributes:
+            word:
+              too_many: "ఆ చర్య కోసం చాలా పదాలు"
+            base:
+              invalid_url: "భర్తీ URL చెల్లదు"
+              invalid_tag_list: "భర్తీ ట్యాగ్ జాబితా చెల్లదు"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "చెల్లుబాటు కాదు"
       <<: *errors
+  uncategorized_category_name: "వర్గీకరించని"
   general_category_name: "సాధారణ"
+  meta_category_name: "సైట్ పై అభిప్రాయం"
   meta_category_description: "ఈ సైటు గురించి చర్చ. ఎలా మొదలైంది. ఎలా పని చేస్తుంది. ఇంకా ఎలా మెరుగు పరచవచ్చు."
   staff_category_name: "సిబ్బంది"
   staff_category_description: "సిబ్బంది చర్చలకు ప్రైవేటు వర్గం. విషయాలు కేవలం అధికారులకు మరియు నిర్వాహకులకు మాత్రమే కనిపిస్తాయి."
+  discourse_welcome_topic:
+    title: "%{site_title} కి స్వాగతం! :wave:"
+  admin_quick_start_title: "అడ్మిన్ గైడ్: ప్రారంభించడం"
   category:
     topic_prefix: "%{category} వర్గం గురించి"
     errors:
+      not_found: "వర్గం కనుగొనబడలేదు!"
       uncategorized_parent: "అవర్గీకృతానికి తండ్రి వర్గం ఉండకూడదు"
       self_parent: "ఉప వర్గపు తండ్రి అదే వర్గం అవ్వకూడదు"
       depth: "మీరు ఒక ఉపవర్గాన్ని మరోదాని కింద ఉంచకూడదు"
+      disallowed_tags_generic: "ఈ విషయం ట్యాగ్‌లను అనుమతించలేదు."
+      is_already_in_use: "ఇప్పటికే వాడుకలో ఉంది"
     cannot_delete:
       has_subcategories: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనికి ఉప వర్గాలు ఉన్నాయి."
       topic_exists_no_oldest: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %{count} విషయాలు ఉన్నాయి."
   trust_levels:
     admin: "అధికారి"
     staff: "సిబ్బంది"
+  post:
+    image_placeholder:
+      broken: "ఈ చిత్రం విచ్ఛిన్నమైంది"
+      blocked_hotlinked: "బాహ్య చిత్రం"
+    media_placeholder:
+      blocked_hotlinked: "బాహ్య మీడియా"
+    has_likes:
+      one: "%{count} ఇష్టం"
+      other: "%{count} ఇష్టాలు"
   rate_limiter:
     hours:
       one: "ఒక గంట"
@@ -192,6 +456,7 @@ te:
     seconds:
       one: "ఒక సెకను"
       other: "%{count} సెకన్లు"
+    short_time: "కొన్ని సెకన్లు"
   datetime:
     distance_in_words:
       half_a_minute: "< 1ని"
@@ -265,18 +530,60 @@ te:
     title: "సంకేతపదం రీసెట్ చెయ్యండి"
     success: "మీరు విజయవంతంగా మీ సంకేతపదం మార్చారు ఇంకా ఇప్పుడు లాగిన్ అయ్యారు కూడా."
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
+  email_login:
+    title: "ఇమెయిల్ లాగిన్"
+  user_auth_tokens:
+    browser:
+      chrome: "గూగుల్ క్రోమ్"
+      discoursehub: "DiscourseHub యాప్"
+      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+      firefox: "ఫైర్‌ఫాక్స్"
+      ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
+      opera: "ఒపేరా"
+      safari: "సఫారి"
+      unknown: "తెలియని బ్రౌజర్"
+    device:
+      android: "ఆండ్రాయిడ్ పరికరం"
+      chromebook: "క్రోమ్ OS"
+      ipad: "ఐప్యాడ్"
+      iphone: "ఐఫోన్"
+      ipod: "ఐపాడ్"
+      linux: "గ్ను/లైనక్స్ కంప్యూటర్"
+      mac: "మాక్"
+      mobile: "మొబైల్ పరికరం"
+      windows: "విండోస్ కంప్యూటర్"
+      unknown: "తెలియని పరికరం"
+    os:
+      android: "ఆండ్రాయిడ్"
+      chromeos: "క్రోమ్ OS"
+      ios: "ఐ ఓ ఎస్"
+      linux: "లినక్స్‍"
+      macos: "macOS"
+      windows: "మైక్రోసాఫ్ట్ విండోస్"
+      unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
+    confirm: "నిర్ధారించండి"
+  associated_accounts:
+    connected: "(కనెక్ట్ చేయబడింది)"
   activation:
+    action: "మీ ఖాతాను సక్రియం చేయడానికి ఇక్కడ క్లిక్ చేయండి"
     already_done: "క్షమించాలి. ఖాతా ధృవపరుచు లంకె కాలాతీతమైంది. బహుశా మీ ఖాతా ఇప్పటికే చేతనమై ఉందేమో?"
     please_continue: "మీ ఖాతా ధృవపర్చబడింది. మీరిప్పుడు తొలిపుటకు మళ్లించబడతారు."
     continue_button: "%{site_name} కు కొనసాగండి."
     welcome_to: "%{site_name} కు సుస్వాగతం!"
     approval_required: "ఈ ఫోరమ్ మీరు వాడేముందు ఒక నిర్వాహకుడు మీ ఖాతాను అంగీకరించాలి. మీ ఖాతా అంగీకరించగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
+    admin_confirm:
+      grant: "అడ్మిన్ యాక్సెస్ మంజూరు చేయండి"
+      back_to: "%{title}కి తిరిగి వెళ్ళండి"
+  reviewable_score_types:
+    needs_approval:
+      title: "ఆమోదం అవసరం"
   post_action_types:
     off_topic:
       title: "విషయాంతరం"
       description: " శీర్షిక మరియు తొలి టపా ప్రకారం ఈ టపా ప్రస్తుత చర్చకు సంబంధంలేనిది. బహుశా వేరేచోటుకు తరలించాలేమో."
+      short_description: "చర్చకు సంబంధించినది కాదు"
     spam:
       title: "స్పాము"
       email_title: '"%{title}" ప్పాముగా కేతనించాము'
@@ -284,8 +591,11 @@ te:
     inappropriate:
       title: "అసమంజసమైనది"
     illegal:
+      title: "చట్టవిరుద్ధం"
+      short_description: "ఇది చట్టవిరుద్ధం"
       email_body: "%{link}\n\n%{message}"
     notify_user:
+      title: "@%{username} కి సందేశం పంపండి"
       email_title: '"%{title}" లో మీ టపా'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -299,11 +609,26 @@ te:
       title: "ఇష్టం"
       description: "ఈ టపాను ఇష్టపడు"
       short_description: "ఈ టపాను ఇష్టపడు"
+  draft:
+    sequence_conflict_error:
+      title: "డ్రాఫ్ట్ లోపం"
+    too_many_drafts:
+      title: "చాలా చిత్తుప్రతులు"
+  draft_backup:
+    pm_title: "కొనసాగుతున్న విషయాల నుండి చిత్తుప్రతులను బ్యాకప్ చెయ్యండి"
+    pm_body: "బ్యాకప్ డ్రాఫ్ట్‌లను కలిగి ఉన్న విషయం"
+  webauthn:
+    validation:
+      user_presence_error: "సభ్యుడు ఉనికి అవసరం."
+      user_verification_error: "సభ్యుడు ధృవీకరణ అవసరం."
+      ownership_error: "సెక్యూరిటీ కీ సభ్యుడి స్వంతం కాదు."
+      malformed_public_key_credential_error: "అందించిన పబ్లిక్ కీ చెల్లదు."
   topic_flag_types:
     spam:
       title: "స్పాము"
       description: "ఈ విషయం వాణిజ్య ప్రకటన. ఇది ఎట్టి ఉపయోగం లేనిదీ, ఈ సైటుకు సంబంధం లేనిది మార్కెటింగు గిమ్మిక్కు."
       long_form: "దీన్ని స్పాముగా కేతనించారు"
+      short_description: "ఇది ఒక ప్రకటన"
     inappropriate:
       title: "అసమంజసం"
       long_form: "దీన్ని అసమంజసమైనదిగా కేతనించారు"
@@ -313,9 +638,13 @@ te:
       email_title: '"%{title}" విషయం నిర్వాహకుల దృష్టిలో ఉంది.'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "చట్టవిరుద్ధం"
+      short_description: "ఇది చట్టవిరుద్ధం"
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>ఈ టపా కమ్యునిటీ కేతనించింది. తాత్కాలికంగా దాచబడింది</p>"
+  ignored:
+    hidden_content: "<p>విస్మరించబడిన కంటెంట్</p>"
   archetypes:
     regular:
       title: "రెగ్యులర్ విషయం"
@@ -324,62 +653,147 @@ te:
       message:
         make: "ఈ విషయం ఇప్పుడు బ్యానరు. సభ్యుడు తుడిచే వరకూ ఈ విషయం ప్రతి పుటకు అగ్రభాగాన కనిపిస్తుంది."
         remove: "ఈ విషయం ఇప్పుడు బ్యానరు కాదు. ఇహ అది ప్రతి పుట అగ్రభాగానా కనిపించదు"
+  unsubscribed:
+    title: "ఇమెయిల్ ప్రాధాన్యతలు నవీకరించబడ్డాయి!"
+  uploads:
+    marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
+    title: "చందాను తీసివేయండి"
+    stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
+    unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
+    mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
+    all: "%{sitename} నుండి నాకు ఎలాంటి మెయిల్ పంపవద్దు"
     log_out: "లాగవుట్"
+    submit: "ప్రాధాన్యతలను సేవ్ చేయండి"
     digest_frequency:
       never: "ఎప్పటికీ వద్దు"
+      every_30_minutes: "ప్రతి 30 నిమిషాలకు"
+      every_hour: "గంటకోసారి"
       daily: "ప్రతిరోజూ"
       weekly: "ప్రతీవారం"
+      every_month: "ప్రతి నెల"
+      every_six_months: "ప్రతి ఆరు నెలలకు"
   user_api_key:
+    authorize: "అధికారం ఇవ్వండి"
     read: "చదివిన"
+    read_write: "చదవండి/వ్రాయండి"
     otp_confirmation:
       confirm_title: '%{site_name} కు కొనసాగండి'
+      logging_in_as: '%{username} గా లాగిన్ అవుతోంది'
+      confirm_button: లాగిన్ ముగించండి
+    scopes:
+      message_bus: "ప్రత్యక్ష నవీకరణలు"
+      push: "బాహ్య సేవలకు నోటిఫికేషన్‌లను పుష్ చేయండి"
+      read: "అన్నీ చదవండి"
+      write: "అన్నీ వ్రాయగల సామర్థ్యం"
+      bookmarks_calendar: "బుక్‌మార్క్ రిమైండర్‌లను చదవండి"
+      user_status: "సభ్యుడు స్థితిని చదవండి మరియు నవీకరించండి"
+    invalid_public_key: "క్షమించండి, పబ్లిక్ కీ చెల్లదు."
+    invalid_token: "తప్పిపోయిన, చెల్లని లేదా గడువు ముగిసిన టోకెన్."
   reports:
     default:
       labels:
+        count: సంఖ్య
+        percent: శాతం
         day: రోజు
     post_edits:
+      title: "పోస్ట్ సవరణలు"
       labels:
+        edited_at: తేదీ
+        post: పోస్ట్
         editor: ఎడిటరు
+        author: రచయిత
         edit_reason: కారణం
+      description: "కొత్త పోస్ట్ సవరణల సంఖ్య."
     user_flagging_ratio:
+      title: "సభ్యుడు ఫిర్యాదుల నిష్పత్తి"
       labels:
         user: సభ్యుడు
+        agreed_flags: అంగీకరించిన ఫిర్యాదులు
+        disagreed_flags: విభేదించిన ఫిర్యాదులు
+        ignored_flags: విస్మరించబడిన ఫిర్యాదులు
+        score: స్కోర్
     moderators_activity:
+      title: "మోడరేటర్ కార్యాచరణ"
       labels:
         moderator: నిర్వాహకుడు
+        flag_count: ఫిర్యాదులను పరిశీలించారు
+        time_read: చదివే సమయం
+        topic_count: విషయాలు సృష్టించబడ్డాయి
+        post_count: పోస్ట్‌లు సృష్టించబడ్డాయి
+        pm_count: PM లు సృష్టించబడ్డాయి
+        revision_count: పునర్విమర్శలు
     flags_status:
+      title: "ఫిర్యాదు స్థితి"
+      values:
+        agreed: అంగీకరించింది
+        disagreed: విభేదించారు
+        deferred: వాయిదా పడింది
+        no_action: చర్య తీసుకోలేదు
       labels:
         flag: రకం
+        assigned: కేటాయించబడింది
+        poster: పోస్టర్
+        flagger: ఫిర్యాదుదారు
+        time_to_resolution: రిజల్యూషన్ సమయం
     visits:
       title: "సభ్యుని గణాంకాలు"
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
+      description: "అన్ని సభ్యుల సందర్శనల సంఖ్య."
     signups:
+      title: "సైన్అప్‌లు"
       xaxis: "రోజు"
+      yaxis: "సైన్అప్‌ల సంఖ్య"
+      description: "ఈ కాలానికి కొత్త ఖాతా నమోదులు."
     new_contributors:
+      title: "కొత్త కంట్రిబ్యూటర్లు"
       xaxis: "రోజు"
+      yaxis: "కొత్త సహకారుల సంఖ్య"
     trust_level_growth:
+      title: "నమ్మకం స్థాయి పెరుగుదల"
+      xaxis:
+        tl1_reached: "TL1కి చేరుకున్నారు"
+        tl2_reached: "TL2కి చేరుకున్నారు"
+        tl3_reached: "TL3కి చేరుకున్నారు"
+        tl4_reached: "TL4కి చేరుకున్నారు"
       yaxis: "రోజు"
     consolidated_page_views:
+      title: "ఏకీకృత పేజీ వీక్షణలు"
+      xaxis:
+        page_view_crawler: "క్రాలర్లు"
+        page_view_anon: "అనామక సభ్యులు"
+        page_view_logged_in: "లాగిన్ చేసిన సభ్యులు"
       yaxis: "రోజు"
       labels:
+        post: పోస్ట్
         editor: ఎడిటరు
+        author: రచయిత
         edit_reason: కారణం
     consolidated_api_requests:
+      title: "ఏకీకృత API అభ్యర్థనలు"
       xaxis:
         api: "ఏపీఐ"
+        user_api: "సబ్యుల API"
       yaxis: "రోజు"
     dau_by_mau:
+      title: "డిఏయూ/ఎంఏయూ"
       xaxis: "రోజు"
+      yaxis: "డిఏయూ/ఎంఏయూ"
     daily_engaged_users:
+      title: "రోజువారీ నిమగ్నమైన సభ్యులు"
       xaxis: "రోజు"
+      yaxis: "నిమగ్నమైన సభ్యులు"
     profile_views:
+      title: "సభ్యుడు ప్రొఫైల్ వీక్షణలు"
       xaxis: "రోజు"
+      yaxis: "సభ్యుడు ప్రొఫైల్‌ విక్షణ సంఖ్య"
+      description: "సభ్యుడు ప్రొఫైల్‌ల యొక్క మొత్తం కొత్త వీక్షణలు."
     topics:
       title: "విషయాలు"
       xaxis: "రోజు"
       yaxis: "కొత్త విషయాల సంఖ్య"
+      description: "ఈ కాలంలో సృష్టించబడిన కొత్త విషయాలు."
     posts:
       title: "టపాలు"
       xaxis: "రోజు"
@@ -393,15 +807,21 @@ te:
       title: "కేతనాలు"
       xaxis: "రోజు"
       yaxis: "కేతనాల సంఖ్య"
+      description: "కొత్త ఫిర్యాదుల సంఖ్య."
     bookmarks:
       title: "పేజీకలు"
       xaxis: "రోజు"
       yaxis: "కొత్త పేజీకల సంఖ్య"
+      description: "బుక్‌మార్క్ చేయబడిన కొత్త విషయాలు మరియు పోస్ట్‌ల సంఖ్య."
     users_by_trust_level:
       title: "నమ్మకపు స్థాయి వారీగా సభ్యులు"
       xaxis: "నమ్మకం స్థాయి"
       yaxis: "సభ్యుల సంఖ్య"
+      labels:
+        level: స్థాయి
+      description: "ట్రస్ట్ స్థాయి ప్రకారం సమూహపరచబడిన సభ్యుల సంఖ్య."
     users_by_type:
+      title: "ఒక్కో రకం సభ్యులు"
       xaxis: "రకం"
       yaxis: "సభ్యుల సంఖ్య"
       labels:
@@ -410,26 +830,40 @@ te:
         admin: అధికారి
         moderator: నిర్వాహకుడు
         suspended: సస్పెడయ్యాడు
+        silenced: నిశ్శబ్దం చేయబడ్డారు
+    trending_search:
+      labels:
+        term: పదం
+        searches: శోధనలు
+        click_through: సిటిఆర్
     emails:
       title: "పంపిన ఈమెయిల్ల సంఖ్య"
       xaxis: "రోజు"
       yaxis: "ఈమెయిల్ల సంఖ్య"
+      description: "పంపిన కొత్త ఇమెయిల్‌ల సంఖ్య."
     user_to_user_private_messages:
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     user_to_user_private_messages_with_replies:
+      title: "సభ్యుడు నుండి సభ్యుడు (ప్రత్యుత్తరాలతో)"
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     system_private_messages:
       title: "వ్వవస్థ"
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     moderator_warning_private_messages:
       title: "నిర్వాహకుని హెచ్చరిక"
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     notify_moderators_private_messages:
       title: "నిర్వాహకుల దృష్టి"
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     notify_user_private_messages:
       title: "సభ్యుల దృష్టి"
       xaxis: "రోజు"
+      yaxis: "సందేశాల సంఖ్య"
     top_referrers:
       title: "అగ్ర రిఫరరు"
       xaxis: "సభ్యుడు"
@@ -457,16 +891,24 @@ te:
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
+      yaxis: "అనామక పేజీ వీక్షణలు"
     page_view_logged_in_reqs:
       title: "లాగిన్ అయిన"
       xaxis: "రోజు"
+      yaxis: "లాగిన్ చేసిన పేజీవీక్షణలు"
     page_view_crawler_reqs:
       xaxis: "రోజు"
     page_view_total_reqs:
+      title: "పేజీ వీక్షణలు"
       xaxis: "రోజు"
+      yaxis: "మొత్తం పేజీ వీక్షణలు"
+      description: "సందర్శకులందరి నుండి కొత్త పేజీ వీక్షణల సంఖ్య."
     page_view_logged_in_mobile_reqs:
+      title: "లాగిన్ చేసిన పేజీవీక్షణలు"
       xaxis: "రోజు"
+      yaxis: "మొబైల్ లాగిన్ చేసిన పేజీవీక్షణలు"
     page_view_anon_mobile_reqs:
+      title: "అనామక పేజీ వీక్షణలు"
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
@@ -493,31 +935,59 @@ te:
       xaxis: "రోజు"
       yaxis: "మొత్తం అభ్యర్థనలు"
     time_to_first_response:
+      title: "మొదటి ప్రతిస్పందనకు సమయం"
       xaxis: "రోజు"
+      yaxis: "సగటు సమయం (గంటలు)"
     topics_with_no_response:
       xaxis: "రోజు"
       yaxis: "మొత్తం"
     mobile_visits:
+      title: "సభ్యుడు సందర్శనలు (మొబైల్)"
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
+    web_crawlers:
+      title: "వెబ్ క్రాలర్ యూజర్ ఏజెంట్లు"
+      labels:
+        user_agent: "యూజర్ ఏజెంట్"
+        page_views: "పేజీ వీక్షణలు"
     suspicious_logins:
+      title: "అనుమానాస్పద లాగిన్‌లు"
       labels:
         user: సభ్యుడు
+        client_ip: క్లయింట్ IP
         location: ప్రాంతం
+        browser: బ్రౌజర్
+        device: పరికరం
+        os: ఆపరేటింగ్ సిస్టమ్
+        login_time: లాగిన్ సమయం
     staff_logins:
+      title: "అడ్మిన్ లాగిన్‌లు"
       labels:
         user: సభ్యుడు
         location: ప్రాంతం
+        login_at: వద్ద లాగిన్
     top_uploads:
+      title: "అగ్ర అప్‌లోడ్‌లు"
       labels:
         filename: దస్త్రం పేరు
+        extension: ఎక్సటెన్షన్
+        author: రచయిత
+        filesize: ఫైల్ పరిమాణం
+    top_ignored_users:
+      title: "అగ్ర విస్మరించబడిన / మ్యూట్ చేయబడిన సభ్యులు"
+      labels:
+        ignored_user: విస్మరించబడిన సభ్యుడు
+        ignores_count: విస్మరణల గణన
+        mutes_count: మ్యూట్‌లు లెక్క
     top_users_by_likes_received:
+      title: "అందుకున్న లైక్‌ల ద్వారా అగ్ర సభ్యులు"
       labels:
         user: సభ్యుడు
         qtt_like: అందుకున్న ఇష్టాలు
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: సభ్యుడు
+        trust_level: విశ్వసనీయ స్థాయి
         qtt_like: అందుకున్న ఇష్టాలు
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -528,31 +998,348 @@ te:
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "
     queue_size_warning: "వరుసలో ఉన్న ఉద్యోగాల సంఖ్య %{queue_size}, ఏది ఆధిక్యత.ఈ సైడ్‌కిక్ ప్రక్రియ(లు) ఒక సమస్య సూచిస్తుంది , లేదా \nమీకు మరింతమంది సైడ్‌కిక్ కార్మికులు అవసరం కావచ్చు."
     memory_warning: "మీ సర్వరు ఒక జీబీ కన్నా తక్కువ మెమరీతో నడుస్తున్నది. కనీసం ఒక జీబీ అయినా ఉండుట మంచిది. "
+    back_from_logster_text: "తిరిగి సైట్‌కి"
   site_settings:
+    allow_bulk_invite: "CSV ఫైల్‌ను అప్‌లోడ్ చేయడం ద్వారా బల్క్ ఆహ్వానాలను అనుమతించండి"
+    disabled: "నిలిపివేయబడింది"
+    display_local_time_in_user_card: "వారి వినియోగదారు కార్డ్ తెరిచినప్పుడు వినియోగదారు సమయమండలి ఆధారంగా స్థానిక సమయాన్ని ప్రదర్శించండి."
     censored_words: "వీటితో పదాలు స్వయంచాలకంగా భర్తీ చేయబడతాయి &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "30 రోజుల కంటే ఎక్కువ దాగివున్న టపాలు స్వయంసిధ్ధంగా తొలగింపబడతాయి."
+    default_locale: "ఈ ఉపన్యాసం యొక్క డిఫాల్ట్ భాష. మీరు <a href='%{base_path}/admin/customize/site_texts' target='_blank'>అనుకూలీకరించు / వచనం</a>వద్ద సిస్టమ్ రూపొందించిన వర్గాలు మరియు అంశాల వచనాన్ని భర్తీ చేయవచ్చు."
     allow_user_locale: "వినియోగదారులు వారి సొంత భాష ఇంటర్ఫేస్ ప్రాధాన్యతను ఎంచుకోవడానికి అనుమతించు"
+    set_locale_from_accept_language_header: "అనామక వినియోగదారుల కోసం వారి వెబ్ బ్రౌజర్ యొక్క భాషా శీర్షికల నుండి ఇంటర్‌ఫేస్ భాషను సెట్ చేయండి"
+    support_mixed_text_direction: "మిశ్రమ ఎడమ నుండి కుడికి మరియు కుడి నుండి ఎడమకు వచన దిశలకు మద్దతు ఇవ్వండి."
+    min_post_length: "అక్షరాలలో కనీసం అనుమతించబడిన పోస్ట్ పొడవు (వ్యక్తిగత సందేశాలు మినహా)"
+    min_first_post_length: "కనీస అనుమతించబడిన మొదటి పోస్ట్ (టాపిక్ బాడీ) పొడవు (వ్యక్తిగత సందేశాలు మినహా)"
+    min_personal_message_post_length: "సందేశాల కోసం అక్షరాలలో కనీసం అనుమతించబడిన పోస్ట్ పొడవు (మొదటి పోస్ట్ మరియు ప్రత్యుత్తరాలు రెండూ)"
     max_post_length: "టపా అనుమతించే అక్షరాల గరిష్ఠ పొడవు"
+    show_topic_featured_link_in_digest: "డైజెస్ట్ ఇమెయిల్‌లో టాపిక్ ఫీచర్ చేసిన లింక్‌ని చూపండి."
+    min_topic_views_for_delete_confirm: "ఒక అంశం తొలగించబడినప్పుడు కన్ఫర్మేషన్ పాప్అప్ కనిపించాలంటే తప్పనిసరిగా కనీస వీక్షణలు ఉండాలి"
     min_topic_title_length: "శీర్షిక కు అనుమతించే అక్షరాల కనిష్ఠ పొడవు"
     max_topic_title_length: "శీర్షిక కు అనుమతించే అక్షరాల గరిష్ఠ పొడవు"
+    min_personal_message_title_length: "అక్షరాలలో సందేశం కోసం అనుమతించబడిన కనిష్ట శీర్షిక పొడవు"
     min_search_term_length: "శోధనకు అవసరమయ్యే అక్షరాల కనీస పొడవు"
+    search_tokenize_chinese: "చైనీస్ కాని సైట్‌లలో కూడా చైనీస్‌ని టోకనైజ్ చేయడానికి బలవంతంగా శోధన"
+    search_tokenize_japanese: "జపనీస్ కాని సైట్‌లలో కూడా జపనీస్‌ని టోకనైజ్ చేయడానికి బలవంతంగా శోధన"
+    search_prefer_recent_posts: "మీ పెద్ద ఫోరమ్‌ను శోధించడం నెమ్మదిగా ఉంటే, ఈ ఎంపిక ముందుగా ఇటీవలి పోస్ట్‌ల సూచికను ప్రయత్నిస్తుంది"
+    search_recent_posts_size: "ఇండెక్స్‌లో ఎన్ని ఇటీవలి పోస్ట్‌లను ఉంచాలి"
+    log_search_queries: "సభ్యులు ప్రదర్శించిన శోధన ప్రశ్నలను లాగ్ చేయండి"
+    search_query_log_max_size: "ఉంచడానికి శోధన ప్రశ్నల గరిష్ట మొత్తం"
+    search_query_log_max_retention_days: "శోధన ప్రశ్నలను ఉంచడానికి గరిష్ట సమయం, రోజులలో."
+    search_default_sort_order: "పూర్తి పేజీ శోధన కోసం డిఫాల్ట్ క్రమబద్ధీకరణ క్రమం"
+    category_search_priority_low_weight: "తక్కువ కేటగిరీ శోధన ప్రాధాన్యత కోసం ర్యాంకింగ్‌కు బరువు వర్తింపజేయబడింది."
+    category_search_priority_high_weight: "అధిక కేటగిరీ శోధన ప్రాధాన్యత కోసం ర్యాంకింగ్‌కు బరువు వర్తింపజేయబడింది."
+    default_composer_category: "కొత్త టాపిక్‌ను సృష్టించేటప్పుడు వర్గం డ్రాప్‌డౌన్‌ను ప్రీ-పాపులేట్ చేయడానికి ఉపయోగించే వర్గం."
+    allow_uncategorized_topics: "కొత్త టాపిక్‌ను సృష్టించేటప్పుడు వర్గం డ్రాప్‌డౌన్‌ను ప్రీ-పాపులేట్ చేయడానికి ఉపయోగించే వర్గం."
     allow_duplicate_topic_titles: "సమరూపమైన,నకిలీ శీర్షికలతో విషయాలను అనుమతించు."
+    allow_duplicate_topic_titles_category: "వర్గం భిన్నంగా ఉన్నట్లయితే ఒకే విధమైన, నకిలీ శీర్షికలతో అంశాలను అనుమతించండి. allow_duplicate_topic_titles తప్పనిసరిగా నిలిపివేయబడాలి."
     unique_posts_mins: "ఒక వినియోగదారు ఎన్ని నిమిషాల తర్వాత మళ్ళీ అదే విషయంతో ఒక టపా చేయవచ్చు "
-    educate_until_posts: "వినియోగదారు వారి మొదటి (n) కొత్త టపాలు చేయడం మొదలుపెట్టినప్పుడు, కంపోజర్‌లో పాప్-అప్ కొత్త యూజర్ విద్య ప్యానెల్ చూపించు."
+    educate_until_posts: "సభ్యుడు వారి మొదటి (n) కొత్త పోస్ట్‌లను టైప్ చేయడం ప్రారంభించినప్పుడు, కంపోజర్‌లో పాప్-అప్ కొత్త సభ్యుడి విద్యా ప్యానెల్‌ను చూపండి."
+    title: "ఈ సైట్ పేరు. అనామక వినియోగదారులతో సహా సందర్శకులందరికీ కనిపిస్తుంది."
+    site_description: "ఈ సైట్‌ని ఒక వాక్యంలో వివరించండి. అనామక వినియోగదారులతో సహా సందర్శకులందరికీ కనిపిస్తుంది."
+    short_site_description: "కొన్ని పదాలలో చిన్న వివరణ. అనామక వినియోగదారులతో సహా సందర్శకులందరికీ కనిపిస్తుంది."
+    contact_email: "ఈ సైట్‌కు బాధ్యత వహించే ముఖ్య పరిచయస్తుల ఇమెయిల్ చిరునామా. క్లిష్టమైన నోటిఫికేషన్‌ల కోసం ఉపయోగించబడుతుంది మరియు <a href='%{base_path}/about' target='_blank'>/ గురించి</a>లో కూడా ప్రదర్శించబడుతుంది. పబ్లిక్ సైట్‌లలో అనామక వినియోగదారులకు కనిపిస్తుంది."
+    contact_url: "ఈ సైట్ కోసం URLని సంప్రదించండి. ప్రస్తుతం ఉన్నప్పుడు, <a href='%{base_path}/about' target='_blank'>/ గురించి</a> లో ఇమెయిల్ చిరునామాను భర్తీ చేస్తుంది మరియు పబ్లిక్ సైట్‌లలోని అనామక వినియోగదారులకు కనిపిస్తుంది."
+    crawl_images: "సరైన వెడల్పు మరియు ఎత్తు కొలతలు ఇన్సర్ట్ చేయడానికి రిమోట్ URL ల నుండి చిత్రాలను తిరిగి పొందండి."
+    download_remote_images_to_local: "రిమోట్ (హాట్‌లింక్డ్) చిత్రాలను డౌన్‌లోడ్ చేయడం ద్వారా వాటిని స్థానిక చిత్రాలకు మార్చండి; భవిష్యత్తులో రిమోట్ సైట్ నుండి చిత్రాలు తీసివేయబడినా కూడా ఇది కంటెంట్‌ను భద్రపరుస్తుంది."
     download_remote_images_threshold: "సుదూర చిత్రాలను స్థానికంగా దిగుమతి చేయడానికి అవసరమయ్యే కనీస డిస్క్ స్థలం (శాతం లో)"
+    disabled_image_download_domains: "ఈ డొమైన్‌ల నుండి రిమోట్ చిత్రాలు ఎప్పటికీ డౌన్‌లోడ్ చేయబడవు. పైప్-డిలిమిటెడ్ జాబితా."
+    block_hotlinked_media: "వినియోగదారులు తమ పోస్ట్‌లలో రిమోట్ (హాట్‌లింక్డ్) మీడియాను ప్రవేశపెట్టకుండా నిరోధించండి. 'download_remote_images_to_local' ద్వారా డౌన్‌లోడ్ చేయని రిమోట్ మీడియా ప్లేస్‌హోల్డర్ లింక్‌తో భర్తీ చేయబడుతుంది."
+    block_hotlinked_media_exceptions: "block_hotlinked_media సెట్టింగ్ నుండి మినహాయించబడిన బేస్ URLల జాబితా. ప్రోటోకాల్‌ను చేర్చండి (ఉదా: https://example.com)."
     editing_grace_period: "టపా చేసిన తర్వాత (n) సెకన్లు, టపా చరిత్రలో ఒక కొత్త కధనం సృష్టించడానికి సవరింపు కుదరదు."
+    editing_grace_period_max_diff: "ఎడిటింగ్ గ్రేస్ పీరియడ్‌లో గరిష్ట సంఖ్యలో అక్షర మార్పులు అనుమతించబడతాయి, మరింత మారినట్లయితే మరొక పోస్ట్ పునర్విమర్శను నిల్వ చేయండి (విశ్వసనీయ స్థాయి 0 మరియు 1)"
+    editing_grace_period_max_diff_high_trust: "ఎడిటింగ్ గ్రేస్ పీరియడ్‌లో గరిష్ట సంఖ్యలో అక్షర మార్పులు అనుమతించబడతాయి, మరింత మారినట్లయితే మరొక పోస్ట్ పునర్విమర్శను నిల్వ చేయండి (విశ్వసనీయ స్థాయి 2 మరియు అంతకంటే ఎక్కువ)"
+    staff_edit_locks_post: "పోస్ట్‌లను స్టాఫ్ సభ్యులు ఎడిట్ చేస్తే వాటిని ఎడిట్ చేయకుండా లాక్ చేయబడతాయి"
+    post_edit_time_limit: "tl0 లేదా tl1 రచయిత వారి పోస్ట్‌ను పోస్ట్ చేసిన తర్వాత (n) నిమిషాల వరకు సవరించగలరు. ఎప్పటికీ 0కి సెట్ చేయండి."
+    tl2_post_edit_time_limit: "tl2+ రచయిత వారి పోస్ట్‌ని పోస్ట్ చేసిన తర్వాత (n) నిమిషాల వరకు సవరించగలరు. ఎప్పటికీ 0కి సెట్ చేయండి."
+    edit_history_visible_to_public: "సవరించిన పోస్ట్ యొక్క మునుపటి సంస్కరణలను చూడటానికి ప్రతి ఒక్కరినీ అనుమతించండి. నిలిపివేయబడినప్పుడు, సిబ్బంది మాత్రమే చూడగలరు."
+    delete_removed_posts_after: "రచయిత తొలగించిన పోస్ట్‌లు (n) గంటల తర్వాత స్వయంచాలకంగా తొలగించబడతాయి. 0కి సెట్ చేస్తే, పోస్ట్‌లు వెంటనే తొలగించబడతాయి."
+    notify_users_after_responses_deleted_on_flagged_post: "పోస్ట్‌ను ఫ్లాగ్ చేసి, ఆపై తీసివేయబడినప్పుడు, పోస్ట్‌కు ప్రతిస్పందించిన మరియు వారి ప్రతిస్పందనలను తీసివేసిన వినియోగదారులందరికీ తెలియజేయబడుతుంది."
+    max_image_width: "పోస్ట్‌లోని చిత్రాల గరిష్ట థంబ్‌నెయిల్ వెడల్పు. పెద్ద వెడల్పు ఉన్న చిత్రాలు పరిమాణం మార్చబడతాయి మరియు లైట్‌బాక్స్ చేయబడతాయి."
+    max_image_height: "పోస్ట్‌లోని చిత్రాల గరిష్ట థంబ్‌నెయిల్ ఎత్తు. పెద్ద ఎత్తు ఉన్న చిత్రాలు పరిమాణం మార్చబడతాయి మరియు లైట్‌బాక్స్ చేయబడతాయి."
+    responsive_post_image_sizes: "కింది పిక్సెల్ నిష్పత్తుల యొక్క అధిక DPI స్క్రీన్‌లను అనుమతించడానికి లైట్‌బాక్స్ ప్రివ్యూ చిత్రాల పరిమాణాన్ని మార్చండి. ప్రతిస్పందించే చిత్రాలను నిలిపివేయడానికి అన్ని విలువలను తీసివేయండి."
+    fixed_category_positions: "తనిఖీ చేయబడితే, మీరు వర్గాలను స్థిరమైన క్రమంలో అమర్చగలరు. ఎంపిక చేయకపోతే, కార్యాచరణ క్రమంలో వర్గాలు జాబితా చేయబడతాయి."
+    fixed_category_positions_on_create: "తనిఖీ చేయబడితే, టాపిక్ క్రియేషన్ డైలాగ్‌లో వర్గం ఆర్డరింగ్ నిర్వహించబడుతుంది (firsed_category_positions అవసరం)."
+    add_rel_nofollow_to_user_content: 'అంతర్గత లింక్‌లు (పేరెంట్ డొమైన్‌లతో సహా) మినహా సమర్పించిన అన్ని వినియోగదారు కంటెంట్‌కు rel nofollowని జోడించండి. మీరు దీన్ని మార్చినట్లయితే, మీరు తప్పనిసరిగా అన్ని పోస్ట్‌లను దీనితో రీబేక్ చేయాలి: "rake posts:rebake"'
+    exclude_rel_nofollow_domains: "లింక్‌లకు నోఫాలో జోడించకూడని డొమైన్‌ల జాబితా. example.com స్వయంచాలకంగా sub.example.comని కూడా అనుమతిస్తుంది. కనిష్టంగా, వెబ్ క్రాలర్‌లు మొత్తం కంటెంట్‌ను కనుగొనడంలో సహాయపడటానికి మీరు ఈ సైట్ యొక్క డొమైన్‌ను జోడించాలి. మీ వెబ్‌సైట్‌లోని ఇతర భాగాలు ఇతర డొమైన్‌లలో ఉన్నట్లయితే, వాటిని కూడా జోడించండి."
+    max_form_template_title_length: "ఫారమ్ టెంప్లేట్ శీర్షికల కోసం గరిష్టంగా అనుమతించబడిన పొడవు."
+    max_form_template_content_length: "ఫారమ్ టెంప్లేట్ కంటెంట్ కోసం గరిష్టంగా అనుమతించబడిన పొడవు."
     post_excerpt_maxlength: "ఒక టపా సంగ్రహం/సారాంశం గరిష్ట పొడవు."
+    topic_excerpt_maxlength: "టాపిక్ ఎక్సెర్ప్ట్ / సారాంశం యొక్క గరిష్ట నిడివి, టాపిక్‌లోని మొదటి పోస్ట్ నుండి రూపొందించబడింది."
+    default_subcategory_on_read_only_category: "'కొత్త అంశం' బటన్‌ను ప్రారంభిస్తుంది మరియు వినియోగదారు కొత్త అంశాన్ని సృష్టించడానికి అనుమతించని వర్గాలలో పోస్ట్ చేయడానికి డిఫాల్ట్ ఉపవర్గాన్ని ఎంచుకుంటుంది."
+    show_pinned_excerpt_mobile: "మొబైల్ వీక్షణలో పిన్ చేసిన అంశాలపై సారాంశాన్ని చూపండి."
+    show_pinned_excerpt_desktop: "డెస్క్టాప్ వీక్షణలో పిన్ చేసిన అంశాలపై సారాంశాన్ని చూపించు."
+    post_onebox_maxlength: "అక్షరాలలో వన్‌బాక్స్డ్ డిస్కోర్స్ పోస్ట్ యొక్క గరిష్ట నిడివి."
+    blocked_onebox_domains: "ఎప్పటికీ వన్‌బాక్స్ చేయబడని డొమైన్‌ల జాబితా ఉదా wikipedia.org\n(వైల్డ్‌కార్డ్ చిహ్నాలు * ? మద్దతు లేదు)"
+    allowed_inline_onebox_domains: "టైటిల్ లేకుండా లింక్ చేయబడితే సూక్ష్మ రూపంలో వన్‌బాక్స్ చేయబడే డొమైన్‌ల జాబితా"
+    enable_inline_onebox_on_all_domains: "allow_inline_onebox_domains సైట్ సెట్టింగ్‌ని విస్మరించి, అన్ని డొమైన్‌లలో ఇన్‌లైన్ వన్‌బాక్స్‌ని అనుమతించండి."
+    force_custom_user_agent_hosts: "అన్ని అభ్యర్థనలపై అనుకూల onebox వినియోగదారు ఏజెంట్‌ని ఉపయోగించే హోస్ట్‌లు. (యూజర్ ఏజెంట్ ద్వారా యాక్సెస్‌ని పరిమితం చేసే హోస్ట్‌లకు ప్రత్యేకంగా ఉపయోగపడుతుంది)."
+    facebook_app_access_token: "మీ Facebook యాప్ ID మరియు రహస్యం నుండి రూపొందించబడిన టోకెన్. ఇన్‌స్టాగ్రామ్ వన్‌బాక్స్‌లను రూపొందించడానికి ఉపయోగించబడుతుంది."
+    logo: "మీ సైట్ యొక్క ఎగువ ఎడమ వైపున లోగో చిత్రం. 120 ఎత్తు మరియు 3:1 కంటే ఎక్కువ కారక నిష్పత్తితో విస్తృత దీర్ఘచతురస్రాకార చిత్రాన్ని ఉపయోగించండి. ఖాళీగా ఉంచినట్లయితే, సైట్ శీర్షిక వచనం చూపబడుతుంది."
+    logo_small: "మీ సైట్‌కు ఎగువ ఎడమ వైపున ఉన్న చిన్న లోగో చిత్రం, క్రిందికి స్క్రోల్ చేస్తున్నప్పుడు కనిపిస్తుంది. చదరపు 120 × 120 చిత్రాన్ని ఉపయోగించండి. ఖాళీగా ఉంచినట్లయితే, హోమ్ గ్లిఫ్ చూపబడుతుంది."
+    digest_logo: "మీ సైట్ ఇమెయిల్ సారాంశం ఎగువన ఉపయోగించబడిన ప్రత్యామ్నాయ లోగో చిత్రం. విస్తృత దీర్ఘచతురస్ర చిత్రాన్ని ఉపయోగించండి. SVG చిత్రాన్ని ఉపయోగించవద్దు. ఖాళీగా ఉంచినట్లయితే, `లోగో` సెట్టింగ్‌లోని చిత్రం ఉపయోగించబడుతుంది."
+    mobile_logo: "మీ సైట్ యొక్క మొబైల్ వెర్షన్‌లో ఉపయోగించబడిన లోగో. 120 ఎత్తు మరియు 3:1 కంటే ఎక్కువ కారక నిష్పత్తితో విస్తృత దీర్ఘచతురస్రాకార చిత్రాన్ని ఉపయోగించండి. ఖాళీగా ఉంచినట్లయితే, `లోగో` సెట్టింగ్‌లోని చిత్రం ఉపయోగించబడుతుంది."
+    logo_dark: "'లోగో' సైట్ సెట్టింగ్ కోసం డార్క్ స్కీమ్ ప్రత్యామ్నాయం."
+    logo_small_dark: "'లోగో స్మాల్' సైట్ సెట్టింగ్ కోసం డార్క్ స్కీమ్ ప్రత్యామ్నాయం."
+    mobile_logo_dark: "'మొబైల్ లోగో' సైట్ సెట్టింగ్ కోసం డార్క్ స్కీమ్ ప్రత్యామ్నాయం."
+    large_icon: "చిత్రం ఇతర మెటాడేటా చిహ్నాలకు బేస్‌గా ఉపయోగించబడుతుంది. ఆదర్శవంతంగా 512 x 512 కంటే పెద్దదిగా ఉండాలి. ఖాళీగా ఉంచినట్లయితే, logo_small ఉపయోగించబడుతుంది."
+    manifest_icon: "చిత్రం Androidలో లోగో/స్ప్లాష్ ఇమేజ్‌గా ఉపయోగించబడుతుంది. స్వయంచాలకంగా 512 × 512కి పరిమాణం మార్చబడుతుంది. ఖాళీగా ఉంచినట్లయితే, పెద్ద_ఐకాన్ ఉపయోగించబడుతుంది."
+    manifest_screenshots: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+    favicon: "మీ సైట్ కోసం ఫేవికాన్, <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>చూడండి. CDNలో సరిగ్గా పని చేయడానికి అది తప్పనిసరిగా png అయి ఉండాలి. 32x32కి పరిమాణం మార్చబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది."
+    apple_touch_icon: "Apple టచ్ పరికరాల కోసం ఉపయోగించే చిహ్నం. పారదర్శక నేపథ్యం సిఫార్సు చేయబడలేదు. స్వయంచాలకంగా 180x180కి పరిమాణం మార్చబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది."
+    opengraph_image: "డిఫాల్ట్ ఓపెన్‌గ్రాఫ్ చిత్రం, పేజీకి తగిన ఇతర చిత్రం లేనప్పుడు ఉపయోగించబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది"
+    twitter_summary_large_image: "Twitter కార్డ్ 'సారాంశం పెద్ద చిత్రం' (కనీసం 280 వెడల్పు ఉండాలి మరియు కనీసం 150 ఎత్తు ఉండాలి, .svg ఉండకూడదు). ఖాళీగా ఉంచినట్లయితే, సాధారణ కార్డ్ మెటాడేటా opengraph_imageని ఉపయోగించి రూపొందించబడుతుంది, అది కూడా .svg కాదు."
+    notification_email: "నుండి: అన్ని అవసరమైన సిస్టమ్ ఇమెయిల్‌లను పంపేటప్పుడు ఉపయోగించే ఇమెయిల్ చిరునామా. ఇమెయిల్ రావాలంటే ఇక్కడ పేర్కొన్న డొమైన్ తప్పనిసరిగా SPF, DKIM మరియు రివర్స్ PTR రికార్డ్‌లను సరిగ్గా సెట్ చేసి ఉండాలి."
+    email_custom_headers: "అనుకూల ఇమెయిల్ హెడర్‌ల పైప్-డిలిమిటెడ్ లిస్ట్"
+    email_subject: "ప్రామాణిక ఇమెయిల్‌ల కోసం అనుకూలీకరించదగిన సబ్జెక్ట్ ఫార్మాట్. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>చూడండి"
+    detailed_404: "వినియోగదారులు నిర్దిష్ట అంశాన్ని ఎందుకు యాక్సెస్ చేయలేకపోతున్నారనే దాని గురించి మరిన్ని వివరాలను అందిస్తుంది. గమనిక: చెల్లుబాటు అయ్యే అంశానికి URL లింక్ చేయబడితే వినియోగదారులకు తెలుస్తుంది కాబట్టి ఇది తక్కువ సురక్షితమైనది."
+    enforce_second_factor: "ఉపన్యాస UIని యాక్సెస్ చేయడానికి ముందు వినియోగదారులు రెండు-కారకాల ప్రమాణీకరణను ప్రారంభించవలసి ఉంటుంది. వినియోగదారులందరికీ అమలు చేయడానికి 'అన్నీ' ఎంచుకోండి. సిబ్బంది వినియోగదారులకు మాత్రమే అమలు చేయడానికి 'సిబ్బంది'ని ఎంచుకోండి. ఈ సెట్టింగ్ API లేదా 'DiscourseConnect ప్రొవైడర్' ప్రమాణీకరణను ప్రభావితం చేయదు."
+    force_https: "HTTPSని మాత్రమే ఉపయోగించమని మీ సైట్‌ని బలవంతం చేయండి. హెచ్చరిక: HTTPS పూర్తిగా సెటప్ చేయబడిందని మరియు ప్రతిచోటా పని చేస్తుందని మీరు ధృవీకరించే వరకు దీన్ని ప్రారంభించవద్దు! మీరు మీ CDN, అన్ని సోషల్ లాగిన్‌లు మరియు ఏవైనా బాహ్య లోగోలు / డిపెండెన్సీలు అన్నీ కూడా HTTPS అనుకూలంగా ఉన్నాయని నిర్ధారించుకోవడానికి తనిఖీ చేసారా?"
+    same_site_cookies: "అదే సైట్ కుక్కీలను ఉపయోగించండి, అవి మద్దతు ఉన్న బ్రౌజర్‌లలో (లాక్స్ లేదా స్ట్రిక్ట్) అన్ని క్రాస్ సైట్ అభ్యర్థన ఫోర్జరీ వెక్టర్‌లను తొలగిస్తాయి. హెచ్చరిక: లాగిన్‌ని బలవంతం చేసే మరియు బాహ్య ప్రమాణీకరణ పద్ధతిని ఉపయోగించే సైట్‌లలో మాత్రమే కఠినమైనది పని చేస్తుంది."
+    summary_score_threshold: "'ఈ అంశాన్ని సారాంశం'లో చేర్చడానికి పోస్ట్‌కు అవసరమైన కనీస స్కోర్"
+    summary_posts_required: "'ఈ అంశాన్ని సారాంశం' ప్రారంభించే ముందు ఒక అంశంలో కనిష్ట పోస్ట్‌లు ప్రారంభించబడతాయి. ఈ సెట్టింగ్‌కు చేసిన మార్పులు ఒక వారంలోపు ముందస్తుగా వర్తించబడతాయి."
+    summary_likes_required: "'ఈ అంశాన్ని సారాంశం చేయి' ప్రారంభించబడటానికి ముందు ఒక అంశంలో కనిష్ట ఇష్టాలు. ఈ సెట్టింగ్‌కు చేసిన మార్పులు ఒక వారంలోపు ముందస్తుగా వర్తించబడతాయి."
+    summary_percent_filter: "వినియోగదారు 'ఈ అంశాన్ని సారాంశం చేయి'ని క్లిక్ చేసినప్పుడు, టాప్ % పోస్ట్‌లను చూపండి"
+    summary_max_results: "'ఈ అంశాన్ని సంగ్రహించండి' ద్వారా గరిష్ట పోస్ట్‌లు అందించబడ్డాయి"
+    summary_timeline_button: "టైమ్‌లైన్‌లో 'సారాంశం' బటన్‌ను చూపండి"
+    summarization_strategy: "ప్లగిన్‌ల ద్వారా నమోదు చేయబడిన కంటెంట్‌ను సంగ్రహించడానికి అదనపు మార్గాలు"
+    custom_summarization_allowed_groups: "గుంపులు `సారాంశం_వ్యూహం`ని ఉపయోగించి కంటెంట్‌లను సంగ్రహించడానికి అనుమతించబడతాయి."
+    enable_personal_messages: "నిలిపివేయబడింది, బదులుగా 'వ్యక్తిగత సందేశం ప్రారంభించబడిన సమూహాలు' సెట్టింగ్‌ని ఉపయోగించండి. సందేశాలను సృష్టించడానికి మరియు సందేశాలకు ప్రత్యుత్తరం ఇవ్వడానికి విశ్వసనీయ స్థాయి 1 (సందేశాలను పంపడానికి కనీస ట్రస్ట్ ద్వారా కాన్ఫిగర్ చేయవచ్చు) వినియోగదారులను అనుమతించండి. సిబ్బంది ఎప్పుడైనా సందేశాలను పంపగలరని గమనించండి."
+    personal_message_enabled_groups: "సందేశాలను సృష్టించడానికి మరియు సందేశాలకు ప్రత్యుత్తరం ఇవ్వడానికి ఈ సమూహాలలోని వినియోగదారులను అనుమతించండి. విశ్వసనీయ స్థాయి సమూహాలు ఆ సంఖ్య కంటే ఎక్కువ ఉన్న అన్ని విశ్వసనీయ స్థాయిలను కలిగి ఉంటాయి, ఉదాహరణకు Trust_level_1ని ఎంచుకోవడం కూడా trust_level_2, 3, 4 వినియోగదారులు PMలను పంపడానికి అనుమతిస్తుంది. సిబ్బంది ఎప్పుడైనా సందేశాలను పంపగలరని గమనించండి."
+    enable_system_message_replies: "వ్యక్తిగత సందేశాలు నిలిపివేయబడినప్పటికీ, సిస్టమ్ సందేశాలకు ప్రత్యుత్తరం ఇవ్వడానికి వినియోగదారులను అనుమతిస్తుంది"
+    enable_chunked_encoding: "సర్వర్ ద్వారా చంక్డ్ ఎన్‌కోడింగ్ ప్రతిస్పందనలను ప్రారంభించండి. ఈ ఫీచర్ చాలా సెటప్‌లలో పని చేస్తుంది, అయితే కొన్ని ప్రాక్సీలు బఫర్ కావచ్చు, దీని వలన ప్రతిస్పందనలు ఆలస్యం అవుతాయి"
+    long_polling_base_url: "సుదీర్ఘ పోలింగ్ కోసం ఉపయోగించే ప్రాథమిక URL (CDN డైనమిక్ కంటెంట్‌ని అందిస్తున్నప్పుడు, దీన్ని ఆరిజిన్ పుల్‌కి సెట్ చేయండి) ఉదా: http://origin.site.com"
+    polling_interval: "సుదీర్ఘ పోలింగ్ లేనప్పుడు, క్లయింట్‌లపై ఎంత తరచుగా లాగిన్ అవ్వాలి మిల్లీసెకన్లలో పోల్"
+    anon_polling_interval: "అనామక క్లయింట్లు ఎంత తరచుగా మిల్లీసెకన్లలో పోల్ చేయాలి"
+    background_polling_interval: "క్లయింట్‌లు ఎంత తరచుగా మిల్లీసెకన్లలో పోల్ చేయాలి (విండో బ్యాక్‌గ్రౌండ్‌లో ఉన్నప్పుడు)"
+    hide_post_sensitivity: "ఫిర్యాదు చేయబడిన పోస్ట్ దాచబడే అవకాశం"
+    silence_new_user_sensitivity: "స్పామ్ ఫ్లాగ్‌ల ఆధారంగా కొత్త వినియోగదారు నిశ్శబ్దం చేయబడే అవకాశం"
+    auto_close_topic_sensitivity: "ఫ్లాగ్ చేయబడిన అంశం స్వయంచాలకంగా మూసివేయబడే అవకాశం"
+    cooldown_minutes_after_hiding_posts: "కమ్యూనిటీ ఫ్లాగింగ్ ద్వారా దాచిన పోస్ట్‌ను సవరించడానికి ముందు వినియోగదారు వేచి ఉండాల్సిన నిమిషాల సంఖ్య"
+    max_topics_in_first_day: "వినియోగదారు వారి మొదటి పోస్ట్‌ని సృష్టించిన తర్వాత 24 గంటల వ్యవధిలో సృష్టించడానికి అనుమతించబడే గరిష్ట సంఖ్యలో టాపిక్‌లు"
+    max_replies_in_first_day: "వినియోగదారు వారి మొదటి పోస్ట్‌ని సృష్టించిన తర్వాత 24 గంటల వ్యవధిలో సృష్టించడానికి గరిష్ట సంఖ్యలో ప్రత్యుత్తరాలు అనుమతించబడతాయి"
+    tl2_additional_likes_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl2 (సభ్యుడు) కోసం రోజుకు లైక్‌ల పరిమితిని పెంచండి"
+    tl3_additional_likes_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl3 (రెగ్యులర్) కోసం రోజుకు లైక్‌ల పరిమితిని పెంచండి"
+    tl4_additional_likes_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl4 (నాయకుడు) కోసం రోజుకు లైక్‌ల పరిమితిని పెంచండి"
+    tl2_additional_edits_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl2 (సభ్యుడు) కోసం రోజుకు సవరణల పరిమితిని పెంచండి"
+    tl3_additional_edits_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl3 (రెగ్యులర్) కోసం రోజుకు సవరణల పరిమితిని పెంచండి"
+    tl4_additional_edits_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl4 (నాయకుడు) కోసం రోజుకు సవరణల పరిమితిని పెంచండి"
+    tl2_additional_flags_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl2 (సభ్యుడు) కోసం రోజుకు ఫ్లాగ్‌ల పరిమితిని పెంచండి"
+    tl3_additional_flags_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl3 (రెగ్యులర్) కోసం రోజుకు ఫ్లాగ్‌ల పరిమితిని పెంచండి"
+    tl4_additional_flags_per_day_multiplier: "ఈ సంఖ్యతో గుణించడం ద్వారా tl4 (నాయకుడు) కోసం రోజుకు ఫ్లాగ్‌ల పరిమితిని పెంచండి"
+    num_users_to_silence_new_user: "కొత్త వినియోగదారు పోస్ట్‌లు hide_post_sensitivity సెట్టింగ్‌ని మించి ఉంటే మరియు ఈ అనేక విభిన్న వినియోగదారుల నుండి స్పామ్ ఫ్లాగ్‌లను కలిగి ఉంటే, వారి అన్ని పోస్ట్‌లను దాచిపెట్టి, భవిష్యత్తులో పోస్టింగ్‌ను నిరోధించండి. నిలిపివేయడానికి 0."
+    num_tl3_flags_to_silence_new_user: "కొత్త వినియోగదారు పోస్ట్‌లు num_tl3_users_to_silence_new_user విభిన్న విశ్వసనీయ స్థాయి 3 వినియోగదారుల నుండి ఇన్ని ఫ్లాగ్‌లను పొందినట్లయితే, వారి అన్ని పోస్ట్‌లను దాచిపెట్టి, భవిష్యత్తులో పోస్టింగ్ చేయడాన్ని నిరోధించండి. నిలిపివేయడానికి 0."
+    num_tl3_users_to_silence_new_user: "ఒక కొత్త వినియోగదారు పోస్ట్‌లు ఈ విభిన్న విశ్వసనీయ స్థాయి 3 వినియోగదారుల నుండి num_tl3_flags_to_silence_new_user ఫ్లాగ్‌లను పొందినట్లయితే, వారి అన్ని పోస్ట్‌లను దాచిపెట్టి, భవిష్యత్తులో పోస్టింగ్ చేయకుండా నిరోధించండి. నిలిపివేయడానికి 0."
+    notify_mods_when_user_silenced: "వినియోగదారు స్వయంచాలకంగా నిశ్శబ్దం చేయబడితే, మోడరేటర్లందరికీ సందేశాన్ని పంపండి."
+    flag_sockpuppets: "టాపిక్‌ను ప్రారంభించిన వినియోగదారు అదే IP చిరునామా నుండి టాపిక్‌కు కొత్త వినియోగదారు ప్రత్యుత్తరం ఇస్తే, వారి రెండు పోస్ట్‌లను సంభావ్య స్పామ్‌గా ఫ్లాగ్ చేయండి."
+    traditional_markdown_linebreaks: "మార్క్‌డౌన్‌లో సాంప్రదాయ లైన్‌బ్రేక్‌లను ఉపయోగించండి, దీనికి లైన్‌బ్రేక్ కోసం రెండు ట్రైలింగ్ స్పేస్‌లు అవసరం."
+    enable_markdown_linkify: "లింక్‌లా కనిపించే వచనాన్ని స్వయంచాలకంగా లింక్‌గా పరిగణించండి: www.example.com మరియు https://example.com స్వయంచాలకంగా లింక్ చేయబడతాయి"
+    markdown_linkify_tlds: "స్వయంచాలకంగా లింక్‌లుగా పరిగణించబడే అగ్ర స్థాయి డొమైన్‌ల జాబితా"
+    markdown_typographer_quotation_marks: "డబుల్ మరియు సింగిల్ కోట్‌ల రీప్లేస్‌మెంట్ జతల జాబితా"
+    post_undo_action_window_mins: "పోస్ట్‌పై ఇటీవలి చర్యలను రద్దు చేయడానికి వినియోగదారులు అనుమతించబడిన నిమిషాల సంఖ్య (ఇలా, ఫ్లాగ్, మొదలైనవి)."
+    must_approve_users: "సైట్‌ను యాక్సెస్ చేయడానికి అనుమతించే ముందు సిబ్బంది అన్ని కొత్త వినియోగదారు ఖాతాలను తప్పనిసరిగా ఆమోదించాలి."
+    invite_code: "ఖాతా నమోదును అనుమతించడానికి వినియోగదారు తప్పనిసరిగా ఈ కోడ్‌ని టైప్ చేయాలి, ఖాళీగా ఉన్నప్పుడు విస్మరించబడుతుంది (కేస్-సెన్సిటివ్)"
+    approve_suspect_users: "సమీక్ష క్యూలో అనుమానాస్పద వినియోగదారులను జోడించండి. అనుమానాస్పద వినియోగదారులు బయో/వెబ్‌సైట్‌లోకి ప్రవేశించారు కానీ రీడింగ్ యాక్టివిటీ లేదు."
+    review_every_post: "నియంత్రణ కోసం ప్రతి కొత్త పోస్ట్‌ను సమీక్ష క్యూలో పంపండి. పోస్ట్‌లు ఇప్పటికీ వెంటనే ప్రచురించబడతాయి మరియు వినియోగదారులందరికీ కనిపిస్తాయి. హెచ్చరిక! రివ్యూ అవసరమయ్యే పోస్ట్‌ల సంభావ్య వాల్యూమ్ కారణంగా అధిక-ట్రాఫిక్ సైట్‌ల కోసం సిఫార్సు చేయబడలేదు."
+    pending_users_reminder_delay_minutes: "కొత్త వినియోగదారులు ఆమోదం కోసం ఇన్ని నిమిషాల కంటే ఎక్కువ కాలం వేచి ఉంటే మోడరేటర్‌లకు తెలియజేయండి. నోటిఫికేషన్‌లను నిలిపివేయడానికి -1కి సెట్ చేయండి."
+    persistent_sessions: "వెబ్ బ్రౌజర్ మూసివేయబడినప్పుడు వినియోగదారులు లాగిన్ అయి ఉంటారు"
+    maximum_session_age: "చివరి సందర్శన నుండి సభ్యుడు n గంటల పాటు లాగిన్ అయి ఉంటారు"
+    ga_version: "ఉపయోగించడానికి Google యూనివర్సల్ Analytics వెర్షన్: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google యూనివర్సల్ Analytics ట్రాకింగ్ కోడ్ ID, ఉదా: UA-12345678-9; <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>చూడండి"
+    ga_universal_domain_name: "Google Universal Analytics డొమైన్ పేరు, ఉదా: mysite.com; <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>చూడండి"
+    ga_universal_auto_link_domains: "Google యూనివర్సల్ Analytics క్రాస్-డొమైన్ ట్రాకింగ్‌ని ప్రారంభించండి. ఈ డొమైన్‌లకు అవుట్‌గోయింగ్ లింక్‌లకు క్లయింట్ ఐడి జోడించబడుతుంది. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google క్రాస్-డొమైన్ ట్రాకింగ్ గైడ్ చూడండి.</a>"
+    gtm_container_id: "Google ట్యాగ్ మేనేజర్ కంటైనర్ ఐడి. ఉదా: GTM-ABCD12E. <br/>గమనిక: కంటెంట్ భద్రతా విధానం (CSP) ప్రారంభించబడినప్పుడు GTMని ఉపయోగించడానికి, మెటాలోని డాక్యుమెంటేషన్‌ను చూడండి: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Google ట్యాగ్ మేనేజర్ స్క్రిప్ట్‌లలో నాన్‌లను ఉపయోగించండి</a>."
+    enable_escaped_fragments: "వెబ్‌క్రాలర్ కనుగొనబడకపోతే Google యొక్క Ajax-Crawling APIకి తిరిగి వెళ్లండి. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>చూడండి"
+    moderators_manage_categories_and_groups: "వర్గాలు మరియు సమూహాలను సృష్టించడానికి మరియు నిర్వహించడానికి మోడరేటర్‌లను అనుమతించండి"
+    moderators_change_post_ownership: "పోస్ట్ యాజమాన్యాన్ని మార్చడానికి మోడరేటర్‌లను అనుమతించండి"
+    cors_origins: "క్రాస్-ఆరిజిన్ అభ్యర్థనల కోసం అనుమతించబడిన మూలాలు (CORS). ప్రతి మూలం తప్పనిసరిగా http:// లేదా https://ని కలిగి ఉండాలి. CORSని ప్రారంభించడానికి DISCOURSE_ENABLE_CORS env వేరియబుల్ తప్పక ఒప్పుకు సెట్ చేయబడాలి."
+    use_admin_ip_allowlist: "అడ్మిన్‌లు స్క్రీన్ చేయబడిన IPల జాబితాలో (అడ్మిన్ > లాగ్‌లు > స్క్రీన్ చేయబడిన Ips) నిర్వచించబడిన IP చిరునామాలో ఉన్నట్లయితే మాత్రమే లాగిన్ చేయగలరు."
+    blocked_ip_blocks: "డిస్కోర్స్ ద్వారా ఎప్పుడూ క్రాల్ చేయకూడని ప్రైవేట్ IP బ్లాక్‌ల జాబితా"
+    allowed_internal_hosts: "ఉపన్యాసం చేసే అంతర్గత హోస్ట్‌ల జాబితా వన్‌బాక్సింగ్ మరియు ఇతర ప్రయోజనాల కోసం సురక్షితంగా క్రాల్ చేయగలదు"
+    allowed_onebox_iframes: "Onebox పొందుపరచడం ద్వారా అనుమతించబడే iframe src డొమైన్‌ల జాబితా. `*` అన్ని డిఫాల్ట్ Onebox ఇంజిన్‌లను అనుమతిస్తుంది."
+    allowed_iframes: "పోస్ట్‌లలో ఉపన్యాసం సురక్షితంగా అనుమతించగల iframe src డొమైన్ ప్రిఫిక్స్‌ల జాబితా"
+    allowed_crawler_user_agents: "సైట్‌ను యాక్సెస్ చేయడానికి అనుమతించబడే వెబ్ క్రాలర్‌ల వినియోగదారు ఏజెంట్‌లు. హెచ్చరిక! దీన్ని సెట్ చేయడం వలన ఇక్కడ జాబితా చేయబడని అన్ని క్రాలర్‌లు అనుమతించబడవు!"
+    blocked_crawler_user_agents: "సైట్‌ను యాక్సెస్ చేయడానికి అనుమతించకూడని వెబ్ క్రాలర్‌లను గుర్తించే వినియోగదారు ఏజెంట్ స్ట్రింగ్‌లోని ప్రత్యేక కేస్ ఇన్‌సెన్సిటివ్ పదం. అనుమతి జాబితా నిర్వచించబడితే వర్తించదు."
+    slow_down_crawler_user_agents: '"స్లో డౌన్ క్రాలర్ రేట్" సెట్టింగ్‌లో కాన్ఫిగర్ చేయబడినట్లుగా రేట్ పరిమితం చేయబడే వెబ్ క్రాలర్‌ల వినియోగదారు ఏజెంట్‌లు. ప్రతి విలువ తప్పనిసరిగా కనీసం 3 అక్షరాల పొడవు ఉండాలి.'
+    slow_down_crawler_rate: "slow_down_crawler_user_agents పేర్కొనబడితే, ఈ రేటు అన్ని క్రాలర్‌లకు వర్తిస్తుంది (అభ్యర్థనల మధ్య సెకన్ల ఆలస్యం సంఖ్య)"
+    content_security_policy_report_only: "కంటెంట్-సెక్యూరిటీ-పాలసీ-రిపోర్ట్-మాత్రమే (CSP)ని ప్రారంభించండి"
+    content_security_policy_collect_reports: "/csp_reports వద్ద CSP ఉల్లంఘన నివేదిక సేకరణను ప్రారంభించండి"
+    content_security_policy_frame_ancestors: "CSP ద్వారా iframesలో ఈ సైట్‌ను ఎవరు పొందుపరచవచ్చో నియంత్రించండి. <a href='%{base_path}/admin/customize/embedding'>ఎంబెడ్డింగ్</a>లో అనుమతించబడిన హోస్ట్‌లను నియంత్రించండి"
+    content_security_policy_script_src: "అదనపు అనుమతించబడిన స్క్రిప్ట్ మూలాలు. ప్రస్తుత హోస్ట్ మరియు CDN డిఫాల్ట్‌గా చేర్చబడ్డాయి. కంటెంట్ భద్రతా విధానంతో <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>చూడండి XSS దాడులను తగ్గించండి.</a> (CSP)"
+    content_security_policy_strict_dynamic: "ప్రయోగాత్మకం: కఠినమైన-డైనమిక్ కంటెంట్ భద్రతా విధానాన్ని ఉపయోగించండి. ఇది మా డిఫాల్ట్ CSP కాన్ఫిగరేషన్ కంటే ఆధునికమైనది మరియు మరింత సౌకర్యవంతమైనది. ఇది పూర్తిగా పని చేస్తుంది, కానీ ఇంకా అన్ని థీమ్‌లు మరియు ప్లగిన్‌లతో పరీక్షించబడలేదు."
+    invalidate_inactive_admin_email_after_days: "ఇన్ని రోజులలో సైట్‌ను సందర్శించని అడ్మిన్ ఖాతాలు లాగిన్ చేయడానికి ముందు వారి ఇమెయిల్ చిరునామాను మళ్లీ ధృవీకరించాలి. నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    include_secure_categories_in_tag_counts: "ప్రారంభించబడినప్పుడు, ట్యాగ్ కోసం టాపిక్‌ల గణన వినియోగదారులందరికీ చదవడానికి పరిమితం చేయబడిన వర్గాల్లోని అంశాలను కలిగి ఉంటుంది. నిలిపివేయబడినప్పుడు, సాధారణ వినియోగదారులకు ట్యాగ్ కోసం అంశాల గణన మాత్రమే చూపబడుతుంది, ఇక్కడ అన్ని అంశాలు పబ్లిక్ కేటగిరీలలో ఉంటాయి."
+    display_personal_messages_tag_counts: "ప్రారంభించబడినప్పుడు, ఇచ్చిన ట్యాగ్‌తో ట్యాగ్ చేయబడిన వ్యక్తిగత సందేశాల సంఖ్య ప్రదర్శించబడుతుంది."
+    top_menu: "హోమ్‌పేజీ నావిగేషన్‌లో ఏ అంశాలు కనిపించాలో మరియు ఏ క్రమంలో కనిపించాలో నిర్ణయించండి."
+    post_menu: "పోస్ట్ మెనులో ఏ అంశాలు కనిపిస్తాయో మరియు ఏ క్రమంలో కనిపిస్తాయో నిర్ణయించండి."
+    post_menu_hidden_items: "ఎక్స్‌పాన్షన్ ఎలిప్సిస్‌పై క్లిక్ చేస్తే తప్ప పోస్ట్ మెనులో డిఫాల్ట్‌గా దాచాల్సిన మెను ఐటెమ్‌లు."
+    share_links: "భాగస్వామ్య డైలాగ్‌లో ఏ అంశాలు కనిపిస్తాయో మరియు ఏ క్రమంలో ఉన్నాయో నిర్ణయించండి."
+    allow_username_in_share_links: "భాగస్వామ్య లింక్‌లలో వినియోగదారు పేర్లను చేర్చడానికి అనుమతించండి. ప్రత్యేక సందర్శకుల ఆధారంగా బ్యాడ్జ్‌లను రివార్డ్ చేయడానికి ఇది ఉపయోగపడుతుంది."
+    site_contact_username: "అన్ని ఆటోమేటెడ్ సందేశాలను పంపడానికి చెల్లుబాటు అయ్యే సిబ్బంది వినియోగదారు పేరు. ఖాళీగా ఉంచినట్లయితే డిఫాల్ట్ సిస్టమ్ ఖాతా ఉపయోగించబడుతుంది."
+    site_contact_group_name: "స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు."
+    send_welcome_message: "శీఘ్ర ప్రారంభ గైడ్‌తో కొత్త వినియోగదారులందరికీ స్వాగత సందేశాన్ని పంపండి."
+    send_tl1_welcome_message: "కొత్త విశ్వసనీయ స్థాయి 1 వినియోగదారులకు స్వాగత సందేశాన్ని పంపండి."
+    send_tl2_promotion_message: "కొత్త విశ్వసనీయ స్థాయి 2 సబ్యులకు ప్రమోషన్ గురించి సందేశాన్ని పంపండి."
+    suppress_reply_directly_below: "ఈ పోస్ట్‌కి దిగువన నేరుగా ఒకే ఒక్క ప్రత్యుత్తరం ఉన్నప్పుడు పోస్ట్‌పై విస్తరించదగిన ప్రత్యుత్తర గణనను చూపవద్దు."
+    suppress_reply_directly_above: "ఈ పోస్ట్‌పై నేరుగా ఒకే ప్రత్యుత్తరం ఉన్నప్పుడు పోస్ట్‌పై విస్తరించదగిన ప్రత్యుత్తరాన్ని చూపవద్దు."
+    remove_full_quote: "(ఎ) పోస్ట్ ప్రారంభంలో కనిపిస్తే, (బి) ఇది మొత్తం పోస్ట్‌కి చెందినది మరియు (సి) అది వెంటనే ముందున్న పోస్ట్‌లో ఉన్నట్లయితే, కొటేషన్‌ని స్వయంచాలకంగా తీసివేయండి. వివరాల కోసం, ప్రత్యక్ష ప్రత్యుత్తరాల నుండి పూర్తి కోట్‌ల తొలగింపు <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>చూడండి</a>"
+    suppress_reply_when_quoting: "పోస్ట్ కోట్‌లు ప్రత్యుత్తరం ఇచ్చినప్పుడు పోస్ట్‌పై విస్తరించదగిన ప్రత్యుత్తరాన్ని చూపవద్దు."
+    max_reply_history: "ప్రత్యుత్తరానికి విస్తరింపజేసేటప్పుడు విస్తరించాల్సిన ప్రత్యుత్తరాల గరిష్ట సంఖ్య"
     topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
+    topics_per_period_in_top_page: "విస్తరించిన 'మరిన్ని చూపించు' అగ్ర అంశాలలో చూపబడిన అగ్ర అంశాల సంఖ్య."
+    redirect_users_to_top_page: "కొత్త మరియు ఎక్కువ కాలం హాజరుకాని వినియోగదారులను అగ్ర పేజీకి స్వయంచాలకంగా దారి మళ్లించండి."
+    top_page_default_timeframe: "అనామక వినియోగదారుల కోసం డిఫాల్ట్ టాప్ పేజీ సమయ వ్యవధి (లాగిన్ చేసిన వినియోగదారుల కోసం వారి చివరి సందర్శన ఆధారంగా స్వయంచాలకంగా సర్దుబాటు చేస్తుంది)."
+    prioritize_username_in_ux: "వినియోగదారు పేజీ, వినియోగదారు కార్డ్ మరియు పోస్ట్‌లలో ముందుగా వినియోగదారు పేరును చూపు (డిసేబుల్ పేరు మొదట చూపబడినప్పుడు)"
+    enable_rich_text_paste: "కంపోజర్‌లో వచనాన్ని అతికిస్తున్నప్పుడు ఆటోమేటిక్ HTML నుండి మార్క్‌డౌన్ మార్పిడిని ప్రారంభించండి. (ప్రయోగాత్మకం)"
+    send_old_credential_reminder_days: "రోజుల తర్వాత పాత ఆధారాల గురించి గుర్తు చేయండి"
+    email_token_valid_hours: "పాస్‌వర్డ్ మర్చిపోయారా / ఖాతాని సక్రియం చేయండి టోకెన్‌లు (n) గంటల వరకు చెల్లుబాటు అవుతాయి."
+    max_favorite_badges: "సభ్యుడు ఎంచుకోగల బ్యాడ్జ్‌ల గరిష్ట సంఖ్య"
+    whispers_allowed_groups: "పేర్కొన్న సమూహాల సభ్యుల కోసం అంశాలలో ప్రైవేట్ కమ్యూనికేషన్‌ను అనుమతించండి."
+    hidden_post_visible_groups: "దాచిన పోస్ట్‌లను వీక్షించడానికి ఈ సమూహాల సభ్యులను అనుమతించండి. సిబ్బంది వినియోగదారులు ఎల్లప్పుడూ దాచిన పోస్ట్‌లను చూడవచ్చు."
+    allow_index_in_robots_txt: "ఈ సైట్ వెబ్ శోధన ఇంజిన్‌ల ద్వారా సూచిక చేయడానికి అనుమతించబడిందని robots.txtలో పేర్కొనండి. అసాధారణమైన సందర్భాల్లో మీరు శాశ్వతంగా <a href='%{base_path}/admin/customize/robots'>robots.txt</a>ని భర్తీ చేయవచ్చు."
+    blocked_email_domains: "ఖాతాలను నమోదు చేసుకోవడానికి వినియోగదారులు అనుమతించబడని ఇమెయిల్ డొమైన్‌ల పైప్-డిలిమిటెడ్ జాబితా. పేర్కొన్న డొమైన్‌ల కోసం సబ్‌డొమైన్‌లు స్వయంచాలకంగా నిర్వహించబడతాయి. వైల్డ్‌కార్డ్ చిహ్నాలు * మరియు ? మద్దతు లేదు. ఉదాహరణ: mailinator.com|trashmail.net"
+    allowed_email_domains: "వినియోగదారులు తప్పనిసరిగా ఖాతాలను నమోదు చేసుకోవలసిన ఇమెయిల్ డొమైన్‌ల పైప్-డిలిమిటెడ్ జాబితా. పేర్కొన్న డొమైన్‌ల కోసం సబ్‌డొమైన్‌లు స్వయంచాలకంగా నిర్వహించబడతాయి. వైల్డ్‌కార్డ్ చిహ్నాలు * మరియు ? మద్దతు లేదు. హెచ్చరిక: జాబితా చేయబడినవి కాకుండా ఇతర ఇమెయిల్ డొమైన్‌లను కలిగి ఉన్న వినియోగదారులు అనుమతించబడరు!"
+    normalize_emails: "సాధారణీకరించిన ఇమెయిల్ ప్రత్యేకంగా ఉందో లేదో తనిఖీ చేయండి. సాధారణీకరించిన ఇమెయిల్ వినియోగదారు పేరు నుండి అన్ని చుక్కలను మరియు + మరియు @ చిహ్నాల మధ్య ఉన్న ప్రతిదాన్ని తొలగిస్తుంది."
+    auto_approve_email_domains: "ఈ డొమైన్‌ల జాబితా నుండి ఇమెయిల్ చిరునామాలను కలిగి ఉన్న వినియోగదారులు స్వయంచాలకంగా ఆమోదించబడతారు. పేర్కొన్న డొమైన్‌ల కోసం సబ్‌డొమైన్‌లు స్వయంచాలకంగా నిర్వహించబడతాయి. వైల్డ్‌కార్డ్ చిహ్నాలు * మరియు ? మద్దతు లేదు."
+    hide_email_address_taken: "సైన్అప్ సమయంలో లేదా పాస్‌వర్డ్‌ను మర్చిపోయినప్పుడు ఇచ్చిన ఇమెయిల్ చిరునామాతో ఖాతా ఉందని వినియోగదారులకు తెలియజేయవద్దు. 'మర్చిపోయిన పాస్‌వర్డ్' అభ్యర్థనల కోసం పూర్తి ఇమెయిల్ అవసరం."
+    log_out_strict: "లాగ్ అవుట్ చేస్తున్నప్పుడు, అన్ని పరికరాలలో వినియోగదారు కోసం అన్ని సెషన్‌లను లాగ్ అవుట్ చేయండి"
+    version_checks: "వెర్షన్ అప్‌డేట్‌ల కోసం డిస్కోర్స్ హబ్‌ని పింగ్ చేయండి మరియు <a href='%{base_path}/admin' target='_blank'>/అడ్మిన్</a> డాష్‌బోర్డ్‌లో కొత్త వెర్షన్ సందేశాలను చూపండి"
+    new_version_emails: "ఉపన్యాసం యొక్క కొత్త వెర్షన్ అందుబాటులో ఉన్నప్పుడు contact_email చిరునామాకు ఇమెయిల్ పంపండి."
+    include_in_discourse_discover: "CDCK, Inc. (“డిస్కోర్స్”) ఈ సంఘాన్ని <a href='https://www.discourse.org/discover'>డిస్కవర్ పేజీ</a> లో మరియు డిస్కోర్స్ మార్కెటింగ్ మెటీరియల్‌లో ఫీచర్ చేయనివ్వండి. అలా చేయడం ద్వారా, మీరు కమ్యూనిటీ మెటాడేటా మరియు అనామక వినియోగ గణాంకాలను డిస్కోర్స్‌తో పంచుకుంటారు. కమ్యూనిటీల ప్రమోషన్ అనేది డిస్కోర్స్ యొక్క అభీష్టానుసారం అని దయచేసి గమనించండి."
     invite_expiry_days: "వాడుకరుల ఆహ్వాన కీ ఎన్ని రోజులు చెల్లుతుంది"
-    min_password_length: "సంకేతపదపు కనీస పొడవు."
+    invite_only: "కొత్త వినియోగదారులందరినీ విశ్వసనీయ వినియోగదారులు లేదా సిబ్బంది స్పష్టంగా ఆహ్వానించాలి. పబ్లిక్ రిజిస్ట్రేషన్ నిలిపివేయబడింది."
+    login_required: "ఈ సైట్‌లోని కంటెంట్‌ని చదవడానికి ప్రామాణీకరణ అవసరం, అనామక ప్రాప్యతను అనుమతించవద్దు."
+    min_username_length: "అక్షరాలలో కనీస వినియోగదారు పేరు పొడవు. హెచ్చరిక: ఇప్పటికే ఉన్న వినియోగదారులు లేదా సమూహాలు దీని కంటే చిన్న పేర్లను కలిగి ఉంటే, మీ సైట్ విచ్ఛిన్నమవుతుంది!"
+    max_username_length: "అక్షరాలలో గరిష్ట వినియోగదారు పేరు పొడవు. హెచ్చరిక: ఇప్పటికే ఉన్న వినియోగదారులు లేదా సమూహాలకు దీని కంటే ఎక్కువ పొడవు ఉన్న పేర్లు ఉంటే, మీ సైట్ విచ్ఛిన్నమవుతుంది!"
+    unicode_usernames: "యూనికోడ్ అక్షరాలు మరియు సంఖ్యలను కలిగి ఉండేలా వినియోగదారు పేర్లు మరియు సమూహ పేర్లను అనుమతించండి."
+    allowed_unicode_username_characters: "వినియోగదారు పేర్లలో కొన్ని యూనికోడ్ అక్షరాలను మాత్రమే అనుమతించడానికి సాధారణ వ్యక్తీకరణ. ASCII అక్షరాలు మరియు సంఖ్యలు ఎల్లప్పుడూ అనుమతించబడతాయి మరియు అనుమతి జాబితాలో చేర్చవలసిన అవసరం లేదు."
+    reserved_usernames: "సైన్అప్ అనుమతించబడని వినియోగదారు పేర్లు. వైల్డ్‌కార్డ్ చిహ్నం * ఏదైనా అక్షరం సున్నా లేదా అంతకంటే ఎక్కువ సార్లు సరిపోలడానికి ఉపయోగించవచ్చు."
+    password_unique_characters: "పాస్‌వర్డ్ తప్పనిసరిగా కలిగి ఉండవలసిన ప్రత్యేక అక్షరాల కనీస సంఖ్య."
+    block_common_passwords: "10,000 అత్యంత సాధారణ పాస్‌వర్డ్‌లలో ఉన్న పాస్‌వర్డ్‌లను అనుమతించవద్దు."
+    auth_skip_create_confirm: బాహ్య ప్రమాణీకరణ ద్వారా సైన్ అప్ చేస్తున్నప్పుడు, సృష్టించు ఖాతా పాప్‌అప్‌ను దాటవేయండి. auth_overrides_email, auth_overrides_username మరియు auth_overrides_nameతో పాటు ఉత్తమంగా ఉపయోగించబడుతుంది.
+    auth_immediately: "వినియోగదారు పరస్పర చర్య లేకుండా స్వయంచాలకంగా బాహ్య లాగిన్ సిస్టమ్‌కు మళ్లించబడుతుంది. login_required నిజం అయినప్పుడు మాత్రమే ఇది ప్రభావం చూపుతుంది మరియు ఒక బాహ్య ప్రమాణీకరణ పద్ధతి మాత్రమే ఉంది"
+    enable_discourse_connect: "DiscourseConnect (గతంలో 'డిస్కోర్స్ SSO') ద్వారా సైన్ ఆన్ చేయడాన్ని ప్రారంభించండి (హెచ్చరిక: వినియోగదారుల ఇమెయిల్ చిరునామాలు *తప్పక* బాహ్య సైట్ ద్వారా ధృవీకరించబడాలి!)"
+    verbose_discourse_connect_logging: "<a href='%{base_path}/logs' target='_blank'>/లాగ్‌లు</a>కి వెర్బోస్ డిస్కోర్స్ కనెక్ట్ సంబంధిత డయాగ్నోస్టిక్‌లను లాగ్ చేయండి"
+    enable_discourse_connect_provider: "DiscourseConnect (గతంలో 'Discourse SSO') ప్రొవైడర్ ప్రోటోకాల్‌ను /session/sso_provider ఎండ్ పాయింట్ వద్ద అమలు చేయండి, discourse_connect_provider_secrets సెట్ చేయబడాలి"
+    discourse_connect_url: "DiscourseConnect ఎండ్‌పాయింట్ యొక్క URL (తప్పక http:// లేదా https://ని చేర్చాలి మరియు వెనుకబడిన స్లాష్‌ని చేర్చకూడదు)"
+    discourse_connect_secret: "DiscourseConnect సమాచారాన్ని క్రిప్టోగ్రాఫికల్‌గా ప్రామాణీకరించడానికి ఉపయోగించే రహస్య స్ట్రింగ్, అది 10 అక్షరాలు లేదా అంతకంటే ఎక్కువ ఉందని నిర్ధారించుకోండి"
+    discourse_connect_provider_secrets: "DiscourseConnectని ఉపయోగిస్తున్న డొమైన్-రహస్య జతల జాబితా. DiscourseConnect రహస్యం 10 అక్షరాలు లేదా అంతకంటే ఎక్కువ ఉండేలా చూసుకోండి. వైల్డ్‌కార్డ్ చిహ్నాన్ని * ఏదైనా డొమైన్‌తో సరిపోల్చడానికి లేదా దానిలోని కొంత భాగాన్ని మాత్రమే ఉపయోగించుకోవచ్చు (ఉదా *.example.com)."
+    discourse_connect_overrides_bio: "వినియోగదారు ప్రొఫైల్‌లో వినియోగదారు బయోని భర్తీ చేస్తుంది మరియు దానిని మార్చకుండా వినియోగదారుని నిరోధిస్తుంది"
+    discourse_connect_overrides_groups: "గుంపుల లక్షణంలో పేర్కొన్న సమూహాలతో అన్ని మాన్యువల్ గ్రూప్ సభ్యత్వాలను సమకాలీకరించండి (హెచ్చరిక: మీరు సమూహాలను పేర్కొనకపోతే, వినియోగదారు కోసం అన్ని మాన్యువల్ గ్రూప్ సభ్యత్వాలు క్లియర్ చేయబడతాయి)"
+    auth_overrides_email: "ప్రతి లాగిన్‌లో బాహ్య సైట్ ఇమెయిల్‌తో స్థానిక ఇమెయిల్‌ను భర్తీ చేస్తుంది మరియు స్థానిక మార్పులను నిరోధించండి. అన్ని ప్రామాణీకరణ ప్రదాతలకు వర్తిస్తుంది. (హెచ్చరిక: స్థానిక ఇమెయిల్‌ల సాధారణీకరణ కారణంగా వ్యత్యాసాలు సంభవించవచ్చు)"
+    auth_overrides_username: "ప్రతి లాగిన్‌లో బాహ్య సైట్ వినియోగదారు పేరుతో స్థానిక వినియోగదారు పేరును భర్తీ చేస్తుంది మరియు స్థానిక మార్పులను నిరోధించండి. అన్ని ప్రామాణీకరణ ప్రదాతలకు వర్తిస్తుంది. (హెచ్చరిక: వినియోగదారు పేరు పొడవు/అవసరాలలో తేడాల కారణంగా వ్యత్యాసాలు సంభవించవచ్చు)"
+    auth_overrides_name: "ప్రతి లాగిన్‌లో బాహ్య సైట్ పూర్తి పేరుతో స్థానిక పూర్తి పేరును భర్తీ చేస్తుంది మరియు స్థానిక మార్పులను నిరోధించండి. అన్ని ప్రమాణీకరణ ప్రదాతలకు వర్తిస్తుంది."
+    discourse_connect_overrides_avatar: "DiscourseConnect పేలోడ్ నుండి విలువతో వినియోగదారు అవతార్‌ను భర్తీ చేస్తుంది. ప్రారంభించబడితే, డిస్కోర్స్‌లో అవతార్‌లను అప్‌లోడ్ చేయడానికి వినియోగదారులు అనుమతించబడరు."
+    discourse_connect_overrides_location: "DiscourseConnect పేలోడ్ నుండి విలువతో వినియోగదారు స్థానాన్ని భర్తీ చేస్తుంది మరియు స్థానిక మార్పులను నిరోధించండి."
+    discourse_connect_overrides_website: "DiscourseConnect పేలోడ్ నుండి విలువతో వినియోగదారు వెబ్‌సైట్‌ను భర్తీ చేస్తుంది మరియు స్థానిక మార్పులను నిరోధించండి."
+    discourse_connect_overrides_profile_background: "DiscourseConnect పేలోడ్ నుండి విలువతో వినియోగదారు ప్రొఫైల్ నేపథ్యాన్ని భర్తీ చేస్తుంది."
+    discourse_connect_overrides_card_background: "DiscourseConnect పేలోడ్ నుండి విలువతో వినియోగదారు కార్డ్ నేపథ్యాన్ని భర్తీ చేస్తుంది."
+    discourse_connect_not_approved_url: "ఈ URLకి ఆమోదించబడని DiscourseConnect ఖాతాలను దారి మళ్లించండి"
+    discourse_connect_allowed_redirect_domains: "DiscourseConnect అందించిన రిటర్న్_పాత్‌ల కోసం ఈ డొమైన్‌లకు పరిమితం చేయండి (డిఫాల్ట్‌గా తిరిగి వచ్చే మార్గం ప్రస్తుత సైట్‌లో ఉండాలి). రిటర్న్ పాత్ కోసం ఏదైనా డొమైన్‌ను అనుమతించడానికి * ఉపయోగించండి. సబ్‌డొమైన్ వైల్డ్‌కార్డ్‌లు (`*.foobar.com`) అనుమతించబడవు."
+    enable_local_logins: "స్థానిక వినియోగదారు పేరు మరియు పాస్‌వర్డ్ లాగిన్ ఆధారిత ఖాతాలను ప్రారంభించండి. హెచ్చరిక: నిలిపివేయబడితే, మీరు ఇంతకు ముందు కనీసం ఒక ప్రత్యామ్నాయ లాగిన్ పద్ధతిని కాన్ఫిగర్ చేయకుంటే మీరు లాగిన్ చేయలేకపోవచ్చు."
+    enable_local_logins_via_email: "వినియోగదారులకు ఇమెయిల్ ద్వారా పంపడానికి ఒక-క్లిక్ లాగిన్ లింక్‌ను అభ్యర్థించడానికి అనుమతించండి."
+    allow_new_registrations: "కొత్త యూజర్ రిజిస్ట్రేషన్‌లను అనుమతించండి. ఎవరైనా కొత్త ఖాతాను సృష్టించకుండా నిరోధించడానికి దీని ఎంపికను తీసివేయండి."
+    enable_signup_cta: "ఖాతా కోసం సైన్ అప్ చేయమని ప్రాంప్ట్ చేస్తూ తిరిగి వస్తున్న అనామక వినియోగదారులకు నోటీసును చూపండి."
+    enable_google_oauth2_logins: "Google Oauth2 ప్రమాణీకరణను ప్రారంభించండి. ఇది Google ప్రస్తుతం మద్దతు ఇస్తున్న ప్రమాణీకరణ పద్ధతి. కీ మరియు రహస్యం అవసరం. <a href='https://meta.discourse.org/t/15858' target='_blank'>ఉపన్యాసం కోసం Google లాగిన్‌ని కాన్ఫిగర్ చేయడం</a>చూడండి."
+    google_oauth2_client_secret: "మీ Google అప్లికేషన్ యొక్క క్లయింట్ ID."
+    google_oauth2_prompt: "ప్రామాణీకరణ సర్వర్ వినియోగదారుని పునఃప్రామాణీకరణ మరియు సమ్మతి కోసం ప్రాంప్ట్ చేస్తుందో లేదో నిర్దేశించే స్ట్రింగ్ విలువల ఐచ్ఛిక స్పేస్-డిలిమిటెడ్ జాబితా. సాధ్యమయ్యే విలువల కోసం <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ని చూడండి."
+    google_oauth2_hd: "సైన్-ఇన్ పరిమితం చేయబడే ఐచ్ఛిక Google Apps హోస్ట్ చేసిన డొమైన్. మరిన్ని వివరాల కోసం <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> ని చూడండి."
+    google_oauth2_hd_groups: "(ప్రయోగాత్మకం) ప్రామాణీకరణపై హోస్ట్ చేసిన డొమైన్‌లో వినియోగదారుల Google సమూహాలను తిరిగి పొందండి. స్వయంచాలక ఉపన్యాస సమూహ సభ్యత్వాన్ని మంజూరు చేయడానికి తిరిగి పొందిన Google సమూహాలను ఉపయోగించవచ్చు (సమూహ సెట్టింగ్‌లను చూడండి). మరింత సమాచారం కోసం https://meta.discourse.org/t/226850 చూడండి"
+    google_oauth2_hd_groups_service_account_admin_email: "Google Workspace అడ్మినిస్ట్రేటర్ ఖాతాకు చెందిన ఇమెయిల్ చిరునామా. సమూహ సమాచారాన్ని పొందడానికి సేవా ఖాతా ఆధారాలతో ఉపయోగించబడుతుంది."
+    google_oauth2_hd_groups_service_account_json: "సేవా ఖాతా కోసం JSON కీలక సమాచారాన్ని ఫార్మాట్ చేసింది. సమూహ సమాచారాన్ని పొందడానికి ఉపయోగించబడుతుంది."
+    enable_twitter_logins: "ట్విట్టర్ ప్రామాణీకరణను ప్రారంభించండి, twitter_consumer_key మరియు twitter_consumer_secret అవసరం. చూడండి <a href='https://meta.discourse.org/t/13395' target='_blank'>డిస్కోర్స్కోసం ట్విట్టర్ లాగిన్ (మరియు రిచ్ ఎంబెడ్స్) కాన్ఫిగర్ చేయడం</a>."
+    twitter_consumer_key: "Twitter ప్రమాణీకరణ కోసం వినియోగదారు కీ, <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>లో నమోదు చేయబడింది"
+    twitter_consumer_secret: "Twitter ప్రమాణీకరణ కోసం వినియోగదారు రహస్యం, <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>లో నమోదు చేయబడింది"
+    enable_facebook_logins: "Facebook ప్రమాణీకరణను ప్రారంభించండి, facebook_app_id మరియు facebook_app_secret అవసరం. <a href='https://meta.discourse.org/t/13394' target='_blank'>ఉపన్యాసం కోసం Facebook లాగిన్ కాన్ఫిగర్ చేయడం</a>చూడండి."
+    facebook_app_id: "Facebook ప్రమాణీకరణ మరియు భాగస్వామ్యం కోసం యాప్ id, <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>లో నమోదు చేయబడింది"
+    facebook_app_secret: "Facebook ప్రమాణీకరణ కోసం యాప్ రహస్యం, <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>లో నమోదు చేయబడింది"
+    enable_github_logins: "GitHub ప్రమాణీకరణను ప్రారంభించండి, github_client_id మరియు github_client_secret అవసరం. <a href='https://meta.discourse.org/t/13745' target='_blank'>ఉపన్యాసం కోసం GitHub లాగిన్‌ని కాన్ఫిగర్ చేయడం చూడండి</a>."
+    github_client_id: "GitHub ప్రమాణీకరణ కోసం క్లయింట్ id, <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>లో నమోదు చేయబడింది"
+    github_client_secret: "GitHub ప్రమాణీకరణ కోసం క్లయింట్ రహస్యం, <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>లో నమోదు చేయబడింది"
+    enable_discord_logins: "డిస్కార్డ్‌ని ఉపయోగించి ప్రమాణీకరించడానికి వినియోగదారులను అనుమతించాలా?"
+    discord_client_id: 'డిస్కార్డ్ క్లయింట్ ID (ఒకటి కావాలా? <a href="https://discordapp.com/developers/applications/me">డిస్కార్డ్ డెవలపర్ పోర్టల్</a>సందర్శించండి)'
+    discord_trusted_guilds: 'డిస్కార్డ్ ద్వారా లాగిన్ చేయడానికి ఈ డిస్కార్డ్ గిల్డ్‌ల సభ్యులను మాత్రమే అనుమతించండి. గిల్డ్ కోసం సంఖ్యా IDని ఉపయోగించండి. మరింత సమాచారం కోసం, ఇక్కడ <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129"></a>సూచనలను తనిఖీ చేయండి. ఏదైనా గిల్డ్‌ను అనుమతించడానికి ఖాళీగా ఉంచండి.'
+    enable_backups: "ఫోరమ్ యొక్క బ్యాకప్‌లను సృష్టించడానికి నిర్వాహకులను అనుమతించండి"
+    allow_restore: "పునరుద్ధరణను అనుమతించండి, ఇది మొత్తం సైట్ డేటాను భర్తీ చేయగలదు! మీరు బ్యాకప్‌ని పునరుద్ధరించాలని ప్లాన్ చేస్తే మినహా డిజేబుల్‌గా వదిలివేయండి"
+    maximum_backups: "ఉంచడానికి బ్యాకప్‌ల గరిష్ట మొత్తం. పాత బ్యాకప్‌లు స్వయంచాలకంగా తొలగించబడతాయి"
+    remove_older_backups: "పేర్కొన్న రోజుల కంటే పాత బ్యాకప్‌లను తీసివేయండి. నిలిపివేయడానికి ఖాళీని వదిలివేయండి."
+    automatic_backups_enabled: "బ్యాకప్ ఫ్రీక్వెన్సీలో నిర్వచించిన విధంగా ఆటోమేటిక్ బ్యాకప్‌లను అమలు చేయండి"
+    s3_backup_bucket: "బ్యాకప్‌లను పట్టుకోవడానికి రిమోట్ బకెట్. హెచ్చరిక: ఇది ప్రైవేట్ బకెట్ అని నిర్ధారించుకోండి."
+    s3_endpoint: "DigitalOcean Spaces లేదా Minio వంటి S3 అనుకూల సేవకు బ్యాకప్ చేయడానికి ఎండ్‌పాయింట్‌ని సవరించవచ్చు. హెచ్చరిక: AWS S3ని ఉపయోగిస్తుంటే ఖాళీగా ఉంచండి."
+    s3_configure_tombstone_policy: "టోంబ్‌స్టోన్ అప్‌లోడ్‌ల కోసం ఆటోమేటిక్ తొలగింపు విధానాన్ని ప్రారంభించండి. ముఖ్యమైనది: డిజేబుల్ చేసినట్లయితే, అప్‌లోడ్‌లు తొలగించబడిన తర్వాత ఏ స్థలం తిరిగి పొందబడదు."
+    s3_disable_cleanup: "గరిష్టంగా అనుమతించబడిన దాని కంటే ఎక్కువ బ్యాకప్‌లు ఉన్నప్పుడు S3 నుండి పాత బ్యాకప్‌లను తీసివేయడాన్ని నిరోధించండి."
+    enable_s3_inventory: "Amazon S3 ఇన్వెంటరీని ఉపయోగించి నివేదికలను రూపొందించండి మరియు అప్‌లోడ్‌లను ధృవీకరించండి. ముఖ్యమైనది: చెల్లుబాటు అయ్యే S3 ఆధారాలు అవసరం (యాక్సెస్ కీ ఐడి & రహస్య యాక్సెస్ కీ రెండూ)."
+    s3_use_acls: "S3 బకెట్లలో ACL లను ఉపయోగించకూడదని AWS సిఫార్సు చేస్తుంది; మీరు ఈ సలహాను అనుసరిస్తుంటే, ఈ ఎంపికను అన్చెక్ చేయండి. మీరు సురక్షిత అప్లోడ్లను ఉపయోగిస్తుంటే ఇది తప్పనిసరిగా ప్రారంభించబడాలి."
+    backup_time_of_day: "బ్యాకప్ జరగాల్సిన రోజు UTC సమయం."
+    backup_with_uploads: "షెడ్యూల్ చేసిన బ్యాకప్‌లలో అప్‌లోడ్‌లను చేర్చండి. దీన్ని డిసేబుల్ చేయడం వల్ల డేటాబేస్ బ్యాకప్ మాత్రమే అవుతుంది."
+    backup_location: "బ్యాకప్‌లు నిల్వ చేయబడిన స్థానం. ముఖ్యమైనది: S3కి ఫైల్‌ల సెట్టింగ్‌లలో నమోదు చేయబడిన చెల్లుబాటు అయ్యే S3 ఆధారాలు అవసరం."
+    backup_gzip_compression_level_for_uploads: "అప్‌లోడ్‌లను కుదించడానికి Gzip కంప్రెషన్ స్థాయి ఉపయోగించబడుతుంది."
+    include_thumbnails_in_backups: "బ్యాకప్‌లలో రూపొందించబడిన సూక్ష్మచిత్రాలను చేర్చండి. దీన్ని నిలిపివేయడం వలన బ్యాకప్‌లు చిన్నవిగా మారతాయి, కానీ పునరుద్ధరణ తర్వాత అన్ని పోస్ట్‌ల రీబేక్ అవసరం."
+    active_user_rate_limit_secs: "మేము 'చివరి_చూడండి_at' ఫీల్డ్‌ని సెకన్లలో ఎంత తరచుగా అప్‌డేట్ చేస్తాము"
+    verbose_localization: "UIలో విస్తరించిన స్థానికీకరణ చిట్కాలను చూపండి"
+    previous_visit_timeout_hours: "మేము దానిని 'మునుపటి' సందర్శనగా పరిగణించే ముందు సందర్శన ఎంతసేపు ఉంటుంది, గంటలలో"
+    top_topics_formula_log_views_multiplier: "అగ్ర అంశాల ఫార్ములాలో లాగ్ వీక్షణల గుణకం (n) విలువ: `లాగ్(వ్యూస్_కౌంట్) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "టాప్ టాపిక్స్ ఫార్ములాలో మొదటి పోస్ట్ ఇష్టాల గుణకం (n) విలువ: `లాగ్(వ్యూస్_కౌంట్) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "టాప్ టాపిక్స్ ఫార్ములాలో పోస్ట్ గుణకం (n)కి కనీసం లైక్‌ల విలువ: `లాగ్(వ్యూస్_కౌంట్) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    enable_safe_mode: "ప్లగిన్‌లను డీబగ్ చేయడానికి సురక్షిత మోడ్‌లోకి ప్రవేశించడానికి వినియోగదారులను అనుమతించండి."
+    rate_limit_create_topic: "ఒక అంశాన్ని సృష్టించిన తర్వాత, వినియోగదారులు మరొక అంశాన్ని సృష్టించే ముందు (n) సెకన్లు వేచి ఉండాలి."
+    rate_limit_create_post: "పోస్ట్ చేసిన తర్వాత, వినియోగదారులు మరొక పోస్ట్‌ను సృష్టించే ముందు (n) సెకన్లు వేచి ఉండాలి."
+    rate_limit_new_user_create_post: "పోస్ట్ చేసిన తర్వాత, కొత్త వినియోగదారులు మరొక పోస్ట్‌ను సృష్టించే ముందు (n) సెకన్లు వేచి ఉండాలి."
     max_likes_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు చేయగలిగే లైక్‌ల సంఖ్య"
     max_flags_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు చేయగలిగే కేతనాల సంఖ్య"
     max_bookmarks_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు చేయగలిగే బుక్‌మార్క్‌ల సంఖ్య"
     max_edits_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు చేయగలిగే సవరణల సంఖ్య"
     max_topics_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు సృష్టించగలిగే విషయాలు"
+    max_personal_messages_per_day: "ఒక వినియోగదారు రోజుకు సృష్టించగల గరిష్ట సంఖ్యలో కొత్త వ్యక్తిగత సందేశ అంశాలు."
     max_invites_per_day: "వినియోగదారు గరిష్ఠంగా రోజుకు ఎన్ని ఆహ్వానాలు పంపవచ్చు."
+    max_topic_invitations_per_day: "ఒక వినియోగదారు రోజుకు పంపగల గరిష్ట సంఖ్యలో టాపిక్ ఆహ్వానాలు."
+    max_topic_invitations_per_minute: "నిమిషానికి వినియోగదారు పంపగల గరిష్ట సంఖ్యలో టాపిక్ ఆహ్వానాలు."
+    max_logins_per_ip_per_hour: "గంటకు IP చిరునామాకు గరిష్ట సంఖ్యలో లాగిన్‌లు అనుమతించబడతాయి"
+    max_logins_per_ip_per_minute: "నిమిషానికి IP చిరునామాకు గరిష్ట సంఖ్యలో లాగిన్‌లు అనుమతించబడతాయి"
+    max_post_deletions_per_minute: "నిమిషానికి వినియోగదారు తొలగించగల గరిష్ట సంఖ్యలో పోస్ట్‌లు. పోస్ట్ తొలగింపులను నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    max_post_deletions_per_day: "ఒక వినియోగదారు రోజుకు గరిష్టంగా తొలగించగల పోస్ట్‌ల సంఖ్య. పోస్ట్ తొలగింపులను నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    invite_link_max_redemptions_limit: "ఆహ్వాన లింక్‌ల కోసం అనుమతించబడిన గరిష్ట రీడీమ్‌లు ఈ విలువ కంటే ఎక్కువగా ఉండకూడదు."
+    invite_link_max_redemptions_limit_users: "సాధారణ వినియోగదారుల ద్వారా రూపొందించబడిన ఆహ్వాన లింక్‌ల కోసం అనుమతించబడిన గరిష్ట రీడీమ్‌లు ఈ విలువ కంటే ఎక్కువగా ఉండకూడదు."
+    alert_admins_if_errors_per_minute: "నిర్వాహకుల హెచ్చరికను ట్రిగ్గర్ చేయడానికి నిమిషానికి ఎర్రర్‌ల సంఖ్య. 0 విలువ ఈ లక్షణాన్ని నిలిపివేస్తుంది. గమనిక: పునఃప్రారంభం అవసరం."
+    alert_admins_if_errors_per_hour: "నిర్వాహకుల హెచ్చరికను ట్రిగ్గర్ చేయడానికి గంటకు ఎర్రర్‌ల సంఖ్య. 0 విలువ ఈ లక్షణాన్ని నిలిపివేస్తుంది. గమనిక: పునఃప్రారంభం అవసరం."
+    categories_topics: "/కేటగిరీల పేజీలో చూపాల్సిన అంశాల సంఖ్య. 0కి సెట్ చేస్తే, రెండు నిలువు వరుసలను (కేటగిరీలు మరియు టాపిక్‌లు) సుష్టంగా ఉంచడానికి ఇది స్వయంచాలకంగా విలువను కనుగొనడానికి ప్రయత్నిస్తుంది."
     suggested_topics: "విషయం దిగువన చూపే సూచనల సంఖ్య"
+    limit_suggested_to_category: "సూచించిన అంశాలలో ప్రస్తుత వర్గంలోని అంశాలను మాత్రమే చూపండి."
+    suggested_topics_max_days_old: "సూచించబడిన అంశాలు n రోజుల కంటే పాతవి కాకూడదు."
+    suggested_topics_unread_max_days_old: "సూచించబడిన చదవని అంశాలు n రోజుల కంటే పాతవి కాకూడదు."
+    clean_up_uploads: "చట్టవిరుద్ధమైన హోస్టింగ్‌ను నిరోధించడానికి అనాధ సూచించని అప్‌లోడ్‌లను తీసివేయండి. హెచ్చరిక: మీరు ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు మీ /అప్‌లోడ్‌ల డైరెక్టరీని బ్యాకప్ చేయాలనుకోవచ్చు."
+    clean_orphan_uploads_grace_period_hours: "అనాథ అప్‌లోడ్ తీసివేయబడటానికి ముందు గ్రేస్ పీరియడ్ (గంటల్లో)."
+    purge_deleted_uploads_grace_period_days: "తొలగించబడిన అప్‌లోడ్ తొలగించబడటానికి ముందు గ్రేస్ పీరియడ్ (రోజుల్లో)."
+    purge_unactivated_users_grace_period_days: "వారి ఖాతాను యాక్టివేట్ చేయని వినియోగదారు ముందు గ్రేస్ పీరియడ్ (రోజుల్లో) తొలగించబడుతుంది. సక్రియం చేయని వినియోగదారులను ఎప్పటికీ ప్రక్షాళన చేయకుండా 0కి సెట్ చేయండి."
+    enable_s3_uploads: "Amazon S3 నిల్వలో అప్‌లోడ్‌లను ఉంచండి. ముఖ్యమైనది: చెల్లుబాటు అయ్యే S3 ఆధారాలు (యాక్సెస్ కీ ఐడి & రహస్య యాక్సెస్ కీ రెండూ) అవసరం."
+    s3_use_iam_profile: 'S3 బకెట్‌కు ప్రాప్యతను మంజూరు చేయడానికి <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 ఉదాహరణ ప్రొఫైల్</a> ని ఉపయోగించండి. గమనిక: దీన్ని ఎనేబుల్ చేయడానికి డిస్కోర్స్ సముచితంగా కాన్ఫిగర్ చేయబడిన EC2 ఉదాహరణలో అమలు చేయబడాలి మరియు "s3 యాక్సెస్ కీ ఐడి" మరియు "s3 సీక్రెట్ యాక్సెస్ కీ" సెట్టింగ్‌లను ఓవర్‌రైడ్ చేస్తుంది.'
+    s3_upload_bucket: "ఫైల్‌లు అప్‌లోడ్ చేయబడే Amazon S3 బకెట్ పేరు. హెచ్చరిక: తప్పక చిన్న అక్షరంగా ఉండాలి, విరామాలు లేవు, అండర్‌స్కోర్‌లు లేవు."
+    s3_access_key_id: "Amazon S3 యాక్సెస్ కీ ఐడి ఇమేజ్‌లు, జోడింపులు మరియు బ్యాకప్‌లను అప్‌లోడ్ చేయడానికి ఉపయోగించబడుతుంది."
+    s3_secret_access_key: "Amazon S3 రహస్య యాక్సెస్ కీ ఇమేజ్‌లు, జోడింపులు మరియు బ్యాకప్‌లను అప్‌లోడ్ చేయడానికి ఉపయోగించబడుతుంది."
+    s3_region: "Amazon S3 ప్రాంతం పేరు చిత్రాలు మరియు బ్యాకప్‌లను అప్‌లోడ్ చేయడానికి ఉపయోగించబడుతుంది."
+    s3_cdn_url: "అన్ని s3 ఆస్తులకు ఉపయోగించాల్సిన CDN URL (ఉదాహరణకు: https://cdn.somewhere.com). హెచ్చరిక: ఈ సెట్టింగ్‌ని మార్చిన తర్వాత మీరు తప్పనిసరిగా అన్ని పాత పోస్ట్‌లను రీబేక్ చేయాలి."
+    s3_use_cdn_url_for_all_uploads: "చిత్రాల కోసం మాత్రమే కాకుండా s3కి అప్‌లోడ్ చేయబడిన అన్ని ఫైల్‌ల కోసం CDN URLని ఉపయోగించండి."
+    avatar_sizes: "స్వయంచాలకంగా రూపొందించబడిన అవతార్ పరిమాణాల జాబితా."
+    external_system_avatars_url: "బాహ్య సిస్టమ్ అవతార్ సేవ యొక్క URL. అనుమతించబడిన ప్రత్యామ్నాయాలు {username} {first_letter} {color} {size}"
+    external_emoji_url: "ఎమోజి చిత్రాల కోసం బాహ్య సేవ యొక్క URL. నిలిపివేయడానికి ఖాళీని వదిలివేయండి."
+    use_site_small_logo_as_system_avatar: "సిస్టమ్ వినియోగదారు అవతార్‌కు బదులుగా సైట్ యొక్క చిన్న లోగోను ఉపయోగించండి. లోగో ఉండటం అవసరం."
+    restrict_letter_avatar_colors: "అక్షర అవతార్ నేపథ్యం కోసం ఉపయోగించాల్సిన 6-అంకెల హెక్సాడెసిమల్ రంగు విలువల జాబితా."
+    enable_listing_suspended_users_on_search: "సస్పెండ్ చేయబడిన సభ్యులను కనుగొనడానికి సాధారణ సభ్యులను ప్రారంభించండి."
+    selectable_avatars_mode: "Selectable_avatars జాబితా నుండి అవతార్‌ను ఎంచుకోవడానికి వినియోగదారులను అనుమతించండి మరియు ఎంచుకున్న విశ్వసనీయ స్థాయికి అనుకూల అవతార్ అప్‌లోడ్‌లను పరిమితం చేయండి."
+    allow_all_attachments_for_group_messages: "సమూహ సందేశాల కోసం అన్ని ఇమెయిల్ జోడింపులను అనుమతించండి."
+    png_to_jpg_quality: "మార్చబడిన JPG ఫైల్ నాణ్యత (1 అత్యల్ప నాణ్యత, 99 ఉత్తమ నాణ్యత, 100 నిలిపివేయడానికి)."
+    recompress_original_jpg_quality: "అప్‌లోడ్ చేయబడిన చిత్ర ఫైల్‌ల నాణ్యత (1 అత్యల్ప నాణ్యత, 99 ఉత్తమ నాణ్యత, 100 నిలిపివేయడానికి)."
+    image_preview_jpg_quality: "పరిమాణం మార్చబడిన ఇమేజ్ ఫైల్‌ల నాణ్యత (1 అత్యల్ప నాణ్యత, 99 ఉత్తమ నాణ్యత, 100 నిలిపివేయడానికి)."
+    allow_staff_to_upload_any_file_in_pm: "PMలో ఏవైనా ఫైల్‌లను అప్‌లోడ్ చేయడానికి సిబ్బందిని అనుమతించండి."
+    composer_media_optimization_image_enabled: "అప్‌లోడ్ చేసిన ఇమేజ్ ఫైల్‌ల క్లయింట్-సైడ్ మీడియా ఆప్టిమైజేషన్‌ని ప్రారంభిస్తుంది."
+    composer_media_optimization_image_bytes_optimization_threshold: "క్లయింట్ వైపు ఆప్టిమైజేషన్‌ని ట్రిగ్గర్ చేయడానికి కనీస చిత్ర ఫైల్ పరిమాణం"
+    composer_media_optimization_image_resize_dimensions_threshold: "క్లయింట్ వైపు పరిమాణాన్ని ట్రిగ్గర్ చేయడానికి కనిష్ట చిత్రం వెడల్పు"
+    composer_media_optimization_image_resize_width_target: "`composer_media_optimization_image_dimensions_resize_threshold` కంటే పెద్ద వెడల్పు ఉన్న చిత్రాలు ఈ వెడల్పుకు పరిమాణం మార్చబడతాయి. తప్పక >= `composer_media_optimization_image_dimensions_resize_threshold` కంటే ఉండాలి."
+    composer_media_optimization_image_encode_quality: "JPG ఎన్‌కోడ్ నాణ్యత రీ-ఎన్‌కోడ్ ప్రక్రియలో ఉపయోగించబడుతుంది."
+    min_ratio_to_crop: "పొడవైన చిత్రాలను కత్తిరించడానికి ఉపయోగించే నిష్పత్తి. వెడల్పు / ఎత్తు యొక్క ఫలితాన్ని నమోదు చేయండి."
+    simultaneous_uploads: "కంపోజర్‌లో డ్రాగ్ చేయగలిగే గరిష్ట సంఖ్యలో ఫైల్‌లు"
     default_invitee_trust_level: "ఆహ్వానించబడిన వినియోగదారుల కొరకు నమ్మకపు స్థాయి (0-4)"
+    default_trust_level: "కొత్త వినియోగదారులందరికీ డిఫాల్ట్ విశ్వసనీయ స్థాయి (0-4). హెచ్చరిక! దీన్ని మార్చడం వలన మీకు స్పామ్ వచ్చే ప్రమాదం ఉంది."
     tl1_requires_topics_entered: "నమ్మకపు స్థాయి 1 కి ఉన్నతి పొందాలంటే ఎన్ని విషయాలు నమోదు చేయాలి."
     tl1_requires_read_posts: "నమ్మకపు స్థాయి 1 కి ఉన్నతి పొందాలంటే కొత్త వినియోగదారు ఖచ్చితంగా ఎన్ని విషయాలు చదవాలి."
     tl1_requires_time_spent_mins: "నమ్మకపు స్థాయి 1 కి ఉన్నతి పొందాలంటే కొత్త వినియోగదారు ఖచ్చితంగా ఎన్ని నిమిషాలు టపాలు చదవాలి."
@@ -561,91 +1348,984 @@ te:
     tl2_requires_time_spent_mins: "నమ్మకపు స్థాయి 2 కి ఉన్నతి పొందాలంటే కొత్త వినియోగదారు ఖచ్చితంగా ఎన్ని నిమిషాలు టపాలు చదవాలి."
     tl2_requires_days_visited: "నమ్మకపు స్థాయి 2 కి ఉన్నతి పొందాలంటే వినియోగదారు ఖచ్చితంగా ఎన్ని రోజులు సైట్‌ని సందర్శించాలి."
     tl2_requires_likes_received: "నమ్మకపు స్థాయి 2 కి ఉన్నతి పొందాలంటే వినియోగదారు ఖచ్చితంగా ఎన్ని ఇష్టాలు స్వీకరించాలి."
+    tl2_requires_likes_given: "విశ్వసనీయ స్థాయి 2కి ప్రమోషన్‌కు ముందు వినియోగదారు తప్పనిసరిగా ఎన్ని లైక్‌లు వేయాలి."
+    tl2_requires_topic_reply_count: "విశ్వసనీయ స్థాయి 2కి ప్రమోషన్‌కు ముందు వినియోగదారు ఎన్ని అంశాలకు ప్రత్యుత్తరం ఇవ్వాలి."
+    tl3_time_period: "ట్రస్ట్ లెవల్ 3 అవసరాల సమయం (రోజుల్లో)"
+    tl3_requires_days_visited: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి వినియోగదారు గత (tl3 సమయ వ్యవధి) రోజులలో సైట్‌ను సందర్శించాల్సిన కనీస రోజుల సంఖ్య. tl3కి ప్రమోషన్‌లను నిలిపివేయడానికి tl3 కంటే ఎక్కువ సమయ వ్యవధిని సెట్ చేయండి. (0 లేదా అంతకంటే ఎక్కువ)"
+    tl3_requires_topics_replied_to: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి గత (tl3 సమయ వ్యవధి) రోజుల్లో వినియోగదారు ప్రత్యుత్తరం ఇవ్వాల్సిన కనీస అంశాల సంఖ్య. (0 లేదా అంతకంటే ఎక్కువ)"
+    tl3_requires_topics_viewed: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి వినియోగదారు వీక్షించాల్సిన గత (tl3 సమయ వ్యవధి) రోజులలో సృష్టించబడిన అంశాల శాతం. (0 నుండి 100 వరకు)"
+    tl3_requires_topics_viewed_cap: "గత (tl3 సమయ వ్యవధి) రోజుల్లో వీక్షించబడిన గరిష్ట అవసరమైన అంశాల సంఖ్య."
+    tl3_requires_posts_read: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి వినియోగదారు వీక్షించాల్సిన గత (tl3 సమయ వ్యవధి) రోజులలో సృష్టించబడిన పోస్ట్‌ల శాతం. (0 నుండి 100 వరకు)"
+    tl3_requires_posts_read_cap: "గత (tl3 సమయ వ్యవధి) రోజుల్లో చదివిన గరిష్ట సంఖ్యలో పోస్ట్‌లు."
+    tl3_requires_topics_viewed_all_time: "విశ్వసనీయ స్థాయి 3కి అర్హత సాధించడానికి వినియోగదారు తప్పనిసరిగా వీక్షించిన అంశాల యొక్క కనిష్ట సంఖ్య."
+    tl3_requires_posts_read_all_time: "విశ్వసనీయ స్థాయి 3కి అర్హత పొందడానికి వినియోగదారు తప్పనిసరిగా చదవాల్సిన కనీస మొత్తం పోస్ట్‌ల సంఖ్య."
+    tl3_requires_max_flagged: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి గత (tl3 సమయ వ్యవధి) రోజుల్లో x వేర్వేరు వినియోగదారులు ఫ్లాగ్ చేసిన x పోస్ట్‌లను వినియోగదారు కలిగి ఉండకూడదు, ఇక్కడ x అనేది ఈ సెట్టింగ్ విలువ. (0 లేదా అంతకంటే ఎక్కువ)"
+    tl3_promotion_min_duration: "వినియోగదారుని విశ్వసనీయ స్థాయి 2కి తగ్గించడానికి ముందు విశ్వసనీయ స్థాయి 3కి ప్రమోషన్ ఉండే కనీస రోజుల సంఖ్య."
+    tl3_requires_likes_given: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి గత (tl3 సమయ వ్యవధి) రోజుల్లో ఇవ్వాల్సిన కనీస లైక్‌ల సంఖ్య."
+    tl3_requires_likes_received: "విశ్వసనీయ స్థాయి 3కి ప్రమోషన్‌కు అర్హత సాధించడానికి గత (tl3 సమయ వ్యవధి) రోజుల్లో అందుకోవాల్సిన కనీస లైక్‌ల సంఖ్య."
+    tl3_links_no_follow: "విశ్వసనీయ స్థాయి 3 వినియోగదారులు పోస్ట్ చేసిన లింక్‌ల నుండి rel=nofollowని తీసివేయవద్దు."
+    tl4_delete_posts_and_topics: "ఇతర వినియోగదారులు సృష్టించిన పోస్ట్‌లు మరియు అంశాలను తొలగించడానికి TL4 వినియోగదారులను అనుమతించండి. TL4 వినియోగదారులు తొలగించబడిన అంశాలు మరియు పోస్ట్‌లను కూడా చూడగలరు."
+    delete_all_posts_and_topics_allowed_groups: "ఇతర వినియోగదారులు సృష్టించిన పోస్ట్‌లు మరియు అంశాలను తొలగించడానికి సమూహాలు అనుమతించబడతాయి. ఈ సమూహాలు తొలగించబడిన అంశాలు మరియు పోస్ట్‌లను కూడా చూడగలుగుతాయి."
+    edit_all_topic_groups: "ఇతర వినియోగదారుల టాపిక్ టైటిల్‌లు, ట్యాగ్‌లు మరియు వర్గాలను సవరించడానికి ఈ గుంపులోని వినియోగదారులను అనుమతించండి"
+    edit_all_post_groups: "ఈ సమూహంలోని సభ్యులను ఇతర సభ్యుల పోస్ట్‌లను సవరించడానికి అనుమతించండి"
+    min_trust_to_create_topic: "కొత్త అంశాన్ని సృష్టించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    create_topic_allowed_groups: "కొత్త విషయాలను సృష్టించడానికి అనుమతించబడిన సమూహాలు."
+    allow_flagging_staff: "ప్రారంభించబడితే, సభ్యులు సిబ్బంది ఖాతాల నుండి పోస్ట్‌లను ఫిర్యాదు చేయవచ్చు."
+    min_trust_to_edit_wiki_post: "పోస్ట్‌ను సవరించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి వికీగా గుర్తించబడింది."
+    edit_wiki_post_allowed_groups: "వికీగా గుర్తించబడిన పోస్ట్‌లను సవరించడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_to_edit_post: "పోస్ట్‌లను సవరించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    edit_post_allowed_groups: "పోస్ట్‌లను సవరించడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_to_allow_self_wiki: "వినియోగదారు స్వంత పోస్ట్ వికీని చేయడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    self_wiki_allowed_groups: "వినియోగదారులు తమ స్వంత పోస్ట్ వికీని తయారు చేసుకోగల సమూహాలు."
+    min_trust_to_send_messages: "నిలిపివేయబడింది, బదులుగా 'వ్యక్తిగత సందేశం ప్రారంభించబడిన సమూహాలు' సెట్టింగ్‌ని ఉపయోగించండి. కొత్త వ్యక్తిగత సందేశాలను సృష్టించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    min_trust_to_send_email_messages: "ఇమెయిల్ ద్వారా వ్యక్తిగత సందేశాలను పంపడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    send_email_messages_allowed_groups: "ఇమెయిల్ ద్వారా వ్యక్తిగత సందేశాలను పంపడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_to_flag_posts: "పోస్ట్‌లను ఫిర్యాదు చేయడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    flag_post_allowed_groups: "పోస్ట్‌లపై ఫిర్యాదులు చేయడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_to_post_links: "పోస్ట్‌లలో లింక్‌లను చేర్చడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    post_links_allowed_groups: "పోస్ట్‌లలో లింక్‌లను చేర్చడానికి అనుమతించబడిన సమూహాలు. లింక్‌లను పోస్ట్ చేయడానికి నిర్వాహకులు మరియు మోడరేటర్‌లు ఎల్లప్పుడూ అనుమతించబడతారు."
+    min_trust_to_post_embedded_media: "మీడియా అంశాలను పోస్ట్‌లో పొందుపరచడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    embedded_media_post_allowed_groups: "ఈ సమూహాలలోని వినియోగదారులు పోస్ట్‌లో మీడియా అంశాలను పొందుపరచడానికి అనుమతించబడతారు"
+    min_trust_level_to_allow_profile_background: "ప్రొఫైల్ నేపథ్యాన్ని అప్‌లోడ్ చేయడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    profile_background_allowed_groups: "ప్రొఫైల్ నేపథ్యాన్ని అప్‌లోడ్ చేయడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_level_to_allow_user_card_background: "వినియోగదారు కార్డ్ నేపథ్యాన్ని అప్‌లోడ్ చేయడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    user_card_background_allowed_groups: "వినియోగదారు కార్డ్ నేపథ్యాన్ని అప్‌లోడ్ చేయడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_level_to_allow_invite: "వినియోగదారులను ఆహ్వానించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    invite_allowed_groups: "సభ్యులను ఆహ్వానించడానికి అనుమతించబడిన సమూహాలు."
+    min_trust_level_to_allow_ignore: "వినియోగదారులను విస్మరించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి"
+    ignore_allowed_groups: "ఇతర సభ్యులను విస్మరించడానికి అనుమతించబడిన సమూహాలు."
+    allowed_link_domains: "లింక్‌లను పోస్ట్ చేయడానికి తగిన విశ్వసనీయ స్థాయి లేకపోయినా వినియోగదారులు లింక్ చేయగల డొమైన్‌లు"
     newuser_max_links: "కొత్త వాడుకరి టపా కి ఎన్ని లంకెలు జోడించవచ్చు."
+    newuser_max_embedded_media: "కొత్త వినియోగదారు పోస్ట్‌కి ఎన్ని ఎంబెడెడ్ మీడియా అంశాలను జోడించగలరు."
     newuser_max_attachments: "కొత్త వాడుకరి టపా కి ఎన్నిఅనుబంధాలు జోడించవచ్చు"
-    emoji_set: "మీ ఇమోజి ఎలా ఉండాలి? "
+    newuser_max_mentions_per_post: "పోస్ట్‌లో కొత్త వినియోగదారు ఉపయోగించగల గరిష్ట సంఖ్యలో @name నోటిఫికేషన్‌లు."
+    newuser_max_replies_per_topic: "ఒక టాపిక్‌కు ఎవరైనా ప్రత్యుత్తరం ఇచ్చే వరకు కొత్త వినియోగదారు గరిష్ట సంఖ్యలో ప్రత్యుత్తరాలు చేయగలరు."
+    max_mentions_per_post: "పోస్ట్‌లో ఎవరైనా ఉపయోగించగల గరిష్ట సంఖ్యలో @name నోటిఫికేషన్‌లు."
+    max_users_notified_per_group_mention: "సమూహం పేర్కొనబడితే నోటిఫికేషన్‌ను స్వీకరించే గరిష్ట సంఖ్య వినియోగదారుల సంఖ్య (థ్రెషోల్డ్‌ను చేరుకుంటే నోటిఫికేషన్‌లు పెంచబడవు)"
+    here_mention: "టాపిక్‌లో పాల్గొనే వ్యక్తులకు గరిష్టంగా 'max_here_mentioned' వరకు తెలియజేయడానికి విశేష వినియోగదారులను అనుమతించడానికి @ప్రస్తావన కోసం పేరు ఉపయోగించబడింది. ఇప్పటికే ఉన్న వినియోగదారు పేరు కాకూడదు."
+    max_here_mentioned: "@ఇక్కడ పేర్కొన్న వ్యక్తుల గరిష్ట సంఖ్య."
+    min_trust_level_for_here_mention: "@ఇక్కడ పేర్కొనడానికి అనుమతించబడిన కనీస విశ్వసనీయ స్థాయి."
+    here_mention_allowed_groups: "@ఇక్కడ పేర్కొనడానికి అనుమతించబడిన సమూహాలు."
+    create_thumbnails: "పోస్ట్‌లో సరిపోయేంత పెద్దగా ఉండే సూక్ష్మచిత్రాలు మరియు లైట్‌బాక్స్ చిత్రాలను సృష్టించండి."
+    email_time_window_mins: "ఏదైనా నోటిఫికేషన్ ఇమెయిల్‌లను పంపే ముందు (n) నిమిషాలు వేచి ఉండండి, వినియోగదారులు వారి పోస్ట్‌లను సవరించడానికి మరియు ఖరారు చేయడానికి అవకాశం ఇవ్వండి."
+    personal_email_time_window_seconds: "ఏదైనా వ్యక్తిగత సందేశ నోటిఫికేషన్ ఇమెయిల్‌లను పంపే ముందు (n) సెకన్లు వేచి ఉండండి, వినియోగదారులకు వారి సందేశాలను సవరించడానికి మరియు ఖరారు చేయడానికి అవకాశం ఇవ్వండి."
+    email_posts_context: "నోటిఫికేషన్ ఇమెయిల్‌లలో సందర్భోచితంగా ఎన్ని ముందస్తు ప్రత్యుత్తరాలను చేర్చాలి."
+    flush_timings_secs: "మేము ఎంత తరచుగా సమయ డేటాను సర్వర్‌కు సెకన్లలో ఫ్లష్ చేస్తాము."
+    title_max_word_length: "టాపిక్ టైటిల్‌లో అక్షరాలలో గరిష్టంగా అనుమతించబడిన పద పొడవు."
+    title_min_entropy: "టాపిక్ టైటిల్ కోసం కనీస ఎంట్రోపీ (ప్రత్యేకమైన అక్షరాలు, మరిన్నింటికి ఆంగ్లేతర గణన) అవసరం."
+    body_min_entropy: "పోస్ట్ బాడీకి అవసరమైన కనీస ఎంట్రోపీ (ప్రత్యేకమైన అక్షరాలు, మరిన్ని వాటికి ఆంగ్లేతర గణన)."
+    allow_uppercase_posts: "టాపిక్ టైటిల్ లేదా పోస్ట్ బాడీలో అన్ని క్యాప్‌లను అనుమతించండి."
+    max_consecutive_replies: "మరొక ప్రత్యుత్తరాన్ని జోడించకుండా నిరోధించబడటానికి ముందు ఒక అంశంలో వినియోగదారు చేయగలిగే వరుసలో ఉన్న పోస్ట్‌ల సంఖ్య. ఈ పరిమితి అంశం యజమాని, సైట్ సిబ్బంది లేదా వర్గం మోడరేటర్‌లకు వర్తించదు."
+    enable_filtered_replies_view: '"(n) ప్రత్యుత్తరాలు" బటన్ అన్ని ఇతర పోస్ట్‌లను కుదిస్తుంది మరియు ప్రస్తుత పోస్ట్ మరియు దాని ప్రత్యుత్తరాలను మాత్రమే చూపుతుంది.'
+    title_fancy_entities: "టాపిక్ టైటిల్స్‌లో సాధారణ ASCII అక్షరాలను ఫ్యాన్సీ HTML ఎంటిటీలుగా మార్చండి, అలా SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
+    min_title_similar_length: "టైటిల్ ముందు ఉండే కనిష్ట పొడవు సారూప్య అంశాల కోసం తనిఖీ చేయబడుతుంది."
+    category_colors: "వర్గాల కోసం అనుమతించబడిన హెక్సాడెసిమల్ రంగు విలువల జాబితా."
+    default_dark_mode_color_scheme_id: "డార్క్ మోడ్‌లో ఉన్నప్పుడు ఉపయోగించే రంగు పథకం."
+    dark_mode_none: "ఏదీ లేదు"
+    max_image_size_kb: "గరిష్ట చిత్రం అప్‌లోడ్ పరిమాణం. ఇది తప్పనిసరిగా nginx (client_max_body_size) / apache లేదా ప్రాక్సీలో కూడా కాన్ఫిగర్ చేయబడాలి. దీని కంటే పెద్ద మరియు client_max_body_size కంటే చిన్న చిత్రాలు అప్‌లోడ్‌లో సరిపోయేలా పరిమాణం మార్చబడతాయి."
+    max_attachment_size_kb: "గరిష్ట అటాచ్‌మెంట్ ఫైల్‌ల అప్‌లోడ్ పరిమాణం. ఇది తప్పనిసరిగా nginx (client_max_body_size) / apache లేదా ప్రాక్సీలో కూడా కాన్ఫిగర్ చేయబడాలి."
+    authorized_extensions: "అప్‌లోడ్ చేయడానికి అనుమతించబడిన ఫైల్ ఎక్స్‌టెన్షన్‌ల జాబితా"
+    authorized_extensions_for_staff: "`అధీకృత_పొడిగింపులు` సైట్ సెట్టింగ్‌లో నిర్వచించిన జాబితాతో పాటు సిబ్బంది వినియోగదారుల కోసం అప్‌లోడ్ చేయడానికి అనుమతించబడిన ఫైల్ ఎక్స్‌టెన్షన్‌ల జాబితా."
+    theme_authorized_extensions: "అప్‌లోడ్ చేయడానికి అనుమతించబడిన ఫైల్ ఎక్స్‌టెన్షన్‌ల జాబితా"
+    max_similar_results: "కొత్త టాపిక్ కంపోజ్ చేస్తున్నప్పుడు ఎడిటర్ పైన ఎన్ని సారూప్య అంశాలను చూపాలి. టైటిల్ మరియు బాడీ ఆధారంగా పోలిక ఉంటుంది."
+    max_image_megapixels: "చిత్రం కోసం అనుమతించబడిన గరిష్ట సంఖ్యలో మెగాపిక్సెల్‌లు. అధిక సంఖ్యలో మెగాపిక్సెల్‌లు ఉన్న చిత్రాలు తిరస్కరించబడతాయి."
+    title_prettify: "సాధారణ శీర్షిక అక్షరదోషాలు మరియు ఎర్రర్‌లను నిరోధించండి, అన్ని క్యాప్‌లు, చిన్న అక్షరం మొదటి అక్షరం, బహుళ ! మరియు ?, అదనపు . చివర, మొదలైనవి."
+    title_remove_extraneous_space: "ముగింపు విరామ చిహ్నాల ముందు ప్రముఖ వైట్‌స్పేస్‌లను తీసివేయండి."
+    automatic_topic_heat_values: 'సైట్ యాక్టివిటీ ఆధారంగా "టాపిక్ వ్యూస్ హీట్" మరియు "టాపిక్ పోస్ట్ లైక్ హీట్" సెట్టింగ్‌లను ఆటోమేటిక్‌గా అప్‌డేట్ చేయండి.'
+    topic_views_heat_low: "దీని తర్వాత అనేక వీక్షణలు, వీక్షణల ఫీల్డ్ కొద్దిగా హైలైట్ చేయబడింది."
+    topic_views_heat_medium: "దీని తర్వాత అనేక వీక్షణలు, వీక్షణల ఫీల్డ్ మధ్యస్తంగా హైలైట్ చేయబడింది."
+    topic_views_heat_high: "దీని తర్వాత అనేక వీక్షణలు, వీక్షణల ఫీల్డ్ బలంగా హైలైట్ చేయబడింది."
+    cold_age_days_low: "ఈ చాలా రోజుల సంభాషణ తర్వాత, చివరి కార్యాచరణ తేదీ కొద్దిగా మసకబారింది."
+    cold_age_days_medium: "ఈ చాలా రోజుల సంభాషణ తర్వాత, చివరి కార్యాచరణ తేదీ మధ్యస్తంగా మసకబారింది."
+    cold_age_days_high: "ఈ చాలా రోజుల సంభాషణ తర్వాత, చివరి కార్యాచరణ తేదీ బలంగా మసకబారింది."
+    history_hours_low: "ఈ అనేక గంటలలోపు ఎడిట్ చేయబడిన పోస్ట్ సవరణ సూచిక కొద్దిగా హైలైట్ చేయబడింది"
+    history_hours_medium: "ఈ అనేక గంటలలోపు ఎడిట్ చేయబడిన పోస్ట్ సవరణ సూచిక మధ్యస్తంగా హైలైట్ చేయబడింది."
+    history_hours_high: "ఈ అనేక గంటలలోపు ఎడిట్ చేయబడిన పోస్ట్ ఎడిట్ సూచిక బలంగా హైలైట్ చేయబడింది."
+    topic_post_like_heat_low: "ఇష్టాలు:పోస్ట్ నిష్పత్తి ఈ నిష్పత్తిని మించిపోయిన తర్వాత, పోస్ట్ కౌంట్ ఫీల్డ్ కొద్దిగా హైలైట్ చేయబడుతుంది."
+    topic_post_like_heat_medium: "ఇష్టాలు:పోస్ట్ నిష్పత్తి ఈ నిష్పత్తిని మించిపోయిన తర్వాత, పోస్ట్ కౌంట్ ఫీల్డ్ మధ్యస్తంగా హైలైట్ చేయబడుతుంది."
+    topic_post_like_heat_high: "ఇష్టాలు:పోస్ట్ నిష్పత్తి ఈ నిష్పత్తిని మించిపోయిన తర్వాత, పోస్ట్ కౌంట్ ఫీల్డ్ బలంగా హైలైట్ చేయబడుతుంది."
+    faq_url: "మీరు ఉపయోగించాలనుకునే చోట FAQ హోస్ట్ చేయబడి ఉంటే, పూర్తి URLని ఇక్కడ అందించండి."
+    tos_url: "మీరు ఉపయోగించాలనుకుంటున్న సేవా నిబంధనల పత్రం మరెక్కడైనా హోస్ట్ చేయబడి ఉంటే, పూర్తి URLని ఇక్కడ అందించండి."
+    privacy_policy_url: "మీరు ఉపయోగించాలనుకుంటున్న గోప్యతా విధాన పత్రం మరెక్కడైనా హోస్ట్ చేయబడి ఉంటే, పూర్తి URLని ఇక్కడ అందించండి."
+    log_anonymizer_details: "అనామకమైన తర్వాత వినియోగదారు వివరాలను లాగ్‌లో ఉంచాలా వద్దా."
+    newuser_spam_host_threshold: "కొత్త వినియోగదారు స్పామ్‌గా పరిగణించబడటానికి ముందు వారి `newuser_spam_host_threshold` పోస్ట్‌లలో అదే హోస్ట్‌కి లింక్‌ను ఎన్నిసార్లు పోస్ట్ చేయవచ్చు."
+    allowed_spam_host_domains: "స్పామ్ హోస్ట్ టెస్టింగ్ నుండి మినహాయించబడిన డొమైన్‌ల జాబితా. ఈ డొమైన్‌లకు లింక్‌లతో పోస్ట్‌లను సృష్టించకుండా కొత్త వినియోగదారులు ఎప్పటికీ పరిమితం చేయబడరు."
+    staff_like_weight: "సిబ్బందికి లైక్స్ ఇవ్వడానికి ఎంత బరువు (నాన్-స్టాఫ్ లైక్‌ల బరువు 1.)"
+    topic_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త టాపిక్ వీక్షణను లెక్కించండి"
+    user_profile_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త వినియోగదారు ప్రొఫైల్ వీక్షణను లెక్కించండి"
+    levenshtein_distance_spammer_emails: "స్పామర్ ఇమెయిల్‌లను సరిపోల్చేటప్పుడు, అస్పష్టమైన సరిపోలికను అనుమతించే అక్షరాల సంఖ్య తేడా."
+    max_new_accounts_per_registration_ip: "ఈ IP నుండి ఇప్పటికే (n) ట్రస్ట్ లెవల్ 0 ఖాతాలు ఉంటే (మరియు ఎవరూ స్టాఫ్ మెంబర్ లేదా TL2 లేదా అంతకంటే ఎక్కువ వద్ద), ఆ IP నుండి కొత్త సైన్అప్‌లను ఆమోదించడాన్ని ఆపివేయండి. పరిమితిని నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    min_ban_entries_for_roll_up: "రోల్ అప్ బటన్‌ను క్లిక్ చేసినప్పుడు, కనీసం (N) ఎంట్రీలు ఉంటే కొత్త సబ్‌నెట్ బ్యాన్ ఎంట్రీని సృష్టిస్తుంది."
+    max_age_unmatched_emails: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన ఇమెయిల్ ఎంట్రీలను తొలగించండి."
+    max_age_unmatched_ips: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన IP ఎంట్రీలను తొలగించండి."
+    num_flaggers_to_close_topic: "జోక్యం కోసం టాపిక్‌ను ఆటోమేటిక్‌గా పాజ్ చేయడానికి అవసరమైన కనిష్ట సంఖ్యలో ప్రత్యేకమైన ఫ్లాగర్‌లు అవసరం"
+    num_hours_to_close_topic: "జోక్యం కోసం అంశాన్ని పాజ్ చేయడానికి గంటల సంఖ్య."
+    auto_respond_to_flag_actions: "ఫ్లాగ్‌ను పారవేసేటప్పుడు స్వయంచాలక ప్రత్యుత్తరాన్ని ప్రారంభించండి."
+    min_first_post_typing_time: "మొదటి పోస్ట్‌లో వినియోగదారు తప్పనిసరిగా టైప్ చేయాల్సిన కనీస సమయం మిల్లీసెకన్‌లలో ఉంటుంది, థ్రెషోల్డ్‌ను చేరుకోకపోతే, పోస్ట్ స్వయంచాలకంగా అవసరాల ఆమోదం క్యూలో నమోదు చేయబడుతుంది. నిలిపివేయడానికి 0కి సెట్ చేయండి (సిఫార్సు చేయబడలేదు)"
+    auto_silence_fast_typers_on_first_post: "min_first_post_typing_timeకి చేరుకోని వినియోగదారులను స్వయంచాలకంగా నిశ్శబ్దం చేయండి"
+    auto_silence_fast_typers_max_trust_level: "వేగవంతమైన టైపర్‌లను స్వయంచాలకంగా నిశ్శబ్దం చేయడానికి గరిష్ట విశ్వసనీయ స్థాయి"
+    auto_silence_first_post_regex: "కేస్ ఇన్సెన్సిటివ్ రీజెక్స్ పాస్ అయినట్లయితే, వినియోగదారు మొదటి పోస్ట్ నిశ్శబ్దం చేయబడి, ఆమోదం క్యూకు పంపబడుతుంది. ఉదాహరణ: ర్యాగింగ్|a[bc]a , ర్యాగింగ్ లేదా అబా లేదా అకాను కలిగి ఉన్న అన్ని పోస్ట్‌లు ముందుగా నిశ్శబ్దం చేయబడతాయి. మొదటి పోస్ట్‌కి మాత్రమే వర్తిస్తుంది. విస్మరించబడింది: బదులుగా నిశ్శబ్దం వీక్షించిన పదాలను ఉపయోగించండి."
+    reviewable_claiming: "సమీక్షించదగిన కంటెంట్‌పై చర్య తీసుకునే ముందు క్లెయిమ్ చేయాల్సిన అవసరం ఉందా?"
+    reviewable_default_topics: "డిఫాల్ట్‌గా టాపిక్ ద్వారా సమూహం చేయబడిన సమీక్షించదగిన కంటెంట్‌ను చూపండి"
+    reviewable_default_visibility: "సమీక్షించదగిన అంశాలు ఈ ప్రాధాన్యతకు అనుగుణంగా ఉంటే తప్ప వాటిని చూపవద్దు"
+    reviewable_low_priority_threshold: "'(ఏదైనా)' ఫిల్టర్‌ని ఉపయోగించకపోతే ఈ స్కోర్‌కు అనుగుణంగా లేని సమీక్షించదగిన అంశాలను ప్రాధాన్యత ఫిల్టర్ దాచిపెడుతుంది."
+    high_trust_flaggers_auto_hide_posts: "TL3+ వినియోగదారు స్పామ్‌గా ఫ్లాగ్ చేసిన తర్వాత కొత్త వినియోగదారు పోస్ట్‌లు స్వయంచాలకంగా దాచబడతాయి"
+    cooldown_hours_until_reflag: "వినియోగదారులు పోస్ట్‌ను రీఫ్లాగ్ చేసే వరకు ఎంత సమయం వేచి ఉండాలి"
+    slow_mode_prevents_editing: "editing_grace_period తర్వాత 'స్లో మోడ్' ఎడిటింగ్‌ను నిరోధిస్తుందా?"
+    reply_by_email_address: "ఇమెయిల్ ఇన్‌కమింగ్ ఇమెయిల్ చిరునామా ద్వారా ప్రత్యుత్తరం కోసం టెంప్లేట్, ఉదాహరణకు: %%{reply_key}@reply.example.com లేదా ప్రత్యుత్తరాలు+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "ఇమెయిల్ ఇన్‌కమింగ్ ఇమెయిల్ చిరునామాల ద్వారా ప్రత్యుత్తరం కోసం ప్రత్యామ్నాయ టెంప్లేట్‌ల జాబితా. ఉదాహరణ: %%{reply_key}@reply.example.com|ప్రత్యుత్తరాలు+%%{reply_key}@example.com"
+    incoming_email_prefer_html: "ఇన్‌కమింగ్ ఇమెయిల్ కోసం టెక్స్ట్‌కు బదులుగా HTMLని ఉపయోగించండి."
+    strip_incoming_email_lines: "ఇన్‌కమింగ్ ఇమెయిల్‌ల ప్రతి లైన్ నుండి లీడింగ్ మరియు ట్రైలింగ్ వైట్‌స్పేస్‌లను తీసివేయండి."
+    disable_emails: "ఎలాంటి ఇమెయిల్‌లను పంపకుండా ఉపన్యాసం నిరోధించండి. వినియోగదారులందరికీ ఇమెయిల్‌లను నిలిపివేయడానికి 'అవును' ఎంచుకోండి. సిబ్బందియేతర వినియోగదారుల కోసం మాత్రమే ఇమెయిల్‌లను నిలిపివేయడానికి 'నాన్-స్టాఫ్'ని ఎంచుకోండి."
+    strip_images_from_short_emails: "2800 బైట్‌ల కంటే తక్కువ పరిమాణం ఉన్న ఇమెయిల్‌ల నుండి చిత్రాలను తీసివేయండి"
+    display_name_on_email_from: "ఫీల్డ్‌ల నుండి ఇమెయిల్‌లో పూర్తి పేర్లను ప్రదర్శించండి"
+    unsubscribe_via_email: "సబ్జెక్ట్ లేదా బాడీలో 'అన్‌సబ్‌స్క్రయిబ్'తో ఇమెయిల్ పంపడం ద్వారా ఇమెయిల్‌ల నుండి అన్‌సబ్‌స్క్రైబ్ చేయడానికి వినియోగదారులను అనుమతించండి"
+    unsubscribe_via_email_footer: "ఇమెయిల్ మెయిల్ ద్వారా అన్‌సబ్‌స్క్రయిబ్‌ను అటాచ్ చేయండి: పంపిన ఇమెయిల్‌ల ఫుటరుకు లింక్"
+    delete_email_logs_after_days: "(N) రోజుల తర్వాత ఇమెయిల్ లాగ్‌లను తొలగించండి. 0 నిరవధికంగా ఉంచడానికి"
+    disallow_reply_by_email_after_days: "(N) రోజుల తర్వాత ఇమెయిల్ ద్వారా ప్రత్యుత్తరాన్ని అనుమతించవద్దు. 0 నిరవధికంగా ఉంచడానికి"
+    max_emails_per_day_per_user: "రోజుకు వినియోగదారులకు పంపడానికి గరిష్ట సంఖ్యలో ఇమెయిల్‌లు. పరిమితిని నిలిపివేయడానికి 0"
+    enable_staged_users: "ఇన్‌కమింగ్ ఇమెయిల్‌లను ప్రాసెస్ చేస్తున్నప్పుడు స్టేజ్డ్ యూజర్‌లను ఆటోమేటిక్‌గా క్రియేట్ చేయండి."
+    maximum_staged_users_per_email: "ఇన్‌కమింగ్ ఇమెయిల్‌ను ప్రాసెస్ చేస్తున్నప్పుడు సృష్టించబడిన దశలవారీ వినియోగదారుల గరిష్ట సంఖ్య."
+    maximum_recipients_per_new_group_email: "చాలా మంది స్వీకర్తలతో ఇన్‌కమింగ్ ఇమెయిల్‌లను బ్లాక్ చేయండి."
+    auto_generated_allowlist: "స్వీయ-ఉత్పత్తి కంటెంట్ కోసం తనిఖీ చేయబడని ఇమెయిల్ చిరునామాల జాబితా. ఉదాహరణ: foo@bar.com|discourse@bar.com"
+    block_auto_generated_emails: "స్వయంచాలకంగా రూపొందించబడిన ఇన్‌కమింగ్ ఇమెయిల్‌లను బ్లాక్ చేయండి."
+    ignore_by_title: "ఇన్‌కమింగ్ ఇమెయిల్‌లను వాటి శీర్షిక ఆధారంగా విస్మరించండి."
+    mailgun_api_key: "వెబ్‌హుక్ సందేశాలను ధృవీకరించడానికి Mailgun సీక్రెట్ API కీ ఉపయోగించబడుతుంది."
+    sendgrid_verification_key: "webhook సందేశాలను ధృవీకరించడానికి Sendgrid ధృవీకరణ కీ ఉపయోగించబడుతుంది."
+    mailjet_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "వెబ్‌హుక్ సందేశాలను ధృవీకరించడానికి మాండ్రిల్ ప్రమాణీకరణ కీ ఉపయోగించబడుతుంది."
+    postmark_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/sparkpost?t=supersecret"
+    soft_bounce_score: "తాత్కాలిక బౌన్స్ జరిగినప్పుడు వినియోగదారుకు బౌన్స్ స్కోర్ జోడించబడుతుంది."
+    hard_bounce_score: "శాశ్వత బౌన్స్ జరిగినప్పుడు వినియోగదారుకు బౌన్స్ స్కోర్ జోడించబడుతుంది."
+    bounce_score_threshold: "మేము సభ్యుడికి ఇమెయిల్ పంపడం ఆపే ముందు గరిష్ట బౌన్స్ స్కోర్."
+    reset_bounce_score_after_days: "X రోజుల తర్వాత బౌన్స్ స్కోర్‌ని ఆటోమేటిక్‌గా రీసెట్ చేయండి."
+    blocked_attachment_content_types: "కంటెంట్ రకం ఆధారంగా జోడింపులను బ్లాక్‌లిస్ట్ చేయడానికి ఉపయోగించే కీలక పదాల జాబితా."
+    blocked_attachment_filenames: "ఫైల్ పేరు ఆధారంగా జోడింపులను బ్లాక్‌లిస్ట్ చేయడానికి ఉపయోగించే కీలక పదాల జాబితా."
+    forwarded_emails_behaviour: "ఫార్వార్డ్ చేయబడిన ఇమెయిల్‌ను డిస్కోర్స్‌కి ఎలా ట్రీట్ చేయాలి"
+    always_show_trimmed_content: "ఇన్‌కమింగ్ ఇమెయిల్‌లలో కత్తిరించిన భాగాన్ని ఎల్లప్పుడూ చూపండి. హెచ్చరిక: ఇమెయిల్ చిరునామాలను బహిర్గతం చేయవచ్చు."
+    trim_incoming_emails: "సంబంధితంగా లేని ఇన్‌కమింగ్ ఇమెయిల్‌లలో కొంత భాగాన్ని కత్తిరించండి."
+    private_email: "ఇమెయిల్ శీర్షిక లేదా ఇమెయిల్ బాడీలో పోస్ట్‌లు లేదా అంశాల నుండి కంటెంట్‌ను చేర్చవద్దు. గమనిక: డైజెస్ట్ ఇమెయిల్‌లను కూడా నిలిపివేస్తుంది."
+    email_total_attachment_size_limit_kb: "అవుట్‌గోయింగ్ ఇమెయిల్‌లకు జోడించబడిన ఫైల్‌ల గరిష్ట మొత్తం పరిమాణం. జోడింపులను పంపడాన్ని నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    post_excerpts_in_emails: "నోటిఫికేషన్ ఇమెయిల్‌లలో, ఎల్లప్పుడూ పూర్తి పోస్ట్‌లకు బదులుగా సారాంశాలను పంపండి"
+    raw_email_max_length: "ఇన్‌కమింగ్ ఇమెయిల్ కోసం ఎన్ని అక్షరాలు నిల్వ చేయాలి."
+    raw_rejected_email_max_length: "తిరస్కరించబడిన ఇన్‌కమింగ్ ఇమెయిల్ కోసం ఎన్ని అక్షరాలు నిల్వ చేయబడాలి."
+    delete_rejected_email_after_days: "(n) రోజుల కంటే పాత తిరస్కరించబడిన ఇమెయిల్‌లను తొలగించండి."
+    require_change_email_confirmation: "నాన్-స్టాఫ్ యూజర్లు తమ పాత ఇమెయిల్ అడ్రస్‌ను మార్చడానికి ముందు దానిని నిర్ధారించవలసి ఉంటుంది. సిబ్బంది వినియోగదారులకు వర్తించదు, వారు ఎల్లప్పుడూ వారి పాత ఇమెయిల్ చిరునామాను నిర్ధారించాలి."
+    manual_polling_enabled: "ఇమెయిల్ ప్రత్యుత్తరాల కోసం APIని ఉపయోగించి ఇమెయిల్‌లను పుష్ చేయండి."
+    pop3_polling_ssl: "POP3 సర్వర్‌కి కనెక్ట్ చేస్తున్నప్పుడు SSLని ఉపయోగించండి. (సిఫార్సు చేయబడింది)"
+    pop3_polling_openssl_verify: "TLS సర్వర్ ప్రమాణపత్రాన్ని ధృవీకరించండి (డిఫాల్ట్: ప్రారంభించబడింది)"
+    pop3_polling_username: "ఇమెయిల్ కోసం పోల్ చేయడానికి POP3 ఖాతా కోసం సభ్యనామం."
+    pop3_polling_password: "ఇమెయిల్ కోసం పోల్ చేయడానికి POP3 ఖాతా కోసం పాస్‌వర్డ్."
+    pop3_polling_delete_from_server: "సర్వర్ నుండి ఇమెయిల్‌లను తొలగించండి. గమనిక: మీరు దీన్ని నిలిపివేస్తే, మీరు మీ మెయిల్ ఇన్‌బాక్స్‌ను మాన్యువల్‌గా శుభ్రం చేయాలి"
+    log_mail_processing_failures: "అన్ని ఇమెయిల్ ప్రాసెసింగ్ వైఫల్యాలను <a href='%{base_path}/logs' target='_blank'>/లాగ్‌లు</a>కి లాగ్ చేయండి"
+    email_in: "ఇమెయిల్ ద్వారా కొత్త అంశాలను పోస్ట్ చేయడానికి వినియోగదారులను అనుమతించండి. ఈ సెట్టింగ్‌ని ప్రారంభించిన తర్వాత, మీరు సమూహాలు మరియు వర్గాల కోసం ఇన్‌కమింగ్ ఇమెయిల్ చిరునామాలను కాన్ఫిగర్ చేయగలరు."
+    email_in_min_trust: "ఇమెయిల్ ద్వారా కొత్త అంశాలను పోస్ట్ చేయడానికి వినియోగదారుని అనుమతించాల్సిన కనీస విశ్వసనీయ స్థాయి."
+    email_in_allowed_groups: "ఇమెయిల్ ద్వారా కొత్త అంశాలను పోస్ట్ చేయడానికి అనుమతించబడిన సమూహాలు."
+    email_in_authserv_id: "సేవ యొక్క ఐడెంటిఫైయర్ ఇన్‌కమింగ్ ఇమెయిల్‌లపై ప్రమాణీకరణ తనిఖీ చేస్తుంది. దీన్ని ఎలా కాన్ఫిగర్ చేయాలో సూచనల కోసం <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> ని చూడండి."
+    enable_imap: "సమూహ సందేశాలను సమకాలీకరించడానికి IMAPని ప్రారంభించండి."
+    enable_imap_write: "రెండు-మార్గం IMAP సమకాలీకరణను ప్రారంభించండి. నిలిపివేయబడితే, IMAP ఖాతాలపై అన్ని వ్రాత-ఆపరేషన్‌లు నిలిపివేయబడతాయి."
+    enable_imap_idle: "కొత్త ఇమెయిల్‌ల కోసం వేచి ఉండటానికి IMAP IDLE మెకానిజంను ఉపయోగించండి."
+    enable_smtp: "సమూహ సందేశాల కోసం నోటిఫికేషన్‌లను పంపడం కోసం SMTPని ప్రారంభించండి."
+    imap_polling_period_mins: "ఇమెయిల్‌ల కోసం IMAP ఖాతాలను తనిఖీ చేయడం మధ్య నిమిషాల వ్యవధి."
+    imap_polling_old_emails: "IMAP బాక్స్‌లో పోల్ చేయబడిన ప్రతిసారి గరిష్ట సంఖ్యలో పాత ఇమెయిల్‌లు (ప్రాసెస్ చేయబడ్డాయి) నవీకరించబడతాయి (అందరికీ 0)."
+    imap_polling_new_emails: "IMAP బాక్స్‌లో పోల్ చేయబడిన ప్రతిసారి నవీకరించబడే గరిష్ట సంఖ్యలో కొత్త ఇమెయిల్‌లు (ప్రాసెస్ చేయబడలేదు)."
+    imap_batch_import_email: "దిగుమతి మోడ్‌ను ట్రిగ్గర్ చేసే కొత్త ఇమెయిల్‌ల కనీస సంఖ్య (దిగుమతి చేసిన పోస్ట్‌ల కోసం నోటిఫికేషన్‌లను నిలిపివేస్తుంది)."
+    email_prefix: "ఇమెయిల్‌ల విషయంలో ఉపయోగించబడిన [లేబుల్]. సెట్ చేయకుంటే అది 'టైటిల్'కి డిఫాల్ట్ అవుతుంది."
+    email_site_title: "సైట్ యొక్క శీర్షిక సైట్ నుండి ఇమెయిల్‌లను పంపేవారిగా ఉపయోగించబడింది. సెట్ చేయకుంటే 'టైటిల్'కి డిఫాల్ట్ అవుతుంది. మీ 'శీర్షిక' ఇమెయిల్ పంపినవారి స్ట్రింగ్‌లలో అనుమతించబడని అక్షరాలను కలిగి ఉంటే, ఈ సెట్టింగ్‌ని ఉపయోగించండి."
+    find_related_post_with_key: "ప్రత్యుత్తరమిచ్చిన పోస్ట్‌ను కనుగొనడానికి 'ప్రత్యుత్తర కీ'ని మాత్రమే ఉపయోగించండి. హెచ్చరిక: దీన్ని డిసేబుల్ చేయడం వలన ఇమెయిల్ అడ్రస్ ఆధారంగా వినియోగదారు వేషాలు వేయవచ్చు."
+    minimum_topics_similar: "కొత్త టాపిక్‌లను కంపోజ్ చేసేటప్పుడు ఇలాంటి టాపిక్‌లను అందించడానికి ముందు ఎన్ని అంశాలు ఉండాలి."
+    relative_date_duration: "పోస్ట్ తేదీలు సంపూర్ణ (20 ఫిబ్రవరి)కి బదులుగా సాపేక్షంగా (7d) చూపబడే పోస్ట్ చేసిన తర్వాత రోజుల సంఖ్య."
+    delete_user_max_post_age: "మొదటి పోస్ట్ (x) రోజుల కంటే పాతది అయిన వినియోగదారులను తొలగించడాన్ని అనుమతించవద్దు."
+    delete_all_posts_max: "అన్ని పోస్ట్‌లను తొలగించు బటన్‌తో ఒకేసారి తొలగించగల గరిష్ట సంఖ్యలో పోస్ట్‌లు. ఒక వినియోగదారు ఇన్ని కంటే ఎక్కువ పోస్ట్‌లను కలిగి ఉంటే, అన్ని పోస్ట్‌లను ఒకేసారి తొలగించలేరు మరియు వినియోగదారుని తొలగించలేరు."
+    delete_user_self_max_post_count: "స్వీయ-సేవ ఖాతా తొలగింపును అనుమతించేటప్పుడు వినియోగదారు గరిష్ట సంఖ్యలో పోస్ట్‌లను కలిగి ఉంటారు. స్వీయ-సేవ ఖాతా తొలగింపును నిలిపివేయడానికి -1కి సెట్ చేయండి."
+    username_change_period: "నమోదు చేసిన తర్వాత ఖాతాలు తమ వినియోగదారు పేరును మార్చగల గరిష్ట రోజుల సంఖ్య (వినియోగదారు పేరు మార్పును అనుమతించకుండా ఉండటానికి 0)."
+    email_editable: "నమోదు తర్వాత వారి ఇమెయిల్ చిరునామాను మార్చడానికి వినియోగదారులను అనుమతించండి."
+    logout_redirect: "లాగ్అవుట్ తర్వాత బ్రౌజర్‌ని దారి మళ్లించడానికి స్థానం (ఉదా: https://example.com/logout)"
+    allow_uploaded_avatars: "అనుకూల ప్రొఫైల్ చిత్రాలను అప్‌లోడ్ చేయడానికి సభ్యులను అనుమతించండి."
+    uploaded_avatars_allowed_groups: "అనుకూల ప్రొఫైల్ చిత్రాలను అప్‌లోడ్ చేయడానికి అనుమతించబడిన సమూహాలను పేర్కొనండి."
+    default_avatars: "అవతార్‌లకు URLలు, కొత్త వినియోగదారులు వాటిని మార్చే వరకు డిఫాల్ట్‌గా ఉపయోగించబడతాయి."
+    automatically_download_gravatars: "ఖాతా సృష్టి లేదా ఇమెయిల్ మార్పుపై వినియోగదారుల కోసం Gravatarలను డౌన్‌లోడ్ చేయండి."
+    digest_topics: "ఇమెయిల్ సారాంశంలో ప్రదర్శించాల్సిన గరిష్ట సంఖ్యలో జనాదరణ పొందిన అంశాలు."
+    digest_posts: "ఇమెయిల్ సారాంశంలో ప్రదర్శించడానికి జనాదరణ పొందిన పోస్ట్‌ల గరిష్ట సంఖ్య."
+    digest_other_topics: "ఇమెయిల్ సారాంశంలోని 'టాపిక్‌లు మరియు మీరు అనుసరించే కేటగిరీలలో కొత్తవి' విభాగంలో చూపాల్సిన గరిష్ట సంఖ్యలో టాపిక్‌లు."
+    digest_min_excerpt_length: "ఇమెయిల్ సారాంశంలో, అక్షరాలలో కనీస పోస్ట్ ఎక్సెర్ప్ట్."
+    suppress_digest_email_after_days: "(n) రోజులకు మించి సైట్‌లో కనిపించని వినియోగదారుల కోసం సారాంశ ఇమెయిల్‌లను అణచివేయండి."
+    digest_suppress_categories: "సారాంశ ఇమెయిల్‌ల నుండి ఈ వర్గాలను అణచివేయండి."
+    digest_suppress_tags: "సారాంశ ఇమెయిల్‌ల నుండి ఈ ట్యాగ్‌లను అణచివేయండి."
+    apply_custom_styles_to_digest: "సారాంశ ఇమెయిల్‌లకు అనుకూల ఇమెయిల్ టెంప్లేట్ మరియు css వర్తింపజేయబడతాయి."
+    email_accent_bg_color: "HTML ఇమెయిల్‌లలోని కొన్ని మూలకాల నేపథ్యంగా ఉపయోగించాల్సిన యాస రంగు. రంగు పేరు ('ఎరుపు') లేదా హెక్స్ విలువ ('#FF0000') నమోదు చేయండి."
+    email_accent_fg_color: "HTML ఇమెయిల్‌లలోని ఇమెయిల్ bg రంగుపై అందించబడిన వచన రంగు. రంగు పేరు ('తెలుపు') లేదా హెక్స్ విలువ ('#FFFFF') నమోదు చేయండి."
+    email_link_color: "HTML ఇమెయిల్‌లలోని లింక్‌ల రంగు. రంగు పేరు ('నీలం') లేదా హెక్స్ విలువ ('#0000FF') నమోదు చేయండి."
+    detect_custom_avatars: "వినియోగదారులు కస్టమ్ ప్రొఫైల్ చిత్రాలను అప్‌లోడ్ చేశారో లేదో తనిఖీ చేయాలా వద్దా."
+    max_daily_gravatar_crawls: "ఒక రోజులో కస్టమ్ అవతార్‌ల కోసం ఉపన్యాసం గ్రావతార్‌ని గరిష్టంగా ఎన్నిసార్లు తనిఖీ చేస్తుంది"
+    public_user_custom_fields: "APIతో తిరిగి పొందగల వినియోగదారు అనుకూల ఫీల్డ్‌ల జాబితా."
+    staff_user_custom_fields: "APIతో సిబ్బంది సభ్యుల కోసం తిరిగి పొందగలిగే వినియోగదారు అనుకూల ఫీల్డ్‌ల జాబితా."
+    enable_user_directory: "బ్రౌజింగ్ కోసం సభ్యుల డైరెక్టరీని అందించండి"
+    enable_group_directory: "బ్రౌజింగ్ కోసం సమూహాల డైరెక్టరీని అందించండి"
+    enable_category_group_moderation: "నిర్దిష్ట వర్గాలలోని కంటెంట్‌ను మోడరేట్ చేయడానికి సమూహాలను అనుమతించండి"
+    group_in_subject: "PMలో మొదటి సమూహం పేరుకు లోబడి ఇమెయిల్‌లో %%{optional_pm} ని సెట్ చేయండి, చూడండి: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>ప్రామాణిక ఇమెయిల్‌ల కోసం సబ్జెక్ట్ ఆకృతిని అనుకూలీకరించండి</a>"
+    anonymous_posting_min_trust_level: "అనామక పోస్టింగ్‌ని ప్రారంభించడానికి కనీస విశ్వసనీయ స్థాయి అవసరం"
+    anonymous_posting_allowed_groups: "అనామక పోస్టింగ్‌ని ప్రారంభించడానికి అనుమతించబడిన సమూహాలు"
+    anonymous_account_duration_minutes: "అనామకతను రక్షించడానికి ప్రతి వినియోగదారు కోసం ప్రతి N నిమిషాలకు కొత్త అనామక ఖాతాను సృష్టించండి. ఉదాహరణ: 600కి సెట్ చేస్తే, చివరి పోస్ట్ నుండి 600 నిమిషాలు గడిచిన వెంటనే మరియు వినియోగదారు anonకి మారిన వెంటనే, కొత్త అనామక ఖాతా సృష్టించబడుతుంది."
+    hide_user_profiles_from_public: "అనామక వినియోగదారుల కోసం వినియోగదారు కార్డ్‌లు, వినియోగదారు ప్రొఫైల్‌లు మరియు వినియోగదారు డైరెక్టరీని నిలిపివేయండి."
+    allow_users_to_hide_profile: "వారి ప్రొఫైల్ మరియు ఉనికిని దాచడానికి సభ్యులను అనుమతించండి"
+    hide_user_activity_tab: "అడ్మిన్ మరియు స్వీయ మినహా వినియోగదారు ప్రొఫైల్‌లలో కార్యాచరణ ట్యాబ్‌ను దాచండి."
+    allow_featured_topic_on_user_profiles: "వినియోగదారులు వారి వినియోగదారు కార్డ్ మరియు ప్రొఫైల్‌లో ఒక అంశానికి లింక్‌ను ఫీచర్ చేయడానికి అనుమతించండి."
+    show_inactive_accounts: "ఇన్‌యాక్టివ్ ఖాతాల ప్రొఫైల్‌లను బ్రౌజ్ చేయడానికి లాగిన్ చేసిన వినియోగదారులను అనుమతించండి."
+    hide_suspension_reasons: "వినియోగదారు ప్రొఫైల్‌లలో సస్పెన్షన్ కారణాలను పబ్లిక్‌గా ప్రదర్శించవద్దు."
+    log_personal_messages_views: "ఇతర వినియోగదారులు/సమూహాల కోసం అడ్మిన్ వ్యక్తిగత సందేశ వీక్షణలను లాగ్ చేయండి."
+    ignored_users_count_message_threshold: "నిర్దిష్ట వినియోగదారుని ఇంత మంది ఇతర వినియోగదారులు విస్మరించినట్లయితే మోడరేటర్‌లకు తెలియజేయండి."
+    ignored_users_message_gap_days: "చాలా మంది ఇతరులు విస్మరించబడిన వినియోగదారు గురించి మోడరేటర్‌లకు మళ్లీ తెలియజేయడానికి ముందు ఎంతసేపు వేచి ఉండాలి."
+    clean_up_inactive_users_after_days: "నిష్క్రియ వినియోగదారు (ఏ పోస్ట్‌లు లేకుండా ట్రస్ట్ లెవల్ 0) తీసివేయబడటానికి ముందు రోజుల సంఖ్య. క్లీన్‌అప్‌ని నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    clean_up_unused_staged_users_after_days: "ఉపయోగించని దశ వినియోగదారు (ఏ పోస్ట్‌లు లేకుండా) తీసివేయబడటానికి ముందు రోజుల సంఖ్య. క్లీన్‌అప్‌ని నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    user_selected_primary_groups: "సభ్యులు వారి స్వంత ప్రాథమిక సమూహాన్ని సెట్ చేసుకోవడానికి అనుమతించండి"
+    max_notifications_per_user: "ఒక్కో వినియోగదారుకు గరిష్ట మొత్తంలో నోటిఫికేషన్‌లు, ఈ సంఖ్య దాటితే పాత నోటిఫికేషన్‌లు తొలగించబడతాయి. వారానికోసారి అమలు చేస్తారు. నిలిపివేయడానికి 0కి సెట్ చేయండి"
+    allowed_user_website_domains: "ఈ డొమైన్‌లకు వ్యతిరేకంగా వినియోగదారు వెబ్‌సైట్ ధృవీకరించబడుతుంది. పైప్-డిలిమిటెడ్ జాబితా."
+    allow_profile_backgrounds: "ప్రొఫైల్ నేపథ్యాలను అప్‌లోడ్ చేయడానికి సభ్యులను అనుమతించండి."
+    sequential_replies_threshold: "అనేక వరుస ప్రత్యుత్తరాల గురించి రిమైండ్ చేయడానికి ముందు వినియోగదారు ఒక అంశంలో వరుసగా చేయాల్సిన పోస్ట్‌ల సంఖ్య."
+    get_a_room_threshold: "హెచ్చరించే ముందు వినియోగదారు ఒకే అంశంలో అదే వ్యక్తికి చేయాల్సిన పోస్ట్‌ల సంఖ్య."
+    dont_feed_the_trolls_threshold: "హెచ్చరించే ముందు ఇతర సభ్యుల నుండి ఫిర్యాదుల సంఖ్య."
+    enable_mobile_theme: "మొబైల్ పరికరాలు పూర్తి సైట్‌కి మారే సామర్థ్యంతో మొబైల్-స్నేహపూర్వక థీమ్‌ను ఉపయోగిస్తాయి. మీరు పూర్తిగా స్పందించే అనుకూల స్టైల్‌షీట్‌ను ఉపయోగించాలనుకుంటే దీన్ని నిలిపివేయండి."
+    dominating_topic_minimum_percent: "టాపిక్‌పై అతిగా ఆధిపత్యం చెలాయించడం గురించి గుర్తు చేయడానికి ముందు వినియోగదారు ఒక టాపిక్‌లో ఎంత శాతం పోస్ట్‌లు చేయాలి."
+    disable_avatar_education_message: "అవతార్‌ను మార్చడం కోసం విద్యా సందేశాన్ని నిలిపివేయండి."
+    pm_warn_user_last_seen_months_ago: "కొత్త PMని సృష్టిస్తున్నప్పుడు, లక్ష్య గ్రహీత n నెలల క్రితం కనిపించనప్పుడు వినియోగదారులను హెచ్చరించండి."
+    suppress_uncategorized_badge: "టాపిక్ లిస్ట్‌లలో వర్గీకరించని అంశాల కోసం బ్యాడ్జ్‌ని చూపవద్దు."
+    header_dropdown_category_count: "హెడర్ డ్రాప్‌డౌన్ మెనులో ఎన్ని వర్గాలను ప్రదర్శించవచ్చు."
+    permalink_normalizations: "పెర్మాలింక్‌లను సరిపోల్చడానికి ముందు కింది రీజెక్స్‌ని వర్తింపజేయండి, ఉదాహరణకు: /(టాపిక్.*)\\?.*/\\1 టాపిక్ మార్గాల నుండి ప్రశ్న స్ట్రింగ్‌లను తీసివేస్తుంది. క్యాప్చర్‌లను యాక్సెస్ చేయడానికి రీజెక్స్+స్ట్రింగ్ ఉపయోగం \\1 మొదలైనవి ఫార్మాట్"
+    global_notice: "సందర్శకులందరికీ అత్యవసరమైన, అత్యవసరమైన, తీసివేయబడని గ్లోబల్ బ్యానర్ నోటీసును ప్రదర్శించండి, దానిని దాచడానికి ఖాళీగా మార్చండి (HTML అనుమతించబడింది)."
+    disable_system_edit_notifications: "'download_remote_images_to_local' సక్రియంగా ఉన్నప్పుడు సిస్టమ్ వినియోగదారు ద్వారా సవరణ నోటిఫికేషన్‌లను నిలిపివేస్తుంది."
+    disable_category_edit_notifications: "టాపిక్ కేటగిరీ సవరణల కోసం నోటిఫికేషన్‌లను నిలిపివేయండి. ఇందులో 'పబ్లిష్ చేయబడిన' అంశాలు ఉంటాయి (ఉదా. భాగస్వామ్య చిత్తుప్రతులు)."
+    disable_tags_edit_notifications: "టాపిక్ ట్యాగ్ సవరణల కోసం నోటిఫికేషన్‌లను నిలిపివేయండి. ఇందులో 'పబ్లిష్ చేయబడిన' అంశాలు ఉంటాయి (ఉదా. భాగస్వామ్య చిత్తుప్రతులు)."
+    notification_consolidation_threshold: "నోటిఫికేషన్‌లను ఏకీకృతం చేయడానికి ముందు లైక్ చేయబడిన లేదా మెంబర్‌షిప్ అభ్యర్థన నోటిఫికేషన్‌ల సంఖ్య. నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    likes_notification_consolidation_window_mins: "థ్రెషోల్డ్‌ను చేరుకున్న తర్వాత లైక్ చేసిన నోటిఫికేషన్‌లు ఒకే నోటిఫికేషన్‌గా ఏకీకృతం చేయబడిన నిమిషాల వ్యవధి. థ్రెషోల్డ్‌ను `SiteSetting.notification_consolidation_threshold` ద్వారా కాన్ఫిగర్ చేయవచ్చు."
+    automatically_unpin_topics: "వినియోగదారు దిగువకు చేరుకున్నప్పుడు టాపిక్‌లను ఆటోమేటిక్‌గా అన్‌పిన్ చేయండి."
+    read_time_word_count: "అంచనా వేసిన పఠన సమయాన్ని లెక్కించడానికి నిమిషానికి పదాల సంఖ్య."
+    topic_page_title_includes_category: "టాపిక్ పేజీ <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>టైటిల్ ట్యాగ్</a> వర్గం పేరును కలిగి ఉంటుంది."
+    native_app_install_banner_ios: "IOS పరికరాలలో ప్రాథమిక వినియోగదారులకు (ట్రస్ట్ లెవల్ 1) మరియు అంతకంటే ఎక్కువ మందికి DiscourseHub యాప్ బ్యానర్‌ని ప్రదర్శిస్తుంది."
+    native_app_install_banner_android: "ప్రాథమిక వినియోగదారులకు (ట్రస్ట్ లెవల్ 1) మరియు అంతకంటే ఎక్కువ మందికి Android పరికరాలలో DiscourseHub యాప్ బ్యానర్‌ని ప్రదర్శిస్తుంది."
+    app_association_android: "Google యొక్క డిజిటల్ అసెట్ లింక్‌ల API కోసం ఉపయోగించే <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> ముగింపు పాయింట్ యొక్క కంటెంట్‌లు."
+    app_association_ios: "ఈ సైట్ మరియు iOS యాప్‌ల మధ్య యూనివర్సల్ లింక్‌లను రూపొందించడానికి ఉపయోగించే <a href='%{base_path}/apple-app-site-association'>apple-app-site-Association</a> ముగింపు పాయింట్."
+    auto_handle_queued_age: "చాలా రోజుల తర్వాత సమీక్షించడానికి వేచి ఉన్న రికార్డులను స్వయంచాలకంగా నిర్వహించండి. జెండాలు విస్మరించబడతాయి. వరుసలో ఉన్న పోస్ట్‌లు మరియు వినియోగదారులు తిరస్కరించబడతారు. ఈ లక్షణాన్ని నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    penalty_step_hours: "గంటల వ్యవధిలో వినియోగదారులను నిశ్శబ్దం చేయడం లేదా సస్పెండ్ చేయడం కోసం డిఫాల్ట్ జరిమానాలు. మొదటి నేరం మొదటి విలువకు డిఫాల్ట్ అవుతుంది, రెండవ నేరం రెండవ విలువకు డిఫాల్ట్ అవుతుంది, మొదలైనవి."
+    svg_icon_subset: "మీరు మీ ఆస్తులలో చేర్చాలనుకుంటున్న అదనపు FontAwesome 5 చిహ్నాలను జోడించండి. ఘన చిహ్నాల కోసం 'fa-' ఉపసర్గను, సాధారణ చిహ్నాల కోసం 'ఫార్-' మరియు బ్రాండ్ చిహ్నాల కోసం 'fab-'ని ఉపయోగించండి."
+    max_prints_per_hour_per_user: "/ప్రింట్ పేజీ ఇంప్రెషన్‌ల గరిష్ట సంఖ్య (ముద్రణను నిలిపివేయడానికి 0కి సెట్ చేయబడింది)"
+    full_name_required: "పూర్తి పేరు సభ్యుడి ప్రొఫైల్ యొక్క అవసరమైన ఫీల్డ్."
+    enable_names: "వినియోగదారు పూర్తి పేరును వారి ప్రొఫైల్, వినియోగదారు కార్డ్ మరియు ఇమెయిల్‌లలో చూపండి. పూర్తి పేరును ప్రతిచోటా దాచడానికి నిలిపివేయండి."
+    display_name_on_posts: "వారి @usernameకి అదనంగా వారి పోస్ట్‌లలో వినియోగదారు పూర్తి పేరును చూపండి."
+    show_time_gap_days: "చాలా రోజుల వ్యవధిలో రెండు పోస్ట్‌లు చేసినట్లయితే, టాపిక్‌లో టైమ్ గ్యాప్‌ని ప్రదర్శించండి."
+    short_progress_text_threshold: "టాపిక్‌లోని పోస్ట్‌ల సంఖ్య ఈ సంఖ్య కంటే ఎక్కువగా ఉన్న తర్వాత, ప్రోగ్రెస్ బార్ ప్రస్తుత పోస్ట్ నంబర్‌ను మాత్రమే చూపుతుంది. మీరు ప్రోగ్రెస్ బార్ వెడల్పును మార్చినట్లయితే, మీరు ఈ విలువను మార్చవలసి రావచ్చు."
+    default_code_lang: "మార్క్‌డౌన్ కోడ్ బ్లాక్‌లకు (ఆటో, టెక్స్ట్, రూబీ, పైథాన్ మొదలైనవి) డిఫాల్ట్ ప్రోగ్రామింగ్ లాంగ్వేజ్ సింటాక్స్ హైలైటింగ్ వర్తించబడుతుంది. ఈ విలువ తప్పనిసరిగా `హైలైట్ చేసిన భాషలు` సైట్ సెట్టింగ్‌లో కూడా ఉండాలి."
+    warn_reviving_old_topic_age: "చివరి ప్రత్యుత్తరం చాలా రోజుల కంటే పాతది అయిన అంశానికి ఎవరైనా ప్రత్యుత్తరం ఇవ్వడం ప్రారంభించినప్పుడు, హెచ్చరిక ప్రదర్శించబడుతుంది. 0కి సెట్ చేయడం ద్వారా నిలిపివేయండి."
+    autohighlight_all_code: "HTML-రచయిత &lt;code&gt; బ్లాక్‌లకు సింటాక్స్ హైలైటింగ్‌ని వర్తింపజేయండి, అవి భాషని పేర్కొనకపోయినా. మార్క్‌డౌన్-రచయిత కోడ్ బ్లాక్‌లను కాన్ఫిగర్ చేయడానికి, 'డిఫాల్ట్ కోడ్ లాంగ్' సెట్టింగ్‌ని ఉపయోగించండి."
+    highlighted_languages: "సింటాక్స్ హైలైట్ చేసే నియమాలు చేర్చబడ్డాయి. (హెచ్చరిక: అనేక భాషలతో సహా పనితీరు ప్రభావితం కావచ్చు) చూడండి: డెమో కోసం <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
+    show_copy_button_on_codeblocks: "బ్లాక్ కంటెంట్‌లను వినియోగదారు క్లిప్‌బోర్డ్‌కు కాపీ చేయడానికి కోడ్‌బ్లాక్‌లకు బటన్‌ను జోడించండి."
+    embed_any_origin: "మూలాధారంతో సంబంధం లేకుండా పొందుపరచదగిన కంటెంట్‌ను అనుమతించండి. స్టాటిక్ HTMLతో మొబైల్ యాప్‌లకు ఇది అవసరం."
+    embed_set_canonical_url: "పొందుపరిచిన అంశాల కోసం నియమానుగుణ URLని పొందుపరిచిన కంటెంట్ యొక్క URLకి సెట్ చేయండి."
+    embed_unlisted: "సభ్యుడు ప్రత్యుత్తరం ఇచ్చే వరకు పొందుపరిచిన అంశాలు జాబితా చేయబడవు."
+    embed_support_markdown: "ఎంబెడెడ్ పోస్ట్‌ల కోసం మార్క్‌డౌన్ ఫార్మాటింగ్‌కు మద్దతు."
+    allowed_embed_selectors: "ఎంబెడ్‌లలో అనుమతించబడిన కామాతో వేరు చేయబడిన CSS మూలకాల జాబితా."
+    allowed_href_schemes: "http మరియు httpsతో పాటు లింక్‌లలో స్కీమ్‌లు అనుమతించబడతాయి."
+    embed_post_limit: "పొందుపరచడానికి గరిష్ట పోస్ట్ల సంఖ్య."
+    embed_username_required: "టాపిక్ సృష్టికి సభ్యనామం అవసరం."
+    notify_about_reviewable_item_after: "ఇన్ని గంటల తర్వాత నిర్వహించబడని సమీక్షించదగిన అంశాలు ఉంటే, మోడరేటర్‌లకు వ్యక్తిగత సందేశాన్ని పంపండి. నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    delete_merged_stub_topics_after_days: "పూర్తిగా విలీనం చేయబడిన స్టబ్ టాపిక్‌లను ఆటోమేటిక్‌గా తొలగించడానికి ముందు వేచి ఉండాల్సిన రోజుల సంఖ్య. స్టబ్ టాపిక్‌లను ఎప్పటికీ తొలగించకుండా 0కి సెట్ చేయండి."
+    bootstrap_mode_min_users: "బూట్‌స్ట్రాప్ మోడ్‌ను నిలిపివేయడానికి అవసరమైన కనీస వినియోగదారుల సంఖ్య (డిజేబుల్ చేయడానికి 0కి సెట్ చేయబడింది, గరిష్టంగా 24 గంటలు పట్టవచ్చు)"
+    prevent_anons_from_downloading_files: "అనామక సభ్యులను జోడింపులను డౌన్‌లోడ్ చేయకుండా నిరోధించండి."
+    secure_uploads: 'ALL అప్లోడ్లకు ప్రాప్యతను పరిమితం చేస్తుంది (చిత్రాలు, వీడియో, ఆడియో, టెక్స్ట్, పిడిఎఫ్లు, జిప్లు మరియు ఇతరులు). “లాగిన్ అవసరం” ఎనేబుల్ చేయబడితే, లాగ్డ్ ఇన్ చేసిన వినియోగదారులు మాత్రమే అప్లోడ్లను యాక్సెస్ చేయవచ్చు. లేకపోతే, ప్రైవేట్ సందేశాలు మరియు ప్రైవేట్ కేటగిరీల్లోని మీడియా అప్లోడ్లకు మాత్రమే యాక్సెస్ పరిమితం చేయబడుతుంది. హెచ్చరిక: ఈ సెట్టింగ్ సంక్లిష్టమైనది మరియు లోతైన పరిపాలనా అవగాహన అవసరం. వివరాల కోసం <a target="_blank" href="https://meta.discourse.org/t/-/140017">మెటా లో సురక్షిత అప్లోడ్ల అంశాన్ని చూడండి</a>.'
+    secure_uploads_allow_embed_images_in_emails: "సాధారణంగా ఇమెయిల్‌లలో సవరించబడే సురక్షిత చిత్రాలను పొందుపరచడానికి అనుమతిస్తుంది, వాటి పరిమాణం 'సురక్షిత అప్‌లోడ్‌ల గరిష్ట ఇమెయిల్ పొందుపరిచిన చిత్రం పరిమాణం kb' సెట్టింగ్ కంటే తక్కువగా ఉంటే."
+    secure_uploads_max_email_embed_image_size_kb: "'సురక్షిత అప్‌లోడ్‌లు ఇమెయిల్‌లలో పొందుపరచడానికి అనుమతిస్తాయి' సెట్టింగ్ ప్రారంభించబడితే, ఇమెయిల్‌లలో పొందుపరచబడే సురక్షిత చిత్రాల సైజు కటాఫ్. ఆ సెట్టింగ్ ప్రారంభించబడకుండా, ఈ సెట్టింగ్ ప్రభావం ఉండదు."
+    slug_generation_method: "స్లగ్ ఉత్పత్తి పద్ధతిని ఎంచుకోండి. 'ఎన్‌కోడ్' అనేది శాతం ఎన్‌కోడింగ్ స్ట్రింగ్‌ను ఉత్పత్తి చేస్తుంది. 'ఏదీ లేదు' స్లగ్‌ని పూర్తిగా నిలిపివేస్తుంది."
+    enable_emoji_shortcuts: ":) :p :( వంటి సాధారణ స్మైలీ టెక్స్ట్ ఎమోజీలుగా మార్చబడుతుంది"
+    emoji_autocomplete_min_chars: "స్వీయపూర్తి ఎమోజి పాప్‌అప్‌ని ట్రిగ్గర్ చేయడానికి అవసరమైన కనీస అక్షరాల సంఖ్య"
+    enable_inline_emoji_translation: "ఇన్‌లైన్ ఎమోజీల కోసం అనువాదాన్ని ప్రారంభిస్తుంది (ముందు ఖాళీ లేదా విరామ చిహ్నాలు లేకుండా)"
+    emoji_deny_list: "మెనూలు లేదా షార్ట్‌కోడ్‌లలో ఉపయోగించడానికి ఈ ఎమోజీలు అందుబాటులో ఉండవు."
+    approve_post_count: "కొత్త లేదా ప్రాథమిక వినియోగదారు నుండి తప్పనిసరిగా ఆమోదించబడిన పోస్ట్‌ల మొత్తం"
+    approve_unless_trust_level: "ఈ విశ్వసనీయ స్థాయి కంటే తక్కువ వినియోగదారులు సృష్టించిన పోస్ట్‌లు తప్పనిసరిగా ఆమోదించబడాలి"
+    approve_unless_allowed_groups: "ఈ సమూహాలలో లేని వినియోగదారులు సృష్టించిన పోస్ట్‌లు తప్పనిసరిగా ఆమోదించబడాలి"
+    approve_new_topics_unless_trust_level: "ఈ విశ్వసనీయ స్థాయి కంటే తక్కువ వినియోగదారులు సృష్టించిన కొత్త అంశాలు తప్పనిసరిగా ఆమోదించబడాలి"
+    approve_new_topics_unless_allowed_groups: "ఈ సమూహాలలో లేని వినియోగదారులు సృష్టించిన కొత్త అంశాలు తప్పనిసరిగా ఆమోదించబడాలి"
+    approve_unless_staged: "దశలవారీగా వినియోగదారులు సృష్టించిన కొత్త అంశాలు మరియు పోస్ట్‌లు తప్పనిసరిగా ఆమోదించబడాలి"
+    notify_about_queued_posts_after: "ఇన్ని గంటల కంటే ఎక్కువ సమయం సమీక్షించబడటానికి వేచి ఉన్న పోస్ట్‌లు ఉంటే, మోడరేటర్లందరికీ నోటిఫికేషన్ పంపండి. ఈ నోటిఫికేషన్‌లను నిలిపివేయడానికి 0కి సెట్ చేయండి."
+    reviewable_revision_reasons: "పునర్విమర్శతో సమీక్షించదగిన క్యూలో ఉన్న పోస్ట్‌ను తిరస్కరించినప్పుడు ఎంచుకోగల కారణాల జాబితా. ఇతర ఎల్లప్పుడూ అందుబాటులో ఉంటుంది, ఇది అనుకూల కారణాన్ని నమోదు చేయడానికి అనుమతిస్తుంది."
+    auto_close_messages_post_count: "సందేశం స్వయంచాలకంగా మూసివేయబడటానికి ముందు గరిష్ట సంఖ్యలో పోస్ట్‌లు అనుమతించబడతాయి (ఆపివేయడానికి 0)"
+    auto_close_topics_post_count: "టాపిక్ స్వయంచాలకంగా మూసివేయబడటానికి ముందు గరిష్ట సంఖ్యలో పోస్ట్‌లు అనుమతించబడతాయి (ఆపివేయడానికి 0)"
+    auto_close_topics_create_linked_topic: "'ఆటో క్లోజ్ టాపిక్స్ పోస్ట్ కౌంట్' సెట్టింగ్ ఆధారంగా టాపిక్ స్వయంచాలకంగా మూసివేయబడినప్పుడు కొత్త లింక్ చేయబడిన అంశాన్ని సృష్టించండి"
+    code_formatting_style: "స్వరకర్తలోని కోడ్ బటన్ ఈ కోడ్ ఫార్మాటింగ్ శైలికి డిఫాల్ట్ అవుతుంది"
+    max_allowed_message_recipients: "సందేశంలో గరిష్ట గ్రహీతలు అనుమతించబడతారు."
+    disable_watched_word_checking_in_user_fields: "సభ్యుడు ఫీల్డ్‌లలో వీక్షించిన పద తనిఖీని నిలిపివేయండి"
+    enable_diffhtml_preview: "పూర్తి రీ-రెండర్‌కు బదులుగా ప్రివ్యూను సమకాలీకరించడానికి diffHTMLని ఉపయోగించే ప్రయోగాత్మక లక్షణం"
+    enable_fast_edit: "చిన్న ఎంపిక ఇన్‌లైన్‌లో సవరించడానికి పోస్ట్ ఎంపిక మెనుకి బటన్‌ను జోడిస్తుంది."
+    enable_quote_copy: "ఎంపికను క్లిప్‌బోర్డ్‌కి మార్క్‌డౌన్ కోట్‌గా కాపీ చేయడానికి ఎంపిక మెనుని పోస్ట్ చేయడానికి బటన్‌ను జోడిస్తుంది."
+    new_user_notice_tl: "కొత్త యూజర్ పోస్ట్ నోటీసులను చూడటానికి కనీస విశ్వసనీయ స్థాయి అవసరం."
+    returning_user_notice_tl: "రిటర్నింగ్ యూజర్ పోస్ట్ నోటీసులను చూడటానికి కనీస విశ్వసనీయ స్థాయి అవసరం."
+    returning_users_days: "వినియోగదారు తిరిగి వస్తున్నట్లు పరిగణించబడటానికి ముందు ఎన్ని రోజులు గడిచి ఉండాలి."
+    review_media_unless_trust_level: "ఎంబెడెడ్ మీడియాను కలిగి ఉన్నట్లయితే, తక్కువ విశ్వసనీయ స్థాయి కలిగిన వినియోగదారుల పోస్ట్‌లను సిబ్బంది సమీక్షిస్తారు."
+    skip_review_media_groups: "ఈ సమూహాలలో ఏదీ లేని వినియోగదారులు పోస్ట్‌లో పొందుపరిచిన మీడియాను కలిగి ఉన్నట్లయితే, వారి పోస్ట్‌లు సమీక్ష కోసం సిబ్బందికి పంపబడతాయి."
+    blur_tl0_flagged_posts_media: "సంభావ్య NSFW కంటెంట్‌ను దాచడానికి ఫ్లాగ్ చేసిన పోస్ట్‌ల చిత్రాలను బ్లర్ చేయండి."
+    enable_page_publishing: "తమ స్వంత స్టైలింగ్‌తో కొత్త URLలకు అంశాలను ప్రచురించడానికి సిబ్బందిని అనుమతించండి."
+    show_published_pages_login_required: "లాగిన్ అవసరమైనప్పుడు కూడా అజ్ఞాత వినియోగదారులు ప్రచురించిన పేజీలను చూడగలరు."
+    skip_auto_delete_reply_likes: "పాత ప్రత్యుత్తరాలను స్వయంచాలకంగా తొలగిస్తున్నప్పుడు, ఈ సంఖ్య లేదా అంతకంటే ఎక్కువ లైక్‌లు ఉన్న పోస్ట్‌లను తొలగించడాన్ని దాటవేయండి."
+    default_email_digest_frequency: "వినియోగదారులు డిఫాల్ట్‌గా సారాంశ ఇమెయిల్‌లను ఎంత తరచుగా స్వీకరిస్తారు."
+    default_include_tl0_in_digests: "డిఫాల్ట్‌గా సారాంశ ఇమెయిల్‌లలో కొత్త వినియోగదారుల నుండి పోస్ట్‌లను చేర్చండి. వినియోగదారులు దీన్ని తమ ప్రాధాన్యతలలో మార్చుకోవచ్చు."
+    default_email_level: "సాధారణ అంశాల కోసం డిఫాల్ట్ ఇమెయిల్ నోటిఫికేషన్ స్థాయిని సెట్ చేయండి."
+    default_email_messages_level: "ఎవరైనా వినియోగదారుకు సందేశం పంపినప్పుడు డిఫాల్ట్ ఇమెయిల్ నోటిఫికేషన్ స్థాయిని సెట్ చేయండి."
+    default_email_mailing_list_mode: "డిఫాల్ట్‌గా ప్రతి కొత్త పోస్ట్ కోసం ఇమెయిల్ పంపండి."
+    default_email_mailing_list_mode_frequency: "మెయిలింగ్ జాబితా మోడ్‌ను ప్రారంభించే వినియోగదారులు డిఫాల్ట్‌గా తరచుగా ఇమెయిల్‌లను స్వీకరిస్తారు."
+    disable_mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్‌ను ప్రారంభించకుండా వినియోగదారులను అనుమతించవద్దు (ఏ మెయిలింగ్ జాబితా ఇమెయిల్‌లను పంపకుండా నిరోధిస్తుంది.)"
+    default_email_previous_replies: "డిఫాల్ట్‌గా ఇమెయిల్‌లలో మునుపటి ప్రత్యుత్తరాలను చేర్చండి."
+    default_email_in_reply_to: "డిఫాల్ట్‌గా ఇమెయిల్‌లలో పోస్ట్ చేయడానికి ప్రత్యుత్తరం ఇచ్చిన సారాంశాన్ని చేర్చండి."
+    default_hide_profile_and_presence: "డిఫాల్ట్‌గా వినియోగదారు పబ్లిక్ ప్రొఫైల్ మరియు ఉనికి లక్షణాలను దాచండి."
+    default_other_new_topic_duration_minutes: "కొత్త అంశంగా పరిగణించబడే గ్లోబల్ డిఫాల్ట్ పరిస్థితి."
+    default_other_auto_track_topics_after_msecs: "టాపిక్ ఆటోమేటిక్‌గా ట్రాక్ చేయబడే ముందు గ్లోబల్ డిఫాల్ట్ సమయం."
+    default_other_notification_level_when_replying: "వినియోగదారు ఒక అంశానికి ప్రత్యుత్తరం ఇచ్చినప్పుడు గ్లోబల్ డిఫాల్ట్ నోటిఫికేషన్ స్థాయి."
+    default_other_external_links_in_new_tab: "డిఫాల్ట్‌గా కొత్త ట్యాబ్‌లో బాహ్య లింక్‌లను తెరవండి."
+    default_other_enable_quoting: "హైలైట్ చేసిన వచనం కోసం కోట్ ప్రత్యుత్తరాన్ని ప్రారంభించండి"
+    default_other_enable_defer: "డిఫాల్ట్‌గా డిఫర్ టాపిక్ కార్యాచరణను ప్రారంభించండి."
+    default_other_dynamic_favicon: "డిఫాల్ట్‌గా బ్రౌజర్ చిహ్నంపై కొత్త/నవీకరించబడిన టాపిక్ కౌంట్‌ని చూపండి."
+    default_other_skip_new_user_tips: "కొత్త యూజర్ ఆన్‌బోర్డింగ్ చిట్కాలు మరియు బ్యాడ్జ్‌లను దాటవేయండి."
+    default_topics_automatic_unpin: "వినియోగదారు డిఫాల్ట్‌గా దిగువకు చేరుకున్నప్పుడు టాపిక్‌లను ఆటోమేటిక్‌గా అన్‌పిన్ చేయండి."
+    default_categories_watching: "డిఫాల్ట్‌గా చూసే వర్గాల జాబితా."
+    default_categories_tracking: "డిఫాల్ట్‌గా ట్రాక్ చేయబడిన వర్గాల జాబితా."
+    default_categories_muted: "డిఫాల్ట్‌గా అనుసరించే ట్యాగ్‌ల జాబితా."
+    default_categories_watching_first_post: "ప్రతి కొత్త అంశంలో మొదటి పోస్ట్ డిఫాల్ట్‌గా చూడబడే వర్గాల జాబితా."
+    default_categories_normal: "డిఫాల్ట్‌గా మ్యూట్ చేయని వర్గాల జాబితా. `mute_all_categories_by_default` సైట్ సెట్టింగ్ ప్రారంభించబడినప్పుడు ఉపయోగకరంగా ఉంటుంది."
+    mute_all_categories_by_default: "అన్ని వర్గాల డిఫాల్ట్ నోటిఫికేషన్ స్థాయిని మ్యూట్ చేయడానికి సెట్ చేయండి. వినియోగదారులు 'తాజా' మరియు 'కేటగిరీలు' పేజీలలో కనిపించడం కోసం వర్గాలను ఎంచుకోవాలి. మీరు అనామక వినియోగదారుల కోసం డిఫాల్ట్‌లను సవరించాలనుకుంటే 'default_categories_' సెట్టింగ్‌లను సెట్ చేయండి."
+    default_tags_watching: "డిఫాల్ట్‌గా అనుసరించే ట్యాగ్‌ల జాబితా."
+    default_tags_tracking: "డిఫాల్ట్‌గా ట్రాక్ చేయబడిన ట్యాగ్‌ల జాబితా."
+    default_tags_muted: "డిఫాల్ట్‌గా అనుసరించే ట్యాగ్‌ల జాబితా."
+    default_tags_watching_first_post: "ప్రతి కొత్త అంశంలో మొదటి పోస్ట్ డిఫాల్ట్‌గా చూడబడే ట్యాగ్‌ల జాబితా."
+    enable_offline_indicator: "వినియోగదారులకు నెట్‌వర్క్ కనెక్షన్ లేదని గుర్తించినప్పుడు వారికి సందేశాన్ని ప్రదర్శించండి"
+    default_sidebar_link_to_filtered_list: "నావిగేషన్ మెను లింక్‌లను డిఫాల్ట్‌గా ఫిల్టర్ చేసిన జాబితాకు లింక్ చేయండి."
+    default_sidebar_show_count_of_new_items: "నావిగేషన్ మెను లింక్‌లు డిఫాల్ట్‌గా బ్యాడ్జ్‌లకు బదులుగా కొత్త ఐటెమ్‌ల గణనను చూపుతాయి."
+    default_sidebar_switch_panel_position: "సైడ్‌బార్ స్విచ్ ప్యానెల్ బటన్‌ల స్థానం"
+    retain_web_hook_events_period_days: "వెబ్ హుక్ ఈవెంట్ రికార్డ్‌లను ఉంచడానికి రోజుల సంఖ్య."
+    retry_web_hook_events: "విఫలమైన వెబ్ హుక్ ఈవెంట్‌లను 4 సార్లు స్వయంచాలకంగా మళ్లీ ప్రయత్నించండి. పునఃప్రయత్నాల మధ్య సమయ అంతరాలు 1, 5, 25 మరియు 125 నిమిషాలు."
+    revoke_api_keys_unused_days: "API కీ స్వయంచాలకంగా ఉపసంహరించబడటానికి ముందు చివరిగా ఉపయోగించిన రోజుల సంఖ్య (0 ఎప్పటికీ)"
+    revoke_api_keys_maxlife_days: "API కీ స్వయంచాలకంగా ఉపసంహరించబడటానికి ముందు రోజుల సంఖ్య (0 ఎప్పటికీ)"
+    allow_user_api_key_scopes: "వినియోగదారు API కీల కోసం అనుమతించబడిన స్కోప్‌ల జాబితా"
+    min_trust_level_for_user_api_key: |
+      వినియోగదారు API కీల ఉత్పత్తికి విశ్వసనీయ స్థాయి అవసరం.<br>
+      <b>హెచ్చరిక</b>: విశ్వసనీయ స్థాయిని మార్చడం వలన తక్కువ విశ్వసనీయ స్థాయి ఉన్న వినియోగదారులు డిస్కోర్స్ హబ్ ద్వారా లాగిన్ చేయకుండా నిరోధిస్తుంది
+    user_api_key_allowed_groups: |
+      వినియోగదారు API కీల ఉత్పత్తికి సమూహ సభ్యత్వం అవసరం.<br>
+      <b>హెచ్చరిక</b>: విశ్వసనీయ స్థాయిని మార్చడం వలన తక్కువ విశ్వసనీయ స్థాయి ఉన్న వినియోగదారులు డిస్కోర్స్ హబ్ ద్వారా లాగిన్ చేయకుండా నిరోధిస్తుంది
+    allowed_user_api_auth_redirects: "వినియోగదారు API కీల కోసం ప్రామాణీకరణ దారి మళ్లింపు కోసం అనుమతించబడిన URL. వైల్డ్‌కార్డ్ చిహ్నం * దానిలోని ఏదైనా భాగాన్ని సరిపోల్చడానికి ఉపయోగించవచ్చు (ఉదా. www.example.com/*)."
+    allowed_user_api_push_urls: "వినియోగదారు APIకి సర్వర్ పుష్ కోసం అనుమతించబడిన URLలు"
+    revoke_user_api_keys_unused_days: "వినియోగదారు API కీ స్వయంచాలకంగా ఉపసంహరించబడటానికి ముందు చివరిగా ఉపయోగించిన రోజుల సంఖ్య (0 ఎప్పటికీ)"
+    revoke_user_api_keys_maxlife_days: "వినియోగదారు API కీ స్వయంచాలకంగా ఉపసంహరించబడటానికి ముందు రోజుల సంఖ్య (0 ఎప్పటికీ)"
+    min_trust_to_create_tag: "ట్యాగ్‌ని సృష్టించడానికి అవసరమైన కనీస విశ్వసనీయ స్థాయి."
+    create_tag_allowed_groups: "విషయాలను ట్యాగ్ చేయడానికి అనుమతించబడిన సమూహాలు."
+    max_tags_per_topic: "ఒక విషయానికి వర్తించే గరిష్ట ట్యాగ్‌లు."
+    enable_max_tags_per_email_subject: "ఇమెయిల్ విషయాన్ని రూపొందించేటప్పుడు max_tags_per_email_subjectని ఉపయోగించండి"
+    max_tags_per_email_subject: "ఇమెయిల్ సబ్జెక్ట్‌లో ఉండే గరిష్ట ట్యాగ్‌లు"
+    max_tag_length: "ట్యాగ్‌లో ఉపయోగించగల గరిష్ట మొత్తం అక్షరాలు."
+    max_tag_search_results: "ట్యాగ్‌ల కోసం శోధిస్తున్నప్పుడు, చూపాల్సిన ఫలితాల గరిష్ట సంఖ్య."
+    max_tags_in_filter_list: "ఫిల్టర్ డ్రాప్‌డౌన్‌లో చూపాల్సిన ట్యాగ్‌ల గరిష్ట సంఖ్య. ఎక్కువగా ఉపయోగించే ట్యాగ్‌లు చూపబడతాయి."
+    tags_sort_alphabetically: "ట్యాగ్‌లను అక్షర క్రమంలో చూపండి. జనాదరణ క్రమంలో చూపించడం డిఫాల్ట్."
+    tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>ట్యాగ్‌ల పేజీ</a>లో ట్యాగ్ గ్రూప్ వారీగా ట్యాగ్‌లను జాబితా చేయండి."
+    pm_tags_allowed_for_groups: "ఏదైనా వ్యక్తిగత సందేశాన్ని ట్యాగ్ చేయడానికి చేర్చబడిన సమూహం(ల) సభ్యులను అనుమతించండి"
+    min_trust_level_to_tag_topics: "అంశాలను ట్యాగ్ చేయడానికి కనీస విశ్వసనీయ స్థాయి అవసరం"
+    tag_topic_allowed_groups: "విషయాలను ట్యాగ్ చేయడానికి అనుమతించబడిన సమూహాలు."
+    suppress_overlapping_tags_in_list: "టాపిక్ టైటిల్స్‌లో ట్యాగ్‌లు ఖచ్చితమైన పదాలతో సరిపోలితే, ట్యాగ్‌ని చూపవద్దు"
+    remove_muted_tags_from_latest: "తాజా టాపిక్ లిస్ట్‌లో మ్యూట్ చేయబడిన ట్యాగ్‌లతో మాత్రమే ట్యాగ్ చేయబడిన అంశాలను చూపవద్దు."
+    force_lowercase_tags: "అన్ని కొత్త ట్యాగ్‌లను పూర్తిగా చిన్న అక్షరంగా ఉండేలా ఒత్తిడి చేయండి."
+    create_post_for_category_and_tag_changes: "అంశం యొక్క వర్గం లేదా ట్యాగ్‌లు మారినప్పుడు చిన్న చర్య పోస్ట్‌ను సృష్టించండి"
+    automatically_clean_unused_tags: "రోజువారీగా ఏ టాపిక్‌లు లేదా ప్రైవేట్ మెసేజ్‌లలో ఉపయోగించబడని ట్యాగ్‌లను ఆటోమేటిక్‌గా తొలగించండి."
+    watched_precedence_over_muted: "నేను మ్యూట్ చేసిన వాటికి సంబంధించిన వర్గాలు లేదా నేను అనుసరిస్తున్న ట్యాగ్‌లలోని విషయాల గురించి నాకు తెలియజేయండి"
+    company_name: "మీ కంపెనీ లేదా సంస్థ పేరు. ఖాళీగా ఉంచినట్లయితే, బాయిలర్‌ప్లేట్ సేవా నిబంధనలు లేదా గోప్యతా నోటీసు అందించబడవు."
+    shared_drafts_category: "టాపిక్ డ్రాఫ్ట్‌ల కోసం వర్గాన్ని కేటాయించడం ద్వారా షేర్డ్ డ్రాఫ్ట్‌ల లక్షణాన్ని ప్రారంభించండి. సిబ్బంది వినియోగదారుల కోసం టాపిక్ జాబితాల నుండి ఈ వర్గంలోని అంశాలు అణచివేయబడతాయి."
+    shared_drafts_min_trust_level: "షేర్డ్ డ్రాఫ్ట్‌లను చూడటానికి మరియు సవరించడానికి వినియోగదారులను అనుమతించండి."
+    shared_drafts_allowed_groups: "షేర్డ్ డ్రాఫ్ట్‌లను చూడటానికి మరియు సవరించడానికి ఈ సమూహాలలోని వినియోగదారులను అనుమతించండి."
+    push_notifications_icon: "నోటిఫికేషన్ మూలలో కనిపించే బ్యాడ్జ్ చిహ్నం. పారదర్శకతతో 96×96 మోనోక్రోమటిక్ PNG సిఫార్సు చేయబడింది."
+    push_notification_time_window_mins: "పుష్ నోటిఫికేషన్ పంపడానికి ముందు (n) నిమిషాలు వేచి ఉండండి. క్రియాశీల ఆన్‌లైన్ వినియోగదారుకు పుష్ నోటిఫికేషన్‌లు పంపబడకుండా నిరోధించడంలో సహాయపడుతుంది."
+    base_font: "సైట్‌లోని చాలా టెక్స్ట్ కోసం ఉపయోగించే బేస్ ఫాంట్. థీమ్‌లు `--ఫాంట్-ఫ్యామిలీ` CSS అనుకూల ప్రాపర్టీ ద్వారా భర్తీ చేయగలవు."
+    heading_font: "సైట్‌లోని హెడ్డింగ్‌ల కోసం ఉపయోగించాల్సిన ఫాంట్. థీమ్‌లు `--heading-font-family` CSS అనుకూల ప్రాపర్టీ ద్వారా భర్తీ చేయగలవు."
+    enable_sitemap: "మీ సైట్ కోసం సైట్‌మ్యాప్‌ను రూపొందించండి మరియు దానిని robots.txt ఫైల్‌లో చేర్చండి."
+    sitemap_page_size: "ప్రతి సైట్‌మ్యాప్ పేజీలో చేర్చాల్సిన URLల సంఖ్య. గరిష్టంగా 50,000"
+    enable_user_status: "(ప్రయోగాత్మకం) అనుకూల స్థితి సందేశాన్ని సెట్ చేయడానికి వినియోగదారులను అనుమతించండి (ఎమోజి + వివరణ)."
+    enable_user_tips: "వినియోగదారులకు ముఖ్య లక్షణాలను వివరించే కొత్త వినియోగదారు చిట్కాలను ప్రారంభించండి"
+    short_title: "సంక్షిప్త శీర్షిక వినియోగదారు హోమ్ స్క్రీన్, లాంచర్ లేదా స్థలం పరిమితంగా ఉండే ఇతర ప్రదేశాలలో ఉపయోగించబడుతుంది. ఇది 12 అక్షరాలకు పరిమితం చేయాలి."
+    dashboard_hidden_reports: "డాష్‌బోర్డ్ నుండి పేర్కొన్న నివేదికలను దాచడానికి అనుమతించండి."
+    dashboard_visible_tabs: "ఏ డ్యాష్‌బోర్డ్ ట్యాబ్‌లు కనిపించాలో ఎంచుకోండి."
+    dashboard_general_tab_activity_metrics: "సాధారణ ట్యాబ్‌లో కార్యాచరణ కొలమానాలుగా ప్రదర్శించబడే నివేదికలను ఎంచుకోండి."
+    share_quote_buttons: "కోట్ షేరింగ్ విడ్జెట్‌లో ఏ అంశాలు కనిపిస్తాయో మరియు ఏ క్రమంలో కనిపించాలో నిర్ణయించండి."
+    share_quote_visibility: "కోట్ షేరింగ్ బటన్‌లను ఎప్పుడు చూపించాలో నిర్ణయించండి: ఎప్పుడూ, అనామక వినియోగదారులకు మాత్రమే లేదా వినియోగదారులందరికీ. "
+    create_revision_on_bulk_topic_moves: "టాపిక్‌లు పెద్దమొత్తంలో కొత్త వర్గానికి తరలించబడినప్పుడు మొదటి పోస్ట్‌ల కోసం పునర్విమర్శను సృష్టించండి."
+    allow_changing_staged_user_tracking: "నిర్వాహక వినియోగదారు ద్వారా దశలవారీ వినియోగదారు వర్గం మరియు ట్యాగ్ నోటిఫికేషన్ ప్రాధాన్యతలను మార్చడానికి అనుమతించండి."
+    use_email_for_username_and_name_suggestions: "వినియోగదారు పేరు మరియు పేరు సూచనల కోసం ఇమెయిల్ చిరునామాల మొదటి భాగాన్ని ఉపయోగించండి. ఇది పూర్తి వినియోగదారు ఇమెయిల్ చిరునామాలను ఊహించడాన్ని ప్రజలకు సులభతరం చేస్తుందని గమనించండి (ఎందుకంటే ఎక్కువ మంది వ్యక్తులు `gmail.com` వంటి సాధారణ సేవలను భాగస్వామ్యం చేస్తారు)."
+    use_name_for_username_suggestions: "సభ్యుడు పేర్లను సూచించేటప్పుడు సభ్యుడు పూర్తి పేరును ఉపయోగించండి."
+    suggest_weekends_in_date_pickers: "తేదీ పికర్ సూచనలలో వారాంతాలను (శనివారం మరియు ఆదివారం) చేర్చండి (మీరు వారాంతపు రోజులలో, సోమవారం నుండి శుక్రవారం వరకు మాత్రమే ప్రసంగాన్ని ఉపయోగిస్తే దీన్ని నిలిపివేయండి)."
+    splash_screen: "సైట్ ఆస్తులు లోడ్ అవుతున్నప్పుడు తాత్కాలిక లోడింగ్ స్క్రీన్‌ని ప్రదర్శిస్తుంది"
+    navigation_menu: "ఏ నావిగేషన్ మెనుని ఉపయోగించాలో నిర్ణయించండి."
+    default_navigation_menu_categories: "ఎంచుకున్న వర్గాలు డిఫాల్ట్‌గా నావిగేషన్ మెనూ యొక్క కేటగిరీల విభాగంలో ప్రదర్శించబడతాయి."
+    default_navigation_menu_tags: "ఎంచుకున్న ట్యాగ్‌లు డిఫాల్ట్‌గా నావిగేషన్ మెనూ ట్యాగ్‌ల విభాగంలో ప్రదర్శించబడతాయి."
+    experimental_new_new_view_groups: 'ప్రయోగాత్మకం: చదవని మరియు కొత్త అంశాలను మిళితం చేసే కొత్త అంశాల జాబితాను ప్రారంభించండి మరియు దానికి సైడ్‌బార్‌లోని "అంతా" లింక్‌ను చేయండి.'
+    enable_custom_sidebar_sections: "ప్రయోగాత్మకం: అనుకూల సైడ్‌బార్ విభాగాలను ప్రారంభించండి"
+    experimental_topics_filter: "ప్రయోగాత్మకం: /ఫిల్టర్ వద్ద ప్రయోగాత్మక అంశాల ఫిల్టర్ మార్గాన్ని ప్రారంభిస్తుంది"
+    enable_experimental_lightbox: "ప్రయోగాత్మకం: డిఫాల్ట్ ఇమేజ్ లైట్‌బాక్స్‌ని పునరుద్ధరించిన డిజైన్‌తో భర్తీ చేయండి."
+    experimental_glimmer_header_groups: "ప్రయోగాత్మకం: సైట్ హెడర్‌ను గ్లిమ్మెర్ భాగాలుగా రెండర్ చేయండి."
+    experimental_form_templates: "ప్రయోగాత్మకం: ఫారమ్ టెంప్లేట్‌ల లక్షణాన్ని ప్రారంభించండి. <b>ప్రారంభించిన తర్వాత,</b> టెంప్లేట్‌లను <a href='%{base_path}/admin/customize/form-templates'>అనుకూలీకరించండి / టెంప్లేట్‌లు</a>వద్ద నిర్వహించండి."
+    admin_sidebar_enabled_groups: "ప్రయోగాత్మకం: పేర్కొన్న సమూహాల కోసం అడ్మిన్ UI కోసం సైడ్‌బార్ నావిగేషన్‌ను ప్రారంభించండి, ఇది అగ్ర-స్థాయి నిర్వాహక నావిగేషన్ బటన్‌లను భర్తీ చేస్తుంది."
+    lazy_load_categories_groups: "ప్రయోగాత్మకం: ఈ సమూహాల వినియోగదారులకు మాత్రమే లేజీ లోడ్ వర్గం సమాచారం. ఇది అనేక వర్గాలతో కూడిన సైట్‌లలో పనితీరును మెరుగుపరుస్తుంది."
+    page_loading_indicator: "డిస్కోర్స్‌లో పేజీ నావిగేషన్‌ల సమయంలో కనిపించే లోడింగ్ సూచికను కాన్ఫిగర్ చేయండి. 'స్పిన్నర్' అనేది పూర్తి పేజీ సూచిక. 'స్లైడర్' స్క్రీన్ పైభాగంలో ఇరుకైన పట్టీని చూపుతుంది."
+    show_user_menu_avatars: "సభ్యుడి మెనులో సభ్యుడి అవతార్‌లను చూపండి"
     errors:
+      invalid_css_color: "చెల్లని రంగు. రంగు పేరు లేదా హెక్స్ విలువను నమోదు చేయండి."
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
+      valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
+      invalid_group: "ఆ పేరుతో సమూహం లేదు."
+      invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
+      invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
+      invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."
       invalid_integer: "విలువ తప్పనిసరిగా సంఖ్య మాత్రమే."
+      regex_mismatch: "విలువ అవసరమైన ఫార్మాట్‌తో సరిపోలడం లేదు."
+      must_include_latest: "టాప్ మెనూలో తప్పనిసరిగా 'తాజా' ట్యాబ్ ఉండాలి."
       invalid_string: "చెల్లుబాటు కాని విలువ"
+      invalid_string_min_max: "తప్పనిసరిగా %{min} మరియు %{max} అక్షరాల మధ్య ఉండాలి."
       invalid_string_min: "కనీసం %{min} అక్షరాలు ఉండాలి."
       invalid_string_max: "%{max} కంటే ఎక్కువ అక్షరాలు ఉండకూడదు."
+      invalid_json: "చెల్లని JSON."
+      invalid_reply_by_email_address: "విలువ తప్పనిసరిగా '%{reply_key}'ని కలిగి ఉండాలి మరియు నోటిఫికేషన్ ఇమెయిల్‌కి భిన్నంగా ఉండాలి."
+      invalid_alternative_reply_by_email_addresses: "అన్ని విలువలు తప్పనిసరిగా '%{reply_key}'ని కలిగి ఉండాలి మరియు నోటిఫికేషన్ ఇమెయిల్‌కి భిన్నంగా ఉండాలి."
+      invalid_domain_hostname: "చేర్చకూడదు * లేదా? పాత్రలు."
+      pop3_polling_host_is_empty: "మీరు POP3 పోలింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'pop3 పోలింగ్ హోస్ట్'ని సెట్ చేయాలి."
+      pop3_polling_username_is_empty: "మీరు POP3 పోలింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'pop3 పోలింగ్ వినియోగదారు పేరు'ని సెట్ చేయాలి."
+      pop3_polling_password_is_empty: "మీరు POP3 పోలింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'pop3 పోలింగ్ పాస్‌వర్డ్'ని సెట్ చేయాలి."
+      pop3_polling_authentication_failed: "POP3 ప్రమాణీకరణ విఫలమైంది. దయచేసి మీ pop3 ఆధారాలను ధృవీకరించండి."
+      reply_by_email_address_is_empty: "ఇమెయిల్ ద్వారా ప్రత్యుత్తరాన్ని ప్రారంభించే ముందు మీరు తప్పనిసరిగా 'ఇమెయిల్ చిరునామా ద్వారా ప్రత్యుత్తరం'ని సెట్ చేయాలి."
+      email_polling_disabled: "ఇమెయిల్ ద్వారా ప్రత్యుత్తరాన్ని ప్రారంభించే ముందు మీరు తప్పనిసరిగా మాన్యువల్, POP3 పోలింగ్‌ని ప్రారంభించాలి లేదా అనుకూల మెయిల్ పోలర్‌ని ప్రారంభించాలి."
+      user_locale_not_enabled: "ఈ సెట్టింగ్‌ని ఎనేబుల్ చేసే ముందు మీరు ముందుగా 'యూజర్ లొకేల్‌ని అనుమతించు'ని ఎనేబుల్ చేయాలి."
+      at_least_one_group_required: "మీరు ఈ సెట్టింగ్ కోసం కనీసం ఒక సమూహాన్ని తప్పనిసరిగా పేర్కొనాలి."
+      invalid_regex: "Regex చెల్లదు లేదా అనుమతించబడదు."
+      invalid_regex_with_message: "రెగెక్స్ '%{regex}' లోపం ఉంది: %{message}"
+      email_editable_enabled: "మీరు ఈ సెట్టింగ్‌ని ఎనేబుల్ చేసే ముందు తప్పనిసరిగా 'ఇమెయిల్ ఎడిట్ చేయదగిన'ని నిలిపివేయాలి."
+      staged_users_disabled: "ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు మీరు ముందుగా 'స్టేజ్డ్ యూజర్‌లను' ఎనేబుల్ చేయాలి."
+      reply_by_email_disabled: "ఈ సెట్టింగ్‌ని ఎనేబుల్ చేసే ముందు మీరు ముందుగా 'ఇమెయిల్ ద్వారా ప్రత్యుత్తరం' ఎనేబుల్ చేయాలి."
+      discourse_connect_url_is_empty: "మీరు ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'డిస్కోర్స్ కనెక్ట్ url'ని సెట్ చేయాలి."
+      enable_local_logins_disabled: "ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు మీరు ముందుగా 'స్థానిక లాగిన్‌లను ప్రారంభించు'ని తప్పనిసరిగా ప్రారంభించాలి."
+      min_username_length_exists: "మీరు చిన్న వినియోగదారు పేరు (%{username}) కంటే కనీస వినియోగదారు పేరు పొడవును సెట్ చేయలేరు."
+      min_username_length_range: "మీరు కనిష్టాన్ని గరిష్టం కంటే ఎక్కువగా సెట్ చేయలేరు."
+      max_username_length_exists: "మీరు పొడవైన వినియోగదారు పేరు (%{username}) క్రింద గరిష్ట వినియోగదారు పేరు పొడవును సెట్ చేయలేరు."
+      max_username_length_range: "మీరు గరిష్టాన్ని కనిష్ట స్థాయికి దిగువన సెట్ చేయలేరు."
+      invalid_hex_value: "రంగు విలువలు 6-అంకెల హెక్సాడెసిమల్ కోడ్‌లుగా ఉండాలి."
+      empty_selectable_avatars: "ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు మీరు తప్పనిసరిగా కనీసం రెండు ఎంచుకోదగిన అవతార్‌లను అప్‌లోడ్ చేయాలి."
+      category_search_priority:
+        low_weight_invalid: "మీరు బరువును ఎక్కువ లేదా 1కి సమానంగా సెట్ చేయలేరు."
+        high_weight_invalid: "మీరు బరువును చిన్నదిగా లేదా 1కి సమానంగా సెట్ చేయలేరు."
+      allowed_unicode_usernames:
+        regex_invalid: "రెగ్యులర్ ఎక్స్ప్రెషన్ చెల్లదు: %{error}"
+        leading_trailing_slash: "సాధారణ వ్యక్తీకరణ తప్పనిసరిగా స్లాష్‌తో ప్రారంభం కాకూడదు మరియు ముగించకూడదు."
+      unicode_usernames_avatars: "అంతర్గత సిస్టమ్ అవతార్‌లు యూనికోడ్ వినియోగదారు పేర్లకు మద్దతు ఇవ్వవు."
+      list_value_count: "జాబితాలో ఖచ్చితంగా %{count} విలువలు ఉండాలి."
+      markdown_linkify_tlds: "మీరు '*' విలువను చేర్చలేరు."
+      google_oauth2_hd_groups: "మీరు ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు అన్ని 'google oauth2 hd' సెట్టింగ్‌లను తప్పనిసరిగా కాన్ఫిగర్ చేయాలి."
+      search_tokenize_chinese_enabled: "మీరు ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'search_tokenize_chinese'ని నిలిపివేయాలి."
+      search_tokenize_japanese_enabled: "మీరు ఈ సెట్టింగ్‌ని ప్రారంభించే ముందు తప్పనిసరిగా 'search_tokenize_japanese'ని నిలిపివేయాలి."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA అమలు చేయబడితే మీరు డిస్కోర్స్కనెక్ట్ను ప్రారంభించలేరు."
+      delete_rejected_email_after_days: "ఈ సెట్టింగ్‌ని delete_email_logs_after_days సెట్టింగ్ కంటే తక్కువగా లేదా %{max}కంటే ఎక్కువ సెట్ చేయలేరు"
+      invalid_uncategorized_category_setting: '''వర్గీకరించని అంశాలను అనుమతించు'' ప్రారంభించబడకపోతే "వర్గీకరించని" వర్గం ఎంచుకోబడదు.'
+      invalid_search_ranking_weights: "search_ranking_weights సైట్ సెట్టింగ్ కోసం విలువ చెల్లదు. ఉదాహరణ: '{0.1,0.2,0.3,1.0}'. ప్రతి బరువుకు గరిష్ట విలువ 1.0 అని గమనించండి."
+    keywords:
+      anonymous_posting_allowed_groups: "అనామక_పోస్టింగ్_మిన్_ట్రస్ట్_లెవల్"
+      here_mention_allowed_groups: "ఇక్కడ పేర్కొనడానికి నాన్_ట్రస్ట్_లెవెల్_"
+      shared_drafts_allowed_groups: "షేర్డ్_డ్రాఫ్ట్స్_మిన్_ట్రస్ట్_లెవల్"
+      approve_unless_allowed_groups: "ఆమోదించండి_లేని_ట్రస్ట్_లెవెల్"
+      approve_new_topics_unless_allowed_groups: "ఆమోదించండి_కొత్త_అంశాలు_లేని_నమ్మక_స్థాయిని"
+      email_in_allowed_groups: "email_in_min_trust"
+      edit_wiki_post_allowed_groups: "మిన్_ట్రస్ట్_టూ_ఎడిట్_వికీ_పోస్ట్"
+      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
+      create_topic_allowed_groups: "min_trust_to_create_topic"
+      edit_post_allowed_groups: "మిన్_ట్రస్ట్_టూ_ఎడిట్_పోస్ట్"
+      flag_post_allowed_groups: "మిన్_ట్రస్ట్_టు_ఫ్లాగ్ పోస్ట్స్"
+      delete_all_posts_and_topics_allowed_groups: "tl4_తొలగించండి_పోస్ట్లు_మరియు_టాపిక్స్_"
+      user_card_background_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_టూ_అలో_యూజర్_కార్డ్_నేపథ్యం"
+      invite_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_టూ_ఆల్లో_ఇన్విట్ చేయండి"
+      ignore_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_టూ_అనుమతించండి_విస్మరించండి"
+      self_wiki_allowed_groups: "మిన్_ట్రస్ట్_టూ_అనుమతించండి_స్వయం_వికీ"
+      create_tag_allowed_groups: "మిన్_ట్రస్ట్_టూ_క్రియేట్_ట్యాగ్"
+      send_email_messages_allowed_groups: "మిన్_ట్రస్ట్_టూ_ఇమెయిల్_సందేశాలను పంపండి"
+      skip_review_media_groups: "సమీక్ష_మీడియా_లేని_ట్రస్ట్_లెవెల్"
+      embedded_media_allowed_groups: "మైన్_ట్రస్ట్_టు_పోస్ట్_ఎంబెడెడ్_మీడియాకు"
+      post_links_allowed_groups: "మిన్_ట్రస్ట్_టు_పోస్ట్_లింక్లు"
+      user_api_key_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_ఫర్ యూజర్_ఎపి_కీ"
+      tag_topic_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_టు_టాగ్_టాపిక్స్"
+      profile_background_allowed_groups: "మిన్_ట్రస్ట్_లెవెల్_టూ_అల్లో_ప్రొఫైల్_బ్యాక్గ్రౌండ్"
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
+        value: "డిస్కోర్స్కనెక్ట్ రహస్యం"
   search:
     within_post: "%{username} నుండి #%{post_number}"
     types:
       category: "వర్గాలు"
       topic: "ఫలితాలు"
       user: "సభ్యులు"
+    audio: "[ఆడియో]"
+    video: "[వీడియో]"
+  discourse_connect:
+    login_error: "లాగిన్ లోపం"
   original_poster: "మూల టపా రచయిత"
   most_recent_poster: "ఇటీవలి పోస్టర్"
   frequent_poster: "తరచూ వచ్చే పోస్టర్"
+  poster_description_joiner: ", "
   publish_page:
     slug_errors:
       blank: "ఖాళీగా ఉండకూడదు"
+      unavailable: "అందుబాటులో లేదు"
       invalid: "చెల్లని అక్షరాలు ఉన్నాయి."
   topic_statuses:
     autoclosed_disabled: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."
     autoclosed_disabled_lastpost: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."
   login:
+    invalid_second_factor_method: "ఎంచుకున్న రెండు-కారకాల పద్ధతి చెల్లదు."
+    security_key_alternative: "మరొక మార్గం ప్రయత్నించండి"
+    security_key_authenticate: "సెక్యూరిటీ కీతో ప్రమాణీకరించండి"
     incorrect_username_email_or_password: "తప్పు సభ్యుని పేరు లేదా ఈమెయిల్ లేదా సంకేతపదం"
+    incorrect_password: "తప్పు పాస్వర్డ్"
+    incorrect_password_or_passkey: "పాస్‌వర్డ్ లేదా పాస్‌కీ తప్పు"
     active: "మీ ఖాతా చేతనమైంది మరియు వాడటానికి సిద్దంగా ఉంది."
     admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
     suspended: "మీరు %{date}. తారీకు వరకు లాగిన్ అవ్వలేరు"
     errors: "%{errors}"
     not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
+    omniauth_confirm_title: "%{provider} ని ఉపయోగించి లాగిన్ చేయండి"
+    omniauth_confirm_button: "కొనసాగించండి"
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
+    reserved_username: "ఆ సభ్యనామం అనుమతించబడదు."
     missing_user_field: "మీరు అన్ని సభ్య క్షేత్రాలూ నింపలేదు"
+    click_to_continue: "కొనసాగించడానికి ఇక్కడ క్లిక్ చేయండి."
+    second_factor_title: "రెండు-కారకాల ప్రమాణీకరణ"
+    second_factor_backup_description: "దయచేసి మీ బ్యాకప్ కోడ్‌లలో ఒకదానిని నమోదు చేయండి:"
+    second_factor_backup_title: "రెండు-కారకాల బ్యాకప్ కోడ్"
+    missing_second_factor_name: "దయచేసి పేరును అందించండి."
+    missing_second_factor_code: "దయచేసి ఒక కోడ్ అందించండి."
+    second_factor_toggle:
+      backup_code: "బదులుగా బ్యాకప్ కోడ్‌ని ఉపయోగించండి"
+  second_factor_auth:
+    actions:
+      grant_admin:
+        description: "అదనపు భద్రతా చర్యల కోసం, %{username} కి అడ్మిన్ యాక్సెస్ మంజూరు చేయడానికి ముందు మీరు మీ 2FAని నిర్ధారించాలి."
   admin:
     email:
       sent_test: "పంపారు!"
+    user:
+      merge_user:
+        updating_username: "సభ్యనామాన్ని నవీకరిస్తోంది…"
+        changing_post_ownership: "పోస్ట్ యాజమాన్యాన్ని మారుస్తున్నాం…"
+        merging_given_daily_likes: "ఇచ్చిన రోజువారీ లైక్‌లను విలీనం చేయడం…"
+        updating_site_settings: "సైట్ సెట్టింగ్‌లను నవీకరిస్తోంది…"
+        updating_user_ids: "సభ్యుని ఐడీలను నవీకరిస్తోంది…"
   user:
+    activated_by_staff: "సిబ్బంది ద్వారా సక్రియం చేయబడింది"
+    content_matches_auto_silence_regex: "కంటెంట్ ఆటో సైలెన్స్ రీజెక్స్‌తో సరిపోతుంది"
     username:
       short: "కనీసం %[min] అక్షరాలు ఉండాలి"
       long: "గరిష్టం %{max} అక్షరాలు ఉండాలి"
+      too_long: "చాలా పొడవుగా ఉంది"
       unique: "ఏకైకంగా ఉండాలి"
       blank: "తప్పనిసరిగా ఉండాలి"
+      must_end_with_alphanumeric: "అక్షరం లేదా సంఖ్యతో ముగించాలి"
     email:
+      blank: "ఖాళీగా ఉండకూడదు."
+      invalid: "చెల్లదు."
       not_allowed: "ఆ ఈమెయిల్ ప్రొవైడరును అనుమంతిచుటలేదు. దయచేసి మరో ఈమెయిల్ చిరునామా రాయండి"
       blocked: "అనుమతించుటలేదు"
+      does_not_exist: "N/A"
+    destroy_reasons:
+      unused_staged_user: "ఉపయోగించని తాత్కాలిక సభ్యుడు"
+      inactive_user: "నిష్క్రియ సభ్యుడు"
+      reviewable_reject_auto: "క్యూలో ఉన్న సమీక్షించదగిన వాటిని ఆటో హ్యాండిల్ చెయ్యండి"
+      reviewable_reject: "సమీక్షించదగిన సభ్యుడు తిరస్కరించబడ్డారు"
+    email_in_spam_header: "సభ్యుడు యొక్క మొదటి ఇమెయిల్ స్పామ్‌గా ఫ్లాగ్ చేయబడింది"
+  unsubscribe_mailer:
+    title: "మెయిలర్‌ను అన్‌సబ్‌స్క్రైబ్ చేయండి"
+  invite_mailer:
+    title: "ఆహ్వాన మైలర్"
+  invite_forum_mailer:
+    title: "ఫోరమ్ మెయిలర్‌ని ఆహ్వానించండి"
+    subject_template: "%{inviter_name} మిమ్మల్ని %{site_domain_name} లో చేరమని ఆహ్వానించారు"
+    text_body_template: |
+      %{inviter_name} మిమ్మల్ని ఆహ్వానించారు
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      ఆసక్తి ఉన్నవారు, దిగువ లింక్‌ను క్లిక్ చేయండి:
+
+      %{invite_link}
+  custom_invite_forum_mailer:
+    title: "అనుకూల ఆహ్వాన ఫోరమ్ మెయిలర్"
+    subject_template: "%{inviter_name} మిమ్మల్ని %{site_domain_name} లో చేరమని ఆహ్వానించారు"
+    text_body_template: |
+      %{inviter_name} మిమ్మల్ని చేరమని ఆహ్వానించారు
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      ఈ నోట్తో
+
+      > %{user_custom_message}
+
+      మీకు ఆసక్తి ఉంటే, క్రింద ఉన్న లింక్ను క్లిక్ చేయండి:
+
+      %{invite_link}
+  download_backup_mailer:
+    title: "బ్యాకప్ మెయిలర్‌ని డౌన్‌లోడ్ చేయండి"
+    subject_template: "[%{email_prefix}] సైట్ బ్యాకప్ డౌన్‌లోడ్"
+  admin_confirmation_mailer:
+    title: "అడ్మిన్ నిర్ధారణ"
+  test_mailer:
+    title: "టెస్ట్ మెయిలర్"
+  new_version_mailer:
+    title: "కొత్త వెర్షన్ మెయిలర్"
+  new_version_mailer_with_notes:
+    title: "గమనికలతో కొత్త వెర్షన్ మెయిలర్"
+    subject_template: "[%{email_prefix}] నవీకరణ అందుబాటులో ఉంది"
   system_messages:
+    private_topic_title: "విషయం #%{id}"
+    post_hidden:
+      title: "పోస్ట్ దాచబడింది"
+      subject_template: "సంఘం ఫిర్యాదులు ద్వారా పోస్ట్ దాచబడింది"
+    reviewable_queued_post_revise_and_reject:
+      title: "మీ పోస్ట్‌పై అభిప్రాయం"
+    post_hidden_again:
+      title: "పోస్ట్ మళ్లీ దాచబడింది"
+    queued_by_staff:
+      title: "పోస్ట్ కు ఆమోదం అవసరం"
+    flags_disagreed:
+      title: "ఫిర్యాదు చేసిన పోస్ట్‌ను సిబ్బంది పునరుద్ధరించారు"
+      subject_template: "ఫిర్యాదు చేసిన పోస్ట్‌ను సిబ్బంది పునరుద్ధరించారు"
+    flags_agreed_and_post_deleted:
+      title: "ఫిర్యాదు చేసిన పోస్టును సిబ్బంది తొలగించారు"
+      subject_template: "ఫిర్యాదు చేసిన పోస్టును సిబ్బంది తొలగించారు"
+    usage_tips:
+      text_body_template: |
+        కొత్త సభ్యుడిగా ప్రారంభించడంపై కొన్ని శీఘ్ర చిట్కాల కోసం, [ఈ బ్లాగ్ పోస్ట్‌ని చూడండి](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        మీరు ఇక్కడ పాల్గొంటున్నప్పుడు, మేము మిమ్మల్ని తెలుసుకుంటాము మరియు తాత్కాలిక కొత్త సభ్యుడి పరిమితులు ఎత్తివేయబడతాయి. కాలక్రమేణా మీరు [విశ్వసనీయ స్థాయిలు](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)ని పొందుతారు, ఇందులో మా సంఘాన్ని కలిసి నిర్వహించడంలో మాకు సహాయపడే ప్రత్యేక సామర్థ్యాలు ఉంటాయి.
     welcome_user:
+      title: "స్వాగతం సభ్యుడు"
       subject_template: "%{site_name} కు సుస్వాగతం!"
+    welcome_tl1_user:
+      title: "TL1 సభ్యుడుకు స్వాగతం"
+    welcome_staff:
+      title: "సిబ్బందికి స్వాగతం"
+      subject_template: "అభినందనలు, మీకు %{role} హోదా మంజూరు చేయబడింది!"
+      text_body_template: |
+        తోటి సిబ్బంది సభ్యుడు మీకు %{role} హోదా మంజూరు చేశారు.
+
+        ఒక %{role}గా, మీకు ఇప్పుడు <a href='%{base_url}/admin' target='_blank'>అడ్మిన్ ఇంటర్ఫేస్</a> యాక్సెస్ ఉంది.
+
+        గొప్ప శక్తితో గొప్ప బాధ్యత వస్తుంది. మీరు మోడరేట్ చేయడానికి కొత్తగా ఉంటే, దయచేసి [మోడరేషన్ గైడ్](https://meta.discourse.org/t/discourse-moderation-guide/63116) చూడండి.
     welcome_invite:
+      title: "స్వాగతం ఆహ్వానం"
       subject_template: "%{site_name} కు సుస్వాగతం!"
+    backup_succeeded:
+      title: "బ్యాకప్ విజయవంతమైంది"
+      subject_template: "బ్యాకప్ విజయవంతంగా పూర్తయింది"
+    backup_failed:
+      title: "బ్యాకప్ విఫలమైంది"
+      subject_template: "బ్యాకప్ విఫలమైంది"
+    restore_succeeded:
+      title: "పునరుద్ధరణ విజయవంతమైంది"
+      subject_template: "పునరుద్ధరణ విజయవంతంగా పూర్తయింది"
+    restore_failed:
+      title: "పునరుద్ధరించడం విఫలమైంది"
+      subject_template: "పునరుద్ధరించడం విఫలమైంది"
+    bulk_invite_succeeded:
+      title: "బల్క్ ఆహ్వానం విజయవంతమైంది"
+    bulk_invite_failed:
+      title: "బల్క్ ఆహ్వానం విఫలమైంది"
+      subject_template: "బల్క్ ఆహ్వానం లోపాలతో ప్రాసెస్ చేయబడింది"
+    user_added_to_group_as_owner:
+      title: "యజమానిగా సమూహానికి జోడించబడ్డారు"
+    user_added_to_group_as_member:
+      title: "సభ్యుడిగా సమూహానికి జోడించబడ్డారు"
+    csv_export_succeeded:
+      subject_template: "[%{export_title}] డేటా ఎగుమతి పూర్తయింది"
+    csv_export_failed:
+      title: "CSV ఎగుమతి విఫలమైంది"
+      subject_template: "డేటా ఎగుమతి విఫలమైంది"
+    email_reject_inactive_user:
+      title: "నిష్క్రియ సభ్యుని ఇమెయిల్ తిరస్కరించండి"
+    email_reject_silenced_user:
+      title: "నిశ్శబ్ద సభ్యుని ఇమెయిల్ తిరస్కరించండి"
+    email_reject_empty:
+      title: "ఇమెయిల్ రిజెక్ట్ ఖాళీ"
+    email_reject_strangers_not_allowed:
+      title: "అనుమతించబడని అపరిచితులను ఇమెయిల్ తిరస్కరించండి"
+    email_reject_invalid_post:
+      title: "ఇమెయిల్ తిరస్కరించండి చెల్లని పోస్ట్"
+    email_reject_reply_key:
+      title: "ఇమెయిల్ రిజెక్ట్ ప్రత్యుత్తరం కీ"
+    email_reject_topic_closed:
+      title: "ఇమెయిల్ తిరస్కరించండి విషయం మూసివేయబడింది"
+    email_reject_attachment:
+      title: "ఇమెయిల్ జోడింపు తిరస్కరించబడింది"
+    email_reject_reply_to_digest:
+      title: "సారాంశానికి ప్రత్యుత్తరాన్ని ఇమెయిల్ తిరస్కరించండి"
+    email_error_notification:
+      title: "ఇమెయిల్ లోపం నోటిఫికేషన్"
+    email_revoked:
+      title: "ఇమెయిల్ రద్దు చేయబడింది"
+      subject_template: "మీ ఇమెయిల్ చిరునామా సరైనదేనా?"
+    ignored_users_summary:
+      title: "విస్మరించబడిన సభ్యుడు థ్రెషోల్డ్‌ని దాటారు"
+    too_many_spam_flags:
+      title: "చాలా ఎక్కువ స్పామ్ ఫిర్యాదులు"
+      subject_template: "కొత్త ఖాతా హోల్డ్‌లో ఉంది"
+    too_many_tl3_flags:
+      title: "చాలా TL3 ఫిర్యాదులు"
+      subject_template: "కొత్త ఖాతా హోల్డ్‌లో ఉంది"
+    silenced_by_staff:
+      title: "సిబ్బందిచే నిశ్శబ్దం చేయబడ్డారు"
+    spam_post_blocked:
+      title: "స్పామ్ పోస్ట్ బ్లాక్ చేయబడింది"
+    unsilenced:
+      title: "నిశబ్దం రద్దు"
+      subject_template: "ఖాతా ఇకపై హోల్డ్‌లో ఉండదు"
+    pending_users_reminder:
+      subject_template:
+        one: "%{count} సభ్యుడు ఆమోదం కోసం వేచి ఉన్నారు"
+        other: "%{count} సభ్యులు ఆమోదం కోసం వేచి ఉన్నారు"
+    download_remote_images_disabled:
+      subject_template: "రిమోట్ చిత్రాల డౌన్లోడ్ నిలిపివేయబడింది"
+    new_user_of_the_month:
+      text_body_template: |
+        అభినందనలు, మీరు **%{month_year} నెల కోసం కొత్త సభ్యుడు అవార్డును పొందారు**. :trophy:
+
+        ఈ అవార్డు నెలకు ఇద్దరు కొత్త సభ్యులకు మాత్రమే మంజూరు చేయబడుతుంది మరియు ఇది [బ్యాడ్జ్‌ల పేజీ](%{url})లో శాశ్వతంగా కనిపిస్తుంది.
+
+        మీరు త్వరగా మా సంఘంలో విలువైన సభ్యునిగా మారారు. చేరినందుకు ధన్యవాదాలు, మరియు గొప్ప పనిని కొనసాగించండి!
+    queued_posts_reminder:
+      title: "వరుసలో ఉన్న పోస్ట్‌ల రిమైండర్"
+  subject_re: "ప్ర: "
+  subject_pm: "[PM] "
+  email_from: "%{user_name} %{site_name} ద్వారా"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "గత జవాబులు"
+    in_reply_to: "సమాధానముగా"
+    pm_participants: "పాల్గొనేవారు: %{participants}"
+    more_pm_participants:
+      one: "%{participants} మరియు %{count} ఇతర"
+      other: "%{participants} మరియు %{count} ఇతరులు"
+    invited_to_private_message_body: |
+      %{username} ఒక సందేశానికి మిమ్మల్ని ఆహ్వానించింది
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      వద్ద
+
+      > %{site_title} -- %{site_description}
+
+      సందేశంలో చేరడానికి, క్రింది లింక్ను క్లిక్ చేయండి:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} ఒక చర్చకు మిమ్మల్ని ఆహ్వానించారు
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      వద్ద
+
+      > %{site_title} -- %{site_description}
+
+      చర్చలో చేరడానికి, క్రింది లింక్ను క్లిక్ చేయండి:
+
+      %{topic_url}
+    user_invited_to_private_message_pm_group:
+      title: "PMకి సభ్యుడు సమూహంను ఆహ్వానించారు"
+    user_invited_to_private_message_pm:
+      title: "సభ్యుడు PMకి ఆహ్వానించబడ్డారు"
+    user_invited_to_private_message_pm_staged:
+      title: "తాత్కాలిక సభ్యుడు PM కి ఆహ్వానించబడ్డారు"
+    user_replied:
+      title: "సభ్యుడు ప్రత్యుత్తరం ఇచ్చారు"
+    user_replied_pm:
+      title: "సభ్యుడు ప్రత్యుత్తరం ఇచ్చారు"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_quoted:
+      title: "సభ్యుడు కోట్ చేసారు"
+    user_linked:
+      title: "సభ్యుడు లింక్ చేయబడింది"
+    user_mentioned:
+      title: "సభ్యుడు పేర్కొన్నారు"
+    user_mentioned_pm:
+      title: "సభ్యుడు పేర్కొన్న PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_posted:
+      title: "సభ్యుడు పోస్ట్ చేసారు"
+    user_watching_category_or_tag:
+      title: "వర్గం లేదా ట్యాగ్‌ని అనుసరించే సభ్యుడు"
+    user_watching_first_post:
+      title: "సభ్యుడు మొదటి పోస్ట్ అనుసరిస్తున్నారు"
+    user_posted_pm:
+      title: "సభ్యుడు పోస్ట్ చేసిన PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_posted_pm_staged:
+      text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "ఖాతా నిలిపివేయబడింది"
+    account_suspended_forever:
+      title: "ఖాతా నిలిపివేయబడింది"
+    account_silenced:
+      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
+    account_silenced_forever:
+      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
+    account_exists:
+      title: "ఖాతా ఇప్పటికే ఉంది"
+    account_second_factor_disabled:
+      title: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
     digest:
+      since_last_visit: "మీ చివరి సందర్శన నుండి"
+      new_topics: "క్రొత్త విషయాలు"
+      unread_high_priority: "చదవని అధిక ప్రాధాన్యత నోటిఫికేషన్‌లు"
       liked_received: "అందుకున్న ఇష్టాలు"
       new_users: "కొత్త వినియోగదారులు"
+      popular_topics: "ప్రసిద్ధ విషయాలు"
       join_the_discussion: "ఇంకా చదువు"
+      popular_posts: "ప్రసిద్ధ పోస్ట్‌లు"
+      more_new: "మీ కోసం కొత్తది"
+      subject_template: "[%{email_prefix}] సారాంశం"
+      your_email_settings: "మీ ఇమెయిల్ సెట్టింగ్‌లు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
+      from: "%{site_name}"
     forgot_password:
       title: "సంకేతపదం మర్చిపోయా"
+    email_login:
+      title: "లింక్ ద్వారా లాగిన్ అవ్వండి"
+      subject_template: "[%{email_prefix}] లింక్ ద్వారా లాగిన్ అవ్వండి"
     set_password:
       title: "సంకేతపదం అమర్చండి"
+      subject_template: "[%{email_prefix}] పాస్‌వర్డ్‌ని సెట్ చేయండి"
+    admin_login:
+      title: "అడ్మిన్ లాగిన్"
+      subject_template: "[%{email_prefix}] లాగిన్"
+    account_created:
+      title: "ఖాతా సృష్టించబడింది"
+      subject_template: "[%{email_prefix}] మీ కొత్త ఖాతా"
+    confirm_new_email:
+      title: "కొత్త ఇమెయిల్‌ను నిర్ధారించండి"
+    confirm_new_email_via_admin:
+      title: "కొత్త ఇమెయిల్‌ను నిర్ధారించండి"
+    confirm_old_email:
+      title: "పాత ఇమెయిల్‌ను నిర్ధారించండి"
+    confirm_old_email_add:
+      title: "పాత ఇమెయిల్ను నిర్ధారించండి (జోడించండి)"
+    notify_old_email:
+      title: "పాత ఇమెయిల్‌కు తెలియజేయండి"
+    notify_old_email_add:
+      title: "పాత ఇమెయిల్‌ను తెలియజేయండి (జోడించు)"
+    signup_after_approval:
+      title: "ఆమోదం తర్వాత సైన్ అప్"
+      subject_template: "మీరు %{site_name} లో ఆమోదించబడ్డారు!"
+      text_body_template: |
+        %{site_name}కి స్వాగతం!
+
+        ఒక సిబ్బంది మీ ఖాతాను %{site_name}లో ఆమోదించారు.
+
+        మీరు ఇప్పుడు ఇక్కడ లాగిన్ చేయడం ద్వారా మీ కొత్త ఖాతాను యాక్సెస్ చేయవచ్చు:
+        %{base_url}
+
+        పై లింక్ క్లిక్ చేయలేకపోతే, దాన్ని కాపీ చేసి మీ వెబ్ బ్రౌజర్ చిరునామా బార్‌లో అతికించడానికి ప్రయత్నించండి.
+
+        %{new_user_tips}
+
+        మేము ఎల్లప్పుడూ [నాగరిక సమాజ ప్రవర్తన](%{base_url}/guidelines)ని విశ్వసిస్తాము.
+
+        మీ బసను ఆస్వాదించండి!
+    signup_after_reject:
+      title: "తిరస్కరించిన తర్వాత సైన్అప్ చేయండి"
+    signup:
+      title: "సైన్అప్"
+    activation_reminder:
+      title: "యాక్టివేషన్ రిమైండర్"
+    suspicious_login:
+      title: "కొత్త లాగిన్ హెచ్చరిక"
+      subject_template: "[%{site_name}] %{location} నుండి కొత్త లాగిన్"
+    post_approved:
+      title: "మీ పోస్ట్ ఆమోదించబడింది"
+      subject_template: "[%{site_name}] మీ పోస్ట్ ఆమోదించబడింది"
+  site_setting_missing: "`%{name}` సైట్ సెట్టింగ్‌ని సెట్ చేయాలి."
   page_not_found:
+    page_title: "పేజీ కనుగొనబడలేదు"
     popular_topics: "ప్రముఖ"
     recent_topics: "తాజా"
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
+  offline:
+    title: "యాప్ లోడ్ కాలేదు"
+  login_required:
+    welcome_message: "# [ %{title} కు స్వాగతం] (#స్వాగతం)"
   upload:
+    edit_reason: "చిత్రాల స్థానిక కాపీలను డౌన్‌లోడ్ చేసారు"
+    pasted_image_filename: "అతికించిన చిత్రం"
+    file_missing: "క్షమించండి, అప్‌లోడ్ చేయడానికి మీరు తప్పనిసరిగా ఫైల్‌ను అందించాలి."
     images:
       size_not_found: "క్షమించండి, కానీ మేము చిత్రం యొక్క పరిమాణం నిర్ణయించలేదు. బహుశా మీ చిత్రం పాడై ఉండవచ్చు?"
   skipped_email_log:
+    user_email_no_user: "%{user_id} ఐడితో సభ్యుడు కనుగొనబడలేదు"
+    user_email_anonymous_user: "సభ్యుడు అనామకుడు"
     user_email_seen_recently: "వినియోగదారు కొత్తగా చూశారు"
     user_email_notification_already_read: "ఈ ఈమెయిల్ గురించి ప్రకటన ఇప్పటికే చదివబడింది"
+    user_email_notification_topic_nil: "post.topic శూన్యం"
+    user_email_post_user_deleted: "పోస్ట్ యొక్క సభ్యుడు తొలగించబడ్డారు."
     user_email_post_deleted: "టపా రచయితచే తొలగింపబడింది"
     user_email_user_suspended: "వినియోగదారు నిలిపివేయబడ్డారు"
     user_email_already_read: "వినియోగదారు ఇప్పటికే ఈ టపా చదివారు"
     sender_message_blank: "ఖాళీ సందేశం"
+    sender_message_to_blank: "message.to ఖాళీగా ఉంది"
+    sender_text_part_body_blank: "text_part.body ఖాళీగా ఉంది"
     sender_body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
+    sender_post_deleted: "పోస్ట్ తొలగించబడింది"
+    group_smtp_post_deleted: "పోస్ట్ తొలగించబడింది"
   color_schemes:
     base_theme_name: "ఆధారం"
+    light: "లేత"
+    dark: "డార్క్"
+    neutral: "తటస్థ"
+    grey_amber: "గ్రే అంబర్"
+    shades_of_blue: "నీలి రంగు షేడ్స్"
+    latte: "లాట్టే"
+    summer: "వేసవి"
+    dark_rose: "ముదురు గులాబీ"
+    wcag: "WCAG లైట్"
+    wcag_theme_name: "WCAG లైట్"
+    dracula: "డ్రాక్యులా"
+    dracula_theme_name: "డ్రాక్యులా"
+    solarized_light: "సోలరైజ్డ్ లైట్"
+    solarized_light_theme_name: "సోలరైజ్డ్ లైట్"
+    solarized_dark: "సోలారైజ్డ్ డార్క్"
+    solarized_dark_theme_name: "సోలారైజ్డ్ డార్క్"
+    wcag_dark: "WCAG డార్క్"
+    wcag_dark_theme_name: "WCAG డార్క్"
     default_theme_name: "అప్రమేయ"
-  edit_this_page: "ఈ పేజిని సవరించు"
+    light_theme_name: "లేత"
+    dark_theme_name: "డార్క్"
+    neutral_theme_name: "తటస్థ"
+    grey_amber_theme_name: "గ్రే అంబర్"
+    shades_of_blue_theme_name: "నీలి రంగు షేడ్స్"
+    latte_theme_name: "లాట్టే"
+    summer_theme_name: "వేసవి"
+    dark_rose_theme_name: "ముదురు గులాబీ"
+  edit_this_page: "ఈ పేజీని సవరించండి"
   csv_export:
     boolean_yes: "అవును"
     boolean_no: "లేదు"
@@ -657,87 +2337,485 @@ te:
   privacy_topic:
     title: "ప్రైవసీ పోలసీ"
   badges:
+    mass_award:
+      errors:
+        invalid_csv: మేము %{line_number} లైన్‌లో లోపాన్ని ఎదుర్కొన్నాము. దయచేసి CSVకి ఒక పంక్తికి ఒక ఇమెయిల్ ఉందని నిర్ధారించండి.
+        too_many_csv_entries: CSV ఫైల్‌లో చాలా ఎక్కువ నమోదులు ఉన్నాయి. దయచేసి %{count} కంటే ఎక్కువ నమోదులు లేని CSV ఫైల్‌ను అందించండి.
+        badge_disabled: దయచేసి ముందుగా %{badge_name} బ్యాడ్జ్‌ని ప్రారంభించండి.
+        cant_grant_multiple_times: ఒకే సభ్యుడికి %{badge_name} బ్యాడ్జ్‌ని అనేకసార్లు మంజూరు చేయడం సాధ్యపడదు.
     editor:
       name: ఎడిటరు
       description: తొలి టపా సవరణ
+      long_description: |
+        మీరు మీ పోస్ట్‌లలో ఒకదాన్ని మొదటిసారి సవరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీరు మీ పోస్ట్‌లను ఎప్పటికీ ఎడిట్ చేయలేరు, ఎడిటింగ్ ప్రోత్సహించబడుతుంది — మీరు ఫార్మాటింగ్‌ను మెరుగుపరచవచ్చు, చిన్న పొరపాట్లను సరిచేయవచ్చు లేదా మీరు మొదట పోస్ట్ చేసినప్పుడు మీరు తప్పిన వాటిని జోడించవచ్చు. మీ పోస్ట్‌లను మరింత మెరుగ్గా చేయడానికి సవరించండి!
+    wiki_editor:
+      name: వికీ ఎడిటర్
+      description: మొదటి వికీ సవరణ
+      long_description: |
+        మీరు ఒక వికీ పోస్ట్‌ని మొదటిసారి సవరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది.
     basic_user:
       name: ప్రాథమిక
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">మంజూరు చేయబడింది</a> అన్ని అవసరమైన సంఘం విధులు
+      long_description: |
+        మీరు విశ్వసనీయ స్థాయి 1కి చేరుకున్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మా సంఘం గురించి తెలుసుకోవడానికి కొన్ని విషయాలను చదివినందుకు ధన్యవాదాలు. కొత్త సభ్యుల పరిమితులు ఎత్తివేయబడ్డాయి; వ్యక్తిగత సందేశం పంపడం, ఫ్లాగ్ చేయడం, వికీ సవరణ మరియు బహుళ చిత్రాలు మరియు లింక్‌లను పోస్ట్ చేయగల సామర్థ్యం వంటి అన్ని ముఖ్యమైన కమ్యూనిటీ సామర్థ్యాలు మీకు మంజూరు చేయబడ్డాయి.
     member:
       name: సభ్యుడు
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">మంజూరైంది</a> ఆహ్వానాలు, సమూహ సందేశం, మరిన్ని ఇష్టాలు
+      long_description: |
+        మీరు విశ్వసనీయ స్థాయి 2కి చేరుకున్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. నిజంగా మా సంఘంలో చేరడానికి వారాల వ్యవధిలో పాల్గొన్నందుకు ధన్యవాదాలు. మీరు ఇప్పుడు మీసభ్యుడు పేజీ లేదా వ్యక్తిగత విషయాల నుండి ఆహ్వానాలను పంపవచ్చు, సమూహ వ్యక్తిగత సందేశాలను సృష్టించవచ్చు మరియు రోజుకు మరిన్ని ఇష్టాలను పొందవచ్చు.
     regular:
       name: రెగ్యులరు
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">మంజూరు చేయబడింది</a> తిరిగి వర్గీకరించడం, పేరు మార్చడం, అనుసరించిన లింక్‌లు, వికీ, మరిన్ని ఇష్టాలు
+      long_description: |
+        మీరు విశ్వసనీయ స్థాయి 3కి చేరుకున్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. నెలల వ్యవధిలో మా సంఘంలో సాధారణ భాగమైనందుకు ధన్యవాదాలు. మీరు ఇప్పుడు అత్యంత చురుకైన పాఠకులలో ఒకరు మరియు మా సంఘాన్ని గొప్పగా చేసే నమ్మకమైన సహకారి. మీరు ఇప్పుడు విషయాలను తిరిగి వర్గీకరించవచ్చు మరియు పేరు మార్చవచ్చు, మరింత శక్తివంతమైన స్పామ్ ఫిర్యాదుల ప్రయోజనాన్ని పొందవచ్చు, ప్రైవేట్ లాంజ్ ప్రాంతాన్ని యాక్సెస్ చేయవచ్చు మరియు మీరు రోజుకు చాలా ఎక్కువ లైక్‌లను కూడా పొందుతారు.
     leader:
       name: లీడరు
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">మంజూరు చేయబడింది</a> సార్వత్రికం ఎడిట్, పిన్, క్లోజ్, ఆర్కైవ్, స్ప్లిట్ మరియు విలీనం, మరిన్ని ఇష్టాలు
+      long_description: |
+        మీరు విశ్వసనీయ స్థాయి 4కి చేరుకున్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. సిబ్బంది ఎంపిక చేసిన విధంగా మీరు ఈ సంఘంలో లీడర్‌గా ఉన్నారు మరియు ఇక్కడ మీ చర్యలు మరియు మాటలలో మిగిలిన సంఘానికి మీరు మంచి ఉదాహరణగా నిలిచారు. మీరు అన్ని పోస్ట్‌లను ఎడిట్ చేయగల సామర్థ్యాన్ని కలిగి ఉంటారు, పిన్, క్లోజ్, అన్‌లిస్ట్, ఆర్కైవ్, స్ప్లిట్ మరియు విలీనం వంటి సాధారణ విషయం మోడరేటర్ చర్యలను చేయవచ్చు.
     welcome:
       name: సుస్వాగతం
       description: ఒక ఇష్టాన్ని అందుకున్నారు
+      long_description: |
+        మీరు పోస్ట్‌పై మీ మొదటి లైక్‌ను స్వీకరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. అభినందనలు, మీరు మీ తోటి సంఘం సభ్యులు ఆసక్తికరంగా, కూల్ గా లేదా ఉపయోగకరంగా భావించిన దాన్ని పోస్ట్ చేసారు!
     autobiographer:
       name: ఆత్మకధావాది
+      description: <a href="%{base_uri}/my/preferences/profile">ప్రొఫైల్</a> సమాచారం పూరించారు
+      long_description: |
+        ఈ బ్యాడ్జ్ <a href="%{base_uri}/my/preferences/profile">మీ ప్రొఫైల్</a> ని పూరించడానికి మరియు ప్రొఫైల్ చిత్రాన్ని ఎంచుకోవడం కోసం మంజూరు చేయబడింది. సంఘానికి మీరు ఎవరో మరియు మీరు దేనిపై ఆసక్తి కలిగి ఉన్నారనే దాని గురించి కొంచెం ఎక్కువగా తెలియజేయడం వలన మెరుగైన, మరింత కనెక్ట్ చేయబడిన సంఘం ఏర్పడుతుంది. మాతో చేరండి!
     anniversary:
       name: వార్షికోత్సవం
       description: ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు
+      long_description: |
+        మీరు ఆ సంవత్సరంలో కనీసం ఒక పోస్ట్‌తో ఒక సంవత్సరం పాటు సభ్యులుగా ఉన్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మా సంఘానికి సహకరించినందుకు ధన్యవాదాలు. మీరు లేకుండా మేము చేయలేము.
+    nice_post:
+      name: చక్కని ప్రత్యుత్తరం
+      description: ఒక ప్రత్యుత్తరానికి 10 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ ప్రత్యుత్తరానికి 10 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీ ప్రత్యుత్తరం సంఘంపై ప్రభావం చూపింది మరియు సంభాషణను ముందుకు తీసుకెళ్లడంలో సహాయపడింది.
+    good_post:
+      name: మంచి ప్రత్యుత్తరం
+      description: ఒక ప్రత్యుత్తరానికి 25 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ ప్రత్యుత్తరానికి 25 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీ సమాధానం అసాధారణమైనది మరియు సంభాషణను మరింత ఆసక్తికరంగా మార్చింది.
+    great_post:
+      name: గొప్ప ప్రత్యుత్తరం
+      description: ఒక ప్రత్యుత్తరానికి 50 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ ప్రత్యుత్తరానికి 50 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! మీ ప్రత్యుత్తరం స్ఫూర్తిదాయకంగా, ఆకర్షణీయంగా, ఉల్లాసంగా లేదా అంతర్దృష్టిగా ఉంది మరియు సంఘం దీన్ని ఇష్టపడింది!
     nice_topic:
       name: మంచి విషయం
+      description: ఒక విషయంపై 10 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ విషయానికి 10 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీరు సంఘం ఆనందించే ఆసక్తికరమైన సంభాషణను ప్రారంభించారు.
     good_topic:
       name: చాలా మంచి విషయం
+      description: ఒక విషయంపై 25 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ విషయానికి 25 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీరు సంఘం ఆనందించే ఆసక్తికరమైన సంభాషణను ప్రారంభించారు.
     great_topic:
       name: బహుమంచి విషయం
+      description: ఒక విషయంపై 50 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీ విషయానికి 50 లైక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీరు మనోహరమైన సంభాషణను ప్రారంభించారు మరియు ఫలితంగా జరిగిన సజీవ చర్చను సంఘం ఇష్టపడింది!
     nice_share:
       name: మంచి పంపకం
       description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
+      long_description: |
+        25 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. మా చర్చలు మరియు ఈ సంఘం గురించి ప్రచారం చేసినందుకు ధన్యవాదాలు.
     good_share:
       name: చాలామంచి పంపకం
       description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
+      long_description: |
+        300 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. మంచి పని! మీరు కొత్త వ్యక్తుల సమూహానికి గొప్ప చర్చను ప్రదర్శించారు మరియు ఈ కమ్యూనిటీ వృద్ధికి సహాయం చేసారు.
     great_share:
       name: బహుమంచి పంపకం
       description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
+      long_description: |
+        1000 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. వావ్! మీరు భారీ కొత్త ప్రేక్షకులకు ఆసక్తికరమైన చర్చను ప్రచారం చేసారు మరియు మా కమ్యూనిటీని పెద్ద ఎత్తున అభివృద్ధి చేయడంలో మాకు సహాయం చేసారు!
     first_like:
       name: తొలి ఇష్టం
       description: టపాను ఇష్టపడ్డారు
+      long_description: |
+        మీరు :heart: బటన్‌ని ఉపయోగించి మొదటిసారి పోస్ట్‌ను ఇష్టపడినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. పోస్ట్‌లను లైక్ చేయడం అనేది మీ తోటి కమ్యూనిటీ సభ్యులకు వారు పోస్ట్ చేసినవి ఆసక్తికరంగా, ఉపయోగకరంగా, చల్లగా లేదా సరదాగా ఉన్నాయని తెలియజేయడానికి ఒక గొప్ప మార్గం. ప్రేమను పంచుకోండి!
     first_flag:
       name: తొలి కేతనం
       description: ఒక టపాను కేతనించారు
+      long_description: |
+        మీరు మొదటిసారిగా పోస్ట్‌ను ఫిర్యాదు చేసినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ఫిర్యాదు చేయడం అనేది ప్రతిఒక్కరికీ ఒక మంచి ప్రదేశంగా ఉంచడానికి మనమందరం ఎలా సహాయం చేస్తాము. ఏదైనా కారణం చేత మోడరేటర్ శ్రద్ధ అవసరమయ్యే పోస్ట్‌లను మీరు గమనించినట్లయితే, దయచేసి ఫిర్యాదు చేయడానికి వెనుకాడకండి. మీకు సమస్య కనిపిస్తే, :flag_black: దాన్ని ఫిర్యాదు చేయండి!
+    promoter:
+      name: ప్రమోటర్
+      description: సభ్యుని ఆహ్వానించారు
+      long_description: |
+        మీరు మీ వినియోగదారు పేజీలోని ఆహ్వాన బటన్ ద్వారా లేదా అంశం దిగువన సంఘంలో చేరడానికి ఎవరినైనా ఆహ్వానించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. నిర్దిష్ట చర్చలపై ఆసక్తి ఉన్న స్నేహితులను ఆహ్వానించడం మా సంఘానికి కొత్త వ్యక్తులను పరిచయం చేయడానికి గొప్ప మార్గం, కాబట్టి ధన్యవాదాలు!
+    campaigner:
+      name: ప్రచారకర్త
+      description: 3 ప్రాథమిక సభ్యులను ఆహ్వానించారు
+      long_description: |
+        ప్రాథమిక సభ్యులు కావడానికి సైట్‌లో తగినంత సమయాన్ని వెచ్చించిన 3 మంది వ్యక్తులను మీరు ఆహ్వానించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ఒక శక్తివంతమైన సంఘానికి క్రమం తప్పకుండా పాల్గొనే మరియు సంభాషణలకు కొత్త స్వరాలను జోడించే కొత్తవారి క్రమం తప్పకుండా అవసరం.
+    champion:
+      name: ఛాంపియన్
+      description: 5 మంది సభ్యులను ఆహ్వానించారు
+      long_description: |
+        పూర్తి సభ్యులు కావడానికి సైట్‌లో తగినంత సమయాన్ని వెచ్చించిన 5 మంది వ్యక్తులను మీరు ఆహ్వానించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! కొత్త సభ్యులతో మా సంఘం యొక్క వైవిధ్యాన్ని విస్తరించినందుకు ధన్యవాదాలు!
     first_share:
       name: తొలి పంపకం
       description: ఒక టపాను పంచారు
+      long_description: |
+        మీరు షేర్ బటన్‌ని ఉపయోగించి ప్రత్యుత్తరం లేదా అంశానికి లింక్‌ను మొదటిసారి భాగస్వామ్యం చేసినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ప్రపంచంలోని ఇతర వ్యక్తులతో ఆసక్తికరమైన చర్చలను ప్రదర్శించడానికి మరియు మీ సంఘాన్ని పెంచుకోవడానికి లింక్‌లను భాగస్వామ్యం చేయడం గొప్ప మార్గం.
     first_link:
       name: తొలి లంకె
+      description: మరొక విషయానికి లింక్ జోడించబడింది
+      long_description: |
+        మీరు మొదటి సారి మరొక విషయానికి లింక్‌ను జోడించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. విషయాలను లింక్ చేయడం వల్ల తోటి పాఠకులు రెండు దిశల్లోని విషయాలు మధ్య కనెక్షన్‌లను చూపడం ద్వారా ఆసక్తికరమైన సంబంధిత సంభాషణలను కనుగొనడంలో సహాయపడుతుంది. లింక్ చేస్తూ ఉండండి!
     first_quote:
       name: తొలి కోట్
+      description: ఒక పోస్ట్‌ను కోట్ చేసారు
+      long_description: |
+        మీరు మీ ప్రత్యుత్తరంలో పోస్ట్‌ను మొదటిసారి కోట్ చేసినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. మీ ప్రత్యుత్తరంలో మునుపటి పోస్ట్‌ల సంబంధిత భాగాలను కోట్ చేయడం చర్చలను ఒకదానితో ఒకటి మరియు విషయంపై కనెక్ట్ చేయడంలో సహాయపడుతుంది. పోస్ట్‌లోని ఒక విభాగాన్ని హైలైట్ చేసి, ఆపై ఏదైనా ప్రత్యుత్తరం బటన్‌ను నొక్కడం కోట్ చేయడానికి సులభమైన మార్గం. ఉదారంగా కోట్ చేయండి!
     read_guidelines:
       name: మార్గదర్శకాలు చదువు
+      description: <a href="%{base_uri}/guidelines">సంఘం మార్గదర్శకాలను</a> చదివారు
+      long_description: |
+        ఈ బ్యాడ్జ్ <a href="%{base_uri}/guidelines">సంఘం మార్గదర్శకాలను చదవడం</a> కోసం మంజూరు చేయబడింది. ఈ సాధారణ మార్గదర్శకాలను అనుసరించడం మరియు భాగస్వామ్యం చేయడం ప్రతి ఒక్కరికీ సురక్షితమైన, ఆహ్లాదకరమైన మరియు స్థిరమైన సంఘాన్ని నిర్మించడంలో సహాయపడుతుంది. ఆ స్క్రీన్‌కి అవతలివైపు మీలాగే మరొకరు ఉన్నారని ఎల్లప్పుడూ గుర్తుంచుకోండి. మృదువుగా ఉండండి!
     reader:
       name: చదువరి
+      description: 100 కంటే ఎక్కువ ప్రత్యుత్తరాలు ఉన్న విషయాల్లోని ప్రతి ప్రత్యుత్తరాన్ని చదివారు
+      long_description: |
+        మీరు 100 కంటే ఎక్కువ ప్రత్యుత్తరాలతో సుదీర్ఘమైన విషయాన్ని చదివిన మొదటిసారి ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. సంభాషణను నిశితంగా చదవడం వలన మీరు చర్చను అనుసరించడానికి, విభిన్న దృక్కోణాలను అర్థం చేసుకోవడానికి మరియు మరింత ఆసక్తికరమైన సంభాషణలకు దారి తీస్తుంది. మీరు ఎంత ఎక్కువ చదివితే అంత మంచి సంభాషణ వస్తుంది. మేము చెప్పాలనుకుంటున్నట్లుగా, చదవడం ప్రాథమికమైనది! :slight_smile:
+    popular_link:
+      name: ప్రసిద్ధ లింక్
+      description: 50 క్లిక్‌లతో బాహ్య లింక్‌ను పోస్ట్ చేసారు
+      long_description: |
+        మీరు షేర్ చేసిన లింక్‌కి 50 క్లిక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. సంభాషణకు ఆసక్తికరమైన సందర్భాన్ని జోడించిన ఉపయోగకరమైన లింక్‌ను పోస్ట్ చేసినందుకు ధన్యవాదాలు!
+    hot_link:
+      name: హాట్ లింక్
+      description: 300 క్లిక్‌లతో బాహ్య లింక్‌ను పోస్ట్ చేసారు
+      long_description: |
+        మీరు షేర్ చేసిన లింక్‌కి 300 క్లిక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. సంభాషణను ముందుకు నడిపించే మరియు చర్చను ప్రకాశవంతం చేసే మనోహరమైన లింక్‌ను పోస్ట్ చేసినందుకు ధన్యవాదాలు!
+    famous_link:
+      name: ప్రసిద్ధ లింక్
+      description: 1000 క్లిక్‌లతో బాహ్య లింక్‌ను పోస్ట్ చేసారు
+      long_description: |
+        మీరు షేర్ చేసిన లింక్‌కి 1000 క్లిక్‌లు వచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! మీరు ముఖ్యమైన వివరాలు, సందర్భం మరియు సమాచారాన్ని జోడించడం ద్వారా సంభాషణను గణనీయంగా మెరుగుపరిచే లింక్‌ను పోస్ట్ చేసారు. గొప్ప పని!
+    appreciated:
+      name: ప్రశంసించారు
+      description: 20 పోస్ట్‌లకు 1 లైక్ వచ్చింది
+      long_description: |
+        మీరు 20 విభిన్న పోస్ట్‌లపై కనీసం ఒక లైక్‌ని స్వీకరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ఇక్కడ సంభాషణలకు మీ సహకారాన్ని సంఘం ఆనందిస్తోంది!
+    respected:
+      name: గౌరవనీయమైన
+      description: 100 పోస్ట్‌లకు 2 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీరు 100 విభిన్న పోస్ట్‌లపై కనీసం 2 లైక్‌లను స్వీకరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ఇక్కడి సంభాషణలకు మీరు చేసిన అనేక సహకారాలను సంఘం గౌరవించేలా పెరుగుతోంది.
+    admired:
+      name: మెచ్చుకున్నారు
+      description: 300 పోస్ట్‌లకు 5 లైక్‌లు వచ్చాయి
+      long_description: |
+        మీరు 300 విభిన్న పోస్ట్‌లపై కనీసం 5 లైక్‌లను స్వీకరించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! ఇక్కడ సంభాషణలకు మీరు తరచుగా చేసే, అధిక నాణ్యతతో కూడిన సహకారాన్ని సంఘం మెచ్చుకుంటుంది.
+    out_of_love:
+      name: అవుట్ ఆఫ్ లవ్
+      description: ఒక రోజులో %{max_likes_per_day} ఇష్టాలు ఉపయోగించబడ్డాయి
+      long_description: |
+        మీరు మీ రోజువారీ లైక్‌లలో అన్ని %{max_likes_per_day} ని ఉపయోగించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. కొంత సమయం కేటాయించి, మీరు ఆనందించే మరియు అభినందిస్తున్న పోస్ట్‌లను లైక్ చేయడం మీ తోటి కమ్యూనిటీ సభ్యులను భవిష్యత్తులో మరింత గొప్ప చర్చలను సృష్టించేలా ప్రోత్సహిస్తుంది.
+    higher_love:
+      name: ఉన్నత ప్రేమ
+      description: ఒక రోజులో %{max_likes_per_day} లైక్‌లను 5 సార్లు ఉపయోగించారు
+      long_description: |
+        మీరు 5 రోజుల పాటు మీ రోజువారీ లైక్‌లన్నింటినీ %{max_likes_per_day} ఉపయోగించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ప్రతిరోజూ ఉత్తమ సంభాషణలను ప్రోత్సహిస్తూ సమయాన్ని వెచ్చించినందుకు ధన్యవాదాలు!
+    crazy_in_love:
+      name: క్రేజీ ఇన్ లవ్
+      description: ఒక రోజులో %{max_likes_per_day} లైక్‌లను 20 సార్లు ఉపయోగించారు
+      long_description: |
+        మీరు 20 రోజుల పాటు మీ రోజువారీ లైక్‌లన్నింటినీ %{max_likes_per_day} ఉపయోగించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! మీ తోటి కమ్యూనిటీ సభ్యులను ప్రోత్సహించడంలో మీరు ఒక రోల్ మోడల్!
+    thank_you:
+      name: ధన్యవాదాలు
+      description: 20 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉన్నారు మరియు 10 లైక్‌లను ఇచ్చారు
+      long_description: |
+        మీరు 20 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉండి, బదులుగా 10 లేదా అంతకంటే ఎక్కువ లైక్‌లను ఇచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ఎవరైనా మీ పోస్ట్‌లను లైక్ చేసినప్పుడు, ఇతరులు పోస్ట్ చేస్తున్న వాటిని కూడా లైక్ చేయడానికి మీకు సమయం ఉంటుంది.
+    gives_back:
+      name: తిరిగి ఇస్తుంది
+      description: 100 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉన్నారు మరియు 100 లైక్‌లను ఇచ్చారు
+      long_description: |
+        మీరు 100 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉండి, బదులుగా 100 లేదా అంతకంటే ఎక్కువ లైక్‌లను ఇచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ముందుకు చెల్లించినందుకు ధన్యవాదాలు!
+    empathetic:
+      name: తాదాత్మ్యత
+      description: 500 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉన్నారు మరియు 1000 లైక్‌లను ఇచ్చారు
+      long_description: |
+        మీరు 500 లైక్ చేసిన పోస్ట్‌లను కలిగి ఉండి, బదులుగా 1000 లేదా అంతకంటే ఎక్కువ లైక్‌లను ఇచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. వావ్! మీరు ఉదారత మరియు పరస్పర ప్రశంసలకు ఒక నమూనా :two_hearts:.
+    first_emoji:
+      name: మొదటి ఎమోజి
+      description: పోస్ట్‌లో ఎమోజిని ఉపయోగించారు
+      long_description: |
+        మీరు మీ పోస్ట్‌కి మొదటిసారి ఎమోజిని జోడించినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది :thumbsup:. సంతోషం :smiley: నుండి దుఃఖం :anguished: నుండి కోపం :angry: వరకు మరియు :sunglasses: మధ్య ఉన్న ప్రతిదీ మీ పోస్ట్‌లలో భావోద్వేగాలను తెలియజేయడానికి ఎమోజి మిమ్మల్ని అనుమతిస్తుంది. వందలాది ఎంపికల నుండి ఎంచుకోవడానికి ఒక : (కోలన్) లేదా ఎడిటర్‌లోని ఎమోజి టూల్‌బార్ బటన్‌ను నొక్కండి :ok_hand:
+    first_mention:
+      name: మొదటి ప్రస్తావన
+      description: పోస్ట్‌లో సభ్యుని పేర్కొన్నారు
+      long_description: |
+        మీరు మీ పోస్ట్‌లో ఒకరి @సభ్యనామాన్ని మొదటిసారి పేర్కొన్నప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది. ప్రతి ప్రస్తావన ఆ వ్యక్తికి నోటిఫికేషన్‌ను రూపొందిస్తుంది, కాబట్టి వారు మీ పోస్ట్ గురించి తెలుసుకుంటారు. ఏదైనా సభ్యుని పేర్కొనడానికి @ (ఆట చిహ్నం) అని టైప్ చేయడం ప్రారంభించండి లేదా అనుమతిస్తే, సమూహాన్ని - వారి దృష్టికి ఏదైనా తీసుకురావడానికి ఇది అనుకూలమైన మార్గం.
+    first_onebox:
+      name: మొదటి వన్బాక్స్
+      description: వన్‌బాక్స్ చేయబడిన లింక్‌ను పోస్ట్ చేసారు
+      long_description: |
+        సారాంశం, శీర్షిక మరియు (అందుబాటులో ఉన్నప్పుడు) చిత్రంతో స్వయంచాలకంగా వన్‌బాక్స్‌గా విస్తరించబడే ఒక లైన్‌లో మీరు మొదటిసారి లింక్‌ను పోస్ట్ చేసినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది.
+    first_reply_by_email:
+      name: ఇమెయిల్ ద్వారా మొదటి ప్రత్యుత్తరం
+      description: ఇమెయిల్ ద్వారా పోస్ట్‌కి ప్రత్యుత్తరం ఇచ్చారు
+      long_description: |
+        మీరు ఇమెయిల్ :e-mail: ద్వారా పోస్ట్‌కి మొదటిసారి ప్రత్యుత్తరం ఇచ్చినప్పుడు ఈ బ్యాడ్జ్ మంజూరు చేయబడుతుంది.
+    new_user_of_the_month:
+      name: "నెల యొక్క కొత్త సభ్యుడు"
+      description: వారి మొదటి నెలలో అత్యుత్తమ సహకారాలు
+      long_description: |
+        ఈ బ్యాడ్జ్ ప్రతి నెలా ఇద్దరు కొత్త సబ్యులకు వారి పోస్ట్‌లు ఎంత తరచుగా, మరియు ఎవరి ద్వారా లైక్ చేయబడ్డాయి, వారి అద్భుతమైన మొత్తం సహకారాల కోసం అభినందించడానికి మంజూరు చేయబడింది.
+    enthusiast:
+      name: ఉత్సాహవంతుడు
+      description: వరుసగా 10 రోజులు సందర్శించారు
+      long_description: |
+        ఈ బ్యాడ్జ్ వరుసగా 10 రోజులు సందర్శించినందుకు మంజూరు చేయబడింది. ఒక వారం పాటు మాతో అతుక్కుపోయినందుకు ధన్యవాదాలు!
+    aficionado:
+      name: అభిమాని
+      description: వరుసగా 100 రోజులు సందర్శించారు
+      long_description: |
+        వరుసగా 100 రోజులు సందర్శించినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. అంటే మూడు నెలలకు పైగా!
+    devotee:
+      name: భక్తుడు
+      description: వరుసగా 365 రోజులు సందర్శించారు
+      long_description: |
+        వరుసగా 365 రోజులు సందర్శించినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. వావ్, మొత్తం సంవత్సరం!
+    badge_title_metadata: "%{site_title} లో %{display_name} బ్యాడ్జ్"
+  admin_login:
+    success: "ఇమెయిల్ పంపబడింది"
+    errors:
+      unknown_email_address: "తెలియని ఇమెయిల్ చిరునామా."
+      invalid_token: "చెల్లని టోకేను."
+    email_input: "అడ్మిన్ ఇమెయిల్"
+    submit_button: "ఈ మెయిల్ పంపించండి"
   tags:
     title: "ట్యాగులు"
+    restricted_tag_disallowed: 'మీరు "%{tag}" ట్యాగ్‌ని వర్తింపజేయలేరు.'
+    minimum_required_tags:
+      one: "మీరు కనీసం %{count} ట్యాగ్ను ఎంచుకోవాలి."
+      other: "మీరు తప్పనిసరిగా కనీసం %{count} ట్యాగ్లను ఎంచుకోవాలి."
+  finish_installation:
+    congratulations: "అభినందనలు, మీరు డిస్కోర్స్ను ఇన్స్టాల్ చేశారు!"
+    register:
+      button: "నమోదు చేసుకోండి"
+      title: "అడ్మిన్ ఖాతాను నమోదు చేయండి"
+      help: "ప్రారంభించడానికి కొత్త ఖాతాను నమోదు చేయండి."
+    confirm_email:
+      title: "మీ ఇమెయిల్‌ను నిర్ధారించండి"
+    resend_email:
+      title: "యాక్టివేషన్ ఇమెయిల్‌ను మళ్లీ పంపండి"
+  safe_mode:
+    title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
+    enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
   wizard:
+    title: "డిస్కర్స్ సెటప్"
     step:
+      introduction:
+        title: "మీ సైట్ గురించి"
+        fields:
+          title:
+            label: "సంఘం పేరు"
+            placeholder: "రమణ చర్చా కేంద్రం"
+          site_description:
+            label: "మీ సంఘాన్ని ఒక వాక్యంలో వివరించండి"
+          default_locale:
+            label: "భాష"
       privacy:
+        title: "సభ్యుల అనుభవం"
         fields:
           login_required:
             placeholder: "అంతరంగికం"
+          invite_only:
+            placeholder: "ఆహ్వానం మాత్రమే"
+          must_approve_users:
+            placeholder: "ఆమోదం అవసరం"
+          chat_enabled:
+            placeholder: "చాట్‌ని ప్రారంభించండి"
+            extra_description: "మీ సభ్యులతో నిజ సమయంలో పాల్గొనండి"
+          enable_sidebar:
+            placeholder: "సైడ్‌బార్‌ని ప్రారంభించండి"
+            extra_description: "మీకు ఇష్టమైన ప్రదేశాలను సులభంగా యాక్సెస్ చేయండి"
+      ready:
+        title: "మీ సైట్ సిద్ధంగా ఉంది!"
       styling:
+        title: "రూపం మరియు అనుభూతి"
         fields:
+          color_scheme:
+            label: "రంగు పథకం"
+          body_font:
+            label: "బాడీ ఫాంట్"
+          heading_font:
+            label: "శీర్షిక ఫాంట్"
+          styling_preview:
+            label: "ప్రివ్యూ"
           homepage_style:
+            label: "హోమ్‌పేజీ శైలి"
             choices:
+              latest:
+                label: "తాజా విషయాలు"
               categories_only:
                 label: "వర్గాలు మాత్రమే"
+              categories_and_top_topics:
+                label: "వర్గాలు మరియు అగ్ర విషయాలు"
+              categories_boxes:
+                label: "వర్గం పెట్టెలు"
+              subcategories_with_featured_topics:
+                label: "ఫీచర్ చేయబడిన విషయాలతో ఉపవర్గాలు"
+      branding:
+        title: "సైట్ లోగో"
+        fields:
+          logo:
+            label: "ప్రాథమిక లోగో"
+          logo_small:
+            label: "స్క్వేర్ లోగో"
+      corporate:
+        title: "మీ సంస్థ"
+        fields:
+          company_name:
+            label: "కంపెనీ పేరు"
+            placeholder: "ఆక్మే సంస్థ"
+          governing_law:
+            label: "పాలక చట్టం"
+            placeholder: "కాలిఫోర్నియా చట్టం"
+          contact_url:
+            label: "వెబ్ పేజీ"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            label: "వివాదాలకు నగరం"
+            placeholder: "శాన్ ఫ్రాన్సిస్కో, కాలిఫోర్నియా"
+          site_contact:
+            label: "స్వయంచాలక సందేశాలు"
+          contact_email:
+            label: "పరిచయం పాయింట్"
+            placeholder: "example@user.com"
+      invites:
+        title: "సిబ్బందిని ఆహ్వానించండి"
+      finished:
+        title: "మీ డిస్కోర్స్ సిద్ధంగా ఉంది!"
+  search_logs:
+    graph_title: "శోధన గణన"
+  onebox:
+    discourse:
+      user_joined_community: "%{date} లో చేరారు"
+    gitlab:
+      truncated_file: "ఈ ఫైల్ కుదించబడింది."
+      show_original: "అసలైనదాన్ని చూపండి"
+    github:
+      truncated_file: "ఈ ఫైల్ కుదించబడింది."
+      show_original: "అసలైనదాన్ని చూపండి"
+      requires_iframe: "వీక్షకుడికి iframe అవసరం."
+      committed: "కట్టుబడి"
+      opened: "తెరిచినవి"
+      closed: "మూసివేయబడింది"
+      commit_by: "ద్వారా కట్టుబడి"
+      comment_by: "ద్వారా వ్యాఖ్యా"
+      review_by: "ద్వారా సమీక్ష"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "నోటిఫికేషన్‌లు ప్రారంభించబడ్డాయి - %{site_title}"
+      confirm_body: "విజయం! నోటిఫికేషన్‌లు ప్రారంభించబడ్డాయి."
+  staff_action_logs:
+    not_found: "కనుగొనబడలేదు"
+    unknown: "తెలియని"
+    api_key:
+      revoked: రద్దు చేయబడింది
+      restored: పునరుద్ధరించబడింది
   reviewables:
+    priorities:
+      low: "తక్కువ"
+      medium: "మధ్యస్థం"
+      high: "అధిక"
+    sensitivity:
+      disabled: "నిలిపివేయబడింది"
+      low: "తక్కువ"
+      medium: "మధ్యస్థం"
+      high: "అధిక"
+    reasons:
+      links:
+        category: వర్గం సెట్టింగులు
     actions:
       agree:
         title: "అవును"
+      agree_and_keep:
+        title: "పోస్ట్ ఉంచండి"
+      agree_and_keep_hidden:
+        title: "పోస్ట్‌ను దాచి ఉంచండి"
+        description: "ఫిర్యాదుతో అంగీకరిస్తు పోస్ట్‌ను దాచి ఉంచండి."
+      agree_and_suspend:
+        title: "సభ్యుడిని సస్పెండు చేయండి"
+        description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని సస్పెండ్ చేయండి."
+      agree_and_silence:
+        title: "సభ్యుని నిశ్శబ్దం చేయండి"
+        description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని నిశబ్దం చేయండి."
+      agree_and_restore:
+        title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      agree_and_hide:
+        title: "పోస్ట్ను దాచండి"
       delete_single:
         title: "తొలగించు"
+      delete:
+        title: "తొలగించండి…"
+      delete_and_agree:
+        title: "పోస్ట్ తొలగించండి"
+      delete_and_agree_replies:
+        title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
+      disagree_and_restore:
+        title: "లేదు, పోస్ట్‌ని పునరుద్ధరించండి"
       disagree:
         title: "లేదు"
+      discard_post:
+        title: "పోస్ట్‌ని విస్మరించండి"
+      revise_and_reject_post:
+        title: "పోస్ట్ను సవరించండి..."
+      ignore:
+        title: "విస్మరించండి"
+      ignore_and_do_nothing:
+        title: "ఏమీ చేయవద్దు"
       approve:
         title: "అంగీకరించు"
+      approve_post:
+        title: "పోస్ట్‌ని ఆమోదించండి"
+      reject_post:
+        title: "పోస్ట్‌ను తిరస్కరించండి"
+      approve_user:
+        title: "సభ్యుని ఆమోదించండి"
       reject_user:
+        title: "సభ్యుని తొలగించండి"
         delete:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
+        bundle_title: "తిరస్కరించండి…"
+      reject_and_delete:
+        title: "పోస్ట్‌ను తిరస్కరించండి మరియు తొలగించండి"
+      reject_and_keep_deleted:
+        title: "పోస్ట్‌ను తొలగించి ఉంచండి"
+      approve_and_restore:
+        title: "పోస్ట్‌ను ఆమోదించండి మరియు పునరుద్ధరించండి"
+      delete_user:
+        reason: "సమీక్ష క్యూ ద్వారా తొలగించబడింది"
+  notification_level:
+    ignore_error: "క్షమించండి, మీరు ఆ సభ్యుని విస్మరించలేరు."
+  old_keys_reminder:
+    title: "పాత ఆధారాల గురించి రిమైండర్"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (భాగం %{count})"
+      other: "%{topic_title} (భాగం %{count})"
   fallback_username: "సభ్యుడు"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at set_at కంటే ఎక్కువగా ఉండాలి"
+  form_templates:
+    errors:
+      invalid_yaml: "చెల్లుబాటు అయ్యే YAML స్ట్రింగ్ కాదు"
+      missing_type: "ఫీల్డ్ రకం తప్పిపోయింది"
+      missing_id: "ఫీల్డ్ ఐడి తప్పిపోయింది"
+      duplicate_ids: "డూప్లికేట్ ఐడీలను కలిగి ఉంది"
+      unsafe_description: "అసురక్షిత HTML వివరణను కలిగి ఉంది"
   activemodel:
     errors:
       <<: *errors

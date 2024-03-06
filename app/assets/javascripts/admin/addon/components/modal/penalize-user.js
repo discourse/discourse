@@ -19,6 +19,13 @@ export default class PenalizeUser extends Component {
   @tracked reason;
   @tracked message;
 
+  constructor() {
+    super(...arguments);
+    if (this.postEdit && this.siteSettings.penalty_include_post_message) {
+      this.message = `-------------------\n${this.postEdit}\n-------------------`;
+    }
+  }
+
   get modalTitle() {
     if (this.args.model.penaltyType === "suspend") {
       return "admin.user.suspend_modal_title";
