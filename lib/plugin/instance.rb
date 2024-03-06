@@ -582,6 +582,13 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def register_tag_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Tag.register_custom_field_type(name, type, max_length: max_length)
+    end
+  end
+
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_group_custom_field_type(name, type, max_length: nil)
     reloadable_patch do |plugin|
       ::Group.register_custom_field_type(name, type, max_length: max_length)
