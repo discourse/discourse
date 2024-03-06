@@ -9,6 +9,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
+import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -40,6 +41,17 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu").hasText("content");
+  });
+
+  test("@onRegisterApi", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      hbs`<DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+    );
+
+    assert.ok(this.api instanceof DMenuInstance);
   });
 
   test("@onShow", async function (assert) {

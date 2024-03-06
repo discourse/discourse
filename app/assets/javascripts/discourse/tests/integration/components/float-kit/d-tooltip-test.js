@@ -9,6 +9,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);
@@ -40,6 +41,17 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
 
     assert.dom(".fk-d-tooltip").hasText("content");
+  });
+
+  test("@onRegisterApi", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      hbs`<DTooltip @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+    );
+
+    assert.ok(this.api instanceof DTooltipInstance);
   });
 
   test("@onShow", async function (assert) {

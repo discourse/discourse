@@ -30,6 +30,8 @@ export default class DTooltip extends Component {
 
     this.tooltipInstance = instance;
 
+    this.options.onRegisterApi?.(instance);
+
     return () => {
       instance.destroy();
 

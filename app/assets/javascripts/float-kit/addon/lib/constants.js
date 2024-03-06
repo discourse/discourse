@@ -37,6 +37,7 @@ export const TOOLTIP = {
     trapTab: true,
     onClose: null,
     onShow: null,
+    onRegisterApi: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -66,6 +67,7 @@ export const MENU = {
     extraClassName: null,
     onClose: null,
     onShow: null,
+    onRegisterApi: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

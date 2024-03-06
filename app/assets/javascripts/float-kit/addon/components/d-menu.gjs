@@ -29,6 +29,8 @@ export default class DMenu extends Component {
 
     this.menuInstance = instance;
 
+    this.options.onRegisterApi?.(this.menuInstance);
+
     return () => {
       instance.destroy();
 

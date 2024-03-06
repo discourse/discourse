@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
@@ -81,6 +82,17 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
+  onRegisterApi(api) {
+    console.log(api);
+
+    api.show();
+
+    later(() => {
+      api.close();
+    }, 3000);
+  }
+
+  @action
   onEditBookmark() {
     this._openBookmarkModal();
   }
@@ -134,6 +146,7 @@ export default class BookmarkMenu extends Component {
       }}
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
+      @onRegisterApi={{this.onRegisterApi}}
     >
       <:trigger>
         {{#if this.bookmarkManager.trackedBookmark.reminderAt}}
