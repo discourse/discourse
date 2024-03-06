@@ -54,7 +54,7 @@ export default class BulkSelectHelper {
 
     promise.then((result) => {
       if (result?.topic_ids) {
-        if (options.private_message_inbox) {
+        if (options?.private_message_inbox) {
           this.pmTopicTrackingState.removeTopics(result.topic_ids);
         } else {
           this.topicTrackingState.removeTopics(result.topic_ids);
