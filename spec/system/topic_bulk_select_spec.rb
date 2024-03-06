@@ -11,8 +11,6 @@ describe "Topic bulk select", type: :system do
     fab!(:admin)
     fab!(:user)
 
-    # before {  }
-
     it "closes multiple topics" do
       sign_in(admin)
       visit("/latest")
