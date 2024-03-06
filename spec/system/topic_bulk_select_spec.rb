@@ -46,7 +46,7 @@ describe "Topic bulk select", type: :system do
       topic = topics.third
       visit("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
-      sleep(2) # Needs to wait to trigger the read state of the topic.
+      expect(topic_page).to have_read_post(1)
 
       # Bulk close the topic as an admin
       sign_in(admin)
@@ -70,7 +70,7 @@ describe "Topic bulk select", type: :system do
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
-      sleep(2) # Needs to wait to trigger the read state of the topic.
+      expect(topic_page).to have_read_post(1)
 
       # Bulk close the topic as an admin
       sign_in(admin)

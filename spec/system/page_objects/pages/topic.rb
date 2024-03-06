@@ -219,6 +219,10 @@ module PageObjects
         find('li[data-name="watching"]').click
       end
 
+      def has_read_post?(post)
+        post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
+      end
+
       private
 
       def topic_footer_button_id(button)
