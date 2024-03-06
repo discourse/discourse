@@ -15,7 +15,12 @@ export default class ChatChannelRoute extends DiscourseRoute {
     const messageId = this.paramsFor("chat.channel.near-message").messageId;
     const threadId = this.paramsFor("chat.channel.thread").threadId;
 
-    if (!messageId && !threadId && model.threadsManager.unreadThreadCount > 0) {
+    if (
+      model.threadingEnabled &&
+      !messageId &&
+      !threadId &&
+      model.threadsManager.unreadThreadCount > 0
+    ) {
       this.router.transitionTo("chat.channel.threads", ...model.routeModels);
     }
   }

@@ -42,6 +42,7 @@ RSpec.describe Chat::CreateMessage do
         upload_ids: [upload.id],
         context_topic_id: context_topic_id,
         context_post_ids: context_post_ids,
+        force_thread: false,
       }
     end
     let(:message) { result[:message_instance].reload }
@@ -322,6 +323,20 @@ RSpec.describe Chat::CreateMessage do
                         it "does not publish the new thread" do
                           Chat::Publisher.expects(:publish_thread_created!).never
                           result
+                        end
+
+                        context "when thread is forced" do
+                          before { params[:force_thread] = true }
+
+                          it "publishes the new thread" do
+                            Chat::Publisher.expects(:publish_thread_created!).with(
+                              channel,
+                              reply_to,
+                              instance_of(Integer),
+                              nil,
+                            )
+                            result
+                          end
                         end
                       end
                     end
