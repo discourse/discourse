@@ -359,18 +359,6 @@
     .user-invite-search {
       width: 100%;
     }
-    .user-invite-buttons {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      .btn {
-        margin-bottom: 0.5em;
-      }
-      .btn:not(:last-of-type) {
-        margin-right: 0.5em;
-      }
-    }
   }
 
   table.user-invite-list {
