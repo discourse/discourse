@@ -170,12 +170,24 @@ export default function schemaAndData(version = 1) {
         integer_field: {
           type: "integer",
         },
+        float_field: {
+          type: "float",
+        },
         boolean_field: {
           type: "boolean",
         },
         enum_field: {
           type: "enum",
           choices: ["nice", "awesome", "cool"]
+        },
+        category_field: {
+          type: "category",
+        },
+        group_field: {
+          type: "group",
+        },
+        tag_field: {
+          type: "tag",
         }
       },
     };
