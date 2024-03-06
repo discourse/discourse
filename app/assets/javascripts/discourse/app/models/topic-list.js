@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";

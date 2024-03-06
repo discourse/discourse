@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import IncomingEmail from "admin/models/incoming-email";
 import AdminEmailLogs from "admin/routes/admin-email-logs";

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";

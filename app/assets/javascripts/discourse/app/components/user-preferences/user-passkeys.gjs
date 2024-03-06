@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";

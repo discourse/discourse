@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import escape from "discourse-common/lib/escape";

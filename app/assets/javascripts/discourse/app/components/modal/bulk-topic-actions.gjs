@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";

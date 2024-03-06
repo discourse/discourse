@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";

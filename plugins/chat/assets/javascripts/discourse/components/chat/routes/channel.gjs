@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import SidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
 import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-chat";

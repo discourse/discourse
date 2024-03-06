@@ -1,6 +1,6 @@
 import { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";

@@ -5,7 +5,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";

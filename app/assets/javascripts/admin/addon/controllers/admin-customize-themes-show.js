@@ -7,7 +7,7 @@ import {
   match,
   notEmpty,
 } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";

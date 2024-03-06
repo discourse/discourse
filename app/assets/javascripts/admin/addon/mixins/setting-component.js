@@ -2,7 +2,7 @@ import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { alias, oneWay } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";

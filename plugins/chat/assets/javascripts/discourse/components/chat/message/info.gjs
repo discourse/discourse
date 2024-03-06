@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import UserStatusMessage from "discourse/components/user-status-message";

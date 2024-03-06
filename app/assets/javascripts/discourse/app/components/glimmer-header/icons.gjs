@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { eq, not, or } from "truth-helpers";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse-common/lib/get-url";

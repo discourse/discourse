@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 export default class ChatChannelLeaveBtn extends Component {

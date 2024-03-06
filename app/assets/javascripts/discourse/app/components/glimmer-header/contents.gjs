@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";

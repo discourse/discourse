@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";

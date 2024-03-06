@@ -3,7 +3,7 @@ import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";

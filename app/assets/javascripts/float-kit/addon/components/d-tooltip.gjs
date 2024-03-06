@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";

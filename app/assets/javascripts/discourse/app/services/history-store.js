@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";

@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
 import SidebarEditNavigationMenuCategoriesModal from "discourse/components/sidebar/edit-navigation-menu/categories-modal";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";

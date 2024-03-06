@@ -1,5 +1,5 @@
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { COMPONENTS } from "admin/models/theme";
 
 export default class AdminCustomizeThemeComponents extends Route {
