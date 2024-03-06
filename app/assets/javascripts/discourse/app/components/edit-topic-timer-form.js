@@ -53,11 +53,7 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get useDuration() {
-    return (
-      this.autoCloseAfterLastPost ||
-      this.autoDeleteReplies ||
-      this.autoCloseAfterLastPost
-    );
+    return this.autoCloseAfterLastPost || this.autoDeleteReplies;
   }
 
   get autoClose() {
