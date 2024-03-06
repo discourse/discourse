@@ -2834,6 +2834,10 @@ uncategorized:
     type: "list"
     list_type: "compact"
 
+  penalty_include_post_message:
+    default: false
+    client: true
+
   svg_icon_subset:
     default: ""
     type: "list"

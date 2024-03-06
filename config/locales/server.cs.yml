@@ -51,6 +51,11 @@ cs:
   remove_posts_deleted_by_author: "Smazáno autorem"
   redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
   on_another_topic: "V jiném tématu"
+  topic_category_changed: "Z %{from} na %{to}"
+  topic_tag_changed:
+    added_and_removed: "Přidáno %{added} a odebráno %{removed}"
+    added: "Přidáno %{added}"
+    removed: "Odebráno %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
@@ -58,6 +63,10 @@ cs:
     enabled_filter: "Zapnuto"
     disabled_filter: "Vypnuto"
     updates_available_filter: "Dostupné aktualizace"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "překročila maximální velikost %{max_size} bajtů."
   themes:
     bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Při aktualizaci motivu se něco pokazilo"
@@ -67,13 +76,67 @@ cs:
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
       about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
       about_json_too_big: "Chyba importu: about.json je větší než %{limit} limit."
+      about_json_values: "about.json obsahuje neplatné hodnoty: %{errors}"
+      modifier_values: "Modifikátory about.json obsahují neplatné hodnoty: %{errors}"
       asset_too_big: "Soubor %{filename} je větší než limit %{limit}"
       theme_too_big: "Motiv je větší než limit %{limit}"
+      git: "Chyba při klonování úložiště git, přístup byl odepřen nebo úložiště nebylo nalezeno"
+      git_ref_not_found: "Nelze provést checkout git reference: %{ref}"
+      git_unsupported_scheme: "Nelze klonovat repozitář gitu: schéma není podporováno"
+      unpack_failed: "Nepodařilo se rozbalit soubor"
+      file_too_big: "Nekomprimovaný soubor je příliš velký."
+      unknown_file_type: "Soubor, který jste nahráli, se nezdá být platným motivem Discourse."
+      not_allowed_theme: "`%{repo}` není v seznamu povolených motivů (zkontrolujte globální nastavení `allowed_theme_repos`)."
+      ssh_key_gone: "Čekali jste příliš dlouho na instalaci motivu a platnost klíče SSH vypršela. Prosím zkuste to znovu."
       too_many_files: "Počet souborů (%{count}) v motivu překročil maximální povolený počet souborů (%{limit})"
+      migrations:
+        invalid_filename: "Nesprávný název migračního souboru: %{filename}. Názvy souborů musí začínat čtyřmi číslicemi, po nichž následuje pomlčka a poté název, který obsahuje pouze alfanumerické znaky s pomlčkami."
+        name_too_long:
+          one: "Název migrace je příliš dlouhý. Neměl by přesáhnout %{count} znak."
+          few: "Název migrace je příliš dlouhý. Neměl by přesáhnout %{count} znaky."
+          many: "Název migrace je příliš dlouhý. Neměl by přesáhnout %{count} znaků."
+          other: "Název migrace je příliš dlouhý. Neměl by přesáhnout %{count} znaků."
+        too_many_pending_migrations: "V tomto motivu je příliš mnoho čekajících migrací. Motivy nesmějí zavádět více než 100 migrací v jedné aktualizaci"
+        out_of_sequence: "Migrace '%{name}' je mimo pořadí. Poslední migrace pro toto téma měla číslo verze %{current} , které je vyšší než nová migrace"
+        syntax_error: "Nepodařilo se spustit migraci '%{name}', protože obsahuje chybu syntaxe: %{error}"
+        exceeded_memory_limit: "Migrace '%{name}' se nezdařila, protože překročila limit paměti"
+        timed_out: "Časový limit migrace '%{name}' vypršel"
+        no_exported_function: "Migrace '%{name}' neexportuje funkci k provedení migrace"
+        default_export_not_a_function: "Migrace '%{name}' má výchozí export, který není funkcí. Výchozí export musí být funkce, která provádí migraci"
+        no_returned_value: "Migrace '%{name}' nevrátila žádnou hodnotu (nebo vrátila hodnotu null nebo nedefinovanou). Musí vrátit objekt Map"
+        wrong_return_type: "Migrace '%{name}' vrátila neznámý datový typ. Musí vrátit objekt Map"
+        runtime_error: "Migrace '%{name}' zaznamenala následující chybu: %{error}"
+        unknown_setting_returned_by_migration: "Migrace '%{name}' vrátily nastavení '%{setting_name}', které není deklarováno v souboru settings.yml motivu"
+    errors:
+      component_no_user_selectable: "Komponenty motivu nemohou být uživatelsky volitelné"
+      component_no_default: "Komponenty motivu nemohou být výchozím motivem"
+      component_no_color_scheme: "Komponenty motivu nemohou mít barevné palety"
+      no_multilevels_components: "Motivy s podřízenými motivy samy o sobě nemohou být podřízené"
+      optimized_link: Optimalizované odkazy na obrázky jsou pomíjivé a neměly by být součástí zdrojového kódu motivu.
     settings_errors:
+      invalid_yaml: "Poskytnutý YAML je neplatný."
+      data_type_inclusion: "Nastavení typu `%{name}` není podporováno. Podporované typy jsou `integer`, `bool`, `list`, `enum` a `upload`"
+      name_too_long: "Existuje nastavení s příliš dlouhým názvem. Maximální délka je 255"
+      default_value_missing: "Nastavení `%{name}` nemá žádnou výchozí hodnotu."
+      default_not_match_type: "Typ výchozí hodnoty nastavení `%{name}` neodpovídá typu nastavení."
+      default_value_not_valid: "Nastavení výchozí hodnoty `%{name}` není platné. %{error_messages}"
+      enum_value_not_valid: "Vybraná hodnota není jednou z možností výčtu."
+      number_value_not_valid_min_max: "Hodnota musí být mezi %{min} a %{max}."
+      number_value_not_valid_min: "Hodnota musí být větší nebo rovna %{min}."
+      number_value_not_valid_max: "Hodnota musí být menší nebo rovna %{max}."
+      string_value_not_valid_min_max: "Hodnota musí mít délku od %{min} do %{max} znaků."
+      string_value_not_valid_min: "Hodnota musí mít alespoň %{min} znaků."
+      string_value_not_valid_max: "Hodnota musí být dlouhá maximálně %{max} znaků."
       objects:
+        humanize_required: "Vlastnost na ukazateli JSON '%{property_json_pointer}' je povinná."
         required: "nesmí být prázdný"
+        humanize_invalid_type: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být typu %{type}."
+        invalid_type: "%{type} není platný typ"
+        humanize_not_valid_string_value: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být řetězec (string)."
+        not_valid_string_value: "musí být řetězec"
+        humanize_not_valid_integer_value: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být celé číslo (integer)."
         not_valid_integer_value: "musí být celé číslo"
+        humanize_not_valid_float_value: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být číslo s plovoucí desetinnou čárkou (float)."
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"
@@ -117,6 +180,9 @@ cs:
       not_an_integer: musí být celé číslo
       odd: musí být lichý
       record_invalid: ! "Ověření selhalo: %{errors}"
+      max_emojis: "nemůže mít více než %{max_emojis_count} emotikonů"
+      emojis_disabled: "nemůže mít emotikony"
+      ip_address_already_screened: "je již součástí existujícího pravidla"
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
         few: "Nelze smazat záznam protože na něm závisí %{record}."
@@ -138,6 +204,7 @@ cs:
         many: špatná délka (má být %{count} znaků)
         other: špatná délka (má být %{count} znaků)
       other_than: "musí být jiný než %{count}"
+      auth_overrides_username: "Uživatelské jméno je třeba aktualizovat na straně poskytovatele ověřování, protože je povoleno nastavení `auth_overrides_username`."
     template:
       body: ! "Nastaly problémy s následujícími poli: "
       header:
@@ -148,9 +215,26 @@ cs:
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
     site_settings:
+      invalid_site_setting: "Neexistuje žádné nastavení s názvem '%{name}'"
+      invalid_category_id: "Zadali jste kategorii, která neexistuje"
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
+      default_tags_already_selected: "Nemůžete vybrat štítek použitý v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Nemůžete povolit použití inventáře S3, pokud jste nepovolili nahrávání S3."
+      page_publishing_requirements: "Publikování stránek nelze povolit, pokud je povoleno zabezpečené nahrávání."
+      s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
+      s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
+      secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
+      s3_use_acls_requirements: "Pokud je povoleno zabezpečené nahrávání, musíte mít povoleny seznamy ACL S3."
+      share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
+      second_factor_cannot_enforce_with_socials: "Se zapnutým přihlašováním přes sociální sítě nelze vynucovat 2FA. Nejprve musíte zakázat přihlašování prostřednictvím: %{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Přihlášení nelze vypnout, pokud je vynuceno 2FA. Před vypnutím lokálního přihlašování deaktivujte 2FA."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Nemůžete povolit nahrávání S3, protože nahrávání S3 je již globálně povoleno a povolení této úrovně webu by mohlo způsobit kritické problémy s nahráváním"
+      cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
   invite:
     expired: "Platnost vaší pozvánky vypršela. Prosím <a href='%{base_url}/about'>kontaktujte redakci</a>."
     not_found: "Vaše pozvánka je neplatná. Prosím <a href='%{base_url}/about'>kontaktujte redakci</a>."
@@ -258,6 +342,9 @@ cs:
   topic_not_found: "Něco se pokazilo. Téma mohlo být uzavřeno nebo smazáno během vašeho prohlížení."
   not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
   max_pm_recipients: "Bohužel, můžete poslat zprávu maximálně %{recipients_limit} příjemcům."
+  watched_words_auto_tag: "Automaticky oštítkované téma"
+  create_pm_on_existing_topic: "Omlouváme se, ale k existujícímu tématu nelze vytvořit soukromou zprávu."
+  slow_mode_enabled: "Toto téma je v pomalém režimu."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -273,6 +360,11 @@ cs:
     few: "Jsou zobrazeny pouze %{count} příspěvky"
     many: "Je zobrazeno pouze %{count} příspěvků"
     other: "Je zobrazeno pouze %{count} příspěvků"
+  rss_num_participants:
+    one: "%{count} účastník"
+    few: "%{count} účastníci"
+    many: "%{count} účastníků"
+    other: "%{count} účastníků"
   read_full_topic: "Číst celé téma"
   private_message_abbrev: "Msg"
   rss_description:
@@ -293,9 +385,19 @@ cs:
     tag: "Oštítkovaná témata"
     badge: "%{display_name} odznak na %{site_title}"
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
+  edit_conflict: "Tento příspěvek byl upraven jiným uživatelem a vaše změny již nelze uložit."
   revert_version_same: "Aktuální verze je stejná jako verze, na kterou se pokoušíte vrátit."
+  reverted_to_version: "vráceno na verzi #%{version}"
+  cannot_edit_on_slow_mode: "Toto téma je v pomalém režimu. Kvůli podpoře promyšlené a uvážené diskuse není v současné době povoleno upravovat staré příspěvky v tomto tématu."
   excerpt_image: "obrázek"
   bookmarks:
+    errors:
+      already_bookmarked_post: "Stejný příspěvek nelze přidat do záložek dvakrát."
+      already_bookmarked: "Stejnou záložku %{type} nelze přidat dvakrát."
+      too_many: "Litujeme, nemůžete přidat více než %{limit} záložek, navštivte <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> a některé odstraňte."
+      cannot_set_past_reminder: "Nelze nastavit připomenutí záložky do minulosti."
+      cannot_set_reminder_in_distant_future: "Připomenutí záložky nelze nastavit na více než 10 let dopředu."
+      time_must_be_provided: "Pro všechna připomenutí musí být uveden čas"
     reminders:
       later_today: "Později během dnešního dne"
       next_business_day: "Následující pracovní den"
@@ -359,6 +461,12 @@ cs:
       Zvažovali jste **[navštívit svůj uživatelský profil]()** a nahrát v něm obrázek, který vás vystihuje?
 
       Je jednodušší sledovat diskusi a nalézt v konverzaci zajímavé lidi, když má každý jedinečný profilový obrázek!
+    reviving_old_topic: |
+      ### Oživit toto téma?
+
+      Poslední odpověď na toto téma byla **%{time_ago}**. Vaše odpověď pošťouchne téma na začátek seznamu a upozorní každého, kdo se dříve účastnil konverzace.
+
+      Opravdu chcete pokračovat v této staré konverzaci?
   activerecord:
     attributes:
       category:
@@ -1017,18 +1125,13 @@ cs:
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
-    content_security_policy: "Povolit Content-Security-Policy (CSP)"
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     send_tl1_welcome_message: "Pslat novým uživatelům úrovně důvěry 1 uvítací zprávu."
     top_page_default_timeframe: "Výchozí časové období stránky Nejlepší pro anonymní uživatele (pro přihlášené uživatele se nastaví automaticky na základě jejich poslední návštěvy)."
-    enable_badges: "Povolit odznaky"
     version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
-    min_password_length: "Minimální povolená délka hesla."
-    min_admin_password_length: "Minimální délka heslo pro administrátora."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
-    google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     remove_older_backups: "Odstranit zálohy starší než je zadaný počet dní. Nechte prázdné pro vypnutí."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
@@ -1070,10 +1173,8 @@ cs:
     hide_suspension_reasons: "Nezobrazovat důvody pozastavení veřejně na uživatelských profilech."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    embed_truncate: "Useknout zabudované příspěvky."
     embed_unlisted: "Vložená témata nebudou uvedena, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
-    delete_drafts_older_than_n_days: "Odstranit koncepty starší než (n) dní."
     enable_fast_edit: "Přidá do nabídky výběru příspěvku tlačítko pro úpravu malého výběru v řádku."
     enable_quote_copy: "Přidá do nabídky výběru příspěvku tlačítko pro zkopírování výběru do schránky jako markdown citaci."
     skip_review_media_groups: "Uživatelům, kteří nejsou v žádné z těchto skupin, budou jejich příspěvky odeslány ke kontrole redaktorům, pokud příspěvek obsahuje vložená média."

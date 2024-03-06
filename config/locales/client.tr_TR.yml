@@ -3910,6 +3910,7 @@ tr_TR:
         user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"
         show_incoming_updated_topics: "%{shortcut} Güncellenen konuları göster"
         search: "%{shortcut} Ara"
+        filter_sidebar: "%{shortcut} Kenar çubuğunu filtrele"
         help: "%{shortcut} Klavye yardım sayfasını aç"
         dismiss_new: "%{shortcut} Yenileri Kapat"
         dismiss_topics: "%{shortcut} Konuları Kapat"
@@ -4324,6 +4325,11 @@ tr_TR:
       panels:
         forum:
           label: Forum
+      filter: "Filtrele"
+      clear_filter: "Filtreyi temizle"
+      no_results:
+        title: "Sonuç yok"
+        description: "'%{filter}' ile eşleşen hiçbir şey bulamadık"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4662,11 +4668,13 @@ tr_TR:
               write: Yeni bir konu oluşturun veya mevcut bir konuya gönderin.
               update: Bir konuyu güncelleyin. Başlığı, kategoriyi, etiketleri, durumu, arketipi, öne çıkan_bağlantıyı vb. değiştirin.
               delete: Bir konu silin.
+              recover: Bir konuyu kurtarın.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
               status: "Bir konunun durumunu güncelleyin. Durum: kapalı, arşiv, görünür, sabitlenmiş. Etkin: true, false. Yalnızca o kategorideki konuların durum değişikliklerine izin vermek için burada ve request içeriğinde bir category_id belirtin."
             posts:
               edit: Herhangi bir gönderiyi veya belirli bir gönderiyi düzenleyin.
               delete: Bir gönderi silin.
+              recover: Bir gönderiyi kurtarın.
               list: Son gönderileri ve özel gönderileri listeleyin. RSS de desteklenir.
             tags:
               list: Etiketleri listeleyin.

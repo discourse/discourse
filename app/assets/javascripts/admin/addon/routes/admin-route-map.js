@@ -57,9 +57,10 @@ export default function () {
           "adminCustomizeThemes",
           { path: "themes", resetNamespace: true },
           function () {
-            this.route("show", { path: "/:theme_id" });
+            this.route("show", { path: "/:theme_id" }, function () {
+              this.route("schema", { path: "schema/:setting_name" });
+            });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
-            this.route("schema", { path: "/:theme_id/schema/:setting_name" });
           }
         );
 

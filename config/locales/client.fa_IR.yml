@@ -3465,6 +3465,7 @@ fa_IR:
       panels:
         forum:
           label: انجمن
+      filter: "فیلتر"
     until: "تا وقتی که:"
     form_templates:
       upload_field:

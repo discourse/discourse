@@ -34,10 +34,9 @@ export default Component.extend({
   @discourseComputed("position", "model.topics.length")
   showBasedOnPosition(position, topicCount) {
     if (position !== "top") {
-      return true;
+      return topicCount > 5;
     }
-
-    return this.currentUser?.new_new_view_enabled || topicCount > 5;
+    return true;
   },
 
   @discourseComputed("selectedTopics.length")

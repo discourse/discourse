@@ -1420,6 +1420,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Запампаваць"

@@ -1,6 +1,6 @@
-{{#if this.showBasedOnPosition}}
+{{~#if this.showBasedOnPosition}}
   <div class="row {{this.containerClass}}">
-    {{#if this.showDismissRead}}
+    {{~#if this.showDismissRead}}
       <DButton
         @action={{this.dismissReadPosts}}
         @translatedLabel={{this.dismissLabel}}
@@ -8,8 +8,8 @@
         id={{this.dismissReadId}}
         class="btn-default dismiss-read"
       />
-    {{/if}}
-    {{#if this.showResetNew}}
+    {{/if~}}
+    {{~#if this.showResetNew}}
       <DButton
         @action={{this.resetNew}}
         @icon="check"
@@ -17,6 +17,6 @@
         id={{this.dismissNewId}}
         class="btn-default dismiss-read"
       />
-    {{/if}}
+    {{/if~}}
   </div>
-{{/if}}
+{{/if~}}

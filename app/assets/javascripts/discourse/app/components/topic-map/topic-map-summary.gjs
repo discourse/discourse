@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import RelativeDate from "discourse/components/relative-date";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
@@ -7,7 +8,6 @@ import number from "discourse/helpers/number";
 import slice from "discourse/helpers/slice";
 import i18n from "discourse-common/helpers/i18n";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
-import gt from "truth-helpers/helpers/gt";
 
 export default class TopicMapSummary extends Component {
   get toggleMapButton() {

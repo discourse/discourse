@@ -6,16 +6,6 @@
   <div class="alert alert-info">{{this.redirectedReason}}</div>
 {{/if}}
 
-<TopicDismissButtons
-  @position="top"
-  @selectedTopics={{@bulkSelectHelper.selected}}
-  @model={{@model}}
-  @showResetNew={{@showResetNew}}
-  @showDismissRead={{@showDismissRead}}
-  @resetNew={{this.resetNew}}
-  @dismissRead={{this.dismissRead}}
-/>
-
 {{#if @model.sharedDrafts}}
   <TopicList
     @listTitle="shared_drafts.title"
@@ -137,8 +127,8 @@
         @model={{@model}}
         @showResetNew={{@showResetNew}}
         @showDismissRead={{@showDismissRead}}
-        @resetNew={{this.resetNew}}
-        @dismissRead={{this.dismissRead}}
+        @resetNew={{@resetNew}}
+        @dismissRead={{@dismissRead}}
       />
 
       <FooterMessage

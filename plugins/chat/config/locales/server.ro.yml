@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 ro:
+  site_settings:
+    chat_preferred_mobile_index: "Filă preferată la încărcarea /chat pe mobil."
   system_messages:
     private_channel_title: "Canal %{id}"
   chat:
