@@ -227,5 +227,17 @@ after_initialize do
     end
   end
 
+  self.on(:site_setting_changed) do |name, old_value, new_value|
+    next if name.to_s != "default_locale"
+    next if !SiteSetting.discourse_narrative_bot_enabled
+
+    profile = UserProfile.find_by(user_id: DiscourseNarrativeBot::BOT_USER_ID)
+
+    next if profile.blank?
+
+    new_bio = I18n.with_locale(new_value) { I18n.t("discourse_narrative_bot.bio") }
+    profile.update!(bio_raw: new_bio)
+  end
+
   PostGuardian.prepend(DiscourseNarrativeBot::PostGuardianExtension)
 end
