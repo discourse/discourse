@@ -27,6 +27,16 @@ describe ChatSDK::Message do
       end
     end
 
+    context "when force_thread is present" do
+      it "creates the message in a thread" do
+        message_1 = described_class.create(**params)
+        message_2 =
+          described_class.create(**params, in_reply_to_id: message_1.id, force_thread: true)
+
+        expect(message_2.thread.force).to eq(true)
+      end
+    end
+
     context "when channel doesn’t exist" do
       it "fails" do
         expect { described_class.create(**params, channel_id: -999) }.to raise_error(

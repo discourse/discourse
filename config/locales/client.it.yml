@@ -4286,6 +4286,9 @@ it:
       panels:
         forum:
           label: Forum
+      filter: "Filtro"
+      no_results:
+        title: "Nessun risultato"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."

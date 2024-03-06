@@ -34,7 +34,7 @@
         @id="search-type"
         @value={{this.search_type}}
         @content={{this.searchTypes}}
-        @onChange={{action (mut this.search_type)}}
+        @onChange={{fn (mut this.search_type)}}
         @options={{hash castInteger=true}}
       />
       <DButton
@@ -64,7 +64,7 @@
       <div class="search-filters">
         <SearchAdvancedOptions
           @searchTerm={{readonly this.searchTerm}}
-          @onChangeSearchTerm={{action (mut this.searchTerm)}}
+          @onChangeSearchTerm={{fn (mut this.searchTerm)}}
           @search={{action "search" (hash collapseFilters=true)}}
           @searchButtonDisabled={{this.searchButtonDisabled}}
           @expandFilters={{this.expandFilters}}

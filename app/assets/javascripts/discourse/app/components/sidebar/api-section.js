@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner, setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class SidebarApiSection extends Component {
   @service sidebarState;

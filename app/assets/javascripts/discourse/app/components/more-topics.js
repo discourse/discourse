@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";

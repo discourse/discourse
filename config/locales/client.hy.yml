@@ -2868,6 +2868,7 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"

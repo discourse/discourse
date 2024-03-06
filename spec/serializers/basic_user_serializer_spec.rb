@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe BasicUserSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:serializer) { BasicUserSerializer.new(user, scope: Guardian.new(user), root: false) }
 
   describe "#as_json" do
@@ -30,7 +30,7 @@ RSpec.describe BasicUserSerializer do
   end
 
   describe "#status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
 
     before { user.user_status = user_status }
 

@@ -72,7 +72,7 @@
           @name="icon"
           @value={{this.buffered.icon}}
           @options={{hash maximum=1}}
-          @onChange={{action (mut this.buffered.icon)}}
+          @onChange={{fn (mut this.buffered.icon)}}
         />
       {{/if}}
     </div>
@@ -83,7 +83,7 @@
         @name="badge_type_id"
         @value={{this.buffered.badge_type_id}}
         @content={{this.badgeTypes}}
-        @onChange={{action (mut this.buffered.badge_type_id)}}
+        @onChange={{fn (mut this.buffered.badge_type_id)}}
         @options={{hash disabled=this.readOnly}}
       />
     </div>
@@ -100,7 +100,7 @@
           @content={{this.badgeGroupings}}
           class="badge-selector"
           @nameProperty="name"
-          @onChange={{action (mut this.buffered.badge_grouping_id)}}
+          @onChange={{fn (mut this.buffered.badge_grouping_id)}}
         />
         <DButton
           @action={{route-action "editGroupings"}}
@@ -220,7 +220,7 @@
             name="trigger"
             @value={{this.buffered.trigger}}
             @content={{this.badgeTriggers}}
-            @onChange={{action (mut this.buffered.trigger)}}
+            @onChange={{fn (mut this.buffered.trigger)}}
             @options={{hash disabled=this.readOnly}}
           />
         </div>

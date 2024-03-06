@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";

@@ -2104,6 +2104,7 @@ id:
             review:
               content: "Ulasan"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
+      filter: "Filter"
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"

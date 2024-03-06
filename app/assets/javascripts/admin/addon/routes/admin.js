@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";

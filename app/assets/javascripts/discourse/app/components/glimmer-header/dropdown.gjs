@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import and from "truth-helpers/helpers/and";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 
 export default class Dropdown extends Component {

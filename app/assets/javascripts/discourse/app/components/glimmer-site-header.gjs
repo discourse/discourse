@@ -3,7 +3,7 @@ import { DEBUG } from "@glimmer/env";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";

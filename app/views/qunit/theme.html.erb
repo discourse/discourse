@@ -41,7 +41,7 @@
     <%- end %>
 
     <%- if params['testem'] %>
-      <script defer src="/assets/testem.js"></script>
+      <script defer src="/assets/testem.js" nonce="<%= csp_nonce_placeholder %>"></script>
     <%- end %>
   </head>
   <body>

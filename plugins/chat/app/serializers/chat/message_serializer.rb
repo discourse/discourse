@@ -182,20 +182,20 @@ module Chat
       end
     end
 
-    def include_thread?
-      include_thread_id? && object.thread_om? && object.thread.present?
+    def include_thread_id?
+      channel.threading_enabled || object.thread&.force
     end
 
-    def include_thread_id?
-      channel.threading_enabled
+    def include_thread?
+      include_thread_id? && object.thread_om? && object.thread.present?
     end
 
     def thread
       Chat::ThreadSerializer.new(
         object.thread,
         scope: scope,
-        membership: @options[:thread_memberships]&.find { |m| m.thread_id == object.thread.id },
-        participants: @options[:thread_participants]&.dig(object.thread.id),
+        membership: @options[:thread_memberships]&.find { |m| m.thread_id == object.thread&.id },
+        participants: @options[:thread_participants]&.dig(object.thread&.id),
         include_thread_preview: true,
         include_thread_original_message: @options[:include_thread_original_message],
         root: false,

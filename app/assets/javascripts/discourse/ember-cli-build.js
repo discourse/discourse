@@ -76,7 +76,9 @@ module.exports = function (defaults) {
 
     trees: {
       app: RawHandlebarsCompiler(
-        withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+        withSideWatch("app", {
+          watching: ["../discourse-markdown-it", "../truth-helpers"],
+        })
       ),
     },
   });
@@ -228,6 +230,14 @@ module.exports = function (defaults) {
         ],
       },
     },
+    skipBabel: [
+      {
+        package: "qunit",
+      },
+      {
+        package: "sinon",
+      },
+    ],
   });
 
   return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);

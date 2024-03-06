@@ -1,15 +1,15 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
-import or from "truth-helpers/helpers/or";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [
   "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",

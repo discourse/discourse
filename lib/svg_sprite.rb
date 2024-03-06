@@ -77,6 +77,7 @@ module SvgSprite
         discourse-other-tab
         discourse-sparkles
         discourse-threads
+        discourse-sidebar
         download
         ellipsis-h
         ellipsis-v

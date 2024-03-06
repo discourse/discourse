@@ -2701,6 +2701,17 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
+      it "can view raw email if the user is in the allowed group" do
+        sign_in(user)
+        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+
+        get "/posts/#{post.id}/raw-email.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["raw_email"]).to eq("email_content")
+      end
+
       it "can view raw email" do
         sign_in(moderator)
 

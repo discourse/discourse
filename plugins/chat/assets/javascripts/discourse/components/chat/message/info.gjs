@@ -2,7 +2,8 @@ import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
@@ -10,7 +11,6 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import and from "truth-helpers/helpers/and";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
 

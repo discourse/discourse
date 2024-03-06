@@ -3692,6 +3692,7 @@ da:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
     until: "Indtil:"
     form_templates:
       upload_field:

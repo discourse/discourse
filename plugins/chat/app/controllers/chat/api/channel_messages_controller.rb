@@ -31,6 +31,9 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   end
 
   def create
+    # users can't force a thread through JSON API
+    params[:force_thread] = false
+
     Chat::MessageRateLimiter.run!(current_user)
 
     with_service(Chat::CreateMessage) do

@@ -7,9 +7,13 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.0] - 2024-02-21
+
+- added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons. 
+
 ## [1.27.0] - 2024-02-21
 
-- Updated `addToHeaderIcons` to take a component instead of just a widget (masked a string). Additionally, you can can now utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when * you want create a button in the header that opens a dropdown panel with additional content.
+- deprecated `addToHeaderIcons` in favor of `headerIcons`
 
 ## [1.26.0] - 2024-02-21
 

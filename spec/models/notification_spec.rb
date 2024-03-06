@@ -586,6 +586,7 @@ RSpec.describe Notification do
       expect(Notification.prioritized_list(user, count: 1).map(&:id)).to eq(
         [unread_high_priority_2].map(&:id),
       )
+
       expect(Notification.prioritized_list(user, count: 3).map(&:id)).to eq(
         [unread_high_priority_2, unread_high_priority_1, unread_regular_2].map(&:id),
       )

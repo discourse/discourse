@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import and from "truth-helpers/helpers/and";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {

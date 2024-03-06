@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";

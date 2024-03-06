@@ -127,6 +127,8 @@ he:
       skip_trigger: "דילוג"
       help_trigger: "הצגת עזרה"
       random_mention:
+        reply: |-
+          היי! כדי לגלות מה אני יכול לעשות, יש להקליד `‎@%{discobot_username} %{help_trigger}`.
         tracks: |-
           אלו הפעולות שאני יודע לבצע נכון להיום:
 

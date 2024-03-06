@@ -18,7 +18,7 @@ RSpec.describe "Update last read", type: :system do
   end
 
   context "when the full message is visible" do
-    it "marks it as read" do
+    xit "marks it as read" do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 

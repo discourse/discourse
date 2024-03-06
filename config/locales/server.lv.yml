@@ -398,7 +398,6 @@ lv:
     disabled: "atslēgt"
     send_welcome_message: "Nosūtiet visiem jaunajiem lietotājiem apsveikuma ziņojumu ar īso darba sākšanas rokasgrāmatu."
     dark_mode_none: "Nav"
-    embed_truncate: "Saīsināt iegultos ierakstus."
     embed_post_limit: "Maksimālais iegulto ierakstu skaits."
     default_other_skip_new_user_tips: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti."
     errors:

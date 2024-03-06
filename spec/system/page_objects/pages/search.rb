@@ -8,6 +8,15 @@ module PageObjects
         self
       end
 
+      def type_in_search_menu(input)
+        find("input#search-term").send_keys(input)
+        self
+      end
+
+      def click_search_menu_link
+        find(".search-menu .results .search-link").click
+      end
+
       def clear_search_input
         find("input.full-page-search").set("")
         self
@@ -29,7 +38,15 @@ module PageObjects
         find(".d-header #search-button").click
       end
 
+      def click_first_topic
+        find(".topic-list-body tr:first-of-type").click
+      end
+
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
+
+      def has_topic_title_for_first_search_result?(title)
+        page.has_css?(".search-menu .results .search-result-topic", text: title)
+      end
 
       def has_search_result?
         page.has_selector?(SEARCH_RESULT_SELECTOR)

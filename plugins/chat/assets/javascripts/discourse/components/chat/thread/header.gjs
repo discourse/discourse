@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import and from "truth-helpers/helpers/and";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
 
@@ -54,7 +55,7 @@ export default class ChatThreadHeader extends Component {
 
   <template>
     <Navbar @showFullTitle={{@showFullTitle}} as |navbar|>
-      {{#if @thread}}
+      {{#if (and this.channel.threadingEnabled @thread)}}
         <navbar.BackButton
           @route={{this.backLink.route}}
           @routeModels={{this.backLink.models}}

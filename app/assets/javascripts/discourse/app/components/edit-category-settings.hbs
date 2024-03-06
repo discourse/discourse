@@ -58,7 +58,7 @@
         @id="category-search-priority"
         @content={{this.searchPrioritiesOptions}}
         @value={{this.category.search_priority}}
-        @onChange={{action (mut this.category.search_priority)}}
+        @onChange={{fn (mut this.category.search_priority)}}
         @options={{hash placementStrategy="absolute"}}
       />
     </div>
@@ -267,7 +267,7 @@
         @content={{this.availableSorts}}
         @value={{this.category.sort_order}}
         @options={{hash none="category.sort_options.default"}}
-        @onChange={{action (mut this.category.sort_order)}}
+        @onChange={{fn (mut this.category.sort_order)}}
       />
       {{#unless this.isDefaultSortOrder}}
         <ComboBox
@@ -278,7 +278,7 @@
             none="category.sort_options.default"
             placementStrategy="absolute"
           }}
-          @onChange={{action (mut this.category.sort_ascending)}}
+          @onChange={{fn (mut this.category.sort_ascending)}}
         />
       {{/unless}}
     </div>

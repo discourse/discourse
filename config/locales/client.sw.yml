@@ -2275,6 +2275,7 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+      filter: "Chuja"
     form_templates:
       upload_field:
         upload: "Ongeza"

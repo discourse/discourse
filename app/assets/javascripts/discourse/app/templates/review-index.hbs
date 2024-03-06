@@ -24,7 +24,7 @@
       <ComboBox
         @value={{this.filterStatus}}
         @content={{this.statuses}}
-        @onChange={{action (mut this.filterStatus)}}
+        @onChange={{fn (mut this.filterStatus)}}
       />
     </div>
 
@@ -48,7 +48,7 @@
         <ComboBox
           @value={{this.filterType}}
           @content={{this.allTypes}}
-          @onChange={{action (mut this.filterType)}}
+          @onChange={{fn (mut this.filterType)}}
           @options={{hash none="review.filters.type.all"}}
         />
       </div>
@@ -60,7 +60,7 @@
         <ComboBox
           @value={{this.filterPriority}}
           @content={{this.priorities}}
-          @onChange={{action (mut this.filterPriority)}}
+          @onChange={{fn (mut this.filterPriority)}}
         />
       </div>
 
@@ -70,7 +70,7 @@
         </label>
         <CategoryChooser
           @value={{this.filterCategoryId}}
-          @onChange={{action (mut this.filterCategoryId)}}
+          @onChange={{fn (mut this.filterCategoryId)}}
           @options={{hash none="review.filters.all_categories"}}
         />
       </div>
@@ -140,7 +140,7 @@
         <ComboBox
           @value={{this.filterSortOrder}}
           @content={{this.sortOrders}}
-          @onChange={{action (mut this.filterSortOrder)}}
+          @onChange={{fn (mut this.filterSortOrder)}}
         />
       </div>
     {{/if}}

@@ -3533,6 +3533,9 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
+      filter: "필터"
+      no_results:
+        title: "결과 없음"
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"

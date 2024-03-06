@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import HashtagTypeBase from "discourse/lib/hashtag-types/base";
 import { iconHTML } from "discourse-common/lib/icon-library";
 

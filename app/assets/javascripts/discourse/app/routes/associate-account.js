@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import AssociateAccountConfirm from "discourse/components/modal/associate-account-confirm";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
