@@ -49,15 +49,15 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get showFutureDateInput() {
-    return this.showTimeOnly || this.publishToCategory || this.autoClose;
+    return (
+      this.showTimeOnly ||
+      this.publishToCategory ||
+      this.statusType === CLOSE_STATUS_TYPE
+    );
   }
 
   get useDuration() {
     return this.autoCloseAfterLastPost || this.autoDeleteReplies;
-  }
-
-  get autoClose() {
-    return this.statusType === CLOSE_STATUS_TYPE;
   }
 
   get autoCloseAfterLastPost() {
