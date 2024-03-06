@@ -40,7 +40,7 @@
         {{i18n "topic.topic_status_update.duration"}}
       </label>
       <RelativeTimePicker
-        @onChange={{this.durationChanged}}
+        @onChange={{this.changeDuration}}
         @durationMinutes={{readonly @topicTimer.duration_minutes}}
       />
     </div>
