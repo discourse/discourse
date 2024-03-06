@@ -210,6 +210,15 @@ module PageObjects
         @private_message_map_component.is_visible?
       end
 
+      def click_notifications_button
+        find(".topic-notifications-button .select-kit-header").click
+      end
+
+      def watch_topic
+        click_notifications_button
+        find('li[data-name="watching"]').click
+      end
+
       private
 
       def topic_footer_button_id(button)
