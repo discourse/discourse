@@ -33,6 +33,10 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       "account section is displayed"
     );
     assert.ok(
+      exists(".sidebar-section[data-section-name='admin-nav-section-reports']"),
+      "reports section is displayed"
+    );
+    assert.ok(
       exists(
         ".sidebar-section[data-section-name='admin-nav-section-community']"
       ),
@@ -71,10 +75,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
         ".sidebar-section[data-section-name='admin-nav-section-advanced']"
       ),
       "advanced section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-nav-section-reports']"),
-      "reports section is displayed"
     );
   });
 

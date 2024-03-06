@@ -15,7 +15,19 @@ export const ADMIN_NAV_MAP = [
         name: "admin_whats_new",
         route: "admin.dashboardNewFeatures",
         label: "admin.account.sidebar_link.whats_new",
-        icon: "cog",
+        icon: "gift",
+      },
+    ],
+  },
+  {
+    name: "reports",
+    label: "admin.reports.sidebar_title",
+    links: [
+      {
+        name: "admin_all_reports",
+        route: "admin.dashboardReports",
+        label: "admin.reports.sidebar_link.all",
+        icon: "folder",
       },
     ],
   },
@@ -365,18 +377,6 @@ export const ADMIN_NAV_MAP = [
         query: { filter: "experimental" },
         label: "admin.advanced.sidebar_link.experimental",
         icon: "discourse-sparkles",
-      },
-    ],
-  },
-  {
-    name: "reports",
-    label: "admin.reports.sidebar_title",
-    links: [
-      {
-        name: "admin_all_reports",
-        route: "admin.dashboardReports",
-        label: "admin.reports.sidebar_link.all",
-        icon: "folder",
       },
     ],
   },
