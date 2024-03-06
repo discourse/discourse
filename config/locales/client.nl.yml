@@ -4302,6 +4302,9 @@ nl:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      no_results:
+        title: "Geen resultaten"
     welcome_topic_banner:
       title: "Maak je welkomsttopic"
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."

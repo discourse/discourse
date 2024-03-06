@@ -3524,6 +3524,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+      filter: "Filtrar"
     until: "Até:"
     form_templates:
       upload_field:

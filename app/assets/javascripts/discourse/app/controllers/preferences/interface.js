@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { not, reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {

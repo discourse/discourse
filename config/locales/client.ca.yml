@@ -2898,6 +2898,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
+      filter: "Filtre"
     until: "Fins a:"
     form_templates:
       upload_field:

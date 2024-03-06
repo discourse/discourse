@@ -4288,6 +4288,9 @@ fr:
       panels:
         forum:
           label: Forum
+      filter: "Filtrer"
+      no_results:
+        title: "Aucun résultat"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."

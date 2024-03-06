@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { equal, gt, readOnly, union } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import discourseComputed, {
   observes,
   on,

@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classify } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";

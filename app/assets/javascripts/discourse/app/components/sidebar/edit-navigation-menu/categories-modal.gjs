@@ -4,7 +4,8 @@ import { Input } from "@ember/component";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { gt, includes, not } from "truth-helpers";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -15,9 +16,6 @@ import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
-import gt from "truth-helpers/helpers/gt";
-import includes from "truth-helpers/helpers/includes";
-import not from "truth-helpers/helpers/not";
 
 // Given a list, break into chunks starting a new chunk whenever the predicate
 // is true for an element.

@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";

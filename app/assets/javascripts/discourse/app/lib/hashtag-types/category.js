@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {

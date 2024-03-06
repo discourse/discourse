@@ -113,6 +113,7 @@ module ChatSDK
       upload_ids: nil,
       streaming: false,
       enforce_membership: false,
+      force_thread: false,
       &block
     )
       message =
@@ -126,6 +127,7 @@ module ChatSDK
           upload_ids: upload_ids,
           streaming: streaming,
           enforce_membership: enforce_membership,
+          force_thread: force_thread,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
           on_model_not_found(:channel_membership) do

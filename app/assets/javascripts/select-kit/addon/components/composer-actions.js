@@ -1,5 +1,5 @@
 import { equal, gt } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { escapeExpression } from "discourse/lib/utilities";

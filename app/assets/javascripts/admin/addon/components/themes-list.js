@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal, gt, gte } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";

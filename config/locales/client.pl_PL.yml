@@ -1131,6 +1131,7 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
+      account_possessive: "Konto %{name}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -3027,10 +3028,15 @@ pl_PL:
       update_category:
         name: "Aktualizuj kategorię"
         description: "Wybierz nową kategorię dla wybranych tematów"
+      reset_bump_dates:
+        name: "Zresetuj datę odświeżenia"
+        description: "Ustaw datę odświeżenia tematu na datę utworzenia ostatniego posta. Wpływa to na kolejność tematów na liście."
       defer:
+        name: "Odłóż tematy"
         description: "Oznacz tematy jako nieprzeczytane"
       update_notifications:
         name: "Aktualizuj powiadomienia…"
+        description: "Zmień poziom powiadomień na obserwowanie, śledzone, normalne lub wyciszone"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -3994,6 +4000,8 @@ pl_PL:
       notify_user_textarea_label: "Wiadomość dla użytkownika"
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
       notify_moderators_textarea_label: "Wiadomość dla moderatorów"
+      custom_placeholder_illegal: "Daj nam znać, dlaczego uważasz, że te treści są nielegalne, i jeśli to możliwe, podaj odpowiednie linki i przykłady."
+      confirmation_illegal: "Informacje zawarte powyżej są dokładne i kompletne."
       custom_message:
         at_least:
           one: "wprowadź co najmniej %{count} znak"
@@ -4271,6 +4279,7 @@ pl_PL:
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
+        filter_sidebar: "%{shortcut} Filtruj pasek boczny"
         help: "%{shortcut} Pokaż skróty klawiszowe"
         dismiss_new: "%{shortcut} Odrzuć nowe"
         dismiss_topics: "%{shortcut} wyczyść listę tematów"
@@ -4719,6 +4728,11 @@ pl_PL:
       panels:
         forum:
           label: Forum
+      filter: "Filtr"
+      clear_filter: "Wyczyść filtr"
+      no_results:
+        title: "Brak wyników"
+        description: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5073,11 +5087,13 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi, status, archetyp, featured_link itp.
               delete: Usuń temat.
+              recover: Odzyskaj temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
+              recover: Odzyskaj post.
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             tags:
               list: Lista tagów.
@@ -5490,6 +5506,7 @@ pl_PL:
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
+          installing_message: "Instalacja motywu może potrwać kilka minut..."
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           create_placeholder: "Utwórz symbol zastępczy"
@@ -6309,6 +6326,7 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
+          posts_read_days: "Przeczytane posty: unikalne dni"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"

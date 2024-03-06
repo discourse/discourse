@@ -9,8 +9,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import optionalService from "discourse/lib/optional-service";
@@ -19,8 +20,6 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
@@ -467,7 +466,8 @@ export default class ChatMessage extends Component {
 
   get threadingEnabled() {
     return (
-      this.args.message?.channel?.threadingEnabled &&
+      (this.args.message?.channel?.threadingEnabled ||
+        this.args.message?.thread?.force) &&
       !!this.args.message?.thread
     );
   }

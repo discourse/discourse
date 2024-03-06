@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { not } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import LinkLookup from "discourse/lib/link-lookup";

@@ -3722,6 +3722,7 @@ zh_CN:
         user_profile_menu: "%{shortcut} 打开用户菜单"
         show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
         search: "%{shortcut} 搜索"
+        filter_sidebar: "%{shortcut} 侧边栏过滤器"
         help: "%{shortcut} 打开键盘帮助"
         dismiss_new: "%{shortcut} 忽略新话题"
         dismiss_topics: "%{shortcut} 忽略话题"
@@ -4119,6 +4120,11 @@ zh_CN:
       panels:
         forum:
           label: 论坛
+      filter: "筛选"
+      clear_filter: "清除过滤器"
+      no_results:
+        title: "没有结果"
+        description: "我们找不到任何匹配 ’%{filter}’ 的内容"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4449,11 +4455,13 @@ zh_CN:
               write: 创建一个新话题或发布到现有话题。
               update: 更新话题。更改标题、类别、标签、状态、模式、精选链接等。
               delete: 删除话题。
+              recover: 恢复一个话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               status: "更新话题的状态。状态：已关闭、归档、可见已置顶。启用：true、false。在此处和请求负载中指定 category_id，以仅允许该类别中话题的状态更改。"
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
+              recover: 恢复一个帖子。
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             tags:
               list: 列出标签。

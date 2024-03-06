@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";

@@ -1,7 +1,7 @@
 import EmberObject, { computed } from "@ember/object";
 import Evented from "@ember/object/evented";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";

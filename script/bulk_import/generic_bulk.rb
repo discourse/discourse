@@ -72,6 +72,7 @@ class BulkImport::Generic < BulkImport::Base
     import_category_custom_fields
     import_category_tag_groups
     import_category_permissions
+    import_category_users
 
     import_topics
     import_posts
@@ -315,6 +316,33 @@ class BulkImport::Generic < BulkImport::Base
     permissions.close
   end
 
+  def import_category_users
+    puts "", "Importing category users..."
+
+    category_users = query(<<~SQL)
+      SELECT *
+        FROM category_users
+       ORDER BY category_id, user_id
+    SQL
+
+    existing_category_user_ids = CategoryUser.pluck(:category_id, :user_id).to_set
+
+    create_category_users(category_users) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if existing_category_user_ids.include?([category_id, user_id])
+
+      {
+        category_id: category_id,
+        user_id: user_id,
+        notification_level: row["notification_level"],
+        last_seen_at: to_datetime(row["last_seen_at"]),
+      }
+    end
+
+    category_users.close
+  end
+
   def import_groups
     puts "", "Importing groups..."
 
@@ -465,9 +493,12 @@ class BulkImport::Generic < BulkImport::Base
 
     users = query(<<~SQL)
       SELECT id, timezone, email_level, email_messages_level, email_digests
-      FROM users
-      WHERE timezone IS NOT NULL
-      ORDER BY id
+        FROM users
+       WHERE timezone IS NOT NULL
+          OR email_level IS NOT NULL
+          OR email_messages_level IS NOT NULL
+          OR email_digests IS NOT NULL
+       ORDER BY id
     SQL
 
     existing_user_ids = UserOption.pluck(:user_id).to_set
@@ -502,6 +533,8 @@ class BulkImport::Generic < BulkImport::Base
     user_fields.each do |row|
       next if existing_user_field_names.include?(row["name"])
 
+      # TODO: Use `id` and store it in mapping table, but for now just ignore it.
+      row.delete("id")
       options = row.delete("options")
       field = UserField.create!(row)
 
@@ -647,12 +680,10 @@ class BulkImport::Generic < BulkImport::Base
     posts = query(<<~SQL)
       SELECT *
       FROM posts
-      ORDER BY topic_id, id
+      ORDER BY topic_id, post_number, id
     SQL
 
     group_names = Group.pluck(:id, :name).to_h
-    # TODO: Investigate feasibility of loading all users on large sites
-    user_names = User.pluck(:id, :username).to_h
 
     create_posts(posts) do |row|
       next if row["raw"].blank?
@@ -667,7 +698,7 @@ class BulkImport::Generic < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: post_raw(row, group_names, user_names),
+        raw: post_raw(row, group_names),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -677,7 +708,7 @@ class BulkImport::Generic < BulkImport::Base
     posts.close
   end
 
-  def post_raw(row, group_names, user_names)
+  def post_raw(row, group_names)
     raw = row["raw"]
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
@@ -706,13 +737,23 @@ class BulkImport::Generic < BulkImport::Base
       mentions.each do |mention|
         name =
           if mention["type"] == "user"
-            user_names[user_id_from_imported_id(mention["id"])]
+            if mention["id"]
+              username_from_id(user_id_from_imported_id(mention["id"]))
+            elsif mention["name"]
+              user_id = user_id_from_original_username(mention["name"])
+              user_id ? username_from_id(user_id) : mention["name"]
+            end
           elsif mention["type"] == "group"
-            group_names[group_id_from_imported_id(mention["id"])]
+            if mention["id"]
+              group_id = group_id_from_imported_id(mention["id"])
+              group_id ? group_names[group_id] : mention["name"]
+            else
+              mention["name"]
+            end
           end
 
-        puts "#{mention["type"]} not found -- #{mention["id"]}" unless name
-        raw.gsub!(mention["placeholder"], "@#{name}")
+        puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
+        raw.gsub!(mention["placeholder"], " @#{name} ")
       end
     end
 
@@ -724,6 +765,72 @@ class BulkImport::Generic < BulkImport::Base
       SQL
 
       raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
+    end
+
+    if (quotes = placeholders&.fetch("quotes", nil))
+      quotes.each do |quote|
+        user_id =
+          if quote["user_id"]
+            user_id_from_imported_id(quote["user_id"])
+          elsif quote["username"]
+            user_id_from_original_username(quote["username"])
+          end
+
+        username = quote["username"]
+        name = nil
+
+        if user_id
+          username = username_from_id(user_id)
+          name = user_full_name_from_id(user_id)
+        end
+
+        bbcode =
+          if username.present? && name.present?
+            %Q|[quote="#{name}, username:#{username}"]|
+          elsif username.present?
+            %Q|[quote="#{username}"]|
+          else
+            "[quote]"
+          end
+
+        raw.gsub!(quote["placeholder"], bbcode)
+      end
+    end
+
+    if (links = placeholders&.fetch("links", nil))
+      links.each do |link|
+        text = link["text"]
+        original_url = link["url"]
+
+        markdown =
+          if link["topic_id"]
+            topic_id = topic_id_from_imported_id(link["topic_id"])
+            url = topic_id ? "#{Discourse.base_url}/t/#{topic_id}" : original_url
+            text ? "[#{text}](#{url})" : url
+          elsif link["post_id"]
+            topic_id = topic_id_from_imported_post_id(link["post_id"])
+            post_number = post_number_from_imported_id(link["post_id"])
+            url =
+              (
+                if topic_id && post_number
+                  "#{Discourse.base_url}/t/#{topic_id}/#{post_number}"
+                else
+                  original_url
+                end
+              )
+            text ? "[#{text}](#{url})" : url
+          else
+            text ? "[#{text}](#{original_url})" : original_url
+          end
+
+        # ensure that the placeholder is surrounded by whitespace unless it's at the beginning or end of the string
+        placeholder = link["placeholder"]
+        escaped_placeholder = Regexp.escape(placeholder)
+        raw.gsub!(/(?<!\s)#{escaped_placeholder}/, " #{placeholder}")
+        raw.gsub!(/#{escaped_placeholder}(?!\s)/, "#{placeholder} ")
+
+        raw.gsub!(placeholder, markdown)
+      end
     end
 
     if row["upload_ids"].present? && @uploads_db
@@ -2061,108 +2168,84 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_permalinks
-    puts "", "Importing permalinks for topics..."
+    puts "", "Importing permalinks..."
 
     rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM topics
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("topic_id IS NOT NULL").pluck(:topic_id).to_set
-
-    create_permalinks(rows) do |row|
-      topic_id = topic_id_from_imported_id(row["id"])
-      next if !topic_id || existing_permalinks.include?(topic_id)
-
-      { url: row["old_relative_url"], topic_id: topic_id }
-    end
-
-    rows.close
-
-    puts "", "Importing permalinks for posts..."
-
-    rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM posts
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("post_id IS NOT NULL").pluck(:post_id).to_set
-
-    create_permalinks(rows) do |row|
-      post_id = post_id_from_imported_id(row["id"])
-      next if !post_id || existing_permalinks.include?(post_id)
-
-      { url: row["old_relative_url"], post_id: post_id }
-    end
-
-    rows.close
-
-    puts "", "Importing permalinks for categories..."
-
-    rows = query(<<~SQL)
-      SELECT id, old_relative_url
-        FROM categories
-       WHERE old_relative_url IS NOT NULL
-       ORDER BY id
-    SQL
-
-    existing_permalinks = Permalink.where("category_id IS NOT NULL").pluck(:category_id).to_set
-
-    create_permalinks(rows) do |row|
-      category_id = category_id_from_imported_id(row["id"])
-      next if !category_id || existing_permalinks.include?(category_id)
-
-      { url: row["old_relative_url"], category_id: category_id }
-    end
-
-    rows.close
-
-    if @tag_mapping
-      puts "", "Importing permalinks for tags..."
-
-      rows = query(<<~SQL)
-        SELECT id, old_relative_url
-          FROM tags
-         WHERE old_relative_url IS NOT NULL
-         ORDER BY id
-      SQL
-
-      existing_permalinks = Permalink.where("tag_id IS NOT NULL").pluck(:tag_id).to_set
-
-      create_permalinks(rows) do |row|
-        tag_id = @tag_mapping[row["id"]]
-        next if !tag_id || existing_permalinks.include?(tag_id)
-
-        { url: row["old_relative_url"], tag_id: tag_id }
-      end
-
-      rows.close
-    else
-      puts "  Skipping import of topic tags because tags have not been imported."
-    end
-
-    puts "", "Importing permalinks for external/relative URLs..."
-
-    rows = query(<<~SQL)
-      SELECT url, external_url
+      SELECT *
         FROM permalinks
-       WHERE external_url IS NOT NULL
        ORDER BY url
     SQL
 
-    existing_permalinks = Permalink.where("external_url IS NOT NULL").pluck(:external_url).to_set
+    existing_permalinks = Permalink.pluck(:url).to_set
+
+    if !@tag_mapping
+      puts "Skipping import of permalinks for tags because tags have not been imported."
+    end
 
     create_permalinks(rows) do |row|
-      next if existing_permalinks.include?(row["external_url"])
+      next if existing_permalinks.include?(row["url"])
 
-      { url: row["url"], external_url: row["external_url"] }
+      if row["topic_id"]
+        topic_id = topic_id_from_imported_id(row["topic_id"])
+        next unless topic_id
+        { url: row["url"], topic_id: topic_id }
+      elsif row["post_id"]
+        post_id = post_id_from_imported_id(row["post_id"])
+        next unless post_id
+        { url: row["url"], post_id: post_id }
+      elsif row["category_id"]
+        category_id = category_id_from_imported_id(row["category_id"])
+        next unless category_id
+        { url: row["url"], category_id: category_id }
+      elsif row["tag_id"]
+        next unless @tag_mapping
+        tag_id = @tag_mapping[row["tag_id"]]
+        next unless tag_id
+        { url: row["url"], tag_id: tag_id }
+      elsif row["user_id"]
+        user_id = user_id_from_imported_id(row["user_id"])
+        next unless user_id
+        { url: row["url"], user_id: user_id }
+      elsif row["external_url"]
+        external_url = calculate_external_url(row)
+        next unless external_url
+        { url: row["url"], external_url: external_url }
+      end
     end
 
     rows.close
+  end
+
+  def calculate_external_url(row)
+    external_url = row["external_url"]
+    placeholders = row["external_url_placeholders"]&.then { |json| JSON.parse(json) }
+    return external_url unless placeholders
+
+    placeholders.each do |placeholder|
+      case placeholder["type"]
+      when "category_url"
+        category_id = category_id_from_imported_id(placeholder["id"])
+        category = Category.find(category_id)
+        external_url.gsub!(
+          placeholder["placeholder"],
+          "c/#{category.slug_path.join("/")}/#{category.id}",
+        )
+      when "category_slug_ref"
+        category_id = category_id_from_imported_id(placeholder["id"])
+        category = Category.find(category_id)
+        external_url.gsub!(placeholder["placeholder"], category.slug_ref)
+      when "tag_name"
+        if @tag_mapping
+          tag_id = @tag_mapping[placeholder["id"]]
+          tag = Tag.find(tag_id)
+          external_url.gsub!(placeholder["placeholder"], tag.name)
+        end
+      else
+        raise "Unknown placeholder type: #{placeholder[:type]}"
+      end
+    end
+
+    external_url
   end
 
   def create_connection(path)

@@ -92,7 +92,7 @@
         @settingName="name"
         @nameProperty="label"
         @valueProperty="id"
-        @onChange={{action (mut this.model.associated_group_ids)}}
+        @onChange={{fn (mut this.model.associated_group_ids)}}
         class="group-form-automatic-membership-associated-groups"
       />
     {{/if}}
@@ -119,7 +119,7 @@
       @valueProperty="value"
       @value={{this.groupTrustLevel}}
       @content={{this.trustLevelOptions}}
-      @onChange={{action (mut this.model.grant_trust_level)}}
+      @onChange={{fn (mut this.model.grant_trust_level)}}
       class="groups-form-grant-trust-level"
     />
     <label>

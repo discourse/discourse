@@ -3671,6 +3671,7 @@ hu:
               content: "Áttekintés"
               title: "Megjelölt bejegyzések és egyéb sorban álló elemek"
               pending_count: "%{count} függőben"
+      filter: "Szűrő"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."

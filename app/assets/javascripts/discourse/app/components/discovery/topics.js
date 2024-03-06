@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import DismissNew from "discourse/components/modal/dismiss-new";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
-import Topic from "discourse/models/topic";
 import I18n from "discourse-i18n";
 
 export default class DiscoveryTopics extends Component {
@@ -53,52 +51,6 @@ export default class DiscoveryTopics extends Component {
 
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
-  }
-
-  async callResetNew(
-    dismissPosts = false,
-    dismissTopics = false,
-    untrack = false
-  ) {
-    const isTracked =
-      (this.router.currentRoute.queryParams["f"] ||
-        this.router.currentRoute.queryParams["filter"]) === "tracked";
-
-    let topicIds = this.args.bulkSelectHelper.selected.map((topic) => topic.id);
-    const result = await Topic.resetNew(
-      this.args.category,
-      !this.args.noSubcategories,
-      {
-        tracked: isTracked,
-        tag: this.args.tag,
-        topicIds,
-        dismissPosts,
-        dismissTopics,
-        untrack,
-      }
-    );
-
-    if (result.topic_ids) {
-      this.topicTrackingState.removeTopics(result.topic_ids);
-    }
-    this.router.refresh();
-  }
-
-  @action
-  resetNew() {
-    if (!this.currentUser.new_new_view_enabled) {
-      return this.callResetNew();
-    }
-
-    this.modal.show(DismissNew, {
-      model: {
-        selectedTopics: this.args.bulkSelectHelper.selected,
-        subset: this.args.model.listParams?.subset,
-        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
-          this.callResetNew(dismissPosts, dismissTopics, untrack);
-        },
-      },
-    });
   }
 
   // Show newly inserted topics
@@ -226,15 +178,5 @@ export default class DiscoveryTopics extends Component {
 
   get expandAllPinned() {
     return this.args.tag || this.args.category;
-  }
-
-  @action
-  dismissRead(dismissTopics) {
-    const operationType = dismissTopics ? "topics" : "posts";
-    this.args.bulkSelectHelper.dismissRead(operationType, {
-      categoryId: this.args.category?.id,
-      tagName: this.args.tag?.id,
-      includeSubcategories: this.args.noSubcategories,
-    });
   }
 }

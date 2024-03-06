@@ -197,7 +197,7 @@
                   {{#if this.composer.canEditTags}}
                     <MiniTagChooser
                       @value={{this.composer.model.tags}}
-                      @onChange={{action (mut this.composer.model.tags)}}
+                      @onChange={{fn (mut this.composer.model.tags)}}
                       @options={{hash
                         disabled=this.composer.disableTagsChooser
                         categoryId=this.composer.model.categoryId

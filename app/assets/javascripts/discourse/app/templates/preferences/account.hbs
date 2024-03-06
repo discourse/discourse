@@ -212,7 +212,7 @@
       <ComboBox
         @value={{this.newTitleInput}}
         @content={{this.model.availableTitles}}
-        @onChange={{action (mut this.newTitleInput)}}
+        @onChange={{fn (mut this.newTitleInput)}}
         @options={{hash none="user.title.none"}}
       />
     </div>
@@ -229,7 +229,7 @@
       <FlairChooser
         @value={{this.newFlairGroupId}}
         @content={{this.model.availableFlairs}}
-        @onChange={{action (mut this.newFlairGroupId)}}
+        @onChange={{fn (mut this.newFlairGroupId)}}
         @options={{hash none="user.flair.none"}}
       />
     </div>

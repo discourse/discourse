@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import I18n from "discourse-i18n";
 
