@@ -2,7 +2,6 @@ import EmberObject, { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import { makeArray } from "discourse-common/lib/helpers";
 import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -78,13 +77,11 @@ export default MultiSelectComponent.extend({
       if (descendants.length > 1) {
         categories.push(
           EmberObject.create({
-            label: htmlSafe(
-              categoryBadgeHTML(descendants[0], {
-                link: false,
-                recursive: true,
-                subcategoryCount: descendants.length - 1,
-              })
-            ),
+            label: categoryBadgeHTML(descendants[0], {
+              link: false,
+              recursive: true,
+              subcategoryCount: descendants.length - 1,
+            }),
             categories: [...descendants],
           })
         );
