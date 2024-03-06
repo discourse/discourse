@@ -111,7 +111,7 @@ export function unsubscribe(user, callback) {
   }
 
   keyValueStore.setItem(userSubscriptionKey(user), "");
-  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+  return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     serviceWorkerRegistration.pushManager
       .getSubscription()
       .then((subscription) => {
