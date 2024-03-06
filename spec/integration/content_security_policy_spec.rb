@@ -9,9 +9,15 @@ RSpec.describe "content security policy integration" do
     SiteSetting.content_security_policy = true
     get "/"
     expect(response.headers["Content-Security-Policy"]).to be_present
+
+    expect(response.headers["Content-Security-Policy"]).to match(
+      /script-src 'nonce-[^']+' 'strict-dynamic';/,
+    )
   end
 
-  context "with different hostnames" do
+  context "with different hostnames - legacy" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
+
     before do
       SiteSetting.content_security_policy = true
       RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(
