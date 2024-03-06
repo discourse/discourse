@@ -77,7 +77,7 @@ export default class HomeLogo extends Component {
 
   <template>
     <div class={{concatClass (if @minimized "title--minimized") "title"}}>
-      <a href={{this.href}} data-auto-route="true" {{on "click" this.click}}>
+      <a href={{this.href}} {{on "click" this.click}}>
         {{#if @minimized}}
           {{#if this.logoSmallUrl}}
             <Logo
