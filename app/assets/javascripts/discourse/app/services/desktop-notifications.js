@@ -119,9 +119,10 @@ export default class DesktopNotificationsService extends Service {
   disable() {
     if (this.isEnabledDesktop) {
       this.setNotificationsDisabled("disabled");
+      return true;
     }
     if (this.isEnabledPush) {
-      unsubscribePushNotification(this.currentUser, () => {
+      return unsubscribePushNotification(this.currentUser, () => {
         this.setIsEnabledPush("");
       });
     }
@@ -130,13 +131,14 @@ export default class DesktopNotificationsService extends Service {
   @action
   enable() {
     if (this.isPushNotificationsPreferred) {
-      subscribePushNotification(() => {
+      return subscribePushNotification(() => {
         this.setIsEnabledPush("subscribed");
       }, this.siteSettings.vapid_public_key_bytes);
     } else {
       this.setNotificationsDisabled("");
-      Notification.requestPermission(() => {
+      return Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);
+        return permission === "granted";
       });
     }
   }
