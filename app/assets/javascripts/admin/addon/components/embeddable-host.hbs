@@ -22,7 +22,7 @@
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <CategoryChooser
       @value={{this.categoryId}}
-      @onChange={{action (mut this.categoryId)}}
+      @onChange={{fn (mut this.categoryId)}}
       class="small"
     />
   </td>

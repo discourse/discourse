@@ -46,7 +46,7 @@
         @customShortcuts={{this.timeShortcuts}}
         @clearable={{true}}
         @input={{@model.topic.slow_mode_enabled_until}}
-        @onChangeInput={{action (mut @model.topic.slow_mode_enabled_until)}}
+        @onChangeInput={{fn (mut @model.topic.slow_mode_enabled_until)}}
       />
     </div>
   </:body>
