@@ -92,10 +92,6 @@ export default class EditTopicTimerForm extends Component {
     return this.args.topicTimer.status_type;
   }
 
-  get durationType() {
-    return this.autoDeleteReplies ? "days" : "hours";
-  }
-
   get excludeCategoryId() {
     if (this.args.topic.visible) {
       return this.args.topic.category_id;
@@ -157,7 +153,11 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get durationLabel() {
-    return I18n.t(`topic.topic_status_update.num_of_${this.durationType}`);
+    return I18n.t(
+      `topic.topic_status_update.num_of_${
+        this.autoDeleteReplies ? "days" : "hours"
+      }`
+    );
   }
 
   get showTopicTimerInfo() {
