@@ -28,7 +28,7 @@ RSpec.describe FoundUserSerializer do
   end
 
   describe "#status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
 
     before { user.user_status = user_status }
 

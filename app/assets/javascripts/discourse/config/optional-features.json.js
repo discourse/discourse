@@ -3,4 +3,5 @@ module.exports = {
   "default-async-observers": true,
   "jquery-integration": false,
   "template-only-glimmer-components": true,
+  "no-implicit-route-model": true,
 };

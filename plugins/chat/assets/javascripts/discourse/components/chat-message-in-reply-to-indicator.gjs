@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import dIcon from "discourse-common/helpers/d-icon";
 import htmlSafe from "discourse-common/helpers/html-safe";

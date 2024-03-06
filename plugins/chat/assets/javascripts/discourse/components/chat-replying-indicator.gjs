@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";

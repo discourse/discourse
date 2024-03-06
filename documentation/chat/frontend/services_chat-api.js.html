@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Discourse: services/chat-api.js</title>
-    
+
       <link type="text/css" rel="stylesheet" href="styles/vendor/prism-custom.css">
-    
+
     <link type="text/css" rel="stylesheet" href="styles/styles.css">
-    
+
 </head>
 <body>
 
 <header class="layout-header">
-  
+
   <h1>
     <a href="./index.html">
       Discourse
@@ -28,15 +28,15 @@
   <div class="container">
     <p class="page-kind">source</p>
     <h1 class="page-title">services/chat-api.js</h1>
-    
 
 
 
-    
+
+
 
 <section>
     <article>
-        <pre id="source" class="source-page line-numbers"><code class="language-js">import Service, { inject as service } from "@ember/service";
+        <pre id="source" class="source-page line-numbers"><code class="language-js">import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import Collection from "../lib/collection";

@@ -980,14 +980,16 @@ aside.onebox.mixcloud-preview {
   }
 }
 
-iframe.vimeo-onebox {
+iframe.vimeo-onebox,
+iframe.loom-onebox {
   width: 100%;
   height: auto;
   aspect-ratio: 16/9;
 }
 
 @supports not (aspect-ratio: auto) {
-  iframe.vimeo-onebox {
+  iframe.vimeo-onebox,
+  iframe.loom-onebox {
     width: 690px;
     height: 388px;
   }

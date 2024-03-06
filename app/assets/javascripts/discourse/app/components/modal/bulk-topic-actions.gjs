@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
@@ -16,9 +17,12 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 export default class BulkTopicActions extends Component {
   @service router;
+  @service toasts;
   @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
+  @tracked loading;
+  @tracked errors;
 
   notificationLevelId = null;
 
@@ -31,18 +35,16 @@ export default class BulkTopicActions extends Component {
   }
 
   async perform(operation) {
-    this.loading = true;
-
     if (this.args.model.bulkSelectHelper.selected.length > 20) {
       this.showProgress = true;
     }
 
     try {
-      return this._processChunks(operation);
+      return await this._processChunks(operation);
     } catch {
-      this.dialog.alert(i18n("generic_error"));
+      this.errors = true;
+      this.showToast();
     } finally {
-      this.loading = false;
       this.processedTopicCount = 0;
       this.showProgress = false;
     }
@@ -108,6 +110,7 @@ export default class BulkTopicActions extends Component {
 
   @action
   performAction() {
+    this.loading = true;
     switch (this.args.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -163,6 +166,21 @@ export default class BulkTopicActions extends Component {
     }
   }
 
+  showToast() {
+    this.loading = false;
+    if (this.errors) {
+      this.toasts.error({
+        duration: 3000,
+        data: { message: i18n("generic_error") },
+      });
+    } else {
+      this.toasts.success({
+        duration: 3000,
+        data: { message: i18n("topics.bulk.completed") },
+      });
+    }
+  }
+
   @action
   async forEachPerformed(operation, cb) {
     const topics = await this.perform(operation);
@@ -172,6 +190,7 @@ export default class BulkTopicActions extends Component {
       this.args.model.refreshClosure?.();
       this.args.closeModal();
       this.args.model.bulkSelectHelper.toggleBulkSelect();
+      this.showToast();
     }
   }
 
@@ -182,6 +201,7 @@ export default class BulkTopicActions extends Component {
     this.args.model.refreshClosure?.();
     this.args.closeModal();
     this.args.model.bulkSelectHelper.toggleBulkSelect();
+    this.showToast();
   }
 
   @computed("action")
@@ -222,45 +242,55 @@ export default class BulkTopicActions extends Component {
       class="topic-bulk-actions-modal -large"
     >
       <:body>
-        <div>
-          {{htmlSafe
-            (i18n
-              "topics.bulk.selected"
-              count=@model.bulkSelectHelper.selected.length
-            )
-          }}
-        </div>
-
-        {{#if this.isCategoryAction}}
-          <p>
-            <CategoryChooser
-              @value={{this.categoryId}}
-              @onChange={{this.onCategoryChange}}
-            />
-          </p>
-        {{/if}}
-
-        {{#if this.isNotificationAction}}
-          <div class="bulk-notification-list">
-            {{#each this.notificationLevels as |level|}}
-              <div class="controls">
-                <label class="radio notification-level-radio checkbox-label">
-                  <RadioButton
-                    @value={{level.id}}
-                    @name="notification_level"
-                    @selection={{this.notificationLevelId}}
-                  />
-                  <strong>{{level.name}}</strong>
-                  <div class="description">{{htmlSafe level.description}}</div>
-                </label>
-              </div>
-            {{/each}}
+        <ConditionalLoadingSection
+          @isLoading={{this.loading}}
+          @title={{i18n "topics.bulk.performing"}}
+        >
+          <div>
+            {{htmlSafe
+              (i18n
+                "topics.bulk.selected"
+                count=@model.bulkSelectHelper.selected.length
+              )
+            }}
           </div>
-        {{/if}}
 
-        {{#if this.isTagAction}}
-          <p><TagChooser @tags={{this.tags}} @categoryId={{@categoryId}} /></p>
-        {{/if}}
+          {{#if this.isCategoryAction}}
+            <p>
+              <CategoryChooser
+                @value={{this.categoryId}}
+                @onChange={{this.onCategoryChange}}
+              />
+            </p>
+          {{/if}}
+
+          {{#if this.isNotificationAction}}
+            <div class="bulk-notification-list">
+              {{#each this.notificationLevels as |level|}}
+                <div class="controls">
+                  <label class="radio notification-level-radio checkbox-label">
+                    <RadioButton
+                      @value={{level.id}}
+                      @name="notification_level"
+                      @selection={{this.notificationLevelId}}
+                    />
+                    <strong>{{level.name}}</strong>
+                    <div class="description">{{htmlSafe
+                        level.description
+                      }}</div>
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{#if this.isTagAction}}
+            <p><TagChooser
+                @tags={{this.tags}}
+                @categoryId={{@categoryId}}
+              /></p>
+          {{/if}}
+        </ConditionalLoadingSection>
       </:body>
 
       <:footer>
@@ -277,8 +307,16 @@ export default class BulkTopicActions extends Component {
               />{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
+
+        <DButton
+          @action={{@closeModal}}
+          @label="cancel"
+          class="btn-transparent d-modal-cancel"
+          id="bulk-topics-cancel"
+        />
         <DButton
           @action={{this.performAction}}
+          @disabled={{this.loading}}
           @icon="check"
           @label="topics.bulk.confirm"
           id="bulk-topics-confirm"

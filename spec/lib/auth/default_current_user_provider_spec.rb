@@ -601,11 +601,9 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "user api" do
-    fab! :user do
-      Fabricate(:user)
-    end
+    fab!(:user)
 
-    let :api_key do
+    let(:api_key) do
       UserApiKey.create!(
         application_name: "my app",
         client_id: "1234",

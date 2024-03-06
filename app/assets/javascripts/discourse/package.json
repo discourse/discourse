@@ -75,7 +75,7 @@
     "ember-auto-import": "^2.7.2",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
-    "ember-cli": "~5.6.0",
+    "ember-cli": "~5.7.0",
     "ember-cli-app-version": "^6.0.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-deprecation-workflow": "^2.2.0",
@@ -94,7 +94,7 @@
     "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
     "float-kit": "1.0.0",
-    "html-entities": "^2.4.0",
+    "html-entities": "^2.5.2",
     "imports-loader": "^5.0.0",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
@@ -120,7 +120,7 @@
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
     "workbox-sw": "^7.0.0",
-    "xss": "^1.0.14"
+    "xss": "^1.0.15"
   },
   "engines": {
     "node": ">= 18",

@@ -162,7 +162,7 @@
         <GroupChooser
           @content={{this.siteGroups}}
           @value={{this.pollGroups}}
-          @onChange={{action (mut this.pollGroups)}}
+          @onChange={{fn (mut this.pollGroups)}}
           @labelProperty="name"
           @valueProperty="name"
         />
@@ -174,7 +174,7 @@
           }}</label>
         <DateTimeInput
           @date={{this.pollAutoClose}}
-          @onChange={{action (mut this.pollAutoClose)}}
+          @onChange={{fn (mut this.pollAutoClose)}}
           @clearable={{true}}
           @useGlobalPickerContainer={{true}}
         />
@@ -188,7 +188,7 @@
           @content={{this.pollResults}}
           @value={{this.pollResult}}
           @valueProperty="value"
-          @onChange={{action (mut this.pollResult)}}
+          @onChange={{fn (mut this.pollResult)}}
           class="poll-result"
         />
       </div>

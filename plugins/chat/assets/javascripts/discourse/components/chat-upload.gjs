@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { eq } from "truth-helpers";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
-import eq from "truth-helpers/helpers/eq";
 
 export default class ChatUpload extends Component {
   @service siteSettings;

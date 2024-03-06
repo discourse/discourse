@@ -3368,6 +3368,7 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
+      filter: "Filtrer"
     until: "Inntil:"
     form_templates:
       upload_field:

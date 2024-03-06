@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";

@@ -7,6 +7,8 @@ RSpec.describe "Channel - Info - Members page", type: :system do
   fab!(:channel_1) { Fabricate(:category_channel) }
 
   before do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
     chat_system_bootstrap
     sign_in(current_user)
   end

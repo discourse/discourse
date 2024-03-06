@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";

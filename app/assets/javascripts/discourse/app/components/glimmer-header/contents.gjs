@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { inject as service } from "@ember/service";
-import and from "truth-helpers/helpers/and";
+import { service } from "@ember/service";
+import { and } from "truth-helpers";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
-import MountWidget from "../mount-widget";
 import PluginOutlet from "../plugin-outlet";
+import HomeLogo from "./home-logo";
 import SidebarToggle from "./sidebar-toggle";
 import TopicInfo from "./topic/info";
 
@@ -28,10 +28,7 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <MountWidget
-            @widget="home-logo"
-            @args={{hash minimized=this.topicPresent}}
-          />
+          <HomeLogo @minimized={{this.topicPresent}} />
         </PluginOutlet>
       </div>
 

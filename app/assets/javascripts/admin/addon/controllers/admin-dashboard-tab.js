@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardTabController extends Controller {

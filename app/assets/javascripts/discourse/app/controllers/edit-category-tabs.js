@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { and, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";

@@ -115,7 +115,8 @@ module Chat
       context.target_message_id = messages_data[:target_message_id]
 
       messages_data[:target_message] = (
-        if enabled_threads && messages_data[:target_message]&.thread_reply?
+        if messages_data[:target_message]&.thread_reply? &&
+             (enabled_threads || messages_data[:target_message].thread&.force)
           []
         else
           [messages_data[:target_message]]
@@ -130,10 +131,10 @@ module Chat
       ].flatten.compact
     end
 
-    def fetch_tracking(guardian:, enabled_threads:, **)
+    def fetch_tracking(guardian:, **)
       context.tracking = {}
 
-      return if !enabled_threads || !context.thread_ids.present?
+      return if !context.thread_ids.present?
 
       context.tracking =
         ::Chat::TrackingStateReportQuery.call(

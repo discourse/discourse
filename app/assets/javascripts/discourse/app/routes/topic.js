@@ -1,6 +1,6 @@
 import { action, get } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import AddPmParticipants from "discourse/components/modal/add-pm-participants";
 import ChangeOwnerModal from "discourse/components/modal/change-owner";

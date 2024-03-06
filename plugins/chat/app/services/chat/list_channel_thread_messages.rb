@@ -61,7 +61,7 @@ module Chat
     end
 
     def ensure_thread_enabled(thread:, **)
-      thread.channel.threading_enabled
+      thread.channel.threading_enabled || thread.force
     end
 
     def can_view_thread(guardian:, thread:, **)

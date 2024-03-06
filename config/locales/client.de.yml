@@ -200,7 +200,7 @@ de:
     broken_page_change_alert: "Ein onPageChange-Handler hat einen Fehler ausgelöst. Überprüfe die Entwicklerwerkzeuge des Browsers für weitere Informationen."
     broken_plugin_alert: "Verursacht durch das Plug-in „%{name}“"
     critical_deprecation:
-      notice: "<b>[Hinweis für Administratoren]</b> Eines Ihrer Themes oder Plugins muss aktualisiert werden, um die Kompatibilität mit den bevorstehenden Discourse-Kernänderungen zu gewährleisten."
+      notice: "<b>[Hinweis für Administratoren]</b> Eines deiner Themes oder Plugins muss aktualisiert werden, um die Kompatibilität mit den bevorstehenden Discourse-Kernänderungen zu gewährleisten."
       id: "(id:<em>%{id}</em>)"
       linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Identifiziertes Theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
@@ -2776,8 +2776,8 @@ de:
         name: "Kategorie aktualisieren"
         description: "Wähle die neue Kategorie für die ausgewählten Themen"
       reset_bump_dates:
-        name: "Bump-Termine zurücksetzen"
-        description: "Setzt das Datum des Themenanstoßes auf das Datum des zuletzt erstellten Beitrags zurück, was die Reihenfolge in der Themenliste beeinflusst"
+        name: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
+        description: "Setzt das \"nach oben verschieben\"- Datum auf das vom zuletzt erstellten Beitrag zurück, was die Reihenfolge in der Themenliste beeinflusst"
       defer:
         name: "Themen aufschieben"
         description: "Themen als ungelesen markieren"
@@ -3910,6 +3910,7 @@ de:
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
+        filter_sidebar: "%{shortcut} Seitenleiste filtern"
         help: "%{shortcut} Tastenkombinationen anzeigen"
         dismiss_new: "%{shortcut} Neue Themen ignorieren"
         dismiss_topics: "%{shortcut} Themen ignorieren"
@@ -4324,6 +4325,11 @@ de:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Filter löschen"
+      no_results:
+        title: "Keine Ergebnisse"
+        description: "Wir konnten nichts finden, das zu '%{filter}' passt"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4662,11 +4668,13 @@ de:
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
               update: Ein Thema aktualisieren. Den Titel, die Kategorie, die Schlagwörter, den Status, den Archetyp, featured_link usw. ändern.
               delete: Ein Thema löschen.
+              recover: Ein Thema wiederherstellen.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               status: "Den Status eines Themas aktualisieren. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: wahr, falsch. Hier und im Anfrage-Payload eine category_id angeben, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
               delete: Einen Beitrag löschen.
+              recover: Einen Beitrag wiederherstellen.
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
             tags:
               list: Schlagwörter auflisten.

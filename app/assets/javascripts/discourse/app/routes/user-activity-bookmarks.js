@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";

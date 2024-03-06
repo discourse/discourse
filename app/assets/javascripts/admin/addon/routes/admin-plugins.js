@@ -1,5 +1,5 @@
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import AdminPlugin from "admin/models/admin-plugin";
 
 export default class AdminPluginsRoute extends Route {

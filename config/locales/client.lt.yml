@@ -3563,6 +3563,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+      filter: "Filtruoti"
     until: "Iki:"
     form_templates:
       upload_field:
