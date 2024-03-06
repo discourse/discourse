@@ -1,9 +1,46 @@
 // base styles for every modal popup used in Discourse
 
+@keyframes slideUp {
+  from {
+    transform: translateY(85%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
 .d-modal {
+  align-items: flex-start;
   &__container {
+    margin-top: calc(var(--composer-vh, var(--1dvh)) * 15);
     width: 100%;
     max-width: 100%;
+    animation: slideUp 0.25s ease-out forwards;
+    min-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  &__header {
+    padding: 0.5rem;
+  }
+
+  &__body {
+    flex: 1;
+  }
+
+  &.-closing {
+    .d-modal__container {
+      animation: slideDown 0.25s ease-out forwards;
+    }
   }
 
   // fixes modal placement on Android when keyboard is visible

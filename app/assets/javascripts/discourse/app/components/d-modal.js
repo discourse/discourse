@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
+import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
@@ -13,7 +14,10 @@ const FLASH_TYPES = ["success", "error", "warning", "info"];
 
 export default class DModal extends Component {
   @service modal;
+  @service site;
+
   @tracked wrapperElement;
+  @tracked closing = false;
 
   @action
   setupListeners(element) {
@@ -68,9 +72,24 @@ export default class DModal extends Component {
       return;
     }
 
-    return this.args.closeModal?.({
+    return this.closeModal({
       initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
     });
+  }
+
+  @action
+  closeModal(initiatedBy) {
+    console.log("CLOSE MODAL");
+    if (!this.args.closeModal) {
+      return;
+    }
+
+    this.closing = true;
+
+    later(() => {
+      this.args.closeModal({ initiatedBy });
+      this.closing = false;
+    }, 250);
   }
 
   @action
@@ -81,7 +100,7 @@ export default class DModal extends Component {
 
     if (event.key === "Escape" && this.dismissable) {
       event.stopPropagation();
-      this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
+      this.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
@@ -94,7 +113,7 @@ export default class DModal extends Component {
 
   @action
   handleCloseButton() {
-    this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
+    this.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
   }
 
   @action
