@@ -602,7 +602,6 @@ DEPENDENCIES
   mini_sql
   mini_suffix
   minio_runner
-  minitest
   mocha
   multi_json
   mustache
