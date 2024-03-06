@@ -41,6 +41,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
+    "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:js": "eslint ./app/assets/javascripts --cache",
