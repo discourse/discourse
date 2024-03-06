@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -14,7 +15,6 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
-import { Input } from "@ember/component";
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -72,7 +72,7 @@ export default class BulkTopicActions extends Component {
     const options = {};
 
     if (this.isSilent) {
-      operation = { type: "silent_close" }
+      operation = { type: "silent_close" };
     }
 
     const tasks = topicChunks.map((topics) => async () => {
