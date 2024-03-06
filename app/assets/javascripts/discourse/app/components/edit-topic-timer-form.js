@@ -26,16 +26,6 @@ export default class EditTopicTimerForm extends Component {
 
   @tracked timerType;
 
-  duration = (() => {
-    if (!this.useDuration || !this.args.topicTimer.duration_minutes) {
-      return null;
-    } else if (this.durationType === "days") {
-      return this.args.topicTimer.duration_minutes / 60 / 24;
-    } else {
-      return this.args.topicTimer.duration_minutes / 60;
-    }
-  })();
-
   constructor() {
     super(...arguments);
 
