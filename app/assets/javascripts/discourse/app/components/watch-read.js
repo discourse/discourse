@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { userPath } from "discourse/lib/url";

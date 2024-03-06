@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import borderColor from "discourse/helpers/border-color";
 import concatClass from "discourse/helpers/concat-class";

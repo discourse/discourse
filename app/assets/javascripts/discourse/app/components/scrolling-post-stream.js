@@ -1,5 +1,5 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";

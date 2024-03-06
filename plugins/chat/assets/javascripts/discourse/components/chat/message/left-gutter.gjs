@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import dIcon from "discourse-common/helpers/d-icon";

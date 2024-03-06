@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";

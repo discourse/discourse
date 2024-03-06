@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
 import { cancel, later, schedule } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { bind } from "discourse-common/utils/decorators";
 

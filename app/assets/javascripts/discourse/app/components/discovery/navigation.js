@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";

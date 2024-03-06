@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import ChannelsListDirect from "discourse/plugins/chat/discourse/components/channels-list-direct";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";

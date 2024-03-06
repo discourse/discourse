@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";

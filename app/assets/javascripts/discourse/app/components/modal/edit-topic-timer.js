@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";

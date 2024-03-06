@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import discourseComputed from "discourse-common/utils/decorators";

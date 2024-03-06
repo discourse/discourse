@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";

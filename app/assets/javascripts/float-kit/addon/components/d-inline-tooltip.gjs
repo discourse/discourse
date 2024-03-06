@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import DInlineFloat from "float-kit/components/d-inline-float";
 import { TOOLTIP } from "float-kit/lib/constants";

@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { until } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
