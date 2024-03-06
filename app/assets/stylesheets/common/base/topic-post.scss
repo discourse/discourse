@@ -751,6 +751,9 @@ aside.quote {
   }
 
   .topic-links {
+    tbody {
+      border: none;
+    }
     tr {
       border: none;
     }
