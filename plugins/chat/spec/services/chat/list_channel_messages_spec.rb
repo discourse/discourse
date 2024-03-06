@@ -164,7 +164,7 @@ RSpec.describe Chat::ListChannelMessages do
         thread_1.add(user)
       end
 
-      it "returns empty tracking" do
+      it "returns tracking" do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
 
         expect(result.tracking.thread_tracking).to eq(

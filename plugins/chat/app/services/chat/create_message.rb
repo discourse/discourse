@@ -146,7 +146,7 @@ module Chat
       )
     end
 
-    def save_message(message_instance:, thread:, **)
+    def save_message(message_instance:, **)
       message_instance.save!
     end
 
