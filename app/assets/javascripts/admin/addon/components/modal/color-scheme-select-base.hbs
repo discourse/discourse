@@ -7,7 +7,7 @@
     <ComboBox
       @content={{@model.baseColorSchemes}}
       @value={{this.selectedBaseThemeId}}
-      @onChange={{action (mut this.selectedBaseThemeId)}}
+      @onChange={{fn (mut this.selectedBaseThemeId)}}
       @valueProperty="base_scheme_id"
     />
   </:body>

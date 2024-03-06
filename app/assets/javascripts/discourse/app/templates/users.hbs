@@ -21,7 +21,7 @@
           <div class="period-controls">
             <PeriodChooser
               @period={{this.period}}
-              @onChange={{action (mut this.period)}}
+              @onChange={{fn (mut this.period)}}
               @fullDay={{false}}
             />
             {{#if this.lastUpdatedAt}}

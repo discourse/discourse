@@ -14,7 +14,7 @@
         }}</label>
       <CategoryChooser
         @value={{this.topicTimer.category_id}}
-        @onChange={{action (mut this.topicTimer.category_id)}}
+        @onChange={{fn (mut this.topicTimer.category_id)}}
         @options={{hash excludeCategoryId=this.excludeCategoryId}}
       />
     </div>

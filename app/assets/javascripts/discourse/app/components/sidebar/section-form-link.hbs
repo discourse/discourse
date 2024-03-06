@@ -31,7 +31,7 @@
       }}
       class={{@link.iconCssClass}}
       @onlyAvailable={{true}}
-      @onChange={{action (mut @link.icon)}}
+      @onChange={{fn (mut @link.icon)}}
       ariaLabel={{i18n "sidebar.sections.custom.links.icon.label"}}
     />
     {{#if @link.invalidIconMessage}}

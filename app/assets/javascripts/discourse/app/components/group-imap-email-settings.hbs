@@ -54,7 +54,7 @@
             @valueProperty="value"
             @content={{this.mailboxes}}
             @tabindex="10"
-            @onChange={{action (mut this.group.imap_mailbox_name)}}
+            @onChange={{fn (mut this.group.imap_mailbox_name)}}
             @options={{hash none="groups.manage.email.mailboxes.disabled"}}
           />
         {{/if}}

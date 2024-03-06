@@ -77,7 +77,7 @@
           <EmailGroupUserChooser
             class="participant-selector"
             @value={{this.participants}}
-            @onChange={{action (mut this.participants)}}
+            @onChange={{fn (mut this.participants)}}
           />
 
           {{#if this.selectedTopicId}}
@@ -190,7 +190,7 @@
               <CategoryChooser
                 @value={{this.categoryId}}
                 class="small"
-                @onChange={{action (mut this.categoryId)}}
+                @onChange={{fn (mut this.categoryId)}}
               />
               <PluginOutlet
                 @name="split-new-topic-category-after"
