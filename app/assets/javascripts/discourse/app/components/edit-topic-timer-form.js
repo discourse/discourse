@@ -41,7 +41,11 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get showTimeOnly() {
-    return this.autoOpen || this.autoDelete || this.autoBump;
+    return (
+      this.statusType === OPEN_STATUS_TYPE ||
+      this.statusType === DELETE_STATUS_TYPE ||
+      this.statusType === BUMP_TYPE
+    );
   }
 
   get showFutureDateInput() {
@@ -56,28 +60,12 @@ export default class EditTopicTimerForm extends Component {
     );
   }
 
-  get isCustom() {
-    return this.timerType === "custom";
-  }
-
-  get autoOpen() {
-    return this.statusType === OPEN_STATUS_TYPE;
-  }
-
   get autoClose() {
     return this.statusType === CLOSE_STATUS_TYPE;
   }
 
   get autoCloseAfterLastPost() {
     return this.statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE;
-  }
-
-  get autoDelete() {
-    return this.statusType === DELETE_STATUS_TYPE;
-  }
-
-  get autoBump() {
-    return this.statusType === BUMP_TYPE;
   }
 
   get publishToCategory() {
@@ -172,7 +160,7 @@ export default class EditTopicTimerForm extends Component {
       return false;
     }
 
-    if (this.isCustom && this.args.topicTimer.updateTime) {
+    if (this.timerType === "custom" && this.args.topicTimer.updateTime) {
       if (moment(this.args.topicTimer.updateTime) < moment()) {
         return false;
       }
