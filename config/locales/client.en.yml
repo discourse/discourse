@@ -1131,7 +1131,6 @@ en:
         mute_option_title: "You will not receive any notifications related to this user."
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
-        silence_close: "Silence close notifications"
       notification_schedule:
         title: "Notification Schedule"
         label: "Enable custom notification schedule"
@@ -1146,7 +1145,7 @@ en:
         saturday: "Saturday"
         sunday: "Sunday"
         to: "to"
-      
+
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
@@ -1772,6 +1771,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"

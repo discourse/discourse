@@ -41,11 +41,6 @@
 
 <UserNotificationSchedule @model={{this.model}} />
 
-<PreferenceCheckbox
-    @labelKey="user.user_notifications.silence_close"
-    @checked={{this.model.user_option.silence_close_notifications}}
-  />
-
 <span>
   <PluginOutlet
     @name="user-preferences-notifications"
