@@ -57,6 +57,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
@@ -77,6 +80,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
         render json: failed_json.merge(errors: [result["result.step.create_thread"].error]),
                status: 422
         on_failure { render(json: failed_json, status: 422) }
+      end
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end
