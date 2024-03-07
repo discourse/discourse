@@ -607,7 +607,10 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-areas: "sidebar content";
+  grid-template-areas:
+    "sidebar content"
+    "sidebar below-content";
+  grid-template-rows: 1fr auto;
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
