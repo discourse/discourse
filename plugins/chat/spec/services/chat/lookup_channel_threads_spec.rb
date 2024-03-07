@@ -6,7 +6,7 @@ RSpec.describe ::Chat::LookupChannelThreads::Contract, type: :model do
   it { is_expected.to validate_presence_of(:channel_id) }
   it { is_expected.to allow_values(1, 0, nil, "a").for(:limit) }
   it do
-    is_expected.to_not allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit)
+    is_expected.not_to allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit)
   end
 end
 
