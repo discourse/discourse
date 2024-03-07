@@ -90,7 +90,7 @@ RSpec.describe Jobs::RunProblemCheck do
 
     it "schedules a retry" do
       expect_enqueued_with(
-        job: :problem_check,
+        job: :run_problem_check,
         args: {
           check_identifier: :test_check,
           retry_count: 1,
@@ -119,7 +119,7 @@ RSpec.describe Jobs::RunProblemCheck do
     end
 
     it "does not schedule a retry" do
-      expect_not_enqueued_with(job: :problem_check) do
+      expect_not_enqueued_with(job: :run_problem_check) do
         described_class.new.execute(check_identifier: :test_check, retry_count: 1)
       end
     end
