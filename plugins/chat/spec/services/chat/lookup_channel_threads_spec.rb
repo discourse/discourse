@@ -30,9 +30,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
     context "when limit is over max" do
       let(:limit) { described_class::THREADS_LIMIT + 1 }
 
-      it "defaults to a max value" do
-        expect(result.limit).to eq(described_class::THREADS_LIMIT)
-      end
+      it { is_expected.to fail_a_contract }
     end
 
     context "when limit is under min" do
