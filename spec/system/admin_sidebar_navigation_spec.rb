@@ -73,7 +73,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     filter.filter("ie")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(["Preview Summary", "User Fields"])
+    expect(links.map(&:text)).to eq(["User Fields", "Preview Summary"])
     expect(page).to have_no_css(".sidebar-no-results")
 
     filter.filter("ieeee")
@@ -87,9 +87,9 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(page).to have_css(".sidebar-sections__back-to-forum")
 
     # When match section title, display all links
-    filter.filter("Backups")
+    filter.filter("Email Sett")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(%w[Backups Logs])
+    expect(links.count).to eq(3)
+    expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
   end
 end
