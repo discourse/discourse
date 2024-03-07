@@ -36,11 +36,8 @@ bs_BA:
       long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ bs_BA:
           few: "%{count} god."
           other: "%{count} god."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -100,7 +97,6 @@ bs_BA:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -1938,6 +1934,18 @@ bs_BA:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Skini teme sa liste"
+      relist_topics:
+        name: "Listaj teme"
+      append_tags:
+        name: "Pripoji oznake"
+      replace_tags:
+        name: "Zamijeni oznake"
+      delete_topics:
+        name: "Obriši teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3040,6 +3048,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3594,7 +3603,6 @@ bs_BA:
           css: "Stylesheet"
       email:
         title: "Emailovi"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Pregled Sajta"
         advanced_test:
@@ -4054,7 +4062,6 @@ bs_BA:
             other: "U zadnjih %{count} dana:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -4290,6 +4297,7 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"

@@ -70,13 +70,8 @@
       }
     }
   }
-  .modal-footer {
-    display: flex;
+  .d-modal__footer {
     justify-content: space-between;
-
-    .reset-to-default {
-      margin-right: 0;
-    }
   }
 }
 

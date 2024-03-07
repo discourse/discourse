@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";

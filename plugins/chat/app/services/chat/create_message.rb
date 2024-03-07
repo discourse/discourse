@@ -16,6 +16,8 @@ module Chat
     #   @param in_reply_to_id [Integer] ID of a message to reply to
     #   @param thread_id [Integer] ID of a thread to reply to
     #   @param upload_ids [Array<Integer>] IDs of uploaded documents
+    #   @param context_topic_id [Integer] ID of the currently visible topic in drawer mode
+    #   @param context_post_ids [Array<Integer>] IDs of the currently visible posts in drawer mode
     #   @param staged_id [String] arbitrary string that will be sent back to the client
     #   @param incoming_chat_webhook [Chat::IncomingWebhook]
 
@@ -50,12 +52,17 @@ module Chat
     class Contract
       attribute :chat_channel_id, :string
       attribute :in_reply_to_id, :string
+      attribute :context_topic_id, :integer
+      attribute :context_post_ids, :array
       attribute :message, :string
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
+      attribute :streaming, :boolean, default: false
+      attribute :enforce_membership, :boolean, default: false
       attribute :incoming_chat_webhook
       attribute :process_inline, :boolean, default: Rails.env.test?
+      attribute :force_thread, :boolean, default: false
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -71,18 +78,18 @@ module Chat
       Chat::Channel.find_by_id_or_slug(contract.chat_channel_id)
     end
 
-    def allowed_to_join_channel(guardian:, channel:, **)
-      guardian.can_join_chat_channel?(channel)
-    end
-
-    def enforce_system_membership(guardian:, channel:, **)
-      if guardian.user&.is_system_user?
+    def enforce_system_membership(guardian:, channel:, contract:, **)
+      if guardian.user&.is_system_user? || contract.enforce_membership
         channel.add(guardian.user)
 
         if channel.direct_message_channel?
           channel.chatable.direct_message_users.find_or_create_by!(user: guardian.user)
         end
       end
+    end
+
+    def allowed_to_join_channel(guardian:, channel:, **)
+      guardian.can_join_chat_channel?(channel)
     end
 
     def fetch_channel_membership(guardian:, channel:, **)
@@ -106,6 +113,7 @@ module Chat
           original_message: reply,
           original_message_user: reply.user,
           channel: channel,
+          force: contract.force_thread,
         )
     end
 
@@ -134,6 +142,7 @@ module Chat
         thread: thread,
         cooked: ::Chat::Message.cook(contract.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
+        streaming: contract.streaming,
       )
     end
 
@@ -178,18 +187,27 @@ module Chat
     end
 
     def publish_new_thread(reply:, contract:, channel:, thread:, **)
-      return unless channel.threading_enabled?
+      return unless channel.threading_enabled? || thread&.force
       return unless reply&.thread_id_previously_changed?(from: nil)
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def process(channel:, message_instance:, contract:, **)
+    def process(channel:, message_instance:, contract:, thread:, **)
       ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
+
       DiscourseEvent.trigger(
         :chat_message_created,
         message_instance,
         channel,
         message_instance.user,
+        {
+          thread: thread,
+          thread_replies_count: thread&.replies_count_cache || 0,
+          context: {
+            post_ids: contract.context_post_ids,
+            topic_id: contract.context_topic_id,
+          },
+        },
       )
 
       if contract.process_inline

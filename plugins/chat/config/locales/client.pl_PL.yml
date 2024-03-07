@@ -56,6 +56,7 @@ pl_PL:
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
+      see_in: "Zobacz w"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -121,6 +122,7 @@ pl_PL:
         direct_message_cta: "Rozpocznij czat osobisty"
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
         title: "Nie znaleziono żadnych kanałów"
+        my_threads: "Nie masz jeszcze żadnych wątków. Wątki, w których bierzesz udział, będą wyświetlane tutaj."
       email_frequency:
         description: "Wyślemy Ci wiadomość e-mail tylko wtedy, gdy nie widzieliśmy Cię w ciągu ostatnich 15 minut."
         never: "Nigdy"
@@ -322,7 +324,7 @@ pl_PL:
         back: "Poprzednia"
         title: Kanały
         filter_all: Wszystkie
-        filter_open: Otwarty
+        filter_open: Otwórz
         filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy

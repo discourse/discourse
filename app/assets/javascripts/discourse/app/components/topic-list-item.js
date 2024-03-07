@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -55,6 +55,16 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
     this.renderTopicListItem();
+  },
+
+  // Already-rendered topic is marked as highlighted
+  // Ideally this should be a modifier... but we can't do that
+  // until this component has its tagName removed.
+  @observes("topic.highlight")
+  topicHighlightChanged() {
+    if (this.topic.highlight) {
+      this._highlightIfNeeded();
+    }
   },
 
   @observes("topic.pinned", "expandGloballyPinned", "expandAllPinned")

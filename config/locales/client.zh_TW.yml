@@ -34,11 +34,8 @@ zh_TW:
       long_with_year: "YYYY年M月D日 h:mm a"
       long_with_year_no_time: "YYYY年 M月 D日"
       full_with_year_no_time: "YYYY年 M月 D日"
-      long_date_with_year: "YYYY年 M月 D日 LT"
       long_date_without_year: "M月 D日 LT"
-      long_date_with_year_without_time: "YYYY年 M月 D日"
       long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
-      long_date_with_year_with_linebreak: "YYYY年 M月 D日<br/>LT"
       wrap_ago: "%{date}前"
       wrap_on: "在 %{date}"
       tiny:
@@ -84,7 +81,6 @@ zh_TW:
           other: "超過 %{count} 年"
         almost_x_years:
           other: "大約 %{count} 年"
-        date_year: "YYYY年 M月 D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -155,7 +151,6 @@ zh_TW:
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
-      message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
     themes:
       default_description: "預設"
@@ -1902,6 +1897,18 @@ zh_TW:
     topic_bulk_actions:
       close_topics:
         name: "關閉話題"
+      archive_topics:
+        name: "已封存的話題"
+      unlist_topics:
+        name: "未在列表中的話題"
+      relist_topics:
+        name: "討論話題"
+      append_tags:
+        name: "向後追加標記"
+      replace_tags:
+        name: "取代標記"
+      delete_topics:
+        name: "刪除話題"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -2940,6 +2947,9 @@ zh_TW:
             review:
               content: "審核"
               pending_count: "剩餘 %{count}"
+      filter: "過濾"
+      no_results:
+        title: "沒有結果"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       button_title: "開始編輯"
@@ -3466,7 +3476,6 @@ zh_TW:
           reset: "重設為預設值"
       email:
         title: "電子郵件"
-        settings: "設定"
         templates: "模板"
         preview_digest: "預覽文摘"
         advanced_test:
@@ -3934,7 +3943,6 @@ zh_TW:
             other: "這最近 %{count} 天："
           value_heading: "價值"
           requirement_heading: "要求"
-          visits: "造訪"
           days: "天"
           topics_replied_to: "話題回覆"
           topics_viewed: "已讀話題"
@@ -4173,6 +4181,7 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："

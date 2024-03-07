@@ -329,6 +329,10 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def schema
+    raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
+  end
+
   private
 
   def ban_in_allowlist_mode!

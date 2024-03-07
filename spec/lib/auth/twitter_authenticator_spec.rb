@@ -65,4 +65,37 @@ RSpec.describe Auth::TwitterAuthenticator do
       expect(authenticator.description_for_user(user)).to eq("")
     end
   end
+
+  describe "#healthy?" do
+    let(:authenticator) { described_class.new }
+
+    let(:connection) { mock("Faraday::Connection") }
+    let(:response) { mock("Faraday::Response") }
+
+    before do
+      Faraday.stubs(:new).returns(connection)
+      connection.stubs(:post).returns(response)
+      response.stubs(:status).returns(status)
+    end
+
+    context "when endpoint is reachable" do
+      let(:status) { 200 }
+
+      it { expect(authenticator).to be_healthy }
+    end
+
+    context "when credentials aren't recognized" do
+      let(:status) { 403 }
+
+      it { expect(authenticator).not_to be_healthy }
+    end
+
+    context "when an unexpected error happens" do
+      let(:status) { anything }
+
+      before { connection.stubs(:post).raises(Faraday::ServerError) }
+
+      it { expect(authenticator).not_to be_healthy }
+    end
+  end
 end

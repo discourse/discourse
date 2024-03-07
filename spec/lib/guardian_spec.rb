@@ -46,6 +46,13 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).link_posting_access).to eq("full")
     end
 
+    it "is full for staff users regardless of TL" do
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+      admin_user = Fabricate(:admin)
+      admin_user.change_trust_level!(TrustLevel[1])
+      expect(Guardian.new(admin_user).link_posting_access).to eq("full")
+    end
+
     it "is none for a user of a low trust level" do
       user.change_trust_level!(TrustLevel[0])
       SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
@@ -95,7 +102,7 @@ RSpec.describe Guardian do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
 
-    describe "an anonymous user" do
+    describe "an authenticated user posting anonymously" do
       before { SiteSetting.allow_anonymous_posting = true }
 
       context "when allow_anonymous_likes is enabled" do
@@ -1670,25 +1677,31 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false when trying to edit a topic with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        SiteSetting.edit_post_allowed_groups = 12
-        post.user.trust_level = 1
+      it "returns false when trying to edit a topic when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(topic.user).can_edit?(topic)).to be_falsey
       end
 
-      it "returns false when trying to edit a post with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        SiteSetting.edit_post_allowed_groups = 12
-        post.user.trust_level = 1
+      it "returns false when trying to edit a post when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
       end
 
-      it "returns true when trying to edit a post with trust" do
-        SiteSetting.min_trust_to_edit_post = 1
-        post.user.trust_level = 1
+      it "returns true when editing a post when the user is in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        post.user.change_trust_level!(TrustLevel[1])
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      it "returns true when editing a post when the user is admin regardless of groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.update!(admin: true)
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
@@ -2491,7 +2504,7 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "#can_delete_post_action" do
+  describe "#can_delete_post_action?" do
     before do
       SiteSetting.allow_anonymous_posting = true
       Guardian.any_instance.stubs(:anonymous?).returns(true)
@@ -2499,7 +2512,8 @@ RSpec.describe Guardian do
 
     context "with allow_anonymous_likes enabled" do
       before { SiteSetting.allow_anonymous_likes = true }
-      describe "an anonymous user" do
+
+      describe "an authenticated anonymous user" do
         let(:post_action) do
           user.id = anonymous_user.id
           post.id = 1
@@ -2539,6 +2553,10 @@ RSpec.describe Guardian do
 
         it "returns true if the post belongs to the anonymous user" do
           expect(Guardian.new(anonymous_user).can_delete_post_action?(post_action)).to be_truthy
+        end
+
+        it "returns false if the user is an unauthenticated anonymous user" do
+          expect(Guardian.new.can_delete_post_action?(post_action)).to be_falsey
         end
 
         it "return false if the post belongs to another user" do

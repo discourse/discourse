@@ -11,10 +11,8 @@ module Chat
     include Service::Base
 
     # @!method call(guardian:)
-    #   @param [Integer] channel_id
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
-    #   @option optional_params [Integer] channel_id
     #   @return [Service::Base::Context]
 
     contract
@@ -63,7 +61,7 @@ module Chat
     end
 
     def ensure_thread_enabled(thread:, **)
-      thread.channel.threading_enabled
+      thread.channel.threading_enabled || thread.force
     end
 
     def can_view_thread(guardian:, thread:, **)

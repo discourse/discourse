@@ -478,7 +478,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.trust_group_ids
-    (10..19).to_a
+    Group.auto_groups_between(:trust_level_0, :trust_level_4).to_a
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)

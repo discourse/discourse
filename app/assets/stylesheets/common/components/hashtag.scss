@@ -33,16 +33,6 @@ a.hashtag {
   .hashtag-icon-placeholder {
     font-size: var(--font-down-2);
     margin: 0 0.33em 0 0.1em;
-
-    &.hashtag-missing {
-      color: var(--primary-medium);
-      &.d-icon-square-full {
-        width: 8px;
-        height: 10px;
-        margin-bottom: 0;
-        margin-right: 0.7em;
-      }
-    }
   }
 
   img.emoji {
@@ -62,10 +52,6 @@ a.hashtag {
     margin-right: 0.25em;
     margin-left: 0.1em;
     display: inline-block;
-
-    &.hashtag-missing {
-      background-color: var(--primary-medium);
-    }
   }
 }
 

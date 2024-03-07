@@ -44,6 +44,10 @@ sr:
   remove_posts_deleted_by_author: "Izbrisano od strane autora"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "mora biti ceo broj"
   emails:
     incoming:
       default_subject: "Ovoj temi je potreban naslov"
@@ -351,13 +355,10 @@ sr:
     topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
     num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
-    reply_by_email_enabled: "Omogući odgovore na teme putem email poruka."
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
-    pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
-    pop3_polling_port: "Port za proveru POP3 naloga."
     pop3_polling_username: "Korisničko ime POP3 naloga za proveru postojanja novih email poruka"
     pop3_polling_password: "Lozinka PO3 naloga za proveru postojanja novih email poruka"
     minimum_topics_similar: "Koliko teme mora da postoji da bi se prikazivale slične teme prilikom kreiranja novih"
@@ -369,20 +370,15 @@ sr:
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
-    allow_anonymous_posting: "Dozvoli korisnicima da se prebace u anonimni mod"
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
     sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
     disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
-    share_anonymized_statistics: "Deli anonimizirane statistike korišćenja"
     full_name_required: "Puno ime je obavezno polje profila korisnika."
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
-    delete_drafts_older_than_n_days: "Izbriši radne verzije poruka starije od (n) dana"
-    enable_emoji: "Omogući emotikone"
-    emoji_set: "Koliko bi ste želeli vas emoji?"
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"

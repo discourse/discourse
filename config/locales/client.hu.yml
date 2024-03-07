@@ -35,11 +35,8 @@ hu:
       long_with_year: "YYYY. MMM D., HH:mm"
       long_with_year_no_time: "YYYY. MMM D."
       full_with_year_no_time: "YYYY. MMMM D."
-      long_date_with_year: "'YY. MMM D. HH:mm"
       long_date_without_year: "MMM D., HH:mm"
-      long_date_with_year_without_time: "'YY. MMM D."
       long_date_without_year_with_linebreak: "MMM D.<br />HH:mm"
-      long_date_with_year_with_linebreak: "'YY. MMM D.<br />HH:mm"
       wrap_ago: "ennyi ideje: %{date}"
       wrap_on: "ekkor: %{date}"
       tiny:
@@ -75,7 +72,7 @@ hu:
           one: "%{count} é"
           other: "%{count} é"
         date_month: "MMM D."
-        date_year: "'YY. MMM"
+        date_year: "YYYY. MMMM"
       medium:
         less_than_x_minutes:
           one: "kevesebb mint %{count} perc"
@@ -104,7 +101,6 @@ hu:
         almost_x_years:
           one: "majdnem %{count} év"
           other: "majdnem %{count} év"
-        date_year: "'YY. MMM D."
       medium_with_ago:
         x_minutes:
           one: "%{count} perce"
@@ -184,7 +180,6 @@ hu:
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
     emails_are_disabled_non_staff: "A kimenő e-mailek le vannak tiltva a nem stábtagok számára."
     software_update_prompt:
-      message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
     themes:
       default_description: "Alapértelmezett"
@@ -2504,6 +2499,18 @@ hu:
     topic_bulk_actions:
       close_topics:
         name: "Témák lezárása"
+      archive_topics:
+        name: "Témák archiválása"
+      unlist_topics:
+        name: "Témák listázásnak megszüntetése"
+      relist_topics:
+        name: "Újralistázott témák"
+      append_tags:
+        name: "Címkék hozzáfűzése"
+      replace_tags:
+        name: "Címkék cseréje"
+      delete_topics:
+        name: "Témák törlése"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -3664,6 +3671,7 @@ hu:
               content: "Áttekintés"
               title: "Megjelölt bejegyzések és egyéb sorban álló elemek"
               pending_count: "%{count} függőben"
+      filter: "Szűrő"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
@@ -3904,7 +3912,6 @@ hu:
               show: Egyetlen kategória kinyerése az azonosító alapján.
             users:
               sync_sso: Felhasználó szinkronizálása a DiscourseConnect használatával.
-              show: Információk beszerzése egy felhasználóról.
               check_emails: Felhasználói e-mailek listázása.
               update: Felhasználói profil adatainak frissítése.
               log_out: Egy felhasználó összes munkamenetének kijelentkeztetése.
@@ -4250,7 +4257,6 @@ hu:
           reset: "Alapértelmezés visszaállítása"
       email:
         title: "Emailek"
-        settings: "Beállítások"
         templates: "Sablonok"
         preview_digest: "Előnézet összefoglalója"
         error: "<b>HIBA</b> - %{server_error}"
@@ -4687,7 +4693,6 @@ hu:
           posts: "Bejegyzések"
         tl3_requirements:
           value_heading: "Érték"
-          visits: "Látogatások"
           days: "nap"
           topics_viewed: "Megtekintett témák"
           posts_read: "Elolvasott bejegyzések"
@@ -4883,6 +4888,7 @@ hu:
         post_title: "Bejegyzés"
         category_id: "Kategóriaazonosító"
         category_title: "Kategória"
+        username: "Felhasználónév"
         copy_to_clipboard: "Másolja az állandó hivatkozást a vágólapra"
         delete_confirm: Biztos, hogy törli ezt az állandó hivatkozást?
         form:

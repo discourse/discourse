@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";

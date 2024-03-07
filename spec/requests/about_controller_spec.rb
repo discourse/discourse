@@ -48,6 +48,17 @@ RSpec.describe AboutController do
       expect(response.parsed_body["about"].keys).to include("stats")
     end
 
+    it "adds Discourse Discover status if enabled" do
+      get "/about.json"
+
+      expect(response.parsed_body["about"].keys).not_to include("discourse_discover_enrolled")
+
+      SiteSetting.include_in_discourse_discover = true
+      get "/about.json"
+
+      expect(response.parsed_body["about"]["discourse_discover_enrolled"]).to eq(true)
+    end
+
     it "does not serialize stats when 'Guardian#can_see_about_stats?' is false" do
       Guardian.any_instance.stubs(:can_see_about_stats?).returns(false)
       get "/about.json"

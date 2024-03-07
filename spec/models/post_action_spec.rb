@@ -755,11 +755,11 @@ RSpec.describe PostAction do
     end
   end
 
-  it "prevents user to act twice at the same time" do
-    # flags are already being tested
-    all_types_except_flags =
-      PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
-    all_types_except_flags.values.each do |action|
+  # flags are already being tested
+  all_types_except_flags =
+    PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
+  all_types_except_flags.values.each do |action|
+    it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end

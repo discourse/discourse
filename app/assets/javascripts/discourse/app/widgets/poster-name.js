@@ -61,7 +61,7 @@ export default createWidget("poster-name", {
 
   didRenderWidget() {
     if (this.attrs.user) {
-      this.attrs.user.trackStatus();
+      this.attrs.user.statusManager.trackStatus();
       this.attrs.user.on("status-changed", this, "scheduleRerender");
     }
   },
@@ -69,7 +69,7 @@ export default createWidget("poster-name", {
   willRerenderWidget() {
     if (this.attrs.user) {
       this.attrs.user.off("status-changed", this, "scheduleRerender");
-      this.attrs.user.stopTrackingStatus();
+      this.attrs.user.statusManager.stopTrackingStatus();
     }
   },
 

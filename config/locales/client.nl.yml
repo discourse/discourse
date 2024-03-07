@@ -35,11 +35,9 @@ nl:
       long_with_year: "D MMM YYYY HH.mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY HH.mm"
       long_date_without_year: "D MMM HH.mm"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>HH.mm"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH.mm"
       wrap_ago: "%{date} geleden"
       wrap_on: "op %{date}"
       tiny:
@@ -75,7 +73,7 @@ nl:
           one: "%{count} j"
           other: "%{count} j"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "minder dan %{count} min."
@@ -104,7 +102,7 @@ nl:
         almost_x_years:
           one: "bijna %{count} jaar"
           other: "bijna %{count} jaar"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min. geleden"
@@ -188,7 +186,6 @@ nl:
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
     software_update_prompt:
-      message: "We hebben deze site bijgewerkt, dus <span>vernieuw de pagina</span>, anders kan er onverwacht gedrag optreden."
       dismiss: "Negeren"
     bootstrap_mode: "Aan de slag"
     themes:
@@ -200,7 +197,6 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     critical_deprecation:
-      notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>meer informatie</a>)."
       theme_source: "Geïdentificeerd thema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Geïdentificeerde plug-in: '%{name}'"
     s3:
@@ -1021,6 +1017,7 @@ nl:
       said: "%{username}:"
       profile: "Profiel"
       profile_possessive: "Profiel van %{username}"
+      account_possessive: "%{name}'s account"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
       download_archive:
@@ -1462,6 +1459,9 @@ nl:
           description: "Bevestig dat je je e-mailadres wilt wijzigen naar:"
           description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
         authorizing_old:
+          title: "Verifieer oud e-mailadres"
+          description: "Controleer je oude e-mailadres om door te gaan met het wijzigen van je e-mailadres:"
+          description_add: "Controleer je bestaande e-mailadres om door te gaan met het toevoegen van een alternatief adres:"
           old_email: "Oud e-mailadres: %{email}"
           new_email: "Nieuw e-mailadres: %{email}"
           confirm_success: "Er is een e-mail naar je nieuwe e-mailadres gestuurd om de wijziging te bevestigen!"
@@ -2716,6 +2716,7 @@ nl:
         progress:
           one: "Voortgang: <strong>%{count}</strong> topic"
           other: "Voortgang: <strong>%{count}</strong> topics"
+        silent: "Voer deze actie in stilte uit."
       none:
         unread: "Je hebt geen ongelezen topics."
         unseen: "Je hebt geen ongeziene topics."
@@ -2726,6 +2727,7 @@ nl:
         bookmarks: "Je hebt nog geen bladwijzers voor topics gemaakt."
         category: "Er zijn geen topics in %{category}."
         top: "Er zijn geen toptopics."
+        hot: "Er zijn geen veelgelezen topics."
         filter: "Er zijn geen topics."
         educate:
           new: '<p>Hier worden je nieuwe topics weergegeven. Standaard worden topics als nieuw beschouwd en wordt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> weergegeven als ze de afgelopen 2 dagen zijn gemaakt.</p><p>Ga naar je <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
@@ -2741,11 +2743,29 @@ nl:
         category: "Er zijn verder geen topics in %{category}."
         tag: "Er zijn verder geen topics over %{tag}."
         top: "Er zijn verder geen toptopics."
+        hot: "Er zijn geen veelgelezen topics meer."
         bookmarks: "Er zijn verder geen topics met bladwijzers."
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       close_topics:
         name: "Topics sluiten"
+      archive_topics:
+        name: "Topics archiveren"
+      unlist_topics:
+        name: "Topics onzichtbaar maken"
+      relist_topics:
+        name: "Topics opnieuw weergeven"
+      remove_tags:
+        name: "Tags verwijderen"
+      append_tags:
+        name: "Tags toevoegen"
+      replace_tags:
+        name: "Tags vervangen"
+      delete_topics:
+        name: "Topics verwijderen"
+      update_category:
+        name: "Categorie bijwerken"
+        description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -3747,6 +3767,10 @@ nl:
         title: "Ongezien"
         lower_title: "ongezien"
         help: "nieuwe topics en topics die je momenteel observeert of volgt met ongelezen berichten"
+      hot:
+        title: "Veelgelezen"
+        lower_title: "veelgelezen"
+        help: "recente veelgelezen topics"
       new:
         lower_title_with_count:
           one: "%{count} nieuw"
@@ -4278,6 +4302,9 @@ nl:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      no_results:
+        title: "Geen resultaten"
     welcome_topic_banner:
       title: "Maak je welkomsttopic"
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."
@@ -4637,7 +4664,7 @@ nl:
             users:
               bookmarks: Bladwijzers van gebruiker weergeven. Geeft bladwijzerherinneringen terug bij gebruik van de ICS-indeling.
               sync_sso: Een gebruiker synchroniseren met DiscourseConnect.
-              show: Informatie over een gebruiker verkrijgen.
+              show: Krijg informatie over een gebruiker.
               check_emails: E-mailadressen van gebruiker weergeven.
               update: Gebruikersprofielgegevens bijwerken.
               log_out: Alle sessies voor een gebruiker afmelden.
@@ -4758,14 +4785,10 @@ nl:
           post_liked: "Wanneer een gebruiker een bericht liket."
         notification_event:
           group_name: "Meldingsgebeurtenissen"
-          notification_created: "Een gebruiker ontvangt een melding in diens feed"
         group_user_event:
           group_name: "Groepgebruikersgebeurtenissen"
-          user_added_to_group: "Een gebruiker is toegevoegd aan een groep"
-          user_removed_from_group: "Een gebruiker is verwijderd uit een groep"
         user_promoted_event:
           group_name: "Gebruikerspromotiegebeurtenissen"
-          user_promoted: "Een gebruiker is gepromoveerd"
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -5185,7 +5208,6 @@ nl:
           instructions: "Het sjabloon waarin alle html-e-mails worden gerenderd aanpassen, en stileren via CSS."
       email:
         title: "E-mails"
-        settings: "Instellingen"
         templates: "Sjablonen"
         templates_title: "E-mailsjablonen"
         preview_digest: "Voorbeeld van samenvatting"
@@ -5832,7 +5854,6 @@ nl:
             other: "De afgelopen %{count} dagen:"
           value_heading: "Waarde"
           requirement_heading: "Vereiste"
-          visits: "Bezoeken"
           days: "dagen"
           topics_replied_to: "Beantwoorde topics"
           topics_viewed: "Bekeken topics"
@@ -6138,6 +6159,7 @@ nl:
         category_title: "Categorie"
         tag_name: "Tagnaam"
         external_url: "Externe of relatieve URL"
+        username: "Gebruikersnaam"
         destination: "Bestemming"
         copy_to_clipboard: "Permalink kopiëren naar klembord"
         delete_confirm: Weet je zeker dat je deze permalink wilt verwijderen?

@@ -61,7 +61,7 @@ describe "Topic page", type: :system do
       sign_in Fabricate(:admin)
     end
 
-    it "displays the gap to admins, and alows them to expand it" do
+    it "displays the gap to admins, and allows them to expand it" do
       visit "/t/#{topic.slug}/#{topic.id}"
 
       expect(page).to have_css(".topic-post", count: 2)

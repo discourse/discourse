@@ -240,7 +240,11 @@ class Category < ActiveRecord::Base
 
     # Categories with children
     with_children =
-      Category.where(parent_category_id: category_ids).pluck(:parent_category_id).to_set
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: category_ids)
+        .pluck(:parent_category_id)
+        .to_set
 
     # Update category attributes
     categories.each do |category|
@@ -251,6 +255,23 @@ class Category < ActiveRecord::Base
 
       category.has_children = with_children.include?(category[:id])
     end
+  end
+
+  def self.ancestors_of(category_ids)
+    ancestor_ids = []
+
+    SiteSetting.max_category_nesting.times do
+      category_ids =
+        where(id: category_ids)
+          .where.not(parent_category_id: nil)
+          .pluck("DISTINCT parent_category_id")
+
+      ancestor_ids.concat(category_ids)
+
+      break if category_ids.empty?
+    end
+
+    where(id: ancestor_ids)
   end
 
   def self.topic_id_cache
@@ -915,7 +936,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache.defer_get_set(self.id) do
+    @@url_cache.defer_get_set(self.id.to_s) do
       "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
     end
   end

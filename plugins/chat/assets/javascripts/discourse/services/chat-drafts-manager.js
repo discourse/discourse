@@ -1,5 +1,5 @@
 import { cancel } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 
 export default class ChatDraftsManager extends Service {
   @service chatApi;

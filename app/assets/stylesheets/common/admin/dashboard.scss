@@ -1,12 +1,10 @@
 .admin-reports,
-.dashboard,
 .dashboard-next {
   &.admin-contents {
     margin: 10px 0 0 0;
   }
 }
 
-.dashboard,
 .dashboard-next {
   .navigation {
     display: flex;
@@ -681,6 +679,7 @@
   margin-bottom: 1.5em;
   background-color: var(--primary-very-low);
   padding: 1em;
+  max-width: 45rem;
 
   &__new-feature-emoji {
     font-size: 1.2em;

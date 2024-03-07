@@ -35,11 +35,9 @@ fi:
       long_with_year: "D. MMMM[ta] YYYY H.mm"
       long_with_year_no_time: "D. MMMM[ta] YYYY"
       full_with_year_no_time: "Do MMMM[ta] YYYY"
-      long_date_with_year: "D. MMMM[ta] YYYY LT"
       long_date_without_year: "D. MMMM[ta] LT"
       long_date_with_year_without_time: "D. MMMM[ta] YYYY"
       long_date_without_year_with_linebreak: "D. MMMM[ta] <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMMM[ta] YYYY <br/>LT"
       wrap_ago: "%{date} sitten"
       wrap_on: "%{date}"
       tiny:
@@ -75,7 +73,7 @@ fi:
           one: "%{count} v"
           other: "%{count} v"
         date_month: "D. MMM"
-        date_year: "MMM YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "alle %{count} min"
@@ -188,7 +186,6 @@ fi:
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     emails_are_disabled_non_staff: "Lähtevät sähköpostit on poistettu käytöstä muilta kuin henkilökunnan käyttäjiltä."
     software_update_prompt:
-      message: "Sivusto on juuri päivitetty, <span>päivitä sivu</span>, tai sivusto voi käyttäytyä odottamattomasti."
       dismiss: "Sulje"
     bootstrap_mode: "Aloittaminen"
     themes:
@@ -200,7 +197,6 @@ fi:
     broken_page_change_alert: "onPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
     broken_plugin_alert: "Lisäosan \"%{name}\" aiheuttama"
     critical_deprecation:
-      notice: "<b>[Ylläpitäjän huomautus]</b> Jokin teemoistasi tai lisäosistasi täytyy päivittää, jotta se olisi yhteensopiva tulevien Discoursen ydinmuutosten kanssa (<a target='_blank' href='https://meta.discourse.org/t/287211'>lisätietoja</a>)."
       theme_source: "Tunnistettu teema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Tunnistettu lisäosa: \"%{name}\""
     s3:
@@ -2746,6 +2742,20 @@ fi:
     topic_bulk_actions:
       close_topics:
         name: "Sulje ketjut"
+      archive_topics:
+        name: "Arkistoi ketjut"
+      unlist_topics:
+        name: "Poista ketjuja listauksista"
+      relist_topics:
+        name: "Palauta ketjuja listauksiin"
+      remove_tags:
+        name: "Poista tunnisteita"
+      append_tags:
+        name: "Lisää tunnisteita"
+      replace_tags:
+        name: "Korvaa tunnisteet"
+      delete_topics:
+        name: "Poista ketjut"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -4278,6 +4288,9 @@ fi:
       panels:
         forum:
           label: Keskustelualuea
+      filter: "Suodatin"
+      no_results:
+        title: "Ei tuloksia"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
@@ -4636,7 +4649,6 @@ fi:
             users:
               bookmarks: Listaa käyttäjien kirjanmerkit. Palauttaa kirjanmerkkien muistutukset, kun käytetään ICS-muotoa.
               sync_sso: Synkronoi käyttäjä DiscourseConnectin avulla.
-              show: Nouda tietoja käyttäjästä.
               check_emails: Listaa käyttäjien sähköpostiosoitteet.
               update: Päivitä käyttäjäprofiilin tiedot.
               log_out: Kirjaa ulos kaikista käyttäjän istunnoista.
@@ -4757,14 +4769,10 @@ fi:
           post_liked: "Kun käyttäjä tykkää viestistä."
         notification_event:
           group_name: "Ilmoitustapahtumat"
-          notification_created: "Käyttäjä saa ilmoituksen syötteeseensä"
         group_user_event:
           group_name: "Ryhmän käyttäjätapahtumat"
-          user_added_to_group: "Käyttäjä lisätään ryhmään"
-          user_removed_from_group: "Käyttäjä poistetaan ryhmästä"
         user_promoted_event:
           group_name: "Käyttäjän ylennustapahtumat"
-          user_promoted: "Käyttäjä ylennetään"
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei aktiivinen"
@@ -5184,7 +5192,6 @@ fi:
           instructions: "Mukauta mallia, jossa kaikki HTML-sähköpostit hahmonnetaan, ja muotoile käyttämällä CSS:ää."
       email:
         title: "Sähköpostit"
-        settings: "Asetukset"
         templates: "Mallit"
         templates_title: "Sähköpostimallit"
         preview_digest: "Esikatsele yhteenveto"
@@ -5831,7 +5838,6 @@ fi:
             other: "Viimeisimpien %{count} päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
-          visits: "Vierailuja"
           days: "päivää"
           topics_replied_to: "Vastatut ketjut"
           topics_viewed: "Avatut ketjut"
@@ -6137,6 +6143,7 @@ fi:
         category_title: "Alue"
         tag_name: "Tunnisteen nimi"
         external_url: "Ulkoinen tai suhteellinen URL-osoite"
+        username: "Käyttäjätunnus"
         destination: "Kohde"
         copy_to_clipboard: "Kopioi pysyvä linkki leikepöydälle"
         delete_confirm: Oletko varma, että haluat poistaa tämän pysyvän linkin?

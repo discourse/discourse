@@ -1,6 +1,7 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { equal, or, readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import {
@@ -17,73 +18,71 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
-export default Component.extend({
-  statusType: readOnly("topicTimer.status_type"),
-  autoOpen: equal("statusType", OPEN_STATUS_TYPE),
-  autoClose: equal("statusType", CLOSE_STATUS_TYPE),
-  autoCloseAfterLastPost: equal(
-    "statusType",
-    CLOSE_AFTER_LAST_POST_STATUS_TYPE
-  ),
-  autoDelete: equal("statusType", DELETE_STATUS_TYPE),
-  autoBump: equal("statusType", BUMP_TYPE),
-  publishToCategory: equal("statusType", PUBLISH_TO_CATEGORY_STATUS_TYPE),
-  autoDeleteReplies: equal("statusType", DELETE_REPLIES_TYPE),
-  showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
-  showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
-  useDuration: or(
-    "isBasedOnLastPost",
-    "autoDeleteReplies",
-    "autoCloseAfterLastPost"
-  ),
-  duration: null,
-  _itsatrap: null,
+export default class EditTopicTimerForm extends Component {
+  @service currentUser;
 
-  init() {
-    this._super(...arguments);
+  @tracked timerType;
+
+  constructor() {
+    super(...arguments);
 
     KeyboardShortcuts.pause();
-    this.set("_itsatrap", new ItsATrap());
+    this._itsatrap = new ItsATrap();
+  }
 
-    this.set("duration", this.initialDuration);
-  },
-
-  get initialDuration() {
-    if (!this.useDuration || !this.topicTimer.duration_minutes) {
-      return null;
-    } else if (this.durationType === "days") {
-      return this.topicTimer.duration_minutes / 60 / 24;
-    } else {
-      return this.topicTimer.duration_minutes / 60;
-    }
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
 
     this._itsatrap.destroy();
-    this.set("_itsatrap", null);
     KeyboardShortcuts.unpause();
-  },
+  }
 
-  @discourseComputed("autoDeleteReplies")
-  durationType(autoDeleteReplies) {
-    return autoDeleteReplies ? "days" : "hours";
-  },
+  get showTimeOnly() {
+    return (
+      this.statusType === OPEN_STATUS_TYPE ||
+      this.statusType === DELETE_STATUS_TYPE ||
+      this.statusType === BUMP_TYPE
+    );
+  }
 
-  @discourseComputed("topic.visible")
-  excludeCategoryId(visible) {
-    if (visible) {
-      return this.get("topic.category_id");
+  get showFutureDateInput() {
+    return (
+      this.showTimeOnly ||
+      this.publishToCategory ||
+      this.statusType === CLOSE_STATUS_TYPE
+    );
+  }
+
+  get useDuration() {
+    return this.autoCloseAfterLastPost || this.autoDeleteReplies;
+  }
+
+  get autoCloseAfterLastPost() {
+    return this.statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE;
+  }
+
+  get publishToCategory() {
+    return this.statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE;
+  }
+
+  get autoDeleteReplies() {
+    return this.statusType === DELETE_REPLIES_TYPE;
+  }
+
+  get statusType() {
+    return this.args.topicTimer.status_type;
+  }
+
+  get excludeCategoryId() {
+    if (this.args.topic.visible) {
+      return this.args.topic.category_id;
     }
-  },
+  }
 
-  @discourseComputed()
-  timeOptions() {
+  get timeOptions() {
     const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
 
@@ -97,106 +96,85 @@ export default Component.extend({
       shortcuts.nextMonth(),
       shortcuts.sixMonths(),
     ];
-  },
+  }
 
-  @discourseComputed
-  hiddenTimeShortcutOptions() {
+  get hiddenTimeShortcutOptions() {
     return [
       TIME_SHORTCUT_TYPES.NONE,
       TIME_SHORTCUT_TYPES.LATER_TODAY,
       TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
     ];
-  },
+  }
 
-  isCustom: equal("timerType", "custom"),
-  isBasedOnLastPost: equal("statusType", "close_after_last_post"),
-
-  @discourseComputed(
-    "topicTimer.updateTime",
-    "topicTimer.duration_minutes",
-    "useDuration"
-  )
-  executeAt(updateTime, duration, useDuration) {
-    if (useDuration) {
-      return moment().add(parseFloat(duration), "minutes").format(FORMAT);
+  get executeAt() {
+    if (this.useDuration) {
+      return moment()
+        .add(parseFloat(this.args.topicTimer.duration_minutes), "minutes")
+        .format(FORMAT);
     } else {
-      return updateTime;
+      return this.args.topicTimer.updateTime;
     }
-  },
+  }
 
-  @discourseComputed(
-    "isBasedOnLastPost",
-    "topicTimer.duration_minutes",
-    "topic.last_posted_at"
-  )
-  willCloseImmediately(isBasedOnLastPost, duration, lastPostedAt) {
-    if (isBasedOnLastPost && duration) {
-      let closeDate = moment(lastPostedAt);
-      closeDate = closeDate.add(duration, "minutes");
+  get willCloseImmediately() {
+    if (this.autoCloseAfterLastPost && this.args.topicTimer.duration_minutes) {
+      const closeDate = moment(this.args.topic.last_posted_at).add(
+        this.args.topicTimer.duration_minutes,
+        "minutes"
+      );
       return closeDate < moment();
     }
-  },
+  }
 
-  @discourseComputed("isBasedOnLastPost", "topic.last_posted_at")
-  willCloseI18n(isBasedOnLastPost, lastPostedAt) {
-    if (isBasedOnLastPost) {
+  get willCloseI18n() {
+    if (this.autoCloseAfterLastPost) {
       const diff = Math.round(
-        (new Date() - new Date(lastPostedAt)) / (1000 * 60 * 60)
+        (new Date() - new Date(this.args.topic.last_posted_at)) /
+          (1000 * 60 * 60)
       );
       return I18n.t("topic.auto_close_momentarily", { count: diff });
     }
-  },
+  }
 
-  @discourseComputed("durationType")
-  durationLabel(durationType) {
-    return I18n.t(`topic.topic_status_update.num_of_${durationType}`);
-  },
+  get durationLabel() {
+    return I18n.t(
+      `topic.topic_status_update.num_of_${
+        this.autoDeleteReplies ? "days" : "hours"
+      }`
+    );
+  }
 
-  @discourseComputed(
-    "statusType",
-    "isCustom",
-    "topicTimer.updateTime",
-    "willCloseImmediately",
-    "topicTimer.category_id",
-    "useDuration",
-    "topicTimer.duration_minutes"
-  )
-  showTopicTimerInfo(
-    statusType,
-    isCustom,
-    updateTime,
-    willCloseImmediately,
-    categoryId,
-    useDuration,
-    duration
-  ) {
-    if (!statusType || willCloseImmediately) {
+  get showTopicTimerInfo() {
+    if (!this.statusType || this.willCloseImmediately) {
       return false;
     }
 
-    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
+    if (
+      this.statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
+      isEmpty(this.args.topicTimer.category_id)
+    ) {
       return false;
     }
 
-    if (isCustom && updateTime) {
-      if (moment(updateTime) < moment()) {
+    if (this.timerType === "custom" && this.args.topicTimer.updateTime) {
+      if (moment(this.args.topicTimer.updateTime) < moment()) {
         return false;
       }
-    } else if (useDuration) {
-      return duration;
+    } else if (this.useDuration) {
+      return this.args.topicTimer.duration_minutes;
     }
 
-    return updateTime;
-  },
+    return this.args.topicTimer.updateTime;
+  }
 
   @action
   onTimeSelected(type, time) {
-    this.set("timerType", type);
-    this.onChangeInput(type, time);
-  },
+    this.timerType = type;
+    this.args.onChangeInput(type, time);
+  }
 
   @action
-  durationChanged(newDurationMins) {
-    this.set("topicTimer.duration_minutes", newDurationMins);
-  },
-});
+  changeDuration(newDurationMins) {
+    this.args.topicTimer.set("duration_minutes", newDurationMins);
+  }
+}

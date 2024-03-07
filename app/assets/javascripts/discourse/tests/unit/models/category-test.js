@@ -3,6 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Category from "discourse/models/category";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | category", function (hooks) {
   setupTest(hooks);
@@ -446,5 +447,28 @@ module("Unit | Model | category", function (hooks) {
       "Test2 Sub Sub2",
       "Test2 Sub Sub",
     ]);
+  });
+
+  test("asyncFindByIds - do not request categories that have been loaded already", async function (assert) {
+    const requestedIds = [];
+    pretender.get("/categories/find", (request) => {
+      const ids = request.queryParams.ids.map((id) => parseInt(id, 10));
+      requestedIds.push(ids);
+      return response({
+        categories: ids.map((id) => ({ id, slug: `category-${id}` })),
+      });
+    });
+
+    const site = this.owner.lookup("service:site");
+    site.set("lazy_load_categories", true);
+
+    await Category.asyncFindByIds([12345, 12346]);
+    assert.deepEqual(requestedIds, [[12345, 12346]]);
+
+    await Category.asyncFindByIds([12345, 12346, 12347]);
+    assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
+
+    await Category.asyncFindByIds([12345]);
+    assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
   });
 });

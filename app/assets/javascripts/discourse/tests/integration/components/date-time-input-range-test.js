@@ -31,7 +31,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
     await render(
-      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{action (mut this.state)}} />`
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} />`
     );
 
     assert.strictEqual(fromDateInput().value, "2019-01-29");
@@ -58,7 +58,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
     await render(
-      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @relativeDate={{this.state.from}} @onChange={{action (mut this.state)}} />`
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @relativeDate={{this.state.from}} @onChange={{fn (mut this.state)}} />`
     );
 
     await fillIn(toDateInput(), "2019-01-29");
@@ -78,7 +78,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     });
 
     await render(
-      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{action (mut this.state)}} @timezone="Europe/Paris" />`
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} @timezone="Europe/Paris" />`
     );
 
     assert.strictEqual(fromDateInput().value, "2019-01-29");

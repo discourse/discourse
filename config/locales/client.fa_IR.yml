@@ -35,11 +35,9 @@ fa_IR:
       long_with_year: "D MMMM، YYYY HH:mm"
       long_with_year_no_time: "D MMMM، YYYY"
       full_with_year_no_time: "Do MMMM، YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "D MMMM، 'YY"
+      long_date_with_year_without_time: "D MMMM، YYYY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} پیش"
       wrap_on: "در %{date}"
       tiny:
@@ -75,7 +73,7 @@ fa_IR:
           one: "%{count} سال"
           other: "%{count} سال"
         date_month: "D MMMM"
-        date_year: "MMMM 'YY"
+        date_year: "MMMM YYYY"
       medium:
         x_minutes:
           one: "%{count} دقیقه"
@@ -89,7 +87,7 @@ fa_IR:
         x_months:
           one: "%{count} ماه"
           other: "%{count} ماه"
-        date_year: "D MMMM، 'YY"
+        date_year: "D MMMM، YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} دقیقه پیش"
@@ -166,7 +164,6 @@ fa_IR:
     skip_to_main_content: "رفتن به محتوای اصلی"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
-      message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
       dismiss: "رد کردن"
     themes:
       default_description: "پیش‌فرض"
@@ -2318,6 +2315,20 @@ fa_IR:
     topic_bulk_actions:
       close_topics:
         name: "بستن موضوعات"
+      archive_topics:
+        name: "بایگانی موضوعات"
+      unlist_topics:
+        name: "از فهرست خارج کردن مباحث"
+      relist_topics:
+        name: "ایجاد فهرست مجدد از موضوعات"
+      remove_tags:
+        name: "حذف برچسب‌ها"
+      append_tags:
+        name: "افزودن برچسب‌ها"
+      replace_tags:
+        name: "جایگزینی برچسب‌ها"
+      delete_topics:
+        name: "حذف موضوعات"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -3454,6 +3465,7 @@ fa_IR:
       panels:
         forum:
           label: انجمن
+      filter: "فیلتر"
     until: "تا وقتی که:"
     form_templates:
       upload_field:
@@ -3976,7 +3988,7 @@ fa_IR:
           save_error_with_reason: "تغییرات شما ذخیره نشده‌است. %{error}"
       email:
         title: "ایمیل‌ها"
-        settings: "تنظیمات"
+        settings: "تنظیمات ایمیل"
         templates: "قالب‌ها"
         templates_title: "قالب‌های ایمیل"
         preview_digest: "پیشنمایش خلاصه"
@@ -4364,7 +4376,6 @@ fa_IR:
             other: "در %{count} روز گذشته"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
-          visits: "بازدیدها"
           days: "روز‌ها"
           topics_replied_to: "پاسخ به موضوعات"
           topics_viewed: "بازدید موضوعات"
@@ -4598,6 +4609,7 @@ fa_IR:
         post_title: "نوشته"
         category_id: "شناسه دسته‌بندی"
         category_title: "دسته‌بندی"
+        username: "نام‌کاربری"
         delete_confirm: آیا مطمئنید که می‌خواهید این پیوند یکتا را حذف کنید؟
         form:
           label: "جدید:"

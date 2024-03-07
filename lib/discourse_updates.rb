@@ -41,7 +41,7 @@ module DiscourseUpdates
         # Handle cases when version check data is old so we report something that makes sense
         if version_info.updated_at.nil? || last_installed_version != Discourse::VERSION::STRING || # never performed a version check # upgraded since the last version check
              is_stale_data
-          Jobs.enqueue(:version_check, all_sites: true)
+          Jobs.enqueue(:call_discourse_hub, all_sites: true)
           version_info.version_check_pending = true
 
           unless version_info.updated_at.nil?

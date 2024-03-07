@@ -20,7 +20,7 @@
             <DatePickerFuture
               @value={{this.customDate}}
               @defaultDate={{this.defaultCustomDate}}
-              @onSelect={{action (mut this.customDate)}}
+              @onSelect={{fn (mut this.customDate)}}
               @id="custom-date"
             />
           </div>

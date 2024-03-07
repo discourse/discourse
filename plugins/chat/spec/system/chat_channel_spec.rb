@@ -141,6 +141,7 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+      expect(page).to have_css(".-last-read[data-id='#{unloaded_message.id}']")
     end
   end
 

@@ -32,11 +32,8 @@ sw:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM S, MMMM"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} iliyopita"
       tiny:
         half_a_minute: "< dakika 1"
@@ -71,7 +68,7 @@ sw:
           one: "%{count}y"
           other: "%{count}y"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "dakika %{count}"
@@ -82,7 +79,6 @@ sw:
         x_days:
           one: "siku %{count}"
           other: "siku %{count}"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "dakika %{count} iliyopita"
@@ -1453,6 +1449,18 @@ sw:
     topic_bulk_actions:
       close_topics:
         name: "Funga Mada"
+      archive_topics:
+        name: "Hifadhi Mada kwenye nyaraka"
+      unlist_topics:
+        name: "Ondoa Mada kwenye listi"
+      relist_topics:
+        name: "Orodhesha Upya Mada"
+      append_tags:
+        name: "Jumlisha Lebo"
+      replace_tags:
+        name: "Badilisha Lebo"
+      delete_topics:
+        name: "Futa Mada"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2267,6 +2275,7 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+      filter: "Chuja"
     form_templates:
       upload_field:
         upload: "Ongeza"
@@ -2663,7 +2672,6 @@ sw:
           css: "CSS"
       email:
         title: "Barua Pepe"
-        settings: "Mipangilio"
         templates: "Violezo"
         preview_digest: "Kihakiki Jarida"
         error: "<b>HITILAFU</b> - %{server_error}"
@@ -3064,7 +3072,6 @@ sw:
           title: "Mahitaji ya Kiwango cha 3 cha uaminifu"
           value_heading: "Thamani"
           requirement_heading: "Kinachohitajika"
-          visits: "Waliotembelea"
           days: "siku"
           topics_replied_to: "Mada Zilizopata Majibu"
           topics_viewed: "Mada Zilizoonwa "
@@ -3280,6 +3287,7 @@ sw:
         post_title: "Ujumbe"
         category_id: "Utambulisho wa kikundi"
         category_title: "Kikundi"
+        username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
         form:
           label: "Mpya:"

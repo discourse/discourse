@@ -17,11 +17,11 @@ module.exports = function generateWorkboxTree() {
   ];
 
   const nodes = workboxDeps.map((name) => {
-    return funnel(`../node_modules/${name}/build`);
+    return funnel(`../../../../node_modules/${name}/build`);
   });
 
   const versions = workboxDeps.map((name) => {
-    return require(`../../node_modules/${name}/package.json`).version;
+    return require(`../../../../../node_modules/${name}/package.json`).version;
   });
 
   // Normally Sprockets will create a cachebuster per-file. In this case we need it at the directory level since

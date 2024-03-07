@@ -35,11 +35,8 @@ pt:
       long_with_year: "DD MMM YYYY hh:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "DD MMM, 'YY LT"
       long_date_without_year: "DD MMM, LT"
-      long_date_with_year_without_time: "DD MMM, 'YY"
       long_date_without_year_with_linebreak: "DD MMM <br/>LT"
-      long_date_with_year_with_linebreak: "DD MMM, 'YY <br/>LT"
       wrap_ago: "%{date} atrás"
       wrap_on: "em %{date}"
       tiny:
@@ -75,7 +72,7 @@ pt:
           one: "%{count}a"
           other: "%{count}a"
         date_month: "DD MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} minuto"
@@ -104,7 +101,6 @@ pt:
         almost_x_years:
           one: "quase %{count} ano"
           other: "quase %{count} anos"
-        date_year: "DD MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -187,7 +183,6 @@ pt:
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
-      message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
     bootstrap_mode: "Primeiros passos"
     themes:
@@ -2327,6 +2322,18 @@ pt:
     topic_bulk_actions:
       close_topics:
         name: "Fechar Tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover Tópicos da Lista"
+      relist_topics:
+        name: "Voltar a Listar Tópicos"
+      append_tags:
+        name: "Anexar Etiquetas"
+      replace_tags:
+        name: "Substituir Etiquetas"
+      delete_topics:
+        name: "Eliminar Tópicos"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3517,6 +3524,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+      filter: "Filtrar"
     until: "Até:"
     form_templates:
       upload_field:
@@ -3745,7 +3753,6 @@ pt:
               write: Criar um novo tópico ou poste em um já existente.
               update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
-              show: Obter informações sobre um utilizador.
               suspend: Suspender contas de utilizador.
             invites:
               create: Envie convites por e-mail ou gere links de convite.
@@ -4091,7 +4098,6 @@ pt:
           instructions: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS."
       email:
         title: "Emails"
-        settings: "Configurações"
         templates: "Templates"
         preview_digest: "Pré-visualizar Resumo"
         advanced_test:
@@ -4494,7 +4500,6 @@ pt:
             other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "dias"
           topics_replied_to: "Tópicos com Respostas"
           topics_viewed: "Tópicos Visualizados"
@@ -4724,6 +4729,7 @@ pt:
         post_title: "Mensagem"
         category_id: "ID da Categoria"
         category_title: "Categoria"
+        username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"

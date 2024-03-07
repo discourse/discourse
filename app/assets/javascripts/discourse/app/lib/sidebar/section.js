@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import { ajax } from "discourse/lib/ajax";
 import SectionLink from "discourse/lib/sidebar/section-link";

@@ -35,11 +35,9 @@ bg:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "MMMM Do, YYYY "
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "преди %{date}"
       wrap_on: "на %{date}"
       tiny:
@@ -75,7 +73,7 @@ bg:
           one: "%{count}г"
           other: "%{count}г"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "по-малко от %{count} минута"
@@ -104,7 +102,7 @@ bg:
         almost_x_years:
           one: "почти %{count} година"
           other: "почти %{count} години"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "преди %{count} минута"
@@ -187,7 +185,6 @@ bg:
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     emails_are_disabled_non_staff: "Изходящият имейл е деактивиран за потребители, които не са от екипа"
     software_update_prompt:
-      message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
     bootstrap_mode: "Първи стъпки"
     themes:
@@ -2441,6 +2438,16 @@ bg:
     topic_bulk_actions:
       close_topics:
         name: "Затвори темите"
+      archive_topics:
+        name: "Архивирай темите"
+      unlist_topics:
+        name: "Непоказани теми"
+      append_tags:
+        name: "Добави етикетите"
+      replace_tags:
+        name: "Замени етикетите"
+      delete_topics:
+        name: "Изтрий темите"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"
@@ -3405,6 +3412,7 @@ bg:
               content: "Моите публикации"
             review:
               content: "Преглед"
+      filter: "Филтър"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3725,7 +3733,6 @@ bg:
           reset: "Обновявам до първоначалното"
       email:
         title: "Имейли"
-        settings: "Настройки"
         templates: "Шаблони"
         preview_digest: "Преглед на справочника"
         error: "<b>ГРЕШКА</b> - %{server_error}"
@@ -4111,7 +4118,6 @@ bg:
           title: "Изисквания за Ниво на доверие 3"
           value_heading: "Стойност"
           requirement_heading: "Изисквания"
-          visits: "Посещения "
           days: "дни "
           topics_replied_to: "Теми отговорени до"
           topics_viewed: "Прегледани теми "
@@ -4341,6 +4347,7 @@ bg:
         post_title: "Публикация"
         category_id: "Категория ID"
         category_title: "Категория"
+        username: "Потребителско име"
         delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
         form:
           label: "Нов:"

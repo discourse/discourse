@@ -34,11 +34,8 @@ et:
       long_with_year: "D. MMMM, YYYY hh:mm"
       long_with_year_no_time: "D. MMMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D. MMMM, 'YY LT"
       long_date_without_year: "D. MMMM, LT"
-      long_date_with_year_without_time: "D. MMMM, 'YY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMMM, 'YY <br/>LT"
       wrap_ago: "%{date} tagasi"
       tiny:
         half_a_minute: "< 1m"
@@ -73,7 +70,7 @@ et:
           one: "%{count}a"
           other: "%{count}a"
         date_month: "D. MMMM"
-        date_year: "MMMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "vähem kui %{count} minut tagasi"
@@ -96,7 +93,6 @@ et:
         about_x_years:
           one: "umbes %{count} aastat"
           other: "umbes %{count} aastat"
-        date_year: "D. MMMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min tagasi"
@@ -1636,6 +1632,16 @@ et:
     topic_bulk_actions:
       close_topics:
         name: "Sulge Teemad"
+      archive_topics:
+        name: "Arhiveeri Teemad"
+      unlist_topics:
+        name: "Eemalda teemad loetelust"
+      append_tags:
+        name: "Lisa sildid"
+      replace_tags:
+        name: "Asenda sildid"
+      delete_topics:
+        name: "Kustuta teemad"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2586,6 +2592,7 @@ et:
       panels:
         forum:
           label: Foorum
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -2988,7 +2995,6 @@ et:
           css: "CSS"
       email:
         title: "Meilid"
-        settings: "Sätted"
         templates: "Mallid"
         preview_digest: "Saadetise eelvaatlus"
         error: "<b>VIGA</b> - %{server_error}"
@@ -3368,7 +3374,6 @@ et:
             other: "viimase %{count} päeva jooksul:"
           value_heading: "Väärtus"
           requirement_heading: "Nõue"
-          visits: "Külastusi"
           days: "päeva"
           topics_replied_to: "Teemasid vastatud"
           topics_viewed: "Vaadatud teemasid"
@@ -3589,6 +3594,7 @@ et:
         post_title: "Postitus"
         category_id: "Foorumi ID"
         category_title: "Foorum"
+        username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:
           label: "Uus"

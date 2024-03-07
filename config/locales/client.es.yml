@@ -35,11 +35,9 @@ es:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "hace %{date}"
       wrap_on: "el %{date}"
       tiny:
@@ -75,7 +73,7 @@ es:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "hace menos de %{count} min"
@@ -104,7 +102,7 @@ es:
         almost_x_years:
           one: "casi %{count} año"
           other: "casi %{count} años"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "hace %{count} minuto"
@@ -188,7 +186,6 @@ es:
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
-      message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
     bootstrap_mode: "Cómo empezar"
     themes:
@@ -200,7 +197,6 @@ es:
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     critical_deprecation:
-      notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>más información</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>«%{name}»</a>."
       plugin_source: "Plugin identificado: «%{name}»"
     s3:
@@ -1730,6 +1726,7 @@ es:
         incorrect_password: "La contraseña introducida es incorrecta."
         incorrect_passkey: "Esa clave de acceso es incorrecta."
         logged_in_as: "Has iniciado sesión como "
+        forgot_password: "¿Olvidaste tu contraseña?"
         instructions: "Confirma tu identidad para completar esta acción."
         fine_print: "Te pedimos que confirmes tu identidad porque se trata de una acción potencialmente sensible. Una vez autentificado, solo se te pedirá que vuelvas a autentificarte tras unas horas de inactividad."
       password:
@@ -2746,6 +2743,22 @@ es:
     topic_bulk_actions:
       close_topics:
         name: "Cerrar temas"
+      archive_topics:
+        name: "Archivar temas"
+      unlist_topics:
+        name: "Hacer invisibles"
+      relist_topics:
+        name: "Hacer visibles de nuevo"
+      remove_tags:
+        name: "Quitar etiquetas"
+      append_tags:
+        name: "Añadir etiquetas"
+      replace_tags:
+        name: "Remplazar etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
+      update_category:
+        name: "Actualizar Categoría"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -3617,10 +3630,13 @@ es:
         off_topic: "No tiene relación con el tema"
         inappropriate: "Es inapropiado"
         spam: "Es spam"
+        illegal: "Es ilegal"
       custom_placeholder_notify_user: "Sé específico, constructivo y siempre amable."
       notify_user_textarea_label: "Mensaje para el usuario"
       custom_placeholder_notify_moderators: "Haznos saber qué te preocupa específicamente y, siempre que sea posible, incluye enlaces y ejemplos relevantes."
       notify_moderators_textarea_label: "Mensaje para los moderadores"
+      custom_placeholder_illegal: "Indícanos exactamente por qué consideras este contenido ilegal, y proporciona enlaces y ejemplos relevantes cuando sea posible."
+      confirmation_illegal: "Lo que he escrito más arriba es preciso y completo."
       custom_message:
         at_least:
           one: "introduce al menos %{count} caracteres"
@@ -4278,6 +4294,9 @@ es:
       panels:
         forum:
           label: Foro
+      filter: "Filtro"
+      no_results:
+        title: "No hay resultados"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
@@ -4636,7 +4655,6 @@ es:
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.
-              show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
               update: Actualizar información del perfil de usuario.
               log_out: Cerrar sesión todas las sesiones del usuario.
@@ -4757,14 +4775,10 @@ es:
           post_liked: "Cuando un usuario le da me gusta a una publicación."
         notification_event:
           group_name: "Eventos de notificación"
-          notification_created: "Un usuario recibe una notificación en su feed"
         group_user_event:
           group_name: "Eventos de usuario de grupo"
-          user_added_to_group: "Se ha añadido un usuario a un grupo"
-          user_removed_from_group: "Se ha eliminado un usuario de un grupo"
         user_promoted_event:
           group_name: "Eventos promovidos por el usuario"
-          user_promoted: "Se ha promocionado a un usuario"
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -5184,7 +5198,6 @@ es:
           instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
         title: "Correos electrónicos"
-        settings: "Ajustes"
         templates: "Plantillas"
         templates_title: "Plantillas de correo electrónico"
         preview_digest: "Vista previa resumen"
@@ -5831,7 +5844,6 @@ es:
             other: "En los últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas en los que ha comentado"
           topics_viewed: "Temas vistos"
@@ -6137,6 +6149,7 @@ es:
         category_title: "Categoría"
         tag_name: "Nombre de la etiqueta"
         external_url: "URL externa o relativa"
+        username: "Nombre de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar enlace permanente al portapapeles"
         delete_confirm: '¿Seguro que quieres eliminar este enlace permanente?'

@@ -479,6 +479,30 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_edit_chat" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      context "when user is staff" do
+        it "returns true" do
+          expect(staff_guardian.can_edit_chat?(message)).to eq(true)
+        end
+      end
+
+      context "when user is not staff" do
+        it "returns false" do
+          expect(guardian.can_edit_chat?(message)).to eq(false)
+        end
+      end
+
+      context "when user is owner of the message" do
+        fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
+
+        it "returns true" do
+          expect(guardian.can_edit_chat?(message)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_delete_category?" do
       alias_matcher :be_able_to_delete_category, :be_can_delete_category
 

@@ -1,7 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { capitalize } from "@ember/string";
+import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -108,11 +107,6 @@ export default Controller.extend({
     }
 
     return isGroupUser || (this.currentUser && this.currentUser.admin);
-  },
-
-  @discourseComputed("model.displayName", "model.full_name")
-  groupName(displayName, fullName) {
-    return capitalize(fullName || displayName);
   },
 
   @discourseComputed("model.messageable")

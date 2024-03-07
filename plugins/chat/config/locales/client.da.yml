@@ -125,6 +125,7 @@ da:
         back: "Tilbage"
         title: Kanaler
         filter_all: Alle
+        filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
       chat_message_separator:

@@ -311,6 +311,24 @@ RSpec.describe Topic do
     end
   end
 
+  describe "slugless_url" do
+    fab!(:topic)
+
+    it "returns the correct url" do
+      expect(topic.slugless_url).to eq("/t/#{topic.id}")
+    end
+
+    it "works with post id" do
+      expect(topic.slugless_url(123)).to eq("/t/#{topic.id}/123")
+    end
+
+    it "works with subfolder install" do
+      set_subfolder "/forum"
+
+      expect(topic.slugless_url).to eq("/forum/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
@@ -2501,7 +2519,7 @@ RSpec.describe Topic do
 
   describe "#listable_count_per_day" do
     before(:each) do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:topic)
       Fabricate(:topic, created_at: 1.day.ago)

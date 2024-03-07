@@ -12,7 +12,7 @@ export default Controller.extend({
   userCanIgnore(trustLevel) {
     return (
       trustLevel >= this.siteSettings.min_trust_level_to_allow_ignore ||
-      this.currentUser.isInAnyGroups(this.siteSettings.ignore_allowed_groups)
+      this.currentUser.can_ignore_users
     );
   },
 

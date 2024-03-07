@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
@@ -29,13 +29,18 @@ export default {
     this.currentUser = container.lookup("service:current-user");
 
     withPluginApi("1.8.0", (api) => {
+      const chatStateManager = container.lookup("service:chat-state-manager");
+
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
             key = CHAT_PANEL;
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
-            switchButtonDefaultUrl = getURL("/chat");
+
+            get switchButtonDefaultUrl() {
+              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+            }
           }
       );
 
@@ -287,7 +292,7 @@ export default {
               if (this.oneOnOneMessage) {
                 const user = this.channel.chatable.users[0];
                 if (user.username !== I18n.t("chat.deleted_chat_username")) {
-                  user.trackStatus();
+                  user.statusManager.trackStatus();
                 }
               }
             }
@@ -295,7 +300,7 @@ export default {
             @bind
             willDestroy() {
               if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].stopTrackingStatus();
+                this.channel.chatable.users[0].statusManager.stopTrackingStatus();
               }
             }
 

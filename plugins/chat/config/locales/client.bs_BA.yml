@@ -49,6 +49,7 @@ bs_BA:
       browse:
         back: "Prethodno"
         filter_all: All
+        filter_open: Otvori
         filter_closed: Zatvoreno
       chat_message_separator:
         today: Today

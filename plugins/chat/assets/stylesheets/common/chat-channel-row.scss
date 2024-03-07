@@ -23,19 +23,19 @@
     &.active {
       background: var(--primary-very-low);
     }
+  }
 
-    &.can-leave:hover {
-      .toggle-channel-membership-button.-leave {
-        display: block;
+  &.can-leave:hover {
+    .toggle-channel-membership-button.-leave {
+      display: block;
 
-        > * {
-          pointer-events: auto;
-        }
+      > * {
+        pointer-events: auto;
       }
+    }
 
-      .chat-channel__metadata {
-        display: none;
-      }
+    .chat-channel__metadata {
+      display: none;
     }
   }
 

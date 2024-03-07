@@ -56,6 +56,7 @@ uk:
       cancel_reply: "Скасувати відповідь"
       chat_channels: "Канали"
       browse_all_channels: "Переглянути всі канали"
+      see_in: "Дивіться в"
       move_to_channel:
         title: "Перенести повідомлення в канал"
         instructions:
@@ -121,6 +122,7 @@ uk:
         direct_message_cta: "Розпочати особистий чат"
         direct_message: "Ви також можете розпочати особистий чат з одним або кількома користувачами."
         title: "Канали не знайдено"
+        my_threads: "У вас ще немає тем. Теми, в яких ви берете участь, відображатимуться тут."
       email_frequency:
         description: "Ми надішлемо вам листа, якщо не бачили вас протягом останніх 15 хвилин."
         never: "Ніколи"
@@ -334,7 +336,7 @@ uk:
         back: "Назад"
         title: Канали
         filter_all: Все
-        filter_open: Відкрито
+        filter_open: Відкрити
         filter_closed: Закриті
         filter_archived: Архівовано
         filter_input_placeholder: Пошук каналу за назвою

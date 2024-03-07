@@ -35,11 +35,9 @@ it:
       long_with_year: "D MMM YYYY h:mm a"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} fa"
       wrap_on: "il %{date}"
       tiny:
@@ -75,7 +73,7 @@ it:
           one: "%{count} anno"
           other: "%{count} anni"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "meno di %{count} minuto"
@@ -104,7 +102,7 @@ it:
         almost_x_years:
           one: "quasi %{count} anno"
           other: "quasi %{count} anni"
-        date_year: "D MMM 'YY"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto fa"
@@ -158,8 +156,8 @@ it:
       removed_user: "Ha rimosso %{who} %{when}"
       removed_group: "Ha rimosso %{who} %{when}"
       autobumped: "Riproposto automaticamente %{when}"
-      tags_changed: "Etichette aggiornate il %{when}"
-      category_changed: "Categoria aggiornata il %{when}"
+      tags_changed: "Etichette aggiornate il giorno %{when}"
+      category_changed: "Categoria aggiornata il giorno %{when}"
       autoclosed:
         enabled: "Chiuso %{when}"
         disabled: "Aperto %{when}"
@@ -188,7 +186,6 @@ it:
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
-      message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     bootstrap_mode: "Per iniziare"
     themes:
@@ -200,7 +197,6 @@ it:
     broken_page_change_alert: "Un gestore onPageChange ha generato un errore. Controlla gli strumenti per sviluppatori del browser per ulteriori informazioni."
     broken_plugin_alert: "Causato dal plugin '%{name}'"
     critical_deprecation:
-      notice: "<b>[Avviso amministratore]</b> Uno dei tuoi temi o plugin necessita di aggiornamento per compatibilità con le prossime modifiche principali di Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>ulteriori informazioni</a>)."
       theme_source: "Tema identificato: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Plugin identificato: '%{name}'"
     s3:
@@ -311,7 +307,7 @@ it:
       edit_bookmark: "Modifica Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
-        bookmark: "Clicca per memorizzare il segnalibro a questo argomento"
+        bookmark: "Clicca per mettere il segnalibro all'argomento"
         edit_bookmark: "Clicca per modificare il segnalibro di un messaggio in questo argomento"
         edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
@@ -360,7 +356,7 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
       abandon:
-        confirm: "Hai gia una bozza in corso. Cosa vorresti fare?"
+        confirm: "Hai già una bozza in corso. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_all:
@@ -570,7 +566,7 @@ it:
         rejected_user:
           title: "Utente rifiutato"
         rejected_post:
-          title: "Messaggio respinto"
+          title: "Messaggio rifiutato"
         ignored:
           title: "Segnalazione ignorata"
         deleted:
@@ -1916,7 +1912,7 @@ it:
       no_internet: "Nessuna connessione internet."
       refresh_page: "Aggiorna pagina"
     summary:
-      in_progress: "Riepilogo dell'argomento utilizzando l'AI in corso"
+      in_progress: "Riepilogo dell'argomento utilizzando l'IA in corso"
       summarized_on: "Riassunto con IA del giorno %{date}"
       model_used: "IA utilizzata: %{model}"
       outdated: "Il riepilogo è obsoleto"
@@ -2746,6 +2742,20 @@ it:
     topic_bulk_actions:
       close_topics:
         name: "Chiudi argomenti"
+      archive_topics:
+        name: "Archivia argomenti"
+      unlist_topics:
+        name: "Rendi argomenti invisibili"
+      relist_topics:
+        name: "Ripubblica Argomenti"
+      remove_tags:
+        name: "Rimuovi etichette"
+      append_tags:
+        name: "Aggiungi Etichette"
+      replace_tags:
+        name: "Sostituisci Etichette"
+      delete_topics:
+        name: "Elimina argomenti"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -4276,6 +4286,9 @@ it:
       panels:
         forum:
           label: Forum
+      filter: "Filtro"
+      no_results:
+        title: "Nessun risultato"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
@@ -4635,7 +4648,6 @@ it:
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
-              show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
               log_out: Disconnetti tutte le sessioni per un utente.
@@ -4756,14 +4768,10 @@ it:
           post_liked: "Quando un utente mette Mi piace su un messaggio."
         notification_event:
           group_name: "Eventi di notifica"
-          notification_created: "Un utente riceve una notifica nel proprio feed"
         group_user_event:
           group_name: "Eventi sui gruppi utente"
-          user_added_to_group: "Un utente viene aggiunto a un gruppo"
-          user_removed_from_group: "Un utente viene rimosso da un gruppo"
         user_promoted_event:
           group_name: "Eventi di promozione degli utenti"
-          user_promoted: "Un utente viene promosso"
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
@@ -5183,7 +5191,6 @@ it:
           instructions: "Personalizza il modello con cui vengono visualizzate tutte le email html e lo stile usando CSS."
       email:
         title: "Email"
-        settings: "Impostazioni"
         templates: "Modelli"
         templates_title: "Modelli di e-mail"
         preview_digest: "Anteprima Riepilogo"
@@ -5830,7 +5837,6 @@ it:
             other: "Negli ultimi %{count} giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
-          visits: "Visite"
           days: "giorni"
           topics_replied_to: "Argomenti cui hai risposto"
           topics_viewed: "Argomenti Visti"
@@ -6136,6 +6142,7 @@ it:
         category_title: "Categoria"
         tag_name: "Nome etichetta"
         external_url: "URL esterno o relativo"
+        username: "Nome utente"
         destination: "Destinazione"
         copy_to_clipboard: "Copia permalink negli appunti"
         delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?

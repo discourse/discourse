@@ -5298,6 +5298,28 @@ RSpec.describe TopicsController do
         expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
     end
+
+    context "with a post_id parameter" do
+      before { sign_in(admin) }
+
+      it "resets bump correctly" do
+        post1 = Fabricate(:post, user: post_author1, topic: topic, created_at: 2.days.ago)
+        post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
+
+        put "/t/#{topic.id}/reset-bump-date/#{post1.id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(post1.created_at)
+      end
+
+      it "does not raise an error for an inexistent post" do
+        id = (SecureRandom.random_number * 100_000_000).to_i
+        original_bumped_at = topic.bumped_at
+
+        put "/t/#{topic.id}/reset-bump-date/#{id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
+      end
+    end
   end
 
   describe "#private_message_reset_new" do

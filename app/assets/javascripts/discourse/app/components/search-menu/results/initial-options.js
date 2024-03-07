@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import I18n from "discourse-i18n";
 import Assistant from "./assistant";
@@ -13,6 +13,14 @@ const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   tagIntersection: Assistant,
   user: AssistantItem,
 };
+
+const DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES = [
+  "topic",
+  "category",
+  "tag",
+  "tagIntersection",
+  "user",
+];
 
 export default class InitialOptions extends Component {
   @service search;
@@ -35,6 +43,15 @@ export default class InitialOptions extends Component {
 
   get termMatchesContextTypeKeyword() {
     return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP);
+  }
+
+  get displayInitialOptions() {
+    if (this.search.activeGlobalSearchTerm) {
+      return false;
+    }
+    return DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES.includes(
+      this.search.searchContext?.type
+    );
   }
 
   setAttributesForSearchContextType(type) {

@@ -151,6 +151,8 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
+    BlockRequestsMiddleware.allow_requests!
+    BlockRequestsMiddleware.current_example_location = nil
   end
 end
 
@@ -231,6 +233,8 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
+
+  config.full_cause_backtrace = true
 
   config.before(:suite) do
     CachedCounting.disable
@@ -589,6 +593,15 @@ RSpec.configure do |config|
         ActiveRecord::Base.connection.schema_cache.add(table)
       end
 
+      ApplicationController.before_action(prepend: true) do
+        if BlockRequestsMiddleware.current_example_location && !request.xhr? &&
+             request.format == "html"
+          cookies[
+            BlockRequestsMiddleware::RSPEC_CURRENT_EXAMPLE_COOKIE_STRING
+          ] = BlockRequestsMiddleware.current_example_location
+        end
+      end
+
       system_tests_initialized = true
     end
 
@@ -606,6 +619,8 @@ RSpec.configure do |config|
     driven_by driver.join("_").to_sym
 
     setup_system_test
+
+    BlockRequestsMiddleware.current_example_location = example.location
   end
 
   config.after(:each, type: :system) do |example|
@@ -661,6 +676,11 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+
+    # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
+    BlockRequestsMiddleware.block_requests!
+
+    Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Discourse.redis.flushdb
   end
@@ -675,7 +695,12 @@ RSpec.configure do |config|
         lines << "\n"
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}\n" }
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
@@ -754,6 +779,14 @@ def set_cdn_url(cdn_url)
     Rails.configuration.action_controller.asset_host = nil
     ActionController::Base.asset_host = nil
   end
+end
+
+# Time.now can cause flaky tests, especially in cases like
+# leap days. This method freezes time at a "safe" specific
+# time (the Discourse 1.1 release date), so it will not be
+# affected by further temporal disruptions.
+def freeze_time_safe
+  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
 end
 
 def freeze_time(now = Time.now)

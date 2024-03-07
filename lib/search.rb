@@ -266,6 +266,7 @@ class Search
         search_context: @search_context,
         blurb_length: @blurb_length,
         is_header_search: !use_full_page_limit,
+        can_lazy_load_categories: @guardian.can_lazy_load_categories?,
       )
   end
 
@@ -1447,7 +1448,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category]
+    topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 

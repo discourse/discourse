@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { setting } from "discourse/lib/computed";
 import { groupPath } from "discourse/lib/url";

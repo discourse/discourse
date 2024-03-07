@@ -24,6 +24,7 @@ register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
+register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
@@ -32,6 +33,10 @@ GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 module ::Chat
   PLUGIN_NAME = "chat"
+  RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
+    chat_channel_retention_days: :dismissed_channel_retention_reminder,
+    chat_dm_retention_days: :dismissed_dm_retention_reminder,
+  }
 end
 
 require_relative "lib/chat/engine"
@@ -69,7 +74,7 @@ after_initialize do
     Group.prepend Chat::GroupExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
-    Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    Jobs::ExportCsvFile.prepend Chat::MessagesExporter
     WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
@@ -140,6 +145,15 @@ after_initialize do
     include_condition: -> do
       return @can_chat if defined?(@can_chat)
       @can_chat = SiteSetting.chat_enabled && scope.can_chat?
+    end,
+  ) { true }
+
+  add_to_serializer(
+    :current_user,
+    :can_direct_message,
+    include_condition: -> do
+      return @can_direct_message if defined?(@can_direct_message)
+      @can_direct_message = SiteSetting.chat_enabled && scope.can_direct_message?
     end,
   ) { true }
 
@@ -260,12 +274,8 @@ after_initialize do
     include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
   ) { object.thumbnail }
 
-  RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
-    chat_channel_retention_days: :dismissed_channel_retention_reminder,
-    chat_dm_retention_days: :dismissed_dm_retention_reminder,
-  }
   on(:site_setting_changed) do |name, old_value, new_value|
-    user_option_field = RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
+    user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin
       if user_option_field && old_value != new_value && !new_value.zero?
         UserOption.where(user_option_field => true).update_all(user_option_field => false)
@@ -332,10 +342,9 @@ after_initialize do
     nil
   end
 
-  CHAT_NOTIFICATION_TYPES = [Notification.types[:chat_mention], Notification.types[:chat_message]]
   register_push_notification_filter do |user, payload|
     if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      CHAT_NOTIFICATION_TYPES.include?(payload[:notification_type])
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
     else
       true
     end

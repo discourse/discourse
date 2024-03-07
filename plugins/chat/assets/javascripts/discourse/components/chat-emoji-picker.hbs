@@ -25,7 +25,7 @@
           )
         }}
         @value={{this.chatEmojiPickerManager.picker.initialFilter}}
-        @filterAction={{action this.didInputFilter value="target.value"}}
+        @filterAction={{with-event-value this.didInputFilter}}
         @icons={{hash left="search"}}
         @containerClass="chat-emoji-picker__filter"
         autofocus={{true}}

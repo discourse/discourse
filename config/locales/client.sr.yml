@@ -36,11 +36,9 @@ sr:
       long_with_year: "D. MMM YYYY H.mm"
       long_with_year_no_time: "D. MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D. MMM ’YY LT"
       long_date_without_year: "D. MMM LT"
-      long_date_with_year_without_time: "D. MMM ’YY"
+      long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D. MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM ’YY <br/>LT"
       wrap_ago: "пре %{date}"
       wrap_on: "дана %{date}"
       tiny:
@@ -86,7 +84,7 @@ sr:
           few: "%{count} год."
           other: "%{count} год."
         date_month: "D. MMM"
-        date_year: "MMM ’YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "мање од %{count} мин."
@@ -116,7 +114,7 @@ sr:
           one: "око %{count} године"
           few: "око %{count} године"
           other: "око %{count} година"
-        date_year: "D. MMM ’YY"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} мин. раније"
@@ -189,7 +187,6 @@ sr:
     topic_admin_menu: "радње око теме"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
-      message: "Ажурирали смо сајт. <span>Освежите страницу</span> да бисте избегли непријатности."
       dismiss: "Одбаци"
     themes:
       default_description: "Подразумевано"
@@ -1210,6 +1207,10 @@ sr:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori Teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      delete_topics:
+        name: "Obriši Teme"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"
@@ -1834,6 +1835,7 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -2085,7 +2087,6 @@ sr:
         email_style:
           css: "CSS"
       email:
-        settings: "Podešavanje"
         preview_digest: "Pregled sažetka"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
@@ -2358,7 +2359,6 @@ sr:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"
           requirement_heading: "Predispozicija"
-          visits: "Poseta"
           days: "dana"
           topics_replied_to: "Teme Odgovrene U"
           topics_viewed: "Tema Pregledano"
@@ -2535,6 +2535,7 @@ sr:
         post_id: "ID Poruke"
         post_title: "Post"
         category_title: "Kategorija"
+        username: "Korisničko Ime"
         form:
           label: "Novo:"
           add: "Dodaj"

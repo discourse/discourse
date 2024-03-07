@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Chat
-  class ChatableUserSerializer < ::Chat::UserWithCustomFieldsAndStatusSerializer
+  class ChatableUserSerializer < UserWithCustomFieldsSerializer
     attributes :can_chat, :has_chat_enabled
 
     def can_chat
-      SiteSetting.chat_enabled && scope.can_chat?
+      SiteSetting.chat_enabled && object.guardian.can_chat? && object.guardian.can_direct_message?
     end
 
     def has_chat_enabled

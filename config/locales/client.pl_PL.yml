@@ -37,11 +37,8 @@ pl_PL:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} temu"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ pl_PL:
           many: "%{count}r"
           other: "%{count}r"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "mniej niż %{count} minutę"
@@ -144,7 +141,6 @@ pl_PL:
           few: "prawie %{count} lata"
           many: "prawie %{count} lat"
           other: "prawie %{count} lat"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "minutę temu"
@@ -244,7 +240,7 @@ pl_PL:
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
-      message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+      message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
     themes:
@@ -256,7 +252,7 @@ pl_PL:
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     critical_deprecation:
-      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>więcej informacji</a>)."
+      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
       theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
@@ -1135,6 +1131,7 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
+      account_possessive: "Konto %{name}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1611,6 +1608,9 @@ pl_PL:
           description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
           description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
         authorizing_old:
+          title: "Zweryfikuj stary adres e-mail"
+          description: "Zweryfikuj swój stary adres e-mail, aby kontynuować zmianę adresu e-mail:"
+          description_add: "Zweryfikuj istniejący adres e-mail, aby kontynuować dodawanie alternatywnego adresu:"
           old_email: "Stary adres e-mail: %{email}"
           new_email: "Nowy adres e-mail: %{email}"
           confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
@@ -1883,6 +1883,9 @@ pl_PL:
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
         incorrect_passkey: "Ten passkey jest nieprawidłowy."
         logged_in_as: "Jesteś zalogowany jako: "
+        forgot_password: "Zapomniałeś hasła?"
+        password_reset_email_sent: "Wysłano wiadomość e-mail z resetem hasła."
+        cannot_send_password_reset_email: "Nie można wysłać wiadomości e-mail z resetem hasła."
         instructions: "Aby dokończyć tę czynność, potwierdź swoją tożsamość."
         fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
@@ -2975,6 +2978,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
+        silent: "Wykonaj tę akcję po cichu."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -3007,6 +3011,32 @@ pl_PL:
     topic_bulk_actions:
       close_topics:
         name: "Zamknij tematy"
+      archive_topics:
+        name: "Zarchiwizuj tematy"
+      unlist_topics:
+        name: "Ukryj tematy"
+      relist_topics:
+        name: "Odśwież listę tematów"
+      remove_tags:
+        name: "Usuń tagi"
+      append_tags:
+        name: "Dodaj tagi"
+      replace_tags:
+        name: "Zmień tagi"
+      delete_topics:
+        name: "Usuń tematy"
+      update_category:
+        name: "Aktualizuj kategorię"
+        description: "Wybierz nową kategorię dla wybranych tematów"
+      reset_bump_dates:
+        name: "Zresetuj datę odświeżenia"
+        description: "Ustaw datę odświeżenia tematu na datę utworzenia ostatniego posta. Wpływa to na kolejność tematów na liście."
+      defer:
+        name: "Odłóż tematy"
+        description: "Oznacz tematy jako nieprzeczytane"
+      update_notifications:
+        name: "Aktualizuj powiadomienia…"
+        description: "Zmień poziom powiadomień na obserwowanie, śledzone, normalne lub wyciszone"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -3696,6 +3726,7 @@ pl_PL:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
           inappropriate: "Oznaczono jako niewłaściwe"
+          illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
       delete:
@@ -3964,10 +3995,13 @@ pl_PL:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
         spam: "Jest odebrane jako spam"
+        illegal: "To nielegalne"
       custom_placeholder_notify_user: "Napisz konkretnie, konstuktywnie i kulturalnie."
       notify_user_textarea_label: "Wiadomość dla użytkownika"
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
       notify_moderators_textarea_label: "Wiadomość dla moderatorów"
+      custom_placeholder_illegal: "Daj nam znać, dlaczego uważasz, że te treści są nielegalne, i jeśli to możliwe, podaj odpowiednie linki i przykłady."
+      confirmation_illegal: "Informacje zawarte powyżej są dokładne i kompletne."
       custom_message:
         at_least:
           one: "wprowadź co najmniej %{count} znak"
@@ -4245,6 +4279,7 @@ pl_PL:
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
+        filter_sidebar: "%{shortcut} Filtruj pasek boczny"
         help: "%{shortcut} Pokaż skróty klawiszowe"
         dismiss_new: "%{shortcut} Odrzuć nowe"
         dismiss_topics: "%{shortcut} wyczyść listę tematów"
@@ -4693,6 +4728,11 @@ pl_PL:
       panels:
         forum:
           label: Forum
+      filter: "Filtr"
+      clear_filter: "Wyczyść filtr"
+      no_results:
+        title: "Brak wyników"
+        description: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5047,11 +5087,13 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi, status, archetyp, featured_link itp.
               delete: Usuń temat.
+              recover: Odzyskaj temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
+              recover: Odzyskaj post.
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             tags:
               list: Lista tagów.
@@ -5196,7 +5238,7 @@ pl_PL:
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
-          user_promoted: "Użytkownik został awansowany"
+          user_promoted: "Użytkownik zostaje awansowany"
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5464,6 +5506,7 @@ pl_PL:
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
+          installing_message: "Instalacja motywu może potrwać kilka minut..."
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           create_placeholder: "Utwórz symbol zastępczy"
@@ -5546,6 +5589,8 @@ pl_PL:
           active_filter: "Aktywni"
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
+          schema:
+            back_button: "Powrót do %{name}"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -5622,7 +5667,7 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "Emaile"
-        settings: "Ustawienia"
+        settings: "Ustawienia e-mail"
         templates: "Szablony"
         templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -6281,7 +6326,7 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
-          visits: "Odwiedziny"
+          posts_read_days: "Przeczytane posty: unikalne dni"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"
@@ -6591,6 +6636,8 @@ pl_PL:
         category_title: "Kategoria"
         tag_name: "Nazwa tagu"
         external_url: "Zewnętrzny lub względny adres URL"
+        user_id: "ID użytkownika"
+        username: "Nazwa użytkownika"
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?

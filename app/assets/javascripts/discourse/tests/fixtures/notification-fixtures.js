@@ -37,7 +37,7 @@ export default {
         notification_type: NOTIFICATION_TYPES.liked_consolidated,
         acting_user_avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
         read: false,
-        data: { display_username: "aquaman", count: "5" },
+        data: { username: "aquaman", display_username: "aquaman", count: 5 },
       },
       {
         id: 789,

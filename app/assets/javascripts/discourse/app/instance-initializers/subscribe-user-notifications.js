@@ -259,6 +259,11 @@ export default {
 
   @bind
   onAlert(data) {
-    return onNotification(data, this.siteSettings, this.currentUser);
+    return onNotification(
+      data,
+      this.siteSettings,
+      this.currentUser,
+      this.appEvents
+    );
   },
 };

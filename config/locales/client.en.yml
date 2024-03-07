@@ -42,15 +42,15 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "MMM D, 'YY LT"
+      long_date_with_year: "MMM D, YYYY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
 
       wrap_ago: "%{date} ago"
       wrap_on: "on %{date}"
@@ -90,7 +90,7 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "MMM D"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "less than %{count} min"
@@ -120,7 +120,7 @@ en:
           one: "almost %{count} year"
           other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM D, 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min ago"
@@ -209,7 +209,7 @@ en:
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
-      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
@@ -226,7 +226,9 @@ en:
     broken_plugin_alert: "Caused by plugin '%{name}'"
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes (<a target='_blank' href='https://meta.discourse.org/t/287211'>more info</a>)."
+      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identified plugin: '%{name}'"
 
@@ -1869,6 +1871,9 @@ en:
         incorrect_password: "The entered password is incorrect."
         incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
+        forgot_password: "Forgot your password?"
+        password_reset_email_sent: "Password reset email sent."
+        cannot_send_password_reset_email: "Could not send password reset email."
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
@@ -2335,6 +2340,9 @@ en:
       loading: Loading…
 
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -2960,6 +2968,8 @@ en:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
         silent: "Perform this action silently."
+        performing: "Performing bulk operations, please wait…"
+        completed: "Bulk operations completed successfully!"
 
       none:
         unread: "You have no unread topics."
@@ -2994,9 +3004,32 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+      archive_topics:
+        name: "Archive Topics"
+      unlist_topics:
+        name: "Unlist Topics"
+      relist_topics:
+        name: "Relist Topics"
+      remove_tags:
+        name: "Remove Tags"
+      append_tags:
+        name: "Append Tags"
+      replace_tags:
+        name: "Replace Tags"
+      delete_topics:
+        name: "Delete Topics"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
+      reset_bump_dates:
+        name: "Reset Bump Dates"
+        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+      defer:
+        name: "Defer Topics"
+        description: "Mark topics as unread"
+      update_notifications:
+        name: "Update Notifications…"
+        description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
       filter_to:
@@ -3658,6 +3691,7 @@ en:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
+          illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
 
@@ -3940,10 +3974,13 @@ en:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
+        illegal: "It's Illegal"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
+      custom_placeholder_illegal: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
+      confirmation_illegal: "What I’ve written above is accurate and complete."
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -4211,6 +4248,7 @@ en:
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
+        filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
         dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
@@ -4645,6 +4683,11 @@ en:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description: "We couldn’t find anything matching ‘%{filter}’"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4999,11 +5042,13 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
+              recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
@@ -5418,6 +5463,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          installing_message: "Installing theme, this may take several minutes..."
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create Placeholder"
@@ -5442,6 +5488,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          edit_objects_theme_setting: "Objects Setting Editor"
           overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
@@ -5498,6 +5545,8 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
+          schema:
+            back_button: "Back to %{name}"
         colors:
           select_base:
             title: "Select base color palette"
@@ -5580,7 +5629,7 @@ en:
 
       email:
         title: "Emails"
-        settings: "Settings"
+        settings: "Email Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"
@@ -6260,7 +6309,7 @@ en:
             other: "In the last %{count} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
+          posts_read_days: "Posts Read: unique days"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -6575,6 +6624,8 @@ en:
         category_title: "Category"
         tag_name: "Tag name"
         external_url: "External or Relative URL"
+        user_id: "User ID"
+        username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?

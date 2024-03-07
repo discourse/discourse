@@ -2,14 +2,14 @@ import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import { sanitize } from "discourse/lib/text";
-import { bind } from "discourse-common/utils/decorators";
+import { afterRender, bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const FULL_RELOAD_LINKS_REGEX = [
@@ -383,6 +383,13 @@ export default class SidebarSectionForm extends Component {
       : "sidebar.sections.custom.add";
   }
 
+  @afterRender
+  focusNewRowInput(id) {
+    document
+      .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
+      .focus();
+  }
+
   @bind
   setDraggedLink(link) {
     this.draggedLink = link;
@@ -445,6 +452,8 @@ export default class SidebarSectionForm extends Component {
         segment: "primary",
       })
     );
+
+    this.focusNewRowInput(this.nextObjectId);
   }
 
   @action
@@ -457,6 +466,8 @@ export default class SidebarSectionForm extends Component {
         segment: "secondary",
       })
     );
+
+    this.focusNewRowInput(this.nextObjectId);
   }
 
   @action

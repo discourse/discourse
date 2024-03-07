@@ -35,11 +35,9 @@ fr:
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "DD MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
       wrap_on: "le %{date}"
       tiny:
@@ -75,7 +73,7 @@ fr:
           one: "%{count} an"
           other: "%{count} ans"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "moins de %{count} minute"
@@ -104,7 +102,7 @@ fr:
         almost_x_years:
           one: "presque %{count} an"
           other: "presque %{count} ans"
-        date_year: "D MMM 'YY"
+        date_year: "DD MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "il y a %{count} minute"
@@ -188,7 +186,6 @@ fr:
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
-      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     themes:
@@ -200,7 +197,6 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>plus d'informations</a>)."
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -2076,7 +2072,7 @@ fr:
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       passkey:
-        name: "Connectez-vous à l'aide d'une clé d'accès"
+        name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -2746,6 +2742,20 @@ fr:
     topic_bulk_actions:
       close_topics:
         name: "Fermer les sujets"
+      archive_topics:
+        name: "Archiver les sujets"
+      unlist_topics:
+        name: "Rendre les sujets invisibles"
+      relist_topics:
+        name: "Lister les sujets"
+      remove_tags:
+        name: "Supprimer des étiquettes"
+      append_tags:
+        name: "Ajouter des étiquettes"
+      replace_tags:
+        name: "Remplacer des étiquettes"
+      delete_topics:
+        name: "Supprimer les sujets"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -4278,6 +4288,9 @@ fr:
       panels:
         forum:
           label: Forum
+      filter: "Filtrer"
+      no_results:
+        title: "Aucun résultat"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
@@ -4637,7 +4650,6 @@ fr:
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
               sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
-              show: Obtenir des informations sur un utilisateur.
               check_emails: Lister les e-mails d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
               log_out: Déconnecter toutes les sessions pour un utilisateur.
@@ -4758,14 +4770,10 @@ fr:
           post_liked: "Lorsqu'un utilisateur attribue un « J'aime »"
         notification_event:
           group_name: "Événements de notification"
-          notification_created: "Un utilisateur reçoit une notification dans son fil"
         group_user_event:
           group_name: "Événements pour les utilisateurs du groupe"
-          user_added_to_group: "Un utilisateur est ajouté à un groupe"
-          user_removed_from_group: "Un utilisateur est supprimé d'un groupe"
         user_promoted_event:
           group_name: "Événements promus par l'utilisateur"
-          user_promoted: "Un utilisateur est promu"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -5185,7 +5193,6 @@ fr:
           instructions: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "E-mails"
-        settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
         preview_digest: "Prévisualisation de l'e-mail"
@@ -5832,7 +5839,6 @@ fr:
             other: "Lors des %{count} derniers jours :"
           value_heading: "Valeur"
           requirement_heading: "Prérequis"
-          visits: "Visites"
           days: "jours"
           topics_replied_to: "Sujets auxquels l'utilisateur a répondu"
           topics_viewed: "Sujets vus"
@@ -6138,6 +6144,7 @@ fr:
         category_title: "Catégorie"
         tag_name: "Nom de l'étiquette"
         external_url: "URL externe ou relative"
+        username: "Nom d'utilisateur"
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
         delete_confirm: Voulez-vous vraiment supprimer ce permalien ?

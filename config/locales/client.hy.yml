@@ -35,11 +35,8 @@ hy:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} առաջ"
       tiny:
         half_a_minute: "< 1ր"
@@ -74,7 +71,7 @@ hy:
           one: "%{count}տարի"
           other: "%{count}տ"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} րոպե"
@@ -85,7 +82,6 @@ hy:
         x_days:
           one: "%{count} օր"
           other: "%{count} օր"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} րոպե առաջ"
@@ -1799,6 +1795,18 @@ hy:
     topic_bulk_actions:
       close_topics:
         name: "Փակել Թեմաները"
+      archive_topics:
+        name: "Արխիվացնել Թեմաները"
+      unlist_topics:
+        name: "Թեմաները Ցանկից Հանել"
+      relist_topics:
+        name: "Վերացանկավորել Թեմաները"
+      append_tags:
+        name: "Ավելացնել Թեգեր"
+      replace_tags:
+        name: "Փոխարինել Թեգերը"
+      delete_topics:
+        name: "Ջնջել Թեմաները"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2860,6 +2868,7 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
@@ -3431,7 +3440,6 @@ hy:
           instructions: "Ձևանմուշի կարգավորում, որում պատկերվում են բոլոր html էլեկտրոնային փոստի հաղորդագրությունները և ոճը՝ օգտագործելով CSS:"
       email:
         title: "Էլ. հասցեներ"
-        settings: "Կարգավորումներ"
         templates: "Ձևանմուշներ"
         preview_digest: "Նախադիտման Ամփոփումը"
         advanced_test:
@@ -3919,7 +3927,6 @@ hy:
             other: "Վերջին %{count} օրվա ընթացքում՝ "
           value_heading: "Արժեք"
           requirement_heading: "Պահանջ"
-          visits: "Այցելություններ"
           days: "օր"
           topics_replied_to: "Պատասխանած Թեմաները"
           topics_viewed: "Դիտված Թեմաները"
@@ -4164,6 +4171,7 @@ hy:
         post_title: "Գրառում"
         category_id: "Կատեգորիայի ID"
         category_title: "Կատեգորիա"
+        username: "Օգտանուն"
         destination: "Նպատակներ "
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս մշտահղումը:'
         form:

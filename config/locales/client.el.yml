@@ -35,11 +35,8 @@ el:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} πριν"
       wrap_on: "στις %{date}"
       tiny:
@@ -75,7 +72,7 @@ el:
           one: "%{count}χ"
           other: "%{count}χ"
         date_month: "DD MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} λ"
@@ -86,7 +83,6 @@ el:
         x_days:
           one: "%{count} ημ"
           other: "%{count} ημ"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "πριν από %{count} λεπτό "
@@ -164,7 +160,6 @@ el:
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
-      message: "Ενημερώσαμε αυτόν τον ιστότοπο, <span>παρακαλώ ανανεώστε</span>, διαφορετικά ενδέχεται να αντιμετωπίσετε απροσδόκητη συμπεριφορά."
       dismiss: "Απόρριψη"
     themes:
       default_description: "Προεπιλογή"
@@ -2118,6 +2113,18 @@ el:
     topic_bulk_actions:
       close_topics:
         name: "Κλείσιμο Νημάτων"
+      archive_topics:
+        name: "Αρχειοθέτηση Νημάτων"
+      unlist_topics:
+        name: "Απόκρυψη Νημάτων"
+      relist_topics:
+        name: "Εμφάνιση Νημάτων"
+      append_tags:
+        name: "Προσάρτηση Ετικετών "
+      replace_tags:
+        name: "Αντικατάσταση Ετικετών "
+      delete_topics:
+        name: "Διαγραφή Νημάτων"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε νήματα"
@@ -3308,6 +3315,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
+      filter: "Φίλτρο"
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -3535,7 +3543,6 @@ el:
               read_lists: Διαβάστε λίστες θεμάτων όπως δημοφιλή, νέα, πρόσφατα, κλπ. Υποστηρίζεται επίσης το RSS.
             users:
               bookmarks: Λίστα σελιδοδεικτών χρηστών. Επιστρέφει τις υπενθυμίσεις σελιδοδεικτών όταν χρησιμοποιείτε τη μορφή ICS.
-              show: Λάβετε πληροφορίες σχετικά με έναν χρήστη.
               check_emails: Λίστα emails χρήστη.
       web_hooks:
         title: "Webhooks"
@@ -3908,7 +3915,6 @@ el:
           instructions: "Προσαρμόστε το πρότυπο στο οποίο αποδίδονται όλα τα HTML emails και ορίστε στυλ χρησιμοποιώντας CSS."
       email:
         title: "Emails"
-        settings: "Ρυθμίσεις"
         templates: "Πρότυπα"
         preview_digest: "Προεπισκόπηση Σύνοψης"
         advanced_test:
@@ -4410,7 +4416,6 @@ el:
             other: "Τις τελευταίες %{count} μέρες:"
           value_heading: "Τιμή"
           requirement_heading: "Προϋπόθεση"
-          visits: "Επισκέψεις"
           days: "ημέρες"
           topics_replied_to: "Θέματα που απάντησε"
           topics_viewed: "Θέματα που είδε"
@@ -4658,6 +4663,7 @@ el:
         category_title: "Κατηγορία"
         tag_name: "Όνομα ετικέτας"
         external_url: "Εξωτερική ή σχετική διεύθυνση URL"
+        username: "Όνομα Χρήστη"
         destination: "Προορισμός"
         copy_to_clipboard: "Αντιγραφή permalink στο πρόχειρο"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;

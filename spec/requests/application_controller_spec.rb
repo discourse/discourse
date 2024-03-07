@@ -699,7 +699,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -716,7 +716,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("true")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -732,19 +732,6 @@ RSpec.describe ApplicationController do
       expect(gtm_meta_tag["data-nonce"]).to eq(second_nonce)
     end
 
-    it "when splash screen is enabled it adds the fingerprint to the policy" do
-      SiteSetting.content_security_policy = true
-      SiteSetting.splash_screen = true
-
-      get "/latest"
-      fingerprint = SplashScreenHelper.fingerprint
-      expect(response.headers).to include("Content-Security-Policy")
-
-      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      expect(script_src.to_s).to include(fingerprint)
-      expect(response.body).to include(SplashScreenHelper.inline_splash_screen_script)
-    end
-
     def parse(csp_string)
       csp_string
         .split(";")
@@ -756,7 +743,7 @@ RSpec.describe ApplicationController do
     end
 
     def extract_nonce_from_script_src(script_src)
-      nonce = script_src.find { |src| src.match?(/\A'nonce-\h{32}'\z/) }[-33...-1]
+      nonce = script_src.lazy.map { |src| src[/\A'nonce-([^']+)'\z/, 1] }.find(&:itself)
       expect(nonce).to be_present
       nonce
     end
@@ -1308,6 +1295,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
+            "enabledPluginAdminRoutes",
           ],
         )
       end
@@ -1319,6 +1307,11 @@ RSpec.describe ApplicationController do
         expect(font_map.keys).to match_array(
           DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
         )
+      end
+
+      it "has correctly loaded enabledPluginAdminRoutes" do
+        get "/latest"
+        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
       end
     end
   end

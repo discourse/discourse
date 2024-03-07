@@ -4,6 +4,7 @@ RSpec.describe "Outgoing chat webhooks" do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
   end
 
   describe "chat messages" do

@@ -2186,6 +2186,7 @@ export default {
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
+      can_close_topic: true,
       created_by: {
         id: 255,
         username: "uwe_keim",

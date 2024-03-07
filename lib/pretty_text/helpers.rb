@@ -92,7 +92,7 @@ module PrettyText
       if topic && Guardian.new.can_see?(topic)
         { title: Rack::Utils.escape_html(topic.title), href: topic.url }
       elsif topic
-        { title: I18n.t("on_another_topic"), href: Discourse.base_url + topic.slugless_url }
+        { title: I18n.t("on_another_topic"), href: topic.slugless_url }
       end
     end
 

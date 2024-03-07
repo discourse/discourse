@@ -1,5 +1,5 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
@@ -252,28 +252,27 @@ export default MountWidget.extend({
       this._currentPercent = null;
     }
 
-    const onscreenPostNumbers = [];
-    const readPostNumbers = [];
+    const onscreenPostNumbers = new Set();
+    const readPostNumbers = new Set();
 
-    const prev = this._previouslyNearby;
-    const newPrev = {};
+    const newPrev = new Set();
     nearby.forEach((idx) => {
       const post = posts.objectAt(idx);
-      const postNumber = post.post_number;
 
-      delete prev[postNumber];
+      this._previouslyNearby.delete(post.post_number);
 
       if (onscreen.includes(idx)) {
-        onscreenPostNumbers.push(postNumber);
+        onscreenPostNumbers.add(post.post_number);
         if (post.read) {
-          readPostNumbers.push(postNumber);
+          readPostNumbers.add(post.post_number);
         }
       }
-      newPrev[postNumber] = post;
+
+      newPrev.add(post.post_number, post);
       uncloak(post, this);
     });
 
-    Object.values(prev).forEach((node) => cloak(node, this));
+    Object.values(this._previouslyNearby).forEach((node) => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
@@ -323,7 +322,7 @@ export default MountWidget.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this._previouslyNearby = {};
+    this._previouslyNearby = new Set();
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     const opts = {

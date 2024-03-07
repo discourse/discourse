@@ -72,7 +72,7 @@
     @content={{this.emailFrequencyOptions}}
     @value={{this.model.user_option.chat_email_frequency}}
     @id="user_chat_email_frequency"
-    @onChange={{action (mut this.model.user_option.chat_email_frequency)}}
+    @onChange={{fn (mut this.model.user_option.chat_email_frequency)}}
   />
   {{#if (eq this.model.user_option.chat_email_frequency "when_away")}}
     <div class="control-instructions">
@@ -112,7 +112,7 @@
     @content={{this.chatSeparateSidebarModeOptions}}
     @value={{this.chatSeparateSidebarMode}}
     @id="user_chat_separate_sidebar_mode"
-    @onChange={{action (mut this.model.user_option.chat_separate_sidebar_mode)}}
+    @onChange={{fn (mut this.model.user_option.chat_separate_sidebar_mode)}}
   />
 </div>
 

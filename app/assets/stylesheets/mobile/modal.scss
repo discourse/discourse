@@ -51,61 +51,14 @@
   }
 }
 
-// we need a little extra room on mobile for the
-// stuff inside the footer to fit
-.modal-footer {
-  padding: 10px;
-}
-
-.modal-header {
-  padding: 10px;
-  h3 {
-    font-size: var(--font-up-2);
-  }
-}
-
 .close {
   font-size: var(--font-up-4);
 }
 
-#choosing-topic {
-  p {
-    margin-top: 0;
-    padding-bottom: 0;
-  }
-
-  input[type="radio"] {
-    margin-right: 10px;
-  }
-
-  .category-chooser {
-    margin-bottom: 9px;
-  }
-
-  button {
-    margin-top: 10px;
-    display: block;
-  }
-
-  form {
-    margin-top: 20px;
-    input:not(.filter-input)[type="text"] {
-      box-sizing: border-box;
-      width: 100%;
-    }
-  }
-}
-
 @media only screen and (max-device-width: 568px) {
-  .modal .flag-modal-body .flag-message {
+  .flag-modal-body .flag-message {
     height: 3em;
   }
-}
-
-/* fixes for the new account confirm dialog on mobile */
-
-.modal-inner-container {
-  margin-bottom: 20px;
 }
 
 /* fix for tall modals */
@@ -128,25 +81,6 @@
 
     .modal-inner-container {
       margin: auto;
-    }
-  }
-}
-
-.modal .modal-body.reorder-categories {
-  max-height: calc(100vh - 220px);
-}
-
-.discard-draft-modal {
-  .modal-inner-container {
-    width: 250px;
-  }
-  .modal-footer {
-    justify-content: center;
-    flex-flow: column nowrap;
-    align-items: stretch;
-
-    .btn {
-      margin-right: 0;
     }
   }
 }

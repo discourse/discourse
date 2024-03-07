@@ -22,8 +22,16 @@
       {{/if}}
     {{/each}}
   </this.wrapperComponent>
-{{else if this.connectorsExist}}
+{{else if (this.connectorsExist hasBlock=(has-block))}}
   {{! The modern path: no wrapper element = no classic component }}
+
+  {{#if (has-block)}}
+    <PluginOutlet
+      @name={{concat @name "__before"}}
+      @outletArgs={{this.outletArgsWithDeprecations}}
+    />
+  {{/if}}
+
   {{#each (this.getConnectors hasBlock=(has-block)) as |c|}}
     {{#if c.componentClass}}
       <c.componentClass
@@ -47,6 +55,13 @@
   {{else}}
     {{yield}}
   {{/each}}
+
+  {{#if (has-block)}}
+    <PluginOutlet
+      @name={{concat @name "__after"}}
+      @outletArgs={{this.outletArgsWithDeprecations}}
+    />
+  {{/if}}
 {{else}}
   {{yield}}
 {{/if}}

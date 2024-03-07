@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { cancel, next } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -65,13 +65,7 @@ export default class Chat extends Service {
       return false;
     }
 
-    return (
-      this.currentUser.staff ||
-      this.siteSettings.userInAnyGroups(
-        "direct_message_enabled_groups",
-        this.currentUser
-      )
-    );
+    return this.currentUser.staff || this.currentUser.can_direct_message;
   }
 
   @computed("chatChannelsManager.directMessageChannels")

@@ -15,7 +15,7 @@ zh_CN:
     poll_export_data_explorer_query_id: "用于导出投票结果的数据资源管理器查询的 ID（0 将禁用）。"
     poll_default_public: "创建新投票时，默认启用“显示投票人”选项。"
   keywords:
-    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+    poll_create_allowed_groups: "允许创建群组的最低信任等级"
   poll:
     poll: "投票"
     invalid_argument: "参数 '%{argument}' 的值 '%{value}' 无效。"

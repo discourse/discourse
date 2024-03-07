@@ -56,6 +56,7 @@ sv:
       cancel_reply: "Avbryt svar"
       chat_channels: "Kanaler"
       browse_all_channels: "Bläddra bland alla kanaler"
+      see_in: "Se i"
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:
@@ -117,6 +118,7 @@ sv:
         direct_message_cta: "Starta en personlig chatt"
         direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
         title: "Inga kanaler hittades"
+        my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"
@@ -304,7 +306,7 @@ sv:
         back: "Tillbaka"
         title: Kanaler
         filter_all: Alla
-        filter_open: Öppnad
+        filter_open: Öppen
         filter_closed: Stängd
         filter_archived: Arkiverad
         filter_input_placeholder: Sök kanal efter namn

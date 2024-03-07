@@ -9,10 +9,12 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:channel_2) { Fabricate(:chat_channel) }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
     channel_1.add(current_user)
+    channel_2.add(current_user)
     chat_system_bootstrap
     sign_in(current_user)
   end
@@ -145,6 +147,15 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
         expect(sidebar_component).to have_no_section("chat-channels")
         expect(sidebar_component).to have_section("Categories")
+
+        chat_drawer_page.open_channel(channel_2)
+
+        expect(chat_drawer_page).to have_open_channel(channel_2)
+
+        chat_drawer_page.close
+        sidebar_component.switch_to_chat
+
+        expect(chat_drawer_page).to have_open_channel(channel_2)
       end
     end
 
@@ -182,6 +193,16 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
         expect(sidebar_component).to have_no_section("chat-channels")
         expect(sidebar_component).to have_section("Categories")
+
+        sidebar_component.switch_to_chat
+        sidebar_page.open_channel(channel_2)
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
+
+        chat_page.close_from_header
+        sidebar_component.switch_to_chat
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
       end
     end
   end
@@ -222,6 +243,15 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
         expect(sidebar_component).to have_section("Categories")
         expect(sidebar_component).to have_section("chat-channels")
+
+        sidebar_page.open_channel(channel_2)
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
+
+        chat_drawer_page.close
+        sidebar_component.switch_to_chat
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
       end
     end
 
@@ -259,6 +289,16 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
         expect(sidebar_component).to have_section("chat-channels")
         expect(sidebar_component).to have_section("Categories")
+
+        sidebar_component.switch_to_chat
+        sidebar_page.open_channel(channel_2)
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
+
+        chat_page.close_from_header
+        sidebar_component.switch_to_chat
+
+        expect(sidebar_component).to have_section_link(channel_2.name, active: true)
       end
     end
   end

@@ -18,7 +18,11 @@
   <div class="user-notifications-filter">
     <NotificationsFilter
       @value={{this.filter}}
-      @onChange={{action (mut this.filter)}}
+      @onChange={{this.updateFilter}}
+    />
+    <PluginOutlet
+      @name="user-notifications-after-filter"
+      @outletArgs={{hash items=this.items}}
     />
   </div>
 

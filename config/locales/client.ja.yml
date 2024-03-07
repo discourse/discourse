@@ -34,11 +34,9 @@ ja:
       long_with_year: "YYYY 年 MMM D 日 a h:mm"
       long_with_year_no_time: "YYYY 年 MMM D 日"
       full_with_year_no_time: "YYYY 年 MMMM D 日"
-      long_date_with_year: "'YY 年 MMM D 日 LT"
       long_date_without_year: "MMM D 日 LT"
-      long_date_with_year_without_time: "'YY 年 MMM D 日"
+      long_date_with_year_without_time: "YYYY 年 MMM D 日"
       long_date_without_year_with_linebreak: "MMM D 日 <br/>LT"
-      long_date_with_year_with_linebreak: "'YY 年 MMM D 日 <br/>LT"
       wrap_ago: "%{date}前"
       wrap_on: "%{date}"
       tiny:
@@ -64,7 +62,7 @@ ja:
         almost_x_years:
           other: "%{count} 年"
         date_month: "MMM D 日"
-        date_year: "'YY 年 MMM"
+        date_year: "YYYY 年 MMM"
       medium:
         less_than_x_minutes:
           other: "%{count} 分未満"
@@ -84,7 +82,7 @@ ja:
           other: "%{count} 年以上"
         almost_x_years:
           other: "ほぼ %{count} 年"
-        date_year: "'YY 年 MMM D 日"
+        date_year: "YYYY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -160,7 +158,6 @@ ja:
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     emails_are_disabled_non_staff: "スタッフ以外のユーザーの送信メールは無効になっています。"
     software_update_prompt:
-      message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
     bootstrap_mode: "はじめに"
     themes:
@@ -172,7 +169,6 @@ ja:
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     critical_deprecation:
-      notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります (<a target='_blank' href='https://meta.discourse.org/t/287211'>詳細</a>)。"
       theme_source: "検出されたテーマ: <a target='_blank' href='%{path}'>'%{name}'</a>。"
       plugin_source: "検出されたプラグイン: '%{name}'"
     s3:
@@ -1763,7 +1759,7 @@ ja:
       admin_guide:
         title: "新しいサイトへようこそ！"
         content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
-        content_no_url: "管理者ガイドを読み、サイトとコミュニティの構築を続けましょう。"
+        content_no_url: "管理者ガイドを読み、サイトとコミュニティーの構築を続けましょう。"
     loading: "読み込み中…"
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -2616,6 +2612,18 @@ ja:
     topic_bulk_actions:
       close_topics:
         name: "トピックをクローズ"
+      archive_topics:
+        name: "トピックをアーカイブ"
+      unlist_topics:
+        name: "トピックを非表示"
+      relist_topics:
+        name: "トピックを表示"
+      append_tags:
+        name: "タグを追加"
+      replace_tags:
+        name: "タグを置換"
+      delete_topics:
+        name: "トピックを削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4073,6 +4081,9 @@ ja:
       panels:
         forum:
           label: フォーラム
+      filter: "フィルタ"
+      no_results:
+        title: "結果がありません"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
@@ -4424,7 +4435,6 @@ ja:
             users:
               bookmarks: ユーザーブックマークを一覧表示します。ICS 形式を使用している場合は、ブックマークのリマインダーが返されます。
               sync_sso: DiscourseConnect を使用してユーザーを同期します。
-              show: ユーザーに関する情報を取得します。
               check_emails: ユーザーのメールを一覧表示します。
               update: ユーザープロファイル情報を更新します。
               log_out: ユーザーのすべてのセッションをログアウトします。
@@ -4545,14 +4555,10 @@ ja:
           post_liked: "ユーザーが投稿に「いいね！」した場合。"
         notification_event:
           group_name: "通知イベント"
-          notification_created: "ユーザーがフィードで通知を受け取った"
         group_user_event:
           group_name: "グループユーザーイベント"
-          user_added_to_group: "ユーザーがグループに追加された"
-          user_removed_from_group: "ユーザーがグループから削除された"
         user_promoted_event:
           group_name: "ユーザー昇格イベント"
-          user_promoted: "ユーザーが昇格された"
         delivery_status:
           title: "配信ステータス"
           inactive: "非アクティブ"
@@ -4969,7 +4975,6 @@ ja:
           instructions: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します。"
       email:
         title: "メール"
-        settings: "設定"
         templates: "テンプレート"
         templates_title: "メールのテンプレート"
         preview_digest: "要約をプレビュー"
@@ -5610,7 +5615,6 @@ ja:
             other: "過去 %{count} 日:"
           value_heading: "値"
           requirement_heading: "要件"
-          visits: "アクセス"
           days: "日"
           topics_replied_to: "返信するトピック"
           topics_viewed: "閲覧したトピック数"
@@ -5914,6 +5918,7 @@ ja:
         category_title: "カテゴリ"
         tag_name: "タグ名"
         external_url: "外部または相対 URL"
+        username: "ユーザー名"
         destination: "リンク先"
         copy_to_clipboard: "パーマリンクをクリップボードにコピー"
         delete_confirm: このパーマリンクを削除してもよろしいですか？

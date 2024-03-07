@@ -35,11 +35,8 @@ gl:
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do, MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
@@ -74,7 +71,7 @@ gl:
           one: "%{count}ano"
           other: "%{count}anos"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min."
@@ -85,7 +82,6 @@ gl:
         x_days:
           one: "%{count} día"
           other: "%{count} días"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "Hai %{count} min."
@@ -2120,6 +2116,20 @@ gl:
     topic_bulk_actions:
       close_topics:
         name: "Pechar temas"
+      archive_topics:
+        name: "Arquivar temas"
+      unlist_topics:
+        name: "Retirar temas da listaxe"
+      relist_topics:
+        name: "Refacer a listaxe de temas"
+      remove_tags:
+        name: "Retirar etiquetas"
+      append_tags:
+        name: "Anexar etiquetas"
+      replace_tags:
+        name: "Substituír etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3324,6 +3334,7 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+      filter: "Filtro"
     until: "Ata:"
     form_templates:
       upload_field:
@@ -3555,7 +3566,6 @@ gl:
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.
-              show: Obter información sobre un usuario.
               check_emails: Listar os enderezos de correo dos usuarios.
               update: Actualizar a información do perfil de usuario.
               log_out: Cerrar todas a sesións dun usuario.
@@ -3962,7 +3972,6 @@ gl:
           instructions: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS."
       email:
         title: "Mensaxes de correo"
-        settings: "Configuración"
         templates: "Modelos"
         preview_digest: "Visualización do compendio"
         advanced_test:
@@ -4488,7 +4497,6 @@ gl:
             other: "Nos últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requirimento"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas aos que respondeu"
           topics_viewed: "Temas vistos"
@@ -4756,6 +4764,7 @@ gl:
         category_title: "Categoría"
         tag_name: "Nome da etiqueta"
         external_url: "URL externo ou relativo"
+        username: "Nome de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?

@@ -64,6 +64,10 @@ zh_CN:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
     updates_available_filter: "有可用更新"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "已超过 %{max_size} 字节的最大容量。"
   themes:
     bad_color_scheme: "无法更新主题，调色板无效"
     other_error: "更新主题时出错"
@@ -109,20 +113,55 @@ zh_CN:
       optimized_link: 优化的图片链接是暂时的，不应包含在主题源代码中。
     settings_errors:
       invalid_yaml: "提供的 YAML 无效。"
-      data_type_not_a_number: "设置 `%{name}` 的类型不受支持。支持的类型为 `integer`、`bool`、`list` 、`enum` 和 `upload`"
+      data_type_inclusion: "设置 `%{name}` 的类型不受支持。支持的类型为 `integer`、`bool`、`list` 、`enum` 和 `upload`"
       name_too_long: "有一个设置的名称过长。最大长度为 255"
-      default_value_missing: "设置 `%{name}` 无默认值"
+      default_value_missing: "设置 `%{name}` 无默认值."
       default_not_match_type: "设置 `%{name}` 默认值的类型与设置类型不匹配。"
-      default_out_range: "设置 `%{name}` 的默认值不在指定范围内。"
+      default_value_not_valid: "设置 `%{name}` 默认值无效。 %{error_messages}"
       enum_value_not_valid: "选择的值不是枚举选项之一。"
-      number_value_not_valid: "新值不在允许的范围内。"
-      number_value_not_valid_min_max: "它必须介于 %{min} 和 %{max} 之间。"
-      number_value_not_valid_min: "它必须大于或等于 %{min}。"
-      number_value_not_valid_max: "它必须小于或等于 %{max}。"
-      string_value_not_valid: "新值长度不在允许的范围内。"
-      string_value_not_valid_min_max: "它的字符长度必须介于 %{min} 和 %{max} 之间。"
-      string_value_not_valid_min: "它必须至少为 %{min} 个字符。"
-      string_value_not_valid_max: "它必须至多为 %{max} 个字符。"
+      number_value_not_valid_min_max: "值必须介于 %{min} 和 %{max}之间。"
+      number_value_not_valid_min: "值必须大于或等于 %{min}。"
+      number_value_not_valid_max: "值必须小于或等于 %{max}。"
+      string_value_not_valid_min_max: "值必须介于 %{min} 和 %{max} 个字符之间。"
+      string_value_not_valid_min: "值必须至少为 %{min} 个字符。"
+      string_value_not_valid_max: "值必须最多为 %{max} 个字符。"
+      objects:
+        humanize_required: "JSON 指针 '%{property_json_pointer}' 处的属性必须存在。"
+        required: "必须存在"
+        humanize_invalid_type: "JSON 指针 '%{property_json_pointer}' 处的属性必须是 %{type} 类型。"
+        invalid_type: "%{type} 不是有效类型"
+        humanize_not_valid_string_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是字符串。"
+        not_valid_string_value: "必须是字符串"
+        humanize_not_valid_integer_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是整数。"
+        not_valid_integer_value: "必须是整数"
+        humanize_not_valid_float_value: "JSON 指针'%{property_json_pointer}' 处的属性必须是浮点数。"
+        not_valid_float_value: "必须是浮点数"
+        humanize_not_valid_boolean_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是布尔值。"
+        not_valid_boolean_value: "必须是布尔值"
+        humanize_not_valid_enum_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是以下 %{choices} 之一。"
+        not_valid_enum_value: "必须是以下之一：%{choices}"
+        humanize_not_valid_category_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的类别 id。"
+        not_valid_category_value: "必须是有效的类别 id"
+        humanize_not_valid_topic_value: "JSON 指针 '%{property_json_pointer}' 中的属性必须是有效的话题 id。"
+        not_valid_topic_value: "必须是有效的话题 id"
+        humanize_not_valid_post_value: "JSON 指针 '%{property_json_pointer}' 中的属性必须是有效的帖子 id。"
+        not_valid_post_value: "必须是有效的帖子 id"
+        humanize_not_valid_group_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的群组 id。"
+        not_valid_group_value: "必须是有效的群组 id"
+        humanize_not_valid_tag_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的标签 id。"
+        not_valid_tag_value: "必须是有效的标签 id"
+        humanize_not_valid_upload_value: "JSON 指针 \"%{property_json_pointer}' 中的属性必须是有效的上传 id。"
+        not_valid_upload_value: "必须是有效的上传 id"
+        humanize_string_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须至少为 %{min} 个字符长。"
+        string_value_not_valid_min: "长度必须至少为 %{min} 个字符"
+        humanize_string_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性最多只能有 %{max} 个字符。"
+        string_value_not_valid_max: "长度最多为 %{max} 个字符"
+        humanize_number_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须大于或等于 %{min}。"
+        number_value_not_valid_min: "必须大于或等于 %{min}"
+        humanize_number_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性必须小于或等于 %{max}。"
+        number_value_not_valid_max: "必须小于或等于 %{max}"
+        humanize_string_value_not_valid_url: "JSON 指针 \"%{property_json_pointer}' 处的属性必须是有效的 URL。"
+        string_value_not_valid_url: "必须是有效的 URL"
     locale_errors:
       top_level_locale: "区域设置文件中的顶级键必须与区域设置名称匹配"
       invalid_yaml: "翻译 YAML 文件无效"
@@ -840,6 +879,12 @@ zh_CN:
       title: "不当言论"
       description: '这篇帖子包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
+    illegal:
+      title: "非法"
+      description: "本帖需要工作人员注意，因为我认为其中包含非法内容。"
+      short_description: "这是非法的"
+      email_title: '“%{title}”中的一个帖子需要管理人员注意'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "向 @%{username} 发送消息"
       description: "我想亲自与此人私下交流关于其帖子的事情。"
@@ -918,6 +963,12 @@ zh_CN:
       long_form: "举报以引起版主注意"
       short_description: "因其他原因需要管理人员注意"
       email_title: '话题“%{title}”需要版主注意'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "非法"
+      description: "本话题需要管理人员关注，因为我认为其中包含非法内容。"
+      short_description: "这是非法的"
+      email_title: '“%{title}”中的一个帖子需要管理人员注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>您的帖子已被社区举报。请<a href="%{path}">查看您的消息</a>。</p>'
@@ -1342,6 +1393,7 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
   dashboard:
+    twitter_login_warning: 'Twitter 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
     group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭据有问题。在此问题解决之前，不会从群组收件箱发送电子邮件。%{error}'
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
@@ -1371,6 +1423,7 @@ zh_CN:
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
     category_style_deprecated: "您的 Discourse 目前正在使用已弃用的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>移至单一类别样式站点设置</a>，了解如何保留所选类别样式。"
+    back_from_logster_text: "返回站点"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1385,13 +1438,11 @@ zh_CN:
     min_first_post_length: "允许的第一篇帖子（即话题正文）的最小长度（不包括个人消息）"
     min_personal_message_post_length: "消息的允许最小帖子长度（包括第一篇帖子和回复），以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
-    topic_featured_link_enabled: "启用在话题中发布链接。"
     show_topic_featured_link_in_digest: "在摘要电子邮件中显示话题精选链接。"
     min_topic_views_for_delete_confirm: "话题在删除时出现确认弹出窗口必须具有的最小浏览量"
     min_topic_title_length: "允许的最小话题长度（以字符为单位）"
     max_topic_title_length: "允许的最大话题长度（以字符为单位）"
     min_personal_message_title_length: "消息允许的最小标题长度（以字符为单位）"
-    max_emojis_in_title: "话题标题中允许的最大表情数量"
     min_search_term_length: "最小有效搜索词长度（以字符为单位）"
     search_tokenize_chinese: "即使在非中文站点上也强制搜索将中文词例化"
     search_tokenize_japanese: "即使在非日语站点上也强制搜索将日语词例化"
@@ -1400,7 +1451,6 @@ zh_CN:
     log_search_queries: "记录用户执行的搜索查询"
     search_query_log_max_size: "要保留的最大搜索查询量"
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
-    search_ignore_accents: "搜索文本时忽略注音。"
     search_default_sort_order: "整页搜索的默认排序顺序"
     category_search_priority_low_weight: "应用于低类别搜索优先级排名的权重。"
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
@@ -1446,11 +1496,9 @@ zh_CN:
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
     post_onebox_maxlength: "Onebox Discourse 帖子的最大长度（以字符为单位）。"
     blocked_onebox_domains: "一个永远不会被归类的域名列表，例如：wikipedia.org（不支持通配符*？）"
-    block_onebox_on_redirect: "阻止重定向 URL 的归类。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
     enable_inline_onebox_on_all_domains: "忽略 allowed_inline_onebox_domains 站点设置并在所有域上允许内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
-    max_oneboxes_per_post: "帖子中的最大 Onebox 数量。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
     logo: "您的站点左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将显示站点标题文本。"
     logo_small: "您的站点左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
@@ -1510,7 +1558,6 @@ zh_CN:
     notify_mods_when_user_silenced: "如果用户被自动禁言，则向所有版主发送消息。"
     flag_sockpuppets: "如果新用户从与发起话题的用户相同的 IP 地址回复话题，则将他们的两个帖子举报为潜在垃圾信息。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统的换行符，需要两个尾随空格。"
-    enable_markdown_typographer: "使用排版规则提高文本的可读性：将直引号 ' 替换为弯引号 ’，将 (c) (tm) 替换为符号，将 -- 替换为破折号 - 等"
     enable_markdown_linkify: "自动将看起来像链接的文本视为链接：www.example.com 和 https://example.com 将自动添加链接"
     markdown_linkify_tlds: "自动被视为链接的顶级网域列表"
     markdown_typographer_quotation_marks: "双引号和单引号替换对的列表"
@@ -1540,11 +1587,11 @@ zh_CN:
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
-    content_security_policy: "启用内容安全策略 (CSP)"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此站点嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "已列入许可名单的附加脚本源。默认包含当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击 (CSP)</a>。"
+    content_security_policy_strict_dynamic: "实验：使用严格的动态内容安全策略。这比我们的默认 CSP 配置更现代、更灵活。该配置功能齐全，但尚未与所有主题和插件一起测试。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
@@ -1567,12 +1614,10 @@ zh_CN:
     topics_per_period_in_top_page: "在展开的“显示更多”热门话题中显示的热门话题数。"
     redirect_users_to_top_page: "自动将新用户和长期缺席的用户重定向到热门页面。"
     top_page_default_timeframe: "匿名用户的默认顶部页面时间段（会基于登录用户最后一次访问自动为其调整）。"
-    moderators_view_emails: "允许版主查看用户电子邮件"
     prioritize_username_in_ux: "在用户页面、用户卡片和帖子上先显示用户名（先显示禁用名称时）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时启用 HTML 到 Markdown 的自动转换。（实验性）"
     send_old_credential_reminder_days: "几天后提醒旧凭据"
     email_token_valid_hours: "“忘记密码了”/“激活帐户”令牌的有效期为 (n) 小时。"
-    enable_badges: "启用徽章系统"
     max_favorite_badges: "用户可以选择的最大徽章数"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     hidden_post_visible_groups: "允许这些群组的成员查看隐藏的帖子。管理人员始终可以查看隐藏的帖子。"
@@ -1594,8 +1639,6 @@ zh_CN:
     unicode_usernames: "允许用户名和群组名称包含 Unicode 字母和数字。"
     allowed_unicode_username_characters: "仅在用户名中允许某些 Unicode 字符的正则表达式。ASCII 字符和数字将始终被允许，不需要包含在许可名单中。"
     reserved_usernames: "不允许注册的用户名。通配符 * 可用于匹配任何字符零次或多次。"
-    min_password_length: "最小密码长度。"
-    min_admin_password_length: "管理员最小密码长度。"
     password_unique_characters: "密码必须具有的最小唯一字符数。"
     block_common_passwords: "不允许使用 10,000 个最常见密码中的密码。"
     auth_skip_create_confirm: 通过外部身份验证方法注册时，跳过“创建帐户”弹出窗口。最好与 auth_overrides_email、auth_overrides_username 和 auth_overrides_name 一起使用。
@@ -1623,7 +1666,6 @@ zh_CN:
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
     enable_google_oauth2_logins: "启用 Google Oauth2 身份验证。这是 Google 当前支持的身份验证方法。要求密钥和密钥代码。请参阅<a href='https://meta.discourse.org/t/15858' target='_blank'>为 Discourse 配置 Google 登录</a>。"
-    google_oauth2_client_id: "您的 Google 应用的客户端 ID。"
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
@@ -1641,14 +1683,12 @@ zh_CN:
     github_client_secret: "Github 身份验证的客户端密钥，在 <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a> 中注册"
     enable_discord_logins: "允许用户使用 Discord 进行身份验证？"
     discord_client_id: 'Discord 客户端 ID（需要申请一个？请访问 <a href="https://discordapp.com/developers/applications/me">Discord 开发者门户</a>）'
-    discord_secret: "Discord 密钥"
     discord_trusted_guilds: '只允许这些 Discord 公会的成员通过 Discord 登录。使用公会的数字 ID。有关详情，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">此处</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许恢复，这可以替换所有站点数据！除非您计划恢复备份，否则请保持禁用状态"
     maximum_backups: "要保留的最大备份数。系统将自动删除较旧的备份"
     remove_older_backups: "移除超过指定天数的备份。留空表示禁用。"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份"
-    backup_frequency: "备份之间的天数。"
     s3_backup_bucket: "存放备份的远程存储桶。警告：确认它是私有存储桶。"
     s3_endpoint: "可以修改端点以备份到 S3 兼容服务，如 DigitalOcean Spaces 或 Minio。警告：如果使用 AWS S3，请留空。"
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
@@ -1705,20 +1745,17 @@ zh_CN:
     s3_cdn_url: "用于所有 S3 资源的 CDN URL（例如：https://cdn.somewhere.com）。警告：更改此设置后，您必须重新发布所有旧帖子。"
     s3_use_cdn_url_for_all_uploads: "对上传到 s3 的所有文件使用 CDN URL，而不仅仅对图片使用。"
     avatar_sizes: "自动生成的头像大小列表。"
-    external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL。允许的替换为 {username} {first_letter} {color} {size}"
     external_emoji_url: "表情符号图片的外部服务的 URL。留空将禁用。"
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "使普通用户能够找到被封禁的用户。"
     selectable_avatars_mode: "允许用户从 selectable_avatars 列表中选择头像，并将自定义头像上传限制在所选信任级别。"
-    selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     recompress_original_jpg_quality: "上传的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     image_preview_jpg_quality: "调整大小的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任何文件。"
-    strip_image_metadata: "去除图片元数据。"
     composer_media_optimization_image_enabled: "启用上传图片文件的客户端媒体优化。"
     composer_media_optimization_image_bytes_optimization_threshold: "触发客户端优化的最小图片文件大小"
     composer_media_optimization_image_resize_dimensions_threshold: "触发客户端大小调整的最小图片宽度"
@@ -1771,10 +1808,11 @@ zh_CN:
     min_trust_to_flag_posts: "举报帖子所需的最低信任级别"
     flag_post_allowed_groups: "能够举报帖子的群组。"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
-    post_links_allowed_groups: "允许在帖子中包含链接的组。"
+    post_links_allowed_groups: "允许在帖子中包含链接的群组。管理员和版主始终可以发布链接。"
     min_trust_to_post_embedded_media: "在帖子中嵌入媒体条目所需的最低信任级别"
     embedded_media_post_allowed_groups: "这些组中的用户可以在帖子中嵌入媒体项目"
     min_trust_level_to_allow_profile_background: "上传个人资料背景所需的最低信任级别"
+    profile_background_allowed_groups: "允许上传个人背景资料的组。"
     min_trust_level_to_allow_user_card_background: "上传用户卡背景所需的最低信任级别"
     user_card_background_allowed_groups: "能够上传用户卡片背景的群组。"
     min_trust_level_to_allow_invite: "邀请用户所需的最低信任级别"
@@ -1789,7 +1827,6 @@ zh_CN:
     newuser_max_replies_per_topic: "在有人回复他们之前，新用户可以在单个话题中做出的最大回复数。"
     max_mentions_per_post: "任何人可以在帖子中使用的提及通知的最大数量。"
     max_users_notified_per_group_mention: "当群组被提及时可能会收到通知的最大用户数（超过阈值后将不发送通知）"
-    enable_mentions: "允许用户提及其他用户。"
     here_mention: "用于 @ 提及的名称，允许特权用户通知参与话题的 'max_here_mentioned' 人。必须不是一个现有的用户名。"
     max_here_mentioned: "@here 提及的最大人数。"
     min_trust_level_for_here_mention: "允许提及 @here 的最低信任级别。"
@@ -1807,7 +1844,6 @@ zh_CN:
     enable_filtered_replies_view: '“(n) 回复”按钮会收起所有其他帖子，仅显示当前帖子及其回复。'
     title_fancy_entities: "将常见的 ASCII 字符转换为话题标题中的花哨 HTML 实体，又称为 SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
-    desktop_category_page_style: "/categories 页面的视觉样式。"
     category_colors: "设置类别允许的十六进制颜色值列表。"
     default_dark_mode_color_scheme_id: "在深色模式下使用的配色方案。"
     dark_mode_none: "无"
@@ -1861,14 +1897,12 @@ zh_CN:
     high_trust_flaggers_auto_hide_posts: "新用户帖子在被 TL3+ 用户举报为垃圾信息后会被自动隐藏"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
     slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
-    reply_by_email_enabled: "启用通过电子邮件回复话题。"
     reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "对传入电子邮件使用 HTML 而不是文本。"
     strip_incoming_email_lines: "从传入电子邮件的每一行中移除前导和尾随空格。"
     disable_emails: "禁止 Discourse 发送任何类型的电子邮件。选择“是”将对所有用户禁用电子邮件。选择“非管理人员”将仅对非管理人员用户禁用电子邮件。"
     strip_images_from_short_emails: "从大小小于 2800 字节的电子邮件中去除图片"
-    short_email_length: "短电子邮件长度（以字节为单位）"
     display_name_on_email_from: "在电子邮件发件人字段上显示全名"
     unsubscribe_via_email: "允许用户通过发送主题或正文中包含 'unsubscribe' 的电子邮件来退订电子邮件"
     unsubscribe_via_email_footer: "通过已发送电子邮件页脚的电子邮件 mailto: 链接附加退订"
@@ -1904,12 +1938,8 @@ zh_CN:
     delete_rejected_email_after_days: "删除超过 (n) 天的被拒电子邮件。"
     require_change_email_confirmation: "要求非管理人员用户在更改之前确认他们的旧电子邮件地址。不适用于管理人员用户，他们始终需要确认他们的旧电子邮件地址。"
     manual_polling_enabled: "使用 API 推送电子邮件以进行电子邮件回复。"
-    pop3_polling_enabled: "通过 POP3 轮询以进行电子邮件回复。"
     pop3_polling_ssl: "连接到 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_openssl_verify: "验证 TLS 服务器证书（默认：启用）"
-    pop3_polling_period_mins: "检查 POP3 帐户以获取电子邮件之间的时间间隔（以分钟为单位）。注意：需要重新启动。"
-    pop3_polling_port: "用于 POP3 轮询帐户的端口。"
-    pop3_polling_host: "通过 POP3 轮询电子邮件的主机。"
     pop3_polling_username: "用于轮询电子邮件的 POP3 帐户的用户名。"
     pop3_polling_password: "用于轮询电子邮件的 POP3 帐户的密码。"
     pop3_polling_delete_from_server: "从服务器删除电子邮件。注意：如果您禁用此功能，您应该手动清理您的邮件收件箱"
@@ -1918,7 +1948,6 @@ zh_CN:
     email_in_min_trust: "用户要被允许通过电子邮件发布新话题所需的最低信任级别。"
     email_in_allowed_groups: "能够通过电子邮件发布新话题的群组。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
-    email_in_spam_header: "用于检测垃圾信息的电子邮件标头。"
     enable_imap: "启用 IMAP 以同步群组消息。"
     enable_imap_write: "启用双向 IMAP 同步。如果禁用，IMAP 帐户上的所有写入操作都将被禁用。"
     enable_imap_idle: "使用 IMAP IDLE 机制等待新电子邮件。"
@@ -1949,7 +1978,6 @@ zh_CN:
     suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送总结电子邮件。"
     digest_suppress_categories: "从总结电子邮件中禁止这些类别。"
     digest_suppress_tags: "从摘要电子邮件中禁止这些标签。"
-    disable_digest_emails: "禁用所有用户的总结电子邮件。"
     apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于总结电子邮件。"
     email_accent_bg_color: "用作 HTML 电子邮件中某些元素背景的强调色。输入颜色名称 ('red') 或十六进制值 ('#FF0000')。"
     email_accent_fg_color: "HTML 电子邮件中电子邮件背景颜色上呈现的文本颜色。输入颜色名称 ('white') 或十六进制值 ('#FFFFFF')。"
@@ -1962,13 +1990,12 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_posting: "允许用户切换至匿名模式"
-    allow_anonymous_likes: "允许匿名用户点赞帖子"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
+    hide_user_activity_tab: "隐藏用户个人资料中的活动选项卡，管理员和自己除外。"
     allow_featured_topic_on_user_profiles: "允许用户在他们的用户卡片和个人资料上添加指向某个话题的链接。"
     show_inactive_accounts: "允许登录用户浏览闲置帐户的个人资料。"
     hide_suspension_reasons: "不在用户个人资料中公开显示封禁原因。"
@@ -2004,7 +2031,6 @@ zh_CN:
     native_app_install_banner_android: "在 Android 设备上向基本用户（信任级别 1）及以上的用户显示 DiscourseHub 应用横幅。"
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
-    share_anonymized_statistics: "共享匿名使用统计信息。"
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
@@ -2020,9 +2046,7 @@ zh_CN:
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
-    embed_topics_list: "支持话题列表的 HTML 嵌入"
     embed_set_canonical_url: "将嵌入话题的规范 URL 设置为嵌入内容的 URL。"
-    embed_truncate: "截断嵌入的帖子。"
     embed_unlisted: "在用户回复前，嵌入的话题将不会被取消公开。"
     embed_support_markdown: "支持嵌入帖子的 Markdown 格式。"
     allowed_embed_selectors: "嵌入中允许的 CSS 元素的逗号分隔列表。"
@@ -2030,7 +2054,6 @@ zh_CN:
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
-    delete_drafts_older_than_n_days: "删除超过 (n) 天的草稿。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
@@ -2038,9 +2061,7 @@ zh_CN:
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
     secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure uploads allow embed in emails' 设置，将被嵌入到电子邮件的安全图片的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
-    enable_emoji: "启用表情符号"
     enable_emoji_shortcuts: "常见的笑脸文字（如 :) :p :(）将被转换为表情符号"
-    emoji_set: "您喜欢表情符号吗？"
     emoji_autocomplete_min_chars: "触发自动填充表情符号弹出窗口所需的最少字符数"
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
@@ -2057,11 +2078,10 @@ zh_CN:
     auto_close_topics_create_linked_topic: "在话题根据 'auto close topics post count' 设置被自动关闭后，创建一个新的链接话题"
     code_formatting_style: "编辑器中的代码按钮将默认为此代码格式样式"
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
-    watched_words_regular_expressions: "关注词是正则表达式。"
+    disable_watched_word_checking_in_user_fields: "禁用用户字段中的关注词检查"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
     enable_quote_copy: "在帖子选择菜单中添加一个按钮，以将选择内容作为 Markdown 引用复制到剪贴板。"
-    old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
@@ -2089,7 +2109,6 @@ zh_CN:
     default_other_enable_defer: "默认启用延迟话题功能。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
-    default_other_like_notification_frequency: "默认通知用户获得赞"
     default_topics_automatic_unpin: "当用户到达底部时默认自动取消置顶话题。"
     default_categories_watching: "默认关注的类别列表。"
     default_categories_tracking: "默认跟踪的类别列表。"
@@ -2101,8 +2120,6 @@ zh_CN:
     default_tags_tracking: "默认跟踪的标签列表。"
     default_tags_muted: "默认被设为免打扰的标签列表。"
     default_tags_watching_first_post: "默认将关注每个新话题中的第一个帖子的标签列表。"
-    default_text_size: "默认选择的文本大小"
-    default_title_count_mode: "页面标题计数器的默认模式"
     enable_offline_indicator: "检测到用户没有网络连接时，向他们显示一条消息"
     default_sidebar_link_to_filtered_list: "默认情况下，将导航菜单链接设为链接到筛选后的列表。"
     default_sidebar_show_count_of_new_items: "默认情况下，将导航菜单链接设为显示新条目的数量而非徽章的数量。"
@@ -2122,7 +2139,6 @@ zh_CN:
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_user_api_keys_maxlife_days: "用户 API 密钥被自动撤销前的天数（0 表示永不撤销）"
-    tagging_enabled: "在话题上启用标签？"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     create_tag_allowed_groups: "能够创建标签的群组。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
@@ -2133,7 +2149,6 @@ zh_CN:
     max_tags_in_filter_list: "要在筛选器下拉列表中显示的最大标签数。将显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
-    tag_style: "标签徽章的视觉样式。"
     pm_tags_allowed_for_groups: "允许所包含群组的成员标记任何个人消息"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     tag_topic_allowed_groups: "允许为主题添加标签的群组。"
@@ -2144,14 +2159,10 @@ zh_CN:
     automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
-    governing_law: "适用法律"
-    city_for_disputes: "争议之城"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
     shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     shared_drafts_allowed_groups: "允许这些群组中的用户查看和编辑共享草稿。"
-    push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
-    enable_desktop_push_notifications: "启用桌面推送通知"
     push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
     base_font: "用于站点上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于站点上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
@@ -2163,9 +2174,6 @@ zh_CN:
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
-    gravatar_name: "Gravatar 提供程序的名称"
-    gravatar_base_url: "Gravatar 提供程序的 API 库的 URL"
-    gravatar_login_url: "相对于 gravatar_base_url 的 URL，让用户可以登录 Gravatar 服务"
     share_quote_buttons: "确定引用分享微件中显示的条目以及显示顺序。"
     share_quote_visibility: "确定何时显示引用分享按钮：从不、仅匿名用户或所有用户。"
     create_revision_on_bulk_topic_moves: "当话题被批量移入新类别时，为第一个帖子创建修订。"
@@ -2181,6 +2189,7 @@ zh_CN:
     enable_custom_sidebar_sections: "实验性：启用自定义边栏版块"
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
+    experimental_glimmer_header_groups: "实验：将网站标题渲染为 glimmer 组件。"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "实验：为指定组的管理员界面启用侧边栏导航，取代顶层管理员导航按钮。"
     lazy_load_categories_groups: "实验：只为这些组的用户懒加载类别信息。这可以提高有许多类别的网站的性能。"
@@ -2267,6 +2276,7 @@ zh_CN:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "允许配置个人资料背景的最小信任等级"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2635,6 +2645,7 @@ zh_CN:
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
+    illegal: "你的帖子被标记为**非法**：社区认为这可能触犯了法律。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
     responder:
@@ -3808,7 +3819,7 @@ zh_CN:
     images:
       too_large: "抱歉，您尝试上传的图片过大（大小上限为 %{max_size_kb}KB），请调整大小并重试。"
       too_large_humanized: "抱歉，您尝试上传的图片太大（大小上限为 %{max_size}），请调整大小并重试。"
-      larger_than_x_megapixels: "抱歉，您尝试上传的图片过大（大小上限为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
+      larger_than_x_megapixels: "抱歉，上传的图片过大 (最大尺寸为 %{max_image_megapixels} 百万像素) ，请调整大小后再试。"
       size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
       too_large: "（图片大小超过 %{max_size_kb}KB）"
@@ -3883,6 +3894,104 @@ zh_CN:
     编辑此话题中的第一个帖子以更改 %{page_name} 页面的内容。
   guidelines_topic:
     title: "常见问题解答/准则"
+    body: |
+      <a name="civilized"></a>
+
+      ## [这里是公共讨论的文明场所](#civilized)
+
+      请像对待公共公园一样尊重本讨论区。我们也是一个共享的社区资源 &mdash; 一个通过持续对话分享技能、知识和兴趣的地方。
+
+      这些并非硬性规定。它们是帮助我们社区进行人性化判断的准则，并使这里成为文明公共讨论的友好场所。
+
+      <a name="improve"></a>
+
+      ## [改进讨论](#improve)
+
+      帮助我们使这里成为一个良好的讨论场所，无论多么微小，记得始终为讨论增添一些积极的东西，。如果您不确定自己的帖子是否能促进讨论，请仔细想想自己想说什么，稍后再试。
+
+      改进讨论的方法之一是发现已经在进行的讨论。在回复或开始自己的话题之前，先花时间浏览一下这里的话题，这样您就更有可能遇到与您志同道合的人。
+
+      在这里讨论的话题对我们很重要，我们希望您也能把它们当作对您很重要的话题。即使你不同意某些观点，也要尊重这些话题和讨论这些话题的人。
+
+      <a name="agreeable"></a>
+
+      ## [即使不同意，也要同意](#agreeable)
+
+      您可能希望以不同意的方式来回应。这很好。但请记住，是批评观点，而不是批评人。请避免
+
+      * 谩骂
+      * 主观攻击
+      * 回应帖子的语气而非其实际内容
+      * 一触即发的反驳
+
+      相反，请提供深思熟虑的见解，以改善讨论。
+
+      <a name="participate"></a>
+
+      ## [您的参与很重要](#participate)
+
+      我们在这里的对话为每一位新来者定下了基调。选择参与能让本论坛成为一个有趣的地方的讨论， &mdash; ，避免参与那些不有趣的讨论，从而帮助我们影响这个社区的未来。
+
+      Discourse 提供了各种工具，使社区能够共同识别最佳（和最差）贡献：书签、喜欢、标记、回复、编辑、关注、静音等等。使用这些工具来改善你和其他人的体验。
+
+      让我们的社区变得更好。
+
+      <a name="flag-problems"></a>
+
+      ## [如果您发现问题，请标记它](#flag-problems)
+
+      版主拥有特殊的权力；他们是本论坛的负责人。但您也一样。在您的帮助下，版主可以成为社区的促进者，而不仅仅是看门人或警察。
+
+      看到不良行为时，不要回复。回复会承认不良行为，从而鼓励不良行为，消耗您的精力，浪费大家的时间。直接标记。如果标记的次数足够多，就会自动或由版主介入采取行动。
+
+      为了维护我们的社区，版主保留随时以任何理由删除任何内容和任何用户帐户的权利。版主不预览新帖；版主和网站运营者对社区发布的任何内容不承担任何责任。
+
+      <a name="be-civil"></a>
+
+      ## [始终文明](#be-civil)
+
+      没有什么比粗鲁无礼更能破坏健康的对话了：
+
+      * 要文明。不要张贴任何被认为具有攻击性、辱骂性或仇恨性的言论。
+      * 保持内容干净。不要张贴任何淫秽或色情内容。
+      * 互相尊重。不要骚扰或伤害任何人，不要冒充他人或暴露其私人信息。
+      * 尊重我们的论坛。不要张贴垃圾邮件或以其他方式破坏论坛。
+
+      这些都不是有精确定义的具体术语 &mdash; ，甚至避免出现任何这些情况。如果您不确定，请扪心自问，如果您的帖子出现在人民日报的头版，您会作何感想。
+
+      这是一个公共论坛，搜索引擎会对这些讨论进行索引。对家人和朋友来说，语言、链接和图片都是安全的。
+
+      <a name="keep-tidy"></a>
+
+      ## [保持整洁](#keep-tidy)
+
+      努力把东西摆放在正确的位置，这样我们就可以花更多时间讨论，减少清理工作。所以
+
+      * 不要在错误的分类中启动主题；请阅读分类定义。
+      * 不要在多个主题中交叉张贴相同的内容。
+      * 不要发表无内容的回复。
+      * 不要中途更改主题，从而转移话题。
+      * 不要在帖子上签名 &mdash; 每篇帖子都附有你的个人资料信息。
+
+      不要发表 "+1 "或 "同意 "的帖子，而应使用 "赞 "按钮。不要将现有主题引向完全不同的方向，而应使用回复作为链接主题。
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#stealing)
+
+      未经许可，不得发布任何属于他人的数字内容。不得张贴关于窃取他人知识产权（软件、视频、音频、图像）或违反任何其他法律的描述、链接或方法。
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      本网站由[友好的本地工作人员](%{base_path}/about)和*您*（社区）共同运营。如果您对网站的运作方式有任何疑问，请在 %{feedback_category} 开设一个新主题，让我们一起讨论！如果有无法通过元主题或标记解决的重要或紧急问题，请通过[工作人员页面](%{base_path}/about)联系我们。
+
+      <a name="tos"></a>
+
+      ## [服务条款](#tos)
+
+      是的，法律条文很枯燥，但我们必须保护自己 &ndash; ，进而保护您和您的数据 &ndash; ，防止不友好的人。我们制定了[服务条款](%{base_path}/tos)，描述您（和我们）的行为以及与内容、隐私和法律相关的权利。要使用本服务，您必须同意遵守我们的 [TOS](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
     body: |

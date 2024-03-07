@@ -12,6 +12,7 @@ RSpec.describe SiteController do
       SiteSetting.logo_small = upload
       SiteSetting.apple_touch_icon = upload
       SiteSetting.mobile_logo = upload
+      SiteSetting.include_in_discourse_discover = true
       Theme.clear_default!
 
       get "/site/basic-info.json"
@@ -28,6 +29,16 @@ RSpec.describe SiteController do
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
       expect(json["login_required"]).to eq(true)
+      expect(json["discourse_discover_enrolled"]).to eq(true)
+    end
+
+    it "skips `discourse_discover_enrolled` if `include_in_discourse_discover` setting disabled" do
+      SiteSetting.include_in_discourse_discover = false
+
+      get "/site/basic-info.json"
+      json = response.parsed_body
+
+      expect(json.keys).not_to include("discourse_discover_enrolled")
     end
   end
 
@@ -54,6 +65,16 @@ RSpec.describe SiteController do
       expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
+    end
+
+    it "returns Discourse Discover stats" do
+      SiteSetting.include_in_discourse_discover = true
+      About.refresh_stats
+
+      get "/site/statistics.json"
+      json = response.parsed_body
+
+      expect(json["discourse_discover_enrolled"]).to be_truthy
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do

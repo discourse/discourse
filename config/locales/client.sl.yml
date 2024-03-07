@@ -37,11 +37,8 @@ sl:
       long_with_year: "D. MMM YYYY H:mm"
       long_with_year_no_time: "D. MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "D. MMM LT"
-      long_date_with_year_without_time: "D. MMM 'YY"
       long_date_without_year_with_linebreak: "D. MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "pred %{date}"
       wrap_on: "dne %{date}"
       tiny:
@@ -97,7 +94,7 @@ sl:
           few: "%{count} l"
           other: "%{count} l"
         date_month: "D. MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minuto"
@@ -114,7 +111,6 @@ sl:
           two: "%{count} dneva"
           few: "%{count} dnevi"
           other: "%{count} dni"
-        date_year: "D. MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "pred %{count} minuto"
@@ -2305,6 +2301,20 @@ sl:
     topic_bulk_actions:
       close_topics:
         name: "Zapri teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Izloči temo iz seznamov"
+      relist_topics:
+        name: "Postavi temo nazaj na seznam"
+      remove_tags:
+        name: "Odstrani oznake"
+      append_tags:
+        name: "Dodaj oznake"
+      replace_tags:
+        name: "Zamenjaj oznake"
+      delete_topics:
+        name: "Izbriši teme"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"
@@ -3050,6 +3060,11 @@ sl:
           two: "vnesite vsaj %{count} znaka"
           few: "vnesite vsaj %{count} znake"
           other: "vnesite vsaj %{count} znakov"
+        more:
+          one: "Še %{count} do konca"
+          two: "Še %{count} do konca"
+          few: "Še %{count} do konca"
+          other: "Še %{count} do konca"
         left:
           one: "%{count} preostal"
           two: "%{count} preostala"
@@ -3570,6 +3585,7 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Do:"
     form_templates:
       upload_field:
@@ -3578,6 +3594,21 @@ sl:
       errors:
         typeMismatch:
           default: "Vnesite veljavno vsebino"
+        tooShort:
+          one: "Vnos mora vsebovati vsaj %{count} znakov."
+          two: "Vnos mora vsebovati vsaj %{count} znakov."
+          few: "Vnos mora vsebovati vsaj %{count} znakov."
+          other: "Vnos mora vsebovati vsaj %{count} znakov."
+        rangeOverflow:
+          one: "Vnos mora biti manjši od %{count}."
+          two: "Vnos mora biti manjši od %{count}."
+          few: "Vnos mora biti manjši od %{count}."
+          other: "Vnos mora biti manjši od %{count}."
+        rangeUnderflow:
+          one: "Vnos mora biti večji od %{count}."
+          two: "Vnos mora biti večji od %{count}."
+          few: "Vnos mora biti večji od %{count}."
+          other: "Vnos mora biti večji od %{count}."
     table_builder:
       title: "Oblikovalec tabel"
       modal:
@@ -3780,8 +3811,6 @@ sl:
             topics:
               write: Ustvarite novo temo ali objavite v obstoječi.
               read_lists: Preberite sezname tem, kot so najboljše, nove, najnovejše, itd. Podpira tudi RSS.
-            users:
-              show: Pridobi informacije o uporabniku.
       web_hooks:
         create: "Ustvari"
         edit: "Uredi"
@@ -3959,7 +3988,6 @@ sl:
           reset: "Ponastavi na privzeto"
       email:
         title: "E-pošta"
-        settings: "Nastavitve"
         templates: "Predloge"
         test_error: "Prišlo je do napake med pošiljanjem testnega e-sporočila. Ponovno preverite vaše nastavitve e-pošte in preverite, da vaš ponudnik ne blokira povezav za e-pošto. Potem poskusite ponovno."
         sent: "Poslano"
@@ -4334,7 +4362,6 @@ sl:
             other: "V zadnjih %{count} dneh:"
           value_heading: "Stanje"
           requirement_heading: "Zahtevano"
-          visits: "Obiskov"
           days: "dni"
           topics_replied_to: "Odgovorjenih tem"
           topics_viewed: "Ogledanih tem"
@@ -4545,6 +4572,7 @@ sl:
         post_title: "Prispevek"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        username: "Uporabniško ime"
         delete_confirm: Ali ste prepričani, da želite odstraniti trajno povezavo?
         form:
           label: "Novo:"

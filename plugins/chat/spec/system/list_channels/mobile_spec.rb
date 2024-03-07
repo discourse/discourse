@@ -50,24 +50,73 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     end
 
     context "when multiple category channels are present" do
-      fab!(:channel_1) { Fabricate(:category_channel, name: "b channel") }
-      fab!(:channel_2) { Fabricate(:category_channel, name: "a channel") }
+      fab!(:channel_1) { Fabricate(:category_channel, name: "a channel") }
+      fab!(:channel_2) { Fabricate(:category_channel, name: "b channel") }
+      fab!(:channel_3) { Fabricate(:category_channel, name: "c channel") }
+      fab!(:channel_4) { Fabricate(:category_channel, name: "d channel") }
 
       before do
         channel_1.add(current_user)
         channel_2.add(current_user)
+        channel_3.add(current_user)
+        channel_4.add(current_user)
       end
 
-      it "sorts them alphabetically" do
-        visit("/chat")
-        page.find("#c-footer-channels").click
+      it "sorts them by mentions, unread, then by slug" do
+        Jobs.run_immediately!
 
-        expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
-          channel_2.id.to_s,
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          created_at: 10.minutes.ago,
+          use_service: true,
         )
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_2,
+          created_at: 5.minutes.ago,
+          use_service: true,
+        )
+        Fabricate(
+          :chat_message_with_service,
+          chat_channel: channel_4,
+          message: "Hey @#{current_user.username}",
+          user: Fabricate(:user),
+        )
+
+        Fabricate(:chat_message, chat_channel: channel_3, user: current_user, use_service: true)
+
+        visit("/chat/channels")
+
+        # channel with mentions should be first
+        expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
+          channel_4.id.to_s,
+        )
+        # channels with unread messages are next
         expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_1.id.to_s,
         )
+        expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
+          channel_2.id.to_s,
+        )
+      end
+
+      context "with emojis in title" do
+        before do
+          channel_1.update!(name: ":pear: a channel")
+          channel_2.update!(name: ":apple: b channel")
+        end
+
+        it "sorts them by slug" do
+          visit("/chat/channels")
+
+          expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
+            channel_1.id.to_s,
+          )
+          expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
+            channel_2.id.to_s,
+          )
+        end
       end
     end
 
@@ -149,6 +198,60 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       visit("/chat")
       expect(page).to have_no_css(".public-channels-section")
       expect(page).to have_no_css(".direct-message-channels-section")
+    end
+  end
+
+  context "when chat_preferred_mobile_index is set to direct_messages" do
+    before { SiteSetting.chat_preferred_mobile_index = "direct_messages" }
+
+    it "changes the default index" do
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/direct-messages")
+    end
+
+    context "when user can't use direct messages" do
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "redirects to channels" do
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/channels")
+      end
+    end
+  end
+
+  context "when chat_preferred_mobile_index is not set" do
+    it "redirects to channels" do
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/channels")
+    end
+  end
+
+  context "when chat_preferred_mobile_index is set to my_threads" do
+    before do
+      SiteSetting.chat_threads_enabled = true
+      SiteSetting.chat_preferred_mobile_index = "my_threads"
+    end
+
+    it "redirects to threads" do
+      channel = Fabricate(:chat_channel, threading_enabled: true)
+      channel.add(current_user)
+
+      visit("/chat")
+
+      expect(page).to have_current_path("/chat/threads")
+    end
+
+    context "when no threads" do
+      before { SiteSetting.chat_threads_enabled = false }
+
+      it "redirects to channels" do
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/channels")
+      end
     end
   end
 

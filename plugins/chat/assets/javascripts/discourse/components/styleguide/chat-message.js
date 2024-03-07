@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 

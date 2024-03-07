@@ -117,6 +117,7 @@ nl:
         direct_message_cta: "Start een privéchat"
         direct_message: "Je kunt ook een privéchat starten met een of meer gebruikers."
         title: "Geen kanalen gevonden"
+        my_threads: "Je hebt nog geen onderwerpen. Discussies waaraan je deelneemt, worden hier weergegeven."
       email_frequency:
         description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
@@ -226,6 +227,7 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      no_direct_message_channels: "Je bent geen lid geworden van directe berichtkanalen."
       no_public_channels: "Je bent geen lid geworden van kanalen."
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:
@@ -303,7 +305,7 @@ nl:
         back: "Terug"
         title: Kanalen
         filter_all: Alle
-        filter_open: Geopend
+        filter_open: Open
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
         filter_input_placeholder: Kanaal zoeken op naam
@@ -343,6 +345,7 @@ nl:
         filter: "Filter"
         cant_add_more_members: "Maximaal aantal leden bereikt"
         create_new_group_chat: "Groepschat maken"
+        group_with_too_many_members: "heeft te veel leden (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Kanaal bewerken
         input_placeholder: Voeg een naam toe
@@ -477,7 +480,12 @@ nl:
           description: "Hierdoor worden alle berichten van alle kanalen geëxporteerd."
           create_export: "Export maken"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
+      my_threads:
+        title: Mijn discussies
+        aria_label: "Wissel naar lijst met mijn discussies"
       direct_messages:
+        title: "DM's"
+        aria_label: "Wisselen naar privéberichten"
         new: "Maak een persoonlijke chat"
         create: "Gaan"
         leave: "Deze privéchat verlaten"
@@ -485,6 +493,7 @@ nl:
         cannot_create: "Sorry, je kunt geen directe berichten sturen."
       channel_list:
         title: "Kanalen"
+        aria_label: "Wisselen naar kanalenlijst"
       incoming_webhooks:
         back: "Vorige"
         channel_placeholder: "Selecteer een kanaal"

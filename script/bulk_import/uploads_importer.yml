@@ -35,6 +35,10 @@ site_settings:
   s3_secret_access_key: "your-secret-access-key"
   s3_cdn_url: "https://your-cdn-url.com"
 
+  # Set this to true if the site is a multisite and configure the `multisite_db_name` accordingly
+  multisite: false
+  multisite_db_name: "default"
+
 # Sometimes a file can be found at one of many locations. Here's a list of transformations that can
 # be applied to the path to try and find the file. The first transformation that results in a file
 # being found will be used.

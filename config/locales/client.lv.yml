@@ -36,11 +36,8 @@ lv:
       long_with_year: "MMM D, YYYY hh:mm"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "pirms %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -82,7 +79,7 @@ lv:
           one: "%{count} g"
           other: "%{count} g"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           zero: "0 minūtes"
@@ -96,7 +93,6 @@ lv:
           zero: "0 dienas"
           one: "%{count} diena"
           other: "%{count} dienas"
-        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           zero: "pirms 0 minūtēm"
@@ -167,7 +163,6 @@ lv:
     topic_admin_menu: "tēmas darbības"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
-      message: "Mēs esam atjauninājuši šo vietni, <span>lūdzu, atjaunojiet to</span>, pretējā gadījumā var rasties kļūdas."
       dismiss: "Nerādīt"
     themes:
       default_description: "Noklusējums"
@@ -1896,6 +1891,18 @@ lv:
     topic_bulk_actions:
       close_topics:
         name: "Slēgt tēmas"
+      archive_topics:
+        name: "Arhivēt tēmas"
+      unlist_topics:
+        name: "Izņemt no sarakstiem tēmas"
+      relist_topics:
+        name: "Atkal padarīt tēmas redzamas sarakstiem"
+      append_tags:
+        name: "Pievienot tagus"
+      replace_tags:
+        name: "Aizvietot tagus"
+      delete_topics:
+        name: "Dzēst tēmas"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
@@ -2773,6 +2780,7 @@ lv:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
+      filter: "Filtrs"
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -3104,7 +3112,6 @@ lv:
           reset: "Atiestatīt uz noklusējumu"
       email:
         title: "E-pasti"
-        settings: "Iestatījumi"
         templates: "Veidnes"
         error: "<b>KĻŪDA</b> - %{server_error}"
         test_error: "Sūtot testa e-pastu, notika kļūda. Lūdzu uzmanīgi pārbaudiet jūsu e-pasta iestatījumus, pārliecinieties, ka jūsu izvietotājs nebloķē e-pasta savienojumus un mēģiniet vēlreiz."
@@ -3460,7 +3467,6 @@ lv:
             other: "Pēdējās %{count} dienās:"
           value_heading: "Vērtība"
           requirement_heading: "Prasības"
-          visits: "Apmeklējumi"
           days: "dienas"
           topics_replied_to: "Tēmās atbildēts / rakstīts"
           topics_viewed: "Tēmas izskatītas"
@@ -3683,6 +3689,7 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
+        username: "Lietotājvārds"
         delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"

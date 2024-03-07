@@ -35,11 +35,11 @@ sv:
       long_with_year: "D MMM, YYYY h:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
+      long_date_with_year: "MMM D, ÅÅÅÅ LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_with_year_without_time: "MMM D, ÅÅÅÅ"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, ÅÅÅÅ <br/>LT"
       wrap_ago: "%{date} sedan"
       wrap_on: "den %{date}"
       tiny:
@@ -75,7 +75,7 @@ sv:
           one: "%{count} år"
           other: "%{count} år"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "mindre än %{count} min"
@@ -104,7 +104,7 @@ sv:
         almost_x_years:
           one: "nästan %{count} år"
           other: "nästan %{count} år"
-        date_year: "D MMM, 'YY"
+        date_year: "MMM D, ÅÅÅÅ"
       medium_with_ago:
         x_minutes:
           one: "%{count} min sedan"
@@ -188,7 +188,7 @@ sv:
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
-      message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
+      message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
     themes:
@@ -200,7 +200,6 @@ sv:
     broken_page_change_alert: "En onPageChange-hanterare meddelar ett fel. Se mer information i webbläsarens utvecklarverktyg."
     broken_plugin_alert: "Orsakas av plugin '%{name}'"
     critical_deprecation:
-      notice: "<b>[Administratörsmeddelande]</b> Ett av dina teman eller plugins måste uppdateras för kompatibilitet med kommande förändringar av Discourse-kärnan (<a target='_blank' href='https://meta.discourse.org/t/287211'>mer info</a>)."
       theme_source: "Identifierat tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identifierad plugin: '%{name}'"
     s3:
@@ -1463,6 +1462,9 @@ sv:
           description: "Bekräfta att du önskar ändra din e-postadress till:"
           description_add: "Bekräfta att du önskar lägga till en alternativ e-postadress:"
         authorizing_old:
+          title: "Verifiera gammal e-postadress"
+          description: "Verifiera din gamla e-postadress för att fortsätta med ändringen av din e-postadress:"
+          description_add: "Verifiera din befintliga e-postadress för att fortsätta lägga till en alternativ adress:"
           old_email: "Gammal e-postadress: %{email}"
           new_email: "Ny e-postadress: %{email}"
           confirm_success: "Vi har skickat e-post till din nya e-postadress för att bekräfta ändringen!"
@@ -1731,6 +1733,9 @@ sv:
         incorrect_password: "Det angivna lösenordet är felaktigt."
         incorrect_passkey: "Det lösenordet är felaktigt."
         logged_in_as: "Du är inloggad som: "
+        forgot_password: "Har du glömt ditt lösenord?"
+        password_reset_email_sent: "E-postmeddelande om lösenordsåterställning har skickats."
+        cannot_send_password_reset_email: "Det gick inte att skicka e-postmeddelande om lösenordsåterställning."
         instructions: "Bekräfta din identitet för att slutföra denna åtgärd."
         fine_print: "Vi ber dig bekräfta din identitet eftersom detta är en potentiellt känslig åtgärd. När du har autentiserats kommer du bara att bli ombedd att autentisera igen efter några timmars inaktivitet."
       password:
@@ -2750,6 +2755,20 @@ sv:
     topic_bulk_actions:
       close_topics:
         name: "Stäng ämnen"
+      archive_topics:
+        name: "Arkivera ämnen"
+      unlist_topics:
+        name: "Avlista ämnen"
+      relist_topics:
+        name: "Lista om ämnen"
+      remove_tags:
+        name: "Ta bort taggar"
+      append_tags:
+        name: "Lägg till taggar"
+      replace_tags:
+        name: "Ersätt taggar"
+      delete_topics:
+        name: "Ta bort ämnen"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"
@@ -3360,6 +3379,7 @@ sv:
           off_topic: "Du flaggade detta som irrelevant"
           spam: "Du flaggade detta som skräppost"
           inappropriate: "Du flaggade detta som olämpligt"
+          illegal: "Du flaggade detta som olagligt"
           notify_moderators: "Du flaggade det för moderation."
           notify_user: "Du skickade ett meddelande till denna användare"
       delete:
@@ -3624,10 +3644,12 @@ sv:
         off_topic: "Det är irrelevant"
         inappropriate: "Det är olämpligt"
         spam: "Det är skräppost"
+        illegal: "Det är olagligt"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
       notify_user_textarea_label: "Meddelande till användaren"
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka om möjligt med relevanta länkar och exempel."
       notify_moderators_textarea_label: "Meddelande till moderatorerna"
+      custom_placeholder_illegal: "Låt oss veta i detalj varför du tycker detta innehåll är olagligt, och skicka om möjligt med relevanta länkar och exempel."
       custom_message:
         at_least:
           one: "skriv åtminstone %{count} tecken"
@@ -4289,6 +4311,7 @@ sv:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -5196,7 +5219,7 @@ sv:
           instructions: "Anpassa mallen där alla e-post renderas, samt stil genom CSS."
       email:
         title: "E-post"
-        settings: "Inställningar"
+        settings: "E-postinställningar"
         templates: "Mallar"
         templates_title: "E-postmallar"
         preview_digest: "Förhandsgranska sammandrag"
@@ -5843,7 +5866,7 @@ sv:
             other: "De senaste %{count} dagarna:"
           value_heading: "Värde"
           requirement_heading: "Krav"
-          visits: "Besök"
+          posts_read_days: "Lästa inlägg: unika dagar"
           days: "dagar"
           topics_replied_to: "Besvarade ämnen"
           topics_viewed: "Besökta ämnen"
@@ -6149,6 +6172,8 @@ sv:
         category_title: "Kategori"
         tag_name: "Namn på tagg"
         external_url: "Extern eller relativ URL"
+        user_id: "Användar-ID"
+        username: "Användarnamn"
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?

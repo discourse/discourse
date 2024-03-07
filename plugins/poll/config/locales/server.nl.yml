@@ -10,9 +10,12 @@ nl:
     poll_maximum_options: "Maximale aantal toegestane opties in een poll."
     poll_edit_window_mins: "Aantal minuten na het maken van een bericht waarin polls kunnen worden bewerkt."
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls te maken."
+    poll_create_allowed_groups: "De groepen die peilingen mogen maken."
     poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
     poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."
     poll_default_public: "Schakel bij het maken van een nieuwe poll standaard de optie 'Weergeven wie er heeft gestemd' in."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "poll"
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."

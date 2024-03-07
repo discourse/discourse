@@ -6,8 +6,30 @@ RSpec.describe TopicHotScore do
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
 
-    it "can correctly update like counts and post counts and account for activity" do
+    it "also always updates based on recent activity" do
       freeze_time
+
+      # this will come in with a score
+      topic = Fabricate(:topic, created_at: 1.hour.ago, bumped_at: 2.minutes.ago)
+      post = Fabricate(:post, topic: topic, created_at: 2.minute.ago)
+      PostActionCreator.like(user, post)
+
+      TopicHotScore.update_scores
+
+      # this will come in in the batch in score 0
+      topic = Fabricate(:topic, created_at: 1.minute.ago, bumped_at: 1.minute.ago)
+      post = Fabricate(:post, topic: topic, created_at: 1.minute.ago)
+      PostActionCreator.like(user, post)
+
+      # batch size is 1 so if we do not do something special we only update
+      # the high score topic and skip new
+      TopicHotScore.update_scores(1)
+
+      expect(TopicHotScore.find_by(topic_id: topic.id).score).to be_within(0.001).of(0.861)
+    end
+
+    it "can correctly update like counts and post counts and account for activity" do
+      freeze_time_safe
 
       TopicHotScore.create!(topic_id: -1, score: 0.0, recent_likes: 99, recent_posters: 0)
 

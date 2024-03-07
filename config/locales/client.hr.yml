@@ -36,11 +36,8 @@ hr:
       long_with_year: "D MMM, YYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "prije %{date} "
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ hr:
           few: "%{count} godine"
           other: "%{count}godina"
         date_month: "D MMM"
-        date_year: "MMM, 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "manje od %{count} min"
@@ -124,7 +121,6 @@ hr:
           one: "skoro %{count} godina"
           few: "skoro %{count} godina"
           other: "skoro %{count} godina"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -210,7 +206,6 @@ hr:
     emails_are_disabled: "Svi emailovi prema van su blokirani od strane administratora. Ni jedna vrsta obavijesti putem emaila neće biti poslana."
     emails_are_disabled_non_staff: "Odlazna e-pošta onemogućena je za korisnike koji nisu zaposleni."
     software_update_prompt:
-      message: "Ažurirali smo ovu stranicu, <span>osvježite</span>ili ćete možda doživjeti neočekivano ponašanje."
       dismiss: "Skloni"
     themes:
       default_description: "Zadano"
@@ -2671,6 +2666,18 @@ hr:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Poništite popis tema"
+      relist_topics:
+        name: "Poništite popis tema"
+      append_tags:
+        name: "Dodajte oznake"
+      replace_tags:
+        name: "Zamijeni oznake"
+      delete_topics:
+        name: "Obriši teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -4154,6 +4161,7 @@ hr:
               content: "Osvrt"
               title: "Označene objave i druge stavke u redu čekanja"
               pending_count: "%{count} na čekanju"
+      filter: "Filter"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
@@ -4435,7 +4443,6 @@ hr:
             users:
               bookmarks: Navedite oznake korisnika. Vraća podsjetnike na oznake prilikom korištenja ICS formata.
               sync_sso: Sinkronizirajte korisnika pomoću DiscourseConnect.
-              show: Pribavite informacije o korisniku.
               check_emails: Popis e-adresa korisnika.
               update: Ažurirajte informacije korisničkog profila.
               log_out: Odjavite se sve sesije za korisnika.
@@ -4880,7 +4887,6 @@ hr:
           instructions: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a."
       email:
         title: "E-adrese"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Sažetak pregleda"
         advanced_test:
@@ -5459,7 +5465,6 @@ hr:
             other: "U zadnjih %{count} dana:"
           value_heading: "Vrijednost"
           requirement_heading: "Predispozicija"
-          visits: "Posjeta"
           days: "dana"
           topics_replied_to: "Odgovoreno u teme"
           topics_viewed: "Tema pogledano"
@@ -5742,6 +5747,7 @@ hr:
         category_title: "Kategorija"
         tag_name: "Naziv oznake"
         external_url: "Vanjski ili relativni URL"
+        username: "Korisničko ime"
         destination: "Odredište"
         copy_to_clipboard: "Kopirajte stalnu vezu u međuspremnik"
         delete_confirm: Jeste li sigurni da želite izbrisati ovu stalnu vezu?

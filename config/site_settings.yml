@@ -327,7 +327,6 @@ basic:
     min: 0
     max: 6
   whispers_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
@@ -339,10 +338,6 @@ basic:
     default: "14"
     allow_any: false
     refresh: true
-  enable_bookmarks_with_reminders:
-    client: true
-    default: true
-    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -685,7 +680,6 @@ users:
   anonymous_posting_allowed_groups:
     default: "3|11" # auto group staff and trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -867,7 +861,6 @@ posting:
   personal_message_enabled_groups:
     default: "3|11" # auto group trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -885,7 +878,6 @@ posting:
   shared_drafts_allowed_groups:
     default: "3" # auto group staff
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -966,7 +958,6 @@ posting:
   here_mention_allowed_groups:
     default: "3|12" # auto group staff and trust_level_2
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -1428,6 +1419,12 @@ email:
     default: 10
     hidden: true
   require_change_email_confirmation: false
+  view_raw_email_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
+    allow_any: false
+    refresh: true
 
 files:
   max_image_size_kb:
@@ -1744,7 +1741,7 @@ trust:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   send_email_messages_allowed_groups:
-    default: "3|14" # auto group staff and trust_level_4
+    default: "1|3|14" # auto group admin, staff, and trust_level_4
     type: group_list
     allow_any: false
     refresh: true
@@ -1783,6 +1780,12 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
+  profile_background_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
   min_trust_level_to_allow_user_card_background:
     default: 0
     client: true
@@ -1793,7 +1796,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"
@@ -1812,7 +1814,6 @@ trust:
   ignore_allowed_groups:
     default: "3|12" # auto group staff and trust_level_2
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -1878,7 +1879,6 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    client: true
   edit_all_topic_groups:
     default: "13"
     type: group_list
@@ -1991,6 +1991,8 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
+  content_security_policy_strict_dynamic:
+    default: false
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2323,26 +2325,19 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_search_menu:
-    client: true
-    hidden: true
-    default: true
   max_sidebar_section_links:
     default: 50
     hidden: true
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  enable_experimental_admin_ui_groups:
+  experimental_glimmer_header_groups:
+    client: true
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
-    refresh: true
-    hidden: true
-    client: true
   admin_sidebar_enabled_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
@@ -2367,6 +2362,9 @@ developer:
     list_type: compact
     allow_any: false
     refresh: true
+  experimental_objects_type_for_theme_settings:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2613,7 +2611,6 @@ uncategorized:
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3
@@ -2829,6 +2826,10 @@ uncategorized:
     default: "24|72|168|720"
     type: "list"
     list_type: "compact"
+
+  penalty_include_post_message:
+    default: false
+    client: true
 
   svg_icon_subset:
     default: ""
@@ -3059,7 +3060,7 @@ tags:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
-    default: "3|13" # auto group staff and trust_level_3
+    default: "1|3|13" # auto group admin, staff, and trust_level_3
     type: group_list
     allow_any: false
     refresh: true
@@ -3070,7 +3071,7 @@ tags:
     client: true
     hidden: true
   tag_topic_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|3|10" # auto group admin, staff, and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -3093,7 +3094,6 @@ tags:
     client: true
     default: false
   pm_tags_allowed_for_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
@@ -3154,10 +3154,6 @@ dashboard:
   verbose_user_stat_count_logging:
     hidden: true
     default: false
-  experimental_hot_topics:
-    hidden: true
-    default: false
-    client: true
   hot_topics_gravity:
     hidden: true
     default: 1.2

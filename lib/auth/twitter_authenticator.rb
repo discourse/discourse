@@ -9,6 +9,16 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
     SiteSetting.enable_twitter_logins
   end
 
+  def healthy?
+    connection =
+      Faraday.new(url: "https://api.twitter.com") do |config|
+        config.basic_auth(SiteSetting.twitter_consumer_key, SiteSetting.twitter_consumer_secret)
+      end
+    connection.post("/oauth2/token").status == 200
+  rescue Faraday::Error
+    false
+  end
+
   def after_authenticate(auth_token, existing_account: nil)
     # Twitter sends a huge amount of data which we don't need, so ignore it
     auth_token[:extra] = {}

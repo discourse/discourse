@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";

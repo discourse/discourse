@@ -1,3 +1,4 @@
+// deprecated in favor of discourse/tests/integration/components/home-logo-test.gjs
 import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";

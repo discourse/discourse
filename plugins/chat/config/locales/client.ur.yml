@@ -52,6 +52,7 @@ ur:
       browse:
         back: "واپس"
         filter_all: تمام
+        filter_open: کھولیں
         filter_closed: بند
       chat_message_separator:
         today: آج

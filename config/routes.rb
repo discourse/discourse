@@ -253,6 +253,7 @@ Discourse::Application.routes.draw do
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "themes/:id/export" => "themes#export"
+        get "themes/:id/schema/:setting_name" => "themes#schema"
 
         # They have periods in their URLs often:
         get "site_texts" => "site_texts#index"
@@ -1207,6 +1208,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#lookup"
+    get "hashtags/by-ids" => "hashtags#by_ids"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
@@ -1236,7 +1238,11 @@ Discourse::Application.routes.draw do
     put "t/:id/convert-topic/:type" => "topics#convert_topic"
     put "t/:id/publish" => "topics#publish"
     put "t/:id/shared-draft" => "topics#update_shared_draft"
-    put "t/:id/reset-bump-date" => "topics#reset_bump_date"
+    put "t/:id/reset-bump-date/(:post_id)" => "topics#reset_bump_date",
+        :constraints => {
+          id: /\d+/,
+          post_id: /\d+/,
+        }
     put "topics/bulk"
     put "topics/reset-new" => "topics#reset_new"
     put "topics/pm-reset-new" => "topics#private_message_reset_new"

@@ -6,7 +6,6 @@ chat:
     default: true
     client: true
   chat_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: "3|11" # 3: @staff, 11: @trust_level_1
@@ -101,14 +100,12 @@ chat:
   direct_message_enabled_groups:
     default: "11" # @trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
     default: "11" # @trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
   max_mentions_per_chat_message:
@@ -140,3 +137,11 @@ chat:
     type: integer
     default: 40
     min: 0
+  chat_preferred_mobile_index:
+    client: true
+    type: enum
+    default: channels
+    choices:
+      - channels
+      - direct_messages
+      - my_threads

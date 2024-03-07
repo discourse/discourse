@@ -51,6 +51,7 @@ export default class ChatMessage {
   @tracked message;
   @tracked manager;
   @tracked deletedById;
+  @tracked streaming = false;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -59,6 +60,7 @@ export default class ChatMessage {
   constructor(channel, args = {}) {
     this.id = args.id;
     this.channel = channel;
+    this.streaming = args.streaming;
     this.manager = args.manager;
     this.newest = args.newest || false;
     this.draftSaved = args.draftSaved || args.draft_saved || false;

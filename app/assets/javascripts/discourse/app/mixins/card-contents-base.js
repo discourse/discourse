@@ -1,7 +1,7 @@
 import { alias, match } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { schedule, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { headerOffset } from "discourse/lib/offset-calculator";

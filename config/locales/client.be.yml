@@ -26,8 +26,6 @@ be:
       time: "HH:mm"
       long_no_year_no_time: "D MMM"
       long_with_year_no_time: "D МММ, YYYY"
-      long_date_with_year_without_time: "D MMM YYYY"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} таму"
       tiny:
         half_a_minute: "< 1 хв"
@@ -58,7 +56,6 @@ be:
           few: " %{Count} дні"
           many: " %{Count} дзён"
           other: " %{Count} дзён"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_hours:
           one: "0%{count}:00 таму"
@@ -962,6 +959,10 @@ be:
     topic_bulk_actions:
       close_topics:
         name: "Закрыць тэму"
+      archive_topics:
+        name: "Заархіваваныя тэмы"
+      delete_topics:
+        name: "Выдаліць тэмы"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1419,6 +1420,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -1680,7 +1682,6 @@ be:
             description: "Колер кнопкі \"Падабаецца\"."
       email:
         title: "Емейлы"
-        settings: "Налады"
         templates: "шаблоны"
         preview_digest: "Кароткі выклад навін"
         sent: "Sent"
@@ -1968,7 +1969,6 @@ be:
             other: "За апошнія %{count} дзён:"
           value_heading: "значэнне"
           requirement_heading: "патрабаванне"
-          visits: "наведванне"
           days: "дзён"
           topics_replied_to: "Тэмы, на якія адказаў (а)"
           topics_viewed: "прагледжана Тым"
@@ -2111,6 +2111,7 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
+        username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"

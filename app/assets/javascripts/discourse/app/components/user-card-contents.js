@@ -207,7 +207,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           );
         }
         this.setProperties({ user });
-        this.user.trackStatus();
+        this.user.statusManager.trackStatus();
         return user;
       })
       .catch(() => this._close())
@@ -216,7 +216,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   _close() {
     if (this.user) {
-      this.user.stopTrackingStatus();
+      this.user.statusManager.stopTrackingStatus();
     }
 
     this.setProperties({

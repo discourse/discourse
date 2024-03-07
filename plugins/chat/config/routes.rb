@@ -18,6 +18,8 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/messages" => "channel_messages#index"
     put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
+    delete "/channels/:channel_id/messages/:message_id/streaming" =>
+             "channels_messages_streaming#destroy"
     post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
@@ -73,6 +75,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
   get "/threads" => "chat#respond"

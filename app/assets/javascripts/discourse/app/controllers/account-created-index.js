@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import getUrl from "discourse-common/lib/get-url";

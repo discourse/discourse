@@ -140,6 +140,11 @@ span.relative-date {
   white-space: nowrap;
 }
 
+legend {
+  color: var(--primary-high);
+  font-weight: bold;
+}
+
 label {
   display: flex;
   margin-bottom: 5px;
@@ -340,10 +345,11 @@ textarea {
 }
 
 .wrap {
+  --d-wrap-padding-h: 10px;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 10px;
+  padding: 0 var(--d-wrap-padding-h);
   .contents {
     position: relative;
   }
@@ -586,8 +592,12 @@ textarea {
     line-height: var(--line-height-large);
   }
 
+  .control-group,
   .controls {
     margin-left: 0;
+    label {
+      font-weight: normal;
+    }
   }
 }
 

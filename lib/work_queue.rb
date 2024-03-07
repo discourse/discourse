@@ -51,15 +51,16 @@ module WorkQueue
   class FairQueue
     attr_reader :size
 
-    def initialize(limit, &blk)
+    def initialize(key, limit, &blk)
       @limit = limit
       @size = 0
+      @key = key
       @elements = Hash.new { |h, k| h[k] = blk.call }
     end
 
     def push(task, force:)
       raise WorkQueueFull if !force && @size >= @limit
-      key, task = task.values_at(:key, :task)
+      key = task[@key]
       @elements[key].push(task, force: force)
       @size += 1
       nil
@@ -72,10 +73,8 @@ module WorkQueue
         task = queue.shift
 
         @elements[key] = queue unless queue.empty?
-
         @size -= 1
-
-        { key: key, task: task }
+        task
       end
     end
 

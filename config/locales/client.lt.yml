@@ -37,11 +37,8 @@ lt:
       long_with_year: "YYYY MMMM D H:mm"
       long_with_year_no_time: "YYYY MMMM D"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "YYYY MMMM D H:mm"
       long_date_without_year: "MMMM D H:mm"
-      long_date_with_year_without_time: "YYYY MMMM D"
       long_date_without_year_with_linebreak: "MMMM D<br/>H:mm"
-      long_date_with_year_with_linebreak: "YYYY MMMM D<br/>H:mm"
       wrap_ago: "prieš %{date} "
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ lt:
           many: "%{count} m."
           other: "%{count} m."
         date_month: "MMM D"
-        date_year: "YYYY MMM"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minutė"
@@ -114,7 +111,6 @@ lt:
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
-        date_year: "YYYY-MM-D"
       medium_with_ago:
         x_minutes:
           one: "prieš %{count} minutę"
@@ -208,7 +204,6 @@ lt:
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     emails_are_disabled_non_staff: "Siunčiamas el. laiškas buvo išjungtas ne darbuotojams."
     software_update_prompt:
-      message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
     bootstrap_mode: "Darbo pradžia"
     themes:
@@ -2289,6 +2284,16 @@ lt:
     topic_bulk_actions:
       close_topics:
         name: "Uždaryti temas"
+      archive_topics:
+        name: "Archyvuoti temas"
+      unlist_topics:
+        name: "Atžymėti temas"
+      append_tags:
+        name: "Pridėti žymas"
+      replace_tags:
+        name: "Pakeisti žymas"
+      delete_topics:
+        name: "Ištrinti temas"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3558,6 +3563,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+      filter: "Filtruoti"
     until: "Iki:"
     form_templates:
       upload_field:
@@ -3788,7 +3794,6 @@ lt:
             users:
               bookmarks: Sąrašas vartotojo žymių. Naudojant ICS formatą, jis grąžina priminimus apie žymes.
               sync_sso: Sinchronizuokite vartotoją naudodami DiscourseConnect.
-              show: Gauti informaciją apie vartotoją.
               check_emails: Vartotojų el. paštų sąrašas
               update: Atnaujinti vartotojo profilio informaciją.
               log_out: Atjungti visus seansus vartotojui.
@@ -4152,7 +4157,6 @@ lt:
           save_error_with_reason: "Jūsų pakeitimai nebuvo išsaugoti. %{error}"
       email:
         title: "El. laiškai"
-        settings: "Nustatymai"
         templates: "Juodraščiai"
         preview_digest: "Parodyti Santrauką"
         advanced_test:
@@ -4655,7 +4659,6 @@ lt:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"
           requirement_heading: "Reikalavimas"
-          visits: "Apsilankymai"
           days: "dienos"
           topics_replied_to: "Atsakyta į temų"
           topics_viewed: "Peržiūrėta temų"
@@ -4925,6 +4928,7 @@ lt:
         category_title: "Kategorija"
         tag_name: "Žymos pavadinimas"
         external_url: "Išorinis arba santykinis URL"
+        username: "Vartotojo vardas"
         destination: "Paskirtis"
         copy_to_clipboard: "Kopijuoti nuolatinę nuorodą į iškarpinę"
         delete_confirm: Ar tikrain nori ištrinti šią laikiną nuorodą?

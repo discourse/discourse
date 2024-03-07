@@ -94,6 +94,7 @@ bg:
         back: "Назад"
         title: Канали
         filter_all: Всички
+        filter_open: Отвори
         filter_closed: Затворена
       chat_message_separator:
         today: Днес

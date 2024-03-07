@@ -24,6 +24,7 @@ export default ComboBoxComponent.extend({
   navigateToEdit: false,
   editingCategory: false,
   editingCategoryTab: null,
+  allowUncategorized: setting("allow_uncategorized_topics"),
 
   selectKitOptions: {
     filterable: true,
@@ -40,7 +41,7 @@ export default ComboBoxComponent.extend({
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
-    allowUncategorized: setting("allow_uncategorized_topics"),
+    allowUncategorized: "allowUncategorized",
   },
 
   modifyComponentForRow() {
@@ -138,22 +139,26 @@ export default ComboBoxComponent.extend({
 
   async search(filter) {
     if (this.site.lazy_load_categories) {
-      const results = await Category.asyncSearch(filter, {
-        parentCategoryId: this.options.parentCategory?.id || -1,
-        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
-        limit: 15,
-      });
-      return this.shortcuts.concat(
-        results.sort((a, b) => {
-          if (a.parent_category_id && !b.parent_category_id) {
-            return 1;
-          } else if (!a.parent_category_id && b.parent_category_id) {
-            return -1;
-          } else {
-            return 0;
-          }
+      let parentCategoryId;
+      if (this.options.parentCategory?.id) {
+        parentCategoryId = this.options.parentCategory.id;
+      } else if (!filter) {
+        // Only top-level categories should be displayed by default.
+        // If there is a search term, the term can match any category,
+        // including subcategories.
+        parentCategoryId = -1;
+      }
+
+      const results = (
+        await Category.asyncSearch(filter, {
+          parentCategoryId,
+          includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+          includeAncestors: true,
+          limit: 15,
         })
-      );
+      ).categories;
+
+      return this.shortcuts.concat(results);
     }
 
     const opts = {

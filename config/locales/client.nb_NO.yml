@@ -35,11 +35,8 @@ nb_NO:
       long_with_year: "D MMM YYYY LT"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       wrap_on: "på %{date}"
       tiny:
@@ -75,7 +72,7 @@ nb_NO:
           one: "%{count}år"
           other: "%{count}år"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minutt"
@@ -86,7 +83,6 @@ nb_NO:
         x_days:
           one: "%{count} dag"
           other: "%{count} dager"
-        date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minutt siden"
@@ -161,7 +157,6 @@ nb_NO:
     skip_to_main_content: "Gå til hovedinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
-      message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
     themes:
       default_description: "Forvalg"
@@ -2129,6 +2124,18 @@ nb_NO:
     topic_bulk_actions:
       close_topics:
         name: "Lukk emner"
+      archive_topics:
+        name: "Arkiver emner"
+      unlist_topics:
+        name: "Fjern emner fra lister"
+      relist_topics:
+        name: "Før opp igjen emner i lister"
+      append_tags:
+        name: "Legg til stikkord"
+      replace_tags:
+        name: "Erstatt stikkord"
+      delete_topics:
+        name: "Slett emner"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3361,6 +3368,7 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
+      filter: "Filtrer"
     until: "Inntil:"
     form_templates:
       upload_field:
@@ -3891,7 +3899,6 @@ nb_NO:
           instructions: "Tilpass malen hvor alle html e-poster gjengis og stil ved hjelp av CSS."
       email:
         title: "E-poster"
-        settings: "Instillinger"
         templates: "Maler"
         preview_digest: "Forhåndsvis oppsummering"
         advanced_test:
@@ -4358,7 +4365,6 @@ nb_NO:
             other: "De siste %{count} dagene:"
           value_heading: "Verdi"
           requirement_heading: "Krav"
-          visits: "Besøk"
           days: "dager"
           topics_replied_to: "Emner besvart"
           topics_viewed: "Emner lest"
@@ -4585,6 +4591,7 @@ nb_NO:
         post_title: "Innlegg"
         category_id: "Kategori-ID"
         category_title: "Kategori"
+        username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
         form:
           label: "Ny:"

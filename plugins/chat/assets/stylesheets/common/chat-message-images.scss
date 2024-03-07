@@ -18,7 +18,9 @@ $max_image_height: 150px;
   }
 
   .onebox {
-    container-type: inline-size;
+    &:not(img) {
+      container-type: inline-size;
+    }
 
     .thumbnail {
       &.onebox-avatar {
@@ -27,6 +29,10 @@ $max_image_height: 150px;
         max-width: 60px;
         margin-right: 0.5rem;
       }
+    }
+
+    .onebox-body .aspect-image {
+      max-width: 50%;
     }
 
     @container (width < 400px) {

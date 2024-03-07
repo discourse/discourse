@@ -180,7 +180,7 @@ hu:
         back: "Vissza"
         title: Csatornák
         filter_all: Összes
-        filter_open: Nyitott
+        filter_open: Megnyitás
         filter_closed: Zárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint

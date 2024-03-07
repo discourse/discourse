@@ -35,11 +35,8 @@ ca:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY HH:mm"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH:mm"
       wrap_ago: "fa %{date} "
       wrap_on: "el %{date}"
       tiny:
@@ -75,7 +72,7 @@ ca:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -89,7 +86,6 @@ ca:
         over_x_years:
           one: "més d'%{count} any"
           other: "més de %{count} anys"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "fa %{count} minut"
@@ -165,7 +161,6 @@ ca:
     skip_to_main_content: "Vés al contingut principal"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
-      message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
     themes:
       default_description: "Per defecte"
@@ -1881,6 +1876,18 @@ ca:
     topic_bulk_actions:
       close_topics:
         name: "Tanca temes"
+      archive_topics:
+        name: "Arxiva temes"
+      unlist_topics:
+        name: "Fes temes invisibles"
+      relist_topics:
+        name: "Torna a llistar els temes"
+      append_tags:
+        name: "Annexa etiquetes"
+      replace_tags:
+        name: "Reemplaça etiquetes"
+      delete_topics:
+        name: "Suprimeix temes"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2891,6 +2898,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
+      filter: "Filtre"
     until: "Fins a:"
     form_templates:
       upload_field:
@@ -3450,7 +3458,6 @@ ca:
           instructions: "Personalitzeu la plantilla en què es presenten tots els correus electrònics HTML i establiu l'estil amb CSS."
       email:
         title: "Correus"
-        settings: "Configuració"
         templates: "Plantilles"
         preview_digest: "Previsualitza el resum"
         advanced_test:
@@ -3913,7 +3920,6 @@ ca:
             other: "Durant els darrers %{count} dies:"
           value_heading: "Valor"
           requirement_heading: "Requisit"
-          visits: "Visites"
           days: "dies"
           topics_replied_to: "Temes resposts a"
           topics_viewed: "Temes vists"
@@ -4152,6 +4158,7 @@ ca:
         post_title: "Publicació"
         category_id: "ID de categoria"
         category_title: "Categoria"
+        username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
         form:
           label: "Nou:"

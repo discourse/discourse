@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
@@ -25,6 +25,7 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
+import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -429,15 +430,17 @@ export default class ChatThread extends Component {
     }
 
     try {
+      const params = {
+        message: message.message,
+        in_reply_to_id: null,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
+        thread_id: message.thread.id,
+      };
+
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
-        {
-          message: message.message,
-          in_reply_to_id: null,
-          staged_id: message.id,
-          upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.id,
-        }
+        Object.assign({}, params, extractCurrentTopicInfo(this))
       );
 
       this.args.thread.currentUserMembership ??=
@@ -486,15 +489,15 @@ export default class ChatThread extends Component {
   }
 
   @action
-  scrollToBottom() {
+  async scrollToBottom() {
     this._ignoreNextScroll = true;
-    scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scrollable);
   }
 
   @action
-  scrollToTop() {
+  async scrollToTop() {
     this._ignoreNextScroll = true;
-    scrollListToTop(this.scrollable);
+    await scrollListToTop(this.scrollable);
   }
 
   @action

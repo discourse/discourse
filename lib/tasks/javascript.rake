@@ -46,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} prettified"
 end
 
@@ -59,7 +59,7 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} created"
 end
 
@@ -203,8 +203,7 @@ end
 task "javascript:update" => "clean_up" do
   require "uglifier"
 
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  system("yarn install", exception: true)
 
   versions = {}
   start = Time.now

@@ -3,16 +3,16 @@ import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default RestModel.extend({
+export default class UserActionStat extends RestModel {
+  @i18n("action_type", "user_action_groups.%@") description;
+
   @discourseComputed("action_type")
   isPM(actionType) {
     return (
       actionType === UserAction.TYPES.messages_sent ||
       actionType === UserAction.TYPES.messages_received
     );
-  },
-
-  description: i18n("action_type", "user_action_groups.%@"),
+  }
 
   @discourseComputed("action_type")
   isResponse(actionType) {
@@ -20,5 +20,5 @@ export default RestModel.extend({
       actionType === UserAction.TYPES.replies ||
       actionType === UserAction.TYPES.quotes
     );
-  },
-});
+  }
+}

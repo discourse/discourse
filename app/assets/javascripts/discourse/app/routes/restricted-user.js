@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 // A base route that allows us to redirect when access is restricted

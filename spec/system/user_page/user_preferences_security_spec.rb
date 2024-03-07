@@ -9,6 +9,9 @@ describe "User preferences | Security", type: :system do
 
   before do
     user.activate
+    # testing the enforced 2FA flow requires a user that was created > 5 minutes ago
+    user.created_at = 6.minutes.ago
+    user.save!
     sign_in(user)
 
     # system specs run on their own host + port

@@ -34,11 +34,8 @@ vi:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} trước"
       wrap_on: "lúc %{date}"
       tiny:
@@ -64,7 +61,7 @@ vi:
         almost_x_years:
           other: "%{count}năm"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           other: "dưới %{count} phút"
@@ -84,7 +81,6 @@ vi:
           other: "hơn %{count} năm"
         almost_x_years:
           other: "gần %{count} năm"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           other: " %{count} phút trước"
@@ -155,7 +151,6 @@ vi:
     emails_are_disabled: "Ban quản trị đã tắt mọi thư gửi đi. Sẽ không có bất kỳ thư thông báo nào được gửi."
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
-      message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
     themes:
       default_description: "Mặc định"
@@ -2305,6 +2300,20 @@ vi:
     topic_bulk_actions:
       close_topics:
         name: "Đóng các chủ đề"
+      archive_topics:
+        name: "Chủ đề Lưu trữ"
+      unlist_topics:
+        name: "Chủ đề không công khai"
+      relist_topics:
+        name: "Chủ đề liên quan"
+      remove_tags:
+        name: "Xóa thẻ"
+      append_tags:
+        name: "Thêm thẻ"
+      replace_tags:
+        name: "Thay thế thẻ"
+      delete_topics:
+        name: "Xóa chủ đề"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -3589,6 +3598,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
+      filter: "Lọc"
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3839,7 +3849,6 @@ vi:
             users:
               bookmarks: Liệt kê các dấu trang của người dùng. Nó trả về lời nhắc đánh dấu khi sử dụng định dạng ICS.
               sync_sso: Đồng bộ hóa người dùng bằng DiscourSeconnect.
-              show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
               update: Cập nhật thông tin hồ sơ người dùng.
               log_out: Đăng xuất tất cả
@@ -4294,7 +4303,6 @@ vi:
           instructions: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS."
       email:
         title: "Emails"
-        settings: "Cấu hình"
         templates: "Templates"
         preview_digest: "Xem trước tập san"
         advanced_test:
@@ -4818,7 +4826,6 @@ vi:
             other: "Trong %{count} ngày qua:"
           value_heading: "Giá trị"
           requirement_heading: "Yêu cầu"
-          visits: "Lượt xem"
           days: "ngày"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Đã xem chủ đề"
@@ -5095,6 +5102,7 @@ vi:
         category_title: "Danh mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
+        username: "Tên tài khoản"
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?

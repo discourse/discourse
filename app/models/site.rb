@@ -109,7 +109,16 @@ class Site
     if @guardian.can_lazy_load_categories?
       preloaded_category_ids = []
       if @guardian.authenticated?
-        preloaded_category_ids.concat(@guardian.user.secured_sidebar_category_ids(@guardian))
+        sidebar_category_ids = @guardian.user.secured_sidebar_category_ids(@guardian)
+        preloaded_category_ids.concat(
+          Category
+            .secured(@guardian)
+            .select(:parent_category_id)
+            .distinct
+            .where(id: sidebar_category_ids)
+            .pluck(:parent_category_id),
+        )
+        preloaded_category_ids.concat(sidebar_category_ids)
       end
     end
 

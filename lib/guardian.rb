@@ -97,7 +97,7 @@ class Guardian
   attr_reader :request
 
   def initialize(user = nil, request = nil)
-    @user = user.presence || AnonymousUser.new
+    @user = user.presence || Guardian::AnonymousUser.new
     @request = request
   end
 
@@ -640,12 +640,17 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    if anonymous?
+    # NOTE: This looks strange...but we are checking if someone is posting anonymously
+    # as a AnonymousUser model, _not_ as Guardian::AnonymousUser which is a different thing
+    # used when !authenticated?
+    if authenticated? && is_anonymous?
       return(
         SiteSetting.allow_anonymous_likes? && obj.class == PostAction && obj.is_like? &&
           obj.user_id == @user.id
       )
     end
+
+    return false if anonymous?
     return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
     return obj.user == @user if obj.respond_to?(:user)
 

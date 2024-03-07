@@ -9,10 +9,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-  });
-
-  needs.settings({
-    admin_sidebar_enabled_groups: "1",
+    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {
@@ -75,10 +72,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-  });
-
-  needs.settings({
-    admin_sidebar_enabled_groups: "1",
+    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {

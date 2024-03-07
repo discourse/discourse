@@ -50,6 +50,7 @@ ca:
       browse:
         back: "Enrere"
         filter_all: Tot
+        filter_open: Obre
         filter_closed: Tancat
       chat_message_separator:
         today: Avui

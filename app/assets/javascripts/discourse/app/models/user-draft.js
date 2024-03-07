@@ -9,16 +9,16 @@ import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default RestModel.extend({
+export default class UserDraft extends RestModel {
   @discourseComputed("draft_username")
   editableDraft(draftUsername) {
     return draftUsername === User.currentProp("username");
-  },
+  }
 
   @discourseComputed("username_lower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
-  },
+  }
 
   @discourseComputed("topic_id")
   postUrl(topicId) {
@@ -27,7 +27,7 @@ export default RestModel.extend({
     }
 
     return postUrl(this.slug, this.topic_id, this.post_number);
-  },
+  }
 
   @discourseComputed("draft_key")
   draftType(draftKey) {
@@ -39,5 +39,5 @@ export default RestModel.extend({
       default:
         return false;
     }
-  },
-});
+  }
+}

@@ -22,9 +22,9 @@ module Chat
     #   @option params_to_create [Array<String>] target_groups
     #   @return [Service::Base::Context]
 
-    policy :can_create_direct_message
     contract
     model :target_users
+    policy :can_create_direct_message
     policy :satisfies_dms_max_users_limit,
            class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
     model :user_comm_screener
@@ -53,8 +53,13 @@ module Chat
 
     private
 
-    def can_create_direct_message(guardian:, **)
-      guardian.can_create_direct_message?
+    def can_create_direct_message(guardian:, target_users:, **)
+      guardian.can_create_direct_message? &&
+        DiscoursePluginRegistry.apply_modifier(
+          :chat_can_create_direct_message_channel,
+          guardian.user,
+          target_users,
+        )
     end
 
     def fetch_target_users(guardian:, contract:, **)

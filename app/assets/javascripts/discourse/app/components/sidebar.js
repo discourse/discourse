@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class Sidebar extends Component {

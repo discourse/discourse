@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "theme_settings_manager"
-
 RSpec.describe ThemeSettingsManager do
   let!(:theme) { Fabricate(:theme) }
 

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import I18n from "discourse-i18n";
@@ -81,6 +81,10 @@ export default class KeyboardShortcutsHelp extends Component {
           search: buildShortcut("application.search", {
             keys1: ["/"],
             keys2: [CTRL, ALT, "f"],
+            keysDelimiter: PLUS,
+          }),
+          filter_sidebar: buildShortcut("application.filter_sidebar", {
+            keys1: [META, "/"],
             keysDelimiter: PLUS,
           }),
           help: buildShortcut("application.help", { keys1: ["?"] }),

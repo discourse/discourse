@@ -32,11 +32,8 @@ sq:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} më parë"
       tiny:
         half_a_minute: "< 1m"
@@ -71,7 +68,7 @@ sq:
           one: "%{count}v"
           other: "%{count}v"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -82,7 +79,6 @@ sq:
         x_days:
           one: "%{count} ditë"
           other: "%{count} ditë"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min më parë"
@@ -1177,6 +1173,12 @@ sq:
     topic_bulk_actions:
       close_topics:
         name: "Mbyll temat"
+      archive_topics:
+        name: "Arkivo temat"
+      unlist_topics:
+        name: "Hiq temat nga lista"
+      delete_topics:
+        name: "Fshi temat"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -1949,6 +1951,7 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+      filter: "Filtro"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -2245,7 +2248,6 @@ sq:
           css: "CSS"
       email:
         title: "Emailat"
-        settings: "Rregullimet"
         templates: "Shabllonet"
         preview_digest: "Parashiko emailin përmbledhës"
         error: "<b>ERROR</b> - %{server_error}"
@@ -2563,7 +2565,6 @@ sq:
             other: "Në %{count} ditët e fundit:"
           value_heading: "Vlera"
           requirement_heading: "Kërkesë"
-          visits: "Vizita"
           days: "ditë"
           topics_replied_to: "Përgjigje në kaq tema"
           topics_viewed: "Tema të shikuara"
@@ -2767,6 +2768,7 @@ sq:
         post_title: "Postim"
         category_id: "ID e kategorisë"
         category_title: "Kategoria"
+        username: "Emri i përdoruesit"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "E Re:"

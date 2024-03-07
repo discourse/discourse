@@ -10,25 +10,3 @@
     />
   {{/each}}
 {{/if}}
-
-{{#if this.renderLegacy}}
-  <DModalLegacy
-    @modalClass={{if
-      this.modal.isLegacy
-      (concat-class
-        "modal"
-        "d-modal"
-        this.modal.modalClass
-        (if this.modal.opts.panels "has-tabs")
-      )
-    }}
-    @title={{this.modal.title}}
-    @titleAriaElementId={{this.modal.opts.titleAriaElementId}}
-    @panels={{this.modal.opts.panels}}
-    @selectedPanel={{this.modal.selectedPanel}}
-    @onSelectPanel={{this.modal.onSelectPanel}}
-    @hidden={{this.modal.hidden}}
-    @errors={{this.modal.errors}}
-    @closeModal={{this.closeModal}}
-  />
-{{/if}}

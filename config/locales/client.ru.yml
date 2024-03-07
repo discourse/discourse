@@ -37,11 +37,9 @@ ru:
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YYYY, LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} назад"
       wrap_on: "%{date}"
       tiny:
@@ -244,7 +242,6 @@ ru:
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
-      message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
       dismiss: "Закрыть"
     bootstrap_mode: "Начало работы"
     themes:
@@ -256,7 +253,6 @@ ru:
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>подробнее</a>)."
       theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Выявленный плагин: '%{name}'"
     s3:
@@ -668,7 +664,7 @@ ru:
         all:
           title: "Все"
       context_question:
-        is_this_post: "Это %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Эта %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "или"
         something_else_wrong: "Что-то не так со следующим: %{reviewable_type}?"
       types:
@@ -3006,6 +3002,20 @@ ru:
     topic_bulk_actions:
       close_topics:
         name: "Закрыть темы"
+      archive_topics:
+        name: "Архивировать темы"
+      unlist_topics:
+        name: "Скрыть темы"
+      relist_topics:
+        name: "Показать темы"
+      remove_tags:
+        name: "Удалить теги"
+      append_tags:
+        name: "Добавить теги"
+      replace_tags:
+        name: "Заменить теги"
+      delete_topics:
+        name: "Удалить темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4688,6 +4698,9 @@ ru:
       panels:
         forum:
           label: Форум
+      filter: "Фильтр"
+      no_results:
+        title: "Нет результатов"
     welcome_topic_banner:
       title: "Создать приветственную тему"
       description: "Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь максимально коротко и ярко выразить в ней наиболее важную информацию, которую вы хотите донести до новых пользователей форума."
@@ -5063,7 +5076,6 @@ ru:
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.
-              show: Получение информации о пользователе.
               check_emails: Список электронных писем пользователя.
               update: Обновление информации в профиле пользователя.
               log_out: Завершение всех сессий пользователя.
@@ -5184,14 +5196,10 @@ ru:
           post_liked: "При пометке публикации лайком."
         notification_event:
           group_name: "События уведомления"
-          notification_created: "Пользователь получает уведомление в своей ленте"
         group_user_event:
           group_name: "События группы пользователей"
-          user_added_to_group: "Пользователь добавлен в группу"
-          user_removed_from_group: "Пользователь удален из группы"
         user_promoted_event:
           group_name: "События повышения уровня доверия"
-          user_promoted: "Уровень доверия к пользователю повышен"
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -5617,7 +5625,6 @@ ru:
           instructions: "Настройте шаблон, в котором отображаются все почтовые html-сообщения. Настройте стиль шаблона, используя CSS."
       email:
         title: "Письма"
-        settings: "Настройки"
         templates: "Шаблоны"
         templates_title: "Шаблоны электронных писем"
         preview_digest: "Предпросмотр сводки"
@@ -6286,7 +6293,6 @@ ru:
             other: "За последние %{count} дня:"
           value_heading: "Значение"
           requirement_heading: "Требование"
-          visits: "Посещений"
           days: "Дней"
           topics_replied_to: "Ответов на темы"
           topics_viewed: "Просмотров тем"
@@ -6596,6 +6602,7 @@ ru:
         category_title: "Категория"
         tag_name: "Имя тега"
         external_url: "Внешняя или относительная ссылка"
+        username: "Псевдоним"
         destination: "Назначения"
         copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: Удалить эту постоянную ссылку?

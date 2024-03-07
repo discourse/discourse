@@ -28,8 +28,54 @@ if Rails.env.test?
       super(env)
     end
   end
+
   Rails.configuration.middleware.unshift TestMultisiteMiddleware,
                                          RailsMultisite::DiscoursePatches.config
+
+  class BlockRequestsMiddleware
+    RSPEC_CURRENT_EXAMPLE_COOKIE_STRING = "rspec_current_example_location"
+
+    cattr_accessor :current_example_location
+
+    @@block_requests = false
+
+    def self.block_requests!
+      @@block_requests = true
+    end
+
+    def self.allow_requests!
+      @@block_requests = false
+    end
+
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      request = Rack::Request.new(env)
+
+      if (
+           @@block_requests ||
+             (
+               request.xhr? && self.class.current_example_location.present? &&
+                 self.class.current_example_location !=
+                   request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
+             )
+         )
+        [
+          503,
+          { "Content-Type" => "text/plain" },
+          [
+            "Blocked by BlockRequestsMiddleware for requests initiated by #{request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]} when running #{self.class.current_example_location}",
+          ],
+        ]
+      else
+        @app.call(env)
+      end
+    end
+  end
+
+  Rails.configuration.middleware.unshift BlockRequestsMiddleware
 elsif Rails.configuration.multisite
   assets_hostnames = GlobalSetting.cdn_hostnames
 

@@ -158,7 +158,7 @@ ko:
         back: "뒤로"
         title: 채널
         filter_all: 전체
-        filter_open: 열림
+        filter_open: 열기
         filter_closed: 닫힘
         filter_archived: 보관됨
         filter_input_placeholder: 이름으로 채널 검색

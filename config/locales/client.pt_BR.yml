@@ -35,11 +35,9 @@ pt_BR:
       long_with_year: "D MMM, YYYY H:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D [de] MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_with_year_without_time: "D MMM, YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} atrás"
       wrap_on: "em %{date}"
       tiny:
@@ -75,7 +73,7 @@ pt_BR:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} min"
@@ -104,7 +102,7 @@ pt_BR:
         almost_x_years:
           one: "há quase %{count} ano"
           other: "há quase %{count} anos"
-        date_year: "D MMM, 'YY"
+        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -188,7 +186,6 @@ pt_BR:
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários que não são da equipe."
     software_update_prompt:
-      message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
       dismiss: "Descartar"
     bootstrap_mode: "Primeiros passos"
     themes:
@@ -200,7 +197,6 @@ pt_BR:
     broken_page_change_alert: "Houve um erro no identificador onPageChange. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     broken_plugin_alert: "Causado(a) pelo plugin \"%{name}\""
     critical_deprecation:
-      notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>mais informações</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>\"%{name}\"</a>."
       plugin_source: "Plugin identificado: \"%{name}\""
     s3:
@@ -1021,6 +1017,7 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
+      account_possessive: "Conta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -1456,12 +1453,15 @@ pt_BR:
         success_via_admin: "Enviamos um e-mail para esse endereço. O(a) usuário(a) precisará seguir as instruções de confirmação do e-mail."
         success_staff: "Enviamos um e-mail para o seu endereço atual. Siga as instruções para confirmar."
         back_to_preferences: "Voltar às preferências"
-        confirm_success: "O seu email foi atualizado."
+        confirm_success: "Seu e-mail foi atualizado."
         confirm: "Confirmar"
         authorizing_new:
           description: "Confirme que gostaria de mudar seu endereço de e-mail para:"
           description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
         authorizing_old:
+          title: "Verifique o endereço de e-mail antigo"
+          description: "Por favor, verifique o seu endereço de e-mail antigo para continuar a mudar o seu e-mail:"
+          description_add: "Por favor, verifique o seu endereço de e-mail existente para continuar adicionando um endereço alternativo:"
           old_email: "E-mail antigo: %{email}"
           new_email: "Novo e-mail: %{email}"
           confirm_success: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
@@ -2716,6 +2716,7 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
+        silent: "Realizar esta ação silenciosamente."
       none:
         unread: "Você não tem tópicos não lidos."
         unseen: "Você não tem tópicos não vistos."
@@ -2726,6 +2727,7 @@ pt_BR:
         bookmarks: "Você ainda não tem nenhum tópico favorito."
         category: "Não há tópicos na categoria %{category}."
         top: "Não há melhores tópicos."
+        hot: "Não há tópicos principais."
         filter: "Não existem tópicos."
         educate:
           new: '<p>Seus novos tópicos serão exibidos aqui. Por padrão, os tópicos serão considerados novos e exibirão um <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador se tiverem tido criados nos últimos dois dias.</p><p>Acesse suas <a href="%{userPrefsUrl}">preferências</a> para alterar essa configuração.</p>'
@@ -2741,11 +2743,27 @@ pt_BR:
         category: "Não há mais tópicos na categoria %{category}."
         tag: "Não há mais tópicos na categoria %{tag}."
         top: "Não há mais melhores tópicos."
+        hot: "Não há mais tópicos principais."
         bookmarks: "Não há mais tópicos favoritos."
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
       close_topics:
         name: "Fechar tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover tópicos da lista"
+      relist_topics:
+        name: "Reinserir tópicos na lista"
+      append_tags:
+        name: "Adicionar etiquetas"
+      replace_tags:
+        name: "Substituir etiquetas"
+      delete_topics:
+        name: "Excluir tópicos"
+      update_category:
+        name: "Atualizar Categoria"
+        description: "Escolha a nova categoria para os tópicos selecionados"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -3747,6 +3765,10 @@ pt_BR:
         title: "Não vistos"
         lower_title: "não vistos"
         help: "novos tópicos e tópicos que você está acompanhando ou monitorando com postagens não lidas"
+      hot:
+        title: "Quente"
+        lower_title: "quente"
+        help: "Principais tópicos recentes"
       new:
         lower_title_with_count:
           one: "%{count} nova"
@@ -4278,6 +4300,9 @@ pt_BR:
       panels:
         forum:
           label: Fórum
+      filter: "Filtro"
+      no_results:
+        title: "Nenhum resultado"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -4758,14 +4783,10 @@ pt_BR:
           post_liked: "Quando um(a) usuário(a) curte uma postagem."
         notification_event:
           group_name: "Eventos de notificação"
-          notification_created: "Um(a) usuário(a) recebe uma notificação em seu feed"
         group_user_event:
           group_name: "Eventos de usuário(a) em grupo"
-          user_added_to_group: "Usuário(a) adicionado(a) a um grupo"
-          user_removed_from_group: "Usuário(a) removido(a) de um grupo"
         user_promoted_event:
           group_name: "Eventos promovidos pelo(a) usuário(a)"
-          user_promoted: "Usuário(a) promovido(a)"
         delivery_status:
           title: "Status de entrega"
           inactive: "Inativo(a)"
@@ -5185,7 +5206,6 @@ pt_BR:
           instructions: "Personalize o modelo no qual todos os e-mails em HTML são renderizados e estilize usando CSS."
       email:
         title: "E-mails"
-        settings: "Configurações"
         templates: "Modelos"
         templates_title: "Modelos de e-mail"
         preview_digest: "Visualizar resumo"
@@ -5832,7 +5852,6 @@ pt_BR:
             other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Acessos"
           days: "dias"
           topics_replied_to: "Tópicos respondidos para"
           topics_viewed: "Tópicos visualizados"
@@ -6138,6 +6157,7 @@ pt_BR:
         category_title: "Categoria"
         tag_name: "Nome da etiqueta"
         external_url: "URL externa ou relacionada"
+        username: "Nome de usuário(a)"
         destination: "Destino"
         copy_to_clipboard: "Copiar permalink para a área de transferência"
         delete_confirm: Você tem certeza que quer excluir este link permanente?

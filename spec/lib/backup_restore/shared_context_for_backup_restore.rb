@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context "with shared stuff" do
+RSpec.shared_context "with shared backup restore context" do
   let!(:logger) do
     Class
       .new do

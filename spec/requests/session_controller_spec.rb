@@ -403,6 +403,7 @@ RSpec.describe SessionController do
 
         before do
           simulate_localhost_webauthn_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by visiting the email login page
           get "/session/email-login/#{email_token.token}.json"
@@ -422,6 +423,7 @@ RSpec.describe SessionController do
             expect(response_body["error"]).to eq(I18n.t("login.not_enabled_second_factor_method"))
           end
         end
+
         context "when the security key params are invalid" do
           it "shows an error message and denies login" do
             post "/session/email-login/#{email_token.token}.json",
@@ -442,6 +444,7 @@ RSpec.describe SessionController do
             expect(response_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
           end
         end
+
         context "when the security key params are valid" do
           it "logs the user in" do
             post "/session/email-login/#{email_token.token}.json",
@@ -2021,6 +2024,7 @@ RSpec.describe SessionController do
 
         before do
           simulate_localhost_webauthn_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by failing login once
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
@@ -3097,6 +3101,8 @@ RSpec.describe SessionController do
   end
 
   describe "#passkey_login" do
+    before { DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000") }
+
     it "returns 404 if feature is not enabled" do
       SiteSetting.enable_passkeys = false
 

@@ -58,6 +58,7 @@ vi:
       browse:
         back: "Quay lại"
         filter_all: All
+        filter_open: Mở
         filter_closed: Đã
       chat_message_separator:
         today: Hôm nay

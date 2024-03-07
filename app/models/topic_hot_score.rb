@@ -48,7 +48,9 @@ class TopicHotScore < ActiveRecord::Base
         AND topics.deleted_at IS NULL
         AND topics.archetype <> :private_message
         AND topics.created_at <= :now
-      ORDER BY topics.bumped_at desc
+      ORDER BY
+        CASE WHEN topics.pinned_at IS NOT NULL THEN 0 ELSE 1 END ASC,
+        topics.bumped_at desc
       LIMIT :max
     SQL
 
@@ -102,9 +104,26 @@ class TopicHotScore < ActiveRecord::Base
       WHERE thsOrig.topic_id = ths.topic_id
     SQL
 
-    # update up to BATCH_SIZE records that are out of date based on age
-    # we need an extra index for this
-    DB.exec(<<~SQL, args)
+    # we may end up update 2x batch size, this is ok
+    # we need to update 1 batch of high scoring topics
+    # we need to update a second batch of recently bumped topics
+    sql = <<~SQL
+      WITH topic_ids AS (
+        SELECT topic_id FROM (
+          SELECT th3.topic_id FROM topic_hot_scores th3
+          JOIN topics t3 on t3.id = th3.topic_id
+          ORDER BY t3.bumped_at DESC
+          LIMIT :max
+        ) Y
+
+        UNION ALL
+
+        SELECT topic_id FROM (
+          SELECT th2.topic_id FROM topic_hot_scores th2
+          ORDER BY th2.score DESC, th2.recent_first_bumped_at DESC NULLS LAST
+          LIMIT :max
+        ) X
+      )
       UPDATE topic_hot_scores ths
       SET score = (
         CASE WHEN topics.created_at > :recent_cutoff
@@ -121,11 +140,11 @@ class TopicHotScore < ActiveRecord::Base
 
       FROM topics
       WHERE topics.id IN (
-        SELECT topic_id FROM topic_hot_scores
-        ORDER BY score DESC, recent_first_bumped_at DESC NULLS LAST
-        LIMIT :max
+        SELECT topic_id FROM topic_ids
       ) AND ths.topic_id = topics.id
     SQL
+
+    DB.exec(sql, args)
   end
 end
 

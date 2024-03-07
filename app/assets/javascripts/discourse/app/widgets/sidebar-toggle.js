@@ -1,3 +1,4 @@
+// Deprecated in favor of app/assets/javascripts/discourse/app/components/glimmer-header/sidebar-toggle.gjs
 import { createWidget } from "discourse/widgets/widget";
 
 export default createWidget("sidebar-toggle", {

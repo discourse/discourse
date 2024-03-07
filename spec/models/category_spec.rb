@@ -1483,4 +1483,31 @@ RSpec.describe Category do
       end
     end
   end
+
+  describe ".ancestors_of" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    fab!(:sub_subcategory) do
+      SiteSetting.max_category_nesting = 3
+      Fabricate(:category, parent_category: subcategory)
+    end
+
+    it "finds the parent" do
+      expect(Category.ancestors_of([subcategory.id]).to_a).to eq([category])
+    end
+
+    it "finds the grandparent" do
+      expect(Category.ancestors_of([sub_subcategory.id]).to_a).to contain_exactly(
+        category,
+        subcategory,
+      )
+    end
+
+    it "respects the relation it's called on" do
+      expect(Category.where.not(id: category.id).ancestors_of([sub_subcategory.id]).to_a).to eq(
+        [subcategory],
+      )
+    end
+  end
 end

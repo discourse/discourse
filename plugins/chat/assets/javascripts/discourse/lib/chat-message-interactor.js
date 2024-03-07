@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";

@@ -37,11 +37,11 @@ uk:
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YY, LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} тому"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +97,7 @@ uk:
           many: "%{count}р."
           other: "%{count}р."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "менше %{count} хвилини тому"
@@ -144,7 +144,7 @@ uk:
           few: "майже %{count} роки"
           many: "майже %{count} років"
           other: "майже %{count} років"
-        date_year: "D MMM 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} хв. тому"
@@ -244,7 +244,7 @@ uk:
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
     software_update_prompt:
-      message: "Ми оновили цей сайт, <span>оновіть сторінку</span>, інакше у вас може виникнути неочікувана поведінка."
+      message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
       dismiss: "Відхилити"
     bootstrap_mode: "Початок роботи"
     themes:
@@ -256,7 +256,9 @@ uk:
     broken_page_change_alert: "Обробник onPageChange викликав помилку. Зверніться до інструментів розробника браузера для отримання додаткової інформації."
     broken_plugin_alert: "Викликано плагіном '%{name}'"
     critical_deprecation:
-      notice: "<b>[Повідомлення адміністратора]</b> Одна з ваших тем або плагінів потребує оновлення для сумісності з майбутніми змінами ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>більше інформації</a>)."
+      notice: "<b>[Повідомлення адміністратора]</b> Одну з ваших тем або плагінів потрібно оновити для сумісності з майбутніми основними змінами Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Ідентифікована тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Ідентифікований плагін: '%{name}'"
     s3:
@@ -1613,6 +1615,9 @@ uk:
           description: "Підтвердьте, що ви бажаєте змінити адресу електронної пошти на:"
           description_add: "Будь ласка, підтвердьте, що ви хочете додати альтернативну адресу електронної пошти:"
         authorizing_old:
+          title: "Перевірте стару адресу електронної пошти"
+          description: "Будь ласка, підтвердіть свою стару електронну адресу, щоб продовжити зміну електронної пошти:"
+          description_add: "Будь ласка, перевірте вашу існуючу адресу електронної пошти, щоб продовжити додавання альтернативної адреси:"
           old_email: "Стара електронна пошта: %{email}"
           new_email: "Нова електронна пошта: %{email}"
           confirm_success: "Ми надіслали електронного листа на вашу нову адресу електронної пошти, щоб підтвердити зміни!"
@@ -1885,6 +1890,9 @@ uk:
         incorrect_password: "Введений пароль неправильний."
         incorrect_passkey: "Цей ключ доступу неправильний."
         logged_in_as: "Ви увійшли як: "
+        forgot_password: "Забули свій пароль?"
+        password_reset_email_sent: "Електронний лист для зміни пароля надіслано."
+        cannot_send_password_reset_email: "Не вдалося надіслати лист для скидання пароля."
         instructions: "Будь ласка, підтвердіть свою особу для того, щоб завершити цю дію."
         fine_print: "Ми просимо вас підтвердити свою особу, оскільки це потенційно чутлива дія. Після автентифікації вам буде запропоновано повторно підтвердити автентифікацію лише через кілька годин бездіяльності."
       password:
@@ -3010,9 +3018,32 @@ uk:
     topic_bulk_actions:
       close_topics:
         name: "Закрити теми"
+      archive_topics:
+        name: "Архівувати теми"
+      unlist_topics:
+        name: "Виключити з усіх списків тем"
+      relist_topics:
+        name: "Повторний Список тем"
+      remove_tags:
+        name: "Видалити теги"
+      append_tags:
+        name: "Додати теґи"
+      replace_tags:
+        name: "Замінити теґи"
+      delete_topics:
+        name: "Видалити теми"
       update_category:
         name: "Оновити категорію"
         description: "Виберіть нову категорію для обраних тем"
+      reset_bump_dates:
+        name: "Скинути дату підняття"
+        description: "Скинути дату підняття теми до дати останнього створеного повідомлення, що впливає на порядок у списку тем"
+      defer:
+        name: "Відкласти теми"
+        description: "Позначити теми як непрочитані"
+      update_notifications:
+        name: "Сповіщення про оновлення…"
+        description: "Змініть рівень сповіщень на «Перегляд», «Стеження», «Звичайний» або «Вимкнено»."
     topic:
       filter_to:
         one: "%{count} допис в темі"
@@ -3702,6 +3733,7 @@ uk:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
           inappropriate: "Ви поскаржилися на це як на неприпустиме"
+          illegal: "Ви позначили це як незаконне"
           notify_moderators: "Ви позначили це для модерації"
           notify_user: "Ви надіслали повідомлення цьому користувачеві"
       delete:
@@ -3970,10 +4002,13 @@ uk:
         off_topic: "Це не по темі"
         inappropriate: "Це не прийнятно"
         spam: "Це спам"
+        illegal: "Це незаконно"
       custom_placeholder_notify_user: "Будьте конкретні, конструктивні та доброзичливі."
       notify_user_textarea_label: "Повідомлення для користувача"
       custom_placeholder_notify_moderators: "Поясніть суть проблеми: на що потрібно звернути увагу. Надайте відповідні посилання, якщо це можливо."
       notify_moderators_textarea_label: "Повідомлення для модераторів"
+      custom_placeholder_illegal: "Повідомте нам, чому ви вважаєте цей контент незаконним, і надайте відповідні посилання та приклади, де це можливо."
+      confirmation_illegal: "Те, що я написав вище, є точним і повним."
       custom_message:
         at_least:
           one: "Введіть хоча б %{count} символ"
@@ -4699,6 +4734,9 @@ uk:
       panels:
         forum:
           label: Форум
+      filter: "Filter"
+      no_results:
+        title: "Немає результатів"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -5202,7 +5240,7 @@ uk:
           user_removed_from_group: "Користувача видалено з групи"
         user_promoted_event:
           group_name: "Події, запропоновані користувачем"
-          user_promoted: "Користувач просуває"
+          user_promoted: "Користувач отримав підвищення"
         delivery_status:
           title: "Стан доставки"
           inactive: "Неактивно"
@@ -5470,6 +5508,7 @@ uk:
           install_upload: "З вашого пристрою"
           install_git_repo: "Зі сховища git"
           install_create: "Створити новий"
+          installing_message: "Встановлення теми, це може зайняти кілька хвилин..."
           duplicate_remote_theme: "Компонент теми «%{name}» уже встановлений. Ви впевнені, що хочете встановити іншу копію?"
           force_install: "Тему неможливо встановити, тому що не доступний репозиторій Git. Ви впевнені, що хочете продовжити установку?"
           create_placeholder: "Створити заповнювач"
@@ -5552,6 +5591,8 @@ uk:
           active_filter: "Активні"
           inactive_filter: "Неактивно"
           updates_available_filter: "Доступні оновлення"
+          schema:
+            back_button: "Назад до %{name}"
         colors:
           select_base:
             title: "Виберіть базову колірну палітру"
@@ -5628,7 +5669,7 @@ uk:
           instructions: "Налаштування шаблону, в якому відображаються всі html-повідомлення e-mail пошти, та стиль за допомогою CSS."
       email:
         title: "Листи"
-        settings: "Налаштування"
+        settings: "Налаштування електронної пошти"
         templates: "Шаблони"
         templates_title: "Шаблони електронної пошти"
         preview_digest: "Стислий виклад новин"
@@ -6287,7 +6328,7 @@ uk:
             other: "За останні %{count} днів:"
           value_heading: "Значення"
           requirement_heading: "Вимога"
-          visits: "Відвідини"
+          posts_read_days: "Повідомлення Прочитано: унікальні дні"
           days: "днів"
           topics_replied_to: "Теми, на які відповів(ла)"
           topics_viewed: "Переглянуто Тем"
@@ -6597,6 +6638,8 @@ uk:
         category_title: "Розділ"
         tag_name: "Назва теґу"
         external_url: "Зовнішня або відносна URL-адреса"
+        user_id: "ID користувача"
+        username: "Імʼя користувача"
         destination: "Призначення"
         copy_to_clipboard: "Копіювати постійне посилання у буфер обміну"
         delete_confirm: Ви впевнені, що хочете видалити це постійне посилання?

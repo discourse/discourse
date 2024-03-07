@@ -36,8 +36,15 @@ module PageObjects
           has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
         end
 
-        def has_section_link?(name, href: nil, active: false, target: nil)
-          section_link_present?(name, href: href, active: active, target: target, present: true)
+        def has_section_link?(name, href: nil, active: false, target: nil, count: 1)
+          section_link_present?(
+            name,
+            href: href,
+            active: active,
+            target: target,
+            present: true,
+            count: count,
+          )
         end
 
         def has_no_section_link?(name, href: nil, active: false)
@@ -131,6 +138,10 @@ module PageObjects
           click_button(add_section_button_text)
         end
 
+        def click_add_link_button
+          click_button(add_link_button_text)
+        end
+
         def has_no_add_section_button?
           page.has_no_button?(add_section_button_text)
         end
@@ -163,17 +174,22 @@ module PageObjects
 
         private
 
-        def section_link_present?(name, href: nil, active: false, target: nil, present:)
+        def section_link_present?(name, href: nil, active: false, target: nil, count: 1, present:)
           attributes = { exact_text: name }
           attributes[:href] = href if href
           attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
           attributes[:class] += "--active" if active
           attributes[:target] = target if target
+          attributes[:count] = count
           page.public_send(present ? :has_link? : :has_no_link?, **attributes)
         end
 
         def add_section_button_text
           I18n.t("js.sidebar.sections.custom.add")
+        end
+
+        def add_link_button_text
+          I18n.t("js.sidebar.sections.custom.links.add")
         end
       end
     end

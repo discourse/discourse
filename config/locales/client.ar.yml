@@ -39,11 +39,9 @@ ar:
       long_with_year: "D ‏MMMM ‏YYYY، ‏h:mm ‏a"
       long_with_year_no_time: "D ‏MMMM ‏YYYY"
       full_with_year_no_time: "D ‏MMMM ‏YYYY"
-      long_date_with_year: "D ‏MMMM ‏YYYY، ‏LT"
       long_date_without_year: "D ‏MMMM، LT"
       long_date_with_year_without_time: "D ‏MMMM ‏YYYY"
       long_date_without_year_with_linebreak: "D MMMM <br/>LT"
-      long_date_with_year_with_linebreak: "D ‏MMMM ‏YYYY <br/>LT"
       wrap_ago: "منذ %{date}"
       wrap_on: "في %{date}"
       tiny:
@@ -300,7 +298,6 @@ ar:
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
     software_update_prompt:
-      message: "لقد حدَّثنا هذا الموقع، <span>يُرجى التحديث </span>، أو قد تواجه سلوكًا غير متوقَّع."
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
     themes:
@@ -312,7 +309,6 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     critical_deprecation:
-      notice: "<b>[إشعار المسؤول]</b> تحتاج إحدى سماتك أو مكوِّناتك الإضافية إلى التحديث للتوافق مع التغييرات الجوهرية في Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>المزيد من المعلومات</a>)."
       theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
@@ -1755,6 +1751,9 @@ ar:
           description: "يُرجى تأكيد رغبتك في تغيير عنوان بريدك الإلكتروني إلى:"
           description_add: "يُرجى تأكيد رغبتك في إضافة عنوان بريد إلكتروني بديل:"
         authorizing_old:
+          title: "تحقق من عنوان البريد الإلكتروني القديم"
+          description: "يُرجى التحقق من عنوان بريدك الإلكتروني القديم لمواصلة تغيير بريدك الإلكتروني:"
+          description_add: "يُرجى التحقق من عنوان بريدك الإلكتروني الحالي لمواصلة إضافة عنوان بديل:"
           old_email: "البريد الإلكتروني القديم: %{email}"
           new_email: "البريد الإلكتروني الجديد: %{email}"
           confirm_success: "لقد أرسلنا رسالة إلكترونية إلى عنوان بريدك الإلكتروني الجديد لتأكيد التغيير!"
@@ -3262,9 +3261,25 @@ ar:
     topic_bulk_actions:
       close_topics:
         name: "إغلاق الموضوعات"
+      archive_topics:
+        name: "أرشفة الموضوعات"
+      unlist_topics:
+        name: "إلغاء إدراج الموضوعات"
+      relist_topics:
+        name: "إعادة إدراج الموضوعات"
+      remove_tags:
+        name: "أزِل الوسوم"
+      append_tags:
+        name: "إضافة الوسوم"
+      replace_tags:
+        name: "استبدال الوسوم"
+      delete_topics:
+        name: "حذف الموضوعات"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
+      update_notifications:
+        name: "تحديث الإشعارات…"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -5097,6 +5112,9 @@ ar:
       panels:
         forum:
           label: المنتدى
+      filter: "عامل التصفية"
+      no_results:
+        title: "لا نتائج"
     welcome_topic_banner:
       title: "إنشاء موضوعك الترحيبي"
       description: "إن موضوعك الترحيبي هو أول ما يقرأه الأعضاء الجُدد. انظر إليه على أنه \"عرض ترويجي\" أو \"بيان مهمة\". دَع الجميع يعرفون الجمهور المستهدف بهذا المجتمع، وما يتوقعون العثور عليه هنا، وما تريد منهم أن يفعلوه أولًا."
@@ -5488,7 +5506,7 @@ ar:
             users:
               bookmarks: إدراج الإشارات المرجعية للمستخدم. تعرض تذكيرات بالإشارات المرجعية عند استخدام تنسيق ICS.
               sync_sso: مزامنة مستخدم باستخدام DiscourseConnect
-              show: الحصول على معلومات عن مستخدم
+              show: احصل على معلومات حول المستخدم.
               check_emails: إدراج عناوين البريد الإلكتروني للمستخدمين
               update: تحديث معلومات الملف الشخصي لمستخدم
               log_out: تسجيل الخروج من جميع الجلسات لمستخدم
@@ -5609,14 +5627,10 @@ ar:
           post_liked: "عند تسجيل المستخدم إعجابه بمنشور."
         notification_event:
           group_name: "أحداث الإشعارات"
-          notification_created: "يتلقى المستخدم إشعارًا في الموجز الخاص به"
         group_user_event:
           group_name: "أحداث مستخدم المجموعة"
-          user_added_to_group: "تمت إضافة مستخدم إلى مجموعة"
-          user_removed_from_group: "تمت إزالة مستخدم من مجموعة"
         user_promoted_event:
           group_name: "الأحداث التي يروِّج لها المستخدم"
-          user_promoted: "تمت ترقية مستخدم"
         delivery_status:
           title: "حالة التسليم"
           inactive: "غير نشط"
@@ -6048,7 +6062,7 @@ ar:
           instructions: "خصِّص النموذج الذي يتم فيه عرض جميع الرسائل الإلكترونية بتنسيق HTML، والنمط باستخدام CSS."
       email:
         title: "الرسائل الإلكترونية"
-        settings: "الإعدادات"
+        settings: "إعدادات البريد الإلكتروني"
         templates: "القوالب"
         templates_title: "قوالب البريد الإلكتروني"
         preview_digest: "معاينة الملخص"
@@ -6719,7 +6733,6 @@ ar:
             other: "في آخر %{count} يوم:"
           value_heading: "القيمة"
           requirement_heading: "المتطلبات"
-          visits: "الزيارات"
           days: "الأيام"
           topics_replied_to: "الموضوعات المردود عليها"
           topics_viewed: "الموضوعات المعروضة"
@@ -7033,6 +7046,7 @@ ar:
         category_title: "الفئة"
         tag_name: "اسم الوسم"
         external_url: "عنوان URL خارجي أو نسبي"
+        username: "اسم المستخدم"
         destination: "الوجهة"
         copy_to_clipboard: "نسخ الرابط الثابت إلى الحافظة"
         delete_confirm: هل تريد بالتأكيد حذف هذا الرابط الثابت؟

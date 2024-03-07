@@ -178,6 +178,22 @@ RSpec.describe Chat::CreateDirectMessageChannel do
       it { is_expected.to fail_a_policy(:can_create_direct_message) }
     end
 
+    context "when the plugin modifier returns false" do
+      it "fails a policy" do
+        modifier_block = Proc.new { false }
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:chat_can_create_direct_message_channel, &modifier_block)
+
+        expect(result).to fail_a_policy(:can_create_direct_message)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :chat_can_create_direct_message_channel,
+          &modifier_block
+        )
+      end
+    end
+
     context "when the actor is not allowing anyone to message them" do
       before { current_user.user_option.update!(allow_private_messages: false) }
 

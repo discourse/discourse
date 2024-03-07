@@ -38,6 +38,10 @@ module PageObjects
       def click_delete_themes_button
         find(".btn-delete").click
       end
+
+      def click_edit_objects_theme_setting_button(setting_name)
+        find(".theme-setting[data-setting=\"#{setting_name}\"] .setting-value-edit-button").click
+      end
     end
   end
 end
