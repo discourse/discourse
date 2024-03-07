@@ -167,6 +167,7 @@ async function onNotification(data, siteSettings, user, appEvents) {
       site_title: siteSettings.title,
       topic: data.topic_title,
       username: formatUsername(data.username),
+      group_name: data.group_name,
     });
 
   const notificationBody = data.excerpt;

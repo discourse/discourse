@@ -58,6 +58,7 @@ class PushNotificationPusher
       site_title: SiteSetting.title,
       topic: payload[:topic_title],
       username: payload[:username],
+      group_name: payload[:group_name],
     )
   end
 
