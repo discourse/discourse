@@ -49,8 +49,8 @@ module(
         "Parent Category × 95"
       );
       assert.equal(
-        this.subject.rowByIndex(1).el().innerText.replace("\n", " "),
-        "Parent Category + 2 subcategories"
+        this.subject.rowByIndex(1).el().innerText.replaceAll("\n", " "),
+        "Parent Category × 95 + 2 subcategories"
       );
     });
   }
