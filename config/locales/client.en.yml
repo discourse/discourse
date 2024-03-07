@@ -1145,7 +1145,6 @@ en:
         saturday: "Saturday"
         sunday: "Sunday"
         to: "to"
-
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
