@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import formatDate from "discourse/helpers/format-date";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
