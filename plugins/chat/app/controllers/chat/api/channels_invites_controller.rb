@@ -3,6 +3,8 @@
 class Chat::Api::ChannelsInvitesController < Chat::ApiController
   def create
     with_service(Chat::InviteUsersToChannel) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
     end

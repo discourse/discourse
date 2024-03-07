@@ -19,6 +19,7 @@ class Chat::Api::CurrentUserThreadsController < Chat::ApiController
         )
       end
       on_model_not_found(:threads) { render json: success_json.merge(threads: []) }
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end

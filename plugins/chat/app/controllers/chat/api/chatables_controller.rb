@@ -6,6 +6,7 @@ class Chat::Api::ChatablesController < Chat::ApiController
   def index
     with_service(::Chat::SearchChatable) do
       on_success { render_serialized(result, ::Chat::ChatablesSerializer, root: false) }
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end

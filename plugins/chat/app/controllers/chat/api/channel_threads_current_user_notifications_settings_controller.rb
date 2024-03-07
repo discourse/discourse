@@ -13,6 +13,7 @@ class Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsController < Chat
           root: "membership",
         )
       end
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end

@@ -11,6 +11,7 @@ class Chat::Api::ChannelsCurrentUserMembershipFollowsController < Chat::Api::Cha
         )
       end
       on_model_not_found(:channel) { raise Discourse::NotFound }
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end

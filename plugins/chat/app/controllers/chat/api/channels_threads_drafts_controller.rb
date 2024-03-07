@@ -3,6 +3,8 @@
 class Chat::Api::ChannelsThreadsDraftsController < Chat::ApiController
   def create
     with_service(Chat::UpsertDraft) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_step(:check_thread_exists) { raise Discourse::NotFound }
     end

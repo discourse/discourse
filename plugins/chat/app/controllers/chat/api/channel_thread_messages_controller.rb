@@ -12,7 +12,7 @@ class Chat::Api::ChannelThreadMessagesController < Chat::ApiController
           include_thread_original_message: false,
         )
       end
-
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:ensure_thread_enabled) { raise Discourse::NotFound }
       on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
       on_failed_policy(:can_view_thread) { raise Discourse::InvalidAccess }

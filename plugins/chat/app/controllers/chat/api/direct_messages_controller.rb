@@ -30,6 +30,7 @@ class Chat::Api::DirectMessagesController < Chat::ApiController
       on_model_errors(:channel) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end
