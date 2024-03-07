@@ -46,6 +46,14 @@ module PageObjects
         page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
       end
 
+      def has_checkbox_selected_on_first_topic?
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR}:first-child input.bulk-select:checked")
+      end
+
+      def has_no_checkbox_selected_on_first_topic?
+        page.has_no_css?("#{TOPIC_LIST_ITEM_SELECTOR}:first-child input.bulk-select:checked")
+      end
+
       def click_topic_checkbox(topic)
         find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
       end
