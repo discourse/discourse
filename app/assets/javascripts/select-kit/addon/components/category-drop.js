@@ -189,7 +189,7 @@ export default ComboBoxComponent.extend({
       });
 
       const categories =
-        result.categoriesCount > 15
+        result.categoriesCount > 18
           ? result.categories.slice(0, 15)
           : result.categories;
 
