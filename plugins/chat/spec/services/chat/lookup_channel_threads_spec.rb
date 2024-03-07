@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Chat::LookupChannelThreads::Contract, type: :model do
-  it { is_expected.to validate_presence_of :channel_id }
+  subject { described_class.new(channel_id: 1) }
+
+  it { is_expected.to validate_presence_of(:channel_id) }
+  it { should allow_values(1, 0, nil, "a").for(:limit) }
+  it { should_not allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit) }
 end
 
 RSpec.describe ::Chat::LookupChannelThreads do
