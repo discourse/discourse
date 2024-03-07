@@ -19,6 +19,10 @@ export default class ChatChannelIcon extends Component {
     return htmlSafe(`color: #${this.args.channel.chatable.color}`);
   }
 
+  get isThreadsList() {
+    return this.args.thread ?? false;
+  }
+
   <template>
     {{#if @channel.isDirectMessageChannel}}
       <div class="chat-channel-icon">
@@ -44,15 +48,13 @@ export default class ChatChannelIcon extends Component {
           {{/if}}
         </span>
       </div>
-    {{else if @channel.isThreadChannel}}
-      {{! ok this doesnt exist yet }}
-    {{else}}
+    {{else if this.isThreadsList}}
       <div class="chat-channel-icon">
         <div class="chat-channel-icon --avatar">
-          {{! how do I avoid the is-online styling? }}
           <ChatUserAvatar
-            @user={{@channel.originalMessage.user}}
+            @user={{@thread.originalMessage.user}}
             @interactive={{false}}
+            @showPresence={{false}}
           />
           <div class="avatar-flair --threads">
             {{icon "discourse-threads"}}

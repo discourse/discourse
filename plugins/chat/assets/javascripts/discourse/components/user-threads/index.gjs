@@ -42,16 +42,17 @@ export default class UserThreads extends Component {
     >
       <list.Item as |thread|>
         <div class="c-user-thread" data-id={{thread.id}}>
-          <ChannelIcon @channel={{thread}} />
-          <ThreadTitle @thread={{thread}} />
+          <ChannelIcon @thread={{thread}} />
           <ChannelTitle @channel={{thread.channel}} />
+          <ThreadTitle @thread={{thread}} />
+          
           <span class="chat-message-thread-indicator__last-reply-timestamp">
             {{formatDate thread.preview.lastReplyCreatedAt leaveAgo="true"}}
           </span>
           <div class="c-user-thread__excerpt">
-            <div
-              class="c-user-thread__excerpt-poster"
-            >{{thread.preview.lastReplyUser.username}}<span>:</span></div>
+            <div class="c-user-thread__excerpt-poster">
+              {{thread.preview.lastReplyUser.username}}<span>:</span>
+            </div>
             {{thread.preview.lastReplyExcerpt}}
           </div>
         </div>
