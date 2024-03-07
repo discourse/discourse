@@ -116,6 +116,19 @@
 
       transition-delay: 0s;
     }
+    &__back-to-forum {
+      margin: 0 var(--d-sidebar-row-horizontal-padding) 1em
+        var(--d-sidebar-row-horizontal-padding);
+      color: var(--d-sidebar-link-color);
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+        height: 0.75em;
+        width: 0.75em;
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
   }
   .sidebar-footer-wrapper {
     .btn-flat.add-section {

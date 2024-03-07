@@ -20,7 +20,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to be_visible
     expect(sidebar).to have_no_section("community")
     expect(page).to have_no_css(".admin-main-nav")
-    sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
+    filter.click_back_to_forum
     expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-nav-section-root")
   end
@@ -44,7 +44,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
-      sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
+      filter.click_back_to_forum
       expect(page).to have_current_path("/latest")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-nav-section-root")
@@ -84,6 +84,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(all_links_count)
     expect(page).to have_no_css(".sidebar-no-results")
+    expect(page).to have_css(".sidebar-sections__back-to-forum")
 
     # When match section title, display all links
     filter.filter("Backups")
