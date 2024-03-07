@@ -14,7 +14,7 @@ export default class AdminPluginConfigArea extends Component {
 
   <template>
     {{#if @innerSidebarNavLinks}}
-      <div class="admin-nav admin-plugin-inner-sidebar-nav pull-left">
+      <nav class="admin-nav admin-plugin-inner-sidebar-nav pull-left">
         <ul class="nav nav-stacked">
           {{#each @innerSidebarNavLinks as |navLink|}}
             <li
@@ -33,10 +33,10 @@ export default class AdminPluginConfigArea extends Component {
             </li>
           {{/each}}
         </ul>
-      </div>
+      </nav>
     {{/if}}
-    <div class="admin-plugin-config-area">
+    <section class="admin-plugin-config-area">
       {{yield}}
-    </div>
+    </section>
   </template>
 }

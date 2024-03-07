@@ -107,11 +107,24 @@ class Plugin::Instance
   end
 
   def add_admin_route(label, location, opts = {})
-    @admin_route = { label: label, location: location }.merge(opts.slice(:use_new_show_route))
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
   end
 
   def register_admin_config_nav_routes(plugin_id, nav)
-    @admin_config_nav_routes = nav.each { |n| n[:model] = plugin_id }
+    @admin_config_nav_routes =
+      nav.each do |n|
+        if !n.key?(:label) || !n.key?(:route)
+          raise ArgumentError.new(
+                  "Admin config nav routes must have a `route` value that matches an Ember route and a `label` value that matches a client I18n key",
+                )
+        end
+
+        n[:model] = plugin_id
+      end
   end
 
   def configurable?
