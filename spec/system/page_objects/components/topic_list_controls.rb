@@ -36,6 +36,11 @@ module PageObjects
         click_button("dismiss-new-top")
         self
       end
+
+      def click_latest
+        find(".nav-item_latest").click
+        self
+      end
     end
   end
 end
