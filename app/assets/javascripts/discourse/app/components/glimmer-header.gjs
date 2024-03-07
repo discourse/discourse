@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
@@ -24,7 +25,6 @@ export default class GlimmerHeader extends Component {
   @service currentUser;
   @service site;
   @service appEvents;
-  @service register;
   @service header;
 
   @tracked skipSearchContext = this.site.mobileView;
@@ -99,12 +99,13 @@ export default class GlimmerHeader extends Component {
     let showSearch = this.router.currentRouteName.startsWith("topic.");
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch) {
-      const controller = this.register.lookup("controller:topic");
-      const total = controller.get("model.postStream.stream.length") || 0;
-      const chunkSize = controller.get("model.chunk_size") || 0;
+      const container = getOwner(this);
+      const topic = container.lookup("controller:topic");
+      const total = topic.get("model.postStream.stream.length") || 0;
+      const chunkSize = topic.get("model.chunk_size") || 0;
       showSearch =
         total > chunkSize &&
-        document.querySelector(
+        document.querySelectorAll(
           ".topic-post .cooked, .small-action:not(.time-gap)"
         )?.length < total;
     }
