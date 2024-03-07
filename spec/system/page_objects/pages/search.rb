@@ -46,6 +46,10 @@ module PageObjects
         page.has_selector?(".search-menu .search-menu-panel", visible: true)
       end
 
+      def has_no_search_menu_visible?
+        page.has_no_selector?(".search-menu .search-menu-panel")
+      end
+
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
 
       def has_topic_title_for_first_search_result?(title)

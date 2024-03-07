@@ -196,37 +196,22 @@ RSpec.describe "Glimmer Header", type: :system do
     end
   end
 
-  context "when cmd + f keyboard shortcut pressed" do
-    context "when within a topic with less than 20 posts" do
-      fab!(:post) { Fabricate(:post, topic: topic) }
-      it "does not open search" do
-        sign_in(current_user)
-        visit "/t/#{topic.slug}/#{topic.id}"
-        header.search_in_topic_keyboard_shortcut
-        expect(search).not_to have_search_menu_visible
-      end
+  context "when cmd + f keyboard shortcut pressed - when within a topic with 20+ posts" do
+    before { sign_in(current_user) }
+    fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
+
+    it "opens search" do
+      visit "/t/#{topic.slug}/#{topic.id}"
+      header.search_in_topic_keyboard_shortcut
+      expect(search).to have_search_menu_visible
     end
 
-    context "when within a topic with 20+ posts" do
-      before do
-        TopicView.stubs(:chunk_size).returns(2)
-        sign_in(current_user)
-      end
-
-      fab!(:posts) { Fabricate.times(3, :post, topic: topic) }
-
-      it "opens search" do
-        visit "/t/#{topic.slug}/#{topic.id}"
-        header.search_in_topic_keyboard_shortcut
-        expect(search).to have_search_menu_visible
-      end
-
-      it "closes search after two presses" do
-        visit "/t/#{topic.slug}/#{topic.id}"
-        header.search_in_topic_keyboard_shortcut
-        header.search_in_topic_keyboard_shortcut
-        expect(search).not_to have_search_menu_visible
-      end
+    it "closes search after two presses" do
+      visit "/t/#{topic.slug}/#{topic.id}"
+      header.search_in_topic_keyboard_shortcut
+      expect(search).to have_search_menu_visible
+      header.search_in_topic_keyboard_shortcut
+      expect(search).to have_no_search_menu_visible
     end
   end
 end
