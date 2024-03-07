@@ -45,11 +45,11 @@ module Chat
 
     private
 
-    def enforce_system_membership(guardian:, message:, **)
+    def enforce_system_membership(guardian:, message:)
       message.chat_channel.add(guardian.user) if guardian.user.is_system_user?
     end
 
-    def fetch_message(contract:, **)
+    def fetch_message(contract:)
       ::Chat::Message.includes(
         :chat_mentions,
         :bookmarks,
@@ -67,20 +67,20 @@ module Chat
       ).find_by(id: contract.message_id)
     end
 
-    def fetch_uploads(contract:, guardian:, **)
+    def fetch_uploads(contract:, guardian:)
       return if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: contract.upload_ids)
     end
 
-    def can_modify_channel_message(guardian:, message:, **)
+    def can_modify_channel_message(guardian:, message:)
       guardian.can_modify_channel_message?(message.chat_channel)
     end
 
-    def can_modify_message(guardian:, message:, **)
+    def can_modify_message(guardian:, message:)
       guardian.can_edit_chat?(message)
     end
 
-    def modify_message(contract:, message:, guardian:, uploads:, **)
+    def modify_message(contract:, message:, guardian:, uploads:)
       message.message = contract.message
       message.last_editor_id = guardian.user.id
       message.cook
@@ -95,11 +95,11 @@ module Chat
       message.upload_ids = new_upload_ids
     end
 
-    def save_message(message:, **)
+    def save_message(message:)
       message.save!
     end
 
-    def save_revision(message:, guardian:, **)
+    def save_revision(message:, guardian:)
       return false if message.streaming_before_last_save
 
       prev_message = message.message_before_last_save || message.message_was
@@ -135,7 +135,7 @@ module Chat
       chars_edited > max_edited_chars
     end
 
-    def publish(message:, guardian:, contract:, **)
+    def publish(message:, guardian:, contract:)
       edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)

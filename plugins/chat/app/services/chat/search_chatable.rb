@@ -34,27 +34,27 @@ module Chat
 
     private
 
-    def clean_term(contract:, **)
+    def clean_term(contract:)
       context.term = contract.term.downcase&.gsub(/^#+/, "")&.gsub(/^@+/, "")&.strip
     end
 
-    def fetch_memberships(guardian:, **)
+    def fetch_memberships(guardian:)
       ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
     end
 
-    def fetch_users(guardian:, contract:, **)
+    def fetch_users(guardian:, contract:)
       return unless contract.include_users
       return unless guardian.can_create_direct_message?
       search_users(context, guardian, contract)
     end
 
-    def fetch_groups(guardian:, contract:, **)
+    def fetch_groups(guardian:, contract:)
       return unless contract.include_groups
       return unless guardian.can_create_direct_message?
       search_groups(context, guardian, contract)
     end
 
-    def fetch_category_channels(guardian:, contract:, **)
+    def fetch_category_channels(guardian:, contract:)
       return unless contract.include_category_channels
       return if !SiteSetting.enable_public_channels
 

@@ -70,15 +70,15 @@ module Chat
 
     private
 
-    def no_silenced_user(guardian:, **)
+    def no_silenced_user(guardian:)
       !guardian.is_silenced?
     end
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       Chat::Channel.find_by_id_or_slug(contract.chat_channel_id)
     end
 
-    def enforce_system_membership(guardian:, channel:, contract:, **)
+    def enforce_system_membership(guardian:, channel:, contract:)
       if guardian.user&.is_system_user? || contract.enforce_membership
         channel.add(guardian.user)
 
@@ -88,24 +88,24 @@ module Chat
       end
     end
 
-    def allowed_to_join_channel(guardian:, channel:, **)
+    def allowed_to_join_channel(guardian:, channel:)
       guardian.can_join_chat_channel?(channel)
     end
 
-    def fetch_channel_membership(guardian:, channel:, **)
+    def fetch_channel_membership(guardian:, channel:)
       Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user)
     end
 
-    def fetch_reply(contract:, **)
+    def fetch_reply(contract:)
       Chat::Message.find_by(id: contract.in_reply_to_id)
     end
 
-    def ensure_reply_consistency(channel:, contract:, reply:, **)
+    def ensure_reply_consistency(channel:, contract:, reply:)
       return true if contract.in_reply_to_id.blank?
       reply&.chat_channel == channel
     end
 
-    def fetch_thread(contract:, reply:, channel:, **)
+    def fetch_thread(contract:, reply:, channel:)
       return Chat::Thread.find_by(id: contract.thread_id) if contract.thread_id.present?
       return unless reply
       reply.thread ||
@@ -117,22 +117,22 @@ module Chat
         )
     end
 
-    def ensure_valid_thread_for_channel(thread:, contract:, channel:, **)
+    def ensure_valid_thread_for_channel(thread:, contract:, channel:)
       return true if contract.thread_id.blank?
       thread&.channel == channel
     end
 
-    def ensure_thread_matches_parent(thread:, reply:, **)
+    def ensure_thread_matches_parent(thread:, reply:)
       return true unless thread && reply
       reply.thread == thread
     end
 
-    def fetch_uploads(contract:, guardian:, **)
+    def fetch_uploads(contract:, guardian:)
       return [] if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: contract.upload_ids)
     end
 
-    def instantiate_message(channel:, guardian:, contract:, uploads:, thread:, reply:, **)
+    def instantiate_message(channel:, guardian:, contract:, uploads:, thread:, reply:)
       channel.chat_messages.new(
         user: guardian.user,
         last_editor: guardian.user,
@@ -146,15 +146,15 @@ module Chat
       )
     end
 
-    def save_message(message_instance:, **)
+    def save_message(message_instance:)
       message_instance.save!
     end
 
-    def delete_drafts(channel:, guardian:, **)
+    def delete_drafts(channel:, guardian:)
       Chat::Draft.where(user: guardian.user, chat_channel: channel).destroy_all
     end
 
-    def post_process_thread(thread:, message_instance:, guardian:, **)
+    def post_process_thread(thread:, message_instance:, guardian:)
       return unless thread
 
       thread.update!(last_message: message_instance)
@@ -163,36 +163,36 @@ module Chat
       thread.add(thread.original_message_user)
     end
 
-    def create_webhook_event(contract:, message_instance:, **)
+    def create_webhook_event(contract:, message_instance:)
       return if contract.incoming_chat_webhook.blank?
       message_instance.create_chat_webhook_event(
         incoming_chat_webhook: contract.incoming_chat_webhook,
       )
     end
 
-    def update_channel_last_message(channel:, message_instance:, **)
+    def update_channel_last_message(channel:, message_instance:)
       return if message_instance.in_thread?
       channel.update!(last_message: message_instance)
     end
 
-    def update_membership_last_read(channel_membership:, message_instance:, **)
+    def update_membership_last_read(channel_membership:, message_instance:)
       return if message_instance.in_thread?
       channel_membership.update!(last_read_message: message_instance)
     end
 
-    def process_direct_message_channel(channel_membership:, **)
+    def process_direct_message_channel(channel_membership:)
       Chat::Action::PublishAndFollowDirectMessageChannel.call(
         channel_membership: channel_membership,
       )
     end
 
-    def publish_new_thread(reply:, contract:, channel:, thread:, **)
+    def publish_new_thread(reply:, contract:, channel:, thread:)
       return unless channel.threading_enabled? || thread&.force
       return unless reply&.thread_id_previously_changed?(from: nil)
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def process(channel:, message_instance:, contract:, thread:, **)
+    def process(channel:, message_instance:, contract:, thread:)
       ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
 
       DiscourseEvent.trigger(
@@ -222,7 +222,7 @@ module Chat
       end
     end
 
-    def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:, **)
+    def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:)
       message_to_publish = message_instance
       message_to_publish =
         channel_membership.last_read_message || message_instance if message_instance.in_thread?
