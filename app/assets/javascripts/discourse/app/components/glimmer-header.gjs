@@ -44,7 +44,6 @@ export default class GlimmerHeader extends Component {
   @service header;
 
   @tracked skipSearchContext = this.site.mobileView;
-  @tracked panelElement;
 
   appEventsListeners = modifier(() => {
     this.appEvents.on(
@@ -167,11 +166,6 @@ export default class GlimmerHeader extends Component {
     scrollLock(bool);
   }
 
-  @action
-  setPanelElement(element) {
-    this.panelElement = element;
-  }
-
   <template>
     <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
@@ -204,7 +198,6 @@ export default class GlimmerHeader extends Component {
               @toggleHamburger={{this.toggleHamburger}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
-              @panelElement={{this.panelElement}}
             />
           {{/if}}
 
@@ -217,9 +210,6 @@ export default class GlimmerHeader extends Component {
           {{else if this.header.userVisible}}
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
-
-          <div id="additional-panel-wrapper" {{didInsert this.setPanelElement}}>
-          </div>
 
           {{#if
             (and

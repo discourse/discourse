@@ -1844,17 +1844,17 @@ class PluginApi {
    * api.headerIcons.has("chat")
    * ```
    *
-   * Additionally, you can utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
    * you want create a button in the header that opens a dropdown panel with additional content.
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DButton @icon="icon" @onClick={{this.toggleVisible}} />
-   *   {{#if this.visible}}
-   *     <@panelPortal>
-   *       <div>Panel</div>
-   *     </@panelPortal>
-   *   {{/if}}
+   *   <DMenu @icon="foo" title={{i18n "title"}}>
+   *     <:content as |args|>
+   *       dropdown content here
+   *       <DButton @action={{args.close}} @icon="bar" />
+   *     </:content>
+   *   </DMenu>
    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })

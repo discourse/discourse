@@ -4,7 +4,6 @@ import { eq, not, or } from "truth-helpers";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse-common/lib/get-url";
 import Dropdown from "./dropdown";
-import PanelPortal from "./panel-portal";
 import UserDropdown from "./user-dropdown";
 
 let headerIcons;
@@ -64,9 +63,7 @@ export default class Icons extends Component {
             />
           {{/if}}
         {{else if entry.value}}
-          <entry.value
-            @panelPortal={{component PanelPortal panelElement=@panelElement}}
-          />
+          <entry.value />
         {{/if}}
       {{/each}}
     </ul>

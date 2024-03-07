@@ -22,7 +22,6 @@ import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 
 const SEARCH_BUTTON_ID = "search-button";
-export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
 let _extraHeaderIcons;
 clearExtraHeaderIcons();
@@ -241,11 +240,7 @@ createWidget("header-icons", {
   tagName: "ul.icons.d-header-icons",
 
   init() {
-    registerWidgetShim(
-      "extra-icon",
-      "div.wrapper",
-      hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
-    );
+    registerWidgetShim("extra-icon", "div.wrapper", hbs`<@data.component />`);
   },
 
   html(attrs) {
@@ -576,8 +571,6 @@ export default createWidget("header", {
           );
         }
       });
-
-      panels.push(h(`div#${PANEL_WRAPPER_ID}`));
 
       if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
