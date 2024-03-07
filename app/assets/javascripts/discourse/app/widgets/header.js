@@ -2,6 +2,8 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerButtonsDAG } from "discourse/components/glimmer-header";
+import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
@@ -22,14 +24,18 @@ import I18n from "discourse-i18n";
 const SEARCH_BUTTON_ID = "search-button";
 export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
-let _extraHeaderIcons = [];
+let _extraHeaderIcons;
+clearExtraHeaderIcons();
 
-export function addToHeaderIcons(icon) {
-  _extraHeaderIcons.push(icon);
-}
+let _extraHeaderButtons;
+clearExtraHeaderButtons();
 
 export function clearExtraHeaderIcons() {
-  _extraHeaderIcons = [];
+  _extraHeaderIcons = headerIconsDAG();
+}
+
+export function clearExtraHeaderButtons() {
+  _extraHeaderButtons = headerButtonsDAG();
 }
 
 export const dropdown = {
@@ -249,15 +255,13 @@ createWidget("header-icons", {
 
     const icons = [];
 
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach((icon) => {
-        if (typeof icon === "string") {
-          icons.push(this.attach(icon));
-        } else {
-          icons.push(this.attach("extra-icon", { component: icon }));
-        }
-      });
-    }
+    const resolvedIcons = _extraHeaderIcons.resolve();
+    resolvedIcons.forEach((icon) => {
+      if (["search", "user-menu", "hamburger"].includes(icon.key)) {
+        return;
+      }
+      icons.push(this.attach("extra-icon", { component: icon.value }));
+    });
 
     const search = this.attach("header-dropdown", {
       title: "search.title",
@@ -300,7 +304,7 @@ createWidget("header-icons", {
 });
 
 createWidget("header-buttons", {
-  tagName: "span.header-buttons",
+  tagName: "span.auth-buttons",
 
   html(attrs) {
     if (this.currentUser) {
@@ -500,6 +504,10 @@ export default createWidget("header", {
   buildKey: () => `header`,
   services: ["router", "search"],
 
+  init() {
+    registerWidgetShim("extra-button", "div.wrapper", hbs`<@data.component />`);
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,
@@ -535,7 +543,19 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [this.attach("header-buttons", attrs), headerIcons];
+      const buttons = [];
+      const resolvedButtons = _extraHeaderButtons.resolve();
+      resolvedButtons.forEach((button) => {
+        if (button.key === "auth") {
+          return;
+        }
+        buttons.push(this.attach("extra-button", { component: button.value }));
+      });
+
+      buttons.push(this.attach("header-buttons", attrs));
+
+      const panels = [];
+      panels.push(h("span.header-buttons", buttons), headerIcons);
 
       if (this.search.visible) {
         this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;

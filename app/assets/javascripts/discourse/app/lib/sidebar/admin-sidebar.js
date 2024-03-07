@@ -5,7 +5,6 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n from "discourse-i18n";
 
@@ -111,12 +110,6 @@ export function useAdminNavConfig(navMap) {
       name: "root",
       hideSectionHeader: true,
       links: [
-        {
-          name: "back_to_forum",
-          route: `discovery.${defaultHomepage()}`,
-          label: "admin.back_to_forum",
-          icon: "arrow-left",
-        },
         {
           name: "admin_dashboard",
           route: "admin.dashboard",
@@ -254,5 +247,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return navConfig.map((adminNavSectionData) => {
       return defineAdminSection(adminNavSectionData);
     });
+  }
+
+  get filterable() {
+    return true;
   }
 }

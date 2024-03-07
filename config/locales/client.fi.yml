@@ -197,7 +197,6 @@ fi:
     broken_page_change_alert: "onPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
     broken_plugin_alert: "Lisäosan \"%{name}\" aiheuttama"
     critical_deprecation:
-      notice: "<b>[Ylläpitäjän huomautus]</b> Jokin teemoistasi tai lisäosistasi täytyy päivittää, jotta se olisi yhteensopiva tulevien Discoursen ydinmuutosten kanssa (<a target='_blank' href='https://meta.discourse.org/t/287211'>lisätietoja</a>)."
       theme_source: "Tunnistettu teema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Tunnistettu lisäosa: \"%{name}\""
     s3:
@@ -2743,6 +2742,20 @@ fi:
     topic_bulk_actions:
       close_topics:
         name: "Sulje ketjut"
+      archive_topics:
+        name: "Arkistoi ketjut"
+      unlist_topics:
+        name: "Poista ketjuja listauksista"
+      relist_topics:
+        name: "Palauta ketjuja listauksiin"
+      remove_tags:
+        name: "Poista tunnisteita"
+      append_tags:
+        name: "Lisää tunnisteita"
+      replace_tags:
+        name: "Korvaa tunnisteet"
+      delete_topics:
+        name: "Poista ketjut"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -4275,6 +4288,9 @@ fi:
       panels:
         forum:
           label: Keskustelualuea
+      filter: "Suodatin"
+      no_results:
+        title: "Ei tuloksia"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."

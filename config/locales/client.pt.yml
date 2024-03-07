@@ -2322,6 +2322,18 @@ pt:
     topic_bulk_actions:
       close_topics:
         name: "Fechar Tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover Tópicos da Lista"
+      relist_topics:
+        name: "Voltar a Listar Tópicos"
+      append_tags:
+        name: "Anexar Etiquetas"
+      replace_tags:
+        name: "Substituir Etiquetas"
+      delete_topics:
+        name: "Eliminar Tópicos"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3512,6 +3524,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+      filter: "Filtrar"
     until: "Até:"
     form_templates:
       upload_field:

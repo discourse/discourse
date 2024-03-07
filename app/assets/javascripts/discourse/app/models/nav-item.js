@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   hasTrackedFilter,

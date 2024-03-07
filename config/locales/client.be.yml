@@ -959,6 +959,10 @@ be:
     topic_bulk_actions:
       close_topics:
         name: "Закрыць тэму"
+      archive_topics:
+        name: "Заархіваваныя тэмы"
+      delete_topics:
+        name: "Выдаліць тэмы"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1416,6 +1420,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Запампаваць"

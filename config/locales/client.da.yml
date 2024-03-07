@@ -2351,6 +2351,18 @@ da:
     topic_bulk_actions:
       close_topics:
         name: "Luk indlæg"
+      archive_topics:
+        name: "Arkiver Emner"
+      unlist_topics:
+        name: "Fjern emner fra liste"
+      relist_topics:
+        name: "Genindlæs emner"
+      append_tags:
+        name: "Tilføj Mærker"
+      replace_tags:
+        name: "Erstat Mærker"
+      delete_topics:
+        name: "Slet emner"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -3680,6 +3692,7 @@ da:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
     until: "Indtil:"
     form_templates:
       upload_field:

@@ -28,6 +28,14 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when readonly mode" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
@@ -64,6 +72,25 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "#create" do
+    context "when force_thread param is given" do
+      it "removes it from params" do
+        sign_in(current_user)
+
+        message_1 = Fabricate(:chat_message, chat_channel: channel)
+
+        expect {
+          post "/chat/#{channel.id}.json",
+               params: {
+                 in_reply_to_id: message_1.id,
+                 message: "test",
+                 force_thread: true,
+               }
+        }.to change { Chat::Thread.where(force: false).count }.by(1)
       end
     end
   end

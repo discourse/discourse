@@ -197,7 +197,6 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     critical_deprecation:
-      notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>meer informatie</a>)."
       theme_source: "Geïdentificeerd thema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Geïdentificeerde plug-in: '%{name}'"
     s3:
@@ -2750,6 +2749,20 @@ nl:
     topic_bulk_actions:
       close_topics:
         name: "Topics sluiten"
+      archive_topics:
+        name: "Topics archiveren"
+      unlist_topics:
+        name: "Topics onzichtbaar maken"
+      relist_topics:
+        name: "Topics opnieuw weergeven"
+      remove_tags:
+        name: "Tags verwijderen"
+      append_tags:
+        name: "Tags toevoegen"
+      replace_tags:
+        name: "Tags vervangen"
+      delete_topics:
+        name: "Topics verwijderen"
       update_category:
         name: "Categorie bijwerken"
         description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"
@@ -4289,6 +4302,9 @@ nl:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      no_results:
+        title: "Geen resultaten"
     welcome_topic_banner:
       title: "Maak je welkomsttopic"
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."

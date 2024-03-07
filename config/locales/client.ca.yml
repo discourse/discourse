@@ -1876,6 +1876,18 @@ ca:
     topic_bulk_actions:
       close_topics:
         name: "Tanca temes"
+      archive_topics:
+        name: "Arxiva temes"
+      unlist_topics:
+        name: "Fes temes invisibles"
+      relist_topics:
+        name: "Torna a llistar els temes"
+      append_tags:
+        name: "Annexa etiquetes"
+      replace_tags:
+        name: "Reemplaça etiquetes"
+      delete_topics:
+        name: "Suprimeix temes"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2886,6 +2898,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
+      filter: "Filtre"
     until: "Fins a:"
     form_templates:
       upload_field:

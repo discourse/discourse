@@ -139,7 +139,7 @@
         @langProperty="value"
         @content={{this.availableLocales}}
         @value={{this.model.locale}}
-        @onChange={{action (mut this.model.locale)}}
+        @onChange={{fn (mut this.model.locale)}}
         @options={{hash filterable=true none="user.locale.default"}}
       />
     </div>
@@ -157,7 +157,7 @@
       @content={{this.userSelectableHome}}
       @valueProperty="value"
       @value={{this.homepageId}}
-      @onChange={{action (mut this.model.user_option.homepage_id)}}
+      @onChange={{fn (mut this.model.user_option.homepage_id)}}
     />
   </div>
 </div>
@@ -217,7 +217,7 @@
       @content={{this.titleCountModes}}
       @value={{this.model.user_option.title_count_mode}}
       @id="user-title-count-mode"
-      @onChange={{action (mut this.model.user_option.title_count_mode)}}
+      @onChange={{fn (mut this.model.user_option.title_count_mode)}}
     />
   </div>
   <div

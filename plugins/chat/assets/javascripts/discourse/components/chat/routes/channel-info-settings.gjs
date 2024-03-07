@@ -3,7 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -537,7 +537,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       @action={{this.onArchiveChannel}}
                       @label="chat.channel_settings.archive_channel"
                       @icon="archive"
-                      class="archive-btn chat-form__btn btn-flat"
+                      class="archive-btn chat-form__btn btn-transparent"
                     />
                   </:action>
                 </section.row>
@@ -550,14 +550,14 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       @action={{this.onToggleChannelState}}
                       @label="chat.channel_settings.close_channel"
                       @icon="lock"
-                      class="close-btn chat-form__btn btn-flat"
+                      class="close-btn chat-form__btn btn-transparent"
                     />
                   {{else}}
                     <DButton
                       @action={{this.onToggleChannelState}}
                       @label="chat.channel_settings.open_channel"
                       @icon="unlock"
-                      class="open-btn chat-form__btn btn-flat"
+                      class="open-btn chat-form__btn btn-transparent"
                     />
                   {{/if}}
                 </:action>
@@ -569,7 +569,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                     @action={{this.onDeleteChannel}}
                     @label="chat.channel_settings.delete_channel"
                     @icon="trash-alt"
-                    class="delete-btn chat-form__btn btn-flat"
+                    class="delete-btn chat-form__btn btn-transparent"
                   />
                 </:action>
               </section.row>

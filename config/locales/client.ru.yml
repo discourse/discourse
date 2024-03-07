@@ -253,7 +253,6 @@ ru:
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>подробнее</a>)."
       theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Выявленный плагин: '%{name}'"
     s3:
@@ -3003,6 +3002,20 @@ ru:
     topic_bulk_actions:
       close_topics:
         name: "Закрыть темы"
+      archive_topics:
+        name: "Архивировать темы"
+      unlist_topics:
+        name: "Скрыть темы"
+      relist_topics:
+        name: "Показать темы"
+      remove_tags:
+        name: "Удалить теги"
+      append_tags:
+        name: "Добавить теги"
+      replace_tags:
+        name: "Заменить теги"
+      delete_topics:
+        name: "Удалить темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4685,6 +4698,9 @@ ru:
       panels:
         forum:
           label: Форум
+      filter: "Фильтр"
+      no_results:
+        title: "Нет результатов"
     welcome_topic_banner:
       title: "Создать приветственную тему"
       description: "Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь максимально коротко и ярко выразить в ней наиболее важную информацию, которую вы хотите донести до новых пользователей форума."

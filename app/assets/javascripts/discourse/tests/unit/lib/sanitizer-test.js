@@ -157,6 +157,11 @@ module("Unit | Utility | sanitizer", function (hooks) {
       `<div data-value="<something>" data-html-value="<something>"></div>`,
       `<div data-value="&lt;something&gt;"></div>`
     );
+
+    cooked(
+      '<table><tr><th rowspan="2">a</th><th colspan="3">b</th><td rowspan="4">c</td><td colspan="5">d</td><td class="fa-spin">e</td></tr></table>',
+      '<table><tr><th rowspan="2">a</th><th colspan="3">b</th><td rowspan="4">c</td><td colspan="5">d</td><td>e</td></tr></table>'
+    );
   });
 
   test("ids on headings", function (assert) {

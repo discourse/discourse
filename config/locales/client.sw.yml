@@ -1449,6 +1449,18 @@ sw:
     topic_bulk_actions:
       close_topics:
         name: "Funga Mada"
+      archive_topics:
+        name: "Hifadhi Mada kwenye nyaraka"
+      unlist_topics:
+        name: "Ondoa Mada kwenye listi"
+      relist_topics:
+        name: "Orodhesha Upya Mada"
+      append_tags:
+        name: "Jumlisha Lebo"
+      replace_tags:
+        name: "Badilisha Lebo"
+      delete_topics:
+        name: "Futa Mada"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2263,6 +2275,7 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+      filter: "Chuja"
     form_templates:
       upload_field:
         upload: "Ongeza"

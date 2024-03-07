@@ -2284,6 +2284,16 @@ lt:
     topic_bulk_actions:
       close_topics:
         name: "Uždaryti temas"
+      archive_topics:
+        name: "Archyvuoti temas"
+      unlist_topics:
+        name: "Atžymėti temas"
+      append_tags:
+        name: "Pridėti žymas"
+      replace_tags:
+        name: "Pakeisti žymas"
+      delete_topics:
+        name: "Ištrinti temas"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3553,6 +3563,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+      filter: "Filtruoti"
     until: "Iki:"
     form_templates:
       upload_field:

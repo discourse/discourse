@@ -197,7 +197,6 @@ pt_BR:
     broken_page_change_alert: "Houve um erro no identificador onPageChange. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     broken_plugin_alert: "Causado(a) pelo plugin \"%{name}\""
     critical_deprecation:
-      notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>mais informações</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>\"%{name}\"</a>."
       plugin_source: "Plugin identificado: \"%{name}\""
     s3:
@@ -2750,6 +2749,18 @@ pt_BR:
     topic_bulk_actions:
       close_topics:
         name: "Fechar tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover tópicos da lista"
+      relist_topics:
+        name: "Reinserir tópicos na lista"
+      append_tags:
+        name: "Adicionar etiquetas"
+      replace_tags:
+        name: "Substituir etiquetas"
+      delete_topics:
+        name: "Excluir tópicos"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"
@@ -4289,6 +4300,9 @@ pt_BR:
       panels:
         forum:
           label: Fórum
+      filter: "Filtro"
+      no_results:
+        title: "Nenhum resultado"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."

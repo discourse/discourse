@@ -2666,6 +2666,18 @@ hr:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Poništite popis tema"
+      relist_topics:
+        name: "Poništite popis tema"
+      append_tags:
+        name: "Dodajte oznake"
+      replace_tags:
+        name: "Zamijeni oznake"
+      delete_topics:
+        name: "Obriši teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -4149,6 +4161,7 @@ hr:
               content: "Osvrt"
               title: "Označene objave i druge stavke u redu čekanja"
               pending_count: "%{count} na čekanju"
+      filter: "Filter"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."

@@ -2315,6 +2315,20 @@ fa_IR:
     topic_bulk_actions:
       close_topics:
         name: "بستن موضوعات"
+      archive_topics:
+        name: "بایگانی موضوعات"
+      unlist_topics:
+        name: "از فهرست خارج کردن مباحث"
+      relist_topics:
+        name: "ایجاد فهرست مجدد از موضوعات"
+      remove_tags:
+        name: "حذف برچسب‌ها"
+      append_tags:
+        name: "افزودن برچسب‌ها"
+      replace_tags:
+        name: "جایگزینی برچسب‌ها"
+      delete_topics:
+        name: "حذف موضوعات"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -3451,6 +3465,7 @@ fa_IR:
       panels:
         forum:
           label: انجمن
+      filter: "فیلتر"
     until: "تا وقتی که:"
     form_templates:
       upload_field:

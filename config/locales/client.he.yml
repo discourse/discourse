@@ -256,7 +256,9 @@ he:
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     critical_deprecation:
-      notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>למידע נוסף</a>)."
+      notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse."
+      id: "(מזהה:<em>%{id}</em>)"
+      linked_id: "(מזהה:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "זוהתה ערכת עיצוב: <a target='_blank' href='%{path}'>‚%{name}’</a>."
       plugin_source: "זוהה תוסף: ‚%{name}’"
     s3:
@@ -3018,9 +3020,31 @@ he:
     topic_bulk_actions:
       close_topics:
         name: "סגירת נושאים"
+      archive_topics:
+        name: "העברת נושאים לארכיון"
+      unlist_topics:
+        name: "הסרת נושאים מהרשימה"
+      relist_topics:
+        name: "הצגת נושאים ברשימה מחדש"
+      remove_tags:
+        name: "הסרת תגיות"
+      append_tags:
+        name: "הוספת תגיות"
+      replace_tags:
+        name: "החלפת תגיות"
+      delete_topics:
+        name: "מחיקת נושאים"
       update_category:
         name: "עדכון קטגוריה"
         description: "נא לבחור קטגוריה חדשה לנושאים הנבחרים"
+      reset_bump_dates:
+        name: "איפוס תאריכי הקפצה"
+        description: "איפוס תאריכי הקפצת הנושאים לתאריך של הפוסט האחרון שנוצר, מה שמשפיע על הסדר ברשימת הנושאים"
+      defer:
+        name: "דחיית נושאים"
+        description: "סימון נושאים כנקראו"
+      update_notifications:
+        name: "עדכון התראות…"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -3985,6 +4009,7 @@ he:
       custom_placeholder_notify_moderators: "נשמח לשמוע בדיוק מה מטריד אותך ולספק קישורים מתאימים ודוגמאות היכן שניתן."
       notify_moderators_textarea_label: "הודעה למפקחים"
       custom_placeholder_illegal: "נשמח לשמוע בדיוק למה לדעתך התוכן הזה לא חוקי ולספק קישורים מתאימים ודוגמאות היכן שניתן."
+      confirmation_illegal: "מה שכתבתי למעלה הוא מדויק ומלא."
       custom_message:
         at_least:
           one: "הכניסו לפחות תו אחד"
@@ -4262,6 +4287,7 @@ he:
         user_profile_menu: "%{shortcut} פתיחת תפריט משתמש"
         show_incoming_updated_topics: "%{shortcut} הצגת נושאים שהתעדכנו"
         search: "%{shortcut} חיפוש"
+        filter_sidebar: "%{shortcut} סרגל צד סינון"
         help: "%{shortcut} פתיחת קיצורי מקשים"
         dismiss_new: "%{shortcut} התעלמות מחדשים"
         dismiss_topics: "%{shortcut} התעלמות מנושאים"
@@ -4710,6 +4736,11 @@ he:
       panels:
         forum:
           label: פורום
+      filter: "סינון"
+      clear_filter: "פינוי המסנן"
+      no_results:
+        title: "אין תוצאות"
+        description: "לא מצאנו שום דבר שעונה על ‚%{filter}’"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -5064,11 +5095,13 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. אפשר לערוך את הכותרת, הקטגוריה, התגיות, המצב, סוג שימוש, קישור מובילים וכו׳.
               delete: מחיקת נושא.
+              recover: שחזור נושא.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               status: "עדכון מצב של נושא. מצב: סגור, ארכיון, גלוי, נעוץ. זמין: אמת, שקר. יש לציין כאן category_id (מזהה קטגוריה) ובמטען של הבקשה כדי לאפשר שינויי מצב בלבד על נושאים בקטגוריה הזאת."
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
               delete: מחיקת פוסט.
+              recover: שחזור פוסט.
               list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
             tags:
               list: הצגת תגיות.
@@ -5481,6 +5514,7 @@ he:
           install_upload: "מהמכשיר שלך"
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
+          installing_message: "ערכת נושא מותקנת, עלול לארוך מספר דקות…"
           duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
           force_install: "לא ניתן להתקין את ערכת העיצוב כיוון שמאגר ה־Git אינו נגיש. להמשיך בהתקנתה?"
           create_placeholder: "יצירת ממלא מקום"

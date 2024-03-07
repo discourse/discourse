@@ -31,6 +31,7 @@ pl_PL:
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
+    chat_preferred_mobile_index: "Preferowana karta podczas ładowania /chat na urządzeniach mobilnych."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
@@ -105,6 +106,7 @@ pl_PL:
       original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
       thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
       thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
+      invalid_direct_message: "Nie możesz utworzyć tej wiadomości bezpośredniej."
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:

@@ -169,7 +169,6 @@ ja:
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     critical_deprecation:
-      notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります (<a target='_blank' href='https://meta.discourse.org/t/287211'>詳細</a>)。"
       theme_source: "検出されたテーマ: <a target='_blank' href='%{path}'>'%{name}'</a>。"
       plugin_source: "検出されたプラグイン: '%{name}'"
     s3:
@@ -2613,6 +2612,18 @@ ja:
     topic_bulk_actions:
       close_topics:
         name: "トピックをクローズ"
+      archive_topics:
+        name: "トピックをアーカイブ"
+      unlist_topics:
+        name: "トピックを非表示"
+      relist_topics:
+        name: "トピックを表示"
+      append_tags:
+        name: "タグを追加"
+      replace_tags:
+        name: "タグを置換"
+      delete_topics:
+        name: "トピックを削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4070,6 +4081,9 @@ ja:
       panels:
         forum:
           label: フォーラム
+      filter: "フィルタ"
+      no_results:
+        title: "結果がありません"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"

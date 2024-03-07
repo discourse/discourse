@@ -1207,6 +1207,10 @@ sr:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori Teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      delete_topics:
+        name: "Obriši Teme"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"
@@ -1831,6 +1835,7 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Upload"

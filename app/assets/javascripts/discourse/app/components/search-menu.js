@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -36,7 +36,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked noResults = false;
   @tracked
   inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
@@ -215,7 +214,7 @@ export default class SearchMenu extends Component {
 
     const matchSuggestions = this.matchesSuggestions();
     if (matchSuggestions) {
-      this.noResults = true;
+      this.search.noResults = true;
       this.search.results = {};
       this.loading = false;
       this.suggestionResults = [];
@@ -253,7 +252,7 @@ export default class SearchMenu extends Component {
             this.suggestionResults = result.users;
             this.suggestionKeyword = "@";
           } else {
-            this.noResults = true;
+            this.search.noResults = true;
             this.suggestionKeyword = false;
           }
         });
@@ -266,14 +265,14 @@ export default class SearchMenu extends Component {
     this.suggestionKeyword = false;
 
     if (!this.search.activeGlobalSearchTerm) {
-      this.noResults = false;
+      this.search.noResults = false;
       this.search.results = {};
       this.loading = false;
       this.invalidTerm = false;
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
-      this.noResults = true;
+      this.search.noResults = true;
       this.search.results = {};
       this.loading = false;
       this.invalidTerm = true;
@@ -298,7 +297,7 @@ export default class SearchMenu extends Component {
               });
             }
 
-            this.noResults = results.resultTypes.length === 0;
+            this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
           }
         })
@@ -339,7 +338,7 @@ export default class SearchMenu extends Component {
 
   @action
   triggerSearch() {
-    this.noResults = false;
+    this.search.noResults = false;
 
     if (this.includesTopics) {
       if (this.search.contextType === "topic") {

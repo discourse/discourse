@@ -751,6 +751,9 @@ aside.quote {
   }
 
   .topic-links {
+    tbody {
+      border: none;
+    }
     tr {
       border: none;
     }
@@ -1742,6 +1745,10 @@ iframe {
       top: 0;
       z-index: 1;
       background-color: var(--secondary);
+    }
+
+    td {
+      padding: 5px 6px 5px 3px;
     }
   }
 }

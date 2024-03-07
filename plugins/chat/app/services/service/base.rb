@@ -112,8 +112,7 @@ module Service
       def call(instance, context)
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
-        args = {}
-        args = context.to_h if method.arity.nonzero?
+        args = context.to_h.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
@@ -254,7 +253,7 @@ module Service
     #
     #   private
     #
-    #   def fetch_channel(channel_id:, **)
+    #   def fetch_channel(channel_id:)
     #     Chat::Channel.find_by(id: channel_id)
     #   end
 
@@ -277,7 +276,7 @@ module Service
     #
     #   private
     #
-    #   def no_direct_message_channel(channel:, **)
+    #   def no_direct_message_channel(channel:)
     #     !channel.direct_message_channel?
     #   end
     #
@@ -326,7 +325,7 @@ module Service
     #
     #   private
     #
-    #   def update_channel(channel:, params_to_edit:, **)
+    #   def update_channel(channel:, params_to_edit:)
     #     channel.update!(params_to_edit)
     #   end
     # @example using {#fail!} in a step
@@ -334,7 +333,7 @@ module Service
     #
     #   private
     #
-    #   def save_channel(channel:, **)
+    #   def save_channel(channel:)
     #     fail!("something went wrong") if !channel.save
     #   end
 

@@ -1,16 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
+import { and, eq, not, or } from "truth-helpers";
+import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import or from "truth-helpers/helpers/or";
 import AuthButtons from "./glimmer-header/auth-buttons";
 import Contents from "./glimmer-header/contents";
 import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
@@ -20,9 +19,20 @@ import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 
 const SEARCH_BUTTON_ID = "search-button";
 
-let _customHeaderClasses = [];
-export function addCustomHeaderClass(className) {
-  _customHeaderClasses.push(className);
+let headerButtons;
+resetHeaderButtons();
+
+function resetHeaderButtons() {
+  headerButtons = new DAG({ defaultPosition: { before: "auth" } });
+  headerButtons.add("auth");
+}
+
+export function headerButtonsDAG() {
+  return headerButtons;
+}
+
+export function clearExtraHeaderButtons() {
+  resetHeaderButtons();
 }
 
 export default class GlimmerHeader extends Component {
@@ -31,7 +41,6 @@ export default class GlimmerHeader extends Component {
   @service currentUser;
   @service site;
   @service appEvents;
-  @service register;
   @service header;
 
   @tracked skipSearchContext = this.site.mobileView;
@@ -51,10 +60,6 @@ export default class GlimmerHeader extends Component {
       );
     };
   });
-
-  get customHeaderClasses() {
-    return _customHeaderClasses.join(" ");
-  }
 
   @action
   headerKeyboardTrigger(msg) {
@@ -110,12 +115,13 @@ export default class GlimmerHeader extends Component {
     let showSearch = this.router.currentRouteName.startsWith("topic.");
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch) {
-      const controller = this.register.lookup("controller:topic");
-      const total = controller.get("model.postStream.stream.length") || 0;
-      const chunkSize = controller.get("model.chunk_size") || 0;
+      const container = getOwner(this);
+      const topic = container.lookup("controller:topic");
+      const total = topic.get("model.postStream.stream.length") || 0;
+      const chunkSize = topic.get("model.chunk_size") || 0;
       showSearch =
         total > chunkSize &&
-        document.querySelector(
+        document.querySelectorAll(
           ".topic-post .cooked, .small-action:not(.time-gap)"
         )?.length < total;
     }
@@ -167,23 +173,28 @@ export default class GlimmerHeader extends Component {
   }
 
   <template>
-    <header
-      class={{concatClass this.customHeaderClasses "d-header"}}
-      {{this.appEventsListeners}}
-    >
+    <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
         <Contents
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleHamburger={{this.toggleHamburger}}
           @showSidebar={{@showSidebar}}
         >
-          {{#unless this.currentUser}}
-            <AuthButtons
-              @showCreateAccount={{@showCreateAccount}}
-              @showLogin={{@showLogin}}
-              @canSignUp={{@canSignUp}}
-            />
-          {{/unless}}
+
+          <span class="header-buttons">
+            {{#each (headerButtons.resolve) as |entry|}}
+              {{#if (and (eq entry.key "auth") (not this.currentUser))}}
+                <AuthButtons
+                  @showCreateAccount={{@showCreateAccount}}
+                  @showLogin={{@showLogin}}
+                  @canSignUp={{@canSignUp}}
+                />
+              {{else if entry.value}}
+                <entry.value />
+              {{/if}}
+            {{/each}}
+          </span>
+
           {{#if
             (not (and this.siteSettings.login_required (not this.currentUser)))
           }}

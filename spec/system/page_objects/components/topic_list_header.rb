@@ -46,6 +46,10 @@ module PageObjects
         find("#bulk-topics-confirm").click
       end
 
+      def click_silent
+        find("#topic-bulk-action-options__silent").click
+      end
+
       private
 
       def bulk_select_dropdown_item(name)

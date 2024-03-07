@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
 import toMarkdown from "discourse/lib/to-markdown";

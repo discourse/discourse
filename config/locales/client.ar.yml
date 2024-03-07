@@ -309,7 +309,6 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     critical_deprecation:
-      notice: "<b>[إشعار المسؤول]</b> تحتاج إحدى سماتك أو مكوِّناتك الإضافية إلى التحديث للتوافق مع التغييرات الجوهرية في Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>المزيد من المعلومات</a>)."
       theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
@@ -3262,9 +3261,25 @@ ar:
     topic_bulk_actions:
       close_topics:
         name: "إغلاق الموضوعات"
+      archive_topics:
+        name: "أرشفة الموضوعات"
+      unlist_topics:
+        name: "إلغاء إدراج الموضوعات"
+      relist_topics:
+        name: "إعادة إدراج الموضوعات"
+      remove_tags:
+        name: "أزِل الوسوم"
+      append_tags:
+        name: "إضافة الوسوم"
+      replace_tags:
+        name: "استبدال الوسوم"
+      delete_topics:
+        name: "حذف الموضوعات"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
+      update_notifications:
+        name: "تحديث الإشعارات…"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -5097,6 +5112,9 @@ ar:
       panels:
         forum:
           label: المنتدى
+      filter: "عامل التصفية"
+      no_results:
+        title: "لا نتائج"
     welcome_topic_banner:
       title: "إنشاء موضوعك الترحيبي"
       description: "إن موضوعك الترحيبي هو أول ما يقرأه الأعضاء الجُدد. انظر إليه على أنه \"عرض ترويجي\" أو \"بيان مهمة\". دَع الجميع يعرفون الجمهور المستهدف بهذا المجتمع، وما يتوقعون العثور عليه هنا، وما تريد منهم أن يفعلوه أولًا."
@@ -6044,6 +6062,7 @@ ar:
           instructions: "خصِّص النموذج الذي يتم فيه عرض جميع الرسائل الإلكترونية بتنسيق HTML، والنمط باستخدام CSS."
       email:
         title: "الرسائل الإلكترونية"
+        settings: "إعدادات البريد الإلكتروني"
         templates: "القوالب"
         templates_title: "قوالب البريد الإلكتروني"
         preview_digest: "معاينة الملخص"

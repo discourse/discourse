@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { registerDestructor } from "@ember/destroyable";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse-common/lib/later";

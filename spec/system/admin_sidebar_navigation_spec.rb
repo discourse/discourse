@@ -5,6 +5,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
+  let(:filter) { PageObjects::Components::Filter.new }
 
   before do
     SiteSetting.admin_sidebar_enabled_groups = Group::AUTO_GROUPS[:admins]
@@ -19,7 +20,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to be_visible
     expect(sidebar).to have_no_section("community")
     expect(page).to have_no_css(".admin-main-nav")
-    sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
+    filter.click_back_to_forum
     expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-nav-section-root")
   end
@@ -43,7 +44,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
-      sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
+      filter.click_back_to_forum
       expect(page).to have_current_path("/latest")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-nav-section-root")
@@ -59,5 +60,36 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       expect(page).to have_current_path("/admin")
       expect(sidebar).to have_no_section("admin-nav-section-root")
     end
+  end
+
+  it "allows links to be filtered" do
+    visit("/admin")
+    all_links_count = page.all(".sidebar-section-link-content-text").count
+
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(all_links_count)
+    expect(page).to have_no_css(".sidebar-no-results")
+
+    filter.filter("ie")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(["Preview Summary", "User Fields"])
+    expect(page).to have_no_css(".sidebar-no-results")
+
+    filter.filter("ieeee")
+    expect(page).to have_no_css(".sidebar-section-link-content-text")
+    expect(page).to have_css(".sidebar-no-results")
+
+    filter.clear
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(all_links_count)
+    expect(page).to have_no_css(".sidebar-no-results")
+    expect(page).to have_css(".sidebar-sections__back-to-forum")
+
+    # When match section title, display all links
+    filter.filter("Backups")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(%w[Backups Logs])
   end
 end

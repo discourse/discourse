@@ -1897,6 +1897,18 @@ zh_TW:
     topic_bulk_actions:
       close_topics:
         name: "關閉話題"
+      archive_topics:
+        name: "已封存的話題"
+      unlist_topics:
+        name: "未在列表中的話題"
+      relist_topics:
+        name: "討論話題"
+      append_tags:
+        name: "向後追加標記"
+      replace_tags:
+        name: "取代標記"
+      delete_topics:
+        name: "刪除話題"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -2935,6 +2947,9 @@ zh_TW:
             review:
               content: "審核"
               pending_count: "剩餘 %{count}"
+      filter: "過濾"
+      no_results:
+        title: "沒有結果"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       button_title: "開始編輯"

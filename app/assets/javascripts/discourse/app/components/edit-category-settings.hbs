@@ -5,10 +5,7 @@
         {{i18n "category.position"}}
       </label>
       <input
-        {{on
-          "input"
-          (action (mut this.category.position) value="target.value")
-        }}
+        {{on "input" (with-event-value (fn (mut this.category.position)))}}
         value={{this.category.position}}
         type="number"
         min="0"
@@ -42,7 +39,7 @@
     <input
       {{on
         "input"
-        (action (mut this.category.num_featured_topics) value="target.value")
+        (with-event-value (fn (mut this.category.num_featured_topics)))
       }}
       value={{this.category.num_featured_topics}}
       type="number"
@@ -61,7 +58,7 @@
         @id="category-search-priority"
         @content={{this.searchPrioritiesOptions}}
         @value={{this.category.search_priority}}
-        @onChange={{action (mut this.category.search_priority)}}
+        @onChange={{fn (mut this.category.search_priority)}}
         @options={{hash placementStrategy="absolute"}}
       />
     </div>
@@ -197,9 +194,8 @@
     <input
       {{on
         "input"
-        (action
-          (mut this.category.category_setting.num_auto_bump_daily)
-          value="target.value"
+        (with-event-value
+          (fn (mut this.category.category_setting.num_auto_bump_daily))
         )
       }}
       value={{this.category.category_setting.num_auto_bump_daily}}
@@ -216,9 +212,8 @@
     <input
       {{on
         "input"
-        (action
-          (mut this.category.category_setting.auto_bump_cooldown_days)
-          value="target.value"
+        (with-event-value
+          (fn (mut this.category.category_setting.auto_bump_cooldown_days))
         )
       }}
       value={{this.category.category_setting.auto_bump_cooldown_days}}
@@ -272,7 +267,7 @@
         @content={{this.availableSorts}}
         @value={{this.category.sort_order}}
         @options={{hash none="category.sort_options.default"}}
-        @onChange={{action (mut this.category.sort_order)}}
+        @onChange={{fn (mut this.category.sort_order)}}
       />
       {{#unless this.isDefaultSortOrder}}
         <ComboBox
@@ -283,7 +278,7 @@
             none="category.sort_options.default"
             placementStrategy="absolute"
           }}
-          @onChange={{action (mut this.category.sort_ascending)}}
+          @onChange={{fn (mut this.category.sort_ascending)}}
         />
       {{/unless}}
     </div>

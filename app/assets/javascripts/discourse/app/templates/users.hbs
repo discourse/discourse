@@ -21,7 +21,7 @@
           <div class="period-controls">
             <PeriodChooser
               @period={{this.period}}
-              @onChange={{action (mut this.period)}}
+              @onChange={{fn (mut this.period)}}
               @fullDay={{false}}
             />
             {{#if this.lastUpdatedAt}}
@@ -41,10 +41,7 @@
               @value={{readonly this.nameInput}}
               placeholder={{i18n "directory.filter_name"}}
               class="filter-name no-blur"
-              {{on
-                "input"
-                (action "onUsernameFilterChanged" value="target.value")
-              }}
+              {{on "input" (with-event-value this.onUsernameFilterChanged)}}
             />
             {{#if this.showGroupFilter}}
               <ComboBox

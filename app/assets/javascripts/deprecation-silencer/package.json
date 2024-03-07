@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }

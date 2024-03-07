@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 
 export default class AuthButtons extends Component {
   @service header;
 
   <template>
-    <span class="header-buttons">
+    <span class="auth-buttons">
       {{#if (and @canSignUp (not this.header.topic))}}
         <DButton
           class="btn-primary btn-small sign-up-button"

@@ -38,28 +38,28 @@ module Chat
 
     private
 
-    def fetch_thread(contract:, **)
+    def fetch_thread(contract:)
       Chat::Thread.find_by(id: contract.thread_id)
     end
 
-    def can_view_channel(guardian:, thread:, **)
+    def can_view_channel(guardian:, thread:)
       guardian.can_preview_chat_channel?(thread.channel)
     end
 
-    def can_edit_thread(guardian:, thread:, **)
+    def can_edit_thread(guardian:, thread:)
       guardian.can_edit_thread?(thread)
     end
 
-    def threading_enabled_for_channel(thread:, **)
+    def threading_enabled_for_channel(thread:)
       thread.channel.threading_enabled
     end
 
-    def update(thread:, contract:, **)
+    def update(thread:, contract:)
       thread.update(title: contract.title)
       fail!(thread.errors.full_messages.join(", ")) if thread.invalid?
     end
 
-    def publish_metadata(thread:, **)
+    def publish_metadata(thread:)
       Chat::Publisher.publish_thread_original_message_metadata!(thread)
     end
   end

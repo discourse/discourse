@@ -587,13 +587,15 @@ RSpec.describe InviteRedeemer do
         expect(invite_link.redemption_count).to eq(1)
       end
 
-      it "should not redeem the invite if InvitedUser record already exists for email" do
+      it "raises an error if email has already been invited" do
         invite_redeemer.redeem
         invite_link.reload
 
         another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: "foo@example.com")
-        another_user = another_invite_redeemer.redeem
-        expect(another_user).to eq(nil)
+        expect { another_invite_redeemer.redeem }.to raise_error(
+          Invite::UserExists,
+          I18n.t("invite.existing_user_already_redemeed"),
+        )
       end
 
       it "should redeem the invite if InvitedUser record does not exists for email" do

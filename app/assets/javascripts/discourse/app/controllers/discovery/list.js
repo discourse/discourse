@@ -1,11 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import DismissNew from "discourse/components/modal/dismiss-new";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
+import Topic from "discourse/models/topic";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -49,6 +51,9 @@ export default class DiscoveryListController extends Controller {
   @service siteSettings;
   @service site;
   @service currentUser;
+  @service router;
+  @service topicTrackingState;
+  @service modal;
 
   @tracked model;
 
@@ -111,6 +116,52 @@ export default class DiscoveryListController extends Controller {
     return this.order ?? this.model.list.get("params.order") ?? "activity";
   }
 
+  async callResetNew(
+    dismissPosts = false,
+    dismissTopics = false,
+    untrack = false
+  ) {
+    const isTracked =
+      (this.router.currentRoute.queryParams["f"] ||
+        this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+    let topicIds = this.bulkSelectHelper.selected.map((topic) => topic.id);
+    const result = await Topic.resetNew(
+      this.model.category,
+      !this.model.noSubcategories,
+      {
+        tracked: isTracked,
+        tag: this.model.tag,
+        topicIds,
+        dismissPosts,
+        dismissTopics,
+        untrack,
+      }
+    );
+
+    if (result.topic_ids) {
+      this.topicTrackingState.removeTopics(result.topic_ids);
+    }
+    this.router.refresh();
+  }
+
+  @action
+  resetNew() {
+    if (!this.currentUser.new_new_view_enabled) {
+      return this.callResetNew();
+    }
+
+    this.modal.show(DismissNew, {
+      model: {
+        selectedTopics: this.bulkSelectHelper.selected,
+        subset: this.model.listParams?.subset,
+        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
+          this.callResetNew(dismissPosts, dismissTopics, untrack);
+        },
+      },
+    });
+  }
+
   @action
   createTopic() {
     this.composer.openNewTopic({
@@ -147,5 +198,10 @@ export default class DiscoveryListController extends Controller {
   @action
   toggleTagInfo() {
     this.toggleProperty("showTagInfo");
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
   }
 }

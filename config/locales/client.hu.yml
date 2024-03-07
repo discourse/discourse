@@ -2499,6 +2499,18 @@ hu:
     topic_bulk_actions:
       close_topics:
         name: "Témák lezárása"
+      archive_topics:
+        name: "Témák archiválása"
+      unlist_topics:
+        name: "Témák listázásnak megszüntetése"
+      relist_topics:
+        name: "Újralistázott témák"
+      append_tags:
+        name: "Címkék hozzáfűzése"
+      replace_tags:
+        name: "Címkék cseréje"
+      delete_topics:
+        name: "Témák törlése"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -3659,6 +3671,7 @@ hu:
               content: "Áttekintés"
               title: "Megjelölt bejegyzések és egyéb sorban álló elemek"
               pending_count: "%{count} függőben"
+      filter: "Szűrő"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."

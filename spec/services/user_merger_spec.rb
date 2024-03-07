@@ -977,7 +977,7 @@ RSpec.describe UserMerger do
   end
 
   it "merges user visits" do
-    freeze_time DateTime.parse("2010-01-01 12:00")
+    freeze_time_safe
 
     UserVisit.create!(
       user_id: source_user.id,

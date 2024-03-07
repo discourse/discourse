@@ -338,10 +338,6 @@ basic:
     default: "14"
     allow_any: false
     refresh: true
-  enable_bookmarks_with_reminders:
-    client: true
-    default: true
-    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -1423,6 +1419,12 @@ email:
     default: 10
     hidden: true
   require_change_email_confirmation: false
+  view_raw_email_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
+    allow_any: false
+    refresh: true
 
 files:
   max_image_size_kb:
@@ -1778,6 +1780,7 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
   profile_background_allowed_groups:
     default: "3|10" # auto group staff and trust_level_0
     type: group_list
@@ -1989,7 +1992,7 @@ security:
     type: simple_list
     default: ""
   content_security_policy_strict_dynamic:
-    default: false
+    default: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2823,6 +2826,10 @@ uncategorized:
     default: "24|72|168|720"
     type: "list"
     list_type: "compact"
+
+  penalty_include_post_message:
+    default: false
+    client: true
 
   svg_icon_subset:
     default: ""

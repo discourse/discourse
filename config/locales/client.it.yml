@@ -197,7 +197,6 @@ it:
     broken_page_change_alert: "Un gestore onPageChange ha generato un errore. Controlla gli strumenti per sviluppatori del browser per ulteriori informazioni."
     broken_plugin_alert: "Causato dal plugin '%{name}'"
     critical_deprecation:
-      notice: "<b>[Avviso amministratore]</b> Uno dei tuoi temi o plugin necessita di aggiornamento per compatibilità con le prossime modifiche principali di Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>ulteriori informazioni</a>)."
       theme_source: "Tema identificato: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Plugin identificato: '%{name}'"
     s3:
@@ -2743,6 +2742,20 @@ it:
     topic_bulk_actions:
       close_topics:
         name: "Chiudi argomenti"
+      archive_topics:
+        name: "Archivia argomenti"
+      unlist_topics:
+        name: "Rendi argomenti invisibili"
+      relist_topics:
+        name: "Ripubblica Argomenti"
+      remove_tags:
+        name: "Rimuovi etichette"
+      append_tags:
+        name: "Aggiungi Etichette"
+      replace_tags:
+        name: "Sostituisci Etichette"
+      delete_topics:
+        name: "Elimina argomenti"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -4273,6 +4286,9 @@ it:
       panels:
         forum:
           label: Forum
+      filter: "Filtro"
+      no_results:
+        title: "Nessun risultato"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."

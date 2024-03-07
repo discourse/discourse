@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import i18n from "discourse-common/helpers/i18n";
-import or from "truth-helpers/helpers/or";
 import Notifications from "./user-dropdown/notifications";
 
 export default class UserDropdown extends Component {

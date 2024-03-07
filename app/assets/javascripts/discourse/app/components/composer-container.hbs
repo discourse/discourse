@@ -197,7 +197,7 @@
                   {{#if this.composer.canEditTags}}
                     <MiniTagChooser
                       @value={{this.composer.model.tags}}
-                      @onChange={{action (mut this.composer.model.tags)}}
+                      @onChange={{fn (mut this.composer.model.tags)}}
                       @options={{hash
                         disabled=this.composer.disableTagsChooser
                         categoryId=this.composer.model.categoryId
@@ -401,7 +401,7 @@
               @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
               class={{concat-class
-                "btn-flat btn-mini-toggle toggle-preview"
+                "btn-transparent btn-mini-toggle toggle-preview"
                 (unless this.composer.showPreview "active")
               }}
             />

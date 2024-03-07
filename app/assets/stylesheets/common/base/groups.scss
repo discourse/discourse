@@ -153,6 +153,7 @@
     display: inline;
   }
   &.groups-notifications-form {
+    max-width: 33em;
     .control-instructions {
       color: var(--primary-medium);
       margin-bottom: 10px;

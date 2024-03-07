@@ -344,6 +344,10 @@
   div.discourse-tags {
     font-size: var(--font-down-1);
   }
+
+  .sidebar-filter {
+    width: calc(100% - 2.35rem);
+  }
 }
 
 // Panel / user-notification-list styles. **not** menu panel sizing styles

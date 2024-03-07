@@ -42,6 +42,12 @@ RSpec.describe Chat::ListChannelThreadMessages do
       before { thread.channel.update!(threading_enabled: false) }
 
       it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
+
+      context "when the thread is forced" do
+        before { thread.update!(force: true) }
+
+        it { is_expected.to be_a_success }
+      end
     end
 
     context "when channel and site setting are enabling threading" do

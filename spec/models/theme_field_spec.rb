@@ -412,6 +412,14 @@ HTML
     )
   end
 
+  it "generates the right errors when setting of type objects have default values which does not matches the schema" do
+    field = create_yaml_field(get_fixture("invalid"))
+
+    expect(field.error).to include(
+      "Setting `invalid_default_objects_setting` default value isn't valid. The property at JSON Pointer '/0/required_string' must be present. The property at JSON Pointer '/1/min_5_chars_string' must be at least 5 characters long. The property at JSON Pointer '/1/children/0/required_integer' must be present.",
+    )
+  end
+
   it "works correctly when valid yaml is provided" do
     field = create_yaml_field(get_fixture("valid"))
     expect(field.error).to be_nil

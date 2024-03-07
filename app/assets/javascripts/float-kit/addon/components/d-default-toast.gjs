@@ -1,8 +1,8 @@
 import { concat, fn, hash } from "@ember/helper";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
-import or from "truth-helpers/helpers/or";
 
 const DDefaultToast = <template>
   <div
@@ -48,7 +48,7 @@ const DDefaultToast = <template>
       {{/if}}
     </div>
     <div class="fk-d-default-toast__close-container">
-      <DButton class="btn-flat" @icon="times" @action={{@close}} />
+      <DButton class="btn-transparent" @icon="times" @action={{@close}} />
     </div>
   </div>
 </template>;

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { createPopper } from "@popperjs/core";

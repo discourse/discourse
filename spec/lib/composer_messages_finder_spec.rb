@@ -441,6 +441,24 @@ RSpec.describe ComposerMessagesFinder do
       SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
       SiteSetting.get_a_room_threshold = 2
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
+    context "when user can't send private messages" do
+      fab!(:group)
+
+      before { SiteSetting.personal_message_enabled_groups = group.id }
+
+      it "does not show the message" do
+        expect(
+          ComposerMessagesFinder.new(
+            user,
+            composer_action: "reply",
+            topic_id: topic.id,
+            post_id: op.id,
+          ).check_get_a_room(min_users_posted: 2),
+        ).to be_blank
+      end
     end
 
     it "does not show the message for new topics" do

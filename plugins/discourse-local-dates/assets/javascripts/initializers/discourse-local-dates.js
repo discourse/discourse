@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { withPluginApi } from "discourse/lib/plugin-api";

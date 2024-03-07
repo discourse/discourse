@@ -2300,6 +2300,20 @@ vi:
     topic_bulk_actions:
       close_topics:
         name: "Đóng các chủ đề"
+      archive_topics:
+        name: "Chủ đề Lưu trữ"
+      unlist_topics:
+        name: "Chủ đề không công khai"
+      relist_topics:
+        name: "Chủ đề liên quan"
+      remove_tags:
+        name: "Xóa thẻ"
+      append_tags:
+        name: "Thêm thẻ"
+      replace_tags:
+        name: "Thay thế thẻ"
+      delete_topics:
+        name: "Xóa chủ đề"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -3584,6 +3598,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
+      filter: "Lọc"
     until: "Cho đến khi:"
     form_templates:
       upload_field:

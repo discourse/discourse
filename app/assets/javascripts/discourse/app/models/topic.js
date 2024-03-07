@@ -181,7 +181,7 @@ export default class Topic extends RestModel {
     };
 
     if (options) {
-      if (options.select) {
+      if (options.silent) {
         data.silent = true;
       }
     }

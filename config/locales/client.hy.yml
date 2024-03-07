@@ -1795,6 +1795,18 @@ hy:
     topic_bulk_actions:
       close_topics:
         name: "Փակել Թեմաները"
+      archive_topics:
+        name: "Արխիվացնել Թեմաները"
+      unlist_topics:
+        name: "Թեմաները Ցանկից Հանել"
+      relist_topics:
+        name: "Վերացանկավորել Թեմաները"
+      append_tags:
+        name: "Ավելացնել Թեգեր"
+      replace_tags:
+        name: "Փոխարինել Թեգերը"
+      delete_topics:
+        name: "Ջնջել Թեմաները"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2856,6 +2868,7 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"

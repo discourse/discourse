@@ -37,6 +37,7 @@ class Notification < ActiveRecord::Base
   scope :prioritized,
         ->(deprioritized_types = []) do
           scope = order("notifications.high_priority AND NOT notifications.read DESC")
+
           if deprioritized_types.present?
             scope =
               scope.order(
@@ -48,8 +49,10 @@ class Notification < ActiveRecord::Base
           else
             scope = scope.order("NOT notifications.read DESC")
           end
+
           scope.order("notifications.created_at DESC")
         end
+
   scope :for_user_menu,
         ->(user_id, limit: 30) do
           where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
@@ -258,6 +261,9 @@ class Notification < ActiveRecord::Base
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
+  # Update `index_notifications_user_menu_ordering_deprioritized_likes` index when updating this as this is used by
+  # `Notification.prioritized_list` to deprioritize like typed notifications. Also See
+  # `db/migrate/20240306063428_add_indexes_to_notifications.rb`.
   def self.like_types
     [
       Notification.types[:liked],
@@ -421,4 +427,6 @@ end
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
 #  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
+#  index_notifications_user_menu_ordering                       (user_id, ((high_priority AND (NOT read))) DESC, ((NOT read)) DESC, created_at DESC)
+#  index_notifications_user_menu_ordering_deprioritized_likes   (user_id, ((high_priority AND (NOT read))) DESC, (((NOT read) AND (notification_type <> ALL (ARRAY[5, 19, 25])))) DESC, created_at DESC)
 #

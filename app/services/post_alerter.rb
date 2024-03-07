@@ -13,7 +13,14 @@ class PostAlerter
     post
   end
 
-  def self.create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+  def self.create_notification_alert(
+    user:,
+    post:,
+    notification_type:,
+    excerpt: nil,
+    username: nil,
+    group_name: nil
+  )
     return if user.suspended?
 
     if post_url = post.url
@@ -34,11 +41,25 @@ class PostAlerter
         username: username || post.username,
         post_url: post_url,
       }
+      payload[:group_name] = group_name if group_name.present?
 
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
 
       if user.allow_live_notifications?
-        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        send_notification =
+          DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+            filter.call(user, payload)
+          end
+
+        if send_notification
+          payload =
+            DiscoursePluginRegistry.apply_modifier(
+              :post_alerter_live_notification_payload,
+              payload,
+              user,
+            )
+          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        end
       end
 
       push_notification(user, payload)
@@ -50,6 +71,11 @@ class PostAlerter
 
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
+
+    # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
+    # If the subscriber of this event wants to filter usage by push_notification_filters as well,
+    # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)
+    DiscourseEvent.trigger(:push_notification, user, payload)
 
     if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
          !filter.call(user, payload)
@@ -84,8 +110,6 @@ class PostAlerter
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end
-
-    DiscourseEvent.trigger(:push_notification, user, payload)
   end
 
   def initialize(default_opts = {})
@@ -639,19 +663,28 @@ class PostAlerter
         post: original_post,
         notification_type: type,
         username: original_username,
+        group_name: group&.name,
       )
     end
 
     created.id ? created : nil
   end
 
-  def create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+  def create_notification_alert(
+    user:,
+    post:,
+    notification_type:,
+    excerpt: nil,
+    username: nil,
+    group_name: nil
+  )
     self.class.create_notification_alert(
       user: user,
       post: post,
       notification_type: notification_type,
       excerpt: excerpt,
       username: username,
+      group_name: group_name,
     )
   end
 

@@ -10,7 +10,7 @@ register_asset "stylesheets/styleguide.scss"
 enabled_site_setting :styleguide_enabled
 hide_plugin
 
-load File.expand_path("../lib/styleguide/engine.rb", __FILE__)
+require_relative "lib/styleguide/engine"
 
 Discourse::Application.routes.append { mount ::Styleguide::Engine, at: "/styleguide" }
 

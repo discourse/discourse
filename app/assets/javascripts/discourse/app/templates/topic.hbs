@@ -560,6 +560,10 @@
       </span>
 
       <MoreTopics @topic={{this.model}} />
+      <PluginOutlet
+        @name="topic-below-suggested"
+        @outletArgs={{hash model=this.model}}
+      />
     {{/if}}
   {{else}}
     <div class="container">

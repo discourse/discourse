@@ -287,50 +287,48 @@ class Stylesheet::Manager
         end
       )
 
-    stylesheets = cache[array_cache_key]
-    return stylesheets if stylesheets.present?
+    cache.defer_get_set(array_cache_key) do
+      @@lock.synchronize do
+        stylesheets = []
 
-    @@lock.synchronize do
-      stylesheets = []
+        if is_theme_target
+          scss_checker = ScssChecker.new(target, @theme_ids)
+          themes = load_themes(@theme_ids)
+          themes.each do |theme|
+            theme_id = theme&.id
+            data = {
+              target: target,
+              theme_id: theme_id,
+              theme_name: theme&.name&.downcase,
+              remote: theme.remote_theme_id?,
+            }
+            builder = Builder.new(target: target, theme: theme, manager: self)
 
-      if is_theme_target
-        scss_checker = ScssChecker.new(target, @theme_ids)
-        themes = load_themes(@theme_ids)
-        themes.each do |theme|
-          theme_id = theme&.id
-          data = {
-            target: target,
-            theme_id: theme_id,
-            theme_name: theme&.name&.downcase,
-            remote: theme.remote_theme_id?,
-          }
-          builder = Builder.new(target: target, theme: theme, manager: self)
+            next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            builder.compile unless File.exist?(builder.stylesheet_fullpath)
+            href = builder.stylesheet_absolute_url
 
-          next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            data[:new_href] = href
+            stylesheets << data
+          end
+
+          if stylesheets.size > 1
+            stylesheets =
+              stylesheets.sort_by do |s|
+                [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
+              end
+          end
+        else
+          builder = Builder.new(target: target, manager: self)
           builder.compile unless File.exist?(builder.stylesheet_fullpath)
           href = builder.stylesheet_absolute_url
 
-          data[:new_href] = href
+          data = { target: target, new_href: href }
           stylesheets << data
         end
 
-        if stylesheets.size > 1
-          stylesheets =
-            stylesheets.sort_by do |s|
-              [s[:remote] ? 0 : 1, s[:theme_id] == @theme_id ? 1 : 0, s[:theme_name]]
-            end
-        end
-      else
-        builder = Builder.new(target: target, manager: self)
-        builder.compile unless File.exist?(builder.stylesheet_fullpath)
-        href = builder.stylesheet_absolute_url
-
-        data = { target: target, new_href: href }
-        stylesheets << data
+        stylesheets
       end
-
-      cache.defer_set(array_cache_key, stylesheets.freeze)
-      stylesheets
     end
   end
 

@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import LoadMore from "discourse/mixins/load-more";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import TopicBulkActions from "./modal/topic-bulk-actions";

@@ -7,6 +7,7 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
@@ -203,6 +204,23 @@ module PageObjects
 
       def has_no_topic_map?
         @topic_map_component.is_not_visible?
+      end
+
+      def has_private_message_map?
+        @private_message_map_component.is_visible?
+      end
+
+      def click_notifications_button
+        find(".topic-notifications-button .select-kit-header").click
+      end
+
+      def watch_topic
+        click_notifications_button
+        find('li[data-name="watching"]').click
+      end
+
+      def has_read_post?(post)
+        post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
       end
 
       private

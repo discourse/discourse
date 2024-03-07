@@ -5,7 +5,7 @@
       @valueProperty="value"
       @content={{@considerNewTopicOptions}}
       @value={{@model.user_option.new_topic_duration_minutes}}
-      @onChange={{action (mut @model.user_option.new_topic_duration_minutes)}}
+      @onChange={{fn (mut @model.user_option.new_topic_duration_minutes)}}
       class="duration"
     />
   </div>

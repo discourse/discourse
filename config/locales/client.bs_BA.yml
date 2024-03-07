@@ -1934,6 +1934,18 @@ bs_BA:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Skini teme sa liste"
+      relist_topics:
+        name: "Listaj teme"
+      append_tags:
+        name: "Pripoji oznake"
+      replace_tags:
+        name: "Zamijeni oznake"
+      delete_topics:
+        name: "Obriši teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3036,6 +3048,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Sve do:"
     form_templates:
       upload_field:

@@ -2116,6 +2116,20 @@ gl:
     topic_bulk_actions:
       close_topics:
         name: "Pechar temas"
+      archive_topics:
+        name: "Arquivar temas"
+      unlist_topics:
+        name: "Retirar temas da listaxe"
+      relist_topics:
+        name: "Refacer a listaxe de temas"
+      remove_tags:
+        name: "Retirar etiquetas"
+      append_tags:
+        name: "Anexar etiquetas"
+      replace_tags:
+        name: "Substituír etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3320,6 +3334,7 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+      filter: "Filtro"
     until: "Ata:"
     form_templates:
       upload_field:

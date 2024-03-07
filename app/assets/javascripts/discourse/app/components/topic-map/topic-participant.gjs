@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import { gt } from "truth-helpers";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { userPath } from "discourse/lib/url";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
-import gt from "truth-helpers/helpers/gt";
 
 const addTopicParticipantClassesCallbacks = [];
 
@@ -48,7 +48,7 @@ export default class TopicParticipant extends Component {
   }
 
   get userUrl() {
-    userPath(this.args.participant);
+    return userPath(this.args.participant.username);
   }
 
   <template>

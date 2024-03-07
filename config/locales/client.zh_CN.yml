@@ -172,7 +172,9 @@ zh_CN:
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     critical_deprecation:
-      notice: "<b>[管理通知]</b> 您的一个主题或插件需要更新，以便与即将发布的 Discourse 核心更改（<a target='_blank' href='https://meta.discourse.org/t/287211'>更多信息</a>）兼容。"
+      notice: "<b>[管理员通知]</b> 你的一个主题或插件需要更新，以兼容即将到来的 Discourse 核心更改。"
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "确定的主题：<a target='_blank' href='%{path}'>'%{name}'</a>。"
       plugin_source: "确定的插件：'%{name}'"
     s3:
@@ -2604,7 +2606,7 @@ zh_CN:
         bookmarks: "您还没有将任何话题加入书签。"
         category: "没有%{category}话题。"
         top: "没有热门话题。"
-        hot: "没有热门话题了。"
+        hot: "没有热议话题了。"
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
@@ -2620,15 +2622,38 @@ zh_CN:
         category: "没有更多%{category}话题了。"
         tag: "没有更多%{tag}话题了。"
         top: "没有更多热门话题了。"
-        hot: "没有更多热门话题了。"
+        hot: "没有更多热议话题了。"
         bookmarks: "没有更多已加入书签的话题了。"
         filter: "没有更多话题了。"
     topic_bulk_actions:
       close_topics:
         name: "关闭话题"
+      archive_topics:
+        name: "归档话题"
+      unlist_topics:
+        name: "取消公开话题"
+      relist_topics:
+        name: "重新公开话题"
+      remove_tags:
+        name: "移除标签"
+      append_tags:
+        name: "附加标签"
+      replace_tags:
+        name: "替换标签"
+      delete_topics:
+        name: "删除话题"
       update_category:
         name: "更新类别"
         description: "为所选主题选择新类别"
+      reset_bump_dates:
+        name: "重置顶帖日期"
+        description: "将话题顶帖日期重置为最后创建的帖子日期，这会影响话题列表中的排序"
+      defer:
+        name: "推迟话题"
+        description: "将话题标记为未读"
+      update_notifications:
+        name: "更新通知…"
+        description: "将通知级别更改为 关注、跟踪、常规 或 静音"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -3464,6 +3489,7 @@ zh_CN:
       custom_placeholder_notify_moderators: "让我们具体了解您关心的问题，并尽可能提供相关的链接和示例。"
       notify_moderators_textarea_label: "给版主的消息"
       custom_placeholder_illegal: "请向我们说明你认为这些内容违法的具体原因，并尽可能提供相关链接和示例。"
+      confirmation_illegal: "我上面写的内容是准确和完整的。"
       custom_message:
         at_least:
           other: "至少输入 %{count} 个字符"
@@ -3579,8 +3605,8 @@ zh_CN:
         lower_title: "未读"
         help: "新话题和您当前正在关注或跟踪，具有未读帖子的话题"
       hot:
-        title: "热门"
-        lower_title: "热门"
+        title: "热议"
+        lower_title: "热议"
         help: "最近热门话题"
       new:
         lower_title_with_count:
@@ -3696,6 +3722,7 @@ zh_CN:
         user_profile_menu: "%{shortcut} 打开用户菜单"
         show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
         search: "%{shortcut} 搜索"
+        filter_sidebar: "%{shortcut} 侧边栏过滤器"
         help: "%{shortcut} 打开键盘帮助"
         dismiss_new: "%{shortcut} 忽略新话题"
         dismiss_topics: "%{shortcut} 忽略话题"
@@ -4093,6 +4120,11 @@ zh_CN:
       panels:
         forum:
           label: 论坛
+      filter: "筛选"
+      clear_filter: "清除过滤器"
+      no_results:
+        title: "没有结果"
+        description: "我们找不到任何匹配 ’%{filter}’ 的内容"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4423,11 +4455,13 @@ zh_CN:
               write: 创建一个新话题或发布到现有话题。
               update: 更新话题。更改标题、类别、标签、状态、模式、精选链接等。
               delete: 删除话题。
+              recover: 恢复一个话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               status: "更新话题的状态。状态：已关闭、归档、可见已置顶。启用：true、false。在此处和请求负载中指定 category_id，以仅允许该类别中话题的状态更改。"
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
+              recover: 恢复一个帖子。
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             tags:
               list: 列出标签。
@@ -4834,6 +4868,7 @@ zh_CN:
           install_upload: "从您的设备"
           install_git_repo: "从 git 仓库"
           install_create: "创建新主题"
+          installing_message: "正在安装主题，这可能需要几分钟..."
           duplicate_remote_theme: "主题组件“%{name}”已安装，确定要安装另一个副本吗？"
           force_install: "该主题无法安装，因为 Git 仓库无法访问。确定要继续安装吗？"
           create_placeholder: "创建占位符"
@@ -4913,6 +4948,8 @@ zh_CN:
           active_filter: "有效"
           inactive_filter: "停用"
           updates_available_filter: "有可用更新"
+          schema:
+            back_button: "返回 %{name}"
         colors:
           select_base:
             title: "选择基础调色板"

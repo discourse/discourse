@@ -197,7 +197,6 @@ es:
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     critical_deprecation:
-      notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>más información</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>«%{name}»</a>."
       plugin_source: "Plugin identificado: «%{name}»"
     s3:
@@ -1727,6 +1726,7 @@ es:
         incorrect_password: "La contraseña introducida es incorrecta."
         incorrect_passkey: "Esa clave de acceso es incorrecta."
         logged_in_as: "Has iniciado sesión como "
+        forgot_password: "¿Olvidaste tu contraseña?"
         instructions: "Confirma tu identidad para completar esta acción."
         fine_print: "Te pedimos que confirmes tu identidad porque se trata de una acción potencialmente sensible. Una vez autentificado, solo se te pedirá que vuelvas a autentificarte tras unas horas de inactividad."
       password:
@@ -2743,6 +2743,22 @@ es:
     topic_bulk_actions:
       close_topics:
         name: "Cerrar temas"
+      archive_topics:
+        name: "Archivar temas"
+      unlist_topics:
+        name: "Hacer invisibles"
+      relist_topics:
+        name: "Hacer visibles de nuevo"
+      remove_tags:
+        name: "Quitar etiquetas"
+      append_tags:
+        name: "Añadir etiquetas"
+      replace_tags:
+        name: "Remplazar etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
+      update_category:
+        name: "Actualizar Categoría"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -3614,10 +3630,13 @@ es:
         off_topic: "No tiene relación con el tema"
         inappropriate: "Es inapropiado"
         spam: "Es spam"
+        illegal: "Es ilegal"
       custom_placeholder_notify_user: "Sé específico, constructivo y siempre amable."
       notify_user_textarea_label: "Mensaje para el usuario"
       custom_placeholder_notify_moderators: "Haznos saber qué te preocupa específicamente y, siempre que sea posible, incluye enlaces y ejemplos relevantes."
       notify_moderators_textarea_label: "Mensaje para los moderadores"
+      custom_placeholder_illegal: "Indícanos exactamente por qué consideras este contenido ilegal, y proporciona enlaces y ejemplos relevantes cuando sea posible."
+      confirmation_illegal: "Lo que he escrito más arriba es preciso y completo."
       custom_message:
         at_least:
           one: "introduce al menos %{count} caracteres"
@@ -4275,6 +4294,9 @@ es:
       panels:
         forum:
           label: Foro
+      filter: "Filtro"
+      no_results:
+        title: "No hay resultados"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."

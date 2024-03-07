@@ -1034,9 +1034,13 @@ en:
       "15": "Drafts"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
+      plus_more_count: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
@@ -2340,6 +2344,9 @@ en:
       loading: Loading…
 
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -2965,6 +2972,8 @@ en:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
         silent: "Perform this action silently."
+        performing: "Performing bulk operations, please wait…"
+        completed: "Bulk operations completed successfully!"
 
       none:
         unread: "You have no unread topics."
@@ -4243,6 +4252,7 @@ en:
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
+        filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
         dismiss_new: "%{shortcut} Dismiss New"
         dismiss_topics: "%{shortcut} Dismiss Topics"
@@ -4347,8 +4357,10 @@ en:
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
+      selector_tags: "tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
+      selector_remove_filter: "remove filter"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
@@ -4677,6 +4689,11 @@ en:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description: "We couldn’t find anything matching ‘%{filter}’"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5031,11 +5048,13 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
+              recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
@@ -5450,6 +5469,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          installing_message: "Installing theme, this may take several minutes..."
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create Placeholder"
@@ -5474,6 +5494,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          edit_objects_theme_setting: "Objects Setting Editor"
           overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"

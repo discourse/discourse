@@ -197,7 +197,6 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>plus d'informations</a>)."
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -2073,7 +2072,7 @@ fr:
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       passkey:
-        name: "Connectez-vous à l'aide d'une clé d'accès"
+        name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -2743,6 +2742,20 @@ fr:
     topic_bulk_actions:
       close_topics:
         name: "Fermer les sujets"
+      archive_topics:
+        name: "Archiver les sujets"
+      unlist_topics:
+        name: "Rendre les sujets invisibles"
+      relist_topics:
+        name: "Lister les sujets"
+      remove_tags:
+        name: "Supprimer des étiquettes"
+      append_tags:
+        name: "Ajouter des étiquettes"
+      replace_tags:
+        name: "Remplacer des étiquettes"
+      delete_topics:
+        name: "Supprimer les sujets"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -4275,6 +4288,9 @@ fr:
       panels:
         forum:
           label: Forum
+      filter: "Filtrer"
+      no_results:
+        title: "Aucun résultat"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."

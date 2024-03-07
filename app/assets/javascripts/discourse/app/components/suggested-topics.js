@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 export default class SuggestedTopics extends Component {

@@ -1608,6 +1608,14 @@ th:
     topic_bulk_actions:
       close_topics:
         name: "ปิดกระทู้"
+      archive_topics:
+        name: "คลังกระทู้"
+      unlist_topics:
+        name: "กระทู้ที่ไม่ได้แสดง"
+      replace_tags:
+        name: "แทนที่แท็ก"
+      delete_topics:
+        name: "ลบกระทู้"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"

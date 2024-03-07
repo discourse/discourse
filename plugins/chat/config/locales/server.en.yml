@@ -25,6 +25,7 @@ en:
     chat_editing_grace_period: "For (n) seconds after sending a chat, editing will not display the (edited) tag by the chat message."
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
+    chat_preferred_mobile_index: "Preferred tab when loading /chat on mobile."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -94,6 +95,7 @@ en:
       original_message_not_found: "The ancestor of the message you are replying to cannot be found or has been deleted."
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
+      invalid_direct_message: "You are not allowed to create this direct message."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:

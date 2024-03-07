@@ -4903,7 +4903,7 @@ RSpec.describe UsersController do
   end
 
   describe "#search_users" do
-    fab!(:topic) { Fabricate :topic }
+    fab!(:topic)
     let(:user) { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let(:staged_user) { Fabricate(:user, staged: true) }
@@ -7085,6 +7085,37 @@ RSpec.describe UsersController do
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(1)
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "does not show unread notifications if the bookmark has been deleted if they only have the bookmark_id data" do
+        notif =
+          Notification.find_by(
+            topic: bookmark_with_reminder.bookmarkable.topic,
+            post_number: bookmark_with_reminder.bookmarkable.post_number,
+          )
+        new_data = notif.data_hash
+        new_data.delete(:bookmarkable_type)
+        new_data.delete(:bookmarkable_id)
+        notif.update!(data: JSON.dump(new_data))
+
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(0)
       end
 
       context "with `show_user_menu_avatars` setting enabled" do

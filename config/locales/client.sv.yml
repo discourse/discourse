@@ -200,7 +200,6 @@ sv:
     broken_page_change_alert: "En onPageChange-hanterare meddelar ett fel. Se mer information i webbläsarens utvecklarverktyg."
     broken_plugin_alert: "Orsakas av plugin '%{name}'"
     critical_deprecation:
-      notice: "<b>[Administratörsmeddelande]</b> Ett av dina teman eller plugins måste uppdateras för kompatibilitet med kommande förändringar av Discourse-kärnan (<a target='_blank' href='https://meta.discourse.org/t/287211'>mer info</a>)."
       theme_source: "Identifierat tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identifierad plugin: '%{name}'"
     s3:
@@ -2756,6 +2755,20 @@ sv:
     topic_bulk_actions:
       close_topics:
         name: "Stäng ämnen"
+      archive_topics:
+        name: "Arkivera ämnen"
+      unlist_topics:
+        name: "Avlista ämnen"
+      relist_topics:
+        name: "Lista om ämnen"
+      remove_tags:
+        name: "Ta bort taggar"
+      append_tags:
+        name: "Lägg till taggar"
+      replace_tags:
+        name: "Ersätt taggar"
+      delete_topics:
+        name: "Ta bort ämnen"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"
@@ -4298,6 +4311,7 @@ sv:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."

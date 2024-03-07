@@ -58,23 +58,23 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def fetch_optional_membership(channel:, guardian:, **)
+    def fetch_optional_membership(channel:, guardian:)
       context.membership = channel.membership_for(guardian.user)
     end
 
-    def enabled_threads?(channel:, **)
+    def enabled_threads?(channel:)
       context.enabled_threads = channel.threading_enabled
     end
 
-    def can_view_channel(guardian:, channel:, **)
+    def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def determine_target_message_id(contract:, **)
+    def determine_target_message_id(contract:)
       if contract.fetch_from_last_read
         context.target_message_id = context.membership&.last_read_message_id
       else
@@ -82,7 +82,7 @@ module Chat
       end
     end
 
-    def target_message_exists(channel:, guardian:, **)
+    def target_message_exists(channel:, guardian:)
       return true if context.target_message_id.blank?
 
       target_message =
@@ -98,7 +98,7 @@ module Chat
       true
     end
 
-    def fetch_messages(channel:, contract:, guardian:, enabled_threads:, **)
+    def fetch_messages(channel:, contract:, guardian:, enabled_threads:)
       messages_data =
         ::Chat::MessagesQuery.call(
           channel: channel,
@@ -115,7 +115,8 @@ module Chat
       context.target_message_id = messages_data[:target_message_id]
 
       messages_data[:target_message] = (
-        if enabled_threads && messages_data[:target_message]&.thread_reply?
+        if messages_data[:target_message]&.thread_reply? &&
+             (enabled_threads || messages_data[:target_message].thread&.force)
           []
         else
           [messages_data[:target_message]]
@@ -130,10 +131,10 @@ module Chat
       ].flatten.compact
     end
 
-    def fetch_tracking(guardian:, enabled_threads:, **)
+    def fetch_tracking(guardian:)
       context.tracking = {}
 
-      return if !enabled_threads || !context.thread_ids.present?
+      return if !context.thread_ids.present?
 
       context.tracking =
         ::Chat::TrackingStateReportQuery.call(
@@ -143,18 +144,18 @@ module Chat
         )
     end
 
-    def fetch_thread_ids(messages:, **)
+    def fetch_thread_ids(messages:)
       context.thread_ids = messages.map(&:thread_id).compact.uniq
     end
 
-    def fetch_thread_participants(messages:, **)
+    def fetch_thread_participants(messages:)
       return if context.thread_ids.empty?
 
       context.thread_participants =
         ::Chat::ThreadParticipantQuery.call(thread_ids: context.thread_ids)
     end
 
-    def fetch_thread_memberships(guardian:, **)
+    def fetch_thread_memberships(guardian:)
       return if context.thread_ids.empty?
 
       context.thread_memberships =
@@ -164,7 +165,7 @@ module Chat
         )
     end
 
-    def update_membership_last_viewed_at(guardian:, **)
+    def update_membership_last_viewed_at(guardian:)
       Scheduler::Defer.later "Chat::ListChannelMessages - defer update_membership_last_viewed_at" do
         context.membership&.update!(last_viewed_at: Time.zone.now)
       end

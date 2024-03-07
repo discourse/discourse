@@ -36,6 +36,10 @@
   .single-select-header {
     padding: 0.3675rem 0.584rem;
   }
+
+  > .c-navbar__title:first-child {
+    margin-left: 1rem;
+  }
 }
 
 .c-navbar__back-button {
@@ -99,6 +103,9 @@
   display: flex;
   align-items: center;
   height: var(--chat-header-offset);
+  .d-icon {
+    color: var(--primary-low-mid);
+  }
 }
 
 .c-navbar__back-button ~ .c-navbar__title {
