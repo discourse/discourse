@@ -8,6 +8,7 @@ import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-ico
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ThreadTitle from "discourse/plugins/chat/discourse/components/thread-title";
+import ThreadPreview from "discourse/plugins/chat/discourse/components/user-threads/preview";
 
 export default class UserThreads extends Component {
   @service chat;
@@ -45,16 +46,7 @@ export default class UserThreads extends Component {
           <ChannelIcon @thread={{thread}} />
           <ChannelTitle @channel={{thread.channel}} />
           <ThreadTitle @thread={{thread}} />
-          
-          <span class="chat-message-thread-indicator__last-reply-timestamp">
-            {{formatDate thread.preview.lastReplyCreatedAt leaveAgo="true"}}
-          </span>
-          <div class="c-user-thread__excerpt">
-            <div class="c-user-thread__excerpt-poster">
-              {{thread.preview.lastReplyUser.username}}<span>:</span>
-            </div>
-            {{thread.preview.lastReplyExcerpt}}
-          </div>
+          <ThreadPreview @preview={{thread.preview}} />
         </div>
       </list.Item>
       <list.EmptyState>
