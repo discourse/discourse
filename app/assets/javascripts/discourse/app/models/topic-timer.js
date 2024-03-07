@@ -31,4 +31,12 @@ export default class TopicTimer extends RestModel {
       data,
     });
   }
+
+  // static update(topicId, timer) {
+  //   return ajax({
+  //     url: `/t/${topicId}/timer`,
+  //     type: "POST",
+  //     timer,
+  //   });
+  // }
 }

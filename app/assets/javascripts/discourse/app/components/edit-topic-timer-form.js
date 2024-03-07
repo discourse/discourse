@@ -73,7 +73,7 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get statusType() {
-    return this.args.topicTimer.status_type;
+    return this.args.topicTimer.get("status_type");
   }
 
   get excludeCategoryId() {
@@ -109,17 +109,23 @@ export default class EditTopicTimerForm extends Component {
   get executeAt() {
     if (this.useDuration) {
       return moment()
-        .add(parseFloat(this.args.topicTimer.duration_minutes), "minutes")
+        .add(
+          parseFloat(this.args.topicTimer.get("duration_minutes")),
+          "minutes"
+        )
         .format(FORMAT);
     } else {
-      return this.args.topicTimer.updateTime;
+      return this.args.topicTimer.get("time");
     }
   }
 
   get willCloseImmediately() {
-    if (this.autoCloseAfterLastPost && this.args.topicTimer.duration_minutes) {
+    if (
+      this.autoCloseAfterLastPost &&
+      this.args.topicTimer.get("duration_minutes")
+    ) {
       const closeDate = moment(this.args.topic.last_posted_at).add(
-        this.args.topicTimer.duration_minutes,
+        this.args.topicTimer.get("duration_minutes"),
         "minutes"
       );
       return closeDate < moment();
@@ -151,20 +157,20 @@ export default class EditTopicTimerForm extends Component {
 
     if (
       this.statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
-      isEmpty(this.args.topicTimer.category_id)
+      isEmpty(this.args.topicTimer.get("category_id"))
     ) {
       return false;
     }
 
-    if (this.timerType === "custom" && this.args.topicTimer.updateTime) {
-      if (moment(this.args.topicTimer.updateTime) < moment()) {
+    if (this.timerType === "custom" && this.args.topicTimer.get("time")) {
+      if (moment(this.args.topicTimer.get("time")) < moment()) {
         return false;
       }
     } else if (this.useDuration) {
-      return this.args.topicTimer.duration_minutes;
+      return this.args.topicTimer.get("duration_minutes");
     }
 
-    return this.args.topicTimer.updateTime;
+    return this.args.topicTimer.get("time");
   }
 
   @action

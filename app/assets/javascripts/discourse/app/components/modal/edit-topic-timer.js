@@ -17,24 +17,19 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 
 export default class EditTopicTimer extends Component {
   @service currentUser;
+  @service store;
 
   @tracked loading = false;
   @tracked flash;
 
-  constructor() {
-    super(...arguments);
-
-    // if (!this.topicTimer) {
-    //   this.createDefaultTimer();
-    // }
-  }
+  topicTimer = this.topic.topic_timer
+    ? this.store.createRecord("topic-timer", this.topic.topic_timer)
+    : this.store.createRecord("topic-timer", {
+        status_type: this.publicTimerTypes[0].id,
+      });
 
   get topic() {
     return this.args.model.topic;
-  }
-
-  get topicTimer() {
-    return this.topic.topic_timer;
   }
 
   @cached
@@ -102,36 +97,36 @@ export default class EditTopicTimer extends Component {
     return types;
   }
 
-  async setTimer(
-    statusType,
-    time,
-    durationMinutes,
-    basedOnLastPost,
-    categoryId
-  ) {
+  async setTimer(statusType) {
     this.loading = true;
 
     try {
+      // this.topicTimer
       const result = await TopicTimer.update(
         this.topic.id,
-        time,
-        basedOnLastPost,
+        this.topicTimer.time,
+        this.topicTimer.based_on_last_post,
         statusType,
-        categoryId,
-        durationMinutes
+        this.topicTimer.category_id,
+        this.topicTimer.duration_minutes
       );
 
-      if (time || durationMinutes) {
+      if (this.topicTimer.time || this.topicTimer.duration_minutes) {
         this.topicTimer.setProperties({
           execute_at: result.execute_at,
           duration_minutes: result.duration_minutes,
           category_id: result.category_id,
           closed: result.closed,
         });
+        this.topic.set("topic_timer", this.topicTimer);
         this.args.closeModal();
       } else {
-        this.createDefaultTimer();
-        this.topicTimer.set("time", null);
+        this.topic.set(
+          "topic_timer",
+          this.store.createRecord("topic-timer", {
+            status_type: this.publicTimerTypes[0].id,
+          })
+        );
       }
     } catch (e) {
       popupAjaxError(e);
@@ -140,21 +135,13 @@ export default class EditTopicTimer extends Component {
     }
   }
 
-  createDefaultTimer() {
-    const defaultTimer = TopicTimer.create({
-      status_type: this.publicTimerTypes[0].id,
-    });
-    this.topic.set("topic_timer", defaultTimer);
-    return defaultTimer;
-  }
-
   @action
   onChangeStatusType(value) {
-    const basedOnLastPost = CLOSE_AFTER_LAST_POST_STATUS_TYPE === value;
-    this.topicTimer.based_on_last_post = basedOnLastPost;
-    this.topicTimer.set("based_on_last_post", basedOnLastPost);
-    this.topicTimer.status_type = value;
     this.topicTimer.set("status_type", value);
+    this.topicTimer.set(
+      "based_on_last_post",
+      CLOSE_AFTER_LAST_POST_STATUS_TYPE === value
+    );
   }
 
   @action
@@ -192,13 +179,7 @@ export default class EditTopicTimer extends Component {
       statusType = CLOSE_STATUS_TYPE;
     }
 
-    await this.setTimer(
-      statusType,
-      this.topicTimer.time,
-      this.topicTimer.duration_minutes,
-      this.topicTimer.based_on_last_post,
-      this.topicTimer.category_id
-    );
+    await this.setTimer(statusType);
   }
 
   @action
@@ -207,9 +188,11 @@ export default class EditTopicTimer extends Component {
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }
+
     await this.setTimer(statusType);
+
     // timer has been removed and we are removing `execute_at`
     // which will hide the remove timer button from the modal
-    this.topicTimer.execute_at = null;
+    this.topicTimer.set("execute_at", null);
   }
 }

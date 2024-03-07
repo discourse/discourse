@@ -19,10 +19,8 @@ import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import TopicTimer from "discourse/models/topic-timer";
 import DiscourseRoute from "discourse/routes/discourse";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
 
 const SCROLL_DELAY = 500;
 
@@ -136,19 +134,9 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showTopicTimerModal() {
-    const model = this.modelFor("topic");
-    if (!model.topic_timer) {
-      model.set(
-        "topic_timer",
-        TopicTimer.create({
-          id: "close",
-          name: I18n.t("topic.auto_close.title"),
-        })
-      );
-    }
     this.modal.show(EditTopicTimerModal, {
       model: {
-        topic: model,
+        topic: this.modelFor("topic"),
       },
     });
   },
