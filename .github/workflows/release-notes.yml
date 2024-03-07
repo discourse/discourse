@@ -23,6 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
     timeout-minutes: 10
+    env:
+      from_ref: ${{ inputs.from || 'latest-release' }}
+      to_ref: ${{ inputs.to || 'HEAD' }}
 
     steps:
       - name: Set working directory owner
@@ -51,14 +54,14 @@ jobs:
         run: mkdir -p tmp/notes
 
       - name: Core release notes
-        run: bin/rake "release_note:generate[${{ inputs.from || 'latest-release' }},${{ inputs.to || 'HEAD' }}]" | tee tmp/notes/core.txt
+        run: bin/rake "release_note:generate[ $from_ref , $to_ref ]" | tee tmp/notes/core.txt
 
       - name: Calculate from/to dates from refs
         id: dates
         run: |
-          from=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${{ inputs.from || 'latest-release' }}^{commit}")
+          from=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${from_ref}^{commit}")
           echo "from=$from" >> $GITHUB_OUTPUT
-          to=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${{ inputs.to || 'HEAD' }}^{commit}")
+          to=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${to_ref}^{commit}")
           echo "to=$to" >> $GITHUB_OUTPUT
 
       - name: Setup all-the-plugins
@@ -79,6 +82,16 @@ jobs:
 
       - name: Write summary
         run: |
+          echo "### Release notes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "From: $from_ref - $(git rev-parse --short $from_ref) - ${{ steps.dates.outputs.from }}" >> $GITHUB_STEP_SUMMARY
+          echo "To: $to_ref - $(git rev-parse --short $to_ref) - ${{ steps.dates.outputs.to }}" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
           echo "Core:" >> $GITHUB_STEP_SUMMARY
           echo '~~~' >> $GITHUB_STEP_SUMMARY
           cat tmp/notes/core.txt >> $GITHUB_STEP_SUMMARY
