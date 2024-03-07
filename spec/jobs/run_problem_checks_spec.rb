@@ -26,9 +26,12 @@ RSpec.describe Jobs::RunProblemChecks do
     end
 
     it "schedules the individual scheduled checks" do
-      expect_enqueued_with(job: :problem_check, args: { check_identifier: "scheduled_check" }) do
-        described_class.new.execute([])
-      end
+      expect_enqueued_with(
+        job: :run_problem_check,
+        args: {
+          check_identifier: "scheduled_check",
+        },
+      ) { described_class.new.execute([]) }
     end
   end
 
