@@ -949,6 +949,19 @@
   }
 }
 
+.user-additional-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.user-invite-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-left: auto;
+}
+
 .notification-schedule {
   .instruction {
     margin-top: 12px;

@@ -73,19 +73,6 @@
     }
   }
 }
-.user-additional-controls {
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: 15px;
-  .single-select-header,
-  button {
-    margin-bottom: 1em;
-    margin-right: 0.75em;
-  }
-  .user-invite-buttons {
-    margin-left: auto;
-  }
-}
 
 .user-content {
   padding: 0;
