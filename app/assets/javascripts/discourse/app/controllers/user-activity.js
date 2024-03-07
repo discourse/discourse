@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Controller.extend({
-  dialog: service(),
+  currentUser: service(),
   user: controller(),
   userActionType: null,
 
