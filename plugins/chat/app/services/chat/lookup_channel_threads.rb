@@ -42,6 +42,13 @@ module Chat
       validates :channel_id, presence: true
 
       attribute :limit, :integer
+      validates :limit,
+                numericality: {
+                  less_than_or_equal_to: THREADS_LIMIT,
+                  only_integer: true,
+                },
+                allow_nil: true
+
       attribute :offset, :integer
     end
 
