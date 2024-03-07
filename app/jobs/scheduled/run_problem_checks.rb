@@ -4,7 +4,7 @@ module Jobs
   # This job runs all of the scheduled problem checks for the admin dashboard
   # on a regular basis. To add a problem check, add a new class that inherits
   # the `ProblemCheck` base class.
-  class ProblemChecks < ::Jobs::Scheduled
+  class RunProblemChecks < ::Jobs::Scheduled
     sidekiq_options retry: false
 
     every 10.minutes
@@ -20,7 +20,7 @@ module Jobs
         end
 
       scheduled_checks.each do |check|
-        Jobs.enqueue(:problem_check, check_identifier: check.identifier.to_s)
+        Jobs.enqueue(:run_problem_check, check_identifier: check.identifier.to_s)
       end
     end
   end
