@@ -36,22 +36,22 @@ module Chat
 
     private
 
-    def fetch_thread(contract:, **)
+    def fetch_thread(contract:)
       ::Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
     end
 
-    def invalid_access(guardian:, thread:, **)
+    def invalid_access(guardian:, thread:)
       guardian.can_join_chat_channel?(thread.channel)
     end
 
     # NOTE: In future we will pass in a specific last_read_message_id
     # to the service, so this will need to change because currently it's
     # just using the thread's last_message_id.
-    def mark_thread_read(thread:, guardian:, **)
+    def mark_thread_read(thread:, guardian:)
       thread.mark_read_for_user!(guardian.user)
     end
 
-    def mark_associated_mentions_as_read(thread:, guardian:, **)
+    def mark_associated_mentions_as_read(thread:, guardian:)
       ::Chat::Action::MarkMentionsRead.call(
         guardian.user,
         channel_ids: [thread.channel_id],
@@ -59,7 +59,7 @@ module Chat
       )
     end
 
-    def publish_new_last_read_to_clients(guardian:, thread:, **)
+    def publish_new_last_read_to_clients(guardian:, thread:)
       ::Chat::Publisher.publish_user_tracking_state!(
         guardian.user,
         thread.channel,

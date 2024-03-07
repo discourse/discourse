@@ -47,27 +47,27 @@ module Chat
 
     private
 
-    def set_limit(contract:, **)
+    def set_limit(contract:)
       context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
-    def set_offset(contract:, **)
+    def set_offset(contract:)
       context.offset = [contract.offset || 0, 0].max
     end
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def threading_enabled_for_channel(channel:, **)
+    def threading_enabled_for_channel(channel:)
       channel.threading_enabled
     end
 
-    def can_view_channel(guardian:, channel:, **)
+    def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def fetch_threads(guardian:, channel:, **)
+    def fetch_threads(guardian:, channel:)
       ::Chat::Thread
         .includes(
           :channel,
@@ -114,7 +114,7 @@ module Chat
         .offset(context.offset)
     end
 
-    def fetch_tracking(guardian:, threads:, **)
+    def fetch_tracking(guardian:, threads:)
       context.tracking =
         ::Chat::TrackingStateReportQuery.call(
           guardian: guardian,
@@ -123,7 +123,7 @@ module Chat
         ).thread_tracking
     end
 
-    def fetch_memberships(guardian:, threads:, **)
+    def fetch_memberships(guardian:, threads:)
       context.memberships =
         ::Chat::UserChatThreadMembership.where(
           thread_id: threads.map(&:id),
@@ -131,11 +131,11 @@ module Chat
         )
     end
 
-    def fetch_participants(threads:, **)
+    def fetch_participants(threads:)
       context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url(contract:, **)
+    def build_load_more_url(contract:)
       load_more_params = { offset: context.offset + context.limit }.to_query
       context.load_more_url =
         ::URI::HTTP.build(
