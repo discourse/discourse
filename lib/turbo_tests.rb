@@ -55,7 +55,6 @@ module TurboTests
   class FakeExecutionResult
     def self.from_obj(obj)
       obj = obj.symbolize_keys
-
       new(
         obj[:example_skipped?],
         obj[:pending_message],
