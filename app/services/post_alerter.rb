@@ -40,8 +40,8 @@ class PostAlerter
             ),
         username: username || post.username,
         post_url: post_url,
-        group_name: group_name,
       }
+      payload[:group_name] = group_name if group_name.present?
 
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
 
