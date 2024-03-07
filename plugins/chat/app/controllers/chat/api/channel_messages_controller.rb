@@ -66,6 +66,9 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       on_model_errors(:message_instance) do |model|
         render_json_error(model.errors.map(&:full_message).join(", "))
       end
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 end

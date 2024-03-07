@@ -14,6 +14,9 @@ class Chat::Api::ReadsController < Chat::ApiController
       on_model_not_found(:active_membership) { raise Discourse::NotFound }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
