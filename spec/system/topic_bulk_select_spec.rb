@@ -95,10 +95,10 @@ describe "Topic bulk select", type: :system do
       send_keys([:shift, "b"])
       send_keys("j")
       send_keys("x") # toggle select
-      expect(topic_list).to have_checkbox_selected_on_first_topic
+      expect(topic_list).to have_checkbox_selected_on_row(1)
 
       send_keys("x") # toggle deselect
-      expect(topic_list).to have_no_checkbox_selected_on_first_topic
+      expect(topic_list).to have_no_checkbox_selected_on_row(1)
 
       # watch topic and add a reply so we have something in /unread
       topic = topics.first
