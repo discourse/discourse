@@ -54,7 +54,9 @@ export default class ChatThreadHeader extends Component {
   }
 
   get showThreadUnreadIndicator() {
-    return this.backLink.route === "chat.channel.threads" && this.unreadCount > 0;
+    return (
+      this.backLink.route === "chat.channel.threads" && this.unreadCount > 0
+    );
   }
 
   <template>
