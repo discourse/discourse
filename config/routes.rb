@@ -425,6 +425,7 @@ Discourse::Application.routes.draw do
     get "session/sso_login" => "session#sso_login"
     get "session/sso_provider" => "session#sso_provider"
     get "session/current" => "session#current"
+    get "session/current/counts" => "session#current_counts"
     get "session/csrf" => "session#csrf"
     get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
