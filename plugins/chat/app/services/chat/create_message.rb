@@ -62,6 +62,7 @@ module Chat
       attribute :enforce_membership, :boolean, default: false
       attribute :incoming_chat_webhook
       attribute :process_inline, :boolean, default: Rails.env.test?
+      attribute :force_thread, :boolean, default: false
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -112,6 +113,7 @@ module Chat
           original_message: reply,
           original_message_user: reply.user,
           channel: channel,
+          force: contract.force_thread,
         )
     end
 
@@ -185,7 +187,7 @@ module Chat
     end
 
     def publish_new_thread(reply:, contract:, channel:, thread:, **)
-      return unless channel.threading_enabled?
+      return unless channel.threading_enabled? || thread&.force
       return unless reply&.thread_id_previously_changed?(from: nil)
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end

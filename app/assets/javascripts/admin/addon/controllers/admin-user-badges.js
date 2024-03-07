@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import UserBadge from "discourse/models/user-badge";

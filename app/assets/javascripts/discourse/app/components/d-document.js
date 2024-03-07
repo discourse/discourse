@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
 import logout from "discourse/lib/logout";
 import { bind } from "discourse-common/utils/decorators";

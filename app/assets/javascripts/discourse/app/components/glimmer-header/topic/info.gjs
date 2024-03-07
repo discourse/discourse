@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { and, gt, not, or } from "truth-helpers";
 import categoryLink from "discourse/helpers/category-link";

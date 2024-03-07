@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";

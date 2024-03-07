@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { warn } from "@ember/debug";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";

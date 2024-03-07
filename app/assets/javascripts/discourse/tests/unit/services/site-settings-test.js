@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/application";
 import EmberObject, { computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 

@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import UploadedImageListModal from "admin/components/modal/uploaded-image-list";
 
 export default class UploadedImageList extends Component {

@@ -30,7 +30,7 @@
       @name="icon"
       @value={{this.model.flair_icon}}
       @options={{hash maximum=1}}
-      @onChange={{action (mut this.model.flair_icon)}}
+      @onChange={{fn (mut this.model.flair_icon)}}
     />
   {{else if this.flairPreviewImage}}
     <UppyImageUploader

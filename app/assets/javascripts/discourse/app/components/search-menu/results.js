@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
 import PostViewComponent from "./results/type/post";

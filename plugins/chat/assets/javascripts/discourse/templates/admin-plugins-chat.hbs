@@ -70,7 +70,7 @@
         @isActive={{this.emojiPickerIsActive}}
         @isEditorFocused={{true}}
         @emojiSelected={{action "emojiSelected"}}
-        @onEmojiPickerClose={{action (mut this.emojiPickerIsActive) false}}
+        @onEmojiPickerClose={{fn (mut this.emojiPickerIsActive) false}}
       />
 
       {{#unless this.emojiPickerIsActive}}
@@ -121,7 +121,7 @@
       <ChatChannelChooser
         @content={{this.model.chat_channels}}
         @value={{this.newWebhookChannelId}}
-        @onChange={{action (mut this.newWebhookChannelId)}}
+        @onChange={{fn (mut this.newWebhookChannelId)}}
       />
       <DButton
         @label="chat.create"

@@ -12,7 +12,7 @@
     <div class="control-group">
       <FormTemplateChooser
         @value={{this.category.form_template_ids}}
-        @onChange={{action (mut this.category.form_template_ids)}}
+        @onChange={{fn (mut this.category.form_template_ids)}}
         class="select-category-template"
       />
 

@@ -37,7 +37,7 @@
           @content={{this.autoDeletePreferences}}
           @value={{this.bookmark.autoDeletePreference}}
           @id="bookmark-auto-delete-preference"
-          @onChange={{action (mut this.bookmark.autoDeletePreference)}}
+          @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
           class="bookmark-option-selector"
         />
       </div>

@@ -21,7 +21,7 @@
         @value={{this.category.parent_category_id}}
         @allowSubCategories={{true}}
         @allowRestrictedCategories={{true}}
-        @onChange={{action (mut this.category.parent_category_id)}}
+        @onChange={{fn (mut this.category.parent_category_id)}}
         @options={{hash
           allowUncategorized=false
           excludeCategoryId=this.category.id

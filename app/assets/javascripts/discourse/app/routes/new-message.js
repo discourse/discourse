@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";

@@ -1,6 +1,6 @@
 import { setOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import uniqueId from "discourse/helpers/unique-id";
 import { TOAST } from "float-kit/lib/constants";
 

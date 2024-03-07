@@ -9,7 +9,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -466,7 +466,8 @@ export default class ChatMessage extends Component {
 
   get threadingEnabled() {
     return (
-      this.args.message?.channel?.threadingEnabled &&
+      (this.args.message?.channel?.threadingEnabled ||
+        this.args.message?.thread?.force) &&
       !!this.args.message?.thread
     );
   }

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
@@ -76,12 +76,8 @@ export default class HomeLogo extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    <div
-      class={{concatClass (if @minimized "title--minimized") "title"}}
-      {{on "click" this.click}}
-    >
-      <a href={{this.href}} data-auto-route="true">
+    <div class={{concatClass (if @minimized "title--minimized") "title"}}>
+      <a href={{this.href}} {{on "click" this.click}}>
         {{#if @minimized}}
           {{#if this.logoSmallUrl}}
             <Logo

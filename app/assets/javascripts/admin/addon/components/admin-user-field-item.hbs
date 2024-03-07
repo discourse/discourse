@@ -4,7 +4,7 @@
       <ComboBox
         @content={{this.fieldTypes}}
         @value={{this.buffered.field_type}}
-        @onChange={{action (mut this.buffered.field_type)}}
+        @onChange={{fn (mut this.buffered.field_type)}}
       />
     </AdminFormRow>
 

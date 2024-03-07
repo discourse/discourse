@@ -2340,6 +2340,9 @@ en:
       loading: Loading…
 
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"

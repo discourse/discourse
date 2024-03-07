@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";

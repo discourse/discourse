@@ -1,6 +1,6 @@
 <CategoryChooser
   @value={{this.value}}
-  @onChange={{action (mut this.value)}}
+  @onChange={{fn (mut this.value)}}
   @options={{hash allowUncategorized=true none=(eq this.setting.default "")}}
 />
 <SettingValidationMessage @message={{this.validationMessage}} />

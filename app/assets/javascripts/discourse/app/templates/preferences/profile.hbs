@@ -11,7 +11,7 @@
   <label class="control-label">{{i18n "user.timezone"}}</label>
   <TimezoneInput
     @value={{this.model.user_option.timezone}}
-    @onChange={{action (mut this.model.user_option.timezone)}}
+    @onChange={{fn (mut this.model.user_option.timezone)}}
     class="input-xxlarge"
   />
   <DButton
@@ -149,7 +149,7 @@
         @content={{this.calendarOptions}}
         @value={{this.model.user_option.default_calendar}}
         @id="user-default-calendar"
-        @onChange={{action (mut this.model.user_option.default_calendar)}}
+        @onChange={{fn (mut this.model.user_option.default_calendar)}}
       />
     </div>
     <div class="instructions">

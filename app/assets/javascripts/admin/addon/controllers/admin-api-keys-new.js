@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action, get } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";

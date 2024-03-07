@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";

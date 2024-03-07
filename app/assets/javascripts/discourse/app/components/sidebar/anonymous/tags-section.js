@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 
 export default class SidebarAnonymousTagsSection extends Component {

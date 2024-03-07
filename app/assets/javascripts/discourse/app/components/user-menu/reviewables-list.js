@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
