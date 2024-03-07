@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
@@ -76,39 +77,41 @@ export default class HomeLogo extends Component {
   }
 
   <template>
-    <div class={{concatClass (if @minimized "title--minimized") "title"}}>
-      <a href={{this.href}} {{on "click" this.click}}>
-        {{#if @minimized}}
-          {{#if this.logoSmallUrl}}
+    <PluginOutlet @name="home-logo">
+      <div class={{concatClass (if @minimized "title--minimized") "title"}}>
+        <a href={{this.href}} {{on "click" this.click}}>
+          {{#if @minimized}}
+            {{#if this.logoSmallUrl}}
+              <Logo
+                @key="logo-small"
+                @url={{this.logoSmallUrl}}
+                @title={{this.siteSettings.title}}
+                @darkUrl={{this.logoSmallUrlDark}}
+              />
+            {{else}}
+              {{icon "home"}}
+            {{/if}}
+          {{else if this.showMobileLogo}}
             <Logo
-              @key="logo-small"
-              @url={{this.logoSmallUrl}}
+              @key="logo-mobile"
+              @url={{this.mobileLogoUrl}}
               @title={{this.siteSettings.title}}
-              @darkUrl={{this.logoSmallUrlDark}}
+              @darkUrl={{this.mobileLogoUrlDark}}
+            />
+          {{else if this.logoUrl}}
+            <Logo
+              @key="logo-big"
+              @url={{this.logoUrl}}
+              @title={{this.siteSettings.title}}
+              @darkUrl={{this.logoUrlDark}}
             />
           {{else}}
-            {{icon "home"}}
+            <h1 id="site-text-logo" class="text-logo">
+              {{this.siteSettings.title}}
+            </h1>
           {{/if}}
-        {{else if this.showMobileLogo}}
-          <Logo
-            @key="logo-mobile"
-            @url={{this.mobileLogoUrl}}
-            @title={{this.siteSettings.title}}
-            @darkUrl={{this.mobileLogoUrlDark}}
-          />
-        {{else if this.logoUrl}}
-          <Logo
-            @key="logo-big"
-            @url={{this.logoUrl}}
-            @title={{this.siteSettings.title}}
-            @darkUrl={{this.logoUrlDark}}
-          />
-        {{else}}
-          <h1 id="site-text-logo" class="text-logo">
-            {{this.siteSettings.title}}
-          </h1>
-        {{/if}}
-      </a>
-    </div>
+        </a>
+      </div>
+    </PluginOutlet>
   </template>
 }
