@@ -38,7 +38,7 @@ module TurboTests
 
         klass = Class.new(FakeException) { define_singleton_method(:name) { obj[:class_name] } }
 
-        klass.new(obj[:backtrace], obj[:message], p(FakeException.from_obj(obj[:cause])))
+        klass.new(obj[:backtrace], obj[:message], FakeException.from_obj(obj[:cause]))
       end
     end
   end
