@@ -28,6 +28,14 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{channel.id}/messages?page_size=9999"
+
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when readonly mode" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
