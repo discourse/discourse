@@ -9,7 +9,7 @@
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
   self.perform_every = 30.minutes
 
-  def call
+  def call(_tracker)
     [*smtp_errors, *imap_errors]
   end
 

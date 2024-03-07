@@ -8,11 +8,13 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
   fab!(:group2) { Fabricate(:smtp_group) }
   fab!(:group3) { Fabricate(:imap_group) }
 
+  let(:tracker) { Fabricate(:problem_check_tracker, identifier: "group_email_credentials") }
+
   describe "#call" do
     it "does nothing if SMTP is disabled for the site" do
       expect_no_validate_any
       SiteSetting.enable_smtp = false
-      expect(described_class.new.call).to eq([])
+      expect(described_class.new.call(tracker)).to eq([])
     end
 
     context "with smtp and imap enabled for the site" do
@@ -25,7 +27,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
         expect_no_validate_any
         group2.update!(smtp_enabled: false)
         group3.update!(smtp_enabled: false, imap_enabled: false)
-        expect(described_class.new.call).to eq([])
+        expect(described_class.new.call(tracker)).to eq([])
       end
 
       it "returns a problem with the group's SMTP settings error" do
@@ -37,7 +39,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .at_least_once
         EmailSettingsValidator.stubs(:validate_imap).returns(true)
 
-        expect(described_class.new.call).to contain_exactly(
+        expect(described_class.new.call(tracker)).to contain_exactly(
           have_attributes(
             identifier: "group_#{group2.id}_email_credentials",
             priority: "high",
@@ -54,7 +56,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
           .raises(Net::IMAP::NoResponseError.new(stub(data: stub(text: "Invalid credentials"))))
           .once
 
-        expect(described_class.new.call).to contain_exactly(
+        expect(described_class.new.call(tracker)).to contain_exactly(
           have_attributes(
             identifier: "group_#{group3.id}_email_credentials",
             priority: "high",
@@ -69,7 +71,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
         EmailSettingsValidator.stubs(:validate_smtp).returns(true)
         EmailSettingsValidator.expects(:validate_imap).never
 
-        expect(described_class.new.call).to eq([])
+        expect(described_class.new.call(tracker)).to eq([])
       end
     end
   end

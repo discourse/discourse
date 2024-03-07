@@ -2,13 +2,16 @@
 
 class ProblemCheck::TwitterLogin < ProblemCheck
   self.priority = "high"
-
-  # TODO: Implement.
   self.perform_every = 24.hours
+  self.max_blips = 3
 
-  def call
+  def call(tracker)
     return no_problem if !authenticator.enabled?
     return no_problem if authenticator.healthy?
+
+    if SiteSetting.disable_failing_social_logins? && self.class.max_blips >= tracker.blips
+      authenticator.disable
+    end
 
     problem
   end

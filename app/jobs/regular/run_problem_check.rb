@@ -14,8 +14,10 @@ module Jobs
       identifier = args[:check_identifier].to_sym
 
       check = ProblemCheck[identifier]
+      tracker = ProblemCheckTracker[identifier]
 
-      problems = check.call
+      problems = check.call(tracker)
+
       raise RetrySignal if problems.present? && retry_count < check.max_retries
 
       if problems.present?

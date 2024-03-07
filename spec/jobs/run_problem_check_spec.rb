@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RunProblemCheck do
+  before { Fabricate(:problem_check_tracker, identifier: "test_check") }
+
   after do
     Discourse.redis.flushdb
 
@@ -14,7 +16,7 @@ RSpec.describe Jobs::RunProblemCheck do
           self.perform_every = 30.minutes
           self.max_retries = 0
 
-          def call
+          def call(_tracker)
             [
               ProblemCheck::Problem.new("Big problem"),
               ProblemCheck::Problem.new(
@@ -43,7 +45,7 @@ RSpec.describe Jobs::RunProblemCheck do
           self.perform_every = 30.minutes
           self.max_retries = 0
 
-          def call
+          def call(_tracker)
             [
               ProblemCheck::Problem.new(
                 "Yuge problem",
@@ -76,7 +78,7 @@ RSpec.describe Jobs::RunProblemCheck do
           self.perform_every = 30.minutes
           self.max_retries = 2
 
-          def call
+          def call(_tracker)
             [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
@@ -106,7 +108,7 @@ RSpec.describe Jobs::RunProblemCheck do
           self.perform_every = 30.minutes
           self.max_retries = 1
 
-          def call
+          def call(_tracker)
             [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
@@ -131,7 +133,7 @@ RSpec.describe Jobs::RunProblemCheck do
         Class.new(ProblemCheck) do
           self.max_retries = 1
 
-          def call
+          def call(_tracker)
             raise StandardError.new("Something went wrong")
           end
         end

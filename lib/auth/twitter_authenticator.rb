@@ -5,6 +5,10 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
     "twitter"
   end
 
+  def disable
+    SiteSetting.set_and_log(:enable_twitter_logins, false)
+  end
+
   def enabled?
     SiteSetting.enable_twitter_logins
   end

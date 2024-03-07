@@ -425,6 +425,8 @@ login:
   enable_signup_cta:
     client: true
     default: true
+  disable_failing_social_logins:
+    default: false
   enable_google_oauth2_logins:
     default: false
   google_oauth2_client_id: ""
