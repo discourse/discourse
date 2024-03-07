@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ProblemChecks do
+RSpec.describe Jobs::RunProblemChecks do
   before do
-    ::ProblemCheck::ScheduledCheck =
+    ProblemCheck::ScheduledCheck =
       Class.new(ProblemCheck) do
         self.perform_every = 30.minutes
 
         def call = []
       end
 
-    ::ProblemCheck::NonScheduledCheck = Class.new(ProblemCheck) { def call = [] }
+    ProblemCheck::NonScheduledCheck = Class.new(ProblemCheck) { def call = [] }
   end
 
   after do
@@ -39,7 +39,7 @@ RSpec.describe Jobs::ProblemChecks do
 
     it "does not schedule any check" do
       expect_not_enqueued_with(
-        job: :problem_check,
+        job: :run_problem_check,
         args: {
           check_identifier: "scheduled_check",
         },
@@ -52,7 +52,7 @@ RSpec.describe Jobs::ProblemChecks do
 
     it "does not schedule any check" do
       expect_not_enqueued_with(
-        job: :problem_check,
+        job: :run_problem_check,
         args: {
           check_identifier: "non_scheduled_check",
         },
@@ -62,7 +62,7 @@ RSpec.describe Jobs::ProblemChecks do
 
   it "does not schedule non-scheduled checks" do
     expect_not_enqueued_with(
-      job: :problem_check,
+      job: :run_problem_check,
       args: {
         check_identifier: "non_scheduled_check",
       },
