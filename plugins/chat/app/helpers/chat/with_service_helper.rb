@@ -10,8 +10,12 @@ module Chat
     #   in addition to controller @params.
     def with_service(service, **dependencies, &block)
       object = self
-      merged_block = proc { instance_exec(&(block || proc {})) }
-      ServiceRunner.call(service, object, **dependencies, &merged_block)
+      ServiceRunner.call(
+        service,
+        object,
+        **dependencies,
+        &proc { instance_exec(&(block || proc {})) }
+      )
     end
 
     def run_service(service, dependencies)
