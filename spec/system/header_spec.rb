@@ -200,13 +200,7 @@ RSpec.describe "Glimmer Header", type: :system do
     before { sign_in(current_user) }
     fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
 
-    it "opens search" do
-      visit "/t/#{topic.slug}/#{topic.id}"
-      header.search_in_topic_keyboard_shortcut
-      expect(search).to have_search_menu_visible
-    end
-
-    it "closes search after two presses" do
+    it "opens search on first press, and closes on the second" do
       visit "/t/#{topic.slug}/#{topic.id}"
       header.search_in_topic_keyboard_shortcut
       expect(search).to have_search_menu_visible
