@@ -39,7 +39,8 @@ class UserOptionSerializer < ApplicationSerializer
              :seen_popups,
              :sidebar_link_to_filtered_list,
              :sidebar_show_count_of_new_items,
-             :watched_precedence_over_muted
+             :watched_precedence_over_muted,
+             :silence_close_notifications
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
