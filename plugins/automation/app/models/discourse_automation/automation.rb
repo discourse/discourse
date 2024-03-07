@@ -18,6 +18,7 @@ module DiscourseAutomation
              foreign_key: "automation_id"
 
     validates :script, presence: true
+    validate :validate_trigger_fields
 
     attr_accessor :running_in_background
 
@@ -69,6 +70,10 @@ module DiscourseAutomation
     def trigger_field(name)
       field = fields.find_by(target: "trigger", name: name)
       field ? field.metadata : {}
+    end
+
+    def has_trigger_field?(name)
+      !!fields.find_by(target: "trigger", name: name)
     end
 
     def script_field(name)
@@ -159,6 +164,12 @@ module DiscourseAutomation
       pending_automations.delete_all
       pending_pms.delete_all
       scriptable&.on_reset&.call(self)
+    end
+
+    private
+
+    def validate_trigger_fields
+      !triggerable || triggerable.valid?(self)
     end
   end
 end

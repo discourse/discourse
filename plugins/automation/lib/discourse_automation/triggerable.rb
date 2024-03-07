@@ -14,6 +14,7 @@ module DiscourseAutomation
       @on_update_block = proc {}
       @on_call_block = proc {}
       @not_found = false
+      @validations = []
 
       eval! if @name
     end
@@ -28,6 +29,16 @@ module DiscourseAutomation
 
     def triggerable?
       true
+    end
+
+    def validate(&block)
+      @validations << block
+    end
+
+    def valid?(automation)
+      @validations.each { |block| automation.instance_exec(&block) }
+
+      automation.errors.blank?
     end
 
     def placeholders

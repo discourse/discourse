@@ -8,6 +8,8 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}.`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "At least one of 'custom_fields' or 'user_profile' must be provided."
       user_badge_granted:
         title: User badge granted
         doc: Triggers an automation when a user is granted a badge.
