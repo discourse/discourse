@@ -275,16 +275,8 @@
       }
     }
   }
-  &.facebook {
-    .d-icon {
-      color: var(--facebook);
-    }
-    &:hover {
-      .d-icon {
-        color: var(--facebook-hover);
-      }
-    }
-  }
+  // https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign
+  // if you are unable to use Facebook blue, revert to black and white.
 }
 
 // Button Sizes
