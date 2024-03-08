@@ -148,8 +148,8 @@ export default class SearchMenu extends Component {
 
   @action
   openAdvancedSearch() {
+    this.fullSearch();
     this.close();
-    DiscourseURL.routeTo(this.fullSearchUrl({ expanded: true }));
   }
 
   get displayMenuPanelResults() {
