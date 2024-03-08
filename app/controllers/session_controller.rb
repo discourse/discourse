@@ -651,7 +651,7 @@ class SessionController < ApplicationController
 
   def current_counts
     if current_user.present?
-      render_serialized(current_user, CurrentUserCountsSerializer, root: false)
+      render_serialized(current_user, CurrentUserCountSerializer, root: false)
     else
       render body: nil, status: 404
     end

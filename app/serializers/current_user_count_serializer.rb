@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
-class CurrentUserCountsSerializer < BasicUserSerializer
+class CurrentUserCountSerializer < BasicUserSerializer
   attributes :unread_notifications,
-             :unread_pm_notifications,
+             :unread_personal_messages,
              :unseen_reviewables,
-             :topic_tracking_counts,
-             :group_inboxes_counts,
-             def include_name?
-               false
+             :topic_tracking,
+             :group_inboxes,
+             def unread_notifications
+               object.all_unread_notifications_count
              end
 
-  def unread_notifications
-    object.all_unread_notifications_count
-  end
-
-  def unread_pm_notifications
+  def unread_personal_messages
     object.new_personal_messages_notifications_count
   end
 
@@ -22,15 +18,15 @@ class CurrentUserCountsSerializer < BasicUserSerializer
     Reviewable.unseen_reviewable_count(object)
   end
 
-  def topic_tracking_counts
+  def topic_tracking
     object.topic_tracking_counts
   end
 
-  def include_group_inboxes_counts?
+  def include_group_inboxes?
     scope.user.staff?
   end
 
-  def group_inboxes_counts
+  def group_inboxes
     group_inbox_data =
       Notification
         .unread
@@ -57,6 +53,4 @@ class CurrentUserCountsSerializer < BasicUserSerializer
 
     results
   end
-
-  # needs chat
 end
