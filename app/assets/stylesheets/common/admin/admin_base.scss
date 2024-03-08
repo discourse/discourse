@@ -715,12 +715,6 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.admin-plugin-config-area {
-  .admin-detail {
-    padding-top: 15px;
-  }
-}
-
 .admin-detail.mobile-open {
   @media (max-width: $mobile-breakpoint) {
     transition: transform 0.3s ease;

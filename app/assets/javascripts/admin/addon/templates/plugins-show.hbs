@@ -1,37 +1,7 @@
 {{#if this.currentUser.use_admin_experimental_plugin_page}}
-  <div class="admin-plugin-container">
-    <div class="admin-plugin-container__metadata">
-      <h2>
-        {{this.model.nameTitleized}}
-      </h2>
-      <p>
-        {{this.model.about}}
-        |
-        {{#if this.model.linkUrl}}
-          <a
-            href={{this.model.linkUrl}}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {{i18n "admin.plugins.learn_more"}}
-          </a>
-        {{/if}}
-
-      </p>
-    </div>
-    <div class="admin-plugin-container__content">
-      <div class="admin-plugin-container__nav-sidebar"></div>
-      <div class="admin-plugin-container__main-area">
-        {{#if this.model.configNavRoutes}}
-          <AdminPluginConfigArea
-            @innerSidebarNavLinks={{this.model.configNavRoutes}}
-          >
-            {{outlet}}
-          </AdminPluginConfigArea>
-        {{/if}}
-      </div>
-    </div>
-  </div>
+  <AdminPluginConfigPage @plugin={{this.model}}>
+    {{outlet}}
+  </AdminPluginConfigPage>
 {{else}}
   {{outlet}}
 {{/if}}
