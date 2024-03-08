@@ -1,8 +1,6 @@
-{{! template-lint-disable no-invalid-interactive }}
-<a
+<DButton
   class="show-advanced-search"
   title={{i18n "search.open_advanced"}}
-  {{on "click" @openAdvancedSearch}}
->
-  {{d-icon "sliders-h"}}
-</a>
+  @action={{@openAdvancedSearch}}
+  @icon="sliders-h"
+/>

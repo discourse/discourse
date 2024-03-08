@@ -92,9 +92,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert
       .dom(".search-menu .search-menu-panel")
-      .doesNotContainText(
-        "closes search menu after clicking advanced search button"
-      );
+      .doesNotExist("closes search menu after clicking advanced search button");
 
     assert.ok(
       exists(".search-advanced-options"),
