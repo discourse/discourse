@@ -49,7 +49,7 @@ export default class DesktopNotificationsService extends Service {
 
   setNotificationsDisabled(value) {
     keyValueStore.setItem("notifications-disabled", value);
-    this.notificationsDisabled = value;
+    this.notificationsDisabled = value === DISABLED;
   }
 
   get isDeniedPermission() {
