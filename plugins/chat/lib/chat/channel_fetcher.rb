@@ -257,14 +257,11 @@ module Chat
       result = 0
 
       public_channels = secured_public_channels(guardian, status: :open, following: true)
-
       publics = tracking_state(public_channels.map(&:id), guardian, include_threads: true)
-
       publics.channel_tracking.each_value { |channel_info| result += channel_info[:mention_count] }
 
       direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
       directs = tracking_state(direct_message_channels.map(&:id), guardian)
-
       directs.channel_tracking.each_value { |channel_info| result += channel_info[:unread_count] }
 
       result

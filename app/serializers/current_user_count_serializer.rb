@@ -7,7 +7,8 @@ class CurrentUserCountSerializer < BasicUserSerializer
              :topic_tracking,
              :group_inboxes,
              def unread_notifications
-               object.all_unread_notifications_count
+               object.all_unread_notifications_count -
+                 object.new_personal_messages_notifications_count
              end
 
   def unread_personal_messages
