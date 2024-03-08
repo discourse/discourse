@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
+import { Promise } from "rsvp";
 import {
   confirmNotification,
   context,
@@ -116,15 +117,28 @@ export default class DesktopNotificationsService extends Service {
 
   @action
   disable() {
+    const promises = [];
     if (this.isEnabledDesktop) {
-      this.setNotificationsDisabled(DISABLED);
-      return true;
+      promises.push(
+        new Promise((resolve) => {
+          this.setNotificationsDisabled(DISABLED);
+          resolve(true);
+        })
+      );
     }
+
     if (this.isEnabledPush) {
-      return unsubscribePushNotification(this.currentUser, () => {
-        this.setIsEnabledPush("");
-      });
+      promises.push(
+        new Promise((resolve) => {
+          unsubscribePushNotification(this.currentUser, () => {
+            this.setIsEnabledPush("");
+            resolve(true);
+          });
+        })
+      );
     }
+
+    return Promise.all(promises);
   }
 
   @action
