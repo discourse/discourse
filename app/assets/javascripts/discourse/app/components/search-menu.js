@@ -106,9 +106,7 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  close(e) {
-    e.preventDefault();
-
+  close() {
     if (this.args?.onClose) {
       return this.args.onClose();
     }
@@ -148,8 +146,10 @@ export default class SearchMenu extends Component {
     return getURL(url);
   }
 
-  get advancedSearchButtonHref() {
-    return this.fullSearchUrl({ expanded: true });
+  @action
+  openAdvancedSearch() {
+    this.close();
+    DiscourseURL.routeTo(this.fullSearchUrl({ expanded: true }));
   }
 
   get displayMenuPanelResults() {
