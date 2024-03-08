@@ -22,7 +22,7 @@ RSpec.describe ApplicationController do
       sign_in(admin)
       get "/latest"
       expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to include(
-        { "label" => "chat.admin.title", "location" => "chat" },
+        { "label" => "chat.admin.title", "location" => "chat", "use_new_show_route" => false },
       )
     end
   end
