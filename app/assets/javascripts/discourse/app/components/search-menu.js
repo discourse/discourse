@@ -106,7 +106,9 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  close() {
+  close(e) {
+    e.preventDefault();
+
     if (this.args?.onClose) {
       return this.args.onClose();
     }

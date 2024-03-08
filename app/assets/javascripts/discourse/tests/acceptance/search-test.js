@@ -90,6 +90,12 @@ acceptance("Search - Anonymous", function (needs) {
       "it goes to full search page and preserves the search term"
     );
 
+    assert
+      .dom(".search-menu .search-menu-panel")
+      .doesNotContainText(
+        "closes search menu after clicking advanced search button"
+      );
+
     assert.ok(
       exists(".search-advanced-options"),
       "advanced search is expanded"
