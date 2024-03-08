@@ -100,11 +100,16 @@ module Stylesheet
         color_scheme_id.present? && ColorScheme.find_by_id(color_scheme_id)&.is_dark?
 
       contents = +""
-      Category
-        .where("uploaded_background_id IS NOT NULL")
-        .each do |c|
-          contents << category_css(c, is_dark_color_scheme) if c.uploaded_background&.url.present?
-        end
+
+      categories_with_background_images =
+        DiscoursePluginRegistry.apply_modifier(
+          :stylesheet_importer_categories_with_background_images,
+          Category.where("uploaded_background_id IS NOT NULL"),
+        )
+
+      categories_with_background_images.each do |c|
+        contents << category_css(c, is_dark_color_scheme) if c.uploaded_background&.url.present?
+      end
 
       contents
     end

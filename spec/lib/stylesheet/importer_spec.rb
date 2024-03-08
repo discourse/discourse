@@ -150,6 +150,57 @@ RSpec.describe Stylesheet::Importer do
         "body.category-#{category.slug}{background-image:url(https://s3.cdn/original",
       )
     end
+
+    describe "stylesheet_importer_categories_with_background_images modifier" do
+      fab!(:background) { Fabricate(:upload) }
+      fab!(:category_with_background) { Fabricate(:category, uploaded_background: background) }
+
+      fab!(:undesired_background) { Fabricate(:upload) }
+      fab!(:category_with_undesired_background) do
+        Fabricate(:category, uploaded_background: undesired_background)
+      end
+
+      let(:modifier_block) do
+        Proc.new do |categories_with_background|
+          categories_with_background.where.not(id: category_with_undesired_background.id)
+        end
+      end
+
+      it "can change which categories have background images applied" do
+        # it includes both category backgrounds before the modifier is applied
+        scheme = ColorScheme.create_from_base(name: "Light Test", base_scheme_id: "Neutral")
+        compiled_css = compile_css("color_definitions", { color_scheme_id: scheme.id })
+
+        expect(compiled_css).to include(
+          "body.category-#{category_with_background.slug}{background-image:url(#{background.url})}",
+        )
+        expect(compiled_css).to include(
+          "body.category-#{category_with_undesired_background.slug}{background-image:url(#{undesired_background.url})}",
+        )
+
+        # it includes only the desired category background after the modifier is applied
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(
+          :stylesheet_importer_categories_with_background_images,
+          &modifier_block
+        )
+
+        modified_css = compile_css("color_definitions", { color_scheme_id: scheme.id })
+
+        expect(modified_css).to include(
+          "body.category-#{category_with_background.slug}{background-image:url(#{background.url})}",
+        )
+        expect(modified_css).not_to include(
+          "body.category-#{category_with_undesired_background.slug}{background-image:url(#{undesired_background.url})}",
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :stylesheet_importer_categories_with_background_images,
+          &modifier_block
+        )
+      end
+    end
   end
 
   describe "#font" do
