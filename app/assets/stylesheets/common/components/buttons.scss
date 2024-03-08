@@ -275,6 +275,16 @@
       }
     }
   }
+  &.facebook {
+    .d-icon {
+      color: var(--facebook);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--facebook-hover);
+      }
+    }
+  }
 }
 
 // Button Sizes
