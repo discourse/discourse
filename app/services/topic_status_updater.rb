@@ -101,7 +101,9 @@ TopicStatusUpdater =
         SQL
         user_ids = DB.query_single(sql_query, topic_id: topic.id)
 
-        PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
+        if user_ids.present?
+          PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
+        end
       end
     end
 
