@@ -76,7 +76,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :glimmer_header_enabled?,
-             :use_admin_experimental_plugin_page,
              :can_view_raw_email
 
   delegate :user_stat, to: :object, private: true
@@ -140,15 +139,6 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_user_admin_sidebar?
-    object.admin?
-  end
-
-  def use_admin_experimental_plugin_page
-    object.admin? &&
-      object.in_any_groups?(SiteSetting.experimental_admin_plugin_page_enabled_groups_map)
-  end
-
-  def include_use_admin_experimental_plugin_page?
     object.admin?
   end
 

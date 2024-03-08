@@ -1,7 +1,3 @@
-{{#if this.currentUser.use_admin_experimental_plugin_page}}
-  <AdminPluginConfigPage @plugin={{this.model}}>
-    {{outlet}}
-  </AdminPluginConfigPage>
-{{else}}
+<AdminPluginConfigPage @plugin={{this.model}}>
   {{outlet}}
-{{/if}}
+</AdminPluginConfigPage>
