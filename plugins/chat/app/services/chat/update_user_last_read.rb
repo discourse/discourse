@@ -37,32 +37,32 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def fetch_active_membership(guardian:, channel:, **)
+    def fetch_active_membership(guardian:, channel:)
       ::Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user, following: true)
     end
 
-    def invalid_access(guardian:, active_membership:, **)
+    def invalid_access(guardian:, active_membership:)
       guardian.can_join_chat_channel?(active_membership.chat_channel)
     end
 
-    def fetch_message(channel:, contract:, **)
+    def fetch_message(channel:, contract:)
       ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: contract.message_id)
     end
 
-    def ensure_message_id_recency(message:, active_membership:, **)
+    def ensure_message_id_recency(message:, active_membership:)
       !active_membership.last_read_message_id ||
         message.id >= active_membership.last_read_message_id
     end
 
-    def update_membership_state(message:, active_membership:, **)
+    def update_membership_state(message:, active_membership:)
       active_membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
     end
 
-    def mark_associated_mentions_as_read(active_membership:, message:, **)
+    def mark_associated_mentions_as_read(active_membership:, message:)
       ::Chat::Action::MarkMentionsRead.call(
         active_membership.user,
         channel_ids: [active_membership.chat_channel.id],
@@ -70,7 +70,7 @@ module Chat
       )
     end
 
-    def publish_new_last_read_to_clients(guardian:, channel:, message:, **)
+    def publish_new_last_read_to_clients(guardian:, channel:, message:)
       ::Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message)
     end
   end

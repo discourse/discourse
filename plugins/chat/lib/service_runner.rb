@@ -27,8 +27,6 @@
 # argument to their block. `on_model_errors` receives the actual model so it’s
 # easier to inspect it.
 #
-# Default actions for each of these are defined in [Chat::ApiController#default_actions_for_service]
-#
 # @example In a controller
 #   def create
 #     with_service MyService do

@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ProblemCheck do
+RSpec.describe Jobs::RunProblemCheck do
   after do
     Discourse.redis.flushdb
 
-    ::ProblemCheck.send(:remove_const, "TestCheck")
+    ProblemCheck.send(:remove_const, "TestCheck")
   end
 
   context "when there are problems" do
     before do
-      ::ProblemCheck::TestCheck =
-        Class.new(::ProblemCheck) do
+      ProblemCheck::TestCheck =
+        Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
           self.max_retries = 0
 
           def call
             [
-              ::ProblemCheck::Problem.new("Big problem"),
-              ::ProblemCheck::Problem.new(
+              ProblemCheck::Problem.new("Big problem"),
+              ProblemCheck::Problem.new(
                 "Yuge problem",
                 priority: "high",
                 identifier: "config_is_a_mess",
@@ -38,19 +38,19 @@ RSpec.describe Jobs::ProblemCheck do
 
   context "with multiple problems with the same identifier" do
     before do
-      ::ProblemCheck::TestCheck =
-        Class.new(::ProblemCheck) do
+      ProblemCheck::TestCheck =
+        Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
           self.max_retries = 0
 
           def call
             [
-              ::ProblemCheck::Problem.new(
+              ProblemCheck::Problem.new(
                 "Yuge problem",
                 priority: "high",
                 identifier: "config_is_a_mess",
               ),
-              ::ProblemCheck::Problem.new(
+              ProblemCheck::Problem.new(
                 "Nasty problem",
                 priority: "high",
                 identifier: "config_is_a_mess",
@@ -71,13 +71,13 @@ RSpec.describe Jobs::ProblemCheck do
 
   context "when there are retries remaining" do
     before do
-      ::ProblemCheck::TestCheck =
-        Class.new(::ProblemCheck) do
+      ProblemCheck::TestCheck =
+        Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
           self.max_retries = 2
 
           def call
-            [::ProblemCheck::Problem.new("Yuge problem")]
+            [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
     end
@@ -90,7 +90,7 @@ RSpec.describe Jobs::ProblemCheck do
 
     it "schedules a retry" do
       expect_enqueued_with(
-        job: :problem_check,
+        job: :run_problem_check,
         args: {
           check_identifier: :test_check,
           retry_count: 1,
@@ -101,13 +101,13 @@ RSpec.describe Jobs::ProblemCheck do
 
   context "when there are no retries remaining" do
     before do
-      ::ProblemCheck::TestCheck =
-        Class.new(::ProblemCheck) do
+      ProblemCheck::TestCheck =
+        Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
           self.max_retries = 1
 
           def call
-            [::ProblemCheck::Problem.new("Yuge problem")]
+            [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
     end
@@ -119,7 +119,7 @@ RSpec.describe Jobs::ProblemCheck do
     end
 
     it "does not schedule a retry" do
-      expect_not_enqueued_with(job: :problem_check) do
+      expect_not_enqueued_with(job: :run_problem_check) do
         described_class.new.execute(check_identifier: :test_check, retry_count: 1)
       end
     end
@@ -127,8 +127,8 @@ RSpec.describe Jobs::ProblemCheck do
 
   context "when the check unexpectedly errors out" do
     before do
-      ::ProblemCheck::TestCheck =
-        Class.new(::ProblemCheck) do
+      ProblemCheck::TestCheck =
+        Class.new(ProblemCheck) do
           self.max_retries = 1
 
           def call

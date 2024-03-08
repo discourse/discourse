@@ -53,27 +53,27 @@ module Service
   #
   #     private
   #
-  #     def fetch_channel(channel_id:, **)
+  #     def fetch_channel(channel_id:)
   #       Chat::Channel.find_by(id: channel_id)
   #     end
   #
-  #     def invalid_access(guardian:, channel:, **)
+  #     def invalid_access(guardian:, channel:)
   #       guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
   #     end
   #
-  #     def prevents_slug_collision(channel:, **)
+  #     def prevents_slug_collision(channel:)
   #       …
   #     end
   #
-  #     def soft_delete_channel(guardian:, channel:, **)
+  #     def soft_delete_channel(guardian:, channel:)
   #       …
   #     end
   #
-  #     def log_channel_deletion(guardian:, channel:, **)
+  #     def log_channel_deletion(guardian:, channel:)
   #       …
   #     end
   #
-  #     def enqueue_delete_channel_relations_job(channel:, **)
+  #     def enqueue_delete_channel_relations_job(channel:)
   #       …
   #     end
   #   end

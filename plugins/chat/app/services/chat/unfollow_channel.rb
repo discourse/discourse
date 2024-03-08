@@ -29,11 +29,11 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def unfollow(channel:, guardian:, **)
+    def unfollow(channel:, guardian:)
       context.membership = channel.remove(guardian.user)
     end
   end

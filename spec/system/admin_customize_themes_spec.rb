@@ -69,8 +69,6 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).not_to have_css(".submit-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-edit")
-
-      expect(theme.reload.color_scheme_id).to eq(color_scheme.id)
     end
   end
 

@@ -28,7 +28,7 @@ export default class Results extends Component {
   }
 
   get noTopicResults() {
-    return this.args.searchTopics && this.args.noResults;
+    return this.args.searchTopics && this.search.noResults;
   }
 
   get termTooShort() {

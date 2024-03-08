@@ -1034,9 +1034,13 @@ en:
       "15": "Drafts"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
+      plus_more_count: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
@@ -4353,8 +4357,10 @@ en:
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
+      selector_tags: "tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
+      selector_remove_filter: "remove filter"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:

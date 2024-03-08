@@ -647,14 +647,14 @@ RSpec.describe ApplicationController do
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to_not include("example.com")
+      expect(script_src).to_not include("'unsafe-inline'")
 
-      SiteSetting.content_security_policy_script_src = "example.com"
+      SiteSetting.content_security_policy_script_src = "'unsafe-inline'"
 
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to include("example.com")
+      expect(script_src).to include("'unsafe-inline'")
     end
 
     it "does not set CSP when responding to non-HTML" do

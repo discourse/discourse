@@ -34,7 +34,13 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def destroy
     with_service Chat::TrashChannel do
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
@@ -74,6 +80,10 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_errors(:membership) do
         render_json_error(result.membership, type: :record_invalid, status: 422)
+      end
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end

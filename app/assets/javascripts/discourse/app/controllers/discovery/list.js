@@ -201,7 +201,13 @@ export default class DiscoveryListController extends Controller {
   }
 
   @action
-  dismissRead(operationType, options) {
-    this.bulkSelectHelper.dismissRead(operationType, options);
+  dismissRead(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+
+    this.bulkSelectHelper.dismissRead(operationType, {
+      categoryId: this.model.category?.id,
+      tagName: this.model.tag?.id,
+      includeSubcategories: this.model.noSubcategories,
+    });
   }
 }
