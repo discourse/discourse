@@ -43,7 +43,8 @@ RSpec.describe NotificationEmailer do
       it "enqueues a job if the user is staged for non-linked and non-quoted types" do
         notification.user.staged = true
 
-        if type == :user_linked || type == :user_quoted || type == :user_mentioned || type == :group_mentioned
+        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
+             type == :group_mentioned
           expect_not_enqueued_with(job: :user_email, args: { type: type }) do
             NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
@@ -60,7 +61,8 @@ RSpec.describe NotificationEmailer do
         notification.user.staged = true
         SiteSetting.must_approve_users = true
 
-        if type == :user_linked || type == :user_quoted || type == :user_mentioned || type == :group_mentioned
+        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
+             type == :group_mentioned
           expect_not_enqueued_with(job: :user_email, args: { type: type }) do
             NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
