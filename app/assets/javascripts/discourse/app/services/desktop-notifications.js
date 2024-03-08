@@ -16,6 +16,8 @@ import {
 } from "discourse/lib/push-notifications";
 
 const keyValueStore = new KeyValueStore(context);
+const DISABLED = "disabled";
+const ENABLED = "enabled";
 
 @disableImplicitInjections
 export default class DesktopNotificationsService extends Service {
@@ -28,9 +30,8 @@ export default class DesktopNotificationsService extends Service {
 
   constructor() {
     super(...arguments);
-    this.notificationsDisabled = keyValueStore.getItem(
-      "notifications-disabled"
-    );
+    this.notificationsDisabled =
+      keyValueStore.getItem("notifications-disabled") === DISABLED;
     this.isEnabledPush = this.currentUser
       ? pushNotificationKeyValueStore.getItem(
           pushNotificationUserSubscriptionKey(this.currentUser)
@@ -48,9 +49,7 @@ export default class DesktopNotificationsService extends Service {
 
   setNotificationsDisabled(value) {
     keyValueStore.setItem("notifications-disabled", value);
-    this.notificationsDisabled = keyValueStore.getItem(
-      "notifications-disabled"
-    );
+    this.notificationsDisabled = value;
   }
 
   get isDeniedPermission() {
@@ -71,7 +70,7 @@ export default class DesktopNotificationsService extends Service {
 
   get isEnabledDesktop() {
     if (this.isGrantedPermission) {
-      return this.notificationsDisabled;
+      return !this.notificationsDisabled;
     }
 
     return false;
@@ -103,7 +102,7 @@ export default class DesktopNotificationsService extends Service {
     if (this.isPushNotificationsPreferred) {
       return this.isEnabledPush === "subscribed";
     } else {
-      return this.notificationsDisabled === "";
+      return !this.notificationsDisabled;
     }
   }
 
@@ -118,7 +117,7 @@ export default class DesktopNotificationsService extends Service {
   @action
   disable() {
     if (this.isEnabledDesktop) {
-      this.setNotificationsDisabled("disabled");
+      this.setNotificationsDisabled(DISABLED);
       return true;
     }
     if (this.isEnabledPush) {
@@ -135,7 +134,7 @@ export default class DesktopNotificationsService extends Service {
         this.setIsEnabledPush("subscribed");
       }, this.siteSettings.vapid_public_key_bytes);
     } else {
-      this.setNotificationsDisabled("");
+      this.setNotificationsDisabled(ENABLED);
       return Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);
         return permission === "granted";
