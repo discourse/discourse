@@ -112,7 +112,7 @@ RSpec.describe PostAlerter do
       expect(Notification.where(user_id: pm.user_id).count).to eq(1)
     end
 
-    it "notifies about private message even if direct mention" do
+    it "prioritises 'private_message' type even if direct mention" do
       pm = Fabricate(:topic, archetype: "private_message", category_id: nil)
       op =
         Fabricate(:post, topic: pm, user: pm.user, raw: "Hello @#{user.username}, nice to meet you")
