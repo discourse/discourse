@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
@@ -142,7 +143,7 @@ export default class ChatMessageInfo extends Component {
         {{/if}}
 
         <span class="chat-message-info__date">
-          {{formatChatDate @message}}
+          {{formatChatDate @message (hash threadContext=@threadContext)}}
         </span>
 
         {{#if @message.bookmark}}
