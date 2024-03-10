@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@glimmer/syntax": "^0.88.1",
+    "@glimmer/syntax": "^0.89.0",
     "@highlightjs/cdn-assets": "^11.9.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
