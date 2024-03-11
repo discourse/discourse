@@ -142,7 +142,6 @@ class AdminDashboardData
     ]
 
     add_problem_check :force_https_check,
-                      :facebook_config_check,
                       :twitter_config_check,
                       :github_config_check,
                       :s3_config_check,
@@ -234,13 +233,6 @@ class AdminDashboardData
   def queue_size_check
     queue_size = Jobs.queued
     I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
-  end
-
-  def facebook_config_check
-    if SiteSetting.enable_facebook_logins &&
-         (SiteSetting.facebook_app_id.blank? || SiteSetting.facebook_app_secret.blank?)
-      I18n.t("dashboard.facebook_config_warning", base_path: Discourse.base_path)
-    end
   end
 
   def twitter_config_check

@@ -178,15 +178,6 @@ RSpec.describe AdminDashboardData do
       end
     end
 
-    describe "facebook" do
-      subject(:check) { described_class.new.facebook_config_check }
-
-      let(:enable_setting) { :enable_facebook_logins }
-      let(:key) { :facebook_app_id }
-      let(:secret) { :facebook_app_secret }
-      include_examples "problem detection for login providers"
-    end
-
     describe "twitter" do
       subject(:check) { described_class.new.twitter_config_check }
 
