@@ -6,7 +6,7 @@
     {{#if @postAttrs.summarizable}}
       {{#if this.summary.showSummaryBox}}
         <DButton
-          @action={{this.collapseSummary}}
+          @action={{@collapseSummary}}
           @title="summary.buttons.hide"
           @label="summary.buttons.hide"
           @icon="chevron-up"
@@ -14,7 +14,7 @@
         />
       {{else}}
         <DButton
-          @action={{this.generateSummary}}
+          @action={{@showSummary}}
           @translatedLabel={{this.generateSummaryTitle}}
           @translatedTitle={{this.generateSummaryTitle}}
           @icon={{this.generateSummaryIcon}}
@@ -26,7 +26,11 @@
 
     {{#if @postAttrs.hasTopRepliesSummary}}
       <DButton
-        @action={{this.toggleTopRepliesFilter}}
+        @action={{if
+          @postAttrs.topicSummaryEnabled
+          @cancelFilter
+          @showTopReplies
+        }}
         @translatedTitle={{this.topRepliesTitle}}
         @translatedLabel={{this.topRepliesLabel}}
         @icon={{this.topRepliesIcon}}

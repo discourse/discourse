@@ -743,8 +743,7 @@ createWidget("post-body", {
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
     if (attrs.showTopicMap) {
-      result.push(this.attach("topic-map", attrs));
-      // result.push(this.buildTopicMap(attrs));
+      result.push(this.buildTopicMap(attrs));
     }
 
     return result;
