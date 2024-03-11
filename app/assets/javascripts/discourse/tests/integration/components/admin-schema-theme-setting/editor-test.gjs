@@ -2,11 +2,11 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 class TreeFromDOM {
   constructor() {

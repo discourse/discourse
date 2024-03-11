@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import TagChooser from "select-kit/components/tag-chooser";
-import { hash } from "@ember/helper";
 
 export default class SchemaThemeSettingTypeTag extends Component {
   @tracked value;

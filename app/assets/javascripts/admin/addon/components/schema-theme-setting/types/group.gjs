@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import GroupChooser from "select-kit/components/group-chooser";
 import Group from "discourse/models/group";
+import GroupChooser from "select-kit/components/group-chooser";
 
 export default class SchemaThemeSettingTypeGroup extends Component {
   @tracked value;
