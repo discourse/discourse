@@ -381,10 +381,7 @@ createWidget("hamburger-dropdown-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "340px"
-          : "-340px";
+      const finishPosition = document.dir === "rtl" ? "340px" : "-340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,

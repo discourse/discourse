@@ -104,12 +104,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this.pxClosed = null;
     },
 
-    _isRTL() {
-      return document.querySelector("html").classList["direction"] === "rtl";
-    },
-
     _leftMenuClass() {
-      return this._isRTL() ? "user-menu" : "hamburger-panel";
+      return document.dir === "rtl" ? "user-menu" : "hamburger-panel";
     },
 
     @bind

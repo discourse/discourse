@@ -51,7 +51,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   get leftMenuClass() {
-    if (document.querySelector("html").classList["direction"] === "rtl") {
+    if (document.dir === "rtl") {
       return "user-menu";
     } else {
       return "hamburger-panel";
