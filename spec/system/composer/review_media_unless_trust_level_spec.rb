@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe "Composer using review_media", type: :system do
-  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, category: Category.find(SiteSetting.uncategorized_category_id)) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    SiteSetting.review_media_unless_trust_level = 3
-    sign_in user
+    SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3]
+    sign_in(current_user)
   end
 
   it "does not flag a post with an emoji" do

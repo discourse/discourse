@@ -4,7 +4,7 @@
 # TODO - test pinning, create_moderator_post
 
 RSpec.describe TopicStatusUpdater do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
 
   it "avoids notifying on automatically closed topics" do

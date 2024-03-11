@@ -61,6 +61,15 @@ describe "Thread list in side panel | full page", type: :system do
     end
   end
 
+  it "doesn’t list threads with no replies" do
+    thread = Fabricate(:chat_thread, channel: channel, use_service: true)
+
+    chat_page.visit_channel(channel)
+    channel_page.open_thread_list
+
+    expect(thread_list_page).to have_no_thread(thread)
+  end
+
   context "when there are threads that the user is participating in" do
     fab!(:thread_1) do
       chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
@@ -172,7 +181,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         expect(thread_list_page).to have_no_thread(thread_1)
 
-        using_session(:tab_2) do |session|
+        using_session(:tab_2) do
           sign_in(other_user)
           chat_page.visit_channel(channel)
           expect(channel_page).to have_no_loading_skeleton
@@ -180,7 +189,6 @@ describe "Thread list in side panel | full page", type: :system do
           channel_page.message_thread_indicator(thread_1.original_message).click
           expect(side_panel_page).to have_open_thread(thread_1)
           thread_page.messages.restore(thread_1.original_message)
-          session.quit
         end
 
         expect(thread_list_page).to have_thread(thread_1)

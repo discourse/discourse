@@ -19,6 +19,129 @@ RSpec.describe HashtagsController do
     tag_group
   end
 
+  describe "#by_ids" do
+    context "when logged in" do
+      context "as anonymous user" do
+        it "does not return private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+            },
+          )
+        end
+
+        it "does not return categories on login_required sites" do
+          SiteSetting.login_required = true
+
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "as regular user" do
+        before { sign_in(Fabricate(:user)) }
+
+        it "does not return private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+            },
+          )
+        end
+      end
+
+      context "as admin" do
+        before { sign_in(Fabricate(:admin)) }
+
+        it "returns private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category"]).to contain_exactly(
+            {
+              "relative_url" => category.url,
+              "text" => category.name,
+              "description" => nil,
+              "colors" => [category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => category.slug,
+              "slug" => category.slug,
+              "id" => category.id,
+            },
+            {
+              "relative_url" => private_category.url,
+              "text" => private_category.name,
+              "description" => nil,
+              "colors" => [private_category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => private_category.slug,
+              "slug" => private_category.slug,
+              "id" => private_category.id,
+            },
+          )
+        end
+      end
+    end
+
+    context "when not logged in" do
+      it "does not return private categories" do
+        get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          {
+            "category" => [
+              {
+                "relative_url" => category.url,
+                "text" => category.name,
+                "description" => nil,
+                "colors" => [category.color],
+                "icon" => "folder",
+                "type" => "category",
+                "ref" => category.slug,
+                "slug" => category.slug,
+                "id" => category.id,
+              },
+            ],
+          },
+        )
+      end
+    end
+  end
+
   describe "#lookup" do
     context "when logged in" do
       context "as regular user" do
@@ -39,6 +162,7 @@ RSpec.describe HashtagsController do
                   "relative_url" => category.url,
                   "text" => category.name,
                   "description" => nil,
+                  "colors" => [category.color],
                   "icon" => "folder",
                   "type" => "category",
                   "ref" => category.slug,
@@ -51,6 +175,7 @@ RSpec.describe HashtagsController do
                   "relative_url" => tag.url,
                   "text" => tag.name,
                   "description" => nil,
+                  "colors" => nil,
                   "icon" => "tag",
                   "type" => "tag",
                   "ref" => tag.name,
@@ -75,6 +200,7 @@ RSpec.describe HashtagsController do
                   "relative_url" => tag.url,
                   "text" => tag.name,
                   "description" => nil,
+                  "colors" => nil,
                   "icon" => "tag",
                   "type" => "tag",
                   "ref" => "#{tag.name}::tag",
@@ -121,6 +247,7 @@ RSpec.describe HashtagsController do
                   "relative_url" => private_category.url,
                   "text" => private_category.name,
                   "description" => nil,
+                  "colors" => [private_category.color],
                   "icon" => "folder",
                   "type" => "category",
                   "ref" => private_category.slug,
@@ -133,6 +260,7 @@ RSpec.describe HashtagsController do
                   "relative_url" => hidden_tag.url,
                   "text" => hidden_tag.name,
                   "description" => nil,
+                  "colors" => nil,
                   "icon" => "tag",
                   "type" => "tag",
                   "ref" => hidden_tag.name,
@@ -218,6 +346,7 @@ RSpec.describe HashtagsController do
               "text" => category.name,
               "description" => nil,
               "icon" => "folder",
+              "colors" => [category.color],
               "type" => "category",
               "ref" => category.slug,
               "slug" => category.slug,
@@ -227,6 +356,7 @@ RSpec.describe HashtagsController do
               "relative_url" => tag_2.url,
               "text" => tag_2.name,
               "description" => nil,
+              "colors" => nil,
               "icon" => "tag",
               "type" => "tag",
               "ref" => "#{tag_2.name}::tag",
@@ -261,6 +391,7 @@ RSpec.describe HashtagsController do
               "relative_url" => private_category.url,
               "text" => private_category.name,
               "description" => nil,
+              "colors" => [private_category.color],
               "icon" => "folder",
               "type" => "category",
               "ref" => private_category.slug,
@@ -278,6 +409,7 @@ RSpec.describe HashtagsController do
               "relative_url" => hidden_tag.url,
               "text" => hidden_tag.name,
               "description" => nil,
+              "colors" => nil,
               "icon" => "tag",
               "type" => "tag",
               "ref" => "#{hidden_tag.name}",

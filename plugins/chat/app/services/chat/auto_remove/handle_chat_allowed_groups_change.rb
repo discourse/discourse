@@ -32,15 +32,15 @@ module Chat
         SiteSetting.chat_enabled
       end
 
-      def cast_new_allowed_groups_to_array(new_allowed_groups:, **)
+      def cast_new_allowed_groups_to_array(new_allowed_groups:)
         context[:new_allowed_groups] = new_allowed_groups.to_s.split("|").map(&:to_i)
       end
 
-      def not_everyone_allowed(new_allowed_groups:, **)
+      def not_everyone_allowed(new_allowed_groups:)
         !new_allowed_groups.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_users(new_allowed_groups:, **)
+      def fetch_users(new_allowed_groups:)
         User
           .real
           .activated
@@ -61,20 +61,20 @@ module Chat
           end
       end
 
-      def fetch_memberships_to_remove(users:, **)
+      def fetch_memberships_to_remove(users:)
         Chat::UserChatChannelMembership
           .joins(:chat_channel)
           .where(user_id: users.pluck(:id))
           .where.not(chat_channel: { type: "DirectMessageChannel" })
       end
 
-      def remove_users_outside_allowed_groups(memberships_to_remove:, **)
+      def remove_users_outside_allowed_groups(memberships_to_remove:)
         context[:users_removed_map] = Chat::Action::RemoveMemberships.call(
           memberships: memberships_to_remove,
         )
       end
 
-      def publish(users_removed_map:, **)
+      def publish(users_removed_map:)
         Chat::Action::PublishAutoRemovedUser.call(
           event_type: :chat_allowed_groups_changed,
           users_removed_map: users_removed_map,

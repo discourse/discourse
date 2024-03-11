@@ -8,16 +8,16 @@ RSpec.describe TopicsController do
 
   fab!(:pm) { Fabricate(:private_message_topic) }
 
-  fab!(:user)
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:post_author1) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:post_author1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author2) { Fabricate(:user) }
   fab!(:post_author3) { Fabricate(:user) }
   fab!(:post_author4) { Fabricate(:user) }
   fab!(:post_author5) { Fabricate(:user) }
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:trust_level_0)
   fab!(:trust_level_1)
   fab!(:trust_level_4)
@@ -32,7 +32,7 @@ RSpec.describe TopicsController do
     end
   end
 
-  fab!(:group_user)
+  fab!(:group_user) { Fabricate(:group_user, user: Fabricate(:user, refresh_auto_groups: true)) }
 
   fab!(:tag)
 
@@ -1530,7 +1530,7 @@ RSpec.describe TopicsController do
       end
 
       it "does not allow to destroy topic if not all posts were force destroyed" do
-        other_post = Fabricate(:post, topic: topic, post_number: 2)
+        _other_post = Fabricate(:post, topic: topic, post_number: 2)
         PostDestroyer.new(Discourse.system_user, post).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
@@ -1629,7 +1629,7 @@ RSpec.describe TopicsController do
         end
       end
 
-      describe "with permission" do
+      context "with permission" do
         fab!(:post_hook) { Fabricate(:post_web_hook) }
         fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
@@ -1853,7 +1853,7 @@ RSpec.describe TopicsController do
           end
 
           it "can create a tag" do
-            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             expect do
               put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
@@ -1863,7 +1863,7 @@ RSpec.describe TopicsController do
           end
 
           it "can change the category and create a new tag" do
-            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             expect do
               put "/t/#{topic.slug}/#{topic.id}.json",
                   params: {
@@ -1877,7 +1877,7 @@ RSpec.describe TopicsController do
           end
 
           it "can add a tag to wiki topic" do
-            SiteSetting.min_trust_to_edit_wiki_post = 2
+            SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
             topic.first_post.update!(wiki: true)
             sign_in(user_2)
 
@@ -1886,7 +1886,7 @@ RSpec.describe TopicsController do
             end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(403)
-            user_2.update!(trust_level: 2)
+            user_2.groups << Group.find_by(name: "trust_level_2")
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
               topic.reload.first_post.revisions.count
@@ -2030,7 +2030,6 @@ RSpec.describe TopicsController do
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to include(tag1)
           end
@@ -2048,7 +2047,6 @@ RSpec.describe TopicsController do
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to contain_exactly(tag3)
           end
@@ -2077,7 +2075,6 @@ RSpec.describe TopicsController do
                   category_id: restricted_category.id,
                 }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
           end
         end
@@ -2348,8 +2345,8 @@ RSpec.describe TopicsController do
       Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
-      post2 = Fabricate(:post, topic: topic, user: user2)
-      post3 = Fabricate(:post, topic: topic, user: user3)
+      _post2 = Fabricate(:post, topic: topic, user: user2)
+      _post3 = Fabricate(:post, topic: topic, user: user3)
       group = Fabricate(:group)
       user2.update!(primary_group: group)
       user3.update!(flair_group: group)
@@ -2372,8 +2369,8 @@ RSpec.describe TopicsController do
       group2 = Fabricate(:group)
       user4 = Fabricate(:user, flair_group: group2)
       user5 = Fabricate(:user, primary_group: group2)
-      post4 = Fabricate(:post, topic: topic, user: user4)
-      post5 = Fabricate(:post, topic: topic, user: user5)
+      _post4 = Fabricate(:post, topic: topic, user: user4)
+      _post5 = Fabricate(:post, topic: topic, user: user5)
 
       second_request_queries =
         track_sql_queries do
@@ -3219,13 +3216,27 @@ RSpec.describe TopicsController do
       it "uses image cdn url for schema markup" do
         set_cdn_url("http://cdn.localhost")
         post = Fabricate(:post_with_uploaded_image, user: post_author1)
-        cpp = CookedPostProcessor.new(post).update_post_image
+        CookedPostProcessor.new(post).update_post_image
 
         get post.topic.url
 
         body = response.body
         expect(body).to have_tag(:link, with: { itemprop: "image", href: post.image_url })
       end
+    end
+
+    it "returns a list of categories" do
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      topic.update!(category: Fabricate(:category))
+      dest_topic.update!(category: Fabricate(:category))
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.uncategorized_category_id,
+        topic.category_id,
+        dest_topic.category_id,
+      )
     end
   end
 
@@ -3334,6 +3345,16 @@ RSpec.describe TopicsController do
       body = response.parsed_body
 
       expect(body["suggested_topics"]).not_to eq(nil)
+    end
+
+    it "optionally can return raw" do
+      get "/t/#{topic.id}/posts.json?include_raw=true&post_id[]=#{post.id}"
+
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
+
+      expect(body["post_stream"]["posts"].first["raw"]).to eq(post.raw)
     end
 
     describe "filtering by post number with filters" do
@@ -3562,7 +3583,7 @@ RSpec.describe TopicsController do
         topic.update!(category_id: sub_subcategory.id)
 
         post_1 = create_post(user: user, topic_id: topic.id)
-        post_2 = create_post(topic_id: topic.id)
+        _post_2 = create_post(topic_id: topic.id)
 
         put "/topics/bulk.json",
             params: {
@@ -3598,8 +3619,6 @@ RSpec.describe TopicsController do
       end
 
       context "with private message" do
-        before_all { Group.refresh_automatic_groups! }
-
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
             g.add(user_2)
@@ -3853,7 +3872,7 @@ RSpec.describe TopicsController do
 
     it "should create a new bookmark for the topic" do
       post = create_post
-      post2 = create_post(topic_id: post.topic_id)
+      _post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
       expect(Bookmark.find_by(user_id: user.id).bookmarkable_id).to eq(post.topic_id)
@@ -3973,7 +3992,6 @@ RSpec.describe TopicsController do
 
             it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
               dismiss_ids = @topic_ids[0..1]
-              other_ids = @topic_ids[2..-1].sort.reverse
 
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
@@ -4527,8 +4545,6 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
-      before { Group.refresh_automatic_groups! }
-
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
@@ -4554,8 +4570,6 @@ RSpec.describe TopicsController do
     describe "converting private message to public topic" do
       fab!(:topic) { Fabricate(:private_message_topic, user: user) }
       fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
-
-      before { Group.refresh_automatic_groups! }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -4931,7 +4945,7 @@ RSpec.describe TopicsController do
         fab!(:user_topic) { Fabricate(:topic, user: user) }
 
         it "should return the right response" do
-          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+          user.update!(trust_level: TrustLevel[2])
 
           post "/t/#{user_topic.id}/invite.json", params: { email: "someguy@email.com" }
 
@@ -4959,10 +4973,7 @@ RSpec.describe TopicsController do
 
         fab!(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
-        before do
-          SiteSetting.max_allowed_message_recipients = 2
-          Group.refresh_automatic_groups!
-        end
+        before { SiteSetting.max_allowed_message_recipients = 2 }
 
         it "doesn't allow normal users to invite" do
           post "/t/#{pm.id}/invite.json", params: { user: user_2.username }
@@ -5287,11 +5298,31 @@ RSpec.describe TopicsController do
         expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
     end
+
+    context "with a post_id parameter" do
+      before { sign_in(admin) }
+
+      it "resets bump correctly" do
+        post1 = Fabricate(:post, user: post_author1, topic: topic, created_at: 2.days.ago)
+        post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
+
+        put "/t/#{topic.id}/reset-bump-date/#{post1.id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(post1.created_at)
+      end
+
+      it "does not raise an error for an inexistent post" do
+        id = (SecureRandom.random_number * 100_000_000).to_i
+        original_bumped_at = topic.bumped_at
+
+        put "/t/#{topic.id}/reset-bump-date/#{id}.json"
+        expect(response.status).to eq(200)
+        expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
+      end
+    end
   end
 
   describe "#private_message_reset_new" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
     end
@@ -5410,8 +5441,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#archive_message" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
     end

@@ -5,11 +5,11 @@ import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
-
-const COMBINED_MODE = "combined";
-const SEPARATED_MODE = "separated";
-export const MAIN_PANEL = "main";
-export const ADMIN_PANEL = "admin";
+import {
+  COMBINED_MODE,
+  MAIN_PANEL,
+  SEPARATED_MODE,
+} from "discourse/lib/sidebar/panels";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
@@ -17,15 +17,20 @@ export default class SidebarState extends Service {
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
+  @tracked filter = "";
+  previousState = {};
 
   constructor() {
     super(...arguments);
-
     this.#reset();
   }
 
   setPanel(name) {
+    if (this.currentPanelKey) {
+      this.setPreviousState();
+    }
     this.currentPanelKey = name;
+    this.restorePreviousState();
   }
 
   get currentPanel() {
@@ -51,6 +56,32 @@ export default class SidebarState extends Service {
     this.displaySwitchPanelButtons = false;
   }
 
+  setPreviousState() {
+    this.previousState[this.currentPanelKey] = {
+      mode: this.mode,
+      displaySwitchPanelButtons: this.displaySwitchPanelButtons,
+    };
+  }
+
+  restorePreviousState() {
+    const state = this.previousState[this.currentPanelKey];
+    if (!state) {
+      return;
+    }
+
+    if (state.mode === SEPARATED_MODE) {
+      this.setSeparatedMode();
+    } else if (state.mode === COMBINED_MODE) {
+      this.setCombinedMode();
+    }
+
+    if (state.displaySwitchPanelButtons) {
+      this.showSwitchPanelButtons();
+    } else {
+      this.hideSwitchPanelButtons();
+    }
+  }
+
   get combinedMode() {
     return this.mode === COMBINED_MODE;
   }
@@ -63,5 +94,9 @@ export default class SidebarState extends Service {
     this.currentPanelKey = currentPanelKey;
     this.panels = panels;
     this.mode = COMBINED_MODE;
+  }
+
+  clearFilter() {
+    this.filter = "";
   }
 }

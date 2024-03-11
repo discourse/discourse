@@ -657,12 +657,48 @@ RSpec.describe GroupsController do
         SiteSetting.public_user_custom_fields = user_field_name
       end
 
-      it "shows custom the fields" do
+      it "shows the custom fields" do
         get "/groups/#{group.name}/members.json", params: { include_custom_fields: true }
 
         expect(response.status).to eq(200)
         response_custom_fields = response.parsed_body["members"].first["custom_fields"]
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
+      end
+
+      it "allows sorting by custom fields" do
+        group.add(user2)
+        UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
+        group.add(other_user)
+        UserCustomField.create!(
+          user_id: other_user.id,
+          name: user_field_name,
+          value: "B custom field",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user.id, other_user.id, user2.id],
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user2.id, other_user.id, user.id],
+        )
       end
     end
   end
@@ -958,6 +994,7 @@ RSpec.describe GroupsController do
           mentionable_level: 2,
           messageable_level: 2,
           default_notification_level: 2,
+          members_visibility_level: 2,
         )
 
         put "/groups/#{group.id}.json",
@@ -971,6 +1008,7 @@ RSpec.describe GroupsController do
                 mentionable_level: 1,
                 messageable_level: 1,
                 default_notification_level: 1,
+                members_visibility_level: 1,
                 tracking_category_ids: [category.id],
                 tracking_tags: [tag.name],
               },
@@ -989,6 +1027,7 @@ RSpec.describe GroupsController do
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
+        expect(group.members_visibility_level).to eq(1)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end

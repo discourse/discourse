@@ -18,7 +18,9 @@ $max_image_height: 150px;
   }
 
   .onebox {
-    container-type: inline-size;
+    &:not(img) {
+      container-type: inline-size;
+    }
 
     .thumbnail {
       &.onebox-avatar {
@@ -29,11 +31,24 @@ $max_image_height: 150px;
       }
     }
 
+    .onebox-body .aspect-image {
+      max-width: 50%;
+    }
+
     @container (width < 400px) {
       .onebox-body {
-        &:not(:has(.thumbnail.onebox-avatar)) {
-          display: flex;
-          flex-direction: column;
+        display: flex;
+        flex-direction: column;
+
+        .thumbnail.onebox-avatar {
+          display: none;
+        }
+        .aspect-image {
+          margin-right: 0;
+          max-width: 100%;
+          + h3 {
+            margin-top: 0.25rem;
+          }
         }
 
         h3 {

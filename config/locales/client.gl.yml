@@ -35,11 +35,8 @@ gl:
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do, MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
@@ -74,7 +71,7 @@ gl:
           one: "%{count}ano"
           other: "%{count}anos"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min."
@@ -85,7 +82,6 @@ gl:
         x_days:
           one: "%{count} día"
           other: "%{count} días"
-        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "Hai %{count} min."
@@ -123,6 +119,8 @@ gl:
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Faga este tema público o %{when}"
       private_topic: "Faga deste tema unha mensaxe privada o %{when}"
@@ -1151,6 +1149,15 @@ gl:
         success: "Enviamos un correo electrónico a ese enderezo. Siga as instrucións de confirmación."
         success_via_admin: "Enviouse unha mensaxe de correo a ese enderezo. O usuario deberá seguir as instrucións de confirmación expostas na mensaxe de correo."
         success_staff: "Enviamos un correo electrónico ao teu enderezo actual. Siga as instrucións de confirmación."
+        confirm_success: "O seu enderezo electrónico foi actualizado."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirme que quere cambiar o seu enderezo electrónico a:"
+          description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
+        authorizing_old:
+          old_email: "Correo electrónico antigo: %{email}"
+          new_email: "Novo correo electrónico: %{email}"
+          confirm_success: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
       change_avatar:
         title: "Cambie a foto do perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseado en"
@@ -1693,6 +1700,8 @@ gl:
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
+        bulk_select_topics_dropdown:
+          title: "Accións en bloque"
     date_time_picker:
       from: De
       to: A
@@ -1938,6 +1947,7 @@ gl:
         membership_request_consolidated: "novas solicitudes de incorporación"
         reaction: "nova reacción"
         votes_released: "O voto foi liberado"
+        admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
       uploading: "Cargando"
       select_file: "Seleccionar ficheiro"
@@ -2047,6 +2057,7 @@ gl:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
@@ -2102,6 +2113,23 @@ gl:
         tag: "Non hai máis temas en %{tag}."
         top: "Non hai máis temas destacados."
         bookmarks: "Non hai máis temas marcados."
+    topic_bulk_actions:
+      close_topics:
+        name: "Pechar temas"
+      archive_topics:
+        name: "Arquivar temas"
+      unlist_topics:
+        name: "Retirar temas da listaxe"
+      relist_topics:
+        name: "Refacer a listaxe de temas"
+      remove_tags:
+        name: "Retirar etiquetas"
+      append_tags:
+        name: "Anexar etiquetas"
+      replace_tags:
+        name: "Substituír etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3306,6 +3334,7 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+      filter: "Filtro"
     until: "Ata:"
     form_templates:
       upload_field:
@@ -3537,7 +3566,6 @@ gl:
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.
-              show: Obter información sobre un usuario.
               check_emails: Listar os enderezos de correo dos usuarios.
               update: Actualizar a información do perfil de usuario.
               log_out: Cerrar todas a sesións dun usuario.
@@ -3707,6 +3735,10 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+        component:
+          all_filter: "Todas"
+          enabled_filter: "Activado"
+          disabled_filter: "Desactivado"
         theme:
           theme: "Tema"
           component: "Compoñente"
@@ -3865,6 +3897,9 @@ gl:
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
+          all_filter: "Todas"
+          active_filter: "Activo"
+          inactive_filter: "Inactivo"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -3937,7 +3972,6 @@ gl:
           instructions: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS."
       email:
         title: "Mensaxes de correo"
-        settings: "Configuración"
         templates: "Modelos"
         preview_digest: "Visualización do compendio"
         advanced_test:
@@ -4463,7 +4497,6 @@ gl:
             other: "Nos últimos %{count} días:"
           value_heading: "Valor"
           requirement_heading: "Requirimento"
-          visits: "Visitas"
           days: "días"
           topics_replied_to: "Temas aos que respondeu"
           topics_viewed: "Temas vistos"
@@ -4602,6 +4635,9 @@ gl:
         json_schema:
           edit: Abrir o editor
           modal_title: "Editar: %{name}"
+        file_types_list:
+          add_image_types: "Imaxes"
+          add_audio_types: "Audio"
       badges:
         title: Insignias
         new_badge: Nova insignia
@@ -4728,6 +4764,7 @@ gl:
         category_title: "Categoría"
         tag_name: "Nome da etiqueta"
         external_url: "URL externo ou relativo"
+        username: "Nome de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?

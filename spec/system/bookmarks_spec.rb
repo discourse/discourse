@@ -2,7 +2,7 @@
 
 describe "Bookmarking posts and topics", type: :system do
   fab!(:topic)
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 

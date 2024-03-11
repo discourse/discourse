@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-import or from "truth-helpers/helpers/or";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
@@ -17,22 +17,27 @@ export default class ReviewableChatMessage extends Component {
 
   @cached
   get channel() {
+    if (!this.args.reviewable.chat_channel) {
+      return;
+    }
     return ChatChannel.create(this.args.reviewable.chat_channel);
   }
 
   <template>
-    <div class="flagged-post-header">
-      <LinkTo
-        @route="chat.channel.near-message"
-        @models={{array
-          this.channel.slugifiedTitle
-          this.channel.id
-          @reviewable.target_id
-        }}
-      >
-        <ChannelTitle @channel={{this.channel}} />
-      </LinkTo>
-    </div>
+    {{#if this.channel}}
+      <div class="flagged-post-header">
+        <LinkTo
+          @route="chat.channel.near-message"
+          @models={{array
+            this.channel.slugifiedTitle
+            this.channel.id
+            @reviewable.target_id
+          }}
+        >
+          <ChannelTitle @channel={{this.channel}} />
+        </LinkTo>
+      </div>
+    {{/if}}
 
     <div class="post-contents-wrapper">
       <ReviewableCreatedBy

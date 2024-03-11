@@ -48,11 +48,10 @@ RSpec.describe "Dates separators", type: :system do
       channel_page.send_message("message1")
       chat_page.visit_channel(channel_2)
 
-      using_session(:user_1) do |session|
+      using_session(:user_1) do
         sign_in(user_1)
         chat_page.visit_channel(channel_1)
         channel_page.send_message("message2")
-        session.quit
       end
 
       chat_page.visit_channel(channel_1)

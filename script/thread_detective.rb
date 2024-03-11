@@ -8,6 +8,7 @@ class ThreadDetective
   def self.test_thread
     Thread.new { sleep 1 }
   end
+
   def self.start(max_threads)
     @thread ||= Thread.new { self.new.monitor(max_threads) }
 

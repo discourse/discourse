@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
@@ -120,6 +120,11 @@ export default Controller.extend(CanCheckEmails, {
     return (
       this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
     );
+  },
+
+  @discourseComputed("viewingSelf", "currentUser.admin")
+  showActivityTab(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin || !this.siteSettings.hide_user_activity_tab;
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")

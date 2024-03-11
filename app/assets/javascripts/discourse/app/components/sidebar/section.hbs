@@ -1,7 +1,8 @@
 {{#if this.displaySection}}
   <div
-    class={{concat-class "sidebar-section-wrapper sidebar-section" @class}}
     data-section-name={{@sectionName}}
+    class="sidebar-section-wrapper sidebar-section"
+    ...attributes
   >
     {{#unless @hideSectionHeader}}
       <div class="sidebar-section-header-wrapper sidebar-row">
@@ -56,7 +57,7 @@
             }}
             @content={{@headerActions}}
             @onChange={{this.handleMultipleHeaderActions}}
-            @class="sidebar-section-header-dropdown"
+            class="sidebar-section-header-dropdown"
           />
         {{/if}}
       </div>

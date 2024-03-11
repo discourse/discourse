@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
@@ -64,7 +64,7 @@ export default class ChatModalChannelSummary extends Component {
           @content={{this.sinceOptions}}
           @onChange={{this.summarize}}
           @valueProperty="value"
-          @class="summarization-since"
+          class="summarization-since"
         />
         <ConditionalLoadingSection @isLoading={{this.loading}}>
           <p class="summary-area">{{this.summary}}</p>

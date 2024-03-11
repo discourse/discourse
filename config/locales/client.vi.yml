@@ -34,11 +34,8 @@ vi:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} trước"
       wrap_on: "lúc %{date}"
       tiny:
@@ -64,7 +61,7 @@ vi:
         almost_x_years:
           other: "%{count}năm"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           other: "dưới %{count} phút"
@@ -84,7 +81,6 @@ vi:
           other: "hơn %{count} năm"
         almost_x_years:
           other: "gần %{count} năm"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           other: " %{count} phút trước"
@@ -116,6 +112,8 @@ vi:
       facebook: "Chia sẻ trên Facebook"
       email: "Gửi qua email"
       url: "Sao chép và chia sẻ URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Hiển thị chủ đề công khai lúc %{when}"
       open_topic: "Đã chuyển đổi chủ đề này thành một chủ đề %{when}"
@@ -153,7 +151,6 @@ vi:
     emails_are_disabled: "Ban quản trị đã tắt mọi thư gửi đi. Sẽ không có bất kỳ thư thông báo nào được gửi."
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
-      message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
     themes:
       default_description: "Mặc định"
@@ -1204,6 +1201,8 @@ vi:
         success: "Chúng tôi đã gửi email tới địa chỉ đó. Vui lòng làm theo chỉ dẫn để xác nhận lại."
         success_via_admin: "Chúng tôi đã gửi một email đến địa chỉ đó. Người dùng sẽ cần làm theo hướng dẫn xác nhận trong email."
         success_staff: "Chúng tôi đã gửi một email đến địa chỉ hiện tại của bạn. Vui lòng làm theo hướng dẫn xác nhận."
+        confirm_success: "Email của bạn đã được cập nhật."
+        confirm: "Xác nhận"
       change_avatar:
         title: "Đổi ảnh đại diện"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, dựa trên"
@@ -1790,6 +1789,8 @@ vi:
       components:
         categories_admin_dropdown:
           title: "Quản lý Danh mục"
+        bulk_select_topics_dropdown:
+          title: "Hành động theo lô"
     date_time_picker:
       from: Từ
       to: Tới
@@ -2054,6 +2055,7 @@ vi:
         membership_request_consolidated: "yêu cầu thành viên mới"
         reaction: "phản ứng mới"
         votes_released: "Phiếu bầu đã được phát hành"
+        admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
     upload_selector:
       uploading: "Đang tải lên"
       processing: "Đang xử lý tải lên"
@@ -2232,6 +2234,7 @@ vi:
     topics:
       new_messages_marker: "lần thăm cuối"
       bulk:
+        confirm: "Xác nhận"
         select_all: "Chọn hết"
         clear_all: "Xoá hết"
         unlist_topics: "Chủ đề không công khai"
@@ -2294,6 +2297,23 @@ vi:
         tag: "Không có thêm %{tag} chủ đề."
         top: "Không còn của đề top nào nữa."
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
+    topic_bulk_actions:
+      close_topics:
+        name: "Đóng các chủ đề"
+      archive_topics:
+        name: "Chủ đề Lưu trữ"
+      unlist_topics:
+        name: "Chủ đề không công khai"
+      relist_topics:
+        name: "Chủ đề liên quan"
+      remove_tags:
+        name: "Xóa thẻ"
+      append_tags:
+        name: "Thêm thẻ"
+      replace_tags:
+        name: "Thay thế thẻ"
+      delete_topics:
+        name: "Xóa chủ đề"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -2667,9 +2687,7 @@ vi:
     post:
       confirm_delete: "Bạn có chắc chắn muốn xóa bài đăng này không?"
       quote_reply: "Trích dẫn"
-      quote_reply_shortcut: "Hoặc nhấn q"
       quote_edit: "Sửa"
-      quote_edit_shortcut: "Hoặc nhấn e"
       quote_share: "Chia sẻ"
       edit_reason: "Lý do: "
       post_number: "bài viết %{number}"
@@ -3512,6 +3530,7 @@ vi:
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
     sidebar:
+      title: "Thanh bên"
       unread_count:
         other: "%{count} chưa đọc"
       new_count:
@@ -3579,6 +3598,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
+      filter: "Lọc"
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3829,7 +3849,6 @@ vi:
             users:
               bookmarks: Liệt kê các dấu trang của người dùng. Nó trả về lời nhắc đánh dấu khi sử dụng định dạng ICS.
               sync_sso: Đồng bộ hóa người dùng bằng DiscourSeconnect.
-              show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
               update: Cập nhật thông tin hồ sơ người dùng.
               log_out: Đăng xuất tất cả
@@ -4054,11 +4073,13 @@ vi:
           body: "Nội dung"
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
+        component:
+          all_filter: "All"
+          disabled_filter: "Vô hiệu hóa"
         theme:
           theme: "Giao diện"
           component: "Thành phần"
           components: "Các thành phần"
-          filter_placeholder: "gõ vào bộ lọc…"
           theme_name: "Tên chủ đề"
           component_name: "Tên thành phần"
           themes_intro: "Chọn một chủ đề hiện có hoặc cài đặt một chủ đề mới để bắt đầu"
@@ -4217,6 +4238,9 @@ vi:
             text: "YAML"
             title: "Xác định cài đặt chủ đề ở định dạng YAML"
           scss_warning_inline: "Việc sử dụng các biến màu SCSS cốt lõi trong các chủ đề không được dùng nữa."
+          all_filter: "All"
+          active_filter: "Kích hoạt"
+          inactive_filter: "Không hoạt động"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"
@@ -4279,7 +4303,6 @@ vi:
           instructions: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS."
       email:
         title: "Emails"
-        settings: "Cấu hình"
         templates: "Templates"
         preview_digest: "Xem trước tập san"
         advanced_test:
@@ -4803,7 +4826,6 @@ vi:
             other: "Trong %{count} ngày qua:"
           value_heading: "Giá trị"
           requirement_heading: "Yêu cầu"
-          visits: "Lượt xem"
           days: "ngày"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Đã xem chủ đề"
@@ -4947,6 +4969,8 @@ vi:
         json_schema:
           edit: Khởi chạy trình chỉnh sửa
           modal_title: "Chỉnh sửa %{name}"
+        file_types_list:
+          add_image_types: "Hình ảnh"
       badges:
         title: Huy hiệu
         new_badge: Thêm huy hiệu
@@ -5078,6 +5102,7 @@ vi:
         category_title: "Danh mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
+        username: "Tên tài khoản"
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?

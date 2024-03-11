@@ -3,9 +3,9 @@
 RSpec.describe PostDestroyer do
   before { UserActionManager.enable }
 
-  fab!(:moderator)
-  fab!(:admin)
-  fab!(:coding_horror)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
@@ -679,7 +679,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "deleting the second post in a topic" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
     fab!(:second_user) { coding_horror }
@@ -1000,7 +1000,7 @@ RSpec.describe PostDestroyer do
     let!(:second_post) { Fabricate(:post, topic: topic) }
     fab!(:other_topic) { Fabricate(:topic) }
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:base_url) { URI.parse(Discourse.base_url) }
     let!(:guardian) { Guardian.new }
     let!(:url) do

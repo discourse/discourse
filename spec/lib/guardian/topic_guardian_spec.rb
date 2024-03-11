@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicGuardian do
-  fab!(:user)
-  fab!(:admin)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:tl3_user) { Fabricate(:trust_level_3) }
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
   fab!(:moderator)
@@ -18,8 +18,6 @@ RSpec.describe TopicGuardian do
   after { Guardian.disable_topic_can_see_consistency_check }
 
   describe "#can_create_shared_draft?" do
-    before { Group.refresh_automatic_groups! }
-
     it "when shared_drafts are disabled" do
       SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
@@ -49,8 +47,6 @@ RSpec.describe TopicGuardian do
   end
 
   describe "#can_see_shared_draft?" do
-    before { Group.refresh_automatic_groups! }
-
     it "when shared_drafts are disabled (existing shared drafts)" do
       SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
@@ -95,12 +91,12 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_see_deleted_topics?(topic.category)).to be_falsey
     end
   end
@@ -122,19 +118,19 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
     end
   end
 
   describe "#can_edit_topic?" do
     context "when the topic is a shared draft" do
-      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
       before do
         SiteSetting.shared_drafts_category = category.id

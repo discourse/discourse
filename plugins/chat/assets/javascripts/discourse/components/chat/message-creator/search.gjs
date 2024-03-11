@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -68,6 +68,13 @@ export default class ChatMessageCreatorSearch extends Component {
 
         await this.startOneToOneChannel(item.model.username);
         break;
+      case "group":
+        if (!item.enabled) {
+          return;
+        }
+
+        this.args.onChangeMode(MODES.new_group, [item]);
+        break;
       default:
         this.router.transitionTo("chat.channel", ...item.model.routeModels);
         this.args.close();
@@ -100,7 +107,24 @@ export default class ChatMessageCreatorSearch extends Component {
 
   async startOneToOneChannel(username) {
     try {
-      const channel = await this.chat.upsertDmChannelForUsernames([username]);
+      const channel = await this.chat.upsertDmChannel({
+        usernames: [username],
+      });
+
+      if (!channel) {
+        return;
+      }
+
+      this.args.close?.();
+      this.router.transitionTo("chat.channel", ...channel.routeModels);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  async startGroupChannel(group) {
+    try {
+      const channel = await this.chat.upsertDmChannel({ groups: [group] });
 
       if (!channel) {
         return;

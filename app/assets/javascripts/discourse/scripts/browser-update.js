@@ -45,8 +45,8 @@
     }
 
     // retrieve localized browser upgrade text
-    var t = I18n.t("browser_update"); // eslint-disable-line no-undef
-    if (t.indexOf(".browser_update]") !== -1) {
+    var t = window.I18n && I18n.t("browser_update"); // eslint-disable-line no-undef
+    if (!t || t.indexOf(".browser_update]") !== -1) {
       // very old browsers might fail to load even translations
       t =
         'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.';

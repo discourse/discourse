@@ -34,11 +34,8 @@ zh_TW:
       long_with_year: "YYYY年M月D日 h:mm a"
       long_with_year_no_time: "YYYY年 M月 D日"
       full_with_year_no_time: "YYYY年 M月 D日"
-      long_date_with_year: "YYYY年 M月 D日 LT"
       long_date_without_year: "M月 D日 LT"
-      long_date_with_year_without_time: "YYYY年 M月 D日"
       long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
-      long_date_with_year_with_linebreak: "YYYY年 M月 D日<br/>LT"
       wrap_ago: "%{date}前"
       wrap_on: "在 %{date}"
       tiny:
@@ -84,7 +81,6 @@ zh_TW:
           other: "超過 %{count} 年"
         almost_x_years:
           other: "大約 %{count} 年"
-        date_year: "YYYY年 M月 D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -155,7 +151,6 @@ zh_TW:
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
-      message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
     themes:
       default_description: "預設"
@@ -1092,6 +1087,7 @@ zh_TW:
         error: "修改你的電子郵件地址時發生錯誤，可能此電子郵件地址已經有人使用?"
         success: "我們已經寄出一封郵件至此電子郵件地址，請遵照說明進行確認。"
         success_staff: "我們已傳送一封電子郵件至你目前的信箱。請根據確認指示進行操作。"
+        confirm_success: "你的電子郵箱已更新。"
       change_avatar:
         title: "設定個人資料圖片"
         letter_based: "系統分配的個人資料圖片"
@@ -1546,6 +1542,9 @@ zh_TW:
         other: "您只能選擇%{count}個項目"
       min_content_not_reached:
         other: "至少要選擇%{count}個項目"
+      components:
+        bulk_select_topics_dropdown:
+          title: "批次操作"
     date_time_picker:
       from: 自
       to: 至
@@ -1743,6 +1742,7 @@ zh_TW:
         watching_first_post: "新話題"
         liked_consolidated: "新的讚"
         post_approved: "貼文已通過審核"
+        admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
       uploading: "正在上傳"
       select_file: "選取檔案"
@@ -1846,6 +1846,8 @@ zh_TW:
         likes: "新的讚"
         bookmarks: "書籤"
         profile: "基本資料"
+      reviewable:
+        deleted_user: "(已被刪除的使用者)"
     topics:
       new_messages_marker: "上次到訪"
       bulk:
@@ -1892,6 +1894,21 @@ zh_TW:
         tag: "%{tag} 分類已經沒有其它話題了。"
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
+    topic_bulk_actions:
+      close_topics:
+        name: "關閉話題"
+      archive_topics:
+        name: "已封存的話題"
+      unlist_topics:
+        name: "未在列表中的話題"
+      relist_topics:
+        name: "討論話題"
+      append_tags:
+        name: "向後追加標記"
+      replace_tags:
+        name: "取代標記"
+      delete_topics:
+        name: "刪除話題"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -2210,9 +2227,7 @@ zh_TW:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
     post:
       quote_reply: "引用"
-      quote_reply_shortcut: "或按 q 鍵"
       quote_edit: "編輯"
-      quote_edit_shortcut: "或按 e 鍵"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -2409,6 +2424,7 @@ zh_TW:
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       images: "圖片"
       email_in: "自訂外來電郵地址:"
+      email_in_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
       email_in_allow_strangers: "接受非使用者的電郵"
       mailinglist_mirror: "以類別來區分郵件列表"
       show_subcategory_list: "在此分類中，將子分類顯示在話題上方。"
@@ -2855,6 +2871,7 @@ zh_TW:
     second_factor_auth:
       redirect_after_success: "兩步驟驗證成功。重新導向至之前的頁面..."
     sidebar:
+      title: "側選單"
       unread_count:
         other: "%{count} 個未讀"
       new_count:
@@ -2930,6 +2947,9 @@ zh_TW:
             review:
               content: "審核"
               pending_count: "剩餘 %{count}"
+      filter: "過濾"
+      no_results:
+        title: "沒有結果"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       button_title: "開始編輯"
@@ -3097,6 +3117,7 @@ zh_TW:
         title: "API"
         key: "金鑰"
         created: 已建立
+        updated: 更新時間
         never_used: (永不)
         generate: "產生"
         revoke: "撤銷"
@@ -3275,6 +3296,10 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+        component:
+          all_filter: "全部"
+          enabled_filter: "啟用"
+          disabled_filter: "停用"
         theme:
           theme: "佈景主題"
           component: "元件"
@@ -3395,6 +3420,9 @@ zh_TW:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"
+          all_filter: "全部"
+          active_filter: "啟用的"
+          inactive_filter: "不活躍"
         colors:
           select_base:
             title: "選擇調色盤"
@@ -3448,7 +3476,6 @@ zh_TW:
           reset: "重設為預設值"
       email:
         title: "電子郵件"
-        settings: "設定"
         templates: "模板"
         preview_digest: "預覽文摘"
         advanced_test:
@@ -3916,7 +3943,6 @@ zh_TW:
             other: "這最近 %{count} 天："
           value_heading: "價值"
           requirement_heading: "要求"
-          visits: "造訪"
           days: "天"
           topics_replied_to: "話題回覆"
           topics_viewed: "已讀話題"
@@ -3989,6 +4015,7 @@ zh_TW:
         go_back: "回到搜尋"
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
+        locale: "語言:"
         more_than_50_results: "有超過50個搜尋結果。請嘗試重新定義搜尋關鍵字。"
         outdated:
           dismiss: "忽略"
@@ -4045,6 +4072,8 @@ zh_TW:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
         default_categories:
           modal_yes: "是"
+        file_types_list:
+          add_image_types: "圖片"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -4152,6 +4181,7 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："

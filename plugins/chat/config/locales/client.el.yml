@@ -13,6 +13,8 @@ el:
           never: "Ποτέ"
     chat:
       deleted_chat_username: διεγράφη
+      dates:
+        yesterday: "Χτες"
       create: "Δημιουργία"
       cancel: "Ακύρωση"
       channel_settings:
@@ -37,6 +39,7 @@ el:
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
       bookmark_message: "Σελιδοδείκτης"
+      bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
       save: "Αποθήκευση"
       sounds:
         none: "Κανένα"
@@ -47,6 +50,7 @@ el:
       browse:
         back: "Πίσω"
         filter_all: Όλα
+        filter_open: Ξεκίνημα
         filter_closed: Κλειστό
       chat_message_separator:
         today: Σήμερα

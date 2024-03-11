@@ -6,6 +6,7 @@
 
 fr:
   site_settings:
+    chat_separate_sidebar_mode: "Afficher des modes de barre latérale distincts pour le forum et la discussion."
     chat_enabled: "Activer la discussion."
     enable_public_channels: "Activer les canaux publics en fonction des catégories."
     chat_allowed_groups: "Les utilisateurs de ces groupes peuvent discuter. Notez que les responsables peuvent toujours accéder à la discussion."
@@ -27,11 +28,15 @@ fr:
     max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."
     chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message privé. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Les responsables ne sont pas soumis à ce paramètre."
     chat_allow_archiving_channels: "Autoriser le personnel à archiver les messages dans un sujet lors de la fermeture d'un canal."
+    chat_editing_grace_period: "Pendant (n) secondes après l'envoi d'une discussion, la modification n'affichera pas l'étiquette (modifiée) à côté du message de discussion."
+    chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages privés, choisissez le groupe des responsables."
       chat_upload_not_allowed_secure_uploads: "Les téléversements de discussion ne sont pas autorisés lorsque le paramètre du site de téléversement sécurisé est activé."
   system_messages:
+    private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
       title: "Archivage du canal de discussion terminé"
       subject_template: "L'archivage du canal de discussion est terminé"
@@ -54,6 +59,7 @@ fr:
   chat:
     deleted_chat_username: supprimé
     errors:
+      users_cant_be_added_to_channel: "Les utilisateurs ne peuvent pas être ajoutés à ce canal."
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
       channel_new_message_disallowed:
         archived: "Le canal est archivé, aucun nouveau message ne peut être envoyé"
@@ -116,15 +122,24 @@ fr:
         agree_and_delete:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
+        delete_and_agree:
+          title: "Ignorer le signalement et supprimer le message"
+          description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le message."
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
         disagree:
           title: "Refuser"
+        ignore:
+          title: "Ne rien faire"
+          description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} a été invité(e) par %{inviting_user}."
+        other: "%{invited_users} ont été invités par %{inviting_user}."
       archive:
         first_post_raw: "Ce sujet est une archive du canal de discussion [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -154,6 +169,7 @@ fr:
       group_mentions_disabled_multiple:
         one: "%{first_identifier} et %{count} autre groupe n'autorisent pas les mentions."
         other: "%{first_identifier} et %{count} autres groupes n'autorisent pas les mentions."
+      global_mentions_disallowed: "Les mentions @here et @all sont désactivées dans ce canal."
       too_many_members: "%{first_identifier} a trop de membres. Personne n'a reçu de notification."
       too_many_members_multiple:
         one: "%{first_identifier} et %{count} autre groupe comprennent trop de membres. Personne n'a été prévenu."
@@ -180,6 +196,7 @@ fr:
       no_targets: "Il n'y a eu aucun message pendant la période sélectionnée."
     transcript:
       default_thread_title: "Fil"
+      split_thread_range: "messages %{start} à %{end} sur %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -214,6 +231,7 @@ fr:
         other: "Vous avez de nouveaux messages de discussions"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nouveau message"
         direct_message_from_1: "[%{email_prefix}] Nouveau message de %{username}"
         direct_message_from_2: "[%{email_prefix}] Nouveaux messages de %{username1} et de %{username2}"
         direct_message_from_more:

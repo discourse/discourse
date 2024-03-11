@@ -1,5 +1,5 @@
 <div class="admin-controls">
-  <HorizontalOverflowNav @className="main-nav nav plugin-nav">
+  <HorizontalOverflowNav class="main-nav nav plugin-nav">
     <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
     {{#each this.adminRoutes as |route|}}
       <NavItem @route={{route.full_location}} @label={{route.label}} />

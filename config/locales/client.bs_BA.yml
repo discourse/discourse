@@ -36,11 +36,8 @@ bs_BA:
       long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
       wrap_on: "na %{date}"
       tiny:
@@ -86,7 +83,7 @@ bs_BA:
           few: "%{count} god."
           other: "%{count} god."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} min"
@@ -100,7 +97,6 @@ bs_BA:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
-        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -1096,6 +1092,7 @@ bs_BA:
         error: "Desila se greška pri promjeni vašeg email-a. Možda se ta email adresa kod nas već koristi?"
         success: "Poslali smo email na datu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
         success_staff: "Poslali smo email na vašu trenutnu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
+        confirm_success: "Your email has been updated."
       change_avatar:
         title: "Promjeni sliku"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na temelju"
@@ -1576,6 +1573,9 @@ bs_BA:
         one: "Označi bar %{count} predmet."
         few: "Označi bar %{count} predmeta."
         other: "Označi bar %{count} predmeta."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
       to: Ka
@@ -1931,6 +1931,21 @@ bs_BA:
         tag: "Nema više %{tag} tema."
         top: "Nema više top tema."
         bookmarks: "U zabilješkama više nema spremljenih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori teme"
+      archive_topics:
+        name: "Arhiviraj teme"
+      unlist_topics:
+        name: "Skini teme sa liste"
+      relist_topics:
+        name: "Listaj teme"
+      append_tags:
+        name: "Pripoji oznake"
+      replace_tags:
+        name: "Zamijeni oznake"
+      delete_topics:
+        name: "Obriši teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3033,6 +3048,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+      filter: "Filter"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3402,6 +3418,10 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+        component:
+          all_filter: "All"
+          enabled_filter: "Omogućen"
+          disabled_filter: "Neomogućen"
         theme:
           theme: "Izgled"
           component: "Komponenta"
@@ -3525,6 +3545,9 @@ bs_BA:
           yaml:
             text: "YAML"
             title: "Definirajte postavke teme u YAML formatu"
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Neaktivan"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -3580,7 +3603,6 @@ bs_BA:
           css: "Stylesheet"
       email:
         title: "Emailovi"
-        settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Pregled Sajta"
         advanced_test:
@@ -4040,7 +4062,6 @@ bs_BA:
             other: "U zadnjih %{count} dana:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -4168,6 +4189,8 @@ bs_BA:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Images"
       badges:
         title: Bedž
         new_badge: Novi Bedž
@@ -4274,6 +4297,7 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"

@@ -37,11 +37,8 @@ lt:
       long_with_year: "YYYY MMMM D H:mm"
       long_with_year_no_time: "YYYY MMMM D"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "YYYY MMMM D H:mm"
       long_date_without_year: "MMMM D H:mm"
-      long_date_with_year_without_time: "YYYY MMMM D"
       long_date_without_year_with_linebreak: "MMMM D<br/>H:mm"
-      long_date_with_year_with_linebreak: "YYYY MMMM D<br/>H:mm"
       wrap_ago: "prieš %{date} "
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +94,7 @@ lt:
           many: "%{count} m."
           other: "%{count} m."
         date_month: "MMM D"
-        date_year: "YYYY MMM"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} minutė"
@@ -114,7 +111,6 @@ lt:
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
-        date_year: "YYYY-MM-D"
       medium_with_ago:
         x_minutes:
           one: "prieš %{count} minutę"
@@ -208,7 +204,6 @@ lt:
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     emails_are_disabled_non_staff: "Siunčiamas el. laiškas buvo išjungtas ne darbuotojams."
     software_update_prompt:
-      message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
     bootstrap_mode: "Darbo pradžia"
     themes:
@@ -1274,6 +1269,15 @@ lt:
         success: "Mes išsiunteme laišką nurodytu el. pašto adresu. Prašome sekti patvirtinimo instrukcijas."
         success_via_admin: "Mes išsiuntėme laišką nurodytu el. pašto adresu. Prašome sekti patvirtinimo instrukcijas."
         success_staff: "Mes išsiunteme laišką nurodytu el. pašto adresu. Prašome sekti patvirtinimo instrukcijas."
+        confirm_success: "Jūsų el. pašto adresas buvo atnaujintas."
+        confirm: "Patvirtinti"
+        authorizing_new:
+          description: "Patvirtinkite, kad norite, kad jūsų el. Pašto adresas būtų pakeistas į:"
+          description_add: "Patvirtinkite, kad norite pridėti alternatyvų el. pašto adresą:"
+        authorizing_old:
+          old_email: "Senas el. Paštas: %{email}"
+          new_email: "Naujas el. paštas: %{email}"
+          confirm_success: "Mes išsiuntėme laišką į jūsų naują elektroninio pašto adresą, kad patvirtintume pakeitimą!"
       change_avatar:
         title: "Pakeisti profilio nuotrauką"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, remiantis"
@@ -1836,6 +1840,8 @@ lt:
       components:
         categories_admin_dropdown:
           title: "Tvarkyti kategorijas"
+        bulk_select_topics_dropdown:
+          title: "Veiksmai"
     date_time_picker:
       from: Nuo
       to: Kam
@@ -2070,6 +2076,7 @@ lt:
         membership_request_consolidated: "nauji narystės prašymai"
         reaction: "nauja reakcija"
         votes_released: "Balsavimas buvo išleistas"
+        admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
       uploading: "Įkeliama"
       processing: "Apdorojamas įkėlimas"
@@ -2217,6 +2224,7 @@ lt:
     topics:
       new_messages_marker: "paskutinis apsilankymas"
       bulk:
+        confirm: "Patvirtinti"
         select_all: "Pasirinkti viską"
         clear_all: "Išvalyti viską"
         unlist_topics: "Atžymėti temas"
@@ -2273,6 +2281,19 @@ lt:
         tag: "Daugiau nėra jokių temų kategorijoje %{tag}."
         top: "Daugiau nėra jokių populiarių temų."
         bookmarks: "Daugiau pažymėtų temų nėra"
+    topic_bulk_actions:
+      close_topics:
+        name: "Uždaryti temas"
+      archive_topics:
+        name: "Archyvuoti temas"
+      unlist_topics:
+        name: "Atžymėti temas"
+      append_tags:
+        name: "Pridėti žymas"
+      replace_tags:
+        name: "Pakeisti žymas"
+      delete_topics:
+        name: "Ištrinti temas"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -2648,9 +2669,7 @@ lt:
       deleted_by_author_simple: "(pašalinta autoriaus)"
     post:
       quote_reply: "Citata"
-      quote_reply_shortcut: "Arba paspauskite q"
       quote_edit: "Redaguoti"
-      quote_edit_shortcut: "Arba paspauskite e"
       quote_share: "Pasidalinti"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"
@@ -3544,6 +3563,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+      filter: "Filtruoti"
     until: "Iki:"
     form_templates:
       upload_field:
@@ -3774,7 +3794,6 @@ lt:
             users:
               bookmarks: Sąrašas vartotojo žymių. Naudojant ICS formatą, jis grąžina priminimus apie žymes.
               sync_sso: Sinchronizuokite vartotoją naudodami DiscourseConnect.
-              show: Gauti informaciją apie vartotoją.
               check_emails: Vartotojų el. paštų sąrašas
               update: Atnaujinti vartotojo profilio informaciją.
               log_out: Atjungti visus seansus vartotojui.
@@ -3934,11 +3953,14 @@ lt:
           body: "Tekstas"
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
+        component:
+          all_filter: "Visos"
+          enabled_filter: "Galimas"
+          disabled_filter: "Uždrausta"
         theme:
           theme: "Tema"
           component: "Komponentas"
           components: "Komponentai"
-          filter_placeholder: "Įveskite filtrą…"
           theme_name: "Temos pavadinimas"
           component_name: "Komponento pavadinimas"
           themes_intro: "Norėdami pradėti, pasirinkite esamą temą arba įdiekite naują"
@@ -4070,6 +4092,9 @@ lt:
           yaml:
             text: "YAML"
             title: "Apibrėžkite temos nustatymus YAML formatu"
+          all_filter: "Visos"
+          active_filter: "Aktyvūs"
+          inactive_filter: "Neaktyvus"
         colors:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"
@@ -4132,7 +4157,6 @@ lt:
           save_error_with_reason: "Jūsų pakeitimai nebuvo išsaugoti. %{error}"
       email:
         title: "El. laiškai"
-        settings: "Nustatymai"
         templates: "Juodraščiai"
         preview_digest: "Parodyti Santrauką"
         advanced_test:
@@ -4635,7 +4659,6 @@ lt:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"
           requirement_heading: "Reikalavimas"
-          visits: "Apsilankymai"
           days: "dienos"
           topics_replied_to: "Atsakyta į temų"
           topics_viewed: "Peržiūrėta temų"
@@ -4779,6 +4802,9 @@ lt:
         json_schema:
           edit: Paleiskite redaktorių
           modal_title: "Redaguoti %{name}"
+        file_types_list:
+          add_image_types: "Paveiksliukai"
+          add_audio_types: "Audio"
       badges:
         title: Trofėjai
         new_badge: Naujas ženklelis
@@ -4902,6 +4928,7 @@ lt:
         category_title: "Kategorija"
         tag_name: "Žymos pavadinimas"
         external_url: "Išorinis arba santykinis URL"
+        username: "Vartotojo vardas"
         destination: "Paskirtis"
         copy_to_clipboard: "Kopijuoti nuolatinę nuorodą į iškarpinę"
         delete_confirm: Ar tikrain nori ištrinti šią laikiną nuorodą?

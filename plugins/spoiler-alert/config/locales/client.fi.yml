@@ -7,7 +7,7 @@
 fi:
   js:
     spoiler:
-      title: Spoileri
+      title: Sumenna spoileri
       label:
         show: "Näytä piilotettu sisältö"
     composer:

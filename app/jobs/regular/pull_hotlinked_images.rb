@@ -112,8 +112,10 @@ module Jobs
 
     class ImageTooLargeError < StandardError
     end
+
     class ImageBrokenError < StandardError
     end
+
     class UploadCreateError < StandardError
     end
 

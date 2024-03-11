@@ -18,3 +18,9 @@
     justify-content: center;
   }
 }
+
+.d-modal.add-pm-participants {
+  .d-modal__body {
+    overflow: visible;
+  }
+}

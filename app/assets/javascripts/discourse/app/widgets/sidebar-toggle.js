@@ -1,3 +1,4 @@
+// Deprecated in favor of app/assets/javascripts/discourse/app/components/glimmer-header/sidebar-toggle.gjs
 import { createWidget } from "discourse/widgets/widget";
 
 export default createWidget("sidebar-toggle", {
@@ -7,9 +8,7 @@ export default createWidget("sidebar-toggle", {
     const attrs = this.attrs;
     return [
       this.attach("button", {
-        title: attrs.showSidebar
-          ? "sidebar.hide_sidebar"
-          : "sidebar.show_sidebar",
+        title: "sidebar.title",
         icon: "bars",
         action: this.site.narrowDesktopView
           ? "toggleHamburger"

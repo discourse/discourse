@@ -3,14 +3,20 @@ puts "Loading application..."
 require_relative "../../config/environment"
 
 require "etc"
-require "sqlite3"
 require "colored2"
 
-# hack so that OptimizedImage.lock beliefs that it's running in a Sidekiq job
-module Sidekiq
-  def self.server?
-    true
-  end
+begin
+  require "sqlite3"
+rescue LoadError
+  STDERR.puts "",
+              "ERROR: Failed to load required gems.",
+              "",
+              "You need to enable the `generic_import` group in your Gemfile.",
+              "Execute the following command to do so:",
+              "",
+              "\tbundle config set --local with generic_import && bundle install",
+              ""
+  exit 1
 end
 
 module BulkImport
@@ -190,9 +196,11 @@ module BulkImport
                 upload =
                   copy_to_tempfile(path) do |file|
                     begin
-                      UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
-                        Discourse::SYSTEM_USER_ID,
-                      )
+                      UploadCreator.new(
+                        file,
+                        row["display_filename"] || row["filename"],
+                        type: row["type"],
+                      ).create_for(Discourse::SYSTEM_USER_ID)
                     rescue StandardError => e
                       error_message = e.message
                       nil
@@ -200,7 +208,7 @@ module BulkImport
                   end
 
                 if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
-                  upload_path = store.get_path_for_upload(upload)
+                  upload_path = add_multisite_prefix(store.get_path_for_upload(upload))
 
                   file_exists =
                     if store.external?
@@ -320,7 +328,7 @@ module BulkImport
             begin
               upload = JSON.parse(row["upload"])
               fake_upload.url = upload["url"]
-              path = store.get_path_for_upload(fake_upload)
+              path = add_multisite_prefix(store.get_path_for_upload(fake_upload))
 
               file_exists =
                 if store.external?
@@ -355,6 +363,9 @@ module BulkImport
       post_upload_ids = Set.new
       avatar_upload_ids = Set.new
       max_count = 0
+
+      # allow more than 1 thread to optimized images at the same time
+      OptimizedImage.lock_per_machine = false
 
       init_threads << Thread.new do
         query("SELECT id FROM optimized_images", @output_db).tap do |result_set|
@@ -508,7 +519,8 @@ module BulkImport
                 if optimized_images.present?
                   optimized_images.map! do |optimized_image|
                     next unless optimized_image.present?
-                    optimized_image_path = store.get_path_for_optimized_image(optimized_image)
+                    optimized_image_path =
+                      add_multisite_prefix(store.get_path_for_optimized_image(optimized_image))
 
                     file_exists =
                       if store.external?
@@ -631,6 +643,22 @@ module BulkImport
       SiteSetting.max_attachment_size_kb = settings[:max_attachment_size_kb]
       SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
 
+      if settings[:multisite]
+        # rubocop:disable Discourse/NoDirectMultisiteManipulation
+        Rails.configuration.multisite = true
+        # rubocop:enable Discourse/NoDirectMultisiteManipulation
+
+        RailsMultisite::ConnectionManagement.class_eval do
+          def self.current_db_override=(value)
+            @current_db_override = value
+          end
+          def self.current_db
+            @current_db_override
+          end
+        end
+        RailsMultisite::ConnectionManagement.current_db_override = settings[:multisite_db_name]
+      end
+
       if settings[:enable_s3_uploads]
         SiteSetting.s3_access_key_id = settings[:s3_access_key_id]
         SiteSetting.s3_secret_access_key = settings[:s3_secret_access_key]
@@ -657,6 +685,14 @@ module BulkImport
 
           upload.destroy
         end
+      end
+    end
+
+    def add_multisite_prefix(path)
+      if Rails.configuration.multisite
+        File.join("uploads", RailsMultisite::ConnectionManagement.current_db, path)
+      else
+        path
       end
     end
   end

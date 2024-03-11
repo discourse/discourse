@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 聊天
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "總是"
           never: "永不"
@@ -26,6 +29,7 @@ zh_TW:
     chat:
       deleted_chat_username: 已刪除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
       already_enabled: "此主題已啟用聊天功能。請重新整理。"
@@ -121,7 +125,7 @@ zh_TW:
         back: "上一步"
         title: 頻道
         filter_all: 全部
-        filter_open: 已打開
+        filter_open: 開啟
         filter_closed: 不公開
         filter_archived: 已封存
       chat_message_separator:
@@ -156,15 +160,17 @@ zh_TW:
         prefix: "發至:"
         no_results: 沒有結果
         selected_user_title: "取消選取 %{username}"
+      channel:
+        memberships_count:
+          other: "%{count} 位成員"
       create_channel:
+        name: "變更名稱"
         type: "類型"
         types:
           category: "分類"
           topic: "話題"
       reviewable:
         type: "聊天訊息"
-      reactions:
-        single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
@@ -197,6 +203,9 @@ zh_TW:
           create_export: "建立匯出"
       direct_messages:
         create: "開始"
+        cannot_create: "抱歉，您無法傳送私訊。"
+      channel_list:
+        title: "頻道"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"

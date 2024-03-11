@@ -5,10 +5,13 @@
 class PresenceChannel
   class NotFound < StandardError
   end
+
   class InvalidAccess < StandardError
   end
+
   class ConfigNotLoaded < StandardError
   end
+
   class InvalidConfig < StandardError
   end
 
@@ -333,7 +336,7 @@ class PresenceChannel
     else
       message["leaving_user_ids"] = leaving_user_ids if leaving_user_ids.present?
       if entering_user_ids.present?
-        users = User.where(id: entering_user_ids)
+        users = User.where(id: entering_user_ids).includes(:user_option)
         message["entering_users"] = ActiveModel::ArraySerializer.new(
           users,
           each_serializer: BasicUserSerializer,

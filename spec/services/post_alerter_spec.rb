@@ -39,9 +39,9 @@ RSpec.describe PostAlerter do
   fab!(:group)
 
   fab!(:admin)
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:coding_horror)
-  fab!(:walterwhite) { Fabricate(:walter_white) }
+  fab!(:walterwhite) { Fabricate(:walter_white, refresh_auto_groups: true) }
   fab!(:user)
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
@@ -715,8 +715,8 @@ RSpec.describe PostAlerter do
     end
 
     it "doesn't notify the linked user if the user is staged and the category is restricted and allows strangers" do
-      staged_user = Fabricate(:staged)
-      group_member = Fabricate(:user)
+      staged_user = Fabricate(:staged, refresh_auto_groups: true)
+      group_member = Fabricate(:user, refresh_auto_groups: true)
       group.add(group_member)
 
       staged_user_post = create_post(user: staged_user, category: private_category)
@@ -1188,21 +1188,29 @@ RSpec.describe PostAlerter do
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
+      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+
       it "sends push notifications when all filters pass" do
+        evil_trout.update!(last_seen_at: 10.minutes.ago)
         Plugin::Instance.new.register_push_notification_filter { |user, payload| true }
 
-        expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
-        DiscoursePluginRegistry.reset!
+        alerts =
+          MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+            expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+          end
+
+        expect(alerts).not_to be_empty
       end
 
       it "does not send push notifications when a filters returns false" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
-        expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
 
-        events = DiscourseEvent.track_events { mention_post }
-        expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
+        alerts =
+          MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+            expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+          end
 
-        DiscoursePluginRegistry.reset!
+        expect(alerts).to be_empty
       end
     end
 
@@ -1386,6 +1394,59 @@ RSpec.describe PostAlerter do
   end
 
   describe ".create_notification_alert" do
+    before { evil_trout.update_columns(last_seen_at: 10.minutes.ago) }
+
+    it "publishes notification to notification-alert MessageBus channel" do
+      messages =
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            excerpt: "excerpt",
+            username: "username",
+          )
+        end
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:username]).to eq("username")
+      expect(messages.first.data[:post_url]).to eq(post.url)
+    end
+
+    let(:modifier_block) do
+      Proc.new do |payload|
+        payload[:username] = "gotcha"
+        payload[:post_url] = "stolen_url"
+        payload
+      end
+    end
+
+    it "applies the post_alerter_live_notification_payload modifier" do
+      plugin_instance = Plugin::Instance.new
+      plugin_instance.register_modifier(:post_alerter_live_notification_payload, &modifier_block)
+
+      messages =
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            excerpt: "excerpt",
+            username: "username",
+          )
+        end
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:username]).to eq("gotcha")
+      expect(messages.first.data[:post_url]).to eq("stolen_url")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :post_alerter_live_notification_payload,
+        &modifier_block
+      )
+    end
+
     it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
 
@@ -2057,6 +2118,7 @@ RSpec.describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
         Jobs.run_immediately!
         TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
         TopicUser.change(
@@ -2075,7 +2137,10 @@ RSpec.describe PostAlerter do
         ).to eq(0)
 
         expect {
-          PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [other_tag.name, watched_tag.name],
+          )
         }.to change { Notification.where(user_id: user.id).count }.by(1)
         expect(
           user
@@ -2085,7 +2150,10 @@ RSpec.describe PostAlerter do
         ).to eq(1)
 
         expect {
-          PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [watched_tag.name, other_tag.name],
+          )
         }.not_to change { Notification.count }
         expect(
           user
@@ -2149,11 +2217,26 @@ RSpec.describe PostAlerter do
       end
 
       it "only notifies staff watching added tag" do
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: staged.id).count).to eq(0)
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag2.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(0)
-        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
+        expect(
+          PostRevisor.new(post).revise!(
+            Fabricate(:admin, refresh_auto_groups: true),
+            tags: [other_tag3.name],
+          ),
+        ).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(1)
       end
     end
@@ -2294,7 +2377,7 @@ RSpec.describe PostAlerter do
 
       post =
         PostCreator.create!(
-          Fabricate(:user),
+          Fabricate(:user, refresh_auto_groups: true),
           title: "one of my first topics",
           raw: "one of my first posts",
           category: category.id,

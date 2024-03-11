@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ matrix.updated_ember && ' (Ember 5)' || '' }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -35,7 +35,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      EMBER_VERSION: ${{ (matrix.updated_ember && '5') || '3' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
 
     strategy:
       fail-fast: false
@@ -44,7 +44,6 @@ jobs:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
         ruby: ["3.2"]
-        updated_ember: [false]
         exclude:
           - build_type: annotations
             target: plugins
@@ -57,18 +56,6 @@ jobs:
         include:
           - build_type: system
             target: chat
-          - build_type: system
-            target: chat
-            updated_ember: true
-          - build_type: system
-            target: core
-            updated_ember: true
-          - build_type: frontend
-            target: plugins
-            updated_ember: true
-          - build_type: frontend
-            target: themes
-            updated_ember: true
 
     steps:
       - name: Set working directory owner
@@ -94,7 +81,7 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
@@ -113,15 +100,11 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
-
-      - name: Upgrade Ember
-        if: matrix.updated_ember == true
-        run: script/switch_ember_version 5
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -135,7 +118,7 @@ jobs:
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: plugins/*/gems
           key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
@@ -151,7 +134,7 @@ jobs:
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Fetch app state cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: app-cache
         with:
           path: tmp/app-cache
@@ -159,6 +142,7 @@ jobs:
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}-
             ${{ env.USES_PARALLEL_DATABASES }}
 
       - name: Restore database from cache
@@ -192,29 +176,13 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
-      - name: Check Zeitwerk eager_load
-        if: matrix.build_type == 'backend'
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
-        run: |
-          if ! bin/rails zeitwerk:check --trace; then
-            echo
-            echo "---------------------------------------------"
-            echo
-            echo "::error::'bin/rails zeitwerk:check' failed - the app will fail to boot with 'eager_load=true' (e.g. in production)."
-            echo "To reproduce locally, run 'bin/rails zeitwerk:check'."
-            echo "Alternatively, you can run your local server/tests with the 'DISCOURSE_ZEITWERK_EAGER_LOAD=1' environment variable."
-            echo
-            exit 1
-          fi
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
@@ -237,7 +205,7 @@ jobs:
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation --use-runtime-info']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format progress --use-runtime-info']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -249,10 +217,10 @@ jobs:
         run: DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
         timeout-minutes: 15
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
         with:
-          name: ember-exam-execution-plugins-frontend
+          name: ember-exam-execution-plugins-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
@@ -265,10 +233,14 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: |
           GLOBIGNORE="plugins/chat/*";
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
@@ -277,22 +249,66 @@ jobs:
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
         timeout-minutes: 30
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
         timeout-minutes: 30
 
+      - name: Check for failed system test screenshots
+        id: check-failed-system-test-screenshots
+        if: always() && matrix.build_type == 'system'
+        run: |
+          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
       - name: Upload failed system test screenshots
-        uses: actions/upload-artifact@v3
-        if: matrix.build_type == 'system' && failure()
+        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now.
+        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
           name: failed-system-test-screenshots
           path: tmp/capybara/*.png
+
+      - name: Check for flaky tests report
+        id: check-flaky-spec-report
+        if: always()
+        run: |
+          if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Fetch Job ID
+        id: fetch-job-id
+        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        run: |
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
+          echo "job_id=$job_id" >> $GITHUB_OUTPUT
+
+      - name: Create flaky tests report artifact
+        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
+
+      - name: Upload flaky tests report
+        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now
+        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        with:
+          name: flaky-test-reports
+          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -313,7 +329,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})${{ matrix.updated_ember && ' (Ember 5)' || '' }}
+    name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -325,10 +341,6 @@ jobs:
       fail-fast: false
       matrix:
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
-        updated_ember: [false]
-        include:
-          - browser: Chrome
-            updated_ember: true
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -349,18 +361,13 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
-      - name: Upgrade Ember
-        if: matrix.updated_ember == true
-        run: script/switch_ember_version 5
-
       - name: Yarn install
-        working-directory: ./app/assets/javascripts/discourse
         run: yarn install --frozen-lockfile
 
       - name: Ember Build
@@ -374,8 +381,8 @@ jobs:
         run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: ember-exam-execution-${{ matrix.browser }}
+          name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json

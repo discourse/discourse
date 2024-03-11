@@ -46,14 +46,17 @@ RSpec.describe SpamRule::AutoSilence do
     end
 
     it "returns the score when there are two flags with spam as the reason" do
-      PostActionCreator.spam(Fabricate(:user), post)
-      PostActionCreator.spam(Fabricate(:user), post)
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
       expect(score).to eq(4.0)
     end
 
     it "returns the score when there are two spam flags, each on a different post" do
-      PostActionCreator.spam(Fabricate(:user), post)
-      PostActionCreator.spam(Fabricate(:user), Fabricate(:post, user: post.user))
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+      PostActionCreator.spam(
+        Fabricate(:user, refresh_auto_groups: true),
+        Fabricate(:post, user: post.user),
+      )
       expect(score).to eq(4.0)
     end
   end
@@ -74,18 +77,18 @@ RSpec.describe SpamRule::AutoSilence do
     end
 
     it "returns 1 when there is one spam flag" do
-      PostActionCreator.spam(Fabricate(:user), post)
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
       expect(count).to eq(1)
     end
 
     it "returns 2 when there are two spam flags from 2 users" do
-      PostActionCreator.spam(Fabricate(:user), post)
-      PostActionCreator.spam(Fabricate(:user), post)
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
       expect(count).to eq(2)
     end
 
     it "returns 1 when there are two spam flags on two different posts from 1 user" do
-      flagger = Fabricate(:user)
+      flagger = Fabricate(:user, refresh_auto_groups: true)
       PostActionCreator.spam(flagger, post)
       PostActionCreator.spam(flagger, Fabricate(:post, user: post.user))
       expect(count).to eq(1)
@@ -135,8 +138,8 @@ RSpec.describe SpamRule::AutoSilence do
 
   describe "autosilenced?" do
     let(:user) { Fabricate(:newuser) }
-    let(:flagger) { Fabricate(:user) }
-    let(:flagger2) { Fabricate(:user) }
+    let(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+    let(:flagger2) { Fabricate(:user, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post, user: user) }
     let(:post2) { Fabricate(:post, user: user) }
 

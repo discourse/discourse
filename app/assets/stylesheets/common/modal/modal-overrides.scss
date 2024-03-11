@@ -218,6 +218,20 @@
   }
 }
 
+.d-modal.topic-bulk-actions-modal {
+  .d-modal {
+    &__container {
+      display: flex;
+    }
+  }
+  p {
+    margin-top: 0;
+  }
+  #bulk-topics-cancel {
+    margin-left: auto;
+  }
+}
+
 .d-modal.edit-slow-mode-modal {
   .slow-mode-label {
     display: inline-flex;

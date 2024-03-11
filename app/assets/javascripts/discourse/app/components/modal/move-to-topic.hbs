@@ -77,7 +77,7 @@
           <EmailGroupUserChooser
             class="participant-selector"
             @value={{this.participants}}
-            @onChange={{action (mut this.participants)}}
+            @onChange={{fn (mut this.participants)}}
           />
 
           {{#if this.selectedTopicId}}
@@ -95,7 +95,6 @@
       {{/if}}
 
     {{else}}
-
       <div class="radios">
         {{#if this.canSplitTopic}}
           <label class="radio-label" for="move-to-new-topic">
@@ -133,16 +132,17 @@
       </div>
 
       {{#if this.existingTopic}}
-        <p>{{html-safe
+        <p>
+          {{html-safe
             (i18n
               "topic.merge_topic.instructions" count=@model.selectedPostsCount
             )
-          }}</p>
+          }}
+        </p>
         <form>
           <ChooseTopic
             @currentTopicId={{@model.topic.id}}
             @selectedTopicId={{this.selectedTopicId}}
-            @autoFocus={{this.existingTopic}}
           />
 
           {{#if this.selectedTopicId}}
@@ -161,28 +161,62 @@
 
       {{#if this.canSplitTopic}}
         {{#if this.newTopic}}
-          <p>{{html-safe
+          <p>
+            {{html-safe
               (i18n
                 "topic.split_topic.instructions" count=@model.selectedPostsCount
               )
-            }}</p>
-          <form>
-            <label>{{i18n "topic.split_topic.topic_name"}}</label>
-            <TextField
-              @value={{this.topicName}}
-              @placeholderKey="composer.title_placeholder"
-              id="split-topic-name"
-            />
+            }}
+          </p>
+          <form class="split-new-topic-form">
+            <div class="control-group">
+              <label>{{i18n "topic.split_topic.topic_name"}}</label>
+              <TextField
+                @value={{this.topicName}}
+                @placeholderKey="composer.title_placeholder"
+                id="split-topic-name"
+              />
+              <PluginOutlet
+                @name="split-new-topic-title-after"
+                @outletArgs={{hash
+                  selectedPosts=@model.selectedPosts
+                  updateTopicName=this.updateTopicName
+                }}
+              />
+            </div>
 
-            <label>{{i18n "categories.category"}}</label>
-            <CategoryChooser
-              @value={{this.categoryId}}
-              class="small"
-              @onChange={{action (mut this.categoryId)}}
-            />
+            <div class="control-group">
+              <label>{{i18n "categories.category"}}</label>
+              <CategoryChooser
+                @value={{this.categoryId}}
+                class="small"
+                @onChange={{fn (mut this.categoryId)}}
+              />
+              <PluginOutlet
+                @name="split-new-topic-category-after"
+                @outletArgs={{hash
+                  selectedPosts=@model.selectedPosts
+                  updateCategoryId=this.updateCategoryId
+                }}
+              />
+            </div>
+
             {{#if this.canAddTags}}
-              <label>{{i18n "tagging.tags"}}</label>
-              <TagChooser @tags={{this.tags}} @categoryId={{this.categoryId}} />
+              <div class="control-group">
+                <label>{{i18n "tagging.tags"}}</label>
+                <TagChooser
+                  @tags={{this.tags}}
+                  @categoryId={{this.categoryId}}
+                />
+                <PluginOutlet
+                  @name="split-new-topic-tag-after"
+                  @outletArgs={{hash
+                    selectedPosts=@model.selectedPosts
+                    updateTags=this.updateTags
+                    tags=this.tags
+                  }}
+                />
+              </div>
             {{/if}}
           </form>
         {{/if}}

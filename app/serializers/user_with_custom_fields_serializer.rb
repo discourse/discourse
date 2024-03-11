@@ -2,7 +2,8 @@
 
 # A basic user serializer, with custom fields
 class UserWithCustomFieldsSerializer < BasicUserSerializer
-  attributes :custom_fields
+  include UserStatusMixin
+  attribute :custom_fields
 
   def custom_fields
     fields = custom_field_keys

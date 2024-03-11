@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def header
-        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes-channel-thread")
       end
 
       def notifications_button
@@ -37,9 +37,7 @@ module PageObjects
 
       def has_notification_level?(level)
         select_kit =
-          PageObjects::Components::SelectKit.new(
-            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
-          )
+          PageObjects::Components::SelectKit.new(".c-navbar__thread-tracking-dropdown.-persisted")
         select_kit.has_selected_value?(
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
         )
@@ -55,30 +53,28 @@ module PageObjects
       end
 
       def close
-        header.find(".chat-thread__close").click
+        header.find(".c-navbar__close-thread-button").click
       end
 
       def has_back_link_to_thread_list?(channel)
-        header.has_css?(
-          ".chat-thread__back-to-previous-route[href='#{channel.relative_url + "/t"}']",
-        )
+        header.has_css?(".c-navbar__back-button[href='#{channel.relative_url + "/t"}']")
       end
 
       def has_back_link_to_channel?(channel)
-        header.has_css?(".chat-thread__back-to-previous-route[href='#{channel.relative_url}']")
+        header.has_css?(".c-navbar__back-button[href='#{channel.relative_url}']")
       end
 
       def back
-        header.find(".chat-thread__back-to-previous-route").click
+        header.find(".c-navbar__back-button").click
       end
 
       def has_no_unread_list_indicator?
-        has_no_css?(".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator")
+        has_no_css?(".c-navbar__back-button .chat-thread-header-unread-indicator")
       end
 
       def has_unread_list_indicator?(count:)
         has_css?(
-          ".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
+          ".c-navbar__back-button .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
           text: count.to_s,
         )
       end

@@ -6,6 +6,9 @@ RSpec.describe "Flag message", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   before do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.chat_max_direct_message_users = 3
     chat_system_bootstrap
     sign_in(current_user)
   end
@@ -86,5 +89,59 @@ RSpec.describe "Flag message", type: :system do
     page.find(".create-chat-group").click
 
     expect(page).to have_current_path(%r{/chat/c/cats/\d+})
+  end
+
+  it "can create a new group by clicking on an user group" do
+    user_1 = Fabricate(:user)
+    user_2 = Fabricate(:user)
+    group = Fabricate(:public_group, users: [user_1, user_2])
+
+    visit("/")
+    chat_page.prefers_full_page
+    chat_page.open_new_message
+    chat_page.find(".chat-message-creator__search-input__input").fill_in(with: group.name)
+    chat_page.message_creator.click_row(group)
+    chat_page.find(".chat-message-creator__new-group-header__input").fill_in(with: "dogs")
+    chat_page.find(".create-chat-group").click
+
+    expect(page).to have_current_path(%r{/chat/c/dogs/\d+})
+  end
+
+  it "doesn’t allow adding a user group if it will exceed the member limit" do
+    user_1 = Fabricate(:user)
+    user_2 = Fabricate(:user)
+    user_3 = Fabricate(:user)
+    group = Fabricate(:public_group, users: [user_1, user_2])
+
+    visit("/")
+    chat_page.prefers_full_page
+    chat_page.open_new_message
+    chat_page.find("#new-group-chat").click
+    chat_page.find(".chat-message-creator__new-group-header__input").fill_in(with: "hamsters")
+    chat_page.find(".chat-message-creator__members-input").fill_in(with: user_3.username)
+    chat_page.message_creator.click_row(user_3)
+    chat_page.find(".chat-message-creator__members-input").fill_in(with: group.name)
+    chat_page.message_creator.click_row(group)
+
+    expect(chat_page.message_creator).to have_css("div[data-disabled]")
+    expect(chat_page.message_creator).to be_listing(group)
+    chat_page.message_creator.click_row(group)
+    expect(chat_page.message_creator).to be_listing(group)
+  end
+
+  it "displays users status next to names" do
+    SiteSetting.enable_user_status = true
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+
+    current_user.set_status!("gone surfing", "ocean")
+
+    visit("/")
+    chat_page.open_new_message
+    chat_page.message_creator.filter(current_user.username)
+
+    expect(chat_page).to have_selector(
+      ".user-status-message img[alt='#{current_user.user_status.emoji}']",
+    )
   end
 end

@@ -1,5 +1,4 @@
 <Sidebar::EditNavigationMenu::Modal
-  @class="sidebar__edit-navigation-menu__tags-modal"
   @title="sidebar.tags_form_modal.title"
   @saving={{this.saving}}
   @save={{this.save}}
@@ -16,7 +15,8 @@
   @filterSelected={{this.filterSelected}}
   @filterUnselected={{this.filterUnselected}}
   @closeModal={{@closeModal}}
-  @loading={{this.tagsLoading}}
+  @loading={{or this.tagsLoading this.disableFiltering}}
+  class="sidebar__edit-navigation-menu__tags-modal"
 >
   {{#if this.tagsLoading}}
     {{loading-spinner size="large"}}

@@ -19,7 +19,12 @@ RSpec.describe Upload do
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
-      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post =
+        Fabricate(
+          :post,
+          raw: "<img src='#{post_upload.url}'>",
+          user: Fabricate(:user, refresh_auto_groups: true),
+        )
       post.link_post_uploads
 
       badge_upload = Fabricate(:upload)
@@ -69,6 +74,7 @@ RSpec.describe Upload do
   end
 
   it "can reconstruct dimensions on demand" do
+    SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
 
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
@@ -88,6 +94,7 @@ RSpec.describe Upload do
   end
 
   it "dimension calculation returns nil on missing image" do
+    SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
 
@@ -102,7 +109,7 @@ RSpec.describe Upload do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     expect(upload.persisted?).to eq(false)
     expect(upload.errors.messages[:base].first).to eq(
-      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 20),
+      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 10),
     )
   end
 

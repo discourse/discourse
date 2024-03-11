@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -16,6 +16,7 @@ export default class extends Component {
   @tracked onlyUnSelected = false;
   @tracked tags = [];
   @tracked tagsLoading;
+  @tracked disableFiltering;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
   constructor() {
@@ -50,6 +51,7 @@ export default class extends Component {
       })
       .finally(() => {
         this.tagsLoading = false;
+        this.disableFiltering = false;
       });
   }
 
@@ -110,6 +112,7 @@ export default class extends Component {
 
   @action
   onFilterInput(filter) {
+    this.disableFiltering = true;
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
   }
 

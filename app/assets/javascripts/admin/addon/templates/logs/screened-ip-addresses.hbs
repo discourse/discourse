@@ -4,10 +4,10 @@
   <div class="filter-screened-ip-address inline-form">
     <TextField
       @value={{this.filter}}
-      @class="ip-address-input"
       @placeholderKey="admin.logs.screened_ips.form.filter"
       @autocorrect="off"
       @autocapitalize="off"
+      class="ip-address-input"
     />
     <DButton
       @action={{this.exportScreenedIpList}}

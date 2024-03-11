@@ -33,15 +33,15 @@ uk:
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "Do MMMM"
+      full_no_year_no_time: "D MMM"
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YY, LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} тому"
       wrap_on: "%{date}"
       tiny:
@@ -97,7 +97,7 @@ uk:
           many: "%{count}р."
           other: "%{count}р."
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "менше %{count} хвилини тому"
@@ -144,7 +144,7 @@ uk:
           few: "майже %{count} роки"
           many: "майже %{count} років"
           other: "майже %{count} років"
-        date_year: "D MMM 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} хв. тому"
@@ -202,6 +202,7 @@ uk:
       url: "Скопіювати та поширити посилання"
     word_connector:
       comma: ", "
+      last_item: "та"
     action_codes:
       public_topic: "Робить цю тему публічною %{when}"
       open_topic: "Перетворив це на тему %{when}"
@@ -243,7 +244,7 @@ uk:
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
     software_update_prompt:
-      message: "Ми оновили цей сайт, <span>оновіть сторінку</span>, інакше у вас може виникнути неочікувана поведінка."
+      message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
       dismiss: "Відхилити"
     bootstrap_mode: "Початок роботи"
     themes:
@@ -252,7 +253,14 @@ uk:
       error_caused_by: "Викликано '%{name}'. <a target='blank' href='%{path}'>Натисніть тут</a>, щоб оновити, переналаштувати або вимкнути."
       only_admins: "(це повідомлення показується тільки адміністраторам сайту)"
     broken_decorator_alert: "Повідомлення можуть показуватись неправильно, оскільки один з декораторів вмісту дописів на вашому сайті викликав помилку."
+    broken_page_change_alert: "Обробник onPageChange викликав помилку. Зверніться до інструментів розробника браузера для отримання додаткової інформації."
     broken_plugin_alert: "Викликано плагіном '%{name}'"
+    critical_deprecation:
+      notice: "<b>[Повідомлення адміністратора]</b> Одну з ваших тем або плагінів потрібно оновити для сумісності з майбутніми основними змінами Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
+      theme_source: "Ідентифікована тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Ідентифікований плагін: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіо)"
@@ -859,6 +867,7 @@ uk:
           imap_mailbox_not_selected: "Ви повинні вибрати поштову скриньку для цієї конфігурації IMAP, інакше жодна поштова скринька не буде синхронізована!"
           prefill:
             title: "Заповніть початкові налаштування для:"
+            gmail: "Gmail"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
@@ -1128,6 +1137,7 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
+      account_possessive: "Обліковий запис %{name}"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -1599,6 +1609,18 @@ uk:
         success_via_admin: "Ми надіслали листа на цю скриньку. Будь ласка, виконайте інструкції з листа для підтвердження."
         success_staff: "Ми надіслали листа на вашу поточну скриньку. Будь ласка, виконайте інструкції щодо підтвердження."
         back_to_preferences: "Повернутися до налаштувань"
+        confirm_success: "Вашу адресу електронної пошти було оновлено."
+        confirm: "Підтвердити"
+        authorizing_new:
+          description: "Підтвердьте, що ви бажаєте змінити адресу електронної пошти на:"
+          description_add: "Будь ласка, підтвердьте, що ви хочете додати альтернативну адресу електронної пошти:"
+        authorizing_old:
+          title: "Перевірте стару адресу електронної пошти"
+          description: "Будь ласка, підтвердіть свою стару електронну адресу, щоб продовжити зміну електронної пошти:"
+          description_add: "Будь ласка, перевірте вашу існуючу адресу електронної пошти, щоб продовжити додавання альтернативної адреси:"
+          old_email: "Стара електронна пошта: %{email}"
+          new_email: "Нова електронна пошта: %{email}"
+          confirm_success: "Ми надіслали електронного листа на вашу нову адресу електронної пошти, щоб підтвердити зміни!"
       change_avatar:
         title: "Змінити своє зображення профілю"
         gravatar: "На основі <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
@@ -1868,6 +1890,9 @@ uk:
         incorrect_password: "Введений пароль неправильний."
         incorrect_passkey: "Цей ключ доступу неправильний."
         logged_in_as: "Ви увійшли як: "
+        forgot_password: "Забули свій пароль?"
+        password_reset_email_sent: "Електронний лист для зміни пароля надіслано."
+        cannot_send_password_reset_email: "Не вдалося надіслати лист для скидання пароля."
         instructions: "Будь ласка, підтвердіть свою особу для того, щоб завершити цю дію."
         fine_print: "Ми просимо вас підтвердити свою особу, оскільки це потенційно чутлива дія. Після автентифікації вам буде запропоновано повторно підтвердити автентифікацію лише через кілька годин бездіяльності."
       password:
@@ -2236,11 +2261,14 @@ uk:
         title: "Увійти через Discord"
         sr_title: "Увійти через Discord"
       passkey:
-        name: "Увійти за допомогою ключа доступу"
+        name: "Увійдіть за допомогою пароля"
       second_factor_toggle:
         totp: "Натомість використовуйте застосунок автентифікації"
         backup_code: "Замість цього використовуйте резервний код"
         security_key: "Натомість використовуйте ключ безпеки"
+      no_login_methods:
+        title: "Немає методів входу"
+        description: "Методи входу не налаштовані. Адміністратори можуть відвідати <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> , щоб переналаштувати сайт."
     invites:
       accept_title: "Запрошення"
       welcome_to: "Ласкаво просимо до %{site_name}!"
@@ -2308,13 +2336,17 @@ uk:
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елементів."
       components:
-        tag_drop:
-          filter_for_more: Шукати ще…
+        filter_for_more: Шукати ще…
         categories_admin_dropdown:
           title: "Керування розділами"
+        bulk_select_topics_dropdown:
+          title: "Масові дії"
     date_time_picker:
       from: Від
       to: До
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} перевищує максимально допустимий %{max_file_size}"
     emoji_picker:
       filter_placeholder: Шукати emoji
       smileys_&_emotion: Смайли та емотикони
@@ -2350,6 +2382,7 @@ uk:
       add_warning: "Це офіційне попередження."
       toggle_whisper: "Шепіт"
       toggle_unlisted: "Сховати зі списків тем"
+      insert_table: "Вставити таблицю"
       posting_not_on_topic: "На яку тему ви хочете відповісти?"
       saved_local_draft_tip: "збережено локально"
       similar_topics: "Ваша тема схожа на…"
@@ -2667,6 +2700,7 @@ uk:
         reaction: "нова реакція"
         votes_released: "Голосування опубліковано"
         new_features: "з’явилися нові функції Discourse!"
+        admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       uploading: "Надсилання"
       processing: "Обробка надсилання"
@@ -2876,6 +2910,7 @@ uk:
     topics:
       new_messages_marker: "останнє відвідування"
       bulk:
+        confirm: "Підтвердити"
         select_all: "Обрати все"
         clear_all: "Очистити все"
         unlist_topics: "Виключити з усіх списків тем"
@@ -2950,6 +2985,7 @@ uk:
           few: "Обробка: <strong>%{count}</strong> теми"
           many: "Обробка: <strong>%{count}</strong> тем"
           other: "Обробка: <strong>%{count}</strong> тем"
+        silent: "Виконати цю дію без звуку."
       none:
         unread: "У вас немає непрочитаних тем."
         unseen: "У Вас немає не переглянутих тем."
@@ -2960,6 +2996,7 @@ uk:
         bookmarks: "У вас немає обраних тем."
         category: "В розділі %{category} немає тем."
         top: "Топових тем немає."
+        hot: "Нема гарячих тем."
         filter: "Немає тем."
         educate:
           new: '<p>Ваші нові теми з’являтимуться тут. Типово теми вважаються новими і показуватимуть індикатор <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, якщо її створено за останні 2 дні.</p><p>Відвідайте свої <a href="%{userPrefsUrl}">налаштування</a>, щоб змінити це.</p>'
@@ -2975,8 +3012,38 @@ uk:
         category: "Більше немає тем в розділі %{category}."
         tag: "Немає більше %{tag} тем."
         top: "Топових тем більше немає."
+        hot: "Гарячих тем більше немає."
         bookmarks: "Більше немає обраних тем."
         filter: "Більше немає тем."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрити теми"
+      archive_topics:
+        name: "Архівувати теми"
+      unlist_topics:
+        name: "Виключити з усіх списків тем"
+      relist_topics:
+        name: "Повторний Список тем"
+      remove_tags:
+        name: "Видалити теги"
+      append_tags:
+        name: "Додати теґи"
+      replace_tags:
+        name: "Замінити теґи"
+      delete_topics:
+        name: "Видалити теми"
+      update_category:
+        name: "Оновити категорію"
+        description: "Виберіть нову категорію для обраних тем"
+      reset_bump_dates:
+        name: "Скинути дату підняття"
+        description: "Скинути дату підняття теми до дати останнього створеного повідомлення, що впливає на порядок у списку тем"
+      defer:
+        name: "Відкласти теми"
+        description: "Позначити теми як непрочитані"
+      update_notifications:
+        name: "Сповіщення про оновлення…"
+        description: "Змініть рівень сповіщень на «Перегляд», «Стеження», «Звичайний» або «Вимкнено»."
     topic:
       filter_to:
         one: "%{count} допис в темі"
@@ -3465,9 +3532,11 @@ uk:
     post:
       confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
-      quote_reply_shortcut: "Або натисніть q"
+      quote_reply_shortcut: "Цитата (або натисніть q)"
       quote_edit: "Редагувати"
-      quote_edit_shortcut: "Або натисніть e"
+      quote_edit_shortcut: "Редагувати (або натиснути e)"
+      quote_copy: "Копіювати цитату"
+      quote_copied_to_clibboard: "Цитата скопійована в буфер обміну"
       quote_share: "Поширити"
       edit_reason: "Причина: "
       post_number: "допис %{number}"
@@ -3588,6 +3657,8 @@ uk:
         delete: "видалити цей допис"
         undelete: "скасувати видалення цього допису"
         share: "поширити посилання на цей допис"
+        copy_title: "скопіювати посилання на цю публікацію в буфер обміну"
+        link_copied: "Посилання скопійовано!"
         more: "Більше"
         delete_replies:
           confirm: "Ви також хочете видалити відповіді до цього допису?"
@@ -3662,6 +3733,7 @@ uk:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
           inappropriate: "Ви поскаржилися на це як на неприпустиме"
+          illegal: "Ви позначили це як незаконне"
           notify_moderators: "Ви позначили це для модерації"
           notify_user: "Ви надіслали повідомлення цьому користувачеві"
       delete:
@@ -3930,10 +4002,13 @@ uk:
         off_topic: "Це не по темі"
         inappropriate: "Це не прийнятно"
         spam: "Це спам"
+        illegal: "Це незаконно"
       custom_placeholder_notify_user: "Будьте конкретні, конструктивні та доброзичливі."
       notify_user_textarea_label: "Повідомлення для користувача"
       custom_placeholder_notify_moderators: "Поясніть суть проблеми: на що потрібно звернути увагу. Надайте відповідні посилання, якщо це можливо."
       notify_moderators_textarea_label: "Повідомлення для модераторів"
+      custom_placeholder_illegal: "Повідомте нам, чому ви вважаєте цей контент незаконним, і надайте відповідні посилання та приклади, де це можливо."
+      confirmation_illegal: "Те, що я написав вище, є точним і повним."
       custom_message:
         at_least:
           one: "Введіть хоча б %{count} символ"
@@ -4084,6 +4159,10 @@ uk:
         title: "Непереглянуті"
         lower_title: "непереглянуті"
         help: "нові теми і теми, які ви відстежуєте або які містять непрочитані дописи"
+      hot:
+        title: "Гаряче"
+        lower_title: "гаряче"
+        help: "топ останніх тем"
       new:
         lower_title_with_count:
           one: "%{count} нова"
@@ -4374,6 +4453,7 @@ uk:
         many: "Синоніми %{count} також будуть видалені."
         other: "Синоніми %{count} також будуть видалені."
       edit_tag: "Редагувати назву та опис теґу"
+      description: "Опис (максимум 1000 символів)"
       sort_by: "Сортувати за:"
       sort_by_count: "Кількість"
       sort_by_name: "ім'я"
@@ -4515,8 +4595,7 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      show_sidebar: "Показати бічну панель"
-      hide_sidebar: "Приховати бічну панель"
+      title: "Бічна панель"
       unread_count:
         one: "%{count} непрочитана"
         few: "%{count} непрочитаних"
@@ -4655,6 +4734,9 @@ uk:
       panels:
         forum:
           label: Форум
+      filter: "Filter"
+      no_results:
+        title: "Немає результатів"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -4707,22 +4789,68 @@ uk:
         patternMismatch: "Будь ласка, використовуйте правильний формат."
         badInput: "Будь ласка, введіть коректне значення."
     table_builder:
+      title: "Конструктор таблиць"
       modal:
+        title: "Конструктор таблиць"
+        create: "Створити таблицю"
         help:
+          title: "Використання редактора таблиць"
           enter_key: "Enter"
+          tab_key: "Вкладка"
+          new_row: "в кінці рядка вставити новий рядок."
+          new_col: "в кінці стовпця вставити новий стовпець."
+          options: "Клацніть правою кнопкою миші по клітинці — додаткові параметри у випадаючому меню."
+        confirm_close: "Ви впевнені, що хочете закрити конструктор таблиць? Будь-які незбережені зміни будуть втрачені."
       edit:
+        btn_edit: "Редагувати таблицю"
         modal:
+          title: "Редагувати таблицю"
           cancel: "скасувати"
           create: "Зберегти"
           reason: "чому ви редагуєте допис?"
+          trigger_reason: "Додати причину для редагування"
+        default_edit_reason: "Оновлення таблиці за допомогою редактора таблиць"
+      default_header:
+        col_1: "Колонка 1"
+        col_2: "Колонка 2"
+        col_3: "Колонка 3"
+        col_4: "Колонка 4"
       spreadsheet:
+        no_records_found: "Записів не знайдено"
         show: "Показати"
+        entries: "записи"
         about: "Про"
+        prompts:
+          delete_selected_rows: "Ви впевнені, що хочете видалити вибрані рядки?"
+          delete_selected_cols: "Ви впевнені, що хочете видалити вибрані стовпці?"
+          will_destroy_merged_cells: "Ця дія знищить всі існуючі об'єднані клітинки. Ви впевнені?"
+          will_clear_search_results: "Ця дія знищить всі існуючі об'єднані клітинки. Ви впевнені?"
+          conflicts_with_merged_cells: "Виник конфлікт з іншою об’єднаною коміркою"
+        invalid_merge_props: "Неправильні об'єднані властивості"
+        cells_already_merged: "Комірка вже об'єднана"
+        no_cells_selected: "Жодна клітинка не вибрана"
+        context_menu:
+          row:
+            before: "Вставити новий рядок перед"
+            after: "Вставити новий рядок після"
+            delete: "Видалити вибрані рядки"
+          col:
+            before: "Вставити новий стовпець перед"
+            after: "Вставити новий стовпець після"
+            delete: "Видалити вибрані стовпці"
+            rename: "Перейменувати цей стовпець"
+          order:
+            ascending: "Порядок за зростанням"
+            descending: "Порядок за спаданням"
+          copy: "Копіювання..."
+          paste: "Вставити..."
+          save: "Зберегти як..."
   admin_js:
     type_to_filter: "текст для пошуку…"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
+      back_to_forum: "Повернутися до форуму"
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -4730,6 +4858,7 @@ uk:
           never: "ніколи"
       reports:
         title: "Список доступних звітів"
+        meta_doc: "Ознайомтеся з нашою документацією <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> для детального огляду звітів."
       dashboard:
         title: "Майстерня"
         last_updated: "Приладова панель оновлена:"
@@ -4912,6 +5041,7 @@ uk:
         user: "Користувач"
         title: "API"
         key: "Ключ"
+        keys: "Ключі"
         created: Створено
         updated: Оновлено
         last_used: Використано
@@ -5016,6 +5146,8 @@ uk:
               commenting: Необхіднj для функцій коментування плагіна WP Discourse.
               discourse_connect: Необхіднj для функцій DiscourseConnect плагіна WP Discourse.
               utilities: Необхідно, якщо ви використовуєте утиліти плагіна WP Discourse.
+            logs:
+              messages: Список повідомлень з /logs або отримання певного повідомлення журналу.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -5108,7 +5240,7 @@ uk:
           user_removed_from_group: "Користувача видалено з групи"
         user_promoted_event:
           group_name: "Події, запропоновані користувачем"
-          user_promoted: "Користувач просуває"
+          user_promoted: "Користувач отримав підвищення"
         delivery_status:
           title: "Стан доставки"
           inactive: "Неактивно"
@@ -5266,11 +5398,19 @@ uk:
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
+        component:
+          all_filter: "Все"
+          used_filter: "Використано"
+          unused_filter: "Невикористаний"
+          enabled_filter: "Включено"
+          disabled_filter: "Вимкнено"
+          updates_available_filter: "Доступні оновлення"
         theme:
+          filter_by: "Фільтрувати за"
           theme: "Тема"
           component: "Компонент"
           components: "Компоненти"
-          filter_placeholder: "текст для пошуку…"
+          search_placeholder: "введіть для пошуку…"
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
@@ -5307,6 +5447,7 @@ uk:
           color_scheme_user_selectable: "Схема кольорів може бути вибрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
+          edit_color_scheme: "Редагувати палітру кольорів"
           default_light_scheme: "Світла (за замовчуванням)"
           color_scheme_select: "Виберіть кольори для стилю"
           custom_sections: "Налаштування секцій:"
@@ -5367,6 +5508,7 @@ uk:
           install_upload: "З вашого пристрою"
           install_git_repo: "Зі сховища git"
           install_create: "Створити новий"
+          installing_message: "Встановлення теми, це може зайняти кілька хвилин..."
           duplicate_remote_theme: "Компонент теми «%{name}» уже встановлений. Ви впевнені, що хочете встановити іншу копію?"
           force_install: "Тему неможливо встановити, тому що не доступний репозиторій Git. Ви впевнені, що хочете продовжити установку?"
           create_placeholder: "Створити заповнювач"
@@ -5445,6 +5587,12 @@ uk:
             title: "Визначити налаштування теми в форматі YAML"
           scss_color_variables_warning: 'Використання основних змінних кольорів SCSS в темах є застарілим. Замість цього використовуйте індивідуальні правила CSS. Див. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">цей посібник</a> для отримання додаткової інформації.'
           scss_warning_inline: "Використання змінних основних кольорів SCSS у темах є застарілою."
+          all_filter: "Все"
+          active_filter: "Активні"
+          inactive_filter: "Неактивно"
+          updates_available_filter: "Доступні оновлення"
+          schema:
+            back_button: "Назад до %{name}"
         colors:
           select_base:
             title: "Виберіть базову колірну палітру"
@@ -5521,8 +5669,9 @@ uk:
           instructions: "Налаштування шаблону, в якому відображаються всі html-повідомлення e-mail пошти, та стиль за допомогою CSS."
       email:
         title: "Листи"
-        settings: "Налаштування"
+        settings: "Налаштування електронної пошти"
         templates: "Шаблони"
+        templates_title: "Шаблони електронної пошти"
         preview_digest: "Стислий виклад новин"
         advanced_test:
           title: "Розширений Тест"
@@ -5592,6 +5741,9 @@ uk:
             type_placeholder: "дайджест, підписка"
             reply_key_placeholder: "Ключ відповіді"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[Детальніше...]"
+          post_id: "(ID допису: %{post_id})"
       moderation_history:
         performed_by: "Виконано користувачем "
         no_results: "Історія модерації недоступна."
@@ -6176,7 +6328,7 @@ uk:
             other: "За останні %{count} днів:"
           value_heading: "Значення"
           requirement_heading: "Вимога"
-          visits: "Відвідини"
+          posts_read_days: "Повідомлення Прочитано: унікальні дні"
           days: "днів"
           topics_replied_to: "Теми, на які відповів(ла)"
           topics_viewed: "Переглянуто Тем"
@@ -6338,6 +6490,13 @@ uk:
         json_schema:
           edit: Відкрити редактор
           modal_title: "Редагувати %{name}"
+        file_types_list:
+          add_image_types: "Зображення"
+          add_video_types: "Відео"
+          add_audio_types: "Audio"
+          add_document_types: "Документи"
+          add_types_title: "Дозволити розширення %{types}"
+          add_types_toast: "%{types} типи файлів додані"
       badges:
         title: Нагороди
         new_badge: Нова нагорода
@@ -6479,6 +6638,8 @@ uk:
         category_title: "Розділ"
         tag_name: "Назва теґу"
         external_url: "Зовнішня або відносна URL-адреса"
+        user_id: "ID користувача"
+        username: "Імʼя користувача"
         destination: "Призначення"
         copy_to_clipboard: "Копіювати постійне посилання у буфер обміну"
         delete_confirm: Ви впевнені, що хочете видалити це постійне посилання?

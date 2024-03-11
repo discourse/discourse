@@ -1,7 +1,7 @@
 const handlers = [];
 const disabledDeprecations = new Set();
-const emberCliDeprecationWorkflows =
-  window.deprecationWorkflow?.config?.workflow;
+const deprecationWorkflow = window.deprecationWorkflow;
+const workflows = deprecationWorkflow?.config?.workflow;
 
 let emberDeprecationSilencer;
 
@@ -47,13 +47,15 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  if (raiseError) {
+  const matchedWorkflow = workflows?.find((w) => w.matchId === id);
+
+  if (
+    raiseError ||
+    matchedWorkflow?.handler === "throw" ||
+    (!matchedWorkflow && deprecationWorkflow?.throwOnUnhandled)
+  ) {
     throw msg;
   }
-
-  const matchedWorkflow = emberCliDeprecationWorkflows?.find(
-    (w) => w.matchId === id
-  );
 
   if (matchedWorkflow?.handler !== "silence") {
     console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console

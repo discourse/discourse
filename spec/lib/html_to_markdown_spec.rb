@@ -150,6 +150,14 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown(HTML_WITH_IMG, keep_img_tags: true)).to eq(HTML_WITH_IMG)
   end
 
+  it "removes newlines from img alt text" do
+    html_with_alt_newlines =
+      %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse\n\nLogo">}
+    expect(html_to_markdown(html_with_alt_newlines)).to eq(
+      "![Discourse Logo](https://www.discourse.org/logo.svg)",
+    )
+  end
+
   it "removes empty & invalid <img>" do
     expect(html_to_markdown("<img>")).to eq("")
     expect(html_to_markdown(%Q{<img src="">})).to eq("")
@@ -158,6 +166,13 @@ RSpec.describe HtmlToMarkdown do
 
   it "keeps <img> with src='cid:' with 'keep_cid_imgs'" do
     expect(html_to_markdown(HTML_WITH_CID_IMG, keep_cid_imgs: true)).to eq(HTML_WITH_CID_IMG)
+  end
+
+  it "removes newlines from img alt text with cid images" do
+    html_with_cid_alt_newlines = %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse\n\nLogo">}
+    expect(html_to_markdown(html_with_cid_alt_newlines, keep_cid_imgs: true)).to eq(
+      %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse Logo">},
+    )
   end
 
   it "skips hidden <img>" do

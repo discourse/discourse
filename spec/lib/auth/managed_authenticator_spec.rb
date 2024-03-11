@@ -123,6 +123,7 @@ RSpec.describe Auth::ManagedAuthenticator do
               def name
                 "myauth"
               end
+
               def can_connect_existing_user?
                 false
               end
@@ -164,6 +165,7 @@ RSpec.describe Auth::ManagedAuthenticator do
               def name
                 "myauth"
               end
+
               def match_by_email
                 false
               end
@@ -328,9 +330,11 @@ RSpec.describe Auth::ManagedAuthenticator do
             def name
               "myauth"
             end
+
             def match_by_email
               false
             end
+
             def match_by_username
               true
             end
@@ -395,6 +399,7 @@ RSpec.describe Auth::ManagedAuthenticator do
               def name
                 "myauth"
               end
+
               def match_by_username
                 false
               end

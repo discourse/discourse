@@ -1,7 +1,7 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/services/sidebar-state";
 import I18n from "discourse-i18n";
 
 export default class AdminRoute extends DiscourseRoute {
@@ -14,12 +14,7 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   activate() {
-    if (
-      !this.siteSettings.userInAnyGroups(
-        "enable_experimental_admin_ui_groups",
-        this.currentUser
-      )
-    ) {
+    if (!this.currentUser.use_admin_sidebar) {
       return DiscourseURL.redirectTo("/admin");
     }
 

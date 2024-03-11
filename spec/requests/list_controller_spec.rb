@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ListController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:group) { Fabricate(:group, name: "AwesomeGroup") }
   fab!(:admin)
@@ -224,14 +224,14 @@ RSpec.describe ListController do
       end
     end
 
-    context "with lazy_load_categories" do
+    context "with lazy load categories enabled" do
       fab!(:category)
       fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories = true
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
         get "/latest.json"
 
@@ -245,7 +245,7 @@ RSpec.describe ListController do
       end
 
       it "does not return categories if not true" do
-        SiteSetting.lazy_load_categories = false
+        SiteSetting.lazy_load_categories_groups = ""
 
         get "/latest.json"
 
@@ -366,7 +366,6 @@ RSpec.describe ListController do
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-        Group.refresh_automatic_groups!
       end
 
       it "should display group private messages for an admin" do
@@ -398,6 +397,25 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(404)
       end
+
+      it "should sort group private messages by posts_count" do
+        topic2 = Fabricate(:private_message_topic, allowed_groups: [group])
+        topic3 = Fabricate(:private_message_topic, allowed_groups: [group])
+        2.times { Fabricate(:post, topic: topic2) }
+        Fabricate(:post, topic: topic3)
+
+        sign_in(Fabricate(:admin))
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json",
+            params: {
+              order: "posts",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to eq(
+          [topic2.id, topic3.id, topic.id],
+        )
+      end
     end
 
     describe "with unicode_usernames" do
@@ -405,7 +423,6 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
-        Group.refresh_automatic_groups!
       end
 
       it "should return the right response when user does not belong to group" do
@@ -432,7 +449,6 @@ RSpec.describe ListController do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
-        Group.refresh_automatic_groups!
       end
 
       it "Returns a 200 with unicode group name" do
@@ -858,6 +874,32 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
+    end
+
+    it "sorts private messages by activity" do
+      topic_ids = []
+
+      [1.year.ago, 1.week.ago, 1.month.ago].each do |date|
+        pm =
+          Fabricate(
+            :private_message_topic,
+            user: Fabricate(:user),
+            created_at: date,
+            bumped_at: date,
+          )
+        pm.topic_allowed_users.create!(user: user)
+        topic_ids << pm.id
+      end
+
+      sign_in(user)
+
+      get "/topics/private-messages/#{user.username}.json", params: { order: "activity" }
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["topic_list"]["topics"].pluck("id")).to eq(
+        [topic_ids[1], topic_ids[2], topic_ids[0]],
+      )
     end
   end
 

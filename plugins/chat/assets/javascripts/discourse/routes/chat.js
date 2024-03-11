@@ -1,5 +1,5 @@
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -28,6 +28,8 @@ export default class ChatRoute extends DiscourseRoute {
 
     const INTERCEPTABLE_ROUTES = [
       "chat.channel",
+      "chat.direct-messages",
+      "chat.channels",
       "chat.threads",
       "chat.channel.thread",
       "chat.channel.thread.index",

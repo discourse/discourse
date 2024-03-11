@@ -3,8 +3,8 @@
 
 RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
-  fab!(:user)
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group) { Fabricate(:group) }
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
   fab!(:moderator)
@@ -12,9 +12,7 @@ RSpec.describe Topic do
   fab!(:evil_trout)
   fab!(:admin)
   fab!(:group)
-  fab!(:trust_level_2) do
-    Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
-  end
+  fab!(:trust_level_2)
 
   it_behaves_like "it has custom fields"
 
@@ -310,6 +308,24 @@ RSpec.describe Topic do
       end
 
       after { Topic.slug_computed_callbacks.clear }
+    end
+  end
+
+  describe "slugless_url" do
+    fab!(:topic)
+
+    it "returns the correct url" do
+      expect(topic.slugless_url).to eq("/t/#{topic.id}")
+    end
+
+    it "works with post id" do
+      expect(topic.slugless_url(123)).to eq("/t/#{topic.id}/123")
+    end
+
+    it "works with subfolder install" do
+      set_subfolder "/forum"
+
+      expect(topic.slugless_url).to eq("/forum/t/#{topic.id}")
     end
   end
 
@@ -784,10 +800,7 @@ RSpec.describe Topic do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     context "with rate limits" do
-      before do
-        RateLimiter.enable
-        Group.refresh_automatic_groups!
-      end
+      before { RateLimiter.enable }
 
       use_redis_snapshotting
 
@@ -871,8 +884,6 @@ RSpec.describe Topic do
     describe "private message" do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
-
-      before { Group.refresh_automatic_groups! }
 
       describe "by username" do
         it "should be able to invite a user" do
@@ -979,8 +990,6 @@ RSpec.describe Topic do
       end
 
       describe "by email" do
-        before { Group.refresh_automatic_groups! }
-
         it "should be able to invite a user" do
           expect(topic.invite(user, user1.email)).to eq(true)
           expect(topic.allowed_users).to include(user1)
@@ -1001,7 +1010,7 @@ RSpec.describe Topic do
           end
 
           describe "when user does not have sufficient trust level" do
-            before { user.update!(trust_level: TrustLevel[1]) }
+            before { user.change_trust_level!(TrustLevel[1]) }
 
             it "should not create an invite" do
               expect do expect(topic.invite(user, "test@email.com")).to eq(nil) end.to_not change {
@@ -1105,7 +1114,7 @@ RSpec.describe Topic do
         end
 
         describe "when user can invite via email" do
-          before { user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+          before { user.change_trust_level!(TrustLevel[2]) }
 
           it "should create an invite" do
             Jobs.run_immediately!
@@ -1123,9 +1132,8 @@ RSpec.describe Topic do
   end
 
   describe "private message" do
-    fab!(:pm_user) { Fabricate(:user) }
+    fab!(:pm_user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:topic) do
-      Group.refresh_automatic_groups!
       PostCreator
         .new(
           pm_user,
@@ -2511,7 +2519,7 @@ RSpec.describe Topic do
 
   describe "#listable_count_per_day" do
     before(:each) do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:topic)
       Fabricate(:topic, created_at: 1.day.ago)
@@ -2683,7 +2691,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 10.minutes)
@@ -2703,7 +2711,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
 
       freeze_time(start + 25.hours)
       topic_id = create_post(user: user).topic_id
@@ -2732,7 +2740,6 @@ RSpec.describe Topic do
     use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: "private_message",

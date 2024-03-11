@@ -90,6 +90,10 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
+
+    server.get("/categories/search", () => {
+      return helper.response({ categories: [], ancestors: [] });
+    });
   });
 
   const setupUserSidebarCategories = function () {

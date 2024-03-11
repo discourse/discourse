@@ -35,11 +35,8 @@ pt:
       long_with_year: "DD MMM YYYY hh:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
-      long_date_with_year: "DD MMM, 'YY LT"
       long_date_without_year: "DD MMM, LT"
-      long_date_with_year_without_time: "DD MMM, 'YY"
       long_date_without_year_with_linebreak: "DD MMM <br/>LT"
-      long_date_with_year_with_linebreak: "DD MMM, 'YY <br/>LT"
       wrap_ago: "%{date} atrás"
       wrap_on: "em %{date}"
       tiny:
@@ -75,7 +72,7 @@ pt:
           one: "%{count}a"
           other: "%{count}a"
         date_month: "DD MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} minuto"
@@ -104,7 +101,6 @@ pt:
         almost_x_years:
           one: "quase %{count} ano"
           other: "quase %{count} anos"
-        date_year: "DD MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -144,6 +140,8 @@ pt:
       facebook: "Partilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Tornei este tópico publico %{when}"
       open_topic: "Converteu isto em um tópico %{when}"
@@ -155,6 +153,8 @@ pt:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente colidido %{when}"
+      tags_changed: "Etiquetas atualizadas %{when}"
+      category_changed: "Categoria atualizada %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -183,8 +183,8 @@ pt:
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
-      message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
+    bootstrap_mode: "Primeiros passos"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -226,6 +226,7 @@ pt:
     delete: "Eliminar"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    multiple_errors: "Ocorreram múltiplos erros: %{errors}"
     sign_up: "Inscrever-se"
     log_in: "Entrar"
     age: "Idade"
@@ -269,6 +270,7 @@ pt:
       title: "Mensagens Relacionadas"
       pill: "Mensagens Relacionadas"
     suggested_topics:
+      pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     about:
       simple_title: "Acerca"
@@ -278,20 +280,29 @@ pt:
       our_moderators: "Os Nossos Moderadores"
       moderators: "Moderadores"
       stat:
+        all_time: "Desde sempre"
         last_day: "24 horas"
+        last_7_days: "7 dias"
+        last_30_days: "30 dias"
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
+      user_count: "Registos"
+      active_user_count: "Utilizadores ativos"
+      contact: "Contactar-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
     bookmarked:
       title: "Adicionar Marcador"
       edit_bookmark: "Editar Favorito"
       clear_bookmarks: "Remover Marcadores"
       help:
+        bookmark: "Clique para marcar este tópico como favorito"
+        edit_bookmark_for_topic: "Clique para editar os favoritos para este tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
+      created_generic: "Você marcou isso como favorito. %{name}"
       create: "Criar favorito"
       edit: "Editar favorito"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
@@ -306,6 +317,8 @@ pt:
       list_permission_denied: "Você não tem permissão para ver os favoritos deste utilizador."
       no_user_bookmarks: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       auto_delete_preference:
+        label: "Após ser notificado"
+        never: "Manter marcador"
         when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
@@ -346,11 +359,18 @@ pt:
       other: "Ver %{count} tópicos novos"
     preview: "pré-visualizar"
     cancel: "cancelar"
+    deleting: "Apagando..."
     save: "Guardar alterações"
+    saving: "Guardando..."
     saved: "Guardado!"
     upload: "Carregar"
+    uploading: "Enviando…"
+    processing: "Processando..."
+    uploading_filename: "A enviar: %{filename}"
+    processing_filename: "A processar: %{filename}"
     clipboard: "área de transferência"
     uploaded: "Carregado!"
+    pasting: "Colando..."
     enable: "Ativar "
     disable: "Desativar"
     continue: "Continuar"
@@ -372,7 +392,10 @@ pt:
         search: "Pesquisar por uma Mensagem"
         placeholder: "digite aqui o título da mensagem, url ou id"
     review:
+      show_more: "Mostrar mais"
+      show_less: "Mostrar menos"
       order_by: "Ordenar por"
+      date_filter: "Postado entre"
       in_reply_to: "Em resposta a"
       explain:
         why: "explique por que este item acabou na fila"
@@ -395,7 +418,12 @@ pt:
           name: "tipo de bónus"
           title: "Determinado tipo de revisões podem receber um bónus por parte da equipa para terem uma prioridade mais elevada."
       revise_and_reject_post:
+        title: "Rever"
         reason: "Motivo"
+        send_pm: "Enviar MP"
+        feedback: "Opinião"
+        custom_reason: "Dê uma descrição clara do motivo"
+        other_reason: "Outro..."
         optional: "opcional"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
@@ -496,6 +524,7 @@ pt:
         type: "Motivo"
         status: "Estado"
         submitted_by: "Reportado por"
+        reviewed_timestamp: "Data da revisão"
       statuses:
         pending:
           title: "Pendente"
@@ -503,6 +532,12 @@ pt:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
+        rejected_user:
+          title: "Utilizador rejeitado"
+        rejected_post:
+          title: "Publicação rejeitada"
+        ignored:
+          title: "Sinalização ignorada"
         reviewed:
           title: "Todos revistos"
         all:
@@ -789,6 +824,7 @@ pt:
         group_type: "Tipo de grupo"
         is_group_user: "Membro"
         is_group_owner: "Dono"
+        search_results: "Os resultados da pesquisa aparecerão abaixo."
       title:
         one: "Grupo"
         other: "Grupos"
@@ -864,7 +900,9 @@ pt:
         icon: "Selecione um ícone"
         image: "Enviar uma imagem"
       default_notifications:
+        modal_title: "Notificações padrão pelo utilizador"
         modal_yes: "Sim"
+        modal_no: "Não, apenas aplicar a mudança daqui em diante"
     user_action_groups:
       "1": "Gostos Dados"
       "2": "Gostos Recebidos"
@@ -939,6 +977,10 @@ pt:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
+      download_archive:
+        title: "Exportar os seus dados"
+        button_text: "Solicitar arquivo"
+        confirm: "Quer realmente transferir o arquivo das atividades e preferências da sua conta?"
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -958,6 +1000,7 @@ pt:
         ignore_no_users: "Não tem utilizadores ignorados."
         ignore_option: "Ignorados"
         ignore_option_title: "Não irá receber notificações relacionadas com este utilizador e todas as publicações deste serão escondidas."
+        add_ignored_user: "Adicionar…"
         mute_option: "Silenciado"
         mute_option_title: "Não irá receber quaisquer notificações relacionadas com este utilizador."
         normal_option: "Normal"
@@ -989,8 +1032,10 @@ pt:
           warning: "Tem a certeza que pretende limpar o tópico em destaque?"
       use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste utilizador está oculto."
+      inactive_user: "Este utilizador já não está ativo."
       expand_profile: "Expandir"
       collapse_profile: "Colapsar"
+      sr_collapse_profile: "Ocultar detalhes do perfil"
       bookmarks: "Marcadores"
       bio: "Sobre mim"
       timezone: "Zona Horária"
@@ -1023,6 +1068,7 @@ pt:
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
+      reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
       color_scheme: "Esquema de Cores"
@@ -1236,6 +1282,7 @@ pt:
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
         success_via_admin: "Enviámos um e-mail para esse endereço. O utilizador terá de seguir as instruções de confirmação no e-mail.."
         success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
+        confirm_success: "O seu email foi atualizado."
       change_avatar:
         title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, com base em"
@@ -1479,6 +1526,8 @@ pt:
             <p>A cada endereço de e-mail em seu arquivo CSV carregado será enviado um convite e você poderá administrar depois.</p>
           success: "Arquivo enviado com sucesso. Você será notificado via mensagem quando o processo estiver completo."
           error: "Desculpe, o ficheiro deverá estar no formato CSV."
+      confirm_access:
+        title: "Confirmar acesso"
       password:
         title: "Palavra-passe"
         too_short: "A sua palavra-passe é muito curta."
@@ -1582,6 +1631,7 @@ pt:
         title: "Agora você está acompanhando este tópico"
       suggested_topics:
         title: "Coninue lendo!"
+    loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
       reasons:
@@ -1639,6 +1689,7 @@ pt:
       disable: "Mostrar Publicações Eliminadas"
     private_message_info:
       title: "Mensagem"
+      add: "Adicionar…"
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
@@ -1785,6 +1836,8 @@ pt:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Entrar"
+    conditional_loading_section:
+      loading: A carregar...
     category_row:
       topic_count:
         one: "%{count} tópico nesta categoria"
@@ -1793,10 +1846,13 @@ pt:
       delete_item: "Apagar %{name}"
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecione um valor para filtrar"
+      default_header_text: Selecionar…
       no_content: Não foram encontradas correspondências
       results_count:
         one: "%{count} resultado"
         other: "%{count} resultados"
+      filter_placeholder: Pesquisar…
+      filter_placeholder_with_any: Pesquisar ou criar…
       create: "Criar: '%{content}'"
       max_content_reached:
         one: "Só consegue selecionar %{count} item."
@@ -1805,8 +1861,11 @@ pt:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
       components:
+        filter_for_more: Filtrar por mais…
         categories_admin_dropdown:
           title: "Gerir categorias"
+        bulk_select_topics_dropdown:
+          title: "Ações em Massa"
     date_time_picker:
       from: De
       to: Para
@@ -1835,19 +1894,23 @@ pt:
       destination_category: "Categoria Destino"
       publish: "Publicar Rascunho Partilhado"
       confirm_publish: "Tem a certeza que quer publicar este rascunho?"
+      publishing: "Publicando Tópico…"
     composer:
       emoji: "Emoji :)"
+      more_emoji: "mais…"
       options: "Opções"
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
       toggle_whisper: "Alternar Sussuro"
       toggle_unlisted: "Alternar Não Listado"
+      insert_table: "Inserir tabela"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
+      esc_label: "descartar mensagem"
       ok_proceed: "Ok, continuar"
       cannot_see_mention:
         category: "Mencionou %{username}, mas este utilizador não será notificado porque não têm acesso a esta categoria. Terá de o adicionar a um grupo que tenha acesso a esta categoria."
@@ -1883,6 +1946,7 @@ pt:
       saving: "A Guardar"
       saved: "Guardado!"
       saved_draft: "Publicar rascunho em andamento. Toque para retomar."
+      uploading: "A enviar…"
       show_preview: "mostrar pré-visualização"
       hide_preview: "ocultar pré-visualização"
       quote_post_title: "Citar toda a publicação"
@@ -2202,14 +2266,19 @@ pt:
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
         dismiss_new: "Marcar Visto Novos"
+        dismiss_new_modal:
+          posts: "Descartar respostas novas"
+          replies: "Descartar respostas novas"
         dismiss_new_with_selected:
           one: "Descartar Novo (%{count})"
           other: "Descartar Novos (%{count})"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
+        change_category: "Definir Categoria..."
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
+        notification_level: "Notificações…"
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -2250,6 +2319,21 @@ pt:
         tag: "Não existem mais tópicos em %{tag}."
         top: "Não existem mais tópicos recentes."
         bookmarks: "Não há mais tópicos marcados."
+    topic_bulk_actions:
+      close_topics:
+        name: "Fechar Tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover Tópicos da Lista"
+      relist_topics:
+        name: "Voltar a Listar Tópicos"
+      append_tags:
+        name: "Anexar Etiquetas"
+      replace_tags:
+        name: "Substituir Etiquetas"
+      delete_topics:
+        name: "Eliminar Tópicos"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -2299,6 +2383,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       deleted: "Este tópico foi eliminado"
@@ -2384,6 +2469,8 @@ pt:
         replies_short: "%{current} / %{total}"
       progress:
         title: progresso do tópico
+        jump_prompt: "ir para..."
+        jump_prompt_long: "Ir Para..."
         jump_prompt_to_date: "ir para data"
         jump_prompt_or: "ou"
       notifications:
@@ -2494,6 +2581,7 @@ pt:
         banner_note: "Os utilizadores podem marcar vista a faixa por fecharem-na. Apenas um tópico pode ser posto como faixa em qualquer momento."
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
+      inviting: "Convidando…"
       automatically_add_to_groups: "Este convite também inclui acesso a estes grupos:"
       invite_private:
         title: "Convidar para Mensagem"
@@ -2621,9 +2709,7 @@ pt:
       deleted_by_author_simple: "(tópico excluído pelo autor)"
     post:
       quote_reply: "Citar"
-      quote_reply_shortcut: "Ou pressione q"
       quote_edit: "Editar"
-      quote_edit_shortcut: "Ou pressione e"
       quote_share: "Partilhar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
@@ -3378,6 +3464,7 @@ pt:
         leader: "líder"
       detailed_name: "%{level}: %{name}"
     sidebar:
+      title: "Barra Lateral"
       unread_count:
         one: "%{count} não lido"
         other: "%{count} não lidos"
@@ -3437,6 +3524,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+      filter: "Filtrar"
     until: "Até:"
     form_templates:
       upload_field:
@@ -3665,7 +3753,6 @@ pt:
               write: Criar um novo tópico ou poste em um já existente.
               update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
-              show: Obter informações sobre um utilizador.
               suspend: Suspender contas de utilizador.
             invites:
               create: Envie convites por e-mail ou gere links de convite.
@@ -3761,6 +3848,7 @@ pt:
         upload:
           label: "Carregar"
           title: "Carregar uma cópia de segurança para esta instância"
+          uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
           error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
         operations:
@@ -3831,6 +3919,10 @@ pt:
           body: "Corpo"
           revert: "Reverter Alterações"
           revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
+        component:
+          all_filter: "Tudo"
+          enabled_filter: "Ativado"
+          disabled_filter: "Desativado"
         theme:
           theme: "Tema"
           component: "Componente"
@@ -3942,6 +4034,9 @@ pt:
           yaml:
             text: "YAML"
             title: "Defina as configurações do tema no formato YAML"
+          all_filter: "Tudo"
+          active_filter: "Ativo"
+          inactive_filter: "Inativo"
         colors:
           select_base:
             description: "Paleta de base:"
@@ -4003,7 +4098,6 @@ pt:
           instructions: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS."
       email:
         title: "Emails"
-        settings: "Configurações"
         templates: "Templates"
         preview_digest: "Pré-visualizar Resumo"
         advanced_test:
@@ -4129,6 +4223,7 @@ pt:
             reviewed_post: "mensagem revista"
             post_edit: "editar mensagem"
             post_approved: "mensagem aprovada"
+            post_rejected: "publicação rejeitada"
             create_badge: "criar crachá"
             change_badge: "editar crachá"
             delete_badge: "eliminar crachá"
@@ -4405,7 +4500,6 @@ pt:
             other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "dias"
           topics_replied_to: "Tópicos com Respostas"
           topics_viewed: "Tópicos Visualizados"
@@ -4522,6 +4616,9 @@ pt:
           navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
+          modal_no: "Não, apenas aplicar a mudança daqui em diante"
+        file_types_list:
+          add_image_types: "Imagens"
       badges:
         title: Crachás
         new_badge: Novo Crachá
@@ -4599,6 +4696,7 @@ pt:
       emoji:
         title: "Emoji"
         add: "Adicionar Novo Emoji"
+        uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
         image: "Imagem"
@@ -4631,6 +4729,7 @@ pt:
         post_title: "Mensagem"
         category_id: "ID da Categoria"
         category_title: "Categoria"
+        username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"
@@ -4646,6 +4745,7 @@ pt:
       next: "Próximo"
       step-text: "Passo"
       step: "%{current} de %{total}"
+      uploading: "A enviar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
       invites:
         add_user: "adicionar"

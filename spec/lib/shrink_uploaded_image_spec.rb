@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe ShrinkUploadedImage do
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+  def create_post_with_upload
+    post = Fabricate(:post, raw: "<img src='#{upload.url}'>", user: user)
+    post.link_post_uploads
+    post
+  end
+
   context "when local uploads are enabled" do
     let(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
 
     it "resizes the image" do
+      create_post_with_upload
       filesize_before = upload.filesize
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
 
       result =
         ShrinkUploadedImage.new(
@@ -32,8 +39,7 @@ RSpec.describe ShrinkUploadedImage do
       smaller_sha1 = Upload.generate_digest("/tmp/smaller.png")
       smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)
 
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
+      post = create_post_with_upload
       post_hotlinked_media =
         PostHotlinkedMedia.create!(
           post: post,
@@ -63,8 +69,8 @@ RSpec.describe ShrinkUploadedImage do
     end
 
     it "returns false if the image cannot be shrunk more" do
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
+      create_post_with_upload
+
       ShrinkUploadedImage.new(
         upload: upload,
         path: Discourse.store.path_for(upload),
@@ -84,9 +90,8 @@ RSpec.describe ShrinkUploadedImage do
     end
 
     it "returns false when the upload is above the size limit" do
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
-      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+      create_post_with_upload
+      SiteSetting.max_image_size_kb = 0
 
       result =
         ShrinkUploadedImage.new(
@@ -110,6 +115,21 @@ RSpec.describe ShrinkUploadedImage do
 
       expect(result).to be(false)
     end
+
+    it "returns false if the image is invalid" do
+      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
+      post.link_post_uploads
+      FastImage.stubs(:size).raises(FastImage::SizeNotFound.new)
+
+      result =
+        ShrinkUploadedImage.new(
+          upload: upload,
+          path: Discourse.store.path_for(upload),
+          max_pixels: 10_000,
+        ).perform
+
+      expect(result).to be(false)
+    end
   end
 
   context "when S3 uploads are enabled" do
@@ -122,8 +142,7 @@ RSpec.describe ShrinkUploadedImage do
 
     it "resizes the image" do
       filesize_before = upload.filesize
-      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
-      post.link_post_uploads
+      create_post_with_upload
 
       result =
         ShrinkUploadedImage.new(

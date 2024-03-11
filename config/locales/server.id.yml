@@ -60,6 +60,9 @@ id:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
+  components:
+    enabled_filter: "Diaktifkan"
+    disabled_filter: "Dinonaktifkan"
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
@@ -90,20 +93,13 @@ id:
       optimized_link: Tautan gambar yang dioptimalkan bersifat sementara dan tidak boleh disertakan dalam kode sumber tema.
     settings_errors:
       invalid_yaml: "YAML yang diberikan tidak valid."
-      data_type_not_a_number: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
+      data_type_inclusion: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
       name_too_long: "Ada pengaturan dengan nama yang terlalu panjang. Panjang maksimum adalah 255"
-      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan"
+      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan."
       default_not_match_type: "Pengaturan jenis nilai bawaan `%{name}` tidak cocok dengan jenis pengaturan."
-      default_out_range: "Pengaturan nilai bawaan `%{name}` tidak dalam rentang yang ditentukan."
       enum_value_not_valid: "Nilai yang dipilih bukan salah satu pilihan enum."
-      number_value_not_valid: "Nilai baru tidak berada dalam rentang yang diizinkan."
-      number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
-      number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
-      number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
-      string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
-      string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
-      string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
-      string_value_not_valid_max: "Panjangnya harus maksimal %{max} karakter."
+      objects:
+        not_valid_integer_value: "harus integer"
     locale_errors:
       top_level_locale: "Kunci level teratas dalam file locale harus cocok dengan nama locale"
       invalid_yaml: "Terjemahan YAML tidak valid"
@@ -332,7 +328,7 @@ id:
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
-  no_embedded_media_allowed_trust: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
+  no_embedded_media_allowed_group: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
   no_embedded_media_allowed: "Maaf, pengguna baru tidak dapat menyematkan item media dalam post."
   too_many_embedded_media:
     other: "Maaf, pengguna baru hanya dapat menempatkan %{count} item media yang disematkan dalam sebuah post."
@@ -722,22 +718,10 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   change_email:
-    confirmed: "Surel anda telah diperbaharui."
-    please_continue: "Lanjut ke %{site_name}"
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah anda telah mengubah surel anda?"
     confirm: "Konfirmasi"
-    authorizing_new:
-      title: "Konfirmasi email baru Anda"
-      description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
-    authorizing_old:
-      title: "Ubah alamat email Anda"
-      description: "Harap konfirmasi perubahan alamat email Anda"
-      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
-      old_email: "Email lama: %{email}"
-      new_email: "Email baru: %{email}"
-      almost_done_title: "Konfirmasi alamat email baru"
   associated_accounts:
     revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
     connected: "(terhubung)"
@@ -774,6 +758,9 @@ id:
       title: "Tidak pantas"
       description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
       description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
@@ -844,6 +831,9 @@ id:
       long_form: "menandai sebagai membutuhkan perhatian moderator"
       short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Konten yang diabaikan</p>"
@@ -1106,6 +1096,7 @@ id:
     page_view_logged_in_reqs:
       title: "Masuk"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Masuk"
     page_view_crawler_reqs:
       xaxis: "Hari"
     page_view_total_reqs:
@@ -1152,6 +1143,9 @@ id:
     mobile_visits:
       xaxis: "Hari"
       yaxis: "Jumlah kunjungan"
+    web_crawlers:
+      labels:
+        page_views: "Tampilan halaman"
     suspicious_logins:
       labels:
         user: Pengguna
@@ -1164,6 +1158,9 @@ id:
       labels:
         user: Pengguna
         location: Lokasi
+    top_uploads:
+      labels:
+        author: Pengarang
     top_users_by_likes_received:
       title: "Pengguna Teratas berdasarkan suka yang diterima"
       labels:
@@ -1202,7 +1199,6 @@ id:
     min_post_length: "Panjang post minimum yang diperbolehkan dalam karakter (tidak termasuk pesan pribadi)"
     min_first_post_length: "Panjang post pertama (isi topik) minimum yang diperbolehkan (tidak termasuk pesan pribadi)"
     min_personal_message_post_length: "Panjang post minimum yang diperbolehkan dalam karakter untuk pesan (postingan pertama dan balasan)"
-    topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
     max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
@@ -1229,6 +1225,8 @@ id:
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
+    invite_allowed_groups: "Grup yang diperbolehkan mengundang pengguna."
+    ignore_allowed_groups: "Grup yang diperbolehkan mengabaikan pengguna lain."
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -1237,7 +1235,6 @@ id:
     sparkpost_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/sparkpost?t=supersecret"
     email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
-    allow_anonymous_likes: "Izinkan pengguna anonim untuk menyukai post"
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
     disable_category_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan kategori topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
     disable_tags_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan tag topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
@@ -1246,7 +1243,6 @@ id:
     max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
     notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
     bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
-    emoji_set: "Bagaimana dengan emoji Anda?"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
@@ -1266,7 +1262,6 @@ id:
     experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
-    experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
     enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
@@ -1276,6 +1271,9 @@ id:
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
+    keywords:
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1328,9 +1326,12 @@ id:
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
+    more_pm_participants:
+      other: "%{participants} dan %{count} lainnya"
     digest:
       liked_received: "Likes Diterima"
       new_users: "Pengguna Baru"
+      from: "%{site_name}"
     forgot_password:
       title: "Lupa Password"
     set_password:
@@ -1622,6 +1623,8 @@ id:
 
       Dokumen ini adalah CC-BY-SA. Terakhir kali diperbarui [MASUKKAN TANGGAL PEMBARUAN TERAKHIR DI SINI].
   badges:
+    editor:
+      name: Editor
     member:
       name: Anggota
     regular:
@@ -1638,6 +1641,7 @@ id:
       name: Tautan
     famous_link:
       name: Tautan terkenal
+    badge_title_metadata: "%{display_name} badge pada %{site_title}"
   tags:
     title: "Label"
     limited_to_one_tag_from_group: "Tag %{tags} tidak dapat digunakan secara bersamaan. Harap sertakan salah satunya saja."
@@ -1658,6 +1662,10 @@ id:
         fields:
           login_required:
             placeholder: "Pribadi"
+          chat_enabled:
+            placeholder: "Aktifkan obrolan"
+          enable_sidebar:
+            placeholder: "Aktifkan bilah sisi"
       styling:
         fields:
           homepage_style:
@@ -1670,9 +1678,17 @@ id:
                 label: "Kategori dan Topik Terbaru"
               categories_and_top_topics:
                 label: "Kategori dan Topik Teratas"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   onebox:
     discourse:
       user_joined_community: "Bergabung %{date}"
+    github:
+      closed: "tertutup"
+  staff_action_logs:
+    unknown: "tidak diketahui"
   reviewables:
     priorities:
       low: "Rendah"
@@ -1694,8 +1710,10 @@ id:
         description: "Setuju dengan tandai dan tetap sembunyikan post."
       agree_and_suspend:
         title: "Tangguhkan pengguna"
+        description: "Setuju dengan penanda dan menangguhkan pengguna."
       agree_and_silence:
         title: "Senyapkan pengguna"
+        description: "Setuju dengan penanda dan senyapkan pengguna."
       agree_and_restore:
         title: "Pulihkan post"
       agree_and_hide:

@@ -56,17 +56,6 @@ if !args.include?("test") && !args.include?("build") && !args.include?("--proxy"
   args << PROXY
 end
 
-if !["3", "5", nil].include?(ENV["EMBER_VERSION"])
-  raise "Unknown ember version #{ENV["EMBER_VERSION"]}"
-end
-
-system(
-  "script/switch_ember_version",
-  ENV["EMBER_VERSION"] || "3",
-  exception: true,
-  chdir: RAILS_ROOT,
-)
-
 # Running yarn install in the root directory will also run it for YARN_DIR via a post-install hook
 exit 1 if !system "yarn", "-s", "install", "--cwd", RAILS_ROOT
 

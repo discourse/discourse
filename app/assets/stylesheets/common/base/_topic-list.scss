@@ -76,6 +76,10 @@
       }
     }
   }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
 }
 
 .category-heading {
@@ -224,6 +228,7 @@
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {
+      // important to prevent clicks registering on non-link elements and resulting in a full page reload
       pointer-events: none;
     }
 
@@ -291,10 +296,6 @@
         }
       }
     }
-  }
-
-  .topic-featured-link {
-    padding-left: 5px;
   }
 
   .topic-excerpt {
@@ -406,21 +407,19 @@
   display: flex;
   margin: 0.5em 0;
   flex-wrap: wrap;
-  font-size: var(--font-0-rem);
-
-  button {
-    margin-right: 0.5em;
-  }
+  font-size: var(--font-down-1);
+  gap: 0.5em;
 }
 
 div.education {
   color: var(--primary);
-  padding: 1em 2.5em 1em 1em;
   margin-bottom: 2em;
-  border-top: 3px solid var(--primary-low);
-  border-bottom: 1px solid var(--primary-low);
 
-  .badge-notification.unread-posts {
+  p {
+    max-width: 62em;
+  }
+
+  .badge-notification {
     vertical-align: text-bottom;
   }
 }

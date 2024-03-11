@@ -24,6 +24,7 @@ class Group < ActiveRecord::Base
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :human_users, -> { human_users }, through: :group_users, source: :user
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews,
@@ -143,6 +144,15 @@ class Group < ActiveRecord::Base
 
   def self.visibility_levels
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
+  end
+
+  def self.auto_groups_between(lower, upper)
+    lower_group = Group::AUTO_GROUPS[lower.to_sym]
+    upper_group = Group::AUTO_GROUPS[upper.to_sym]
+
+    return [] if lower_group.blank? || upper_group.blank?
+
+    (lower_group..upper_group).to_a & AUTO_GROUPS.values
   end
 
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
@@ -420,6 +430,7 @@ class Group < ActiveRecord::Base
 
     result = guardian.filter_allowed_categories(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
     result.order("posts.created_at desc")
   end
 
@@ -467,7 +478,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.trust_group_ids
-    (10..19).to_a
+    Group.auto_groups_between(:trust_level_0, :trust_level_4).to_a
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
@@ -543,13 +554,13 @@ class Group < ActiveRecord::Base
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged"
+        "SELECT id FROM users WHERE NOT admin OR staged"
       when :moderators
-        "SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged"
+        "SELECT id FROM users WHERE NOT moderator OR staged"
       when :staff
-        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged"
+        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10} OR staged"
+        "SELECT id FROM users WHERE trust_level < #{id - 10} OR staged"
       end
 
     removed_user_ids = DB.query_single <<-SQL
@@ -573,15 +584,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id > 0 AND admin AND NOT staged"
+        "SELECT id FROM users WHERE admin AND NOT staged"
       when :moderators
-        "SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged"
+        "SELECT id FROM users WHERE moderator AND NOT staged"
       when :staff
-        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged"
+        "SELECT id FROM users WHERE (moderator OR admin) AND NOT staged"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10} AND NOT staged"
+        "SELECT id FROM users WHERE trust_level >= #{id - 10} AND NOT staged"
       when :trust_level_0
-        "SELECT id FROM users WHERE id > 0 AND NOT staged"
+        "SELECT id FROM users WHERE NOT staged"
       end
 
     added_user_ids = DB.query_single <<-SQL
@@ -625,14 +636,15 @@ class Group < ActiveRecord::Base
   end
 
   def self.reset_groups_user_count!(only_group_ids: [])
-    where_sql = ""
-
-    if only_group_ids.present?
-      where_sql = "WHERE group_id IN (#{only_group_ids.map(&:to_i).join(",")})"
-    end
+    where_sql =
+      if only_group_ids.present?
+        "WHERE group_id IN (#{only_group_ids.map(&:to_i).join(",")}) AND user_id > 0"
+      else
+        "WHERE user_id > 0"
+      end
 
     DB.exec <<-SQL
-      WITH X AS (
+      WITH tally AS (
         SELECT
           group_id,
           COUNT(user_id) users
@@ -641,10 +653,10 @@ class Group < ActiveRecord::Base
         GROUP BY group_id
       )
       UPDATE groups
-         SET user_count = X.users
-        FROM X
-       WHERE id = X.group_id
-         AND user_count <> X.users
+         SET user_count = tally.users
+        FROM tally
+       WHERE id = tally.group_id
+         AND user_count <> tally.users
     SQL
   end
   private_class_method :reset_groups_user_count!
@@ -929,7 +941,8 @@ class Group < ActiveRecord::Base
       SET user_count =
         (SELECT COUNT(gu.user_id)
          FROM group_users gu
-         WHERE gu.group_id = g.id)
+         WHERE gu.group_id = g.id
+         AND gu.user_id > 0)
       WHERE g.id = #{self.id};
     SQL
   end

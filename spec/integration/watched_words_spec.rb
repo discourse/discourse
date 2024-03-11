@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWord do
-  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:admin)
   fab!(:moderator)
 
@@ -187,7 +187,6 @@ RSpec.describe WatchedWord do
     end
 
     it "doesn't need approval in a private message" do
-      Group.refresh_automatic_groups!
       manager =
         NewPostManager.new(
           tl2_user,
@@ -263,8 +262,9 @@ RSpec.describe WatchedWord do
     it "is compatible with flag_sockpuppets" do
       SiteSetting.flag_sockpuppets = true
       ip_address = "182.189.119.174"
-      user1 = Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago)
-      user2 = Fabricate(:user, ip_address: ip_address)
+      user1 =
+        Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago, refresh_auto_groups: true)
+      user2 = Fabricate(:user, ip_address: ip_address, refresh_auto_groups: true)
       first = create_post(user: user1, created_at: 2.days.ago)
       sockpuppet_post =
         create_post(

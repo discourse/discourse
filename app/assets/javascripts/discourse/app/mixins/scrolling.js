@@ -1,6 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import { scheduleOnce, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling

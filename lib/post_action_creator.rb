@@ -32,7 +32,7 @@ class PostActionCreator
         create(created_by, post, action, silent: silent)
       end
     end
-    %i[notify_moderators notify_user].each do |action|
+    %i[notify_moderators notify_user illegal].each do |action|
       define_method(action) do |created_by, post, message = nil|
         create(created_by, post, action, message: message)
       end
@@ -114,7 +114,8 @@ class PostActionCreator
     end
 
     # create meta topic / post if needed
-    if @message.present? && %i[notify_moderators notify_user spam].include?(@post_action_name)
+    if @message.present? &&
+         %i[notify_moderators notify_user spam illegal].include?(@post_action_name)
       creator = create_message_creator
       # We need to check if the creator exists because it's possible `create_message_creator` returns nil
       # in the event that a `post_action_notify_user_handler` evaluated to false, haulting the post creation.
@@ -334,7 +335,7 @@ class PostActionCreator
       raw: body,
     }
 
-    if %i[notify_moderators spam].include?(@post_action_name)
+    if %i[notify_moderators spam illegal].include?(@post_action_name)
       create_args[:subtype] = TopicSubtype.notify_moderators
       create_args[:target_group_names] = [Group[:moderators].name]
 

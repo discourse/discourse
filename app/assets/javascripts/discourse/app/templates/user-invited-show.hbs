@@ -2,10 +2,10 @@
 
 {{#if this.canInviteToForum}}
   <LoadMore
-    @class="user-content"
     @id="user-content"
     @selector=".user-invite-list tr"
     @action={{action "loadMore"}}
+    class="user-content"
   >
     <section class="user-additional-controls">
       {{#if this.showSearch}}
@@ -21,7 +21,7 @@
           @icon="plus"
           @action={{this.createInvite}}
           @label="user.invited.create"
-          class="btn-flat"
+          class="btn-default"
         />
         {{#if this.canBulkInvite}}
           {{#if this.siteSettings.allow_bulk_invite}}
@@ -30,7 +30,7 @@
                 @icon="upload"
                 @action={{this.createInviteCsv}}
                 @label="user.invited.bulk_invite.text"
-                class="btn-flat"
+                class="btn-default"
               />
             {{/unless}}
           {{/if}}

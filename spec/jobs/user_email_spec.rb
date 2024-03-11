@@ -3,7 +3,7 @@
 RSpec.describe Jobs::UserEmail do
   before { SiteSetting.email_time_window_mins = 10 }
 
-  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
+  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago, refresh_auto_groups: true) }
   fab!(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
   fab!(:suspended) do
     Fabricate(

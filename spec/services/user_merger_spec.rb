@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe UserMerger do
-  fab!(:target_user) { Fabricate(:user, username: "alice", email: "alice@example.com") }
-  fab!(:source_user) { Fabricate(:user, username: "alice1", email: "alice@work.com") }
+  fab!(:target_user) do
+    Fabricate(:user, username: "alice", email: "alice@example.com", refresh_auto_groups: true)
+  end
+  fab!(:source_user) do
+    Fabricate(:user, username: "alice1", email: "alice@work.com", refresh_auto_groups: true)
+  end
   fab!(:walter) { Fabricate(:walter_white) }
   fab!(:coding_horror)
 
@@ -12,8 +16,6 @@ RSpec.describe UserMerger do
   fab!(:p4) { Fabricate(:post) }
   fab!(:p5) { Fabricate(:post) }
   fab!(:p6) { Fabricate(:post) }
-
-  before { Group.refresh_automatic_groups! }
 
   def merge_users!(source = nil, target = nil)
     source ||= source_user
@@ -975,7 +977,7 @@ RSpec.describe UserMerger do
   end
 
   it "merges user visits" do
-    freeze_time DateTime.parse("2010-01-01 12:00")
+    freeze_time_safe
 
     UserVisit.create!(
       user_id: source_user.id,

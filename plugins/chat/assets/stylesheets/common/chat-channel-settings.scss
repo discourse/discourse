@@ -1,7 +1,7 @@
-.chat-channel-settings {
+.c-channel-settings {
   width: 100%;
 
-  .chat-channel-settings__slug {
+  .c-channel-settings__slug {
     max-width: 250px;
     @include ellipsis;
   }
@@ -19,7 +19,9 @@
     }
   }
 
-  .chat-form__section-content:has(.chat-channel-settings__leave-info) {
-    gap: 0.25rem;
+  .chat-form__section.--leave-channel {
+    .chat-form__section-content {
+      gap: 0.25rem 0.5rem;
+    }
   }
 }

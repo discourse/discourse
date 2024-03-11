@@ -390,6 +390,7 @@ RSpec.describe SiteSettingExtension do
       def self.valid_value?(v)
         true
       end
+
       def self.values
         [1, 2, 3]
       end
@@ -409,9 +410,11 @@ RSpec.describe SiteSettingExtension do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         ["en"]
       end
+
       def self.translate_names?
         false
       end

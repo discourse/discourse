@@ -3,10 +3,10 @@
 
 RSpec.describe ApplicationHelper do
   describe "preload_script" do
-    def script_tag(url, entrypoint)
+    def script_tag(url, entrypoint, nonce)
       <<~HTML
-          <link rel="preload" href="#{url}" as="script" data-discourse-entrypoint="#{entrypoint}">
-          <script defer src="#{url}" data-discourse-entrypoint="#{entrypoint}"></script>
+          <link rel="preload" href="#{url}" as="script" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}">
+          <script defer src="#{url}" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}"></script>
       HTML
     end
 
@@ -58,7 +58,11 @@ RSpec.describe ApplicationHelper do
         link = helper.preload_script("start-discourse")
 
         expect(link).to eq(
-          script_tag("https://s3cdn.com/assets/start-discourse.br.js", "start-discourse"),
+          script_tag(
+            "https://s3cdn.com/assets/start-discourse.br.js",
+            "start-discourse",
+            helper.csp_nonce_placeholder,
+          ),
         )
       end
 
@@ -66,7 +70,11 @@ RSpec.describe ApplicationHelper do
         link = helper.preload_script("start-discourse")
 
         expect(link).to eq(
-          script_tag("https://s3cdn.com/assets/start-discourse.js", "start-discourse"),
+          script_tag(
+            "https://s3cdn.com/assets/start-discourse.js",
+            "start-discourse",
+            helper.csp_nonce_placeholder,
+          ),
         )
       end
 
@@ -74,7 +82,11 @@ RSpec.describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
         link = helper.preload_script("start-discourse")
         expect(link).to eq(
-          script_tag("https://s3cdn.com/assets/start-discourse.gz.js", "start-discourse"),
+          script_tag(
+            "https://s3cdn.com/assets/start-discourse.gz.js",
+            "start-discourse",
+            helper.csp_nonce_placeholder,
+          ),
         )
       end
 
@@ -83,7 +95,11 @@ RSpec.describe ApplicationHelper do
         link = helper.preload_script("start-discourse")
 
         expect(link).to eq(
-          script_tag("https://s3cdn.com/assets/start-discourse.js", "start-discourse"),
+          script_tag(
+            "https://s3cdn.com/assets/start-discourse.js",
+            "start-discourse",
+            helper.csp_nonce_placeholder,
+          ),
         )
       end
 
@@ -94,6 +110,7 @@ RSpec.describe ApplicationHelper do
           script_tag(
             "https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js",
             "discourse/tests/theme_qunit_ember_jquery",
+            helper.csp_nonce_placeholder,
           ),
         )
       end
@@ -685,6 +702,27 @@ RSpec.describe ApplicationHelper do
 
       it "generates tag tags" do
         expect(metadata).to include output_tags
+      end
+    end
+
+    context "with custom site name" do
+      before { SiteSetting.title = "Default Site Title" }
+
+      it "uses the provided site name in og:site_name" do
+        custom_site_name = "Custom Site Name"
+        result = helper.crawlable_meta_data(site_name: custom_site_name)
+
+        expect(result).to include(
+          "<meta property=\"og:site_name\" content=\"#{custom_site_name}\" />",
+        )
+      end
+
+      it "falls back to the default site title if no custom site name is provided" do
+        result = helper.crawlable_meta_data
+
+        expect(result).to include(
+          "<meta property=\"og:site_name\" content=\"#{SiteSetting.title}\" />",
+        )
       end
     end
   end

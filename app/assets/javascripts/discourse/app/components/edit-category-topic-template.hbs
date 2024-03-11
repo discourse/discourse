@@ -11,9 +11,9 @@
   {{#if this.showFormTemplate}}
     <div class="control-group">
       <FormTemplateChooser
-        @class="select-category-template"
         @value={{this.category.form_template_ids}}
-        @onChange={{action (mut this.category.form_template_ids)}}
+        @onChange={{fn (mut this.category.form_template_ids)}}
+        class="select-category-template"
       />
 
       <p class="select-category-template__info desc">

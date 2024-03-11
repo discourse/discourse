@@ -13,6 +13,7 @@ class AddIndexToTags < ActiveRecord::Migration[5.2]
 
     add_index :tags, "lower(name)", unique: true
   end
+
   def down
     raise ActiveRecord::IrreversibleMigration
   end

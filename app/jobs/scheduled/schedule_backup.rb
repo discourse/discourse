@@ -6,6 +6,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
+      delete_prior_to_n_days
       return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
 
       store = BackupRestore::BackupStore.create
@@ -23,6 +24,10 @@ module Jobs
     rescue => e
       notify_user(e)
       raise
+    end
+
+    def delete_prior_to_n_days
+      BackupRestore::Backuper.new(Discourse.system_user.id).delete_prior_to_n_days
     end
 
     def notify_user(ex)

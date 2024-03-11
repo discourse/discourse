@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import i18n from "discourse-common/helpers/i18n";
-import gt from "truth-helpers/helpers/gt";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 import ChatThreadParticipants from "../../chat-thread-participants";
 import ChatUserAvatar from "../../chat-user-avatar";
@@ -50,7 +50,6 @@ export default class ChatThreadListItem extends Component {
           </div>
 
           <div class="chat-thread-list-item__metadata">
-
             <div class="chat-thread-list-item__members">
               <ChatUserAvatar
                 @user={{@thread.originalMessage.user}}
@@ -72,7 +71,6 @@ export default class ChatThreadListItem extends Component {
                 }}
               {{/if}}
             </div>
-
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 /* You might be looking for navigation-item. */
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse-common/lib/get-url";

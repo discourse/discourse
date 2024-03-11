@@ -28,16 +28,20 @@ it:
     max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
     chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
+    chat_editing_grace_period: "Per (n) secondi dopo l'invio di una chat, la modifica non visualizzerà l'etichetta (modificato) accanto al messaggio di chat."
+    chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
       chat_upload_not_allowed_secure_uploads: "I caricamenti di chat non sono consentiti quando l'impostazione del sito per i caricamenti sicuri è abilitata."
   system_messages:
+    private_channel_title: "Canale %{id}"
     chat_channel_archive_complete:
       title: "Archiviazione canale chat completata"
       subject_template: "Archiviazione del canale di chat completata correttamente"
       text_body_template: |
-        L'archiviazione del canale di chat %{channel_hashtag_or_name}** è stata completata con successo. I messaggi sono stati copiati nell'argomento [%{topic_title}](%{topic_url}).
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} è stata completata con successo. I messaggi sono stati copiati nell'argomento [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
@@ -120,7 +124,7 @@ it:
           description: "Elimina il messaggio in modo che gli utenti non possano vederlo."
         delete_and_agree:
           title: "Ignora segnalazione ed elimina messaggio"
-          description: "Ignora la segnalazione rimuovendolo dalla coda ed eliminando il messaggio."
+          description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il messaggio."
         disagree_and_restore:
           title: "Rifiuta e ripristina il messaggio"
           description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
@@ -133,6 +137,9 @@ it:
         transcript_title: "Trascrizione dei messaggi precedenti in %{channel_name}"
         transcript_body: "Per darti più contesto, abbiamo incluso una trascrizione dei messaggi precedenti in questa conversazione (fino a dieci):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} ha ricevuto un invito da %{inviting_user}."
+        other: "%{invited_users} hanno ricevuto un invito da %{inviting_user}."
       archive:
         first_post_raw: "Questo argomento è un archivio del canale di chat [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -146,10 +153,10 @@ it:
           other: "%{comma_separated_usernames} e altri %{count}"
     mention_warning:
       dismiss: "ignora"
-      cannot_see: "%{first_identifier} non può accedere a questo canale e non è stato avvisato."
+      cannot_see: "%{first_identifier} non può accedere a questo canale e non ha ricevuto avvisi."
       cannot_see_multiple:
-        one: "%{first_identifier} e %{count} altro utente non possono accedere a questo canale e non sono stati avvisati."
-        other: "%{first_identifier} e altri %{count} utenti non possono accedere a questo canale e non sono stati avvisati."
+        one: "%{first_identifier} e %{count} altro utente non possono accedere a questo canale e non hanno ricevuto avvisi."
+        other: "%{first_identifier} e altri %{count} utenti non possono accedere a questo canale e non hanno ricevuto avvisi."
       invitations_sent:
         one: "Invito inviato"
         other: "Inviti inviati"
@@ -161,12 +168,12 @@ it:
       group_mentions_disabled: "%{first_identifier} non consente menzioni."
       group_mentions_disabled_multiple:
         one: "%{first_identifier} e %{count} altro gruppo non consentono menzioni."
-        other: "%{first_identifier} e %{count} altri gruppi non consentono menzioni."
+        other: "%{first_identifier} e altri %{count} gruppi non consentono menzioni."
       global_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
       too_many_members: "%{first_identifier} ha troppi membri. Nessuno è stato avvisato."
       too_many_members_multiple:
-        one: "%{first_identifier} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
-        other: "%{first_identifier} e %{count} altri gruppi hanno troppi membri. Nessuno è stato notificato."
+        one: "%{first_identifier} e %{count} altro gruppo hanno troppi membri. Nessuno è stato avvisato."
+        other: "%{first_identifier} e altri %{count} gruppi hanno troppi membri. Nessuno è stato avvisato."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
@@ -189,6 +196,7 @@ it:
       no_targets: "Non ci sono stati messaggi durante il periodo selezionato."
     transcript:
       default_thread_title: "Thread"
+      split_thread_range: "messaggi da %{start} a %{end} di %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -223,6 +231,7 @@ it:
         other: "Hai nuovi messaggi di chat"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nuovo messaggio"
         direct_message_from_1: "[%{email_prefix}] Nuovo messaggio da %{username}"
         direct_message_from_2: "[%{email_prefix}] Nuovi messaggi da %{username1} e %{username2}"
         direct_message_from_more:

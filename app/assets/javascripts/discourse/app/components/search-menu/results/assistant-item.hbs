@@ -4,6 +4,7 @@
   class="search-menu-assistant-item"
   {{on "keydown" this.onKeydown}}
   {{on "click" this.onClick}}
+  data-usage={{@usage}}
 >
   <a class="search-link" href={{this.href}}>
     <span aria-label={{i18n "search.title"}}>

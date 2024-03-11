@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: گفتگو
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "همیشه"
           never: "هرگز"
@@ -19,8 +22,10 @@ fa_IR:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
     chat:
+      back_to_forum: "انجمن"
       deleted_chat_username: حذف شد
       dates:
+        yesterday: "دیروز"
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
       already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
@@ -146,7 +151,7 @@ fa_IR:
         back: "بازگشت"
         title: کانال‌ها
         filter_all: همه
-        filter_open: باز شد
+        filter_open: باز
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
@@ -202,8 +207,6 @@ fa_IR:
           topic: "موضوعات"
       reviewable:
         type: "پیام گفتگو"
-      reactions:
-        only_you: "شما با :%{emoji}: واکنش نشان دادید"
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
@@ -238,7 +241,6 @@ fa_IR:
       admin:
         title: "گفتگو"
       direct_messages:
-        title: "گفتگوی شخصی"
         new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."

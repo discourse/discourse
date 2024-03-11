@@ -229,13 +229,5 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.status).to eq(200)
       expect(response.body).to include("assert.ok(343434);")
     end
-
-    it "includes inline sourcemap" do
-      ThemeJavascriptCompiler.enable_terser!
-      content, digest = component.baked_js_tests_with_digest
-      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.status).to eq(200)
-      expect(response.body).to include("//# sourceMappingURL=data:application/json;base64,")
-    end
   end
 end

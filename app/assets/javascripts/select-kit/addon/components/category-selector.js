@@ -1,7 +1,8 @@
-import { computed } from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
+import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
@@ -46,38 +47,66 @@ export default MultiSelectComponent.extend({
   value: mapBy("categories", "id"),
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   async search(filter) {
-    if (!this.siteSettings.lazy_load_categories) {
-      return this._super(filter);
+    let categories;
+    if (this.site.lazy_load_categories) {
+      const rejectCategoryIds = new Set([
+        ...this.categories.map((c) => c.id),
+        ...this.blockedCategories.map((c) => c.id),
+      ]);
+
+      categories = await Category.asyncSearch(filter, {
+        includeUncategorized:
+          this.options?.allowUncategorized !== undefined
+            ? this.options.allowUncategorized
+            : this.selectKit.options.allowUncategorized,
+        rejectCategoryIds: Array.from(rejectCategoryIds),
+      });
+    } else {
+      categories = this._super(filter);
     }
 
-    const rejectCategoryIds = new Set([
-      ...this.categories.map((c) => c.id),
-      ...this.blockedCategories.map((c) => c.id),
-    ]);
+    // If there is a single match or an exact match and it has subcategories,
+    // add a row for selecting all subcategories
+    if (
+      categories.length === 1 ||
+      (categories.length > 0 && categories[0].name.localeCompare(filter) === 0)
+    ) {
+      // Descendants may not be loaded if lazy loading is enabled. Search for
+      // subcategories will make sure these are loaded
+      if (this.site.lazy_load_categories) {
+        await Category.asyncSearch("", {
+          parentCategoryId: categories[0].id,
+        });
+      }
 
-    return await Category.asyncSearch(filter, {
-      includeUncategorized:
-        this.options?.allowUncategorized !== undefined
-          ? this.options.allowUncategorized
-          : this.selectKit.options.allowUncategorized,
-      rejectCategoryIds: Array.from(rejectCategoryIds),
-    });
+      if (categories[0].descendants.length > 1) {
+        categories.splice(
+          1,
+          0,
+          EmberObject.create({
+            // This is just a hack to ensure the IDs are unique, but ensure
+            // that parseInt still returns a valid ID in order to generate the
+            // label
+            id: `${categories[0].id}+subcategories`,
+            categories: categories[0].descendants,
+          })
+        );
+      }
+    }
+
+    return categories;
   },
 
   select(value, item) {
-    if (item.multiCategory) {
-      const items = item.multiCategory.map((id) =>
-        Category.findById(parseInt(id, 10))
+    if (item.categories) {
+      this.selectKit.change(
+        makeArray(this.value).concat(item.categories.mapBy("id")),
+        makeArray(this.selectedContent).concat(item.categories)
       );
-
-      const newValues = makeArray(this.value).concat(items.map((i) => i.id));
-      const newContent = makeArray(this.selectedContent).concat(items);
-
-      this.selectKit.change(newValues, newContent);
     } else {
       this._super(value, item);
     }

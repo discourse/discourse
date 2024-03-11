@@ -30,13 +30,20 @@ module Onebox
           )
       end
 
+      def i18n
+        { opened: I18n.t("onebox.github.opened"), closed: I18n.t("onebox.github.closed") }
+      end
+
       def data
         created_at = Time.parse(raw["created_at"])
         closed_at = Time.parse(raw["closed_at"]) if raw["closed_at"]
         body, excerpt = compute_body(raw["body"])
         ulink = URI(link)
 
-        labels = raw["labels"].map { |l| { name: Emoji.codes_to_img(CGI.escapeHTML(l["name"])) } }
+        labels =
+          raw["labels"].map do |l|
+            { name: Emoji.codes_to_img(Onebox::Helpers.sanitize(l["name"])) }
+          end
 
         {
           link: @url,
@@ -54,6 +61,7 @@ module Onebox
           closed_by: raw["closed_by"],
           avatar: "https://avatars1.githubusercontent.com/u/#{raw["user"]["id"]}?v=2&s=96",
           domain: "#{ulink.host}/#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}",
+          i18n: i18n,
         }
       end
     end

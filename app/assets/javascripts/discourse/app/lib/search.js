@@ -9,6 +9,7 @@ import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
@@ -56,9 +57,14 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
+      Site.current().updateCategory(category);
       return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();
+
+  results.grouped_search_result?.extra?.categories?.forEach((category) =>
+    Site.current().updateCategory(category)
+  );
 
   results.groups = results.groups
     .map((group) => {
@@ -237,6 +243,10 @@ export function applySearchAutocomplete($input, siteSettings) {
 }
 
 export function updateRecentSearches(currentUser, term) {
+  if (!term) {
+    return;
+  }
+
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {

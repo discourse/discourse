@@ -24,6 +24,22 @@ RSpec.describe Chat::Types::Array do
       end
     end
 
+    context "when 'value' is an array of numbers as string" do
+      let(:value) { %w[1 2] }
+
+      it "returns it with string casted as integer" do
+        expect(casted_value).to eq([1, 2])
+      end
+    end
+
+    context "when 'value' is an array of numbers" do
+      let(:value) { [1, 2] }
+
+      it "returns it" do
+        expect(casted_value).to eq([1, 2])
+      end
+    end
+
     context "when 'value' is something else" do
       let(:value) { Time.current }
 

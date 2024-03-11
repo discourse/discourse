@@ -2,6 +2,10 @@
 
 class Admin::PluginsController < Admin::StaffController
   def index
-    render_serialized(Discourse.visible_plugins, AdminPluginSerializer, root: "plugins")
+    render_serialized(
+      Discourse.plugins_sorted_by_name(enabled_only: false),
+      AdminPluginSerializer,
+      root: "plugins",
+    )
   end
 end

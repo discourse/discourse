@@ -9,7 +9,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    Group.refresh_automatic_groups!
+
     sign_in(current_user)
   end
 
@@ -128,26 +128,24 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
-      expect(
+
+      mentioned_users =
         response.parsed_body["threads"]
           .find { |thread| thread["id"] == thread_1.id }
-          .dig("original_message", "mentioned_users"),
-      ).to eq(
-        [
-          {
-            "avatar_template" => User.system_avatar_template(current_user.username),
-            "id" => current_user.id,
-            "name" => current_user.name,
-            "username" => current_user.username,
-          },
-          {
-            "avatar_template" =>
-              User.system_avatar_template(thread_2.original_message_user.username),
-            "id" => thread_2.original_message_user.id,
-            "name" => thread_2.original_message_user.name,
-            "username" => thread_2.original_message_user.username,
-          },
-        ],
+          .dig("original_message", "mentioned_users")
+      expect(mentioned_users.count).to be(2)
+      expect(mentioned_users[0]).to include(
+        "avatar_template" => User.system_avatar_template(current_user.username),
+        "id" => current_user.id,
+        "name" => current_user.name,
+        "username" => current_user.username,
+      )
+      second_user = thread_2.original_message_user
+      expect(mentioned_users[1]).to include(
+        "avatar_template" => User.system_avatar_template(second_user.username),
+        "id" => second_user.id,
+        "name" => second_user.name,
+        "username" => second_user.username,
       )
     end
 
@@ -168,6 +166,13 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       it "returns 404" do
         get "/chat/api/channels/#{public_channel.id}/threads"
         expect(response.status).to eq(404)
+      end
+    end
+
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{public_channel.id}/threads?limit=9999"
+        expect(response.status).to eq(400)
       end
     end
   end

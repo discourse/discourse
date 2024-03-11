@@ -38,9 +38,12 @@
     padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
-    .modal-close .d-icon {
-      font-size: var(--font-up-2);
-      color: var(--primary-high);
+    .modal-close {
+      margin-left: auto;
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-high);
+      }
     }
   }
 
@@ -157,36 +160,6 @@
   color: var(--secondary-high);
 }
 
-.modal-header {
-  display: flex;
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
-  align-items: center;
-
-  .title {
-    margin-right: 1em;
-
-    h3 {
-      margin-bottom: 0;
-    }
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .modal-close {
-    order: 2;
-    margin-left: auto;
-    align-self: start;
-    padding: 0.15em 0;
-
-    .close {
-      color: var(--primary-high);
-    }
-  }
-}
-
 .modal-backdrop {
   user-select: none;
   position: fixed;
@@ -257,21 +230,6 @@
 
 .modal-form {
   margin-bottom: 0;
-}
-
-.modal-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 14px 15px 10px;
-  border-top: 1px solid var(--primary-low);
-  gap: 0.3em 0;
-  .btn {
-    margin: 0 0.75em 0 0;
-    &[href] {
-      min-height: unset;
-    }
-  }
 }
 
 .modal {
@@ -470,14 +428,6 @@
   }
 }
 
-.delete-user-modal {
-  .modal-footer {
-    .btn {
-      line-height: var(--line-height-medium);
-    }
-  }
-}
-
 .admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
@@ -612,11 +562,20 @@
 }
 
 .flag-modal-body {
-  max-height: 450px;
+  form {
+    margin: 0;
+  }
+  .flag-action-type .controls .checkbox-label {
+    margin-bottom: 0.25em;
+  }
   .flag-action-type-details {
     width: 100%;
     // max-width: 500px;
     line-height: var(--line-height-large);
+  }
+  .flag-confirmation {
+    margin-top: 0.5em;
+    padding-left: 1.125em;
   }
 }
 
@@ -708,22 +667,26 @@
 
 .confirm-session {
   &__instructions {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
   }
 
   form {
     margin: 1.5em 0;
   }
 
-  &__passkey .btn {
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+  &__passkey {
+    margin-top: 1em;
   }
 
   &__fine-print {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-    max-width: 500px;
+    max-width: 600px;
+  }
+
+  &__reset {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 }
 

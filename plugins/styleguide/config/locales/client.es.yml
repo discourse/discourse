@@ -10,16 +10,23 @@ es:
       title: "Guía de estilos"
       welcome: "Para empezar, elige una sección en el menú de la izquierda."
       categories:
+        syntax: Sintaxis
         atoms: Átomos
         molecules: Moléculas
         organisms: Organismos
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Tipografía"
           example: "Te damos la bienvenida a Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Campos de entrada de fecha/hora"
+        menus:
+          title: "Menús"
+        toasts:
+          title: "Ventanas emergentes"
         font_scale:
           title: "Sistema de fuentes"
         colors:
@@ -88,6 +95,7 @@ es:
         empty_state:
           title: "Estado vacío"
         tooltips:
+          title: "Información sobre herramientas"
           description: "Descripción"
           header: "Encabezado"
           hover_to_see: "Pase el cursor para ver una información sobre herramientas"

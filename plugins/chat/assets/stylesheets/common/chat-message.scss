@@ -70,12 +70,17 @@
       width: 100%;
     }
 
-    .mention {
+    a.mention {
       @include mention;
 
       &.highlighted {
         background: var(--tertiary-low);
       }
+    }
+
+    // unlinked, invalid mention
+    span.mention {
+      color: var(--primary-high);
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping

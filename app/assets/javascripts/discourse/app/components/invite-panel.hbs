@@ -22,7 +22,6 @@
       <div class="invite-user-input-wrapper">
         {{#if this.allowExistingMembers}}
           <EmailGroupUserChooser
-            @class="invite-user-input"
             @value={{this.invitee}}
             @onChange={{action "updateInvitee"}}
             @options={{hash
@@ -33,12 +32,13 @@
               filterPlaceholder=this.placeholderKey
               fullWidthWrap=true
             }}
+            class="invite-user-input"
           />
         {{else}}
           <TextField
-            @class="email-or-username-input"
             @value={{this.invitee}}
             @placeholderKey="topic.invite_reply.email_placeholder"
+            class="email-or-username-input"
           />
         {{/if}}
         {{#if this.capabilities.hasContactPicker}}
@@ -60,7 +60,7 @@
           @content={{this.allGroups}}
           @value={{this.groupIds}}
           @labelProperty="name"
-          @onChange={{action (mut this.groupIds)}}
+          @onChange={{fn (mut this.groupIds)}}
         />
       </div>
     {{/if}}
@@ -69,9 +69,9 @@
       <div class="show-custom-message-control">
         <label class="instructions">
           <DiscourseLinkedText
-            @class="optional"
             @action={{action "showCustomMessageBox"}}
             @text="invite.custom_message"
+            class="optional"
           />
         </label>
         {{#if this.hasCustomMessage}}

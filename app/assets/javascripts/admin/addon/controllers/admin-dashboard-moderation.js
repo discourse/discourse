@@ -1,16 +1,8 @@
-import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import getURL from "discourse-common/lib/get-url";
+import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import PeriodComputationMixin from "admin/mixins/period-computation";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
+import AdminDashboardTabController from "./admin-dashboard-tab";
 
-export default class AdminDashboardModerationController extends Controller.extend(
-  PeriodComputationMixin
-) {
-  @service modal;
-
+export default class AdminDashboardModerationController extends AdminDashboardTabController {
   @discourseComputed
   flagsStatusOptions() {
     return {
@@ -39,33 +31,19 @@ export default class AdminDashboardModerationController extends Controller.exten
     };
   }
 
-  @discourseComputed("startDate", "endDate")
-  filters(startDate, endDate) {
-    return { startDate, endDate };
+  @computed("startDate", "endDate")
+  get filters() {
+    return { startDate: this.startDate, endDate: this.endDate };
   }
 
-  @discourseComputed("lastWeek", "endDate")
-  lastWeekfilters(startDate, endDate) {
-    return { startDate, endDate };
-  }
+  @discourseComputed("endDate")
+  lastWeekFilters(endDate) {
+    const lastWeek = moment()
+      .locale("en")
+      .utc()
+      .endOf("day")
+      .subtract(1, "week");
 
-  _reportsForPeriodURL(period) {
-    return getURL(`/admin/dashboard/moderation?period=${period}`);
-  }
-
-  @action
-  setCustomDateRange(startDate, endDate) {
-    this.setProperties({ startDate, endDate });
-  }
-
-  @action
-  openCustomDateRangeModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.startDate,
-        endDate: this.endDate,
-        setCustomDateRange: this.setCustomDateRange,
-      },
-    });
+    return { lastWeek, endDate };
   }
 }

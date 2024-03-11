@@ -694,6 +694,26 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq short_username
   end
 
+  it "stores registration ip address if it's present" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.registration_ip_address).to eq ip_address
+  end
+
+  it "does not store registration ip address if it's not present" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(nil)
+
+    expect(user.registration_ip_address).to eq nil
+  end
+
   it "can fill in data on way back" do
     sso = make_sso
 

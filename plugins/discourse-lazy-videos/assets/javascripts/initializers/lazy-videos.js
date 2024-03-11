@@ -12,7 +12,7 @@ function initLazyEmbed(api) {
       const lazyContainers = cooked.querySelectorAll(".lazy-video-container");
 
       lazyContainers.forEach((container) => {
-        const siteSettings = api.container.lookup("site-settings:main");
+        const siteSettings = api.container.lookup("service:site-settings");
         const videoAttributes = getVideoAttributes(container);
 
         if (siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {

@@ -11,7 +11,7 @@
         @value="icon"
         @selection={{this.model.flair_type}}
       />
-      <b>{{i18n "groups.flair_type.icon"}}</b>
+      {{i18n "groups.flair_type.icon"}}
     </label>
 
     <label class="radio-label" for="avatar-flair-image">
@@ -21,7 +21,7 @@
         @value="image"
         @selection={{this.model.flair_type}}
       />
-      <b>{{i18n "groups.flair_type.image"}}</b>
+      {{i18n "groups.flair_type.image"}}
     </label>
   </div>
 
@@ -30,7 +30,7 @@
       @name="icon"
       @value={{this.model.flair_icon}}
       @options={{hash maximum=1}}
-      @onChange={{action (mut this.model.flair_icon)}}
+      @onChange={{fn (mut this.model.flair_icon)}}
     />
   {{else if this.flairPreviewImage}}
     <UppyImageUploader
@@ -39,7 +39,7 @@
       @onUploadDeleted={{action "removeFlairImage"}}
       @type="group_flair"
       @id="group-flair-uploader"
-      @class="no-repeat contain-image"
+      class="no-repeat contain-image"
     />
     <div class="control-instructions">
       {{i18n "groups.flair_upload_description"}}
@@ -54,9 +54,9 @@
 
   <TextField
     @name="flair_bg_color"
-    @class="group-flair-bg-color input-xxlarge"
     @value={{this.model.flair_bg_color}}
     @placeholderKey="groups.flair_bg_color_placeholder"
+    class="group-flair-bg-color input-xxlarge"
   />
 </div>
 
@@ -68,9 +68,9 @@
 
     <TextField
       @name="flair_color"
-      @class="group-flair-color input-xxlarge"
       @value={{this.model.flair_color}}
       @placeholderKey="groups.flair_color_placeholder"
+      class="group-flair-color input-xxlarge"
     />
   </div>
 {{/if}}

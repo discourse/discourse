@@ -5,7 +5,6 @@ describe ListController do
 
   before do
     SiteSetting.chat_enabled = true
-    Group.refresh_automatic_groups!
     sign_in(current_user)
   end
 

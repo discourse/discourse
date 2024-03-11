@@ -50,6 +50,13 @@ sl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
+  components:
+    enabled_filter: "Vključeno"
+    disabled_filter: "Onemogočeno"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "mora biti celo število"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -282,6 +289,7 @@ sl:
       <<: *errors
   uncategorized_category_name: "Nerazvrščeno"
   general_category_name: "Splošno"
+  meta_category_name: "Povratne informacije spletnega mesta"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   category:
@@ -476,11 +484,10 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   change_email:
-    confirmed: "Vaš e-naslov je bil spremenjen."
-    please_continue: "Nadaljujte na %{site_name}"
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
     already_done: "Oprostite, vendar povezava za potrditev ni več veljavna. Mogoče je bil vaš e-naslov že spremenjen?"
+    confirm: "Potrdi"
   associated_accounts:
     revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
   activation:
@@ -503,6 +510,9 @@ sl:
     inappropriate:
       title: "Neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
+    illegal:
+      email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
@@ -532,6 +542,9 @@ sl:
       long_form: "prijavljeno za pregled moderatorja"
       short_description: "Potrebuje pregled osebja iz drugega razloga"
       email_title: 'Tema "%{title}" potrebuje pregled moderatorja'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Vaš prispevek je bil prijavljen s strani skupnosti. <a href="%{path}">Preverite vaša sporočila</a>.</p>'
@@ -1953,6 +1966,9 @@ sl:
                 label: "Kategorije in najboljše teme"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
+  onebox:
+    github:
+      closed: "zaprto"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'

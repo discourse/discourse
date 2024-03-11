@@ -5,13 +5,17 @@
 # https://translate.discourse.org/
 
 ru:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Чат
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Всегда"
+          fullscreen: "Когда чат в полноэкранном режиме"
           never: "Никогда"
       logs:
         staff_actions:
@@ -24,9 +28,24 @@ ru:
           descriptions:
             chat:
               create_message: "Создать сообщение чата в указанном канале."
+      web_hooks:
+        chat_event:
+          group_name: "События чата"
+          chat_message_created: "Сообщение создано"
+          chat_message_edited: "Сообщение отредактировано"
+          chat_message_trashed: "Сообщение удалено"
+          chat_message_restored: "Сообщение восстановлено"
+    about:
+      chat_messages_count: "Сообщения чата"
+      chat_channels_count: "Каналы чата"
+      chat_users_count: "Пользователи чата"
     chat:
+      text_copied: Текст скопирован в буфер обмена
+      link_copied: Ссылка скопирована в буфер обмена
+      back_to_forum: "Форум"
       deleted_chat_username: удалён
       dates:
+        yesterday: "Вчера"
         time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."
@@ -55,6 +74,7 @@ ru:
         delete_channel: "Удалить канал"
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
+        leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
         join: "Подписаться"
         leave: "Отписаться"
         save_label:
@@ -83,7 +103,7 @@ ru:
         create: "Новый канал"
       click_to_join: "Нажмите здесь для просмотра доступных каналов."
       close: "Закрыть"
-      remove: "Отозвать"
+      remove: "Удалить"
       collapse: "Свернуть чат"
       expand: "Развернуть панель чата"
       confirm_flag: "Действительно пожаловаться на сообщение пользователя %{username}?"
@@ -110,7 +130,10 @@ ru:
         title: "Показать индикатор активности в заголовке"
         all_new: "Все новые сообщения"
         dm_and_mentions: "Прямые сообщения и упоминания"
+        only_mentions: "Только упоминания"
         never: "Никогда"
+      separate_sidebar_mode:
+        title: "Показывать отдельные режимы боковой панели для форума и чата"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
@@ -137,6 +160,7 @@ ru:
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
+        channel_wide_mentions_disallowed: "Упоминания @here и @all в этом канале отключены."
         groups:
           header:
             some: "Некоторые пользователи не будут уведомлены"
@@ -254,6 +278,7 @@ ru:
       reply: "Ответить"
       edit: "Изменить"
       copy_link: "Копировать ссылку"
+      copy_text: "Копировать текст"
       rebake_message: "Перестроить HTML"
       retry_staged_message:
         title: "Ошибка сети"
@@ -265,6 +290,8 @@ ru:
       save: "Сохранить"
       select: "Выбрать"
       return_to_list: "Вернуться к списку каналов"
+      return_to_channel: "Вернуться в канал"
+      return_to_threads_list: "Вернуться к списку цепочек сообщений"
       unread_threads_count:
         one: "У вас %{count} непрочитанное обсуждение"
         few: "У вас %{count} непрочитанных обсуждения"
@@ -306,7 +333,7 @@ ru:
         back: "Назад"
         title: Каналы
         filter_all: Все
-        filter_open: Открытые
+        filter_open: Открыт
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию
@@ -315,6 +342,8 @@ ru:
         yesterday: Вчера
       members_view:
         filter_placeholder: Найти участников
+        add_member: Добавить участника
+        back_to_settings: "Назад к настройкам"
       about_view:
         associated_topic: Связанная тема
         associated_category: Связанная категория
@@ -335,9 +364,15 @@ ru:
         default_search_placeholder: "#канал, @пользователь или что-то другое"
         default_channel_search_placeholder: "#канал"
         default_user_search_placeholder: "@пользователь"
+        user_search_placeholder: "... добавить еще участников"
         disabled_user: "отключил(а) чат"
         no_items: "Нет компонентов"
+        create_group_placeholder: "Название группового чата (необязательно)"
+        participants_counter: "Участников: %{selection_count}/%{max}"
+        new_group_chat: "Новый групповой чат"
         filter: "Фильтр"
+        cant_add_more_members: "Достигнуто максимальное количество участников"
+        create_new_group_chat: "Создать групповой чат"
       channel_edit_name_slug_modal:
         title: Изменение канала
         input_placeholder: Укажите название
@@ -349,10 +384,17 @@ ru:
         input_placeholder: Добавить описание
         description: Расскажите, о чем этот канал
       direct_message_creator:
+        add_to_channel: "Добавить в канал"
         title: Новое сообщение
         prefix: "Кому:"
         no_results: Нет результатов
         selected_user_title: "Отменить выбор пользователя %{username}"
+        group_name: "Название группового чата (необязательно)"
+        members_counter:
+          one: "Участников: %{count}/%{max}"
+          few: "Участников: %{count}/%{max}"
+          many: "Участников: %{count}/%{max}"
+          other: "Участников: %{count}/%{max}"
       channel:
         no_memberships: На этом канале нет участников
         no_memberships_found: Участники не найдены
@@ -434,21 +476,21 @@ ru:
       reviewable:
         type: "Сообщение чата"
       reactions:
-        only_you: "Вы отреагировали при помощи эмодзи :%{emoji}:"
-        you_and_single_user: "Вы и %{username} отреагировали при помощи эмодзи :%{emoji}:"
-        you_and_multiple_users: "Вы, %{commaSeparatedUsernames} и %{username} отреагировали при помощи эмодзи :%{emoji}:"
+        only_you: "<span>Вы отреагировали с эмодзи</span>:%{emoji}:"
+        you_and_single_user: "<span>Вы и %{username} отреагировали с эмодзи </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Вы, %{commaSeparatedUsernames} и %{username} отреагировали с эмодзи </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователь отреагировали при помощи эмодзи :%{emoji}:"
-          few: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-          many: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователей отреагировали при помощи эмодзи :%{emoji}:"
-          other: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-        single_user: "Пользователь %{username} отреагировал при помощи эмодзи :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} и %{username} отреагировали при помощи эмодзи :%{emoji}:"
+          one: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          few: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          many: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          other: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+        single_user: "<span>%{username} отреагировал(-а) с эмодзи </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} и %{username} отреагировали с эмодзи </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} и еще %{count} пользователь отреагировали при помощи эмодзи :%{emoji}:"
-          few: "%{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-          many: "%{commaSeparatedUsernames} и еще %{count} пользователей отреагировали при помощи эмодзи :%{emoji}:"
-          other: "%{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Переключить панель инструментов"
         italic_text: "текст, выделенный курсивом"
@@ -458,7 +500,7 @@ ru:
       quote:
         original_channel: 'Первоначально отправлено в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитата из чата скопирована в буфер обмена"
-        default_thread_title: "Цепочка"
+        default_thread_title: "Цепочка сообщений"
       notification_levels:
         never: "Никогда"
         mention: "Только для упоминаний"
@@ -488,6 +530,7 @@ ru:
         unfollow: "Отписаться"
         admin_title: "Администрирование"
         settings_title: "Настройки"
+        info_title: "Информация о канале"
         category_label: "Категория"
         history_label: "История"
         members_label: "Участники"
@@ -495,14 +538,17 @@ ru:
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"
+          description: "Экспортируются все сообщения со всех каналов."
           create_export: "Создать экспорт"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       direct_messages:
-        title: "Личный чат"
         new: "Создать личный чат"
         create: "Создать"
         leave: "Выйти из личного чата"
+        close: "Закрыть личный чат"
         cannot_create: "Вы не можете отправлять прямые сообщения."
+      channel_list:
+        title: "Каналы"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Выберите канал"
@@ -568,11 +614,18 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
+        indefinitely_short: "неограниченное время"
+        indefinitely_long: "В настройках чата задано хранение сообщений в канале в течение неограниченного времени."
         short:
           one: "%{count} день"
-          few: "%{count} дней"
-          many: "%{count} дня"
+          few: "%{count} дня"
+          many: "%{count} дней"
           other: "%{count} дня"
+        long:
+          one: "В настройках чата задано хранение сообщений в канале в течение %{count} дня."
+          few: "В настройках чата задано хранение сообщений в канале в течение %{count} дней."
+          many: "В настройках чата задано хранение сообщений в канале в течение %{count} дней."
+          other: "В настройках чата задано хранение сообщений в канале в течение %{count} дня."
       flags:
         off_topic: "Это сообщение не имеет отношения к текущему обсуждению, как указано в названии канала, и, вероятно, его следует переместить в другое место."
         inappropriate: "Это сообщение содержит контент, который обоснованно можно считать оскорбительным или нарушающим <a href=\"%{basePath}/guidelines\">рекомендации для сообщества</a>."
@@ -622,6 +675,7 @@ ru:
           other: "+%{count}"
       threads:
         open: "Открыть цепочку"
+        list: "Цепочки сообщений"
         none: "Вы не участвуете ни в одной цепочке сообщений на этом канале."
       draft_channel_screen:
         header: "Новое сообщение"

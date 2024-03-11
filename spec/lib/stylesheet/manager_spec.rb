@@ -886,7 +886,7 @@ RSpec.describe Stylesheet::Manager do
 
     after do
       STDERR.unstub(:write)
-      FileUtils.rm_rf("tmp/stylesheet-cache")
+      Stylesheet::Manager.rm_cache_folder
     end
 
     it "correctly generates precompiled CSS" do

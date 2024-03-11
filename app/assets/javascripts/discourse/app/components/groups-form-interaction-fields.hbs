@@ -12,9 +12,9 @@
       @valueProperty="value"
       @value={{this.model.visibility_level}}
       @content={{this.visibilityLevelOptions}}
-      @class="groups-form-visibility-level"
-      @onChange={{action (mut this.model.visibility_level)}}
+      @onChange={{fn (mut this.model.visibility_level)}}
       @options={{hash castInteger=true}}
+      class="groups-form-visibility-level"
     />
 
     <div class="control-instructions">
@@ -32,8 +32,8 @@
       @valueProperty="value"
       @value={{this.membersVisibilityLevel}}
       @content={{this.visibilityLevelOptions}}
-      @class="groups-form-members-visibility-level"
-      @onChange={{action (mut this.model.members_visibility_level)}}
+      @onChange={{fn (mut this.model.members_visibility_level)}}
+      class="groups-form-members-visibility-level"
     />
 
     {{#if this.membersVisibilityPrivate}}
@@ -57,8 +57,8 @@
     @valueProperty="value"
     @value={{this.mentionableLevel}}
     @content={{this.aliasLevelOptions}}
-    @class="groups-form-mentionable-level"
-    @onChange={{action (mut this.model.mentionable_level)}}
+    @onChange={{fn (mut this.model.mentionable_level)}}
+    class="groups-form-mentionable-level"
   />
 </div>
 
@@ -70,8 +70,8 @@
     @valueProperty="value"
     @value={{this.messageableLevel}}
     @content={{this.aliasLevelOptions}}
-    @class="groups-form-messageable-level"
-    @onChange={{action (mut this.model.messageable_level)}}
+    @onChange={{fn (mut this.model.messageable_level)}}
+    class="groups-form-messageable-level"
   />
 </div>
 
@@ -100,9 +100,9 @@
 
     <TextField
       @name="incoming_email"
-      @class="input-xxlarge groups-form-incoming-email"
       @value={{this.model.incoming_email}}
       @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
+      class="input-xxlarge groups-form-incoming-email"
     />
 
     <DTooltip
@@ -129,9 +129,9 @@
 
   <NotificationsButton
     @value={{this.defaultNotificationLevel}}
-    @class="groups-form-default-notification-level"
     @options={{hash i18nPrefix="groups.notifications"}}
-    @onChange={{action (mut this.model.default_notification_level)}}
+    @onChange={{fn (mut this.model.default_notification_level)}}
+    class="groups-form-default-notification-level"
   />
 </div>
 

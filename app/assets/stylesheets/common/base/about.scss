@@ -10,10 +10,15 @@ section.about {
   h3 {
     margin-bottom: 1em;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0 0.35em;
     .d-icon {
-      margin-right: 0.5em;
       color: var(--primary-high);
+    }
+    .badge-category__wrapper {
+      font-size: var(--font-0);
+      align-self: baseline;
     }
   }
 

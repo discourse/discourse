@@ -130,6 +130,7 @@ aside.onebox {
     h4 {
       font-size: var(--font-up-1);
       margin: 0 0 10px 0;
+      line-height: var(--line-height-medium);
     }
 
     a[href] {
@@ -480,6 +481,11 @@ pre.onebox code {
   .github-info-container {
     width: 100%;
     overflow-x: hidden;
+    > span {
+      // TODO: remove in a few months
+      // replaced by .github-info in new commit oneboxes
+      grid-area: info;
+    }
   }
 
   .github-info {
@@ -921,6 +927,7 @@ aside.onebox.mixcloud-preview {
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
+  background-color: black;
 
   video {
     position: absolute;
@@ -928,43 +935,61 @@ aside.onebox.mixcloud-preview {
     height: 100%;
   }
 }
+
 .video-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
   background-color: black;
 
   .video-placeholder-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 1rem;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: 150ms;
-    background-repeat: no-repeat;
-    background-position: center;
-    max-width: 30%;
-    .d-icon {
-      color: white;
-      height: 2em;
-      width: 2em;
-      transition: width 0.15s, height 0.15s;
+
+    .d-icon-play {
+      border-radius: var(--d-border-radius);
+      color: #fff;
+      display: flex;
+      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      height: 2.3rem;
+      transition: transform 0.15s;
+      width: 2.3rem;
+
+      @media (prefers-reduced-motion) {
+        transition: transform 0s;
+      }
+    }
+
+    .spinner {
+      border-color: #fff;
+      border-right-color: rgba(0, 0, 0, 0);
+      margin: 0;
     }
   }
 
-  &:hover .video-placeholder-overlay .d-icon {
-    height: 3em;
-    width: 3em;
+  @include hover {
+    .video-placeholder-overlay .d-icon-play {
+      transform: scale(1.2);
+    }
   }
 }
 
-iframe.vimeo-onebox {
+iframe.vimeo-onebox,
+iframe.loom-onebox {
   width: 100%;
   height: auto;
   aspect-ratio: 16/9;
 }
 
 @supports not (aspect-ratio: auto) {
-  iframe.vimeo-onebox {
+  iframe.vimeo-onebox,
+  iframe.loom-onebox {
     width: 690px;
     height: 388px;
   }
@@ -994,6 +1019,8 @@ iframe.vimeo-onebox {
 }
 
 .onebox-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;

@@ -42,15 +42,15 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "MMM D, 'YY LT"
+      long_date_with_year: "MMM D, YYYY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "MMM D, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
 
       wrap_ago: "%{date} ago"
       wrap_on: "on %{date}"
@@ -90,7 +90,7 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "MMM D"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "less than %{count} min"
@@ -120,7 +120,7 @@ en:
           one: "almost %{count} year"
           other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "MMM D, 'YY"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min ago"
@@ -163,6 +163,7 @@ en:
 
     word_connector:
       comma: ", "
+      last_item: "and"
 
     action_codes:
       public_topic: "Made this topic public %{when}"
@@ -208,7 +209,7 @@ en:
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
-      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
@@ -223,6 +224,13 @@ en:
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
+
+    critical_deprecation:
+      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
+      theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Identified plugin: '%{name}'"
 
     s3:
       regions:
@@ -1026,9 +1034,13 @@ en:
       "15": "Drafts"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
+      plus_more_count: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
@@ -1089,6 +1101,7 @@ en:
       said: "%{username}:"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
+      account_possessive: "%{name}'s account"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
@@ -1552,6 +1565,18 @@ en:
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
         back_to_preferences: "Back to preferences"
+        confirm_success: "Your email has been updated."
+        confirm: "Confirm"
+        authorizing_new:
+          description: "Please confirm you would like your email address changed to:"
+          description_add: "Please confirm you would like to add an alternate email address:"
+        authorizing_old:
+          title: "Verify old email address"
+          description: "Please verify your old email address to continue changing your email:"
+          description_add: "Please verify your existing email address to continue adding an alternate address:"
+          old_email: "Old email: %{email}"
+          new_email: "New email: %{email}"
+          confirm_success: "We have sent an email to your new email address to confirm the change!"
 
       change_avatar:
         title: "Change your profile picture"
@@ -1749,6 +1774,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -1850,6 +1876,9 @@ en:
         incorrect_password: "The entered password is incorrect."
         incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
+        forgot_password: "Forgot your password?"
+        password_reset_email_sent: "Password reset email sent."
+        cannot_send_password_reset_email: "Could not send password reset email."
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
@@ -2265,7 +2294,7 @@ en:
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
       passkey:
-        name: "Login with a passkey"
+        name: "Log in with a passkey"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -2316,6 +2345,9 @@ en:
       loading: Loading…
 
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -2339,14 +2371,19 @@ en:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
       components:
-        tag_drop:
-          filter_for_more: Filter for more…
+        filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        bulk_select_topics_dropdown:
+          title: "Bulk Actions"
 
     date_time_picker:
       from: From
       to: To
+
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -2445,7 +2482,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Message"
+      create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -2676,6 +2713,7 @@ en:
         reaction: "new reaction"
         votes_released: "Vote was released"
         new_features: "new Discourse features have been released!"
+        admin_problems: "new advice on your site dashboard"
 
     upload_selector:
       uploading: "Uploading"
@@ -2875,6 +2913,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
@@ -2933,6 +2972,9 @@ en:
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
+        silent: "Perform this action silently."
+        performing: "Performing bulk operations, please wait…"
+        completed: "Bulk operations completed successfully!"
 
       none:
         unread: "You have no unread topics."
@@ -2944,6 +2986,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
+        hot: "There are no hot topics."
         filter: "There are no topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
@@ -2959,8 +3002,39 @@ en:
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
+        hot: "There are no more hot topics."
         bookmarks: "There are no more bookmarked topics."
         filter: "There are no more topics."
+
+    topic_bulk_actions:
+      close_topics:
+        name: "Close Topics"
+      archive_topics:
+        name: "Archive Topics"
+      unlist_topics:
+        name: "Unlist Topics"
+      relist_topics:
+        name: "Relist Topics"
+      remove_tags:
+        name: "Remove Tags"
+      append_tags:
+        name: "Append Tags"
+      replace_tags:
+        name: "Replace Tags"
+      delete_topics:
+        name: "Delete Topics"
+      update_category:
+        name: "Update Category"
+        description: "Choose the new category for the selected topics"
+      reset_bump_dates:
+        name: "Reset Bump Dates"
+        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+      defer:
+        name: "Defer Topics"
+        description: "Mark topics as unread"
+      update_notifications:
+        name: "Update Notifications…"
+        description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
       filter_to:
@@ -3444,6 +3518,8 @@ en:
       quote_reply_shortcut: "Quote (or press q)"
       quote_edit: "Edit"
       quote_edit_shortcut: "Edit (or press e)"
+      quote_copy: "Copy Quote"
+      quote_copied_to_clibboard: "Quote copied to clipboard"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -3620,6 +3696,7 @@ en:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
+          illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
 
@@ -3902,10 +3979,13 @@ en:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
+        illegal: "It's Illegal"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
+      custom_placeholder_illegal: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
+      confirmation_illegal: "What I’ve written above is accurate and complete."
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -4045,6 +4125,10 @@ en:
         title: "Unseen"
         lower_title: "unseen"
         help: "new topics and topics you are currently watching or tracking with unread posts"
+      hot:
+        title: "Hot"
+        lower_title: "hot"
+        help: "top recent topics"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -4169,9 +4253,11 @@ en:
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
+        filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new: "%{shortcut} Dismiss New"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
+        toggle_bulk_select: "%{shortcut} Toggle bulk select"
+        dismiss: "%{shortcut} Dismiss selected topic(s)"
+        x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"
@@ -4273,8 +4359,10 @@ en:
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
+      selector_tags: "tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
+      selector_remove_filter: "remove filter"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
@@ -4469,8 +4557,7 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
-      show_sidebar: "Show sidebar"
-      hide_sidebar: "Hide sidebar"
+      title: "Sidebar"
       unread_count:
         one: "%{count} unread"
         other: "%{count} unread"
@@ -4604,6 +4691,11 @@ en:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description: "We couldn’t find anything matching ‘%{filter}’"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4718,6 +4810,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      back_to_forum: "Back to Forum"
 
       tags:
         remove_muted_tags_from_latest:
@@ -4907,6 +5000,7 @@ en:
         user: "User"
         title: "API"
         key: "Key"
+        keys: "Keys"
         created: Created
         updated: Updated
         last_used: Last Used
@@ -4956,11 +5050,13 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
+              recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
@@ -4977,7 +5073,7 @@ en:
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
-              show: Obtain information about an user.
+              show: Obtain information about a user.
               check_emails: List user emails.
               update: Update user profile information.
               log_out: Log out all sessions for a user.
@@ -5011,6 +5107,8 @@ en:
               commenting: Necessary for the WP Discourse plugin commenting features.
               discourse_connect: Necessary for the WP Discourse plugin DiscourseConnect features.
               utilities: Necessary if you use WP Discourse plugin Utilities.
+            logs:
+              messages: List messages from /logs or get a specific log message.
 
       web_hooks:
         title: "Webhooks"
@@ -5097,14 +5195,14 @@ en:
           post_liked: "When a user likes a post."
         notification_event:
           group_name: "Notification Events"
-          notification_created: "An user receives a notification in their feed"
+          notification_created: "A user receives a notification in their feed"
         group_user_event:
           group_name: "Group User Events"
-          user_added_to_group: "An user is added to a group"
-          user_removed_from_group: "An user is removed from a group"
+          user_added_to_group: "A user is added to a group"
+          user_removed_from_group: "A user is removed from a group"
         user_promoted_event:
           group_name: "User Promoted Events"
-          user_promoted: "An user is promoted"
+          user_promoted: "A user is promoted"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -5263,12 +5361,19 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
-
+        component:
+          all_filter: "All"
+          used_filter: "Used"
+          unused_filter: "Unused"
+          enabled_filter: "Enabled"
+          disabled_filter: "Disabled"
+          updates_available_filter: "Updates Available"
         theme:
+          filter_by: "Filter by"
           theme: "Theme"
           component: "Component"
           components: "Components"
-          filter_placeholder: "type to filter…"
+          search_placeholder: "type to search…"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -5305,6 +5410,7 @@ en:
           color_scheme_user_selectable: "Color scheme can be selected by users"
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
+          edit_color_scheme: "Edit Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
@@ -5365,6 +5471,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          installing_message: "Installing theme, this may take several minutes..."
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create Placeholder"
@@ -5389,6 +5496,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          edit_objects_theme_setting: "Objects Setting Editor"
           overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
@@ -5441,6 +5549,12 @@ en:
             title: "Define theme settings in YAML format"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Inactive"
+          updates_available_filter: "Updates Available"
+          schema:
+            back_button: "Back to %{name}"
         colors:
           select_base:
             title: "Select base color palette"
@@ -5523,8 +5637,9 @@ en:
 
       email:
         title: "Emails"
-        settings: "Settings"
+        settings: "Email Settings"
         templates: "Templates"
+        templates_title: "Email Templates"
         preview_digest: "Preview Summary"
         advanced_test:
           title: "Advanced Test"
@@ -5594,6 +5709,9 @@ en:
             type_placeholder: "digest, signup…"
             reply_key_placeholder: "reply key"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[See more...]"
+          post_id: "(Post ID: %{post_id})"
 
       moderation_history:
         performed_by: "Performed By"
@@ -6199,7 +6317,7 @@ en:
             other: "In the last %{count} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
-          visits: "Visits"
+          posts_read_days: "Posts Read: unique days"
           days: "days"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Topics Viewed"
@@ -6363,6 +6481,13 @@ en:
         json_schema:
           edit: Launch Editor
           modal_title: "Edit %{name}"
+        file_types_list:
+          add_image_types: "Images"
+          add_video_types: "Videos"
+          add_audio_types: "Audio"
+          add_document_types: "Documents"
+          add_types_title: "Allow extensions %{types}"
+          add_types_toast: "%{types} file types added"
 
       badges:
         title: Badges
@@ -6507,6 +6632,8 @@ en:
         category_title: "Category"
         tag_name: "Tag name"
         external_url: "External or Relative URL"
+        user_id: "User ID"
+        username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?

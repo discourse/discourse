@@ -154,7 +154,9 @@ class PostRevisor
   end
 
   def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
-    return if !SiteSetting.create_post_for_category_and_tag_changes
+    if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes
+      return
+    end
 
     topic.add_moderator_post(
       user,

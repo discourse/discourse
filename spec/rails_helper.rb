@@ -26,12 +26,16 @@ require "webmock/rspec"
 require "minio_runner"
 
 class RspecErrorTracker
-  def self.last_exception=(ex)
-    @ex = ex
+  def self.exceptions
+    @exceptions ||= {}
   end
 
-  def self.last_exception
-    @ex
+  def self.clear_exceptions
+    @exceptions&.clear
+  end
+
+  def self.report_exception(path, exception)
+    exceptions[path] = exception
   end
 
   def initialize(app, config = {})
@@ -46,7 +50,7 @@ class RspecErrorTracker
       # and also Mocha::ExpectationError inherit from Exception instead of StandardError
       # they do not get captured by the rescue => e shorthand :(
     rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.last_exception = e
+      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
       raise e
     end
   end
@@ -57,8 +61,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
-require "test_prof/recipes/rspec/let_it_be"
-require "test_prof/before_all/adapters/active_record"
 require "selenium-webdriver"
 require "capybara/rails"
 
@@ -125,7 +127,7 @@ module TestSetup
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
-    RspecErrorTracker.last_exception = nil
+    RspecErrorTracker.clear_exceptions
 
     if $test_cleanup_callbacks
       $test_cleanup_callbacks.reverse_each(&:call)
@@ -149,31 +151,36 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
+    BlockRequestsMiddleware.allow_requests!
+    BlockRequestsMiddleware.current_example_location = nil
   end
 end
 
-TestProf::BeforeAll.configure do |config|
-  config.after(:begin) do
-    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-    TestSetup.test_setup
-  end
-end
-
-module Prefabrication
-  if ENV["PREFABRICATION"] == "0"
+if ENV["PREFABRICATION"] == "0"
+  module Prefabrication
     def fab!(name, **opts, &blk)
       blk ||= proc { Fabricate(name) }
       let!(name, &blk)
     end
-  else
+  end
+else
+  require "test_prof/recipes/rspec/let_it_be"
+  require "test_prof/before_all/adapters/active_record"
+
+  TestProf::BeforeAll.configure do |config|
+    config.after(:begin) do
+      DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+      TestSetup.test_setup
+    end
+  end
+
+  module Prefabrication
     def fab!(name, **opts, &blk)
       blk ||= proc { Fabricate(name) }
       let_it_be(name, refind: true, **opts, &blk)
     end
   end
 end
-
-RSpec.configure { |config| config.extend Prefabrication }
 
 PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
@@ -182,6 +189,7 @@ RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
   config.extend RedisSnapshotHelper
+  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -226,6 +234,8 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  config.full_cause_backtrace = true
+
   config.before(:suite) do
     CachedCounting.disable
 
@@ -233,21 +243,6 @@ RSpec.configure do |config|
       ActiveRecord::Migration.check_pending!
     rescue ActiveRecord::PendingMigrationError
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
-    end
-
-    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
-    # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
-    # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
-    # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
-    # the same location and this can interfere with the running tests in another process.
-    #
-    # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
-    # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-    if !File.directory?("~/.cache/selenium")
-      File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
-        file.flock(File::LOCK_EX)
-        `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
-      end
     end
 
     Sidekiq.error_handlers.clear
@@ -304,6 +299,8 @@ RSpec.configure do |config|
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    else
+      Capybara.default_max_wait_time = 4
     end
 
     Capybara.threadsafe = true
@@ -377,7 +374,7 @@ RSpec.configure do |config|
     end
 
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
-    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
+    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "WARNING"
 
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
@@ -388,8 +385,7 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
-    client = Selenium::WebDriver::Remote::Http::Default.new(read_timeout: BROWSER_READ_TIMEOUT)
-    driver_options = { browser: :chrome, http_client: client }
+    driver_options = { browser: :chrome, timeout: BROWSER_READ_TIMEOUT }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       driver_options[:browser] = :remote
@@ -429,6 +425,23 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
+    Capybara.register_driver :selenium_firefox_headless do |app|
+      options =
+        Selenium::WebDriver::Firefox::Options.new(
+          args: %w[--window-size=1400,1400 --headless],
+          prefs: {
+            "browser.download.dir": Downloads::FOLDER,
+          },
+          log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn,
+        )
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :firefox,
+        timeout: BROWSER_READ_TIMEOUT,
+        options: options,
+      )
+    end
+
     if ENV["ELEVATED_UPLOADS_ID"]
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -446,21 +459,6 @@ RSpec.configure do |config|
       super
       self.current_site = "test"
     end
-  end
-
-  config.after :each do |example|
-    if example.exception && ex = RspecErrorTracker.last_exception
-      # magic in a cause if we have none
-      unless example.exception.cause
-        class << example.exception
-          attr_accessor :cause
-        end
-        example.exception.cause = ex
-      end
-    end
-
-    unfreeze_time
-    ActionMailer::Base.deliveries.clear
   end
 
   config.after(:suite) do
@@ -481,14 +479,55 @@ RSpec.configure do |config|
     class SpecTimeoutError < StandardError
     end
 
+    mutex = Mutex.new
+    condition_variable = ConditionVariable.new
+    test_running = false
+    is_waiting = false
+
+    backtrace_logger =
+      Thread.new do
+        loop do
+          mutex.synchronize do
+            is_waiting = true
+            condition_variable.wait(mutex)
+            is_waiting = false
+          end
+
+          sleep PER_SPEC_TIMEOUT_SECONDS - 1
+
+          if mutex.synchronize { test_running }
+            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
+
+            Thread.list.each do |thread|
+              puts "\n"
+              thread.backtrace.each { |line| puts line }
+              puts "\n"
+            end
+
+            puts "::endgroup::"
+          end
+        rescue StandardError => e
+          puts "Error in backtrace logger: #{e}"
+        end
+      end
+
     config.around do |example|
       Timeout.timeout(
         PER_SPEC_TIMEOUT_SECONDS,
         SpecTimeoutError,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
       ) do
+        mutex.synchronize do
+          test_running = true
+          condition_variable.signal
+        end
+
         example.run
       rescue SpecTimeoutError
+      ensure
+        mutex.synchronize { test_running = false }
+        backtrace_logger.wakeup
+        sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
   end
@@ -497,6 +536,22 @@ RSpec.configure do |config|
     config.around :each do |example|
       measurement = Benchmark.measure { example.run }
       RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
+    end
+  end
+
+  if ENV["GITHUB_ACTIONS"]
+    config.around :each, capture_log: true do |example|
+      original_logger = ActiveRecord::Base.logger
+      io = StringIO.new
+      io_logger = Logger.new(io)
+      io_logger.level = Logger::DEBUG
+      ActiveRecord::Base.logger = io_logger
+
+      example.run
+
+      RSpec.current_example.metadata[:active_record_debug_logs] = io.string
+    ensure
+      ActiveRecord::Base.logger = original_logger
     end
   end
 
@@ -509,15 +564,63 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
-  last_driven_by = nil
+  system_tests_initialized = false
+
   config.before(:each, type: :system) do |example|
+    if !system_tests_initialized
+      # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
+      # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
+      # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
+      # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
+      # the same location and this can interfere with the running tests in another process.
+      #
+      # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
+      # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
+        file.flock(File::LOCK_EX)
+
+        if !File.directory?(File.expand_path("~/.cache/selenium"))
+          `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
+        end
+      end
+
+      # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
+      # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
+      # To work around this problem, we are going to preload all the model schemas before running any system tests so that
+      # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
+      # the issue to the Rails.
+      ActiveRecord::Base.connection.data_sources.map do |table|
+        ActiveRecord::Base.connection.schema_cache.add(table)
+      end
+
+      ApplicationController.before_action(prepend: true) do
+        if BlockRequestsMiddleware.current_example_location && !request.xhr? &&
+             request.format == "html"
+          cookies[
+            BlockRequestsMiddleware::RSPEC_CURRENT_EXAMPLE_COOKIE_STRING
+          ] = BlockRequestsMiddleware.current_example_location
+        end
+      end
+
+      system_tests_initialized = true
+    end
+
     driver = [:selenium]
     driver << :mobile if example.metadata[:mobile]
-    driver << :chrome
+    driver << (aarch64? ? :firefox : :chrome)
     driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
+
+    if driver.include?(:firefox)
+      STDERR.puts(
+        "WARNING: Running system specs using the Firefox driver is not officially supported. Some tests will fail.",
+      )
+    end
+
     driven_by driver.join("_").to_sym
 
     setup_system_test
+
+    BlockRequestsMiddleware.current_example_location = example.location
   end
 
   config.after(:each, type: :system) do |example|
@@ -532,50 +635,80 @@ RSpec.configure do |config|
       lines << "~~~~~ END DRIVER LOGS ~~~~~"
     end
 
+    # The logs API isn’t available (yet?) with the Firefox driver
+    js_logs = aarch64? ? [] : page.driver.browser.logs.get(:browser)
+
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
     if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
       if example.exception
-        skip_js_errors = false
+        lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
-        if example.exception.kind_of?(RSpec::Core::MultipleExceptionError)
-          lines << "~~~~~~~ SYSTEM TEST ERRORS ~~~~~~~"
-          example.exception.all_exceptions.each { |ex| lines << ex.message }
-          lines << "~~~~~ END SYSTEM TEST ERRORS ~~~~~"
-
-          skip_js_errors = true
-        end
-
-        if !skip_js_errors
-          lines << "~~~~~~~ JS LOGS ~~~~~~~"
-          logs = page.driver.browser.logs.get(:browser)
-          if logs.empty?
-            lines << "(no logs)"
-          else
-            logs.each do |log|
-              # System specs are full of image load errors that are just noise, no need
-              # to log this.
-              if (
-                   log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
-                     (log.message.include?("uploads") || log.message.include?("images"))
-                 ) || log.message.include?("favicon.ico")
-                next
-              end
-
-              lines << log.message
+        if js_logs.empty?
+          lines << "(no logs)"
+        else
+          js_logs.each do |log|
+            # System specs are full of image load errors that are just noise, no need
+            # to log this.
+            if (
+                 log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                   (log.message.include?("uploads") || log.message.include?("images"))
+               ) || log.message.include?("favicon.ico")
+              next
             end
+
+            lines << log.message
           end
-          lines << "~~~~~ END JS LOGS ~~~~~"
         end
+
+        lines << "~~~~~ END JS LOGS ~~~~~"
       end
     end
 
+    js_logs.each do |log|
+      next if log.level != "WARNING"
+      deprecation_id = log.message[/\[deprecation id: ([^\]]+)\]/, 1]
+      next if deprecation_id.nil?
+
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
+      deprecations[deprecation_id] ||= 0
+      deprecations[deprecation_id] += 1
+    end
+
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+
+    # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
+    BlockRequestsMiddleware.block_requests!
+
+    Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
-    Scheduler::Defer.do_all_work # Process everything that was added to the defer queue when running the test
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
     Discourse.redis.flushdb
+  end
+
+  config.after :each do |example|
+    if example.exception && RspecErrorTracker.exceptions.present?
+      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
+
+      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+
+      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
+        lines << "\n"
+        lines << "Error encountered while proccessing #{path}"
+        lines << "  #{ex.class}: #{ex.message}"
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
+      end
+
+      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+    end
+
+    unfreeze_time
+    ActionMailer::Base.deliveries.clear
   end
 
   config.before(:each, type: :multisite) do
@@ -646,6 +779,14 @@ def set_cdn_url(cdn_url)
     Rails.configuration.action_controller.asset_host = nil
     ActionController::Base.asset_host = nil
   end
+end
+
+# Time.now can cause flaky tests, especially in cases like
+# leap days. This method freezes time at a "safe" specific
+# time (the Discourse 1.1 release date), so it will not be
+# affected by further temporal disruptions.
+def freeze_time_safe
+  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
 end
 
 def freeze_time(now = Time.now)
@@ -813,6 +954,10 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
+end
+
+def aarch64?
+  RUBY_PLATFORM == "aarch64-linux"
 end
 
 class SpecSecureRandom

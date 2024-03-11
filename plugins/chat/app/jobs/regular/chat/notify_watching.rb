@@ -60,18 +60,36 @@ module Jobs
 
         translation_args = { username: @creator.username }
         translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel
+        translation_args =
+          DiscoursePluginRegistry.apply_modifier(
+            :chat_notification_translation_args,
+            translation_args,
+          )
+
+        translated_title =
+          I18n.with_locale(user.effective_locale) { I18n.t(translation_key, translation_args) }
 
         payload = {
           username: @creator.username,
           notification_type: ::Notification.types[:chat_message],
           post_url: @chat_message.url,
-          translated_title: ::I18n.t(translation_key, translation_args),
+          translated_title: translated_title,
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
         }
 
         if membership.desktop_notifications_always? && !membership.muted?
-          ::MessageBus.publish("/chat/notification-alert/#{user.id}", payload, user_ids: [user.id])
+          send_notification =
+            DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+              filter.call(user, payload)
+            end
+          if send_notification
+            ::MessageBus.publish(
+              "/chat/notification-alert/#{user.id}",
+              payload,
+              user_ids: [user.id],
+            )
+          end
         end
 
         if membership.mobile_notifications_always? && !membership.muted?

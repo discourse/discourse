@@ -15,7 +15,6 @@ describe "Automatic user removal from channels" do
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
     SiteSetting.chat_enabled = true
-    Group.refresh_automatic_groups!
     Jobs.run_immediately!
 
     secret_group.add(user_1)

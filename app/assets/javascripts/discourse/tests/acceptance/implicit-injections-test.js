@@ -1,5 +1,5 @@
 import { getOwner, setOwner } from "@ember/application";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { test } from "qunit";
 import RestModel from "discourse/models/rest";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Flagging post", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:first_post) { Fabricate(:post) }
   fab!(:post_to_flag) { Fabricate(:post, topic: first_post.topic) }
 
@@ -30,6 +30,24 @@ describe "Flagging post", type: :system do
 
       expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
       expect(page).to have_css(".reviewable-meta-data .status .approved")
+    end
+  end
+
+  describe "As Illegal" do
+    it do
+      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.click_post_action_button(post_to_flag, :flag)
+      flag_modal.choose_type(:illegal)
+
+      expect(flag_modal).to have_css(".flag-confirmation")
+
+      flag_modal.fill_message("This looks totally illegal to me.")
+      flag_modal.check_confirmation
+
+      flag_modal.confirm_flag
+
+      expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
     end
   end
 end

@@ -3,6 +3,7 @@
 module Chat
   class MessageProcessor
     include ::CookedProcessorMixin
+    IMG_FILETYPES = %w[jpg jpeg gif png heic heif webp]
 
     def initialize(chat_message, opts = {})
       @model = chat_message
@@ -22,7 +23,11 @@ module Chat
     end
 
     def process_thumbnails
+      return if !SiteSetting.create_thumbnails
+
       @model.uploads.each do |upload|
+        next if upload.blank? || IMG_FILETYPES.exclude?(upload.extension.downcase)
+
         if upload.width <= SiteSetting.max_image_width &&
              upload.height <= SiteSetting.max_image_height
           return false

@@ -7,6 +7,7 @@ RSpec.describe ThemeField do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     ThemeJavascriptCompiler.disable_terser!
+    SiteSetting.experimental_objects_type_for_theme_settings = true
   end
 
   after { ThemeJavascriptCompiler.enable_terser! }
@@ -82,7 +83,7 @@ RSpec.describe ThemeField do
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -119,7 +120,7 @@ HTML
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(field.javascript_cache.content).to include("[THEME 1 'Default'] Compile error")
 
@@ -146,7 +147,7 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
@@ -385,15 +386,37 @@ HTML
   it "generates errors when invalid type is passed" do
     field = create_yaml_field(get_fixture("invalid"))
     expect(field.error).to include(
-      I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"),
+      I18n.t("#{key}.data_type_inclusion", name: "invalid_type_setting"),
     )
   end
 
   it "generates errors when default value is not within allowed range" do
     field = create_yaml_field(get_fixture("invalid"))
-    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "default_out_of_range"))
+
     expect(field.error).to include(
-      I18n.t("#{key}.default_out_range", name: "string_default_out_of_range"),
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "default_out_of_range",
+        error_messages: [I18n.t("#{key}.number_value_not_valid_min_max", min: 1, max: 20)].join(
+          " ",
+        ),
+      ),
+    )
+
+    expect(field.error).to include(
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "string_default_out_of_range",
+        error_messages: [I18n.t("#{key}.string_value_not_valid_min", min: 20)].join(" "),
+      ),
+    )
+  end
+
+  it "generates the right errors when setting of type objects have default values which does not matches the schema" do
+    field = create_yaml_field(get_fixture("invalid"))
+
+    expect(field.error).to include(
+      "Setting `invalid_default_objects_setting` default value isn't valid. The property at JSON Pointer '/0/required_string' must be present. The property at JSON Pointer '/1/min_5_chars_string' must be at least 5 characters long. The property at JSON Pointer '/1/children/0/required_integer' must be present.",
     )
   end
 
@@ -589,7 +612,7 @@ HTML
       it "is generated correctly" do
         fr1.ensure_baked!
         expect(fr1.value_baked).to include(
-          "<script defer src='#{fr1.javascript_cache.url}' data-theme-id='#{fr1.theme_id}'></script>",
+          "<script defer src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
         )
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")

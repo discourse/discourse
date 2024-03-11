@@ -253,6 +253,7 @@ Discourse::Application.routes.draw do
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "themes/:id/export" => "themes#export"
+        get "themes/:id/schema/:setting_name" => "themes#schema"
 
         # They have periods in their URLs often:
         get "site_texts" => "site_texts#index"
@@ -538,10 +539,10 @@ Discourse::Application.routes.draw do
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
 
       get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
         {
@@ -1207,6 +1208,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#lookup"
+    get "hashtags/by-ids" => "hashtags#by_ids"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
@@ -1217,6 +1219,7 @@ Discourse::Application.routes.draw do
 
     get "latest.rss" => "list#latest_feed", :format => :rss
     get "top.rss" => "list#top_feed", :format => :rss
+    get "hot.rss" => "list#hot_feed", :format => :rss
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
@@ -1235,7 +1238,11 @@ Discourse::Application.routes.draw do
     put "t/:id/convert-topic/:type" => "topics#convert_topic"
     put "t/:id/publish" => "topics#publish"
     put "t/:id/shared-draft" => "topics#update_shared_draft"
-    put "t/:id/reset-bump-date" => "topics#reset_bump_date"
+    put "t/:id/reset-bump-date/(:post_id)" => "topics#reset_bump_date",
+        :constraints => {
+          id: /\d+/,
+          post_id: /\d+/,
+        }
     put "topics/bulk"
     put "topics/reset-new" => "topics#reset_new"
     put "topics/pm-reset-new" => "topics#private_message_reset_new"
@@ -1432,6 +1439,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, only: %i[create update destroy]
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"
     post "invites/destroy-all-expired" => "invites#destroy_all_expired"

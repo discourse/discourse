@@ -101,11 +101,17 @@ RSpec.describe Admin::RobotsTxtController do
 
       it "resets robots.txt file to the default version" do
         SiteSetting.overridden_robots_txt = "overridden_content"
-        delete "/admin/customize/robots.json"
+        SiteSetting.allowed_crawler_user_agents = "test-user-agent-154"
+
+        delete "/admin/customize/robots.json", xhr: true
         expect(response.status).to eq(200)
+
         json = response.parsed_body
         expect(json["robots_txt"]).not_to include("overridden_content")
+        expect(json["robots_txt"]).not_to include("</html>")
+        expect(json["robots_txt"]).to include("User-agent: test-user-agent-154\n")
         expect(json["overridden"]).to eq(false)
+
         expect(SiteSetting.overridden_robots_txt).to eq("")
       end
     end

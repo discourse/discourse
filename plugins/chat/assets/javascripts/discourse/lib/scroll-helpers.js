@@ -1,15 +1,21 @@
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 
-export function scrollListToBottom(list) {
-  stackingContextFix(list, () => {
-    list.scrollTo({ top: 0, behavior: "auto" });
+export async function scrollListToBottom(list) {
+  await new Promise((resolve) => {
+    stackingContextFix(list, () => {
+      list.scrollTo({ top: 0, behavior: "auto" });
+      next(resolve);
+    });
   });
 }
 
-export function scrollListToTop(list) {
-  stackingContextFix(list, () => {
-    list.scrollTo({ top: -list.scrollHeight, behavior: "auto" });
+export async function scrollListToTop(list) {
+  await new Promise((resolve) => {
+    stackingContextFix(list, () => {
+      list.scrollTo({ top: -list.scrollHeight, behavior: "auto" });
+      next(resolve);
+    });
   });
 }
 

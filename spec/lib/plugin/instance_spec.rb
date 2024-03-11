@@ -1,9 +1,59 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
-  subject(:plugin_instance) { described_class.new }
+  subject(:plugin_instance) { described_class.new(metadata) }
+
+  let(:metadata) { Plugin::Metadata.parse <<TEXT }
+# name: discourse-sample-plugin
+# about: about: my plugin
+# version: 0.1
+# authors: Frank Zappa
+# contact emails: frankz@example.com
+# url: http://discourse.org
+# required version: 1.3.0beta6+48
+# meta_topic_id: 1234
+# label: experimental
+
+some_ruby
+TEXT
 
   after { DiscoursePluginRegistry.reset! }
+
+  # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
+
+  describe ".humanized_name" do
+    before do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Sample Plugin Category Name",
+      )
+    end
+
+    it "defaults to using the plugin name with the discourse- prefix removed" do
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+    end
+
+    it "uses the plugin setting category name if it exists" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+
+    it "the plugin name the plugin site settings are still under the generic plugins: category" do
+      plugin_instance.stubs(:setting_category).returns("plugins")
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+    end
+
+    it "removes any Discourse prefix from the setting category name" do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Discourse Sample Plugin Category Name",
+      )
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+  end
 
   describe "find_all" do
     it "can find plugins correctly" do
@@ -25,6 +75,55 @@ RSpec.describe Plugin::Instance do
     it "does not blow up on missing directory" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
       expect(plugins.count).to eq(0)
+    end
+  end
+
+  describe "stats" do
+    after { DiscoursePluginRegistry.reset! }
+
+    it "returns core stats" do
+      stats = Plugin::Instance.stats
+      expect(stats.keys).to contain_exactly(
+        :topics_last_day,
+        :topics_7_days,
+        :topics_30_days,
+        :topics_count,
+        :posts_last_day,
+        :posts_7_days,
+        :posts_30_days,
+        :posts_count,
+        :users_last_day,
+        :users_7_days,
+        :users_30_days,
+        :users_count,
+        :active_users_last_day,
+        :active_users_7_days,
+        :active_users_30_days,
+        :likes_last_day,
+        :likes_7_days,
+        :likes_30_days,
+        :likes_count,
+        :discourse_discover_enrolled,
+      )
+    end
+
+    it "returns stats registered by plugins" do
+      plugin = Plugin::Instance.new
+      stats_name = "plugin_stats"
+      plugin.register_stat(stats_name) do
+        { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
+      end
+
+      stats = Plugin::Instance.stats
+
+      expect(stats.with_indifferent_access).to match(
+        hash_including(
+          "#{stats_name}_last_day": 1,
+          "#{stats_name}_7_days": 10,
+          "#{stats_name}_30_days": 100,
+          "#{stats_name}_count": 1000,
+        ),
+      )
     end
   end
 
@@ -68,6 +167,7 @@ RSpec.describe Plugin::Instance do
           "a trout"
         end
       end
+
       class TroutJuniorSerializer < TroutSerializer
         attribute :i_am_child
 
@@ -309,15 +409,9 @@ RSpec.describe Plugin::Instance do
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
-      plugin.register_asset("code.js")
-
-      plugin.register_asset("my_admin.js", :admin)
-      plugin.register_asset("my_admin2.js", :admin)
-
       plugin.activate!
 
-      expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
+      expect(DiscoursePluginRegistry.javascripts.count).to eq(1)
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)

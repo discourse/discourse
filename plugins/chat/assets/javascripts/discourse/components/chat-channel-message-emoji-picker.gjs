@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { createPopper } from "@popperjs/core";
 import { modifier } from "ember-modifier";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -66,12 +66,12 @@ export default class ChatChannelMessageEmojiPicker extends Component {
 
   <template>
     <ChatEmojiPicker
+      {{this.listenToBodyScroll}}
       @context="chat-channel-message"
       @didInsert={{this.didInsert}}
       @willDestroy={{this.willDestroy}}
       @didSelectEmoji={{this.didSelectEmoji}}
-      @class="hidden"
-      {{this.listenToBodyScroll}}
+      class="hidden"
     />
   </template>
 }

@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";

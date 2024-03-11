@@ -450,6 +450,7 @@ RSpec.describe UserSerializer do
     end
 
     it "does not include them if feature is disabled" do
+      SiteSetting.enable_passkeys = false
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
       expect(json[:user_passkeys]).to eq(nil)

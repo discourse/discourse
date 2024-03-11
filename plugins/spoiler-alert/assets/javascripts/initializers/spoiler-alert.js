@@ -49,7 +49,7 @@ export default {
   name: "spoiler-alert",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.spoiler_enabled) {
       withPluginApi("1.15.0", initializeSpoiler);

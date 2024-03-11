@@ -1,9 +1,12 @@
 en:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Always"
           fullscreen: "When chat is in fullscreen"
@@ -34,8 +37,10 @@ en:
     chat:
       text_copied: Text copied to clipboard
       link_copied: Link copied to clipboard
+      back_to_forum: "Forum"
       deleted_chat_username: deleted
       dates:
+        yesterday: "Yesterday"
         time_tiny: "h:mm"
       all_loaded: "Showing all messages"
       already_enabled: "Chat is already enabled on this topic. Please refresh."
@@ -46,6 +51,7 @@ en:
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
       browse_all_channels: "Browse all channels"
+      see_in: "See in"
       move_to_channel:
         title: "Move messages to channel"
         instructions:
@@ -110,6 +116,7 @@ en:
         direct_message_cta: "Start a personal Chat"
         direct_message: "You can also start a personal chat with one or more users."
         title: "No channels found"
+        my_threads: "You don't have any threads yet. Threads you participate in will be displayed here."
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"
@@ -222,6 +229,7 @@ en:
         composer: "Chat composer"
         channels_list: "Chat channels list"
 
+      no_direct_message_channels: "You have not joined any direct message channels."
       no_public_channels: "You have not joined any channels."
       kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
@@ -300,7 +308,7 @@ en:
         back: "Back"
         title: Channels
         filter_all: All
-        filter_open: Opened
+        filter_open: Open
         filter_closed: Closed
         filter_archived: Archived
         filter_input_placeholder: Search channel by name
@@ -312,6 +320,7 @@ en:
       members_view:
         filter_placeholder: Find members
         add_member: Add Member
+        back_to_settings: "Back to settings"
 
       about_view:
         associated_topic: Linked topic
@@ -344,6 +353,7 @@ en:
         filter: "Filter"
         cant_add_more_members: "Maximum number of members reached"
         create_new_group_chat: "Create group chat"
+        group_with_too_many_members: "has too many members (%{membersCount})"
 
       channel_edit_name_slug_modal:
         title: Edit channel
@@ -492,15 +502,21 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       my_threads:
-        title: My threads
+        title: My Threads
+        aria_label: "Switch to my threads list"
 
       direct_messages:
-        title: "Personal chat"
+        title: "DMs"
+        aria_label: "Switch to direct messages"
         new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         close: "Close this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
+
+      channel_list:
+        title: "Channels"
+        aria_label: "Switch to channels list"
 
       incoming_webhooks:
         back: "Back"

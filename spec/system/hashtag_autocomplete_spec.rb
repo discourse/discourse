@@ -2,7 +2,7 @@
 
 describe "Using #hashtag autocompletion to search for and lookup categories and tags",
          type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
   end
@@ -100,7 +100,6 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
-    Group.refresh_automatic_groups!
     topic_page.visit_topic_and_open_composer(topic)
 
     expect(topic_page).to have_expanded_composer
@@ -256,7 +255,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     it "shows a default color and css class for the category icon square" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
-      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+      expect(page).to have_css(".hashtag-cooked .hashtag-category-badge")
+      generated_css = find("#hashtag-css-generator", visible: false).text(:all)
+      expect(generated_css).to include(".hashtag-category-badge")
+      expect(generated_css).not_to include(".hashtag-color--category--#{private_category.id}")
     end
   end
 end

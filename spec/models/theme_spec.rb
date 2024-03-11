@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Theme do
-  after { Theme.clear_cache! }
-
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
-
-  fab! :user do
-    Fabricate(:user)
-  end
+  fab!(:user)
+  fab!(:theme) { Fabricate(:theme, user: user) }
 
   let(:guardian) { Guardian.new(user) }
-
-  fab!(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
+  before { ThemeJavascriptCompiler.disable_terser! }
+
+  after do
+    Theme.clear_cache!
+    ThemeJavascriptCompiler.enable_terser!
+  end
 
   it "can properly clean up color schemes" do
     scheme = ColorScheme.create!(theme_id: theme.id, name: "test")
@@ -328,7 +327,7 @@ HTML
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
-      setting = theme.settings.find { |s| s.name == :font_size }
+      setting = theme.settings[:font_size]
       setting.value = "30px"
       theme.save!
 
@@ -418,7 +417,7 @@ HTML
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
-      setting = theme.settings.find { |s| s.name == :name }
+      setting = theme.settings[:name]
       setting.value = "bill"
       theme.save!
 
@@ -916,18 +915,35 @@ HTML
         name: "yaml",
         value: "some_number: 1",
       )
+
       theme.set_field(
         target: :tests_js,
         type: :js,
         name: "acceptance/some-test.js",
         value: "assert.ok(true);",
       )
+
       theme.save!
     end
 
     it "returns nil for content and digest if theme does not have tests" do
       ThemeField.destroy_all
       expect(theme.baked_js_tests_with_digest).to eq([nil, nil])
+    end
+
+    it "includes theme's migrations theme fields" do
+      theme.set_field(
+        target: :migrations,
+        type: :js,
+        name: "0001-some-migration",
+        value: "export default function migrate(settings) { return settings; }",
+      )
+
+      theme.save!
+
+      content, _digest = theme.baked_js_tests_with_digest
+
+      expect(content).to include("function migrate(settings)")
     end
 
     it "digest does not change when settings are changed" do
@@ -1078,11 +1094,42 @@ HTML
       )
     end
 
+    it "updates the theme's javascript cache after running migration" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+
+      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+
+      migration_field.update!(value: <<~JS)
+      export default function migrate(settings) {
+        settings.set("list_setting", "zz|aa");
+        return settings;
+      }
+      JS
+
+      theme.reload
+      theme.migrate_settings
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+    end
+
     it "allows changing a setting's type" do
       theme.update_setting(:list_setting, "zz,aa")
       theme.save!
 
       setting_record = theme.theme_settings.where(name: "list_setting").first
+
       expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
       expect(setting_record.value).to eq("zz,aa")
 
@@ -1092,12 +1139,14 @@ HTML
           default: aa|bb
           type: list
       YAML
+
       migration_field.update!(value: <<~JS)
         export default function migrate(settings) {
           settings.set("list_setting", "zz|aa");
           return settings;
         }
       JS
+
       theme.reload
 
       theme.migrate_settings

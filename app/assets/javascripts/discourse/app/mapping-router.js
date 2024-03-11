@@ -1,10 +1,10 @@
-import EmberRouter from "@ember/routing/router";
+import EmbroiderRouter from "@embroider/router";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
-class BareRouter extends EmberRouter {
+class BareRouter extends EmbroiderRouter {
   location = isTesting() ? "none" : "history";
 
   setupRouter() {

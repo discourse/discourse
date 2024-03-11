@@ -645,12 +645,12 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:acted)
   end
 
-  def full_url
-    "#{Discourse.base_url}#{url}"
+  def full_url(opts = {})
+    "#{Discourse.base_url}#{url(opts)}"
   end
 
-  def relative_url
-    "#{Discourse.base_path}#{url}"
+  def relative_url(opts = {})
+    "#{Discourse.base_path}#{url(opts)}"
   end
 
   def url(opts = nil)
@@ -685,7 +685,11 @@ class Post < ActiveRecord::Base
     result = +"/t/"
     result << "#{slug}/" if !opts[:without_slug]
 
-    "#{result}#{topic_id}/#{post_number}"
+    if post_number == 1 && opts[:share_url]
+      "#{result}#{topic_id}"
+    else
+      "#{result}#{topic_id}/#{post_number}"
+    end
   end
 
   def self.urls(post_ids)
@@ -1044,14 +1048,16 @@ class Post < ActiveRecord::Base
             .where("original_filename like ?", "#{upload.sha1}.%")
             .order(id: :desc)
             .first if upload.sha1.present?
-        if thumbnail.present? && self.is_first_post? && !self.topic.image_upload_id
+        if thumbnail.present?
           upload_ids << thumbnail.id
-          self.topic.update_column(:image_upload_id, thumbnail.id)
-          extra_sizes =
-            ThemeModifierHelper.new(
-              theme_ids: Theme.user_selectable.pluck(:id),
-            ).topic_thumbnail_sizes
-          self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+          if self.is_first_post? && !self.topic.image_upload_id
+            self.topic.update_column(:image_upload_id, thumbnail.id)
+            extra_sizes =
+              ThemeModifierHelper.new(
+                theme_ids: Theme.user_selectable.pluck(:id),
+              ).topic_thumbnail_sizes
+            self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+          end
         end
       end
       upload_ids << upload.id if upload.present?

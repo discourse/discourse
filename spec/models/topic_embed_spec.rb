@@ -8,7 +8,7 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe ".import" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) do
@@ -73,6 +73,9 @@ RSpec.describe TopicEmbed do
         expect(post.cooked).to have_tag("a", with: { href: "http://eviltrout.com/hello" })
         expect(post.cooked).to have_tag("img", with: { src: "http://eviltrout.com/images/wat.jpg" })
 
+        # It caches the embed content
+        expect(post.topic.topic_embed.embed_content_cache).to eq(contents)
+
         # It converts relative URLs to absolute when expanded
         stub_request(:get, url).to_return(status: 200, body: contents)
         expect(TopicEmbed.expanded_for(post)).to have_tag(
@@ -105,6 +108,13 @@ RSpec.describe TopicEmbed do
         topic_embed.reload
         expect(topic_embed.post.user).to eq(new_user)
         expect(topic_embed.post.topic.user).to eq(new_user)
+      end
+
+      it "Supports updating the embed content cache" do
+        expect do TopicEmbed.import(user, url, title, "new contents") end.to change {
+          topic_embed.reload.embed_content_cache
+        }
+        expect(topic_embed.embed_content_cache).to eq("new contents")
       end
 
       it "Should leave uppercase Feed Entry URL untouched in content" do
@@ -557,6 +567,32 @@ RSpec.describe TopicEmbed do
       expected_html =
         "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
       expect(html).to eq(expected_html)
+    end
+  end
+
+  describe ".expanded_for" do
+    fab!(:user)
+    let(:title) { "How to turn a fish from good to evil in 30 seconds" }
+    let(:url) { "http://eviltrout.com/123" }
+    let(:contents) { "<p>hello world new post :D</p>" }
+    fab!(:embeddable_host)
+    fab!(:category)
+    fab!(:tag)
+
+    it "returns embed content" do
+      stub_request(:get, url).to_return(status: 200, body: contents)
+      post = TopicEmbed.import(user, url, title, contents)
+      expect(TopicEmbed.expanded_for(post)).to include(contents)
+    end
+
+    it "updates the embed content cache" do
+      stub_request(:get, url)
+        .to_return(status: 200, body: contents)
+        .then
+        .to_return(status: 200, body: "contents changed")
+      post = TopicEmbed.import(user, url, title, contents)
+      TopicEmbed.expanded_for(post)
+      expect(post.topic.topic_embed.reload.embed_content_cache).to include("contents changed")
     end
   end
 end

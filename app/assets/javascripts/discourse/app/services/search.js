@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
@@ -13,6 +13,8 @@ export default class Search extends Service {
   @tracked highlightTerm;
   @tracked inTopicContext = false;
   @tracked visible = false;
+  @tracked results = {};
+  @tracked noResults = false;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search

@@ -10,10 +10,13 @@ ar:
       title: "دليل الأنماط"
       welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
       categories:
+        syntax: بناء الجملة
         atoms: الذرّات (Atoms)
         molecules: الجزئيات (Molecules)
         organisms: المخلوقات الحية (Organisms)
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "أسلوب الطباعة"
           example: "مرحبًا بك في Discourse"
@@ -22,6 +25,8 @@ ar:
           title: "حقول إدخال التاريخ/الوقت"
         menus:
           title: "القوائم"
+        toasts:
+          title: "الرسائل المنبثقة"
         font_scale:
           title: "نظام الخطوط"
         colors:

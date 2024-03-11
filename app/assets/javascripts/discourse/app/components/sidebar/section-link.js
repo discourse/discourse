@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 /**
  * Checks if a given string is a valid color hex code.
@@ -19,15 +20,14 @@ export function isHex(input) {
 export default class SectionLink extends Component {
   @service currentUser;
 
+  constructor() {
+    super(...arguments);
+    this.args.didInsert?.();
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
     this.args.willDestroy?.();
-  }
-
-  didInsert(_element, [args]) {
-    if (args.didInsert) {
-      args.didInsert();
-    }
   }
 
   get shouldDisplay() {
@@ -38,10 +38,19 @@ export default class SectionLink extends Component {
     return this.args.shouldDisplay;
   }
 
-  get classNames() {
+  get linkClass() {
     let classNames = ["sidebar-section-link", "sidebar-row"];
 
+    if (this.args.linkClass) {
+      classNames.push(this.args.linkClass);
+    }
+
     if (this.args.class) {
+      deprecated("SectionLink's @class arg has been renamed to @linkClass", {
+        id: "discourse.section-link-class-arg",
+        since: "3.2.0.beta4",
+        dropFrom: "3.3.0.beta1",
+      });
       classNames.push(this.args.class);
     }
 

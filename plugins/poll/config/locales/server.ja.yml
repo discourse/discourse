@@ -12,9 +12,11 @@ ja:
     poll_minimum_trust_level_to_create: "投票の作成に必要な最低信頼レベルを定義します。"
     poll_groupable_user_fields: "投票結果をグループ化およびフィルタするために使用できるユーザーフィールド名のセット。"
     poll_export_data_explorer_query_id: "投票結果のエクスポートに使用するデータエクスプローラのクエリの ID (無効にする場合は 0)。"
+    poll_default_public: "新しい投票を作成する際に、デフォルトで '投票者を表示する' オプションを有効にします。"
   poll:
     poll: "投票"
     invalid_argument: "引数 '%{argument}' の値 '%{value}' が無効です。"
+    multiple_polls_without_name: "複数の投票を作成する際は、<code>name=example</code> を <code>[poll]</code> タグに追加して固有の名前を付けます。"
     multiple_polls_with_same_name: "同じ名前の投票が複数あります: <strong>%{name}</strong>。投票を一意に識別できるよう、'<code>name</code>' 属性を使用してください。"
     default_poll_must_have_at_least_1_option: "投票には少なくとも 1 つのオプションが必要です。"
     named_poll_must_have_at_least_1_option: "<strong>%{name}</strong> という名前の投票には、少なくとも 1 つのオプションが必要です。"

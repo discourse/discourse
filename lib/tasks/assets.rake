@@ -8,28 +8,17 @@ end
 
 task "assets:precompile:build" do
   if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
-    ember_version = ENV["EMBER_VERSION"] || "3"
+    ember_version = ENV["EMBER_VERSION"] || "5"
 
-    raise "Unknown ember version '#{ember_version}'" if !%w[3 5].include?(ember_version)
-
-    if ENV["EMBER_VERSION"] == "5"
-      puts "Upgrading to Ember 5..."
-      system("script/switch_ember_version", ember_version, exception: true, chdir: Rails.root)
-      system("yarn install", exception: true, chdir: "app/assets/javascripts/discourse")
-    end
+    raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
     compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
-    if heap_size_limit < 1024
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 1024MB. Setting --max-old-space-size=1024."
-      compile_command = "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
-    end
-
     if heap_size_limit < 2048
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Disabling Webpack parallelization with JOBS=0 to conserve memory."
-      compile_command = "JOBS=0 #{compile_command}"
+      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048."
+      compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
     end
 
     compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?

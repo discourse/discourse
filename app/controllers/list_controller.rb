@@ -261,6 +261,14 @@ class ListController < ApplicationController
     render "list", formats: [:rss]
   end
 
+  def hot_feed
+    discourse_expires_in 1.minute
+
+    @topic_list = TopicQuery.new(nil).list_hot
+
+    render "list", formats: [:rss]
+  end
+
   def category_feed
     guardian.ensure_can_see!(@category)
     discourse_expires_in 1.minute

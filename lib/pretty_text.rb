@@ -66,10 +66,12 @@ module PrettyText
     end
 
     root_path = "#{Rails.root}/app/assets/javascripts"
-    ctx.load("#{root_path}/node_modules/loader.js/dist/loader/loader.js")
-    ctx.load("#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
+    node_modules = "#{Rails.root}/node_modules"
+    md_node_modules = "#{Rails.root}/app/assets/javascripts/discourse-markdown-it/node_modules"
+    ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
+    ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{root_path}/handlebars-shim.js")
-    ctx.load("#{root_path}/node_modules/xss/dist/xss.js")
+    ctx.load("#{node_modules}/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
 
     ctx_load_directory(
@@ -103,18 +105,18 @@ module PrettyText
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
-    to_load = []
-    DiscoursePluginRegistry.each_globbed_asset do |a|
-      to_load << a if File.file?(a) && a =~ /discourse-markdown/
-    end
-    to_load.uniq.each do |f|
-      plugin_name = f[%r{/plugins/([^/]+)/}, 1]
-      module_name = f[%r{/assets/javascripts/(.+)\.}, 1]
-      apply_es6_file(
-        ctx: ctx,
-        path: f,
-        module_name: "discourse/plugins/#{plugin_name}/#{module_name}",
-      )
+    Discourse.plugins.each do |plugin|
+      Dir
+        .glob("#{plugin.directory}/assets/javascripts/**/discourse-markdown/**/*.{js,js.es6}")
+        .filter { |a| File.file?(a) }
+        .each do |f|
+          module_name =
+            f.sub(%r{\A.+assets/javascripts/}, "discourse/plugins/#{plugin.name}/").sub(
+              /\.js(\.es6)?\z/,
+              "",
+            )
+          apply_es6_file(ctx: ctx, path: f, module_name: module_name)
+        end
     end
 
     DiscoursePluginRegistry.vendored_core_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
@@ -302,6 +304,7 @@ module PrettyText
     add_rel_attributes_to_user_content(doc, add_nofollow)
     strip_hidden_unicode_bidirectional_characters(doc)
     sanitize_hotlinked_media(doc)
+    add_video_placeholder_image(doc)
 
     add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
 
@@ -440,6 +443,21 @@ module PrettyText
       end
 
     links
+  end
+
+  def self.add_video_placeholder_image(doc)
+    doc
+      .css(".video-placeholder-container")
+      .each do |video|
+        video_src = video["data-video-src"]
+        video_sha1 = File.basename(video_src, File.extname(video_src))
+        thumbnail = Upload.where("original_filename LIKE ?", "#{video_sha1}.%").last
+        if thumbnail
+          video["data-thumbnail-src"] = UrlHelper.absolute(
+            GlobalPath.upload_cdn_path(thumbnail.url),
+          )
+        end
+      end
   end
 
   def self.extract_mentions(cooked)

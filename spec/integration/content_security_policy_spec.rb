@@ -2,6 +2,8 @@
 
 RSpec.describe "content security policy integration" do
   it "adds the csp headers correctly" do
+    Fabricate(:admin) # to avoid 'new installation' screen
+
     SiteSetting.content_security_policy = false
     get "/"
     expect(response.headers["Content-Security-Policy"]).to eq(nil)
@@ -9,9 +11,15 @@ RSpec.describe "content security policy integration" do
     SiteSetting.content_security_policy = true
     get "/"
     expect(response.headers["Content-Security-Policy"]).to be_present
+
+    expect(response.headers["Content-Security-Policy"]).to match(
+      /script-src 'nonce-[^']+' 'strict-dynamic';/,
+    )
   end
 
-  context "with different hostnames" do
+  context "with different hostnames - legacy" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
+
     before do
       SiteSetting.content_security_policy = true
       RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(
@@ -39,7 +47,9 @@ RSpec.describe "content security policy integration" do
     end
   end
 
-  context "with different protocols" do
+  context "with different protocols - legacy" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
+
     it "forces https when the site setting is enabled" do
       SiteSetting.force_https = true
       get "/"

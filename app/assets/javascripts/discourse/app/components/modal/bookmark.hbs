@@ -36,9 +36,9 @@
         <ComboBox
           @content={{this.autoDeletePreferences}}
           @value={{this.bookmark.autoDeletePreference}}
-          @class="bookmark-option-selector"
           @id="bookmark-auto-delete-preference"
-          @onChange={{action (mut this.bookmark.autoDeletePreference)}}
+          @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
+          class="bookmark-option-selector"
         />
       </div>
     {{/if}}

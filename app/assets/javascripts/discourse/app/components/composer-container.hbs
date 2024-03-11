@@ -22,8 +22,8 @@
 
     {{#if this.composer.model.viewOpenOrFullscreen}}
       <div
-        role="form"
-        aria-label={{i18n this.composer.saveLabel}}
+        role="dialog"
+        aria-label={{this.composer.ariaLabel}}
         class="reply-area
           {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
           {{if
@@ -74,7 +74,7 @@
                   @onClick={{this.composer.displayEditReason}}
                   @showInput={{this.composer.showEditReason}}
                   @icon="info-circle"
-                  @class="display-edit-reason"
+                  class="display-edit-reason"
                 >
                   <TextField
                     @value={{this.composer.editReason}}
@@ -146,7 +146,7 @@
                       @recipients={{this.composer.model.targetRecipients}}
                       @hasGroups={{this.composer.model.hasTargetGroups}}
                       @focusTarget={{this.composer.focusTarget}}
-                      @class={{concat-class
+                      class={{concat-class
                         "users-input"
                         (if this.composer.showWarning "can-warn")
                       }}
@@ -197,7 +197,7 @@
                   {{#if this.composer.canEditTags}}
                     <MiniTagChooser
                       @value={{this.composer.model.tags}}
-                      @onChange={{action (mut this.composer.model.tags)}}
+                      @onChange={{fn (mut this.composer.model.tags)}}
                       @options={{hash
                         disabled=this.composer.disableTagsChooser
                         categoryId=this.composer.model.categoryId
@@ -278,9 +278,12 @@
                 {{/if}}
               </a>
             {{else}}
-              <a href {{on "click" this.composer.cancel}} class="cancel">{{i18n
-                  "close"
-                }}</a>
+              <a
+                href
+                {{on "click" this.composer.cancel}}
+                class="cancel"
+                role="button"
+              >{{i18n "close"}}</a>
             {{/if}}
 
             {{#if this.composer.site.mobileView}}
@@ -397,8 +400,8 @@
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
-              @class={{concat-class
-                "btn-flat btn-mini-toggle toggle-preview"
+              class={{concat-class
+                "btn-transparent btn-mini-toggle toggle-preview"
                 (unless this.composer.showPreview "active")
               }}
             />

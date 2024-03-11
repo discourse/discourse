@@ -42,6 +42,8 @@ RSpec.describe BaseBookmarkable do
           display_username: bookmark.user.username,
           bookmark_name: bookmark.name,
           bookmark_id: bookmark.id,
+          bookmarkable_type: bookmark.bookmarkable_type,
+          bookmarkable_id: bookmark.bookmarkable_id,
         }.to_json,
       )
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  # Returns a list of chatables (users, category channels, direct message channels) that can be chatted with.
+  # Returns a list of chatables (users, groups ,category channels, direct message channels) that can be chatted with.
   #
   # @example
   #  Chat::SearchChatable.call(term: "@bob", guardian: guardian)
@@ -18,6 +18,7 @@ module Chat
     step :clean_term
     model :memberships, optional: true
     model :users, optional: true
+    model :groups, optional: true
     model :category_channels, optional: true
     model :direct_message_channels, optional: true
 
@@ -25,6 +26,7 @@ module Chat
     class Contract
       attribute :term, :string, default: ""
       attribute :include_users, :boolean, default: true
+      attribute :include_groups, :boolean, default: true
       attribute :include_category_channels, :boolean, default: true
       attribute :include_direct_message_channels, :boolean, default: true
       attribute :excluded_memberships_channel_id, :integer
@@ -32,21 +34,27 @@ module Chat
 
     private
 
-    def clean_term(contract:, **)
+    def clean_term(contract:)
       context.term = contract.term.downcase&.gsub(/^#+/, "")&.gsub(/^@+/, "")&.strip
     end
 
-    def fetch_memberships(guardian:, **)
+    def fetch_memberships(guardian:)
       ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
     end
 
-    def fetch_users(guardian:, contract:, **)
+    def fetch_users(guardian:, contract:)
       return unless contract.include_users
       return unless guardian.can_create_direct_message?
       search_users(context, guardian, contract)
     end
 
-    def fetch_category_channels(guardian:, contract:, **)
+    def fetch_groups(guardian:, contract:)
+      return unless contract.include_groups
+      return unless guardian.can_create_direct_message?
+      search_groups(context, guardian, contract)
+    end
+
+    def fetch_category_channels(guardian:, contract:)
       return unless contract.include_category_channels
       return if !SiteSetting.enable_public_channels
 
@@ -108,6 +116,16 @@ module Chat
       end
 
       user_search
+    end
+
+    def search_groups(context, guardian, contract)
+      Group
+        .visible_groups(guardian.user)
+        .includes(users: :user_option)
+        .where(
+          "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
+          term_like: "%#{context.term}%",
+        )
     end
   end
 end

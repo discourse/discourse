@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
 
 export default class SectionFormLink extends Component {
+  @service site;
   @tracked dragCssClass;
 
   dragCount = 0;

@@ -61,6 +61,10 @@ export default class UserMenuItem extends Component {
     return this.#item.endComponent;
   }
 
+  get endOutletArgs() {
+    return this.#item.endOutletArgs;
+  }
+
   get #item() {
     return this.args.item;
   }

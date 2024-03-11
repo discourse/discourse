@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 
 export default class SidebarFooter extends Component {

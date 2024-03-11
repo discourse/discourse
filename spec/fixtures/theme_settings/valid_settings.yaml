@@ -14,6 +14,10 @@ string_setting_03:
   default: "string value"
   textarea: true
 
+string_setting_04:
+  default: 0
+  type: string
+
 integer_setting: 51
 
 integer_setting_02:

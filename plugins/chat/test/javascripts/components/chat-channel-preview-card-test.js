@@ -24,13 +24,13 @@ module(
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
       assert.strictEqual(
-        query(".chat-channel-title__name").innerText,
+        query(".chat-channel-name__label").innerText,
         this.channel.title,
         "it shows the channel title"
       );
 
       assert.true(
-        exists(query(".chat-channel-title__category-badge")),
+        exists(query(".chat-channel-icon.--category-badge")),
         "it shows the category hashtag badge"
       );
     });

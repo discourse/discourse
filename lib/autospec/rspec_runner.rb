@@ -6,6 +6,7 @@ module Autospec
     def self.watch(pattern, &blk)
       WATCHERS[pattern] = blk
     end
+
     def watchers
       WATCHERS
     end
@@ -41,6 +42,7 @@ module Autospec
     def self.reload(pattern)
       RELOADERS << pattern
     end
+
     def reloaders
       RELOADERS
     end

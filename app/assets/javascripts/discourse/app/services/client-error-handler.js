@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/application";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import $ from "jquery";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";

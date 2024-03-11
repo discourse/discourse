@@ -29,7 +29,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("custom class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" @class="123 abc" />`;
+    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" @linkClass="123 abc" />`;
 
     await render(template);
 

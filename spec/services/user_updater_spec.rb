@@ -211,11 +211,11 @@ RSpec.describe UserUpdater do
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
-    it "allows user to update profile header when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update profile header when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(profile_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload
@@ -226,11 +226,11 @@ RSpec.describe UserUpdater do
       expect(user.profile_background_upload).to eq(nil)
     end
 
-    it "allows user to update user card background when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update user card background when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      SiteSetting.user_card_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(card_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload

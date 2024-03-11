@@ -6,6 +6,7 @@
 
 es:
   site_settings:
+    chat_separate_sidebar_mode: "Mostrar modos separados en la barra lateral para el foro y el chat."
     chat_enabled: "Activar chat."
     enable_public_channels: "Habilitar canales públicos basados en categorías."
     chat_allowed_groups: "Los usuarios de estos grupos pueden chatear. Ten en cuenta que el personal siempre puede acceder al chat."
@@ -27,11 +28,15 @@ es:
     max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
     chat_max_direct_message_users: "Los usuarios no pueden añadir más de este número de otros usuarios al crear un nuevo mensaje directo. Establece el valor 0 para permitir solo los mensajes a uno mismo. El personal está exento de este ajuste."
     chat_allow_archiving_channels: "Permitir al personal archivar mensajes en un tema al cerrar un canal."
+    chat_editing_grace_period: "Durante (n) segundos después de enviar un chat, la edición no mostrará la etiqueta (editado) junto al mensaje de chat."
+    chat_editing_grace_period_max_diff_low_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 0 y 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 2 y superior)."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
       direct_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe mensajes directos, elige el grupo del personal."
       chat_upload_not_allowed_secure_uploads: "Las subidas por chat no están permitidas cuando la configuración del sitio de subidas seguras está activada."
   system_messages:
+    private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
       title: "Archivado del canal de chat completado"
       subject_template: "El archivado del canal de chat se ha completado con éxito"
@@ -54,6 +59,7 @@ es:
   chat:
     deleted_chat_username: eliminado
     errors:
+      users_cant_be_added_to_channel: "No se pueden añadir usuarios a este canal."
       channel_exists_for_category: "Ya existe un canal para esta categoría y nombre"
       channel_new_message_disallowed:
         archived: "El canal está archivado, no se pueden enviar nuevos mensajes"
@@ -116,15 +122,24 @@ es:
         agree_and_delete:
           title: "Eliminar mensaje"
           description: "Elimina el mensaje para que los usuarios no puedan verlo."
+        delete_and_agree:
+          title: "Ignorar denuncia y eliminar mensaje"
+          description: "Ignorar la denuncia eliminándola de la cola y eliminar el mensaje."
         disagree_and_restore:
           title: "No aceptar y restaurar el mensaje"
           description: "Restaura el mensaje para que todos los usuarios puedan verlo."
         disagree:
           title: "No estoy de acuerdo"
+        ignore:
+          title: "No hacer nada"
+          description: "Ignora la denuncia eliminándola de la cola sin realizar ninguna acción."
       direct_messages:
         transcript_title: "Transcripción de los mensajes anteriores en %{channel_name}"
         transcript_body: "Para darte más contexto, incluimos una transcripción de los mensajes anteriores de esta conversación (hasta diez):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{inviting_user} ha invitado a %{invited_users}."
+        other: "%{inviting_user} ha invitado a %{invited_users}."
       archive:
         first_post_raw: "Este tema es un archivo del canal de chat de [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -154,6 +169,7 @@ es:
       group_mentions_disabled_multiple:
         one: "%{first_identifier} y otro grupo no permiten menciones."
         other: "%{first_identifier} y otros %{count} grupos no permiten menciones."
+      global_mentions_disallowed: "Las menciones @aquí y @todos están desactivadas en este canal."
       too_many_members: "%{first_identifier} tiene demasiados miembros. No se notificó a nadie."
       too_many_members_multiple:
         one: "%{first_identifier} y otro grupo tienen demasiados miembros. No se ha notificado a nadie."
@@ -180,6 +196,7 @@ es:
       no_targets: "No hubo mensajes durante el periodo seleccionado."
     transcript:
       default_thread_title: "Hilo"
+      split_thread_range: "mensajes %{start} a %{end} de %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -214,6 +231,7 @@ es:
         other: "Tienes nuevos mensajes de chat"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nuevo mensaje"
         direct_message_from_1: "[%{email_prefix}] Nuevo mensaje de %{username}"
         direct_message_from_2: "[%{email_prefix}] Nuevo mensaje de %{username1} y %{username2}"
         direct_message_from_more:

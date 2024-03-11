@@ -30,3 +30,5 @@ et:
     only_staff_or_op_can_toggle_status: "Ainult meeskonnaliige või postitaja ise saavad küsitluse staatust muuta."
     email:
       link_to_poll: "Vaata küsitlust"
+    user_field:
+      no_data: "Andmed puuduvad"

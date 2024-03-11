@@ -377,7 +377,7 @@ pt_BR:
 
           Digite "#" dentro de uma frase e selecione qualquer categoria ou etiqueta.
         not_found: |-
-          Hmm, não vejo uma categoria em lugar algum. Você poderia copiar isto na sua próxima resposta?
+          Hm, não vejo categoria em nenhum lugar. Você poderia copiar isto na sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria via #

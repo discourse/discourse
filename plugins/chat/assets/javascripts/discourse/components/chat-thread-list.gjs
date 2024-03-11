@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
-import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
@@ -79,7 +78,11 @@ export default class ChatThreadList extends Component {
   @cached
   get sortedThreads() {
     return this.threadsManager.threads
-      .filter((thread) => !thread.originalMessage.deletedAt)
+      .filter(
+        (thread) =>
+          !thread.originalMessage.deletedAt &&
+          thread.originalMessage?.id !== thread.lastMessageId
+      )
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
@@ -179,10 +182,6 @@ export default class ChatThreadList extends Component {
   <template>
     {{#if this.shouldRender}}
       <div class="chat-thread-list" {{this.subscribe @channel}}>
-        {{#if @includeHeader}}
-          <ChatThreadListHeader @channel={{@channel}} />
-        {{/if}}
-
         <div class="chat-thread-list__items" {{this.fill}}>
 
           {{#each this.sortedThreads key="id" as |thread|}}

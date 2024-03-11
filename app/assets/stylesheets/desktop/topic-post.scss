@@ -23,6 +23,7 @@
     .discourse-no-touch & {
       opacity: 0.7;
       transition: background 0.25s, opacity 0.7s ease-in-out;
+      animation: none; // replaces jsuites animation on .fade-out
     }
     .discourse-touch & {
       opacity: 1;
@@ -314,15 +315,6 @@ pre.codeblock-buttons:hover {
         font-size: var(--font-up-2);
         line-height: 52px;
       }
-    }
-  }
-  .link-summary .btn {
-    color: var(--primary-med-or-secondary-high);
-    background: var(--blend-primary-secondary-5);
-    width: 100%;
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-low);
     }
   }
 
@@ -634,21 +626,6 @@ span.highlighted {
 
 .first.new-user:not(.staff) a {
   color: var(--primary-low-mid);
-}
-
-.read-state {
-  position: absolute;
-  // We use absolute positioning here because we want it to display in the padding
-  align-self: center;
-  color: var(--tertiary-medium);
-  right: 0;
-  font-size: 0.571em;
-}
-
-.read-state.read {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 1s, opacity ease-out 1s;
 }
 
 .topic-post.sticky-avatar {

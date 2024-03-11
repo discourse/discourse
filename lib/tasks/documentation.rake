@@ -16,15 +16,6 @@ def generate_chat_documentation
   ]
   `yarn --silent jsdoc --readme plugins/chat/README.md -c #{config} #{files.join(" ")} -d #{destination}`
 
-  # unnecessary files
-  %w[
-    documentation/chat/frontend/scripts/prism.min.js
-    documentation/chat/frontend/scripts/prism.js
-    documentation/chat/frontend/styles/vendor/prism-default.css
-    documentation/chat/frontend/styles/vendor/prism-okaidia.css
-    documentation/chat/frontend/styles/vendor/prism-tomorrow-night.css
-  ].each { |file| FileUtils.rm(file) }
-
   require "open3"
   require "yard"
   YARD::Templates::Engine.register_template_path(

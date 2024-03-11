@@ -6,5 +6,9 @@
 
 pl_PL:
   js:
+    spoiler:
+      title: Spoiler rozmycia
+      label:
+        show: "Pokaż ukrytą zawartość"
     composer:
       spoiler_text: "Ten tekst zostanie zamazany"

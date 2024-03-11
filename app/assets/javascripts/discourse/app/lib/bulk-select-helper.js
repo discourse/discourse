@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
@@ -49,12 +49,12 @@ export default class BulkSelectHelper {
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
     const promise = this.selected.length
-      ? Topic.bulkOperation(this.selected, operation, isTracked)
+      ? Topic.bulkOperation(this.selected, operation, {}, isTracked)
       : Topic.bulkOperationByFilter("unread", operation, options, isTracked);
 
     promise.then((result) => {
       if (result?.topic_ids) {
-        if (options.private_message_inbox) {
+        if (options?.private_message_inbox) {
           this.pmTopicTrackingState.removeTopics(result.topic_ids);
         } else {
           this.topicTrackingState.removeTopics(result.topic_ids);

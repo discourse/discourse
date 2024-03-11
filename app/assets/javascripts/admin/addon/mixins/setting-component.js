@@ -2,9 +2,10 @@ import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { alias, oneWay } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
+import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { splitString } from "discourse/lib/utilities";
@@ -33,6 +34,8 @@ const CUSTOM_TYPES = [
   "simple_list",
   "emoji_list",
   "named_list",
+  "file_size_restriction",
+  "file_types_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -76,6 +79,7 @@ const DEFAULT_USER_PREFERENCES = [
 
 export default Mixin.create({
   modal: service(),
+  router: service(),
   site: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
@@ -166,6 +170,39 @@ export default Mixin.create({
     );
   },
 
+  @discourseComputed("setting")
+  settingEditButton(setting) {
+    if (setting.json_schema) {
+      return {
+        action: () => {
+          this.modal.show(JsonSchemaEditorModal, {
+            model: {
+              updateValue: (value) => {
+                this.buffered.set("value", value);
+              },
+              value: this.buffered.get("value"),
+              settingName: setting.setting,
+              jsonSchema: setting.json_schema,
+            },
+          });
+        },
+        label: "admin.site_settings.json_schema.edit",
+        icon: "pencil-alt",
+      };
+    } else if (setting.objects_schema) {
+      return {
+        action: () => {
+          this.router.transitionTo(
+            "adminCustomizeThemes.show.schema",
+            setting.setting
+          );
+        },
+        label: "admin.customize.theme.edit_objects_theme_setting",
+        icon: "pencil-alt",
+      };
+    }
+  },
+
   @action
   async update() {
     const key = this.buffered.get("setting");
@@ -227,6 +264,11 @@ export default Mixin.create({
         this.set("validationMessage", I18n.t("generic_error"));
       }
     }
+  },
+
+  @action
+  changeValueCallback(value) {
+    this.set("buffered.value", value);
   },
 
   @action

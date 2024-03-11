@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Production mode debug shims", type: :system do
-  it "can successfully print a deprecation message after applying prod shims" do
+describe "JS Deprecation Handling", type: :system do
+  it "can successfully print a deprecation message after applying production-mode shims" do
     visit("/latest")
     expect(find("#main-outlet-wrapper")).to be_visible
 
@@ -30,5 +30,26 @@ describe "Production mode debug shims", type: :system do
 
     expect(call).to eq("DEPRECATION: Some message [deprecation id: some.id]")
     expect(backtrace).to include("shimLogDeprecationToConsole")
+  end
+
+  it "shows warnings to admins for critical deprecations" do
+    sign_in Fabricate(:admin)
+
+    SiteSetting.warn_critical_js_deprecations = true
+    SiteSetting.warn_critical_js_deprecations_message =
+      "Discourse core changes will be applied to your site on Jan 15."
+
+    visit("/latest")
+
+    page.execute_script <<~JS
+      const deprecated = require("discourse-common/lib/deprecated").default;
+      deprecated("Fake deprecation message", { id: "fake-deprecation" })
+    JS
+
+    message = find("#global-notice-critical-deprecation")
+    expect(message).to have_text(
+      "One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes",
+    )
+    expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
 end

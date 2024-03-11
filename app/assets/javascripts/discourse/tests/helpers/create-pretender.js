@@ -288,6 +288,7 @@ export function applyDefaultHandlers(pretender) {
           updated_at: "2023-06-01T04:47:13.195Z",
           expires_at: "2023-08-30T04:47:00.000Z",
           expired: false,
+          max_redemptions_allowed: 10,
           topics: [],
           groups: [],
         },
@@ -306,6 +307,54 @@ export function applyDefaultHandlers(pretender) {
           expired: false,
           topics: [],
           groups: [],
+        },
+        {
+          id: 10,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: null,
+          domain: "cat.com",
+          redemption_count: 0,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          max_redemptions_allowed: 10,
+          topics: [
+            {
+              id: 5,
+              title: "Welcome to Discourse! :wave:",
+              fancy_title: "Welcome to Discourse! :wave:",
+              slug: "welcome-to-discourse",
+              posts_count: 1,
+            },
+          ],
+          groups: [
+            {
+              id: 41,
+              automatic: false,
+              name: "discourse",
+              user_count: 0,
+              alias_level: 0,
+              visible: true,
+              automatic_membership_email_domains: "",
+              primary_group: false,
+              title: null,
+              grant_trust_level: null,
+              has_messages: false,
+              flair_url: null,
+              flair_bg_color: null,
+              flair_color: null,
+              bio_raw: "",
+              bio_cooked: null,
+              public_admission: true,
+              allow_membership_requests: false,
+              full_name: "Awesome Team",
+            },
+          ],
         },
       ],
       can_see_invite_details: true,
@@ -1249,6 +1298,10 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
+
+  pretender.get("/session/passkey/challenge.json", () =>
+    response({ challenge: "123" })
+  );
 }
 
 export function resetPretender() {

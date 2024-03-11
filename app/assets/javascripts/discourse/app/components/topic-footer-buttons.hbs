@@ -45,7 +45,6 @@
       <DropdownSelectBox
         @id={{concat "topic-footer-dropdown-" actionable.id}}
         @value={{actionable.value}}
-        @class={{concat "topic-footer-dropdown " actionable.classNames}}
         @content={{actionable.content}}
         @onChange={{action actionable.action}}
         @options={{hash
@@ -53,6 +52,7 @@
           none=actionable.noneItem
           disabled=actionable.disabled
         }}
+        class={{concat-class "topic-footer-dropdown" actionable.classNames}}
       />
     {{/if}}
   {{/each}}

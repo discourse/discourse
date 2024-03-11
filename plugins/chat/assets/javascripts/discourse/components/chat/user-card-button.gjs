@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class ChatUserCardButton extends Component {
   @service chat;
@@ -13,13 +14,20 @@ export default class ChatUserCardButton extends Component {
   }
 
   @action
-  startChatting() {
-    return this.chat
-      .upsertDmChannelForUsernames([this.args.user.username])
-      .then((channel) => {
-        this.router.transitionTo("chat.channel", ...channel.routeModels);
-        this.appEvents.trigger("card:close");
+  async startChatting() {
+    try {
+      const channel = await this.chat.upsertDmChannel({
+        usernames: [this.args.user.username],
       });
+
+      if (channel) {
+        this.router.transitionTo("chat.channel", ...channel.routeModels);
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.appEvents.trigger("card:close");
+    }
   }
 
   <template>

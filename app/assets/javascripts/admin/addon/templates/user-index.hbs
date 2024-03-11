@@ -411,7 +411,7 @@
         @content={{this.site.trustLevels}}
         @nameProperty="detailedName"
         @value={{this.model.trustLevel.id}}
-        @onChange={{action (mut this.model.trust_level)}}
+        @onChange={{fn (mut this.model.trust_level)}}
       />
 
       {{#if this.model.dirty}}
@@ -609,7 +609,7 @@
           @content={{this.availableGroups}}
           @value={{this.customGroupIdsBuffer}}
           @labelProperty="name"
-          @onChange={{action (mut this.customGroupIdsBuffer)}}
+          @onChange={{fn (mut this.customGroupIdsBuffer)}}
         />
       </div>
       {{#if this.customGroupsDirty}}
@@ -630,7 +630,7 @@
           <ComboBox
             @content={{this.model.customGroups}}
             @value={{this.model.primary_group_id}}
-            @onChange={{action (mut this.model.primary_group_id)}}
+            @onChange={{fn (mut this.model.primary_group_id)}}
             @options={{hash none="admin.groups.no_primary"}}
           />
         </div>

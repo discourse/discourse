@@ -9,6 +9,22 @@ RSpec.describe Chat::ParsedMentions do
   fab!(:not_a_channel_member) { Fabricate(:user) }
   fab!(:chat_channel)
 
+  def message_quote_with_mentions(mentions)
+    <<~MARKDOWN
+    [chat quote="jan;100;2023-10-10T13:00:00Z"]
+    message mentioning #{mentions.map { |m| "@#{m}" }.join(" ")}
+    [/chat]
+    MARKDOWN
+  end
+
+  def post_quote_with_mentions(mentions)
+    <<~MARKDOWN
+    [quote="jan, post:1, topic:10"]
+    message mentioning #{mentions.map { |m| "@#{m}" }.join(" ")}
+    [/quote]
+    MARKDOWN
+  end
+
   before do
     chat_channel.add(channel_member_1)
     chat_channel.add(channel_member_2)
@@ -46,6 +62,24 @@ RSpec.describe Chat::ParsedMentions do
 
       expect(result).to be_empty
     end
+
+    it "returns an empty list when quoting a message with global mentions" do
+      message = create_message(message_quote_with_mentions(["all"]))
+
+      mentions = described_class.new(message)
+      result = mentions.global_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with global mentions" do
+      message = create_message(post_quote_with_mentions(["all"]))
+
+      mentions = described_class.new(message)
+      result = mentions.global_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
   end
 
   describe "#here_mentions" do
@@ -76,6 +110,24 @@ RSpec.describe Chat::ParsedMentions do
 
     it "returns an empty list if there are no here mentions" do
       message = create_message("not mentioning anybody")
+
+      mentions = described_class.new(message)
+      result = mentions.here_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a message with here mentions" do
+      message = create_message(message_quote_with_mentions(["here"]))
+
+      mentions = described_class.new(message)
+      result = mentions.here_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with here mentions" do
+      message = create_message(post_quote_with_mentions(["here"]))
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -121,6 +173,30 @@ RSpec.describe Chat::ParsedMentions do
 
       expect(result).to be_empty
     end
+
+    it "returns an empty list when quoting a message with mentioned users" do
+      message =
+        create_message(
+          message_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        )
+
+      mentions = described_class.new(message)
+      result = mentions.direct_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with mentioned users" do
+      message =
+        create_message(
+          post_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        )
+
+      mentions = described_class.new(message)
+      result = mentions.direct_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
   end
 
   describe "#group_mentions" do
@@ -160,6 +236,24 @@ RSpec.describe Chat::ParsedMentions do
       group1.mentionable_level = Group::ALIAS_LEVELS[:nobody]
       group1.save!
       message = create_message("mentioning @#{group1.name}")
+
+      mentions = described_class.new(message)
+      result = mentions.group_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a message with a mentioned group" do
+      message = create_message(message_quote_with_mentions([group1.name]))
+
+      mentions = described_class.new(message)
+      result = mentions.group_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with a mentioned group" do
+      message = create_message(post_quote_with_mentions([group1.name]))
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)

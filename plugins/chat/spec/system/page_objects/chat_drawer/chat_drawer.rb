@@ -16,12 +16,22 @@ module PageObjects
 
       def close
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__close-drawer-button").click
       end
 
       def back
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__back-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__back-button").click
+      end
+
+      def visit_index
+        visit("/")
+        PageObjects::Pages::Chat.new.open_from_header
+      end
+
+      def visit_channel(channel)
+        visit_index
+        open_channel(channel)
       end
 
       def open_channel(channel)
@@ -38,24 +48,28 @@ module PageObjects
       end
 
       def has_user_threads_section?
-        has_css?(".chat__user-threads-row-container[href='/chat/threads']")
+        has_css?(".chat-channel-row.--threads[href='/chat/threads']")
+      end
+
+      def has_no_user_threads_section?
+        has_no_css?(".chat-channel-row.--threads[href='/chat/threads']")
       end
 
       def has_unread_user_threads?
-        has_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
       def has_no_unread_user_threads?
-        has_no_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
       def click_user_threads
-        find(".chat__user-threads-row").click
+        find(".chat-channel-row.--threads").click
       end
 
       def maximize
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__full-page-button").click
       end
 
       def has_open_thread?(thread = nil)
@@ -79,7 +93,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".chat-threads-list-button"
+        ".c-navbar__threads-list-button"
       end
 
       def has_unread_thread_indicator?(count:)

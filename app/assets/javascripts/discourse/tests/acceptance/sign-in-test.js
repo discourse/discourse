@@ -2,7 +2,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -68,28 +67,20 @@ acceptance("Signing In", function () {
   test("sign in - not activated - edit email", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    assert.ok(exists(".login-modal"), "it shows the login modal");
+    assert.dom(".login-modal").exists("it shows the login modal");
 
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated-edit");
     await click(".d-modal__footer .btn-primary");
     await click(".d-modal__footer button.edit-email");
-    assert.strictEqual(
-      query(".activate-new-email").value,
-      "current@example.com"
-    );
-    assert.strictEqual(
-      count(".d-modal__footer .btn-primary:disabled"),
-      1,
-      "must change email"
-    );
+    assert.dom(".activate-new-email").hasValue("current@example.com");
+    assert.dom(".d-modal__footer .btn-primary").isDisabled("must change email");
+
     await fillIn(".activate-new-email", "different@example.com");
-    assert.ok(!exists(".d-modal__footer .btn-primary:disabled"));
+    assert.dom(".d-modal__footer .btn-primary").isNotDisabled();
+
     await click(".d-modal__footer .btn-primary");
-    assert.strictEqual(
-      query(".d-modal__body b").innerText,
-      "different@example.com"
-    );
+    assert.dom(".d-modal__body b").hasText("different@example.com");
   });
 
   test("second factor", async function (assert) {

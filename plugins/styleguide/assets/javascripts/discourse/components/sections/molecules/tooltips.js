@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TOOLTIP } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";

@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import GroupAddMembersModal from "discourse/components/modal/group-add-members";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -35,7 +35,9 @@ export default DiscourseRoute.extend({
   @action
   showInviteModal() {
     const group = this.modelFor("group");
-    this.modal.show(CreateInvite, { model: { groupIds: [group.id] } });
+    this.modal.show(CreateInvite, {
+      model: { groupIds: [group.id] },
+    });
   },
 
   @action

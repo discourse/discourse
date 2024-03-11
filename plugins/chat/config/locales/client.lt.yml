@@ -5,17 +5,21 @@
 # https://translate.discourse.org/
 
 lt:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Pokalbis
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Visada"
           never: "Niekada"
     chat:
       deleted_chat_username: ištrintas
       dates:
+        yesterday: "Vakar"
         time_tiny: "h:mm"
       bot: "botas"
       create: "Sukurti"
@@ -40,6 +44,7 @@ lt:
       header_indicator_preference:
         never: "Niekada"
       flag: "Pranešti"
+      heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
       summarization:
@@ -52,6 +57,8 @@ lt:
       save: "Išsaugoti"
       sounds:
         none: "Nieko"
+      title: "pokalbis"
+      title_capitalized: "Pokalbis"
       exit: "atgal"
       channel_status:
         closed: "Uždaryta"
@@ -59,6 +66,7 @@ lt:
       browse:
         back: "Atgal"
         filter_all: Visos
+        filter_open: Atidaryti
         filter_closed: Uždaryta
       chat_message_separator:
         today: Šiandien
@@ -104,6 +112,8 @@ lt:
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Nariai"
+      admin:
+        title: "Pokalbis"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
@@ -165,3 +175,14 @@ lt:
           fields:
             message:
               label: Žinutės
+    keyboard_shortcuts_help:
+      chat:
+        title: "Pokalbis"
+    styleguide:
+      sections:
+        chat:
+          title: Pokalbis
+    sidebar:
+      panels:
+        chat:
+          label: "Pokalbis"

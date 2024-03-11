@@ -37,15 +37,15 @@ module Chat
 
     private
 
-    def set_limit(contract:, **)
+    def set_limit(contract:)
       context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
-    def set_offset(contract:, **)
+    def set_offset(contract:)
       context.offset = [contract.offset || 0, 0].max
     end
 
-    def fetch_threads(guardian:, **)
+    def fetch_threads(guardian:)
       ::Chat::Thread
         .includes(
           :channel,
@@ -55,7 +55,7 @@ module Chat
             :uploads,
             :chat_webhook_event,
             :chat_channel,
-            chat_mentions: {
+            user_mentions: {
               user: :user_status,
             },
             user: :user_status,
@@ -64,7 +64,7 @@ module Chat
             :uploads,
             :chat_webhook_event,
             :chat_channel,
-            chat_mentions: {
+            user_mentions: {
               user: :user_status,
             },
             user: :user_status,
@@ -114,7 +114,7 @@ module Chat
         .offset(context.offset)
     end
 
-    def fetch_tracking(guardian:, threads:, **)
+    def fetch_tracking(guardian:, threads:)
       context.tracking =
         ::Chat::TrackingStateReportQuery.call(
           guardian: guardian,
@@ -123,7 +123,7 @@ module Chat
         ).thread_tracking
     end
 
-    def fetch_memberships(guardian:, threads:, **)
+    def fetch_memberships(guardian:, threads:)
       context.memberships =
         ::Chat::UserChatThreadMembership.where(
           thread_id: threads.map(&:id),
@@ -131,11 +131,11 @@ module Chat
         )
     end
 
-    def fetch_participants(threads:, **)
+    def fetch_participants(threads:)
       context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url(contract:, **)
+    def build_load_more_url(contract:)
       load_more_params = { limit: context.limit, offset: context.offset + context.limit }.to_query
 
       context.load_more_url =

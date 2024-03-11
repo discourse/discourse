@@ -12,6 +12,8 @@
   workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
 %>
 
+<% if !GlobalSetting.disable_service_worker_cache %>
+
 importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
 
 workbox.setConfig({
@@ -20,8 +22,6 @@ workbox.setConfig({
 });
 
 var authUrls = ["auth", "session/sso_login", "session/sso", "srv/status"].map(path => `<%= Discourse.base_path %>/${path}`);
-var chatRegex = /\/chat\/channel\/(\d+)\//;
-var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 const oldCacheNames = [
   "discourse-1", "external-1"
@@ -121,6 +121,11 @@ workbox.routing.registerRoute(
       return false;
     }
 
+    // Exclude videos from service worker
+    if (args.event.request.headers.has('range')) {
+      return false;
+    }
+
     var matching = cdnUrls.filter(
       function(url) {
         return args.url.href.startsWith(url);
@@ -138,13 +143,10 @@ workbox.routing.registerRoute(
     ],
   })
 );
+<% end %>
 
-var idleThresholdTime = 1000 * 10; // 10 seconds
-var lastAction = -1;
-
-function isIdle() {
-  return lastAction + idleThresholdTime < Date.now();
-}
+var chatRegex = /\/chat\/channel\/(\d+)\//;
+var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 function showNotification(title, body, icon, badge, tag, baseUrl, url) {
   var notificationOptions = {
@@ -170,20 +172,9 @@ function showNotification(title, body, icon, badge, tag, baseUrl, url) {
 
 self.addEventListener('push', function(event) {
   var payload = event.data.json();
-  if(!isIdle() && payload.hide_when_active) {
-    return false;
-  }
 
   event.waitUntil(
-    self.registration.getNotifications({ tag: payload.tag }).then(function(notifications) {
-      if (notifications && notifications.length > 0) {
-        notifications.forEach(function(notification) {
-          notification.close();
-        });
-      }
-
-      return showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url);
-    })
+    showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url)
   );
 });
 
@@ -253,11 +244,6 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-self.addEventListener('message', function(event) {
-  if('lastAction' in event.data){
-    lastAction = event.data.lastAction;
-  }
-});
 
 self.addEventListener('pushsubscriptionchange', function(event) {
   event.waitUntil(

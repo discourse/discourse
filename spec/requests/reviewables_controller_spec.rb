@@ -343,7 +343,7 @@ RSpec.describe ReviewablesController do
 
       context "with conversation" do
         fab!(:post)
-        fab!(:user)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
         fab!(:admin)
         let(:result) { PostActionCreator.notify_moderators(user, post, "this is the first post") }
         let(:reviewable) { result.reviewable }
@@ -565,8 +565,8 @@ RSpec.describe ReviewablesController do
       fab!(:post0) { Fabricate(:post) }
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }
       fab!(:post2) { Fabricate(:post) }
-      fab!(:user0) { Fabricate(:user) }
-      fab!(:user1) { Fabricate(:user) }
+      fab!(:user0) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
 
       it "returns empty json for no reviewables" do
         get "/review/topics.json"

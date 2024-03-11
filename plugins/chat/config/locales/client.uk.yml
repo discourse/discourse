@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 uk:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Чат
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Завжди"
           fullscreen: "Коли чат у повноекранному режимі"
@@ -39,8 +42,10 @@ uk:
     chat:
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну
+      back_to_forum: "Форум"
       deleted_chat_username: видалено
       dates:
+        yesterday: "Вчора"
         time_tiny: "h:mm"
       all_loaded: "Показати всі повідомлення"
       already_enabled: "У цій темі вже увімкнено чат. Будь ласка, оновіть її."
@@ -51,6 +56,7 @@ uk:
       cancel_reply: "Скасувати відповідь"
       chat_channels: "Канали"
       browse_all_channels: "Переглянути всі канали"
+      see_in: "Дивіться в"
       move_to_channel:
         title: "Перенести повідомлення в канал"
         instructions:
@@ -116,6 +122,7 @@ uk:
         direct_message_cta: "Розпочати особистий чат"
         direct_message: "Ви також можете розпочати особистий чат з одним або кількома користувачами."
         title: "Канали не знайдено"
+        my_threads: "У вас ще немає тем. Теми, в яких ви берете участь, відображатимуться тут."
       email_frequency:
         description: "Ми надішлемо вам листа, якщо не бачили вас протягом останніх 15 хвилин."
         never: "Ніколи"
@@ -247,6 +254,7 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
+      no_direct_message_channels: "Ви не приєдналися до жодного каналу прямих повідомлень."
       no_public_channels: "Ви не приєдналися до жодного каналу."
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       only_chat_push_notifications:
@@ -328,7 +336,7 @@ uk:
         back: "Назад"
         title: Канали
         filter_all: Все
-        filter_open: Відкрито
+        filter_open: Відкрити
         filter_closed: Закриті
         filter_archived: Архівовано
         filter_input_placeholder: Пошук каналу за назвою
@@ -338,6 +346,7 @@ uk:
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
+        back_to_settings: "Повернутися до налаштувань"
       about_view:
         associated_topic: Пов'язана тема
         associated_category: Пов'язана категорія
@@ -367,6 +376,7 @@ uk:
         filter: "Filter"
         cant_add_more_members: "Досягнуто максимальної кількості учасників"
         create_new_group_chat: "Створити груповий чат"
+        group_with_too_many_members: "має забагато учасників (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву
@@ -470,21 +480,21 @@ uk:
       reviewable:
         type: "Повідомлення чату"
       reactions:
-        only_you: "Ви відреагували :%{emoji}:"
-        you_and_single_user: "Ви та %{username} відреагували :%{emoji}:"
-        you_and_multiple_users: "Ви, %{commaSeparatedUsernames} і %{username} відреагували :%{emoji}:"
+        only_you: "<span>Ви відреагували </span>:%{emoji}:"
+        you_and_single_user: "<span>Ви та %{username} відреагували </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Ви, %{commaSeparatedUsernames} та %{username} відреагували </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Ви, %{commaSeparatedUsernames} та %{count} інший відреагували:%{emoji}:"
-          few: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-          many: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-          other: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-        single_user: "%{username} відреагував:%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} і %{username} відреагували:%{emoji}:"
+          one: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          few: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          many: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          other: "<span>Ви, %{commaSeparatedUsernames} та %{count} та інші відреагували на </span>:%{emoji}:"
+        single_user: "<span>%{username} відреагували на </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} і %{username} відреагували </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          few: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          many: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          other: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} та %{count} інший відреагували з </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} та %{count} інших відреагували з </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} та %{count} інших відреагували з </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} і %{count} інших відреагували </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Перемикання панелі інструментів"
         italic_text: "виділення тексту курсивом"
@@ -535,13 +545,20 @@ uk:
           description: "Це експортує всі повідомлення з усіх каналів."
           create_export: "Створити експорт"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
+      my_threads:
+        title: Мої теми
+        aria_label: "Перейти до списку моїх тем"
       direct_messages:
-        title: "Особистий чат"
+        title: "DMs"
+        aria_label: "Перейти на прямі повідомлення"
         new: "Створити особистий чат"
         create: "Створити"
         leave: "Залишити цей особистий чат"
         close: "Закрити цей особистий чат"
         cannot_create: "На жаль, ви не можете надсилати прямі повідомлення."
+      channel_list:
+        title: "Канали"
+        aria_label: "Перемикнутися на список каналів"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Виберіть канал"

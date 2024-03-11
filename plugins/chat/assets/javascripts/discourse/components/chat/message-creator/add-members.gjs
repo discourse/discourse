@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { gte } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
-import gte from "truth-helpers/helpers/gte";
 import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 
@@ -17,9 +17,14 @@ export default class AddMembers extends Component {
   @service loadingSlider;
 
   get membersCount() {
-    return (
-      this.args.members?.length + (this.args.channel?.membershipsCount ?? 0)
-    );
+    const userCount = this.args.members?.reduce((acc, member) => {
+      if (member.type === "group") {
+        return acc + member.model.chat_enabled_user_count;
+      } else {
+        return acc + 1;
+      }
+    }, 0);
+    return userCount + (this.args.channel?.membershipsCount ?? 0);
   }
 
   @action
@@ -27,10 +32,18 @@ export default class AddMembers extends Component {
     try {
       this.loadingSlider.transitionStarted();
 
-      await this.chatApi.addMembersToChannel(
-        this.args.channel.id,
-        this.args.members.mapBy("model.username")
-      );
+      const usernames = this.args.members
+        .filter((member) => member.type === "user")
+        .mapBy("model.username");
+
+      const groups = this.args.members
+        .filter((member) => member.type === "group")
+        .mapBy("model.name");
+
+      await this.chatApi.addMembersToChannel(this.args.channel.id, {
+        usernames,
+        groups,
+      });
 
       this.toasts.success({ data: { message: I18n.t("saved") } });
       this.router.transitionTo(
@@ -58,6 +71,7 @@ export default class AddMembers extends Component {
           @onChange={{@onChangeMembers}}
           @close={{@close}}
           @cancel={{@cancel}}
+          @membersCount={{this.membersCount}}
           @maxReached={{gte
             this.membersCount
             this.siteSettings.chat_max_direct_message_users

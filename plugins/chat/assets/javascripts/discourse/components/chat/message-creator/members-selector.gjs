@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -47,8 +47,11 @@ export default class MembersSelector extends Component {
       return;
     }
 
+    const chatableMembers =
+      chatable.type === "group" ? chatable.model.chat_enabled_user_count : 1;
+
     if (
-      this.args.members.length + (this.args.channel?.membershipsCount ?? 0) >=
+      this.args.membersCount + chatableMembers >
       this.siteSettings.chat_max_direct_message_users
     ) {
       return;
@@ -138,6 +141,7 @@ export default class MembersSelector extends Component {
         @onSelect={{this.selectChatable}}
         @onHighlight={{this.highlightChatable}}
         @maxReached={{@maxReached}}
+        @membersCount={{@membersCount}}
       />
 
     </ListHandler>

@@ -46,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} prettified"
 end
 
@@ -59,7 +59,7 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} created"
 end
 
@@ -129,140 +129,6 @@ def absolute_sourcemap(dest)
   end
 end
 
-def generate_admin_sidebar_nav_map
-  vague_categories = { "root" => [] }
-
-  admin_routes =
-    Rails
-      .application
-      .routes
-      .routes
-      .map do |route|
-        next if route.verb != "GET"
-        path = route.path.spec.to_s.gsub("(.:format)", "")
-        next if !path.include?("admin")
-        next if path.include?("/:") || path.include?("admin-login")
-        path
-      end
-      .compact
-
-  # TODO (martin): This will generate the engine routes based on installed plugins,
-  # so it is not generic enough to use here. Need to think of another way to do
-  # this and reconcile with the Ember routes from the client; maybe some button
-  # that does it at runtime for this experiment?
-  engine_routes = []
-  # engine_routes =  Rails::Engine
-  #     .subclasses
-  #     .map do |engine|
-  #       engine
-  #         .routes
-  #         .routes
-  #         .map do |route|
-  #           next if route.verb != "GET"
-  #           path = route.path.spec.to_s.gsub("(.:format)", "")
-  #           next if !path.include?("admin")
-  #           next if path.include?("/:") || path.include?("admin-login")
-  #           path
-  #         end
-  #         .compact
-  #     end
-  #     .flatten
-
-  admin_routes = admin_routes.concat(engine_routes)
-
-  admin_routes.each do |path|
-    split_path = path.split("/")
-    if split_path.length >= 3
-      vague_categories[split_path[2]] ||= []
-      vague_categories[split_path[2]] << { path: path }
-    else
-      vague_categories["root"] << { path: path }
-    end
-  end
-
-  # rubocop:disable Lint/Void
-  # Copy this JS to your browser to get the Ember routes.
-  <<~JS
-  let routeMap = {}
-  for (const [key, value] of Object.entries(
-    Object.fromEntries(
-      Object.entries(
-        Discourse.__container__.lookup("service:router")._router._routerMicrolib
-          .recognizer.names
-      ).filter(([key]) => key.includes("admin"))
-    )
-  )) {
-    let route = value.segments
-      .map((s) => s.value)
-      .join("/")
-      .replace("//", "/");
-    if (
-      route.includes("dummy") ||
-      route.includes("loading") ||
-      route.includes("_id") ||
-      route.includes("admin-invite")
-    ) {
-      continue;
-    }
-    routeMap[key] = route;
-  }
-  console.log(JSON.stringify(routeMap));
-  JS
-  # rubocop:enable Lint/Void
-
-  # Paste the output below between ROUTE_MAP.
-  #
-  ember_route_map = <<~ROUTE_MAP
-    {"admin.dashboard.general":"/admin/","admin.dashboard":"/admin/","admin":"/admin/","admin.dashboardModeration":"/admin/dashboard/moderation","admin.dashboardSecurity":"/admin/dashboard/security","admin.dashboardReports":"/admin/dashboard/reports","adminSiteSettings.index":"/admin/site_settings/","adminSiteSettings":"/admin/site_settings/","adminEmail.sent":"/admin/email/sent","adminEmail.skipped":"/admin/email/skipped","adminEmail.bounced":"/admin/email/bounced","adminEmail.received":"/admin/email/received","adminEmail.rejected":"/admin/email/rejected","adminEmail.previewDigest":"/admin/email/preview-digest","adminEmail.advancedTest":"/admin/email/advanced-test","adminEmail.index":"/admin/email/","adminEmail":"/admin/email/","adminCustomize.colors.index":"/admin/customize/colors/","adminCustomize.colors":"/admin/customize/colors/","adminCustomizeThemes.index":"/admin/customize/themes/","adminCustomizeThemes":"/admin/customize/themes/","adminSiteText.edit":"/admin/customize/site_texts/id","adminSiteText.index":"/admin/customize/site_texts/","adminSiteText":"/admin/customize/site_texts/","adminUserFields":"/admin/customize/user_fields","adminEmojis":"/admin/customize/emojis","adminPermalinks":"/admin/customize/permalinks","adminEmbedding":"/admin/customize/embedding","adminCustomizeEmailTemplates.edit":"/admin/customize/email_templates/id","adminCustomizeEmailTemplates.index":"/admin/customize/email_templates/","adminCustomizeEmailTemplates":"/admin/customize/email_templates/","adminCustomizeRobotsTxt":"/admin/customize/robots","adminCustomizeEmailStyle.edit":"/admin/customize/email_style/field_name","adminCustomizeEmailStyle.index":"/admin/customize/email_style/","adminCustomizeEmailStyle":"/admin/customize/email_style/","adminCustomizeFormTemplates.new":"/admin/customize/form-templates/new","adminCustomizeFormTemplates.edit":"/admin/customize/form-templates/id","adminCustomizeFormTemplates.index":"/admin/customize/form-templates/","adminCustomizeFormTemplates":"/admin/customize/form-templates/","adminWatchedWords.index":"/admin/customize/watched_words/","adminWatchedWords":"/admin/customize/watched_words/","adminCustomize.index":"/admin/customize/","adminCustomize":"/admin/customize/","adminApiKeys.new":"/admin/api/keys/new","adminApiKeys.index":"/admin/api/keys/","adminApiKeys":"/admin/api/keys/","adminWebHooks.index":"/admin/api/web_hooks/","adminWebHooks":"/admin/api/web_hooks/","adminApi.index":"/admin/api/","adminApi":"/admin/api/","admin.backups.logs":"/admin/backups/logs","admin.backups.index":"/admin/backups/","admin.backups":"/admin/backups/","adminReports.show":"/admin/reports/type","adminReports.index":"/admin/reports/","adminReports":"/admin/reports/","adminLogs.staffActionLogs":"/admin/logs/staff_action_logs","adminLogs.screenedEmails":"/admin/logs/screened_emails","adminLogs.screenedIpAddresses":"/admin/logs/screened_ip_addresses","adminLogs.screenedUrls":"/admin/logs/screened_urls","adminSearchLogs.index":"/admin/logs/search_logs/","adminSearchLogs":"/admin/logs/search_logs/","adminSearchLogs.term":"/admin/logs/search_logs/term","adminLogs.index":"/admin/logs/","adminLogs":"/admin/logs/","adminUsersList.show":"/admin/users/list/filter","adminUsersList.index":"/admin/users/list/","adminUsersList":"/admin/users/list/","adminUsers.index":"/admin/users/","adminUsers":"/admin/users/","adminBadges.index":"/admin/badges/","adminBadges":"/admin/badges/","adminPlugins.index":"/admin/plugins/","adminPlugins":"/admin/plugins/","admin-revamp.lobby":"/admin-revamp/","admin-revamp":"/admin-revamp/","admin-revamp.config.area":"/admin-revamp/config/area","admin-revamp.config.index":"/admin-revamp/config/","admin-revamp.config":"/admin-revamp/config/"}
-  ROUTE_MAP
-  ember_route_map = JSON.parse(ember_route_map)
-
-  # Match the Ember routes to the rails routes.
-  vague_categories.each do |category, route_data|
-    route_data.each do |rails_route|
-      ember_route_map.each do |ember_route_name, ember_path|
-        rails_route[:ember_route] = ember_route_name if ember_path == rails_route[:path] ||
-          ember_path == rails_route[:path] + "/"
-      end
-    end
-  end
-
-  # Remove all rails routes that don't have an Ember equivalent.
-  vague_categories.each do |category, route_data|
-    vague_categories[category] = route_data.reject { |rails_route| !rails_route.key?(:ember_route) }
-  end
-
-  # Remove all categories that don't have any routes (meaning they are all rails-only).
-  vague_categories.each do |category, route_data|
-    vague_categories.delete(category) if route_data.length == 0
-  end
-
-  # Output in the format needed for sidebar sections and links.
-  vague_categories.map do |category, route_data|
-    category_text = category.titleize.gsub("Admin ", "")
-    {
-      name: category,
-      text: category_text,
-      links:
-        route_data.map do |rails_route|
-          {
-            name: rails_route[:path].split("/").compact_blank.join("_").chomp,
-            route: rails_route[:ember_route],
-            text:
-              rails_route[:path]
-                .split("/")
-                .compact_blank
-                .join(" ")
-                .chomp
-                .titleize
-                .gsub("Admin ", "")
-                .gsub("#{category_text} ", ""),
-          }
-        end,
-    }
-  end
-end
-
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
 
@@ -294,10 +160,8 @@ task "javascript:update_constants" => :environment do
     }
 
     export const AUTO_GROUPS = #{auto_groups.to_json};
-  JS
 
-  write_template("discourse/app/lib/sidebar/admin-nav-map.js", task_name, <<~JS)
-    export const ADMIN_NAV_MAP = #{generate_admin_sidebar_nav_map.to_json}
+    export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -339,8 +203,7 @@ end
 task "javascript:update" => "clean_up" do
   require "uglifier"
 
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  system("yarn install", exception: true)
 
   versions = {}
   start = Time.now
@@ -369,26 +232,28 @@ task "javascript:update" => "clean_up" do
         dest = "#{path}/#{filename}"
 
         FileUtils.mkdir_p(path) unless File.exist?(path)
+
+        if src.include? "ace.js"
+          versions["ace/ace.js"] = versions.delete("ace.js")
+
+          themes = %w[theme-chrome theme-chaos]
+
+          themes.each do |file|
+            versions["ace/#{file}.js"] = "#{package_dir_name}/#{package_version}/#{file}.js"
+          end
+
+          ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
+
+          addtl_files = %w[ext-searchbox mode-html mode-scss mode-sql mode-yaml worker-html].concat(
+            themes,
+          )
+
+          dest_path = dest.split("/")[0..-2].join("/")
+          addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
+        end
       end
     else
       dest = "#{vendor_js}/#{filename}"
-    end
-
-    if src.include? "ace.js"
-      versions["ace/ace.js"] = versions.delete("ace.js")
-      ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = %w[
-        ext-searchbox
-        mode-html
-        mode-scss
-        mode-sql
-        mode-yaml
-        theme-chrome
-        theme-chaos
-        worker-html
-      ]
-      dest_path = dest.split("/")[0..-2].join("/")
-      addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
     end
 
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)

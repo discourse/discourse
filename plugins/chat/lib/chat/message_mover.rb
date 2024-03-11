@@ -32,6 +32,7 @@ module Chat
   class MessageMover
     class NoMessagesFound < StandardError
     end
+
     class InvalidChannel < StandardError
     end
 

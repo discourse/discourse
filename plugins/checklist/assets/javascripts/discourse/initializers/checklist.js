@@ -4,7 +4,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
 function initializePlugin(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
 
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);

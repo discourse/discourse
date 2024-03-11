@@ -24,6 +24,7 @@ acceptance("User menu", function (needs) {
   needs.user({
     unread_high_priority_notifications: 73,
     trust_level: 3,
+    can_post_anonymously: true,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.replied]: 2,
     },
@@ -31,7 +32,6 @@ acceptance("User menu", function (needs) {
 
   needs.settings({
     allow_anonymous_posting: true,
-    anonymous_posting_allowed_groups: "3",
   });
 
   let requestHeaders = {};
@@ -609,6 +609,7 @@ acceptance("User menu", function (needs) {
     await click("header.d-header"); // close the menu
     updateCurrentUser({
       is_anonymous: false,
+      can_post_anonymously: false,
       trust_level: 2,
       groups: [
         AUTO_GROUPS.trust_level_0,
@@ -632,14 +633,13 @@ acceptance("User menu", function (needs) {
     updateCurrentUser({
       is_anonymous: true,
       trust_level: 2,
+      can_post_anonymously: true,
       groups: [
         AUTO_GROUPS.trust_level_0,
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,
       ],
     });
-    this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
@@ -651,6 +651,7 @@ acceptance("User menu", function (needs) {
     await click("header.d-header"); // close the menu
     updateCurrentUser({
       is_anonymous: true,
+      can_post_anonymously: true,
       trust_level: 4,
       groups: [
         AUTO_GROUPS.trust_level_0,
@@ -660,8 +661,6 @@ acceptance("User menu", function (needs) {
         AUTO_GROUPS.trust_level_4,
       ],
     });
-    this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
@@ -673,6 +672,7 @@ acceptance("User menu", function (needs) {
     await click("header.d-header"); // close the menu
     updateCurrentUser({
       is_anonymous: false,
+      can_post_anonymously: false,
       trust_level: 2,
       groups: [
         AUTO_GROUPS.trust_level_0,
@@ -680,14 +680,12 @@ acceptance("User menu", function (needs) {
         AUTO_GROUPS.trust_level_2,
       ],
     });
-    this.siteSettings.allow_anonymous_posting = true;
-    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
     assert.notOk(
       exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button is not shown if the user doesn't have a high enough trust level"
+      "toggle anon button is not shown if the user is not allowed to post anonymously"
     );
 
     const logoutButton = query("#quick-access-profile ul li.logout .btn");
@@ -1132,5 +1130,12 @@ acceptance("User menu - avatars", function (needs) {
 
     assert.ok(exists("li.notification.bookmark-reminder .icon-avatar"));
     assert.ok(exists("li.bookmark .icon-avatar"));
+  });
+
+  test("Icon avatars have correct class names based on system avatar usage", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    assert.ok(exists("li.group-message-summary .icon-avatar.system-avatar"));
+    assert.ok(exists("li.notification.replied .icon-avatar.user-avatar"));
   });
 });

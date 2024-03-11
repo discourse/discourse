@@ -30,7 +30,7 @@ const Discourse = Application.extend({
   start() {
     printDebugInfo();
 
-    document.querySelector("noscript")?.remove();
+    document.querySelectorAll("noscript").forEach((el) => el.remove());
 
     // Rewire event handling to eliminate event delegation for better compat
     // between Glimmer and Classic components.
@@ -243,3 +243,7 @@ function printDebugInfo() {
 }
 
 export default Discourse;
+
+/**
+ * @typedef {import('ember-source/types')} EmberTypes
+ */

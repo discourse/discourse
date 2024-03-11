@@ -3,7 +3,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title=".user-main .nav-pills">
-  <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
+  <MobileNav @desktopClass="nav nav-pills user-nav" class="main-nav">
     {{#each @dummy.navItems as |ni|}}
       <li>
         <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
@@ -15,7 +15,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="group page <NavigationBar>">
-  <MobileNav @class="group-nav" @desktopClass="nav nav-pills">
+  <MobileNav @desktopClass="nav nav-pills" class="group-nav">
     <li class="group-dropdown">
       <GroupDropdown @groups={{@dummy.groupNames}} @value="staff" />
     </li>

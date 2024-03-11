@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserDestroyer do
-  fab!(:user) { Fabricate(:user_with_secondary_email) }
-  fab!(:admin)
+  fab!(:user) { Fabricate(:user_with_secondary_email, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   describe ".new" do
     it "raises an error when user is nil" do

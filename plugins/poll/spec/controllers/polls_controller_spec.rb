@@ -33,6 +33,8 @@ RSpec.describe ::DiscoursePoll::PollsController do
     )
   end
 
+  before { Group.refresh_automatic_groups! }
+
   describe "#vote" do
     it "works" do
       channel = "/polls/#{poll.topic_id}"

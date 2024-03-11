@@ -4,7 +4,7 @@
       <ComboBox
         @content={{this.fieldTypes}}
         @value={{this.buffered.field_type}}
-        @onChange={{action (mut this.buffered.field_type)}}
+        @onChange={{fn (mut this.buffered.field_type)}}
       />
     </AdminFormRow>
 
@@ -54,6 +54,11 @@
       <Input @type="checkbox" @checked={{this.buffered.searchable}} />
       <span>{{i18n "admin.user_fields.searchable.title"}}</span>
     </AdminFormRow>
+
+    <PluginOutlet
+      @name="after-admin-user-fields"
+      @outletArgs={{hash buffered=this.buffered}}
+    />
 
     <AdminFormRow>
       <DButton

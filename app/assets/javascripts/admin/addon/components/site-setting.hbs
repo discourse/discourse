@@ -25,15 +25,25 @@
 </div>
 
 <div class="setting-value">
-  {{component
-    this.componentName
-    setting=this.setting
-    value=this.buffered.value
-    validationMessage=this.validationMessage
-    preview=this.preview
-    isSecret=this.isSecret
-    allowAny=this.allowAny
-  }}
+  {{#if this.settingEditButton}}
+    <DButton
+      @action={{this.settingEditButton.action}}
+      @icon={{this.settingEditButton.icon}}
+      @label={{this.settingEditButton.label}}
+      class="setting-value-edit-button"
+    />
+  {{else}}
+    {{component
+      this.componentName
+      setting=this.setting
+      value=this.buffered.value
+      validationMessage=this.validationMessage
+      preview=this.preview
+      isSecret=this.isSecret
+      allowAny=this.allowAny
+      changeValueCallback=this.changeValueCallback
+    }}
+  {{/if}}
 </div>
 
 {{#if this.dirty}}

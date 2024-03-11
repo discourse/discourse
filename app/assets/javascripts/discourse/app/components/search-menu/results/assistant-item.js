@@ -1,9 +1,18 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
 import getURL from "discourse-common/lib/get-url";
 import { debounce } from "discourse-common/utils/decorators";
+
+const _itemSelectCallbacks = [];
+export function addItemSelectCallback(fn) {
+  _itemSelectCallbacks.push(fn);
+}
+
+export function resetItemSelectCallbacks() {
+  _itemSelectCallbacks.length = 0;
+}
 
 export default class AssistantItem extends Component {
   @service search;
@@ -85,16 +94,35 @@ export default class AssistantItem extends Component {
 
   @debounce(100)
   itemSelected() {
-    let updatedValue = "";
-    if (this.args.slug) {
-      updatedValue = this.prefix.concat(this.args.slug);
+    let updatedTerm = "";
+    if (
+      this.args.slug &&
+      (this.args.suggestionKeyword || this.args.concatSlug)
+    ) {
+      updatedTerm = this.prefix.concat(this.args.slug);
     } else {
-      updatedValue = this.prefix.trim();
+      updatedTerm = this.prefix.trim();
     }
 
     const inTopicContext = this.search.searchContext?.type === "topic";
-    this.args.searchTermChanged(updatedValue, {
-      searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,
+    const searchTopics = !inTopicContext || this.search.activeGlobalSearchTerm;
+
+    if (
+      _itemSelectCallbacks.length &&
+      !_itemSelectCallbacks.some((fn) =>
+        fn({
+          updatedTerm,
+          searchTermChanged: this.args.searchTermChanged,
+          usage: this.args.usage,
+        })
+      )
+    ) {
+      // Return early if any callbacks return false
+      return;
+    }
+
+    this.args.searchTermChanged(updatedTerm, {
+      searchTopics,
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });

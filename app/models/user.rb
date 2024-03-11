@@ -151,7 +151,10 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
                        message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
@@ -180,7 +183,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -354,6 +357,10 @@ class User < ActiveRecord::Base
       )
   end
 
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
+  end
+
   def secured_sidebar_category_ids(user_guardian = nil)
     user_guardian ||= guardian
 
@@ -516,7 +523,9 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
+      (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -1807,8 +1816,8 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def experimental_search_menu_groups_enabled?
-    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
+  def glimmer_header_enabled?
+    in_any_groups?(SiteSetting.experimental_glimmer_header_groups_map)
   end
 
   def watched_precedence_over_muted

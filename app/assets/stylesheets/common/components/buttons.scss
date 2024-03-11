@@ -20,6 +20,10 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
+  &:visited {
+    // covers cases where we add button classes to links
+    color: $text-color;
+  }
   background-color: $bg-color;
   background-image: linear-gradient(
     to bottom,
@@ -73,12 +77,7 @@
       @include darken-background($hover-bg-color, 0.1);
     }
   }
-  &[href] {
-    color: $text-color;
-    &:focus {
-      color: $hover-text-color;
-    }
-  }
+
   .discourse-no-touch &:active:not(:hover):not(:focus),
   .discourse-no-touch &.btn-active:not(:hover):not(:focus),
   &:active:not(:hover):not(:focus),
@@ -276,6 +275,8 @@
       }
     }
   }
+  // https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign
+  // if you are unable to use Facebook blue, revert to black and white.
 }
 
 // Button Sizes
@@ -453,16 +454,9 @@
   border-radius: var(--d-border-radius);
   padding: 0.4em 0.467em;
   .d-icon {
-    color: var(--primary-high);
+    color: var(--primary-medium);
   }
   @include hover {
-    background: transparent;
-    .d-icon {
-      color: var(--primary);
-    }
-  }
-  &:focus {
-    background: var(--primary-low);
     .d-icon {
       color: var(--primary);
     }

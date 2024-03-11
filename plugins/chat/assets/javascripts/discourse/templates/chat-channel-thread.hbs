@@ -1,7 +1,4 @@
-{{#each (array this.model) as |thread|}}
-  <ChatThread
-    @thread={{thread}}
-    @targetMessageId={{this.targetMessageId}}
-    @includeHeader={{true}}
-  />
-{{/each}}
+<Chat::Routes::ChannelThread
+  @thread={{this.model}}
+  @targetMessageId={{this.targetMessageId}}
+/>

@@ -4,8 +4,8 @@ require "rails_helper"
 
 describe UserNotifications do
   fab!(:chatters_group) { Fabricate(:group) }
-  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id]) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id]) }
+  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -13,7 +13,6 @@ describe UserNotifications do
   end
 
   def refresh_auto_groups
-    Group.refresh_automatic_groups!
     user.reload
     sender.reload
   end
@@ -111,11 +110,11 @@ describe UserNotifications do
         end
 
         it "displays a count when there are more than two DMs with unread messages" do
-          user = Fabricate(:user, group_ids: [chatters_group.id])
+          user = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
           senders = []
 
           3.times do
-            sender = Fabricate(:user, group_ids: [chatters_group.id])
+            sender = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
             refresh_auto_groups
             sender.reload
             senders << sender
@@ -252,12 +251,12 @@ describe UserNotifications do
       describe "email subject" do
         context "with regular mentions" do
           before do
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
           end
 
@@ -305,12 +304,12 @@ describe UserNotifications do
               user: user,
               last_read_message_id: another_chat_message.id - 2,
             )
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: another_chat_message,
-              notification: notification,
+              notifications: [notification],
             )
             another_chat_channel.update!(last_message: another_chat_message)
 
@@ -345,12 +344,12 @@ describe UserNotifications do
                 user: user,
                 last_read_message_id: another_chat_message.id - 2,
               )
-              notification = Fabricate(:notification)
+              notification = Fabricate(:notification, user: user)
               Fabricate(
-                :chat_mention,
+                :user_chat_mention,
                 user: user,
                 chat_message: another_chat_message,
-                notification: notification,
+                notifications: [notification],
               )
               another_chat_channel.update!(last_message: another_chat_message)
             end
@@ -374,12 +373,12 @@ describe UserNotifications do
             refresh_auto_groups
             channel = create_dm_channel(sender, [sender, user])
             Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
           end
 
@@ -401,12 +400,12 @@ describe UserNotifications do
 
       describe "When there are mentions" do
         before do
-          notification = Fabricate(:notification)
+          notification = Fabricate(:notification, user: user)
           Fabricate(
-            :chat_mention,
+            :user_chat_mention,
             user: user,
             chat_message: chat_message,
-            notification: notification,
+            notifications: [notification],
           )
         end
 
@@ -508,12 +507,12 @@ describe UserNotifications do
             )
 
             new_message = Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})
@@ -637,12 +636,28 @@ describe UserNotifications do
             expect(user_avatar.attribute("alt").value).to eq(sender.username)
           end
 
+          context "with subfolder" do
+            before { set_subfolder "/community" }
+
+            it "includes correct view summary link in template" do
+              email = described_class.chat_summary(user, {})
+              expect(email.html_part.body.to_s).to include(
+                "<a class=\"more-messages-link\" href=\"#{Discourse.base_url}/chat",
+              )
+            end
+          end
+
           context "when there are more than two mentions" do
             it "includes a view more link " do
               2.times do
                 msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-                notification = Fabricate(:notification)
-                Fabricate(:chat_mention, user: user, chat_message: msg, notification: notification)
+                notification = Fabricate(:notification, user: user)
+                Fabricate(
+                  :user_chat_mention,
+                  user: user,
+                  chat_message: msg,
+                  notifications: [notification],
+                )
               end
 
               email = described_class.chat_summary(user, {})
@@ -663,12 +678,12 @@ describe UserNotifications do
               it "has only a link to view all messages" do
                 2.times do
                   msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-                  notification = Fabricate(:notification)
+                  notification = Fabricate(:notification, user: user)
                   Fabricate(
-                    :chat_mention,
+                    :user_chat_mention,
                     user: user,
                     chat_message: msg,
-                    notification: notification,
+                    notifications: [notification],
                   )
                 end
 
@@ -690,12 +705,12 @@ describe UserNotifications do
 
             new_message =
               Fabricate(:chat_message, user: sender, chat_channel: channel, cooked: "New message")
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})

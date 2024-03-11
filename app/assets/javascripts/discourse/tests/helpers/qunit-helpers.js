@@ -18,9 +18,13 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/glimmer-header";
+import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/glimmer-header/icons";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
+import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
@@ -30,7 +34,7 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
-import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
@@ -48,6 +52,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import {
@@ -79,14 +84,12 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { clearExtraHeaderIcons } from "discourse/widgets/header";
+import {
+  clearExtraHeaderButtons,
+  clearExtraHeaderIcons,
+} from "discourse/widgets/header";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
-import {
-  initSearchData,
-  resetOnKeyDownCallbacks,
-} from "discourse/widgets/search-menu";
-import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import { resetDecorators } from "discourse/widgets/widget";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -186,7 +189,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  initSearchData();
   resetDecorators();
   resetPostCookedDecorators();
   resetPluginOutletDecorators();
@@ -226,9 +228,12 @@ export function testCleanup(container, app) {
   clearToolbarCallbacks();
   resetNotificationTypeRenderers();
   resetSidebarPanels();
+  clearExtraGlimmerHeaderIcons();
+  clearExtraGlimmerHeaderButtons();
   clearExtraHeaderIcons();
-  resetOnKeyDownCallbacks();
+  clearExtraHeaderButtons();
   resetOnKeyUpCallbacks();
+  resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
@@ -238,6 +243,7 @@ export function testCleanup(container, app) {
   clearBulkButtons();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
+  clearAdditionalAdminSidebarSectionLinks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -346,7 +352,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().trackStatus();
+        User.current().statusManager.trackStatus();
       }
 
       if (settingChanges) {
@@ -374,7 +380,7 @@ export function acceptance(name, optionsOrCallback) {
       let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
-        User.current().stopTrackingStatus();
+        User.current().statusManager.stopTrackingStatus();
       }
       testCleanup(this.container, app);
 

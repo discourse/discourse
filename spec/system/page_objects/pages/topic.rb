@@ -6,12 +6,14 @@ module PageObjects
       def initialize
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
+        @topic_map_component = PageObjects::Components::TopicMap.new
+        @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         url = "/t/#{topic.id}"
         url += "/#{post_number}" if post_number
-        page.visit url
+        page.visit(url)
         self
       end
 
@@ -86,6 +88,8 @@ module PageObjects
           post_by_number(post).find(".post-controls .reply").click
         when :flag
           post_by_number(post).find(".post-controls .create-flag").click
+        when :copy_link
+          post_by_number(post).find(".post-controls .post-action-menu__copy-link").click
         end
       end
 
@@ -171,6 +175,14 @@ module PageObjects
         @fast_edit_component.fast_edit_input
       end
 
+      def copy_quote_button_selector
+        ".quote-button .copy-quote"
+      end
+
+      def copy_quote_button
+        find(copy_quote_button_selector)
+      end
+
       def click_mention(post, mention)
         within post_by_number(post) do
           find("a.mention-group", text: mention).click
@@ -180,6 +192,44 @@ module PageObjects
       def click_footer_reply
         find("#topic-footer-buttons .btn-primary", text: "Reply").click
         self
+      end
+
+      def click_like_reaction_for(post)
+        post_by_number(post).find(".post-controls .actions .like").click
+      end
+
+      def has_topic_map?
+        @topic_map_component.is_visible?
+      end
+
+      def has_no_topic_map?
+        @topic_map_component.is_not_visible?
+      end
+
+      def has_private_message_map?
+        @private_message_map_component.is_visible?
+      end
+
+      def click_notifications_button
+        find(".topic-notifications-button .select-kit-header").click
+      end
+
+      def click_admin_menu_button
+        find("#topic-footer-buttons .topic-admin-menu-button").click
+      end
+
+      def watch_topic
+        click_notifications_button
+        find('li[data-name="watching"]').click
+      end
+
+      def close_topic
+        click_admin_menu_button
+        find(".topic-admin-popup-menu ul.topic-admin-menu-topic li.topic-admin-close").click
+      end
+
+      def has_read_post?(post)
+        post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
       end
 
       private

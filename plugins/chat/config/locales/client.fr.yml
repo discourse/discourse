@@ -5,13 +5,17 @@
 # https://translate.discourse.org/
 
 fr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Discussion
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Toujours"
+          fullscreen: "Lorsque la discussion est en plein écran"
           never: "Jamais"
       logs:
         staff_actions:
@@ -24,9 +28,24 @@ fr:
           descriptions:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
+      web_hooks:
+        chat_event:
+          group_name: "Événements de discussion"
+          chat_message_created: "Le message est créé"
+          chat_message_edited: "Le message est modifié"
+          chat_message_trashed: "Le message est supprimé"
+          chat_message_restored: "Le message est restauré"
+    about:
+      chat_messages_count: "Messages de discussion"
+      chat_channels_count: "Canaux de discussion"
+      chat_users_count: "Utilisateurs de la discussion"
     chat:
+      text_copied: Texte copié dans le presse-papiers
+      link_copied: Lien copié dans le presse-papiers
+      back_to_forum: "Forum"
       deleted_chat_username: supprimé
       dates:
+        yesterday: "Hier"
         time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
       already_enabled: "La discussion est déjà activée sur ce sujet. Veuillez actualiser."
@@ -53,6 +72,7 @@ fr:
         delete_channel: "Supprimer le canal"
         join_channel: "Rejoindre le canal"
         leave_channel: "Quitter le canal"
+        leave_groupchat_info: "Si vous quittez cette discussion de groupe, vous n'y aurez plus accès et vous ne recevrez plus de notifications associées. Pour vous inscrire à nouveau, vous devrez être réinvité(e) par un membre de la discussion de groupe."
         join: "Rejoindre"
         leave: "Quitter"
         save_label:
@@ -106,9 +126,10 @@ fr:
         title: "Afficher l'indicateur d'activité dans l'en-tête"
         all_new: "Tous les nouveaux messages"
         dm_and_mentions: "Messages directs et mentions"
+        only_mentions: "Mentions uniquement"
         never: "Jamais"
       separate_sidebar_mode:
-        title: "Afficher des modes de barre latérale distincts pour le forum et le clavardag"
+        title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"
@@ -131,6 +152,7 @@ fr:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
+        channel_wide_mentions_disallowed: "Les mentions @here et @all sont désactivées dans ce canal."
         groups:
           header:
             some: "Certains utilisateurs ne recevront pas de notification"
@@ -230,6 +252,7 @@ fr:
       reply: "Répondre"
       edit: "Modifier"
       copy_link: "Copier le lien"
+      copy_text: "Copier le texte"
       rebake_message: "Reconstruire le HTML"
       retry_staged_message:
         title: "Erreur de réseau"
@@ -241,6 +264,8 @@ fr:
       save: "Enregistrer"
       select: "Sélectionner"
       return_to_list: "Retour à la liste des canaux"
+      return_to_channel: "Revenir au canal"
+      return_to_threads_list: "Revenir à la liste des sujets"
       unread_threads_count:
         one: "Vous avez %{count} discussion non lue"
         other: "Vous avez %{count} discussions non lues"
@@ -287,6 +312,8 @@ fr:
         yesterday: Hier
       members_view:
         filter_placeholder: Trouver des membres
+        add_member: Ajouter un membre
+        back_to_settings: "Retour aux paramètres"
       about_view:
         associated_topic: Sujet lié
         associated_category: Catégorie liée
@@ -304,12 +331,18 @@ fr:
         add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
         add_user_short: <span>Ajouter un utilisateur</span>
         open_channel: <span>Ouvrir le canal</span>
-        default_search_placeholder: "#a-channel, @somebody ou quoi que ce soit"
-        default_channel_search_placeholder: "#a-channel"
-        default_user_search_placeholder: "@somebody"
+        default_search_placeholder: "#un-canal, @personne ou un nom"
+        default_channel_search_placeholder: "#un-canal"
+        default_user_search_placeholder: "@personne"
+        user_search_placeholder: "...ajouter d'autres membres"
         disabled_user: "a désactivé la discussion"
         no_items: "Aucun élément"
+        create_group_placeholder: "Nom de la discussion de groupe (facultatif)"
+        participants_counter: "%{selection_count}/%{max} participants"
+        new_group_chat: "Nouveau groupe de discussion"
         filter: "Filtrer"
+        cant_add_more_members: "Nombre maximal de membres atteint"
+        create_new_group_chat: "Créer une discussion de groupe"
       channel_edit_name_slug_modal:
         title: Modifier le canal
         input_placeholder: Ajouter un nom
@@ -321,10 +354,15 @@ fr:
         input_placeholder: Ajouter une description
         description: Dites aux utilisateurs en quoi consiste ce canal
       direct_message_creator:
+        add_to_channel: "Ajouter au canal"
         title: Nouveau message
         prefix: "À :"
         no_results: Aucun résultat
         selected_user_title: "Désélectionner %{username}"
+        group_name: "Nom de la discussion de groupe (facultatif)"
+        members_counter:
+          one: "%{count}/%{max} membre"
+          other: "%{count}/%{max} membres"
       channel:
         no_memberships: Ce canal ne comprend aucun membre
         no_memberships_found: Aucun membre trouvé
@@ -378,17 +416,17 @@ fr:
       reviewable:
         type: "Message de discussion"
       reactions:
-        only_you: "Vous avez réagi avec :%{emoji}:"
-        you_and_single_user: "Vous et %{username} avez réagi avec :%{emoji}:"
-        you_and_multiple_users: "Vous, %{commaSeparatedUsernames} et %{username} avez réagi avec :%{emoji}:"
+        only_you: "<span>Vous avez réagi avec </span>:%{emoji}:"
+        you_and_single_user: "<span>Vous et %{username} avez réagi avec </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vous, %{commaSeparatedUsernames} et %{username} avez réagi avec </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Vous, %{commaSeparatedUsernames} et %{count} autre utilisateur avez réagi avec :%{emoji}:"
-          other: "Vous, %{commaSeparatedUsernames} et %{count} autres utilisateurs avez réagi avec :%{emoji}:"
-        single_user: "%{username} a réagi avec :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} et %{username} ont réagi avec :%{emoji}:"
+          one: "<span>Vous, %{commaSeparatedUsernames} et %{count} autre utilisateur avez réagi avec </span>:%{emoji}:"
+          other: "<span>Vous, %{commaSeparatedUsernames} et %{count} autres utilisateurs avez réagi avec </span>:%{emoji}:"
+        single_user: "<span>%{username} a réagi avec </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} et %{username} ont réagi avec </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} et %{count} autre utilisateur ont réagi avec :%{emoji}:"
-          other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs ont réagi avec :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} et %{count} autre utilisateur ont réagi avec </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} et %{count} autres utilisateurs ont réagi avec </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Basculer la barre d'outils"
         italic_text: "texte souligné"
@@ -428,6 +466,7 @@ fr:
         unfollow: "Quitter"
         admin_title: "Administrateur"
         settings_title: "Paramètres"
+        info_title: "Informations du canal"
         category_label: "Catégorie"
         history_label: "Historique"
         members_label: "Membres"
@@ -435,14 +474,17 @@ fr:
         title: "Discussion"
         export_messages:
           title: "Exporter les messages de la discussion"
+          description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       direct_messages:
-        title: "Discussion privée"
         new: "Créer une conversation personnelle"
         create: "Valider"
         leave: "Quitter cette discussion privée"
+        close: "Fermer ce chat personnel"
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
+      channel_list:
+        title: "Canaux"
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"
@@ -500,9 +542,14 @@ fr:
           one: "%{commaSeparatedUsernames} et %{count} autre utilisateur sont en train d'écrire"
           other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs sont en train d'écrire"
       retention_reminders:
+        indefinitely_short: "indéfiniment"
+        indefinitely_long: "Les paramètres de discussion ont été définis pour conserver les messages du canal indéfiniment."
         short:
           one: "%{count} jour"
           other: "%{count} jours"
+        long:
+          one: "Les paramètres de discussion ont été définis pour conserver les messages du canal pendant %{count} jour."
+          other: "Les paramètres de discussion ont été définis pour conserver les messages du canal pendant %{count} jours."
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient du contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire à nos <a href=\"%{basePath}/guidelines\">consignes communautaires</a>."
@@ -548,6 +595,7 @@ fr:
           other: "+ %{count}"
       threads:
         open: "Ouvrir le fil"
+        list: "Fils de discussion"
         none: "Vous ne participez à aucun fil dans ce canal."
       draft_channel_screen:
         header: "Nouveau message"

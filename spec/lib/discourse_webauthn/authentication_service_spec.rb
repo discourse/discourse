@@ -97,8 +97,10 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   let(:current_user) { Fabricate(:user) }
 
   before do
-    # we have to stub here because the public key was created using this specific challenge
+    # we have to stub here because the test public key was created
+    # using this specific challenge and this origin
     DiscourseWebauthn.stubs(:challenge).returns(challenge)
+    DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
   end
 
   it "updates last_used when the security key and params are valid" do

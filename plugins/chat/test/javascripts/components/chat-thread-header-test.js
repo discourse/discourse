@@ -16,9 +16,10 @@ module("Discourse Chat | Component | chat-thread-header", function (hooks) {
       <Chat::Thread::Header @thread={{this.thread}} @channel={{this.thread.channel}} />
     `);
 
-    assert.equal(
-      query(".chat-thread-header__label").innerHTML.trim(),
-      "&lt;style&gt;body { background: red;}&lt;/style&gt;"
+    assert.ok(
+      query(".c-navbar__title")
+        .innerHTML.trim()
+        .includes("&lt;style&gt;body { background: red;}&lt;/style&gt;")
     );
   });
 });

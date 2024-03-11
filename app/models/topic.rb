@@ -3,6 +3,7 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class NotAllowed < StandardError
   end
   include RateLimiter::OnCreateRecord
@@ -58,7 +59,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.to_i.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -1857,13 +1858,21 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at
+  def reset_bumped_at(post_id = nil)
     post =
-      ordered_posts.where(
-        user_deleted: false,
-        hidden: false,
-        post_type: Post.types[:regular],
-      ).last || first_post
+      (
+        if post_id
+          Post.find_by(id: post_id)
+        else
+          ordered_posts.where(
+            user_deleted: false,
+            hidden: false,
+            post_type: Post.types[:regular],
+          ).last || first_post
+        end
+      )
+
+    return if !post
 
     self.bumped_at = post.created_at
     self.save(validate: false)

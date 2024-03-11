@@ -9,7 +9,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.assets
-    cache[:assets] ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
+    cache[:assets] ||= Dir.glob("**/*.{js,map,txt,css}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
@@ -41,8 +41,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   def self.ember_version
     @version ||=
       begin
-        ember_source_package_raw =
-          File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+        ember_source_package_raw = File.read("#{Rails.root}/node_modules/ember-source/package.json")
         JSON.parse(ember_source_package_raw)["version"]
       end
   end

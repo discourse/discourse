@@ -34,6 +34,9 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[topics#destroy],
           },
+          recover: {
+            actions: %w[topics#recover],
+          },
           read: {
             actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
             params: %i[topic_id external_id],
@@ -60,6 +63,9 @@ class ApiKeyScope < ActiveRecord::Base
           },
           delete: {
             actions: %w[posts#destroy],
+          },
+          recover: {
+            actions: %w[posts#recover],
           },
           list: {
             actions: %w[posts#latest],
@@ -234,6 +240,11 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[users#create groups#index],
           },
         },
+        logs: {
+          messages: {
+            actions: [Logster::Web],
+          },
+        },
       }
 
       parse_resources!(mappings)
@@ -290,6 +301,11 @@ class ApiKeyScope < ActiveRecord::Base
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
               urls << "#{engine_mount_path}#{path} (#{route.verb})"
+            end
+
+            if actions.include?(Logster::Web)
+              urls << "/logs/messages.json (POST)"
+              urls << "/logs/show/:id.json (GET)"
             end
           end
         end

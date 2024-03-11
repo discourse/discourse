@@ -10,13 +10,13 @@
     >
       <label>{{i18n "user.new_topic_duration.label"}}</label>
       <ComboBox
-        @class="duration"
         @valueProperty="value"
         @content={{this.considerNewTopicOptions}}
         @value={{this.model.user_option.new_topic_duration_minutes}}
         @onChange={{action
           (mut this.model.user_option.new_topic_duration_minutes)
         }}
+        class="duration"
       />
     </div>
 
@@ -49,6 +49,11 @@
         }}
       />
     </div>
+
+    <PreferenceCheckbox
+      @labelKey="user.topics_unread_when_closed"
+      @checked={{this.model.user_option.topics_unread_when_closed}}
+    />
   </div>
 </div>
 

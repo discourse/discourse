@@ -1,3 +1,4 @@
+import { humanizeList } from "discourse/lib/text";
 import { isAppleDevice } from "discourse/lib/utilities";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -300,6 +301,12 @@ export function getUploadMarkdown(upload) {
   } else {
     return attachmentMarkdown(upload);
   }
+}
+
+export function displayErrorForBulkUpload(errors) {
+  const fileNames = humanizeList(errors.mapBy("fileName"));
+
+  dialog.alert(I18n.t("post.errors.upload", { file_name: fileNames }));
 }
 
 export function displayErrorForUpload(data, siteSettings, fileName) {

@@ -374,7 +374,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .exists("the DnD mode indicator on the menu is shown");
     });
 
@@ -390,7 +390,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .exists("the DnD mode indicator on the menu is shown");
     });
 
@@ -404,7 +404,7 @@ acceptance(
       await click(".btn.delete-status");
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .doesNotExist("there is no DnD mode indicator on the menu");
     });
 
@@ -421,7 +421,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .doesNotExist("there is no DnD mode indicator on the menu");
     });
 

@@ -1,4 +1,5 @@
 import { fn } from "@ember/helper";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
@@ -12,14 +13,24 @@ const Member = <template>
     }}
     @action={{fn @onSelect @member}}
   >
-    <ChatUserAvatar
-      @user={{@member.model}}
-      @interactive={{false}}
-      @showPresence={{false}}
-    />
-    <span class="chat-message-creator__member-username">
-      {{@member.model.username}}
-    </span>
+    {{#if (eq @member.type "user")}}
+      <ChatUserAvatar
+        @user={{@member.model}}
+        @interactive={{false}}
+        @showPresence={{false}}
+      />
+      <span class="chat-message-creator__member-username">
+        {{@member.model.username}}
+      </span>
+    {{else if (eq @member.type "group")}}
+      <div class="chat-message-creator__group-icon">
+        {{icon "user-friends"}}
+      </div>
+      <span class="chat-message-creator__member-group">
+        {{@member.model.name}}
+      </span>
+    {{/if}}
+
     {{icon "times"}}
   </DButton>
 </template>;

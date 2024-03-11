@@ -26,6 +26,7 @@ export default class ChatComposerDropdown extends Component {
         @disabled={{@isDisabled}}
         @arrow={{true}}
         @placements={{array "top" "bottom"}}
+        @identifier="chat-composer-dropdown__menu"
         ...attributes
         as |menu|
       >

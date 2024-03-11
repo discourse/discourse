@@ -24,9 +24,10 @@
   {{/if}}
 
   <ExpandingTextArea
-    @value={{this.buffered.value}}
-    @rows="1"
-    @class="site-text-value"
+    {{on "input" (with-event-value (fn (mut this.buffered.value)))}}
+    value={{this.buffered.value}}
+    rows="1"
+    class="site-text-value"
   />
 
   {{#if this.siteText.has_interpolation_keys}}

@@ -5,13 +5,24 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    chat_separate_sidebar_mode: "Zobraziť samostatné režimy bočného panela pre fórum a chat."
+    chat_enabled: "Povoliť chat."
+    chat_editing_grace_period: "Počas (n) sekúnd po odoslaní chatu sa pri editácii nezobrazí (upravená) značka pri správe chatu."
+    chat_editing_grace_period_max_diff_low_trust: "Maximálny počet zmien znakov povolených v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe sa zobrazí značka (upravená) (úroveň dôveryhodnosti 0 a 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maximálny počet zmien znakov povolený v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe (úroveň dôveryhodnosti 2 a vyššie) sa zobrazí značka (upravená)."
   system_messages:
+    private_channel_title: "Kanál %{id}"
+    chat_channel_archive_failed:
+      title: "Archív kanálov chatu zlyhal"
+      subject_template: "Archív kanálov chatu zlyhal"
     chat_channel_archive_failed_no_topic:
       title: "Archív kanálov chatu zlyhal"
       subject_template: "Archív kanálov chatu zlyhal"
   chat:
     deleted_chat_username: vymazané
     errors:
+      users_cant_be_added_to_channel: "Do tohto kanála nie je možné pridať používateľov."
       channel_new_message_disallowed:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy"
         closed: "Kanál je uzavretý, nie je možné posielať nové správy"
@@ -40,8 +51,14 @@ sk:
           title: "Suspendovaný užívateľ"
         agree_and_silence:
           title: "Tichý užívateľ"
+        delete_and_agree:
+          title: "Ignorovať nahlásenie a odstrániť správu"
+          description: "Ignorovať príznak odstránením z frontu a vymazaním správy."
         disagree:
           title: "Nesúhlasiť"
+        ignore:
+          title: "Nerobte nič"
+          description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
     channel:
       dm_title:
         single_user: "%{username}"
@@ -54,11 +71,18 @@ sk:
     mention_warning:
       dismiss: "zahodiť"
       cannot_see: "%{first_identifier} nemá prístup k tomuto kanálu a nebol upozornený."
+      invite: "Pozvať na kanál"
+      without_membership: "%{first_identifier} sa nepripojil k tomuto kanálu."
       group_mentions_disabled: "%{first_identifier} nepovoľuje označovanie."
+      global_mentions_disallowed: "Zmienky @here a @all sú v tomto kanáli zakázané."
+      too_many_members: "%{first_identifier} má príliš veľa členov. Nikto nebol informovaný."
+    onebox:
+      thread_title_connector: "v"
     summaries:
       no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
     transcript:
       default_thread_title: "Vlákno"
+      split_thread_range: "správy %{start} až %{end} z %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -68,6 +92,10 @@ sk:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      subject:
+        private_message: "[%{email_prefix}] Nová správa"
   unsubscribe:
     chat_summary:
       never: Nikdy

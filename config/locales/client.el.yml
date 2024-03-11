@@ -35,11 +35,8 @@ el:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} πριν"
       wrap_on: "στις %{date}"
       tiny:
@@ -75,7 +72,7 @@ el:
           one: "%{count}χ"
           other: "%{count}χ"
         date_month: "DD MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} λ"
@@ -86,7 +83,6 @@ el:
         x_days:
           one: "%{count} ημ"
           other: "%{count} ημ"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "πριν από %{count} λεπτό "
@@ -125,6 +121,8 @@ el:
       facebook: "Μοιραστείτε στο Facebook"
       email: "Αποστολή μέσω email"
       url: "Αντιγραφή και κοινοποίηση διεύθυνσης URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Έκανε αυτό το θέμα δημόσιο στις %{when}"
       private_topic: "Έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
@@ -162,7 +160,6 @@ el:
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
-      message: "Ενημερώσαμε αυτόν τον ιστότοπο, <span>παρακαλώ ανανεώστε</span>, διαφορετικά ενδέχεται να αντιμετωπίσετε απροσδόκητη συμπεριφορά."
       dismiss: "Απόρριψη"
     themes:
       default_description: "Προεπιλογή"
@@ -961,6 +958,7 @@ el:
       dismiss_notifications_tooltip: "Όλες οι αδιάβαστες ειδοποιήσεις να χαρακτηριστούν διαβασμένες"
       no_likes_title: "Δεν έχετε λάβει ακόμα likes"
       no_messages_title: "Δεν έχετε κανένα μήνυμα"
+      no_notifications_title: "Δεν έχετε ειδοποιήσεις ακόμα"
       no_notifications_page_title: "Δεν έχετε ειδοποιήσεις ακόμα"
       dynamic_favicon: "Εμφάνιση μετρήσεων στο εικονίδιο του περιηγητή"
       skip_new_user_tips:
@@ -1158,6 +1156,7 @@ el:
         error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
         success: "Έχουμε στείλει ένα email σε αυτή τη διεύθυνση. Παρακαλούμε ακολούθησε τις οδηγίες επιβεβαίωσης που περιέχει."
         success_staff: "Στείλαμε ένα email στην τρέχουσα διεύθυνσή σας. Παρακαλούμε ακολουθήστε τις οδηγίες επικύρωσης."
+        confirm_success: "Η διεύθυνσή email σας έχει ενημερωθεί."
       change_avatar:
         title: "Αλλαγή της φωτογραφίας του προφίλ σου"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, με βάση το"
@@ -1461,6 +1460,7 @@ el:
         the_topic: "το νήμα"
     user_status:
       save: "Αποθήκευση"
+      pause_notifications: "Παύση ειδοποιήσεων"
     user_tips:
       first_notification:
         title: "Η πρώτη σας ειδοποίηση!"
@@ -1697,6 +1697,8 @@ el:
       components:
         categories_admin_dropdown:
           title: "Διαχείριση κατηγοριών"
+        bulk_select_topics_dropdown:
+          title: "Μαζικές Ενέργειες"
     date_time_picker:
       from: Από
       to: Προς
@@ -2037,6 +2039,8 @@ el:
           label: Προβολές
         min_views:
           placeholder: ελάχιστο
+        max_views:
+          placeholder: μέγιστο
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
@@ -2106,6 +2110,21 @@ el:
         tag: "Δεν υπάρχουν άλλα θέματα με ετικέτα %{tag}."
         top: "Δεν υπάρχουν άλλα δημοφιλή θέματα."
         bookmarks: "Δεν υπάρχουν άλλα νήματα με σελιδοδείκτη."
+    topic_bulk_actions:
+      close_topics:
+        name: "Κλείσιμο Νημάτων"
+      archive_topics:
+        name: "Αρχειοθέτηση Νημάτων"
+      unlist_topics:
+        name: "Απόκρυψη Νημάτων"
+      relist_topics:
+        name: "Εμφάνιση Νημάτων"
+      append_tags:
+        name: "Προσάρτηση Ετικετών "
+      replace_tags:
+        name: "Αντικατάσταση Ετικετών "
+      delete_topics:
+        name: "Διαγραφή Νημάτων"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε νήματα"
@@ -2463,9 +2482,7 @@ el:
     post:
       confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ανάρτηση;"
       quote_reply: "Παράθεση"
-      quote_reply_shortcut: "Ή πατήστε q"
       quote_edit: "Επεξεργασία"
-      quote_edit_shortcut: "Ή πατήστε e"
       quote_share: "Κοινοποίηση"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση %{number}"
@@ -3298,6 +3315,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
+      filter: "Φίλτρο"
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -3504,6 +3522,7 @@ el:
         save: Αποθήκευση
         new_key: Νέο κλειδί API
         revoked: Ανακλήθηκε
+        delete: Μόνιμη Διαγραφή
         not_shown_again: Αυτό το κλειδί δε θα εμφανιστεί ξανά. Βεβαιωθείτε ότι έχετε λάβει ένα αντίγραφο πριν συνεχίσετε.
         continue: Συνεχίστε
         scopes:
@@ -3524,7 +3543,6 @@ el:
               read_lists: Διαβάστε λίστες θεμάτων όπως δημοφιλή, νέα, πρόσφατα, κλπ. Υποστηρίζεται επίσης το RSS.
             users:
               bookmarks: Λίστα σελιδοδεικτών χρηστών. Επιστρέφει τις υπενθυμίσεις σελιδοδεικτών όταν χρησιμοποιείτε τη μορφή ICS.
-              show: Λάβετε πληροφορίες σχετικά με έναν χρήστη.
               check_emails: Λίστα emails χρήστη.
       web_hooks:
         title: "Webhooks"
@@ -3688,6 +3706,9 @@ el:
           body: "Σώμα"
           revert: "Επαναφορά Αλλαγών"
           revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
+        component:
+          all_filter: "Όλα"
+          disabled_filter: "Απενεργοποιημένο"
         theme:
           theme: "Θέμα"
           component: "Συστατικό"
@@ -3829,6 +3850,9 @@ el:
           yaml:
             text: "YAML"
             title: "Ορισμός ρυθμίσεων θέματος σε μορφή YAML"
+          all_filter: "Όλα"
+          active_filter: "Ενεργοί"
+          inactive_filter: "Ανενεργό"
         colors:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"
@@ -3891,7 +3915,6 @@ el:
           instructions: "Προσαρμόστε το πρότυπο στο οποίο αποδίδονται όλα τα HTML emails και ορίστε στυλ χρησιμοποιώντας CSS."
       email:
         title: "Emails"
-        settings: "Ρυθμίσεις"
         templates: "Πρότυπα"
         preview_digest: "Προεπισκόπηση Σύνοψης"
         advanced_test:
@@ -4393,7 +4416,6 @@ el:
             other: "Τις τελευταίες %{count} μέρες:"
           value_heading: "Τιμή"
           requirement_heading: "Προϋπόθεση"
-          visits: "Επισκέψεις"
           days: "ημέρες"
           topics_replied_to: "Θέματα που απάντησε"
           topics_viewed: "Θέματα που είδε"
@@ -4519,6 +4541,8 @@ el:
           modal_description: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχοντες χρήστες."
           modal_yes: "Ναι "
           modal_no: "Όχι, εφαρμόστε την αλλαγή μόνο προς τα εμπρός"
+        file_types_list:
+          add_image_types: "Εικόνες"
       badges:
         title: Παράσημα
         new_badge: Νέο Παράσημο
@@ -4639,6 +4663,7 @@ el:
         category_title: "Κατηγορία"
         tag_name: "Όνομα ετικέτας"
         external_url: "Εξωτερική ή σχετική διεύθυνση URL"
+        username: "Όνομα Χρήστη"
         destination: "Προορισμός"
         copy_to_clipboard: "Αντιγραφή permalink στο πρόχειρο"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;

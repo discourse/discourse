@@ -35,11 +35,8 @@ ur:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} قبل"
       wrap_on: "%{date}پر"
       tiny:
@@ -75,7 +72,7 @@ ur:
           one: "%{count} سال"
           other: "%{count} سال"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} منٹ"
@@ -86,7 +83,6 @@ ur:
         x_days:
           one: "%{count} دن"
           other: "%{count} دن"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} منٹ قبل"
@@ -125,6 +121,8 @@ ur:
       facebook: "فیس بک پر شیئر کریں"
       email: "ای میل کے ذریعے بھیجیں"
       url: "یو آر ایل کو کاپی اور شیئر کریں"
+    word_connector:
+      comma: "، "
     action_codes:
       public_topic: "اس ٹاپک کو پبلک بنایا گیا %{when}"
       open_topic: "اسے %{when}پر عنوان میں تبدیل کر دیا"
@@ -162,7 +160,6 @@ ur:
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_non_staff: "باہر جانے والی ای میل غیر عملہ صارفین کے لیے غیر فعال کر دی گئی ہیں"
     software_update_prompt:
-      message: "ہم نے اس سائٹ کواپڈیٹ کردیا <span>براہ مہربانی ریفریش کریں</span> ، یا آپ کا تجربہ غیر متوقع ہو سکتا ہے۔"
       dismiss: "بر خاست کریں"
     themes:
       default_description: "ڈِیفالٹ"
@@ -1227,6 +1224,15 @@ ur:
         success: "ہم نے اِس ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
         success_via_admin: "ہم نے اس پتے پر ایک ای میل بھیجا ہے۔ صارف کو ای میل میں تصدیق کے ہدایات پر عمل کرنے کی ضرورت ہوگی۔"
         success_staff: "ہم نے آپ کے موجودہ ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
+        confirm_success: "آپ کا اِی میل اپڈیٹ کر دیا کیا ہے۔"
+        confirm: "تصدیق کریں"
+        authorizing_new:
+          description: "براہ کرم تصدیق کریں کہ آپ اپنا ای میل پتہ اس میں تبدیل کرنا چاہتے ہیں:"
+          description_add: "براہ کرم تصدیق کریں کہ آپ ایک متبادل ای میل پتہ شامل کرنا چاہتے ہیں:"
+        authorizing_old:
+          old_email: "پرانا ای میل: %{email}"
+          new_email: "نیا ای میل: %{email}"
+          confirm_success: "تبدیلی کی تصدیق کے لیے ہم نے آپ کے نئے ای میل پتے پر ایک ای میل بھیجی ہے!"
       change_avatar:
         title: "اپنے پروفائل کی تصویر تبدیل کریں"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، پر مبنی"
@@ -1788,6 +1794,8 @@ ur:
       components:
         categories_admin_dropdown:
           title: "زمرے کا انتظام کریں"
+        bulk_select_topics_dropdown:
+          title: "بَلک عمل"
     date_time_picker:
       from: سے
       to: کیلئے
@@ -2053,6 +2061,7 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
+        admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       processing: "پروسیسنگ اپ لوڈ"
@@ -2196,6 +2205,7 @@ ur:
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
+        confirm: "تصدیق کریں"
         select_all: "تمام منتخب کریں"
         clear_all: "تمام کو صاف کریں"
         unlist_topics: "ٹاپکس کو فہرست سے ہٹائیں"
@@ -2262,6 +2272,21 @@ ur:
         tag: "مزید کوئی %{tag} کے ٹاپک موجود نہیں۔"
         top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
+    topic_bulk_actions:
+      close_topics:
+        name: "ٹاپکس بند کریں"
+      archive_topics:
+        name: "ٹاپکس آر کائیو کریں"
+      unlist_topics:
+        name: "ٹاپکس کو فہرست سے ہٹائیں"
+      relist_topics:
+        name: "ٹاپک دوبارہ فہرست کریں"
+      append_tags:
+        name: "ٹیگز میں اضافہ کریں"
+      replace_tags:
+        name: "ٹیگز بدلیں"
+      delete_topics:
+        name: "ٹاپکس مٹائیں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"
@@ -2648,9 +2673,7 @@ ur:
       deleted_by_author_simple: "(مضمون مصنف نے مٹایا ہے)"
     post:
       quote_reply: "اقتباس کریں"
-      quote_reply_shortcut: "یا q دبائیں"
       quote_edit: "ترمیم"
-      quote_edit_shortcut: "یا e دبائیں"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -3567,6 +3590,7 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
+      filter: "فِلٹر"
     until: "جب تک:"
     form_templates:
       upload_field:
@@ -3816,7 +3840,6 @@ ur:
             users:
               bookmarks: صارف کے بُک مارکس کی فہرست بنائیں۔ یہ ICS فارمیٹ استعمال کرتے وقت بُک مارک ریمائنڈرز لوٹاتا ہے۔
               sync_sso: DiscourseConnect کا استعمال کرتے ہوئے صارف کو سنکرونائز کریں۔
-              show: صارف کے بارے میں معلومات حاصل کریں۔
               check_emails: صارف ای میلز کی فہرست.
               update: صارف کی پروفائل کی معلومات کو اپ ڈیٹ کریں۔
               log_out: صارف کے لیے تمام سیشن لاگ آؤٹ کریں۔
@@ -3998,11 +4021,13 @@ ur:
           body: "متن"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
+        component:
+          all_filter: "تمام"
+          disabled_filter: "غیر فعال"
         theme:
           theme: "تھیم"
           component: "جزو"
           components: "اجزاء"
-          filter_placeholder: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
@@ -4161,6 +4186,9 @@ ur:
             title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"
           scss_color_variables_warning: 'تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔ براہ کرم اس کے بجائے CSS حسب ضرورت خصوصیات استعمال کریں۔ مزید تفصیلات کے لیے <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">یہ گائیڈ</a> دیکھیں۔'
           scss_warning_inline: "تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔"
+          all_filter: "تمام"
+          active_filter: "فعال"
+          inactive_filter: "غیر فعال"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
@@ -4233,7 +4261,6 @@ ur:
           instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
-        settings: "سیٹِنگ"
         templates: "ٹَیمپلیٹ"
         preview_digest: "ڈائجسٹ کا مشاہدہ کریں"
         advanced_test:
@@ -4784,7 +4811,6 @@ ur:
             other: "پچھلے %{count}دنوں میں"
           value_heading: "وَیلِیو"
           requirement_heading: "ضروریات"
-          visits: "زائرین کی تعداد"
           days: "دن"
           topics_replied_to: "جن ٹاپکس کا جواب دیا گیا"
           topics_viewed: "دیکھے گئے موضوعات"
@@ -4927,6 +4953,8 @@ ur:
         json_schema:
           edit: ایڈیٹر لانچ کریں
           modal_title: "%{name}میں ترمیم"
+        file_types_list:
+          add_image_types: "تصاویر"
       badges:
         title: بَیج
         new_badge: نیا بَیج
@@ -5058,6 +5086,7 @@ ur:
         category_title: "زمرہ"
         tag_name: "ٹیگ کا نام"
         external_url: "بیرونی یا متعلقہ URL"
+        username: "صارف نام"
         destination: "منزل"
         copy_to_clipboard: "پرمالنک کو کلپ بورڈ میں کاپی کریں"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟

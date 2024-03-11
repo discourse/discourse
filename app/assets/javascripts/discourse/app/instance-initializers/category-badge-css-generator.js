@@ -9,7 +9,7 @@ export default {
     this.site = owner.lookup("service:site");
 
     // If the site is login_required and the user is anon there will be no categories preloaded.
-    if (!this.site.categories) {
+    if (!this.site.categories?.length) {
       return;
     }
 

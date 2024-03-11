@@ -160,12 +160,12 @@ const DiscourseURL = EmberObject.extend({
 
   replaceState(path) {
     if (path.startsWith("#")) {
-      path = this.router.currentURL.replace(/#.*$/, "") + path;
+      path = this.routerService.currentURL.replace(/#.*$/, "") + path;
     }
 
     path = withoutPrefix(path);
 
-    if (this.router.currentURL !== path) {
+    if (this.routerService.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
@@ -228,7 +228,7 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = this.router.currentURL;
+    const oldPath = this.routerService.currentURL;
 
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
@@ -415,8 +415,6 @@ const DiscourseURL = EmberObject.extend({
   handleURL(path, opts) {
     opts = opts || {};
 
-    const router = this.router;
-
     if (opts.replaceURL) {
       this.replaceState(path);
     }
@@ -429,7 +427,7 @@ const DiscourseURL = EmberObject.extend({
       elementId = split[1];
     }
 
-    const transition = router.transitionTo(path);
+    const transition = this.routerService.transitionTo(path);
 
     transition._discourse_intercepted = true;
     transition._discourse_anchor = elementId;

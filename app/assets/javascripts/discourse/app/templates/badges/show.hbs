@@ -37,11 +37,9 @@
 
     {{#if this.canSelectTitle}}
       <div class="badge-set-title {{if this.hiddenSetTitle 'hidden' ''}}">
-        <BadgeTitle @selectableUserBadges={{this.selectableUserBadges}} />
-        <DButton
-          @action={{this.toggleSetUserTitle}}
-          @label="close"
-          class="btn-default close-btn"
+        <BadgeTitle
+          @selectableUserBadges={{this.selectableUserBadges}}
+          @closeAction={{this.toggleSetUserTitle}}
         />
       </div>
     {{/if}}
@@ -55,8 +53,8 @@
             <UserInfo
               @user={{ub.user}}
               @size="medium"
-              @class="badge-info"
               @date={{ub.granted_at}}
+              class="badge-info"
             >
               <div class="granted-on">
                 {{html-safe

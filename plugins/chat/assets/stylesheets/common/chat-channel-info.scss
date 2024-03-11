@@ -1,6 +1,5 @@
-.chat-channel-info {
+.c-channel-info {
   display: flex;
-  height: 100%;
   padding: 1rem;
   flex-direction: column;
 
@@ -14,9 +13,13 @@
       padding-bottom: 1rem;
     }
   }
+
+  &__member-count {
+    margin-left: 0.25em;
+  }
 }
 
-.chat-channel-members__add-members {
+.c-channel-members__add-members {
   display: flex;
   gap: 1rem;
 
@@ -26,7 +29,7 @@
 }
 
 // Info header
-.chat-channel-info-header {
+.c-channel-info-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -34,7 +37,7 @@
   box-sizing: border-box;
 }
 
-.chat-channel-info-header__title {
+.c-channel-info-header__title {
   font-size: var(--font-up-2);
   margin: 0;
 }

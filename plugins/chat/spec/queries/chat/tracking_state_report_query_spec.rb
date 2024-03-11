@@ -33,6 +33,11 @@ RSpec.describe Chat::TrackingStateReportQuery do
     fab!(:channel_2) { Fabricate(:category_channel) }
     let(:channel_ids) { [channel_1.id, channel_2.id] }
 
+    before do
+      channel_1.add(current_user)
+      channel_2.add(current_user)
+    end
+
     it "calls the channel unreads query with the corect params" do
       Chat::ChannelUnreadsQuery
         .expects(:call)

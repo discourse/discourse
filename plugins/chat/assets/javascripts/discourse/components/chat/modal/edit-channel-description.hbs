@@ -14,10 +14,7 @@
       @max={{this.descriptionMaxLength}}
     >
       <textarea
-        {{on
-          "input"
-          (action this.onChangeChatChannelDescription value="target.value")
-        }}
+        {{on "input" (with-event-value this.onChangeChatChannelDescription)}}
         class="chat-modal-edit-channel-description__description-input"
         placeholder={{i18n
           "chat.channel_edit_description_modal.input_placeholder"

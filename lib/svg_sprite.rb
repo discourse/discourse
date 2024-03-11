@@ -19,6 +19,7 @@ module SvgSprite
         archive
         arrow-down
         arrow-left
+        arrow-right
         arrow-up
         arrows-alt-h
         arrows-alt-v
@@ -70,11 +71,13 @@ module SvgSprite
         discourse-bell-slash
         discourse-bookmark-clock
         discourse-compress
+        discourse-dnd
         discourse-emojis
         discourse-expand
         discourse-other-tab
         discourse-sparkles
         discourse-threads
+        discourse-sidebar
         download
         ellipsis-h
         ellipsis-v
@@ -171,6 +174,7 @@ module SvgSprite
         mobile-alt
         moon
         paint-brush
+        palette
         paper-plane
         pause
         pencil-alt

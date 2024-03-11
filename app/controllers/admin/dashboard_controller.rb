@@ -14,8 +14,10 @@ class Admin::DashboardController < Admin::StaffController
 
   def moderation
   end
+
   def security
   end
+
   def reports
   end
 

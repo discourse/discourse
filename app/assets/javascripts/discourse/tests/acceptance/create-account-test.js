@@ -78,6 +78,17 @@ acceptance("Create Account", function () {
 
     assert.verifySteps(["buildPostForm"]);
   });
+
+  test("does not show passkeys button", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom(".d-modal.create-account .btn-primary")
+      .exists("create account button exists");
+
+    assert.dom(".passkey-login-button").doesNotExist();
+  });
 });
 
 acceptance("Create Account - full_name_required", function (needs) {
@@ -112,21 +123,5 @@ acceptance("Create Account - full_name_required", function (needs) {
       .exists("create account is disabled");
 
     assert.verifySteps(["request"]);
-  });
-});
-
-acceptance("Create Account - passkeys enabled", function (needs) {
-  needs.settings({ enable_passkeys: true });
-
-  test("does not show passkeys button", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
-
-    assert
-      .dom(".d-modal.create-account .btn-primary")
-      .exists("create account button exists");
-
-    assert.dom(".d-modal.create-account .btn-primary").exists();
-    assert.dom(".passkey-login-button").doesNotExist();
   });
 });

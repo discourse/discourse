@@ -5,27 +5,27 @@
     <TextField
       @value={{this.url}}
       @disabled={{this.formSubmitted}}
-      @class="permalink-url"
       @placeholderKey="admin.permalink.url"
       @autocorrect="off"
       @autocapitalize="off"
+      class="permalink-url"
     />
 
     <ComboBox
       @content={{this.permalinkTypes}}
       @value={{this.permalinkType}}
-      @onChange={{action (mut this.permalinkType)}}
-      @class="permalink-type"
+      @onChange={{fn (mut this.permalinkType)}}
+      class="permalink-type"
     />
 
     <TextField
       @value={{this.permalinkTypeValue}}
       @disabled={{this.formSubmitted}}
-      @class="permalink-destination"
       @placeholderKey={{this.permalinkTypePlaceholder}}
       @autocorrect="off"
       @autocapitalize="off"
       @keyDown={{this.submitFormOnEnter}}
+      class="permalink-destination"
     />
 
     <DButton

@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import Collection from "../lib/collection";
@@ -94,12 +94,16 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channels.then(channels => { ... })
    */
-  channels() {
-    return new Collection(`${this.#basePath}/channels`, (response) => {
-      return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+  channels(params = {}) {
+    return new Collection(
+      `${this.#basePath}/channels`,
+      (response) => {
+        return response.channels.map((channel) =>
+          this.chatChannelsManager.store(channel)
+        );
+      },
+      params
+    );
   }
 
   /**
@@ -176,6 +180,8 @@ export default class ChatApi extends Service {
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
    * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
+   * @param {number} [data.topic_id] - The ID of the currently visible topic in drawer mode.
+   * @param {number} [data.post_ids] - The ID of the currently visible posts in drawer mode.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
@@ -185,6 +191,18 @@ export default class ChatApi extends Service {
       type: "POST",
       data,
     });
+  }
+
+  /**
+   * Stop streaming of a message
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  stopMessageStreaming(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/streaming`
+    );
   }
 
   /**
@@ -304,8 +322,14 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  leaveChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  async leaveChannel(channelId) {
+    await this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+    const channel = await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
+    if (channel) {
+      this.chatChannelsManager.remove(channel);
+    }
   }
 
   /**
@@ -541,11 +565,14 @@ export default class ChatApi extends Service {
    * Add members to a channel.
    *
    * @param {number} channelId - The ID of the channel.
-   * @param {Array<string>} usernames - The usernames of the users to add.
+   * @param {object} targets
+   * @param {Array<string>} targets.usernames - The usernames of the users to add.
+   * @param {Array<string>} targets.groups - The groups names of the groups to add.
    */
-  addMembersToChannel(channelId, usernames) {
+  addMembersToChannel(channelId, targets) {
     return this.#postRequest(`/channels/${channelId}/memberships`, {
-      usernames,
+      usernames: targets.usernames,
+      groups: targets.groups,
     });
   }
 

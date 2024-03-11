@@ -27,6 +27,10 @@ module PageObjects
       def has_no_notification?(notification)
         page.has_no_css?(".notification a[href='#{notification.url}']")
       end
+
+      def has_notification_count_of?(count)
+        page.has_css?(".notification", count: count)
+      end
     end
   end
 end

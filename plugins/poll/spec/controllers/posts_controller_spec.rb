@@ -206,7 +206,25 @@ RSpec.describe PostsController do
           expect(json["post"]["polls"][0]["options"][2]["html"]).to eq("C")
         end
 
-        it "resets the votes" do
+        it "does not clear votes when poll has no change" do
+          DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
+          put :update,
+              params: {
+                id: post_id,
+                post: {
+                  raw: "[poll]\n- A\n- B\n[/poll]\n This poll has no change, but the raw does.",
+                },
+              },
+              format: :json
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["post"]["polls_votes"]["poll"]).to match_array(
+            "5c24fc1df56d764b550ceae1b9319125",
+          )
+        end
+
+        it "resets the votes when poll is changed" do
           DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
 
           put :update,
@@ -376,7 +394,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "invalidates the post" do
       log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))
@@ -409,7 +427,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with equal trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
@@ -424,7 +442,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with superior trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 3, refresh_auto_groups: true))
@@ -439,7 +457,7 @@ RSpec.describe PostsController do
   end
 
   describe "staff with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, moderator: true, trust_level: 1))
@@ -454,7 +472,7 @@ RSpec.describe PostsController do
   end
 
   describe "staff editing posts of users with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))

@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { not, reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -44,6 +44,10 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
+
+    if (this.siteSettings.top_menu.split("|").includes("hot")) {
+      USER_HOMES[8] = "hot";
+    }
   },
 
   @discourseComputed("makeThemeDefault")

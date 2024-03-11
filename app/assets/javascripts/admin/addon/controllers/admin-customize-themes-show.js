@@ -6,8 +6,9 @@ import {
   mapBy,
   match,
   notEmpty,
+  readOnly,
 } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -43,6 +44,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+  @readOnly("model.settings") settings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
@@ -144,11 +146,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
-  }
-
-  @discourseComputed("model.settings")
-  settings(settings) {
-    return settings.map((setting) => ThemeSettings.create(setting));
   }
 
   @discourseComputed("model.translations")
@@ -446,5 +443,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.model
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
+  }
+
+  @action
+  editColorScheme() {
+    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 }

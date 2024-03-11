@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import {
   DEFAULT_TYPE_FILTER,
   SEARCH_INPUT_ID,
@@ -50,6 +50,15 @@ export default class SearchTerm extends Component {
   }
 
   @action
+  onKeydown(e) {
+    if (e.key === "Escape") {
+      this.args.closeSearchMenu();
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
+  @action
   onKeyup(e) {
     if (
       onKeyUpCallbacks.length &&
@@ -57,12 +66,6 @@ export default class SearchTerm extends Component {
     ) {
       // Return early if any callbacks return false
       return;
-    }
-
-    if (e.key === "Escape") {
-      this.args.closeSearchMenu();
-      e.preventDefault();
-      return false;
     }
 
     this.args.openSearchMenu();

@@ -5,13 +5,11 @@ module PageObjects
     class UserThreads < PageObjects::Pages::Base
       def has_threads?(count: nil)
         has_no_css?(".spinner")
-        has_css?(".chat__user-threads__thread-container", count: count)
+        has_css?(".c-user-thread", count: count)
       end
 
       def open_thread(thread)
-        find(
-          ".chat__user-threads__thread-container[data-id='#{thread.id}'] .chat__thread-title__name",
-        ).click
+        find(".c-user-thread[data-id='#{thread.id}'] .chat__thread-title__name").click
       end
     end
   end

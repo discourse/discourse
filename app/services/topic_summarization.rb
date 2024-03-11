@@ -32,7 +32,13 @@ class TopicSummarization
     }
 
     targets_data.map do |(pn, raw, username)|
-      content[:contents] << { poster: username, id: pn, text: raw }
+      raw_text = raw
+
+      if pn == 1 && topic.topic_embed&.embed_content_cache.present?
+        raw_text = topic.topic_embed&.embed_content_cache
+      end
+
+      content[:contents] << { poster: username, id: pn, text: raw_text }
     end
 
     summarization_result = strategy.summarize(content, user, &on_partial_blk)

@@ -17,6 +17,29 @@ RSpec.describe User do
     )
   end
 
+  describe ".in_any_groups?" do
+    fab!(:group)
+
+    it "returns true if any of the group IDs are the 'everyone' auto group" do
+      expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
+    end
+
+    it "returns true if the user is in the group" do
+      expect(user.in_any_groups?([group.id])).to eq(false)
+      group.add(user)
+      user.reload
+      expect(user.in_any_groups?([group.id])).to eq(true)
+    end
+
+    it "always returns true for system user for automated groups" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+  end
+
   describe "Associations" do
     it "should delete sidebar_section_links when a user is destroyed" do
       Fabricate(:category_sidebar_section_link, user: user)
@@ -260,6 +283,11 @@ RSpec.describe User do
 
             it { is_expected.to be_valid }
           end
+          context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+            before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+            it { is_expected.to be_valid }
+          end
         end
 
         context "when watched words are of type 'Censor'" do
@@ -272,6 +300,15 @@ RSpec.describe User do
             it "censors the words upon saving" do
               user.save!
               expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not censor the words upon saving" do
+                user.save!
+                expect(user_field_value).to eq "censored word"
+              end
             end
           end
 
@@ -300,6 +337,14 @@ RSpec.describe User do
             it "replaces the words upon saving" do
               user.save!
               expect(user_field_value).to eq "word replaced"
+            end
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not replace anything" do
+                user.save!
+                expect(user_field_value).to eq "word to replace"
+              end
             end
           end
 
@@ -397,7 +442,7 @@ RSpec.describe User do
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
-      freeze_time DateTime.parse("2017-02-01 12:00")
+      freeze_time_safe
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -1339,7 +1384,7 @@ RSpec.describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     fab!(:post) do
       PostCreator.new(
@@ -1737,7 +1782,7 @@ RSpec.describe User do
   end
 
   describe "#purge_unactivated" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1746,11 +1791,11 @@ RSpec.describe User do
     fab!(:unactivated_old_with_human_pm) do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
-    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
 
     before do
-      Group.refresh_automatic_groups!
-
       PostCreator.new(
         Discourse.system_user,
         title: "Welcome to our Discourse",
@@ -1925,7 +1970,7 @@ RSpec.describe User do
   end
 
   describe "staff info" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:moderator)
 
     describe "#number_of_flags_given" do

@@ -696,6 +696,7 @@ aside.quote {
     }
     .post-count {
       position: absolute;
+      top: 0;
       right: 0;
       border-radius: 100px;
       padding: 0.15em 0.4em 0.2em;
@@ -750,11 +751,26 @@ aside.quote {
   }
 
   .topic-links {
+    tbody {
+      border: none;
+    }
     tr {
       border: none;
     }
     .badge-notification {
       margin: 1px 5px 2px 0;
+    }
+  }
+
+  .link-summary .btn {
+    width: 100%;
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+      }
     }
   }
 
@@ -945,12 +961,12 @@ aside.quote {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .topic-body.highlighted .cooked,
+  .topic-body.highlighted,
   .small-action-desc.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
   // Disable animation so deleted status is visible immediately
-  .deleted .topic-body.highlighted .cooked {
+  .deleted .topic-body.highlighted {
     animation: none;
   }
 }
@@ -1499,6 +1515,11 @@ span.mention {
   }
 }
 
+html.anon #topic-footer-buttons {
+  display: flex;
+  justify-content: end;
+}
+
 #topic-footer-buttons {
   margin: var(--below-topic-margin) 0;
   padding: 0;
@@ -1678,10 +1699,79 @@ iframe {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
   position: relative;
+}
 
-  &__buttons {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+.fullscreen-table-modal .modal-inner-container,
+.fullscreen-code-modal .modal-inner-container {
+  width: max-content;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 10px;
+
+  .modal-body {
+    padding-top: 0;
+  }
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--secondary);
+  }
+
+  tbody {
+    overflow-x: hidden;
+  }
+
+  td {
+    padding: 0.5rem;
+  }
+}
+
+.fullscreen-code-modal {
+  pre code {
+    max-width: none;
+  }
+}
+
+.fullscreen-table-modal {
+  .d-modal__container {
+    width: auto;
+  }
+  .d-modal__body {
+    padding-top: 0;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--secondary);
+    }
+
+    td {
+      padding: 5px 6px 5px 3px;
+    }
+  }
+}
+
+html.discourse-no-touch .fullscreen-table-wrapper:hover {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
+    0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+  .open-popup-link {
+    opacity: 100%;
+  }
+}
+
+.read-state {
+  position: absolute;
+  // We use absolute positioning here because we want it to display in the padding
+  align-self: center;
+  color: var(--tertiary-medium);
+  right: 0;
+  font-size: 0.571em;
+  &.read {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 1s, opacity ease-out 1s;
   }
 }

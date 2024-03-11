@@ -7,7 +7,7 @@ describe Chat::ChannelArchiveService do
   end
 
   fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user, admin: true) }
+  fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:category)
 
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
@@ -117,7 +117,7 @@ describe Chat::ChannelArchiveService do
         reaction_message = Chat::Message.last
         Chat::MessageReaction.create!(
           chat_message: reaction_message,
-          user: Fabricate(:user),
+          user: Fabricate(:user, refresh_auto_groups: true),
           emoji: "+1",
         )
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
@@ -152,6 +152,8 @@ describe Chat::ChannelArchiveService do
       end
 
       xit "creates the correct posts for a channel with messages and threads" do
+        channel.update!(threading_enabled: true)
+
         create_messages(2)
         create_threaded_messages(6, title: "a new thread")
         create_messages(7)

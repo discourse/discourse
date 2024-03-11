@@ -82,49 +82,6 @@ RSpec.describe AdminDashboardData do
     include_examples "stats cacheable"
   end
 
-  describe ".execute_scheduled_checks" do
-    let(:blk) { -> {} }
-
-    before { AdminDashboardData.add_scheduled_problem_check(:foo, &blk) }
-    after { AdminDashboardData.reset_problem_checks }
-
-    it do
-      expect_enqueued_with(job: :problem_check, args: { check_identifier: :foo }) do
-        AdminDashboardData.execute_scheduled_checks
-      end
-    end
-  end
-
-  describe ".execute_scheduled_check" do
-    context "when problems are found" do
-      let(:blk) { -> { self::Problem.new("Problem") } }
-
-      before do
-        AdminDashboardData.add_scheduled_problem_check(:foo, &blk)
-        AdminDashboardData.expects(:add_found_scheduled_check_problem).once
-      end
-
-      after { AdminDashboardData.reset_problem_checks }
-
-      it do
-        expect(described_class.execute_scheduled_check(:foo)).to all(be_a(described_class::Problem))
-      end
-    end
-
-    context "when check errors out" do
-      let(:blk) { -> { raise StandardError } }
-
-      before do
-        AdminDashboardData.add_scheduled_problem_check(:foo, &blk)
-        Discourse.expects(:warn_exception).once
-      end
-
-      after { AdminDashboardData.reset_problem_checks }
-
-      it { expect(described_class.execute_scheduled_check(:foo)).to eq(nil) }
-    end
-  end
-
   describe "#problem_message_check" do
     let(:key) { AdminDashboardData.problem_messages.first }
 

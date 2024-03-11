@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
-import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
+import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -158,6 +158,9 @@ export default {
         tLoading: spinnerHTML,
         image: {
           verticalFit: true,
+        },
+        gallery: {
+          enabled: true,
         },
         callbacks: {
           elementParse: (item) => {

@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
@@ -541,6 +541,10 @@ export default Controller.extend({
     },
 
     search(options = {}) {
+      if (this.searching) {
+        return;
+      }
+
       if (options.collapseFilters) {
         document
           .querySelector("details.advanced-filters")

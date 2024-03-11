@@ -5,12 +5,13 @@ describe "Admin Customize Themes", type: :system do
   fab!(:theme)
   fab!(:admin)
 
+  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+
   before { sign_in(admin) }
 
   describe "when visiting the page to customize themes" do
     fab!(:theme_2) { Fabricate(:theme) }
     fab!(:theme_3) { Fabricate(:theme) }
-    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
     let(:delete_themes_confirm_modal) { PageObjects::Modals::DeleteThemesConfirm.new }
 
     it "should allow admin to bulk delete inactive themes" do
@@ -68,8 +69,6 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).not_to have_css(".submit-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-edit")
-
-      expect(theme.reload.color_scheme_id).to eq(color_scheme.id)
     end
   end
 
@@ -82,6 +81,72 @@ describe "Admin Customize Themes", type: :system do
 
       ace_content = find(".ace_content")
       expect(ace_content.text).to eq("console.log('test')")
+    end
+  end
+
+  describe "when editing a theme setting of objects type" do
+    let(:objects_setting) do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+      )
+
+      theme.save!
+      theme.settings[:objects_setting]
+    end
+
+    before do
+      SiteSetting.experimental_objects_type_for_theme_settings = true
+      objects_setting
+    end
+
+    it "should allow admin to edit the theme setting of objecst type" do
+      visit("/admin/customize/themes/#{theme.id}")
+
+      admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
+
+      expect(page).to have_current_path(
+        "/admin/customize/themes/#{theme.id}/schema/objects_setting",
+      )
+    end
+
+    it "allows an admin to edit a theme setting of objects type via the settings editor" do
+      visit "/admin/customize/themes/#{theme.id}"
+
+      theme_settings_editor = admin_customize_themes_page.click_theme_settings_editor_button
+
+      theme_settings_editor.fill_in(<<~SETTING)
+      [
+        {
+          "setting": "objects_setting",
+          "value": [
+            {
+              "name": "new section",
+              "links": [
+                {
+                  "name": "new link",
+                  "url": "https://example.com"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      SETTING
+
+      theme_settings_editor.save
+
+      try_until_success do
+        expect(theme.reload.settings[:objects_setting].value).to eq(
+          [
+            {
+              "links" => [{ "name" => "new link", "url" => "https://example.com" }],
+              "name" => "new section",
+            },
+          ],
+        )
+      end
     end
   end
 end

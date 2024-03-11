@@ -61,7 +61,7 @@
             <TimezoneInput
               @options={{hash icon="globe"}}
               @value={{this.timezone}}
-              @onChange={{action (mut this.timezone)}}
+              @onChange={{fn (mut this.timezone)}}
             />
           {{/unless}}
         </div>
@@ -83,7 +83,7 @@
           <TimezoneInput
             @value={{this.timezone}}
             @options={{hash icon="globe"}}
-            @onChange={{action (mut this.timezone)}}
+            @onChange={{fn (mut this.timezone)}}
           />
         {{/if}}
       </div>
@@ -103,12 +103,12 @@
               <div class="controls">
                 <ComboBox
                   @content={{this.recurringOptions}}
-                  @class="recurrence-input"
                   @value={{this.recurring}}
-                  @onChange={{action (mut this.recurring)}}
+                  @onChange={{fn (mut this.recurring)}}
                   @options={{hash
                     none="discourse_local_dates.create.form.recurring_none"
                   }}
+                  class="recurrence-input"
                 />
               </div>
             </div>
@@ -125,10 +125,10 @@
               <MultiSelect
                 @valueProperty={{null}}
                 @nameProperty={{null}}
-                @class="timezones-input"
                 @content={{this.allTimezones}}
                 @value={{this.timezones}}
                 @options={{hash allowAny=false maximum=5}}
+                class="timezones-input"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@
               </a>
             </p>
             <div class="controls">
-              <TextField @value={{this.format}} @class="format-input" />
+              <TextField @value={{this.format}} class="format-input" />
             </div>
           </div>
           <div class="control-group">

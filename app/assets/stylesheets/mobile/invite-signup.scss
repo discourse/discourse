@@ -1,10 +1,6 @@
-#main-outlet-wrapper:has(.invites-show) {
-  padding: 0;
-}
 .invites-show {
-  height: 100vh;
-  width: 100vw;
   box-sizing: border-box;
+  padding: 1em;
 
   .invitation-cta {
     display: flex;

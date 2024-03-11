@@ -33,6 +33,9 @@ el:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Διαγραμμένος χρήστης"
   unsubscribe:
     chat_summary:
       never: Ποτέ

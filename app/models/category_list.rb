@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryList
-  CATEGORIES_PER_PAGE = 25
+  CATEGORIES_PER_PAGE = 20
+  SUBCATEGORIES_PER_CATEGORY = 5
 
   include ActiveModel::Serialization
 
@@ -30,8 +31,8 @@ class CategoryList
     @guardian = guardian || Guardian.new
     @options = options
 
-    find_relevant_topics if options[:include_topics]
     find_categories
+    find_relevant_topics if options[:include_topics]
 
     prune_empty
     find_user_data
@@ -58,10 +59,9 @@ class CategoryList
     if SiteSetting.fixed_category_positions
       categories.order(:position, :id)
     else
-      allowed_category_ids = categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
       categories
         .left_outer_joins(:featured_topics)
-        .where(topics: { category_id: allowed_category_ids })
+        .where("topics.category_id IS NULL OR topics.category_id IN (?)", categories.select(:id))
         .group("categories.id")
         .order("max(topics.bumped_at) DESC NULLS LAST")
         .order("categories.id ASC")
@@ -71,17 +71,18 @@ class CategoryList
   private
 
   def find_relevant_topics
-    @topics_by_id = {}
-    @topics_by_category_id = {}
-
-    category_featured_topics = CategoryFeaturedTopic.select(%i[category_id topic_id]).order(:rank)
-
     @all_topics =
-      Topic.where(id: category_featured_topics.map(&:topic_id)).includes(
-        :shared_draft,
-        :category,
-        { topic_thumbnails: %i[optimized_image upload] },
-      )
+      Topic
+        .secured(@guardian)
+        .joins(
+          "INNER JOIN category_featured_topics ON topics.id = category_featured_topics.topic_id",
+        )
+        .where("category_featured_topics.category_id IN (?)", categories_with_descendants.map(&:id))
+        .select(
+          "topics.*, category_featured_topics.category_id AS category_featured_topic_category_id",
+        )
+        .includes(:shared_draft, :category, { topic_thumbnails: %i[optimized_image upload] })
+        .order("category_featured_topics.rank")
 
     @all_topics = @all_topics.joins(:tags).where(tags: { name: @options[:tag] }) if @options[
       :tag
@@ -103,16 +104,18 @@ class CategoryList
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
+
+    featured_topics_by_category_id = Hash.new { |h, k| h[k] = [] }
+
     @all_topics.each do |t|
       # hint for the serializer
       t.include_last_poster = true
       t.dismissed = dismissed_topic?(t)
-      @topics_by_id[t.id] = t
+      featured_topics_by_category_id[t.category_featured_topic_category_id] << t
     end
 
-    category_featured_topics.each do |cft|
-      @topics_by_category_id[cft.category_id] ||= []
-      @topics_by_category_id[cft.category_id] << cft.topic_id
+    categories_with_descendants.each do |category|
+      category.displayable_topics = featured_topics_by_category_id[category.id]
     end
   end
 
@@ -137,15 +140,33 @@ class CategoryList
 
     query = self.class.order_categories(query)
 
-    if SiteSetting.lazy_load_categories
+    if @guardian.can_lazy_load_categories?
       page = [1, @options[:page].to_i].max
-      query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
+      query =
+        query
+          .where(parent_category_id: nil)
+          .limit(CATEGORIES_PER_PAGE)
+          .offset((page - 1) * CATEGORIES_PER_PAGE)
     end
 
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
     @categories = query.to_a
+
+    if @guardian.can_lazy_load_categories?
+      categories_with_rownum =
+        Category
+          .secured(@guardian)
+          .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
+          .where(parent_category_id: @categories.map { |c| c.id })
+
+      @categories +=
+        Category.includes(CategoryList.included_associations).where(
+          "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
+          SUBCATEGORIES_PER_CATEGORY,
+        )
+    end
 
     if Site.preloaded_category_custom_fields.any?
       Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
@@ -156,7 +177,15 @@ class CategoryList
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
-    if @options[:parent_category_id].blank?
+    if @guardian.can_lazy_load_categories?
+      subcategory_ids = {}
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: @categories.map(&:id))
+        .pluck(:id, :parent_category_id)
+        .each { |id, parent_id| (subcategory_ids[parent_id] ||= []) << id }
+      @categories.each { |c| c.subcategory_ids = subcategory_ids[c.id] || [] }
+    elsif @options[:parent_category_id].blank?
       subcategory_ids = {}
       subcategory_list = {}
       to_delete = Set.new
@@ -186,23 +215,6 @@ class CategoryList
         category.id,
       )
       category.has_children = category.subcategories.present?
-    end
-
-    if @topics_by_category_id
-      categories_with_descendants.each do |c|
-        topics_in_cat = @topics_by_category_id[c.id]
-        if topics_in_cat.present?
-          c.displayable_topics = []
-          topics_in_cat.each do |topic_id|
-            topic = @topics_by_id[topic_id]
-            if topic.present? && @guardian.can_see?(topic)
-              # topic.category is very slow under rails 4.2
-              topic.association(:category).target = c
-              c.displayable_topics << topic
-            end
-          end
-        end
-      end
     end
   end
 

@@ -53,6 +53,15 @@
     .select-kit-filter.is-expanded {
       padding: 0.25em 0.5em;
     }
+
+    .filter-for-more {
+      display: flex;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.5em 1em;
+      font-size: var(--font-down-1);
+      color: var(--primary-low-mid);
+    }
   }
 
   &.is-loading {

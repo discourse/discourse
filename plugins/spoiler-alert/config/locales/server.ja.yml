@@ -6,6 +6,6 @@
 
 ja:
   site_settings:
-    spoiler_enabled: 'スポイラープラグインを有効にします。これを変更すると、"rake posts:rebake" で、すべての投稿をリベイクする必要があります。'
+    spoiler_enabled: 'ネタバレプラグインを有効にします。これを変更すると、"rake posts:rebake" で、すべての投稿をリベイクする必要があります。'
   spoiler_alert:
     excerpt_spoiler: "ネタバレ"

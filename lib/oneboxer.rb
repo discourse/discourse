@@ -486,7 +486,7 @@ module Oneboxer
         name: category.name,
         color: category.color,
         logo_url: category.uploaded_logo&.url,
-        description: category.description,
+        description: Onebox::Helpers.sanitize(category.description),
         has_subcategories: category.subcategories.present?,
         subcategories:
           category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } },

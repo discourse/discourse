@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
 import Channel from "./channel";
+import Group from "./group";
 import ListAction from "./list-action";
 import User from "./user";
 
@@ -21,6 +21,8 @@ export default class List extends Component {
         return ListAction;
       case "user":
         return User;
+      case "group":
+        return Group;
       case "channel":
         return Channel;
     }
@@ -74,9 +76,12 @@ export default class List extends Component {
                 tabindex="0"
                 data-identifier={{item.identifier}}
                 id={{item.id}}
-                data-disabled={{not item.enabled}}
               >
-                {{component (this.componentForItem item.type) item=item}}
+                {{component
+                  (this.componentForItem item.type)
+                  membersCount=@membersCount
+                  item=item
+                }}
               </li>
             {{/each}}
           </ul>

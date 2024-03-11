@@ -8,13 +8,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { createPopper } from "@popperjs/core";
+import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import and from "truth-helpers/helpers/and";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -161,6 +161,7 @@ export default class ChatMessageActionsDesktop extends Component {
             <DButton
               @action={{this.messageInteractor.toggleBookmark}}
               class="btn-flat bookmark-btn"
+              @translatedTitle={{this.message.bookmark.reminderTitle}}
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -182,7 +183,6 @@ export default class ChatMessageActionsDesktop extends Component {
             )
           }}
             <DropdownSelectBox
-              @class="more-buttons secondary-actions"
               @options={{hash
                 icon="ellipsis-v"
                 placement="left"
@@ -191,6 +191,7 @@ export default class ChatMessageActionsDesktop extends Component {
               }}
               @content={{this.messageInteractor.secondaryActions}}
               @onChange={{this.messageInteractor.handleSecondaryActions}}
+              class="more-buttons secondary-actions"
             />
           {{/if}}
         </div>

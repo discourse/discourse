@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe IncomingLinksReport do
-  before { freeze_time DateTime.parse("2010-01-01 6:00") }
+  before { freeze_time_safe }
 
   describe "integration" do
     it "runs correctly" do
@@ -126,6 +126,44 @@ RSpec.describe IncomingLinksReport do
              num_clicks: 1,
            },
          ]
+    end
+
+    it "respects date ranges" do
+      p1 = create_post
+      p1.topic.save
+
+      p2 = create_post
+      p2.topic.save
+
+      2.times do |n|
+        IncomingLink.create(
+          referer: "http://test.com",
+          post_id: p1.id,
+          ip_address: "10.0.0.#{n}",
+          user_id: p1.user.id,
+          created_at: 2.days.ago,
+        )
+      end
+
+      3.times do |n|
+        IncomingLink.create(
+          referer: "http://yowza.com",
+          post_id: p2.id,
+          ip_address: "10.0.0.#{n}",
+          user_id: p2.user.id,
+          created_at: 2.months.ago,
+        )
+      end
+
+      r = IncomingLinksReport.find("top_traffic_sources").as_json
+      expect(r[:data]).to eq [{ domain: "test.com", num_clicks: 2, num_topics: 1 }]
+
+      r2 =
+        IncomingLinksReport.find(
+          "top_traffic_sources",
+          { start_date: 3.months.ago, end_date: 1.month.ago },
+        ).as_json
+      expect(r2[:data]).to eq [{ domain: "yowza.com", num_clicks: 3, num_topics: 1 }]
     end
   end
 

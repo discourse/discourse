@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
@@ -80,30 +80,35 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   }
 
   async _findCategoriesAndTopics(filter) {
-    let result = await hash({
+    return hash({
       categoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove("topic_list"),
-    });
+    })
+      .then((result) => {
+        if (
+          result.categoriesList?.category_list &&
+          result.topicsList?.topic_list
+        ) {
+          return { ...result.categoriesList, ...result.topicsList };
+        } else {
+          // Otherwise, return the ajax result
+          return ajax(`/categories_and_${filter}`);
+        }
+      })
+      .then((result) => {
+        if (result.topic_list?.top_tags) {
+          this.site.set("top_tags", result.topic_list.top_tags);
+        }
 
-    if (result.categoriesList?.category_list && result.topicsList?.topic_list) {
-      result = { ...result.categoriesList, ...result.topicsList };
-    } else {
-      // Otherwise, return the ajax result
-      result = await ajax(`/categories_and_${filter}`);
-    }
-
-    if (result.topic_list?.top_tags) {
-      this.site.set("top_tags", result.topic_list.top_tags);
-    }
-
-    return CategoryList.create({
-      store: this.store,
-      categories: CategoryList.categoriesFrom(this.store, result),
-      topics: TopicList.topicsFrom(this.store, result),
-      can_create_category: result.category_list.can_create_category,
-      can_create_topic: result.category_list.can_create_topic,
-      loadBefore: this._loadBefore(this.store),
-    });
+        return CategoryList.create({
+          store: this.store,
+          categories: CategoryList.categoriesFrom(this.store, result),
+          topics: TopicList.topicsFrom(this.store, result),
+          can_create_category: result.category_list.can_create_category,
+          can_create_topic: result.category_list.can_create_topic,
+          loadBefore: this._loadBefore(this.store),
+        });
+      });
   }
 
   titleToken() {

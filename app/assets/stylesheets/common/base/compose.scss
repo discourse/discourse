@@ -21,12 +21,10 @@ html.composer-open {
     max-width: 740px;
   }
 
-  &:has(.with-form-template) {
-    max-width: 740px;
-
+  .with-form-template {
     .toggle-preview,
-    .submit-panel .mobile-preview,
-    .submit-panel .mobile-file-upload:not(.hidden) {
+    #mobile-file-upload,
+    .submit-panel .mobile-preview {
       display: none;
     }
     .d-editor-preview-wrapper {
@@ -178,10 +176,6 @@ html.composer-open {
       display: flex;
       gap: 8px;
       margin-left: 8px;
-
-      .d-icon {
-        color: var(--primary-medium);
-      }
     }
   }
 
@@ -435,8 +429,8 @@ html.composer-open {
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
-  max-width: 300px;
-  width: 300px;
+  max-width: 370px;
+  min-width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-dropdown);

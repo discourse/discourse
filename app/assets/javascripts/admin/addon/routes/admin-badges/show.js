@@ -1,6 +1,6 @@
 import { action, get } from "@ember/object";
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import I18n from "discourse-i18n";

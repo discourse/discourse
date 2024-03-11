@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import {

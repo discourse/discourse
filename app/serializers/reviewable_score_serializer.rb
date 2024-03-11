@@ -14,7 +14,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     invite_only: "invite_only",
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
-    contains_media: "review_media_unless_trust_level",
+    contains_media: "skip_media_review_groups",
   }
 
   attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at

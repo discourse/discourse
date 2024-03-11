@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
@@ -26,15 +26,21 @@ export default {
     }
 
     this.siteSettings = container.lookup("service:site-settings");
+    this.currentUser = container.lookup("service:current-user");
 
     withPluginApi("1.8.0", (api) => {
+      const chatStateManager = container.lookup("service:chat-state-manager");
+
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
             key = CHAT_PANEL;
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
-            switchButtonDefaultUrl = getURL("/chat");
+
+            get switchButtonDefaultUrl() {
+              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+            }
           }
       );
 
@@ -42,58 +48,69 @@ export default {
     });
 
     withPluginApi("1.3.0", (api) => {
-      api.addSidebarSection(
-        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
-            route = "chat.threads";
-            text = I18n.t("chat.my_threads.title");
-            title = I18n.t("chat.my_threads.title");
-            name = "user-threads";
-            prefixType = "icon";
-            prefixValue = "discourse-threads";
-            suffixType = "icon";
-            suffixCSSClass = "unread";
+      const isThreadEnabledInAnyChannel =
+        this.currentUser?.chat_channels?.public_channels?.some(
+          (channel) => channel.threading_enabled === true
+        );
 
-            constructor() {
-              super(...arguments);
+      if (isThreadEnabledInAnyChannel) {
+        api.addSidebarSection(
+          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+            const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
+              route = "chat.threads";
+              text = I18n.t("chat.my_threads.title");
+              title = I18n.t("chat.my_threads.title");
+              name = "user-threads";
+              prefixType = "icon";
+              prefixValue = "discourse-threads";
+              suffixType = "icon";
+              suffixCSSClass = "unread";
 
-              if (container.isDestroyed) {
-                return;
+              constructor() {
+                super(...arguments);
+
+                if (container.isDestroyed) {
+                  return;
+                }
+
+                this.chatChannelsManager = container.lookup(
+                  "service:chat-channels-manager"
+                );
               }
 
-              this.chatChannelsManager = container.lookup(
-                "service:chat-channels-manager"
-              );
-            }
+              get suffixValue() {
+                return this.chatChannelsManager.publicMessageChannels.some(
+                  (channel) => channel.unreadThreadsCount > 0
+                )
+                  ? "circle"
+                  : "";
+              }
+            };
 
-            get suffixValue() {
-              return this.chatChannelsManager.publicMessageChannels.some(
-                (channel) => channel.unreadThreadsCount > 0
-              )
-                ? "circle"
-                : "";
-            }
-          };
+            const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
+              // we only show `My Threads` link
+              hideSectionHeader = true;
 
-          const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
-            // we only show `My Threads` link
-            hideSectionHeader = true;
+              name = "user-threads";
 
-            name = "user-threads";
+              // sidebar API doesn’t let you have undefined values
+              // even if you don't show the section’s header
+              title = "";
 
-            // sidebar API doesn’t let you have undefined values
-            // even if you don't show the section’s header
-            title = "";
+              get links() {
+                return [new SidebarChatMyThreadsSectionLink()];
+              }
 
-            get links() {
-              return [new SidebarChatMyThreadsSectionLink()];
-            }
-          };
+              get text() {
+                return null;
+              }
+            };
 
-          return SidebarChatMyThreadsSection;
-        },
-        CHAT_PANEL
-      );
+            return SidebarChatMyThreadsSection;
+          },
+          CHAT_PANEL
+        );
+      }
 
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
@@ -275,7 +292,7 @@ export default {
               if (this.oneOnOneMessage) {
                 const user = this.channel.chatable.users[0];
                 if (user.username !== I18n.t("chat.deleted_chat_username")) {
-                  user.trackStatus();
+                  user.statusManager.trackStatus();
                 }
               }
             }
@@ -283,7 +300,7 @@ export default {
             @bind
             willDestroy() {
               if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].stopTrackingStatus();
+                this.channel.chatable.users[0].statusManager.stopTrackingStatus();
               }
             }
 

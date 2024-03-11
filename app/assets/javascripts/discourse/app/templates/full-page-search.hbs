@@ -8,7 +8,7 @@
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
-    @class="hidden"
+    class="hidden"
   />
 
   <div class="search-header" role="search">
@@ -24,17 +24,17 @@
     <div class="search-bar">
       <SearchTextField
         @value={{this.searchTerm}}
-        @class="full-page-search search no-blur search-query"
         @aria-label={{i18n "search.search_term_label"}}
         @enter={{action "search" (hash collapseFilters=true)}}
         @hasAutofocus={{this.hasAutofocus}}
         @aria-controls="search-result-count"
+        class="full-page-search search no-blur search-query"
       />
       <ComboBox
         @id="search-type"
         @value={{this.search_type}}
         @content={{this.searchTypes}}
-        @onChange={{action (mut this.search_type)}}
+        @onChange={{fn (mut this.search_type)}}
         @options={{hash castInteger=true}}
       />
       <DButton
@@ -64,7 +64,7 @@
       <div class="search-filters">
         <SearchAdvancedOptions
           @searchTerm={{readonly this.searchTerm}}
-          @onChangeSearchTerm={{action (mut this.searchTerm)}}
+          @onChangeSearchTerm={{fn (mut this.searchTerm)}}
           @search={{action "search" (hash collapseFilters=true)}}
           @searchButtonDisabled={{this.searchButtonDisabled}}
           @expandFilters={{this.expandFilters}}
@@ -258,7 +258,7 @@
                 {{#if this.model.users}}
                   <div class="user-items">
                     {{#each this.model.users as |user|}}
-                      <UserLink @user={{user}} @class="fps-user-item">
+                      <UserLink @user={{user}} class="fps-user-item">
                         {{avatar user imageSize="large"}}
 
                         <div class="user-titles">

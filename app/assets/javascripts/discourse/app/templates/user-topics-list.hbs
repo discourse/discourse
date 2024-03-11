@@ -9,9 +9,9 @@
   />
 {{else}}
   <LoadMore
-    @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list .topic-list-item"
     @action={{action "loadMore"}}
+    class="paginated-topics-list"
   >
     <TopicDismissButtons
       @position="top"
@@ -26,19 +26,23 @@
       }}
     />
 
-    {{#if (gt this.incomingCount 0)}}
+    {{#if (or this.model.loadingBefore this.incomingCount)}}
       <div class="show-mores">
         <a
           tabindex="0"
           href
           {{on "click" this.showInserted}}
-          class="alert alert-info clickable"
+          class="alert alert-info clickable
+            {{if this.model.loadingBefore 'loading'}}"
         >
           <CountI18n
             @key="topic_count_"
             @suffix="latest"
-            @count={{this.incomingCount}}
+            @count={{or this.model.loadingBefore this.incomingCount}}
           />
+          {{#if @model.loadingBefore}}
+            {{loading-spinner size="small"}}
+          {{/if}}
         </a>
       </div>
     {{/if}}
@@ -50,6 +54,10 @@
       @tagsForUser={{this.tagsForUser}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
+      @changeSort={{this.changeSort}}
+      @order={{this.order}}
+      @ascending={{this.ascending}}
+      @focusLastVisitedTopic={{true}}
     />
 
     <TopicDismissButtons

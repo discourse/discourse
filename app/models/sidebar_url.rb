@@ -22,12 +22,6 @@ class SidebarUrl < ActiveRecord::Base
     },
     { name: "Review", path: "/review", icon: "flag", segment: SidebarUrl.segments["primary"] },
     { name: "Admin", path: "/admin", icon: "wrench", segment: SidebarUrl.segments["primary"] },
-    {
-      name: "Admin Revamp",
-      path: "/admin-revamp",
-      icon: "star",
-      segment: SidebarUrl.segments["primary"],
-    },
     { name: "Users", path: "/u", icon: "users", segment: SidebarUrl.segments["secondary"] },
     {
       name: "About",

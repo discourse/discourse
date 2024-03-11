@@ -16,7 +16,10 @@ ro:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:
@@ -72,16 +75,18 @@ ro:
       exit: "înapoi"
       channel_status:
         closed: "Închis"
-        open: "Deschide sondajul"
+        open: "Deschis"
       browse:
         back: "Înapoi"
         filter_all: Toate
+        filter_open: Deschide
         filter_closed: Închis
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
       members_view:
         add_member: Adaugă membru
+        back_to_settings: "Înapoi la setări"
       about_view:
         title: Titlu
         name: Nume
@@ -113,6 +118,20 @@ ro:
         types:
           category: "Categorie"
           topic: "Discuție"
+      reactions:
+        only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
+        you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Tu, %{commaSeparatedUsernames} și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          few: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          other: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+        single_user: "<span>%{username} a reacționat cu </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} și %{username} au reacționat cu </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
@@ -125,6 +144,7 @@ ro:
         follow: "Alătură-te"
         followed: "Înscris"
         threading_enabled: "Activat"
+        threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
         save: "Salvare"
@@ -169,6 +189,7 @@ ro:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
+        label: Fir
         settings: "Opțiuni"
         last_reply: "Ultimul răspuns"
         notifications:
@@ -189,3 +210,7 @@ ro:
           fields:
             message:
               label: Mesaj
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Mesaj discuție semnalat"

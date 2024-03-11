@@ -17,10 +17,7 @@ function initializePollUIBuilder(api) {
       return (
         siteSettings.poll_enabled &&
         (composer.model.topic?.pm_with_non_human_user ||
-          (currentUser &&
-            (currentUser.staff ||
-              currentUser.trust_level >=
-                siteSettings.poll_minimum_trust_level_to_create)))
+          (currentUser && (currentUser.staff || currentUser.can_create_poll)))
       );
     },
   });

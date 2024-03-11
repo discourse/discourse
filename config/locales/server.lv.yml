@@ -53,6 +53,9 @@ lv:
   on_another_topic: "Par citu tēmu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
+  components:
+    enabled_filter: "Ieslēgts"
+    disabled_filter: "Atslēgt"
   emails:
     incoming:
       default_subject: "Šim ierakstam ir nepieciešams nosaukums"
@@ -194,8 +197,6 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
-  change_email:
-    please_continue: "Turpināt %{site_name}"
   activation:
     continue_button: "Turpināt %{site_name}"
     welcome_to: "Laipni lūdzam %{site_name}!"
@@ -397,7 +398,6 @@ lv:
     disabled: "atslēgt"
     send_welcome_message: "Nosūtiet visiem jaunajiem lietotājiem apsveikuma ziņojumu ar īso darba sākšanas rokasgrāmatu."
     dark_mode_none: "Nav"
-    embed_truncate: "Saīsināt iegultos ierakstus."
     embed_post_limit: "Maksimālais iegulto ierakstu skaits."
     default_other_skip_new_user_tips: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti."
     errors:
@@ -466,6 +466,8 @@ lv:
       name: Biedrs
     regular:
       name: Regulārs
+    welcome:
+      name: Sveicināti
   tags:
     title: "Birkas"
   finish_installation:
@@ -493,6 +495,9 @@ lv:
                 label: "Sadaļas un jaunākās tēmas"
               categories_and_top_topics:
                 label: "Kategorijas un populārākās tēmas"
+  onebox:
+    github:
+      closed: "slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -502,6 +507,8 @@ lv:
       posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
       linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
       confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
+  staff_action_logs:
+    unknown: "nezināms"
   reviewables:
     priorities:
       low: "Zems"

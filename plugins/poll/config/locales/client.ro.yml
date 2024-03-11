@@ -53,8 +53,8 @@ ro:
         title: "Exportează rezultatele sondajului"
         label: "Exportă"
       open:
-        title: "Deschide sondajul"
-        label: "Deschide sondajul"
+        title: "Deschide sondaj"
+        label: "Deschide"
         confirm: "Ești sigur că vrei să deschizi acest sondaj?"
       close:
         title: "Închide sondajul"

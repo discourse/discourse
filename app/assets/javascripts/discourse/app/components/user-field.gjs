@@ -16,8 +16,8 @@ const UserField = <template>
     <Component
       @field={{@field}}
       @value={{@value}}
-      @class={{@class}}
       @validation={{@validation}}
+      ...attributes
     />
   {{/let}}
 </template>;

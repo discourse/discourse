@@ -8,6 +8,7 @@ module PageObjects
       def modal
         find(".grant-badge-modal")
       end
+
       def select_badge(badge_name)
         within(modal) do
           grantable_badges_dropdown.expand

@@ -275,6 +275,7 @@ class Auth::DefaultCurrentUserProvider
     data = {
       token: unhashed_auth_token,
       user_id: user.id,
+      username: user.username,
       trust_level: user.trust_level,
       issued_at: Time.zone.now.to_i,
     }

@@ -56,7 +56,7 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def settings
-    object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+    object.settings.map { |_name, setting| ThemeSettingsSerializer.new(setting, root: false) }
   rescue ThemeSettingsParser::InvalidYaml => e
     @errors << e.message
     nil

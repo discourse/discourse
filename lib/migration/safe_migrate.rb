@@ -56,6 +56,7 @@ class Migration::SafeMigrate
         def e.cause
           nil
         end
+
         def e.backtrace
           super.reject do |frame|
             frame =~ /safe_migrate\.rb/ || frame =~ /schema_migration_details\.rb/

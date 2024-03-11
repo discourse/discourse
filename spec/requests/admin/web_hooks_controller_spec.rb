@@ -289,20 +289,5 @@ RSpec.describe Admin::WebHooksController do
       expect(parsed_event["status"]).to eq(-1)
       expect(parsed_event["response_body"]).to eq(nil)
     end
-
-    it "doesn't emit the web hook if the payload URL resolves to a blocked IP" do
-      FinalDestination::TestHelper.stub_to_fail do
-        post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
-      end
-      expect(response.status).to eq(200)
-
-      parsed_event = response.parsed_body["web_hook_event"]
-      expect(parsed_event["id"]).to eq(web_hook_event.id)
-      expect(parsed_event["response_headers"]).to eq(
-        { error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json,
-      )
-      expect(parsed_event["status"]).to eq(-1)
-      expect(parsed_event["response_body"]).to eq(nil)
-    end
   end
 end

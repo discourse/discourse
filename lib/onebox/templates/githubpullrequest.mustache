@@ -29,38 +29,34 @@
         <a href="{{link}}" target="_blank" rel="noopener">{{commit.message.lines.first}}</a>
       </h4>
 
-      <span>
-        Commit by
-        <a href="{{author.html_url}}" target="_blank" rel="noopener">
-          <img alt="{{author.login}}" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
-          {{author.login}}
-        </a>
-        in
-        <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
-      </span>
+      <div class="github-info">
+        <span>
+          {{i18n.commit_by}}
+          <a href="{{author.html_url}}" target="_blank" rel="noopener">
+            <img alt="{{author.login}}" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+            {{author.login}}
+          </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+        </span>
+      </div>
     {{/commit}}
 
     {{#comment}}
       <h4>
-        Comment by
+        {{i18n.comment_by}}
         <a href="{{user.html_url}}" target="_blank" rel="noopener">
           <img alt="{{user.login}}" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
           {{user.login}}
-        </a>
-        to
-        <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+        </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
       </h4>
     {{/comment}}
 
     {{#discussion}}
       <h4>
-        Review by
+        {{i18n.review_by}}
         <a href="{{user.html_url}}" target="_blank" rel="noopener">
           <img alt="{{user.login}}" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
           {{user.login}}
-        </a>
-        in
-        <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+        </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
       </h4>
     {{/discussion}}
 
@@ -77,7 +73,7 @@
     {{#pr}}
       <div class="github-info">
         <div class="date">
-          opened <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+          {{i18n.opened}} <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
         </div>
 
         <div class="user">
@@ -87,7 +83,7 @@
           </a>
         </div>
 
-        <div class="lines" title="{{commits}} commits changed {{changed_files}} files with {{additions}} additions and {{deletions}} deletions">
+        <div class="lines" title="{{i18n.pr_summary}}">
           <a href="{{html_url}}/files" target="_blank" rel="noopener">
             <span class="added">+{{additions}}</span>
             <span class="removed">-{{deletions}}</span>

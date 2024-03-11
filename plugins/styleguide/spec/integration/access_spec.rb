@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe "SiteSetting.styleguide_admin_only" do
+RSpec.describe "SiteSetting.styleguide_allowed_groups" do
   before { SiteSetting.styleguide_enabled = true }
 
   context "when styleguide is admin only" do
-    before { SiteSetting.styleguide_admin_only = true }
+    before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:admins] }
 
     context "when user is admin" do
       before { sign_in(Fabricate(:admin)) }

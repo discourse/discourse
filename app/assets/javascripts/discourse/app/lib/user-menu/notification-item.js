@@ -70,13 +70,22 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.notification.acting_user_avatar_template;
   }
 
+  get endOutletArgs() {
+    return {
+      notification: this.notification,
+    };
+  }
+
   get #notificationName() {
     return this.site.notificationLookup[this.notification.notification_type];
   }
 
   onClick() {
     this.renderDirector.onClick?.();
-    this.appEvents.trigger("user-menu:notification-click", this.notification);
+    this.appEvents.trigger("user-menu:notification-click", {
+      notification: this.notification,
+      href: this.linkHref,
+    });
 
     if (!this.notification.read) {
       this.notification.set("read", true);

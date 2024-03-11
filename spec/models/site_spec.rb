@@ -184,14 +184,37 @@ RSpec.describe Site do
       end
     end
 
-    context "when lazy_load_categories" do
-      before { SiteSetting.lazy_load_categories = true }
+    context "with lazy loaded categories enabled" do
+      fab!(:user)
 
-      it "limits the number of categories" do
-        stub_const(Site, "LAZY_LOAD_CATEGORIES_LIMIT", 1) do
-          categories = Site.new(Guardian.new).categories
-          expect(categories.size).to eq(1)
-        end
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+
+      it "does not return any categories for anonymous users" do
+        site = Site.new(Guardian.new)
+
+        expect(site.categories).to eq([])
+      end
+
+      it "returns only sidebar categories and their parent categories" do
+        parent_category = Fabricate(:category)
+        category.update!(parent_category: parent_category)
+        Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+
+        site = Site.new(Guardian.new(user))
+
+        expect(site.categories.map { |c| c[:id] }).to contain_exactly(
+          parent_category.id,
+          category.id,
+        )
+      end
+
+      it "returns only visible sidebar categories" do
+        Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+        category.update!(read_restricted: true)
+
+        site = Site.new(Guardian.new(user))
+
+        expect(site.categories).to eq([])
       end
     end
   end

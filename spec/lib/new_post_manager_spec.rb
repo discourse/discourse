@@ -4,7 +4,7 @@ require "new_post_manager"
 
 RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic)
+  fab!(:topic) { Fabricate(:topic, user: user) }
 
   describe "default action" do
     it "creates the post by default" do
@@ -22,7 +22,6 @@ RSpec.describe NewPostManager do
     fab!(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
-      Group.refresh_automatic_groups!
       SiteSetting.approve_unless_trust_level = 4
 
       manager =
@@ -302,10 +301,10 @@ RSpec.describe NewPostManager do
         }
       end
 
-      before { user.update!(trust_level: 0) }
+      before { user.change_trust_level!(TrustLevel[0]) }
 
-      it "queues the post for review because if it contains embedded media." do
-        SiteSetting.review_media_unless_trust_level = 1
+      it "queues the post for review because it contains embedded media" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
@@ -315,7 +314,7 @@ RSpec.describe NewPostManager do
       end
 
       it "does not enqueue the post if the poster is a trusted user" do
-        SiteSetting.review_media_unless_trust_level = 0
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_0]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
@@ -332,7 +331,6 @@ RSpec.describe NewPostManager do
     context "with a high trust level setting for new topics" do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-        Group.refresh_automatic_groups!
       end
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
@@ -410,8 +408,8 @@ RSpec.describe NewPostManager do
 
     it "calls custom enqueuing handlers" do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_to_create_tag = 0
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
       manager =
         NewPostManager.new(
@@ -457,7 +455,6 @@ RSpec.describe NewPostManager do
     end
 
     it "if nothing returns a result it creates a post" do
-      Group.refresh_automatic_groups!
       manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
 
       result = manager.perform
@@ -470,7 +467,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "user needs approval?" do
-    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
     it "handles post_needs_approval? correctly" do
       user.user_stat = UserStat.new(post_count: 0, new_since: DateTime.now)
@@ -493,7 +490,7 @@ RSpec.describe NewPostManager do
   end
 
   context "when posting in the category requires approval" do
-    let!(:user) { Fabricate(:user) }
+    let!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:review_group) { Fabricate(:group) }
     let!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
 
@@ -502,7 +499,6 @@ RSpec.describe NewPostManager do
         SiteSetting.tagging_enabled = true
         category.require_topic_approval = true
         category.save
-        Group.refresh_automatic_groups!
       end
 
       it "enqueues new topics" do
@@ -630,7 +626,6 @@ RSpec.describe NewPostManager do
       before do
         category.require_reply_approval = true
         category.save
-        Group.refresh_automatic_groups!
       end
 
       it "enqueues new posts" do
@@ -691,7 +686,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with a spam failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "silences users if its their first post" do
@@ -728,7 +723,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with an authentication results failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "doesn't silence users" do

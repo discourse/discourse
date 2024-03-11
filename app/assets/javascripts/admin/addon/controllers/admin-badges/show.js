@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";

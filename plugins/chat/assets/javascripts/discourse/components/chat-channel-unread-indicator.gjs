@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { hasChatIndicator } from "../lib/chat-user-preferences";
 
@@ -19,7 +19,7 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    if (this.#onlyMentions() && this.#hasChannelMentions()) {
+    if (this.#hasChannelMentions()) {
       return this.args.channel.tracking.mentionCount;
     }
     return this.args.channel.tracking.unreadCount;
@@ -32,13 +32,6 @@ export default class ChatChannelUnreadIndicator extends Component {
     return (
       this.args.channel.isDirectMessageChannel || this.#hasChannelMentions()
     );
-  }
-
-  get showUnreadCount() {
-    if (this.#onlyMentions()) {
-      return this.#hasChannelMentions();
-    }
-    return this.args.channel.isDirectMessageChannel || this.isUrgent;
   }
 
   #hasChannelMentions() {
@@ -58,7 +51,7 @@ export default class ChatChannelUnreadIndicator extends Component {
         }}
       >
         <div class="chat-channel-unread-indicator__number">{{#if
-            this.showUnreadCount
+            this.isUrgent
           }}{{this.unreadCount}}{{else}}&nbsp;{{/if}}</div>
       </div>
     {{/if}}

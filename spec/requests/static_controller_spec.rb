@@ -319,7 +319,7 @@ RSpec.describe StaticController do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("workbox")
+      expect(response.body).to include("addEventListener")
     end
 
     it "replaces sourcemap URL" do

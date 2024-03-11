@@ -1,8 +1,10 @@
-<NumberField
-  @value={{this.value}}
-  @classNames="input-setting-integer"
-  @min={{if this.setting.min this.setting.min null}}
-  @max={{if this.setting.max this.setting.max null}}
+<input
+  {{on "input" (with-event-value (fn (mut this.value)))}}
+  type="number"
+  value={{this.value}}
+  min={{if this.setting.min this.setting.min null}}
+  max={{if this.setting.max this.setting.max null}}
+  class="input-setting-integer"
 />
 
 <SettingValidationMessage @message={{this.validationMessage}} />

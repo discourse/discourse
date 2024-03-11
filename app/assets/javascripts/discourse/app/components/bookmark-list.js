@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";

@@ -35,11 +35,8 @@ hy:
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} առաջ"
       tiny:
         half_a_minute: "< 1ր"
@@ -74,7 +71,7 @@ hy:
           one: "%{count}տարի"
           other: "%{count}տ"
         date_month: "MMM D"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "%{count} րոպե"
@@ -85,7 +82,6 @@ hy:
         x_days:
           one: "%{count} օր"
           other: "%{count} օր"
-        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} րոպե առաջ"
@@ -119,6 +115,8 @@ hy:
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       close: "փակել"
+    word_connector:
+      comma: ","
     action_codes:
       public_topic: "Այս թեման դարձրել է հրապարակային %{when}"
       private_topic: "Այս թեման դարձրել է անձնական նամակ %{when}"
@@ -980,6 +978,7 @@ hy:
         error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե այդ հասցեն արդեն օգտագործվո՞ւմ է:"
         success: "Մենք ուղարկել ենք էլ. նամակ այդ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
         success_staff: "Մենք ուղարկել ենք էլ. նամակ Ձեր ընթացիկ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
+        confirm_success: "Ձեր էլ. հասցեն թարմացվել է "
       change_avatar:
         title: "Փոխել Ձեր պրոֆիլի նկարը"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , հիմնված"
@@ -1432,6 +1431,9 @@ hy:
       min_content_not_reached:
         one: "Ընտրեք առնվազն%{count} տարր:"
         other: "Ընտրեք առնվազն %{count} տարր:"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Զանգվածային Գործողությունները"
     date_time_picker:
       from: Ում կողմից
       to: Ում
@@ -1645,6 +1647,7 @@ hy:
         liked_consolidated: "նոր հավանումներ"
         post_approved: "գրառումը հաստատված է"
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
+        admin_problems: "նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
     upload_selector:
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
@@ -1789,6 +1792,21 @@ hy:
         tag: "%{tag}-ում թեմաներ այլևս չկան:"
         top: "Թոփ թեմաներ այլևս չկան:"
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
+    topic_bulk_actions:
+      close_topics:
+        name: "Փակել Թեմաները"
+      archive_topics:
+        name: "Արխիվացնել Թեմաները"
+      unlist_topics:
+        name: "Թեմաները Ցանկից Հանել"
+      relist_topics:
+        name: "Վերացանկավորել Թեմաները"
+      append_tags:
+        name: "Ավելացնել Թեգեր"
+      replace_tags:
+        name: "Փոխարինել Թեգերը"
+      delete_topics:
+        name: "Ջնջել Թեմաները"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2850,6 +2868,7 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
@@ -3218,6 +3237,9 @@ hy:
           body: "Մարմին"
           revert: "Վերադարձնել Փոփոխությունները"
           revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել Ձեր փոփոխությունները:"
+        component:
+          all_filter: "Բոլորը"
+          disabled_filter: "Անջատված"
         theme:
           theme: "Թեմա"
           component: "Բաղադրիչ"
@@ -3353,6 +3375,9 @@ hy:
           yaml:
             text: "YAML"
             title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
+          all_filter: "Բոլորը"
+          active_filter: "Ակտիվ"
+          inactive_filter: "Ոչ ակտիվ"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -3415,7 +3440,6 @@ hy:
           instructions: "Ձևանմուշի կարգավորում, որում պատկերվում են բոլոր html էլեկտրոնային փոստի հաղորդագրությունները և ոճը՝ օգտագործելով CSS:"
       email:
         title: "Էլ. հասցեներ"
-        settings: "Կարգավորումներ"
         templates: "Ձևանմուշներ"
         preview_digest: "Նախադիտման Ամփոփումը"
         advanced_test:
@@ -3903,7 +3927,6 @@ hy:
             other: "Վերջին %{count} օրվա ընթացքում՝ "
           value_heading: "Արժեք"
           requirement_heading: "Պահանջ"
-          visits: "Այցելություններ"
           days: "օր"
           topics_replied_to: "Պատասխանած Թեմաները"
           topics_viewed: "Դիտված Թեմաները"
@@ -4029,6 +4052,8 @@ hy:
           modal_description: "Ցանկանաու՞մ եք այս փոփոխությունը կիրառել պատմականորեն: Սա կփոխի կարգավորումը %{count} համար՝ առկա օգտատերերի:"
           modal_yes: "Այո"
           modal_no: "Ոչ, կիրառել փոփոխություններ միայն՝ ապագայում "
+        file_types_list:
+          add_image_types: "Նկարներ"
       badges:
         title: Կրծքանշաններ
         new_badge: Նոր Կրծքանշան
@@ -4146,6 +4171,7 @@ hy:
         post_title: "Գրառում"
         category_id: "Կատեգորիայի ID"
         category_title: "Կատեգորիա"
+        username: "Օգտանուն"
         destination: "Նպատակներ "
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս մշտահղումը:'
         form:

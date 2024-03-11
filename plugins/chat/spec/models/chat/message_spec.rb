@@ -449,8 +449,9 @@ describe Chat::Message do
 
     it "destroys chat_mention" do
       message_1 = Fabricate(:chat_message)
-      notification = Fabricate(:notification)
-      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
+      notification = Fabricate(:notification, notification_type: Notification.types[:chat_mention])
+      mention_1 =
+        Fabricate(:user_chat_mention, chat_message: message_1, notifications: [notification])
 
       message_1.reload.destroy!
 
@@ -527,42 +528,162 @@ describe Chat::Message do
   end
 
   describe "#upsert_mentions" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:message) do
-      Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+    context "with direct mentions" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:user3) { Fabricate(:user) }
+      fab!(:user4) { Fabricate(:user) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+      end
+      let(:already_mentioned) { [user1.id, user2.id] }
+
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{user3.username} @#{user4.username} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(
+          [user1.id, user2.id, user3.id, user4.id],
+        )
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # user 2 is not mentioned anymore:
+        message.message = "Hey @#{user1.username}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to contain_exactly(user1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
-    let(:already_mentioned) { [user1.id, user2.id] }
 
-    it "creates newly added mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      update_message!(
-        message,
-        user: message.user,
-        text: message.message + " @#{user3.username} @#{user4.username} ",
-      )
+    context "with group mentions" do
+      fab!(:group1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group2) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group3) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group4) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{group1.name} and @#{group2.name}")
+      end
+      let(:already_mentioned) { [group1.id, group2.id] }
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(
-        [user1.id, user2.id, user3.id, user4.id],
-      )
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{group3.name} @#{group4.name} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(
+          [group1.id, group2.id, group3.id, group4.id],
+        )
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # group 2 is not mentioned anymore:
+        message.message = "Hey @#{group1.name}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to contain_exactly(group1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
 
-    it "drops removed mentions" do
-      # user 2 is not mentioned anymore
-      update_message!(message, user: message.user, text: "Hey @#{user1.username}")
+    context "with @here mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
 
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+      it "creates @here mention" do
+        message.message = "Mentioning @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @here @here @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @here"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_blank
+      end
     end
 
-    it "changes nothing if passed mentions are identical to existing mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      update_message!(message, user: message.user, text: message.message)
+    context "with @all mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      it "creates @all mention" do
+        message.message = "Mentioning @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @all @all @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @all"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_blank
+      end
     end
   end
 

@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { cancel, next } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -65,13 +65,16 @@ export default class Chat extends Service {
       return false;
     }
 
-    return (
-      this.currentUser.staff ||
-      this.siteSettings.userInAnyGroups(
-        "direct_message_enabled_groups",
-        this.currentUser
-      )
-    );
+    return this.currentUser.staff || this.currentUser.can_direct_message;
+  }
+
+  @computed("chatChannelsManager.directMessageChannels")
+  get userHasDirectMessages() {
+    return this.chatChannelsManager.directMessageChannels?.length > 0;
+  }
+
+  get userCanAccessDirectMessages() {
+    return this.userCanDirectMessage || this.userHasDirectMessages;
   }
 
   @computed("activeChannel.userSilenced")
@@ -381,16 +384,22 @@ export default class Chat extends Service {
       .concat(user.username)
       .uniq();
 
-    return this.upsertDmChannelForUsernames(usernames);
+    return this.upsertDmChannel({ usernames });
   }
 
-  // @param {array} usernames - The usernames to create or fetch the direct message
-  // channel for. The current user will automatically be included in the channel
-  // when it is created.
-  upsertDmChannelForUsernames(usernames, name = null) {
+  // @param {object} targets - The targets to create or fetch the direct message
+  // channel for. The current user will automatically be included in the channel when it is created.
+  // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
+  // @param {array} [targets.groups] - The groups to include in the direct message channel.
+  // @param {string|null} [name=null] - Optional name for the direct message channel.
+  upsertDmChannel(targets, name = null) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { target_usernames: usernames.uniq(), name },
+      data: {
+        target_usernames: targets.usernames?.uniq(),
+        target_groups: targets.groups?.uniq(),
+        name,
+      },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);
@@ -412,6 +421,15 @@ export default class Chat extends Service {
   addToolbarButton() {
     deprecated(
       "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`"
+    );
+  }
+
+  @action
+  toggleDrawer() {
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
     );
   }
 }

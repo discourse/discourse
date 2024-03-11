@@ -5,8 +5,15 @@ class ThemeSetting < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
 
+  TYPES_ENUM =
+    Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6, objects: 7)
+
+  MAXIMUM_JSON_VALUE_SIZE_BYTES = 0.5 * 1024 * 1024 # 0.5 MB
+
   validates_presence_of :name, :theme
-  validates :data_type, numericality: { only_integer: true }
+  before_validation :objects_type_enabled
+  validates :data_type, inclusion: { in: TYPES_ENUM.values }
+  validate :json_value_size, if: -> { self.data_type == TYPES_ENUM[:objects] }
   validates :name, length: { maximum: 255 }
 
   after_save :clear_settings_cache
@@ -24,30 +31,7 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6)
-  end
-
-  def self.acceptable_value_for_type?(value, type)
-    case type
-    when self.types[:integer]
-      value.is_a?(Integer)
-    when self.types[:float]
-      value.is_a?(Integer) || value.is_a?(Float)
-    when self.types[:bool]
-      value.is_a?(TrueClass) || value.is_a?(FalseClass)
-    when self.types[:list]
-      value.is_a?(String)
-    else
-      true
-    end
-  end
-
-  def self.value_in_range?(value, range, type)
-    if type == self.types[:integer] || type == self.types[:float]
-      range.include? value
-    elsif type == self.types[:string]
-      range.include? value.to_s.length
-    end
+    TYPES_ENUM
   end
 
   def self.guess_type(value)
@@ -60,6 +44,27 @@ class ThemeSetting < ActiveRecord::Base
       types[:string]
     when TrueClass, FalseClass
       types[:bool]
+    end
+  end
+
+  private
+
+  def objects_type_enabled
+    if self.data_type == ThemeSetting.types[:objects] &&
+         !SiteSetting.experimental_objects_type_for_theme_settings
+      self.data_type = nil
+    end
+  end
+
+  def json_value_size
+    if json_value.to_json.size > MAXIMUM_JSON_VALUE_SIZE_BYTES
+      errors.add(
+        :json_value,
+        I18n.t(
+          "theme_settings.errors.json_value.too_large",
+          max_size_megabytes: MAXIMUM_JSON_VALUE_SIZE_BYTES / 1024 / 1024,
+        ),
+      )
     end
   end
 end
@@ -75,4 +80,5 @@ end
 #  theme_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  json_value :jsonb
 #

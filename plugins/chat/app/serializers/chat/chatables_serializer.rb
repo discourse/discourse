@@ -3,6 +3,7 @@
 module Chat
   class ChatablesSerializer < ::ApplicationSerializer
     attributes :users
+    attributes :groups
     attributes :direct_message_channels
     attributes :category_channels
 
@@ -11,8 +12,26 @@ module Chat
         .map do |user|
           {
             identifier: "u-#{user.id}",
-            model: ::Chat::ChatableUserSerializer.new(user, scope: scope, root: false),
+            model:
+              ::Chat::ChatableUserSerializer.new(
+                user,
+                scope: scope,
+                root: false,
+                include_status: true,
+              ),
             type: "user",
+          }
+        end
+        .as_json
+    end
+
+    def groups
+      (object.groups || [])
+        .map do |group|
+          {
+            identifier: "g-#{group.id}",
+            model: ::Chat::ChatableGroupSerializer.new(group, scope: scope, root: false),
+            type: "group",
           }
         end
         .as_json

@@ -22,6 +22,9 @@
       class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
     >
       {{outlet}}
+      {{#if this.shouldUseChatFooter}}
+        <ChatFooter />
+      {{/if}}
     </div>
   </div>
 {{/if}}

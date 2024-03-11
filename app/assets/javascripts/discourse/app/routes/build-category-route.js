@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
@@ -18,7 +18,7 @@ import I18n from "discourse-i18n";
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
   @service router;
-  @service siteSettings;
+  @service site;
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
@@ -30,7 +30,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
   controllerName = "discovery/list";
 
   async model(params, transition) {
-    const category = this.siteSettings.lazy_load_categories
+    const category = this.site.lazy_load_categories
       ? await Category.asyncFindBySlugPathWithID(
           params.category_slug_path_with_id
         )

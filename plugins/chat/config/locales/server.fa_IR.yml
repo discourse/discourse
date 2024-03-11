@@ -18,6 +18,8 @@ fa_IR:
     chat_channel_archive_complete:
       text_body_template: |
         بایگانی کانال گفتگو %{channel_hashtag_or_name} با موفقیت انجام شد. پیام‌ها در موضوع [%{topic_title}](%{topic_url}) کپی شده‌اند.
+    chat_channel_archive_failed:
+      title: "بایگانی کانال چت ناموفق بود"
     chat_channel_archive_failed_no_topic:
       title: "بایگانی کانال چت ناموفق بود"
   chat:

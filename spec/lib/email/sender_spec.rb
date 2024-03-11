@@ -541,7 +541,13 @@ RSpec.describe Email::Sender do
         #{UploadMarkdown.new(image).image_markdown}
         #{UploadMarkdown.new(csv_file).attachment_markdown}
       RAW
-      reply = Fabricate(:post, raw: raw, topic: post.topic, user: Fabricate(:user))
+      reply =
+        Fabricate(
+          :post,
+          raw: raw,
+          topic: post.topic,
+          user: Fabricate(:user, refresh_auto_groups: true),
+        )
       reply.link_post_uploads
       reply
     end

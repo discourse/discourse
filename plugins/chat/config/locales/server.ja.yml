@@ -6,7 +6,8 @@
 
 ja:
   site_settings:
-    chat_enabled: "チャットを有効にする."
+    chat_separate_sidebar_mode: "フォーラムとチャットに個別のサイドバーモードを表示します。"
+    chat_enabled: "チャットを有効にする。"
     enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
     chat_allowed_groups: "これらのグループのユーザーがチャットできます。スタッフはいつでもチャットにアクセスできることに注意してください。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
@@ -27,11 +28,15 @@ ja:
     max_mentions_per_chat_message: "ユーザーがチャットメッセージで @name 通知を行える最大回数。"
     chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
     chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
+    chat_editing_grace_period: "チャットを送信してから (n) 秒間は、チャットメッセージを編集しても (編集済み) タグは表示されません。"
+    chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
+    chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
       chat_upload_not_allowed_secure_uploads: "安全なアップロードのサイト設定が有効でない場合、チャットのアップロードは行えません。"
   system_messages:
+    private_channel_title: "チャンネル %{id}"
     chat_channel_archive_complete:
       title: "チャットチャンネルのアーカイブ完了"
       subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
@@ -54,6 +59,7 @@ ja:
   chat:
     deleted_chat_username: 削除済み
     errors:
+      users_cant_be_added_to_channel: "このチャンネルにはユーザーを追加できません。"
       channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
       channel_new_message_disallowed:
         archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません"
@@ -113,15 +119,23 @@ ja:
         agree_and_delete:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
+        delete_and_agree:
+          title: "通報を無視してメッセージを削除"
+          description: "キューから削除して通報を無視し、そのメッセージを削除します。"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
         disagree:
           title: "同意しない"
+        ignore:
+          title: "何もしない"
+          description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{invited_users} 人が %{inviting_user} から招待されました。"
       archive:
         first_post_raw: "このトピックは、[%{channel_name}](%{channel_url}) チャットチャンネルのアーカイブです。"
       messages_moved:
@@ -145,6 +159,7 @@ ja:
       group_mentions_disabled: "%{first_identifier} はメンションを許可していません。"
       group_mentions_disabled_multiple:
         other: "%{first_identifier} と他 %{count} 個のグループはメンションを許可していません。"
+      global_mentions_disallowed: "このチャンネルでは @here と @all メンションが無効になっています。"
       too_many_members: "%{first_identifier} のメンバーが多すぎます。誰にも通知されませんでした。"
       too_many_members_multiple:
         other: "%{first_identifier} と他 %{count} 個のグループのメンバーが多すぎます。誰にも通知されませんでした."
@@ -159,7 +174,7 @@ ja:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
       inline_to_channel: "チャット #%{chat_channel}"
       inline_to_topic_channel: "トピック %{topic_title} のチャット"
-      thread_title_connector: "検索対象"
+      thread_title_connector: "場所:"
       x_members:
         other: "%{count} 人のメンバー"
       and_x_others:
@@ -168,6 +183,7 @@ ja:
       no_targets: "選択された期間中にメッセージはありませんでした。"
     transcript:
       default_thread_title: "スレッド"
+      split_thread_range: "メッセージ %{start}～%{end} / %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -201,6 +217,7 @@ ja:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] 新しいメッセージ"
         direct_message_from_1: "[%{email_prefix}] %{username} からの新しいメッセージがあります"
         direct_message_from_2: "[%{email_prefix}] %{username1} と他 %{username2} 人からの新しいメッセージ"
         direct_message_from_more:

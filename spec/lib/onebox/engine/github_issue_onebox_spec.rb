@@ -16,7 +16,7 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
   describe "#to_html" do
     it "sanitizes the input and transform the emoji into an img tag" do
       sanitized_label =
-        'Test <img src="/images/emoji/twitter/+1.png?v=12" title="+1" class="emoji" alt="+1" loading="lazy" width="20" height="20"> &lt;style&gt;body {display: none}&lt;/style&gt;'
+        'Test <img src="/images/emoji/twitter/+1.png?v=12" title="+1" class="emoji" alt="+1" loading="lazy" width="20" height="20">'
 
       expect(html).to include(sanitized_label)
     end

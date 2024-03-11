@@ -1,6 +1,7 @@
 <DModal
   @title={{i18n "categories.reorder.title"}}
   @closeModal={{@closeModal}}
+  @inline={{@inline}}
   class="reorder-categories"
 >
   <:body>
@@ -10,30 +11,31 @@
         <th>{{i18n "categories.reorder.position"}}</th>
       </thead>
       <tbody>
-        {{#each this.categoriesOrdered as |category|}}
-          <tr data-category-id={{category.id}}>
+        {{#each this.sortedEntries as |entry|}}
+          <tr data-category-id={{entry.category.id}}>
             <td>
-              <div class={{concat "reorder-categories-depth-" category.depth}}>
-                {{category-badge category allowUncategorized="true"}}
+              <div class={{concat "reorder-categories-depth-" entry.depth}}>
+                {{category-badge entry.category allowUncategorized="true"}}
               </div>
             </td>
 
             <td>
               <div class="reorder-categories-actions">
-                <NumberField
-                  @number={{readonly category.position}}
-                  @change={{fn this.change category}}
-                  @min="0"
+                <input
+                  {{on "change" (with-event-value (fn this.change entry))}}
+                  value={{entry.position}}
+                  type="number"
+                  min="0"
                 />
                 <DButton
-                  @action={{fn this.move category -1}}
+                  @action={{fn this.move entry -1}}
                   @icon="arrow-up"
-                  class="btn-default no-text"
+                  class="btn-default no-text move-up"
                 />
                 <DButton
-                  @action={{fn this.move category 1}}
+                  @action={{fn this.move entry 1}}
                   @icon="arrow-down"
-                  class="btn-default no-text"
+                  class="btn-default no-text move-down"
                 />
               </div>
             </td>
@@ -47,6 +49,7 @@
     <DButton
       @action={{this.save}}
       @label="categories.reorder.save"
+      @disabled={{not this.changed}}
       class="btn-primary"
     />
   </:footer>

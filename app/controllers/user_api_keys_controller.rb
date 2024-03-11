@@ -183,7 +183,7 @@ class UserApiKeysController < ApplicationController
   end
 
   def meets_tl?
-    current_user.staff? || current_user.trust_level >= SiteSetting.min_trust_level_for_user_api_key
+    current_user.staff? || current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
   end
 
   def one_time_password(public_key, username)

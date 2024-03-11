@@ -67,7 +67,8 @@ class TopicCreator
   private
 
   def validate_visibility(topic)
-    if !@opts[:skip_validations] && !topic.visible && !guardian.can_create_unlisted_topic?(topic)
+    if !@opts[:skip_validations] && !topic.visible &&
+         !guardian.can_create_unlisted_topic?(topic, !!opts[:embed_url])
       topic.errors.add(:base, :unable_to_unlist)
     end
   end

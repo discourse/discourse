@@ -129,6 +129,8 @@ module PageObjects
             selector += "[data-identifier='c-#{chatable.id}']"
           elsif chatable.try(:direct_message_channel?)
             selector += "[data-identifier='c-#{chatable.id}']"
+          elsif chatable.is_a?(Group)
+            selector += "[data-identifier='g-#{chatable.id}']"
           else
             selector += "[data-identifier='u-#{chatable.id}']"
           end

@@ -12,13 +12,6 @@
     }
   }
 
-  .chat-full-page-header {
-    padding: 0 1rem;
-    height: var(--chat-header-offset);
-    min-height: var(--chat-header-offset);
-    flex-shrink: 0;
-  }
-
   .chat-channel {
     .chat-messages-container {
       &.has-reply {

@@ -185,6 +185,18 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(last_email.cc).to match_array(%w[otherguy@test.com cormac@lit.com])
   end
 
+  it "does not retry the job if the IncomingEmail record is not created because of an error" do
+    Jobs.run_immediately!
+    IncomingEmail.expects(:create!).raises(StandardError)
+    expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
+  end
+
+  it "does not retry the job on SMTP read timeouts, because we can't be sure if the send actually failed or if ENTER . ENTER just timed out" do
+    Jobs.run_immediately!
+    Email::Sender.any_instance.expects(:send).raises(Net::ReadTimeout)
+    expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
+  end
+
   context "when there are cc_addresses" do
     it "has the cc_addresses and cc_user_ids filled in correctly" do
       job.execute(args)

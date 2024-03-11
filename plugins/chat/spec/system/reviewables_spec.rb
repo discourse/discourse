@@ -24,4 +24,20 @@ describe "Reviewables", type: :system do
       expect(page).to have_content(message_1.message)
     end
   end
+
+  context "when the message is hard deleted" do
+    before { message_1.destroy! }
+
+    it "does not throw an error" do
+      visit("/review?type=Chat%3A%3AReviewableMessage")
+
+      expect(page).to have_selector(".reviewable-item.reviewable-chat-message")
+    end
+
+    it "adds the option to ignore the flag" do
+      visit("/review?type=Chat%3A%3AReviewableMessage")
+
+      expect(page).to have_selector(".reviewable-actions .chat-message-ignore")
+    end
+  end
 end

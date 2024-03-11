@@ -218,7 +218,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.hide_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is expanded"
       );
 
@@ -233,7 +233,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.show_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is collapsed"
       );
     });

@@ -11,12 +11,13 @@ walkthrough will go through these in detail:
 
 3. [Create new cloud server](#3-create-new-cloud-server)
 4. [Access new cloud server](#4-access-your-cloud-server)
-5. [Install Discourse](#5-install-discourse)
-6. [Edit Discourse configuration](#6-edit-discourse-configuration)
-7. [Start Discourse](#7-start-discourse)
-8. [Register new account and become admin](#8-register-new-account-and-become-admin)
-9. [Post-install maintenance](#9-post-install-maintenance)
-10. [(Optional) Add more Discourse features](#10-optional-add-more-discourse-features)
+5. [Install Prerequisites for Docker](#5-install-prerequisites-for-docker-debianubuntu-based-distro-example)
+6. [Install Discourse](#6-install-discourse)
+7. [Edit Discourse configuration](#7-edit-discourse-configuration)
+8. [Start Discourse](#8-start-discourse)
+9. [Register new account and become admin](#9-register-new-account-and-become-admin)
+10. [Post-install maintenance](#10-post-install-maintenance)
+11. [(Optional) Add more Discourse features](#11-optional-add-more-discourse-features)
 
 > 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
@@ -75,7 +76,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
-### 5. Install Prerequisites for Docker (Debian/ Ubunto basted Distro example)
+### 5. Install Prerequisites for Docker (Debian/Ubuntu based Distro example)
 
     sudo apt install docker.io
     sudo apt install git
@@ -118,25 +119,25 @@ This will generate an `app.yml` configuration file on your behalf, and then kick
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier.
 
-<img src="https://www.discourse.org/images/install/17/discourse-congrats.png" width="650">
+<img src="https://www.discourse.org/images/install/18/discourse-1-congrats.png" width="650">
 
 ### 9. Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-<img src="https://www.discourse.org/images/install/17/discourse-register.png" width="650">
+<img src="https://www.discourse.org/images/install/18/discourse-2-register.png" width="650">
 
-<img src="https://www.discourse.org/images/install/17/discourse-activate.png" width="650">
+<img src="https://www.discourse.org/images/install/18/discourse-3-activate.png" width="650">
 
 (If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
 After registering your admin account, the setup wizard will launch and guide you through basic configuration of your Discourse.
 
-<img src="https://www.discourse.org/images/install/17/discourse-wizard-step-1.png" width="650">
+<img src="https://www.discourse.org/images/install/18/discourse-4-wizard-step1.png" width="650">
 
-After completing the setup wizard, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install.
+After finishing the setup wizard, a popup will welcome you to your new site. It will also link you to the admin guide, which we strongly recommend you look at right away and refer to frequently. The guide provides a setup checklist, important guidance on how to successfully launch your community, and troubleshooting tips.
 
-<img src="https://www.discourse.org/images/install/17/discourse-homepage.png">
+<img src="https://www.discourse.org/images/install/18/discourse-5-home.png" width="650">
 
 ### 10. Post-Install Maintenance
 

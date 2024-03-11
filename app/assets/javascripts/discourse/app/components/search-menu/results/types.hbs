@@ -17,7 +17,10 @@
             {{on "click" this.onClick}}
             class="search-link"
           >
-            <resultType.component @result={{result}} />
+            <resultType.component
+              @result={{result}}
+              @displayNameWithUser={{@displayNameWithUser}}
+            />
           </a>
         </li>
       {{/each}}

@@ -17,6 +17,8 @@ RSpec.describe HasCustomFields do
       end
 
       class CustomFieldsTestItemCustomField < ActiveRecord::Base
+        include CustomField
+
         belongs_to :custom_fields_test_item
       end
     end
@@ -194,6 +196,55 @@ RSpec.describe HasCustomFields do
 
       db_item = CustomFieldsTestItem.find(test_item.id)
       expect(db_item.custom_fields).to eq("a" => %w[b 10 d])
+    end
+
+    it "that are true can be fetched" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(0)
+
+      test_item.custom_fields["bool"] = true
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(1)
+    end
+
+    it "stores boolean values in boolean fields as t or f" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.custom_fields["bool"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("t")
+
+      test_item.custom_fields["bool"] = "false"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("f")
+    end
+
+    it "coerces non-integer values in integer fields" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("int", :integer)
+
+      test_item.custom_fields["int"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("0")
     end
 
     it "supports type coercion" do
@@ -380,6 +431,7 @@ RSpec.describe HasCustomFields do
 
       test_item.custom_fields = { "foo" => "aa" }
       expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { test_item.save_custom_fields }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     describe "upsert_custom_fields" do

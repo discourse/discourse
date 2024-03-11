@@ -196,8 +196,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
+      category_params[:email_in] = nil if category_params[:email_in].blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -303,9 +303,17 @@ class CategoriesController < ApplicationController
 
   def find
     categories = []
+    serializer = params[:include_permissions] ? CategorySerializer : SiteCategorySerializer
 
     if params[:ids].present?
       categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path].present?
+      category = Category.find_by_slug_path(params[:slug_path].split("/"))
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
     elsif params[:slug_path_with_id].present?
       category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
       raise Discourse::NotFound if category.blank?
@@ -319,7 +327,7 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
-    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 
   def search
@@ -333,13 +341,23 @@ class CategoriesController < ApplicationController
           true
         end
       )
-    select_category_ids = params[:select_category_ids].presence
-    reject_category_ids = params[:reject_category_ids].presence
+    if params[:select_category_ids].is_a?(Array)
+      select_category_ids = params[:select_category_ids].map(&:presence)
+    end
+    if params[:reject_category_ids].is_a?(Array)
+      reject_category_ids = params[:reject_category_ids].map(&:presence)
+    end
     include_subcategories =
       if params[:include_subcategories].present?
         ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
       else
         true
+      end
+    include_ancestors =
+      if params[:include_ancestors].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_ancestors])
+      else
+        false
       end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
@@ -374,21 +392,36 @@ class CategoriesController < ApplicationController
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
+    categories_count = categories.count
+
     categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
-
-    categories = categories.order(<<~SQL) if prioritized_category_id.present?
-      CASE
-      WHEN id = #{prioritized_category_id} THEN 1
-      WHEN parent_category_id = #{prioritized_category_id} THEN 2
-      ELSE 3
-      END
-    SQL
-
-    categories = categories.order(:id)
 
     Category.preload_user_fields!(guardian, categories)
 
-    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    # Prioritize categories that start with the term, then top-level
+    # categories, then subcategories
+    categories =
+      categories.to_a.sort_by do |category|
+        [
+          category.name.downcase.starts_with?(term) ? 0 : 1,
+          category.parent_category_id.blank? ? 0 : 1,
+          category.id == prioritized_category_id ? 0 : 1,
+          category.parent_category_id == prioritized_category_id ? 0 : 1,
+          category.id,
+        ]
+      end
+
+    response = {
+      categories_count: categories_count,
+      categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+    }
+
+    if include_ancestors
+      ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
+      response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
+    end
+
+    render_json_dump(response)
   end
 
   private

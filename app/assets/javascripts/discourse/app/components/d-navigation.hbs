@@ -21,6 +21,16 @@
     <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
   {{/if}}
 
+  <TopicDismissButtons
+    @position="top"
+    @selectedTopics={{@bulkSelectHelper.selected}}
+    @model={{@model}}
+    @showResetNew={{@showResetNew}}
+    @showDismissRead={{@showDismissRead}}
+    @resetNew={{@resetNew}}
+    @dismissRead={{@dismissRead}}
+  />
+
   {{#if this.showCategoryAdmin}}
     {{#if this.fixedCategoryPositions}}
       <CategoriesAdminDropdown
@@ -91,6 +101,7 @@
       createTopicDisabled=this.createTopicDisabled
       createTopicLabel=this.createTopicLabel
       category=this.category
+      tag=this.tag
     }}
   />
 

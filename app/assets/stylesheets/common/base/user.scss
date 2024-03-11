@@ -64,6 +64,15 @@
 
   .show-mores {
     width: 100%;
+
+    .alert-info.clickable {
+      gap: 0.5em;
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+    }
   }
 
   .d-icon-heart {
@@ -295,7 +304,6 @@
         width: auto;
         text-align: left;
         font-weight: normal;
-        font-weight: bold;
       }
 
       .instructions {
@@ -939,6 +947,19 @@
       }
     }
   }
+}
+
+.user-additional-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.user-invite-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-left: auto;
 }
 
 .notification-schedule {

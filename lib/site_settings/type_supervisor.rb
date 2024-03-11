@@ -55,6 +55,7 @@ class SiteSettings::TypeSupervisor
         emoji_list: 24,
         html_deprecated: 25,
         tag_group_list: 26,
+        file_size_restriction: 27,
       )
   end
 
@@ -142,6 +143,8 @@ class SiteSettings::TypeSupervisor
       value.to_f
     when self.class.types[:integer]
       value.to_i
+    when self.class.types[:file_size_restriction]
+      value.to_i
     when self.class.types[:bool]
       value == true || value == "t" || value == "true"
     when self.class.types[:null]
@@ -170,7 +173,7 @@ class SiteSettings::TypeSupervisor
     result = { type: type.to_s }
 
     if type == :enum
-      if (klass = enum_class(name))
+      if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
         result.merge!(
@@ -180,7 +183,7 @@ class SiteSettings::TypeSupervisor
       end
     end
 
-    if type == :integer
+    if type == :integer || type == :file_size_restriction
       result[:min] = @validators[name].dig(:opts, :min) if @validators[name].dig(
         :opts,
         :min,
@@ -201,6 +204,10 @@ class SiteSettings::TypeSupervisor
     end
 
     result
+  end
+
+  def get_enum_class(name)
+    @enums[name]
   end
 
   def get_type(name)
@@ -224,7 +231,14 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:null] && val != ""
       type = get_data_type(name, val)
     elsif type == self.class.types[:enum]
-      val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
+      val =
+        (
+          if @defaults_provider[name].is_a?(Integer) && Integer(val, exception: false)
+            val.to_i
+          else
+            val.to_s
+          end
+        )
     elsif type == self.class.types[:uploaded_image_list] && val.present?
       val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
@@ -236,8 +250,8 @@ class SiteSettings::TypeSupervisor
 
   def validate_value(name, type, val)
     if type == self.class.types[:enum]
-      if enum_class(name)
-        unless enum_class(name).valid_value?(val)
+      if get_enum_class(name)
+        unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
         end
       else
@@ -286,10 +300,6 @@ class SiteSettings::TypeSupervisor
     self.class.parse_value_type(val)
   end
 
-  def enum_class(name)
-    @enums[name]
-  end
-
   def json_schema_class(name)
     @json_schemas[name]
   end
@@ -303,6 +313,8 @@ class SiteSettings::TypeSupervisor
     when self.class.types[:group]
       GroupSettingValidator
     when self.class.types[:integer]
+      IntegerSettingValidator
+    when self.class.types[:file_size_restriction]
       IntegerSettingValidator
     when self.class.types[:regex]
       RegexSettingValidator

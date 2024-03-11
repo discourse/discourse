@@ -17,8 +17,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
     context "when clicking back button" do
       it "redirects to browse page" do
         chat_page.visit_browse
-        find(".chat-channel-card__setting").click
-        find(".chat-full-page-header__back-btn").click
+        find(".c-navbar__back-button").click
 
         expect(page).to have_current_path("/chat/browse/open")
       end
@@ -29,8 +28,8 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
     context "when clicking back button" do
       it "redirects to channel page" do
         chat_page.visit_channel(channel_1)
-        find(".chat-channel-title-wrapper").click
-        find(".chat-full-page-header__back-btn").click
+        find(".c-navbar__channel-title").click
+        find(".c-navbar__back-button").click
 
         expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
@@ -78,8 +77,8 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       chat_page.visit_channel_settings(channel_1)
 
       expect(page.find(".badge-category__name")).to have_content(channel_1.chatable.name)
-      expect(page.find(".chat-channel-settings__name")).to have_content(channel_1.title)
-      expect(page.find(".chat-channel-settings__slug")).to have_content(channel_1.slug)
+      expect(page.find(".c-channel-settings__name")).to have_content(channel_1.title)
+      expect(page.find(".c-channel-settings__slug")).to have_content(channel_1.slug)
     end
 
     it "can’t edit name or slug" do
@@ -98,10 +97,10 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       channel_1.update!(name: "<script>alert('hello')</script>")
       chat_page.visit_channel_settings(channel_1)
 
-      expect(page.find(".chat-channel-settings__name")["innerHTML"].strip).to eq(
+      expect(page.find(".c-channel-settings__name")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
-      expect(page.find(".chat-channel-title__name")["innerHTML"].strip).to eq(
+      expect(page.find(".chat-channel-name__label")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
     end
@@ -117,7 +116,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       membership = channel_1.membership_for(current_user)
 
       expect {
-        PageObjects::Components::DToggleSwitch.new(".chat-channel-settings__mute-switch").toggle
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__mute-switch").toggle
 
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { membership.reload.muted }.from(false).to(true)
@@ -130,7 +129,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect {
         select_kit =
           PageObjects::Components::SelectKit.new(
-            ".chat-channel-settings__desktop-notifications-selector",
+            ".c-channel-settings__desktop-notifications-selector",
           )
         select_kit.expand
         select_kit.select_row_by_name("Never")
@@ -146,7 +145,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect {
         select_kit =
           PageObjects::Components::SelectKit.new(
-            ".chat-channel-settings__mobile-notifications-selector",
+            ".c-channel-settings__mobile-notifications-selector",
           )
         select_kit.expand
         select_kit.select_row_by_name("Never")
@@ -260,9 +259,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       chat_page.visit_channel_settings(channel_1)
 
       expect {
-        PageObjects::Components::DToggleSwitch.new(
-          ".chat-channel-settings__auto-join-switch",
-        ).toggle
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__auto-join-switch").toggle
         find("#dialog-holder .btn-primary").click
 
         expect(toasts).to have_success(I18n.t("js.saved"))
@@ -274,7 +271,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
       expect {
         PageObjects::Components::DToggleSwitch.new(
-          ".chat-channel-settings__channel-wide-mentions",
+          ".c-channel-settings__channel-wide-mentions",
         ).toggle
 
         expect(toasts).to have_success(I18n.t("js.saved"))
@@ -296,9 +293,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       chat_page.visit_channel_settings(channel_1)
 
       expect {
-        PageObjects::Components::DToggleSwitch.new(
-          ".chat-channel-settings__threading-switch",
-        ).toggle
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__threading-switch").toggle
 
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { channel_1.reload.threading_enabled }.from(false).to(true)

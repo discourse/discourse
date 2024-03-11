@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:post) do
-  user
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
@@ -78,7 +78,7 @@ Fabricator(:post_with_uploaded_image, from: :post) do
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do
-  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/origina/1X/66b3ed1503efc936.zip\">archive.zip</a>"
+  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/original/1X/66b3ed1503efc936.zip\">archive.zip</a>"
 end
 
 Fabricator(:post_with_unsized_images, from: :post) do
@@ -124,7 +124,7 @@ Fabricator(:post_with_uploads_and_links, from: :post) { raw <<~MD }
   MD
 
 Fabricator(:post_with_external_links, from: :post) do
-  user
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic
   raw <<~MD
     Here's a link to twitter: http://twitter.com

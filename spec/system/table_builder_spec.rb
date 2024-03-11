@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Table Builder", type: :system do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
   fab!(:topic) { Fabricate(:topic, user: user) }

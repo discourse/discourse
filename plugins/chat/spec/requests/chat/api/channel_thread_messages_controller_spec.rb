@@ -73,5 +73,13 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
         expect(response.status).to eq(404)
       end
     end
+
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages?page_size=9999"
+
+        expect(response.status).to eq(400)
+      end
+    end
   end
 end

@@ -324,6 +324,9 @@
             "null"
           ]
         },
+        "user_passkeys": {
+          "type": "array"
+        },
         "sidebar_tags": {
           "type": "array"
         },
@@ -791,6 +794,9 @@
             },
             "seen_popups": {
               "type": ["array", "null"]
+            },
+            "topics_unread_when_closed": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -825,7 +831,8 @@
             "text_size_seq",
             "title_count_mode",
             "timezone",
-            "skip_new_user_tips"
+            "skip_new_user_tips",
+            "topics_unread_when_closed"
           ]
         }
       },

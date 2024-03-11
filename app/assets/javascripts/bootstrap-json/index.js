@@ -5,71 +5,109 @@ const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
-const { JSDOM } = require("jsdom");
 const { Buffer } = require("node:buffer");
 const { env } = require("node:process");
 const { glob } = require("glob");
+const { HTMLRewriter } = require("html-rewriter-wasm");
 
-async function listDistAssets() {
-  const files = await glob("**/*.js", { nodir: true, cwd: "dist/assets" });
+async function listDistAssets(outputPath) {
+  const files = await glob("**/*.js", {
+    nodir: true,
+    cwd: `${outputPath}/assets`,
+  });
   return new Set(files);
 }
 
 function updateScriptReferences({
   chunkInfos,
-  dom,
+  rewriter,
   selector,
   attribute,
   baseURL,
   distAssets,
 }) {
-  const elements = dom.window.document.querySelectorAll(selector);
   const handledEntrypoints = new Set();
 
-  for (const el of elements) {
-    const entrypointName = el.dataset.discourseEntrypoint;
+  rewriter.on(selector, {
+    element(element) {
+      const entrypointName = element.getAttribute("data-discourse-entrypoint");
 
-    if (handledEntrypoints.has(entrypointName)) {
-      el.remove();
-      continue;
-    }
-
-    let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
-
-    if (!chunks) {
-      if (distAssets.has(`${entrypointName}.js`)) {
-        chunks = [`assets/${entrypointName}.js`];
-      } else {
-        // Not an ember-cli asset, do not rewrite
-        continue;
+      if (handledEntrypoints.has(entrypointName)) {
+        element.remove();
+        return;
       }
-    }
 
-    const newElements = chunks.map((chunk) => {
-      const newElement = el.cloneNode(true);
-      newElement[attribute] = `${baseURL}${chunk}`;
-      newElement.dataset.emberCliRewritten = "true";
+      let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
+      if (!chunks) {
+        if (distAssets.has(`${entrypointName}.js`)) {
+          chunks = [`assets/${entrypointName}.js`];
+        } else if (entrypointName === "vendor") {
+          // support embroider-fingerprinted vendor when running with `-prod` flag
+          const vendorFilename = [...distAssets].find((key) =>
+            key.startsWith("vendor.")
+          );
+          chunks = [`assets/${vendorFilename}`];
+        } else {
+          // Not an ember-cli asset, do not rewrite
+          return;
+        }
+      }
 
-      return newElement;
-    });
+      const newElements = chunks.map((chunk) => {
+        let newElement = `<${element.tagName}`;
 
-    if (
-      entrypointName === "discourse" &&
-      el.tagName.toLowerCase() === "script"
-    ) {
-      const liveReload = dom.window.document.createElement("script");
-      liveReload.setAttribute("async", "");
-      liveReload.src = `${baseURL}ember-cli-live-reload.js`;
-      newElements.unshift(liveReload);
-    }
+        for (const [attr, value] of element.attributes) {
+          if (attr === attribute) {
+            newElement += ` ${attribute}="${baseURL}${chunk}"`;
+          } else if (value === "") {
+            newElement += ` ${attr}`;
+          } else {
+            newElement += ` ${attr}="${value}"`;
+          }
+        }
 
-    el.replaceWith(...newElements);
+        newElement += ` data-ember-cli-rewritten="true"`;
+        newElement += `>`;
 
-    handledEntrypoints.add(entrypointName);
-  }
+        if (element.tagName === "script") {
+          newElement += `</script>`;
+        }
+
+        return newElement;
+      });
+
+      if (
+        entrypointName === "discourse" &&
+        element.tagName.toLowerCase() === "script"
+      ) {
+        let nonce = "";
+        for (const [attr, value] of element.attributes) {
+          if (attr === "nonce") {
+            nonce = value;
+            break;
+          }
+        }
+
+        if (!nonce) {
+          // eslint-disable-next-line no-console
+          console.error(
+            "Expected to find a nonce= attribute on the main discourse script tag, but none was found. ember-cli-live-reload may not work correctly."
+          );
+        }
+
+        newElements.unshift(
+          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${nonce}"></script>`
+        );
+      }
+
+      element.replace(newElements.join("\n"), { html: true });
+
+      handledEntrypoints.add(entrypointName);
+    },
+  });
 }
 
-async function handleRequest(proxy, baseURL, req, res) {
+async function handleRequest(proxy, baseURL, req, res, outputPath) {
   // x-forwarded-host is used in e.g. GitHub CodeSpaces
   let originalHost = req.headers["x-forwarded-host"] || req.headers.host;
 
@@ -136,7 +174,7 @@ async function handleRequest(proxy, baseURL, req, res) {
   }
 
   const csp = response.headers.get("content-security-policy");
-  if (csp) {
+  if (csp && !csp.includes("'strict-dynamic'")) {
     const emberCliAdditions = [
       `http://${originalHost}${baseURL}assets/`,
       `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
@@ -158,17 +196,23 @@ async function handleRequest(proxy, baseURL, req, res) {
   if (isHTML) {
     const [responseText, chunkInfoText, distAssets] = await Promise.all([
       response.text(),
-      fsPromises.readFile("dist/assets.json", "utf-8"),
-      listDistAssets(),
+      fsPromises.readFile(`${outputPath}/assets.json`, "utf-8"),
+      listDistAssets(outputPath),
     ]);
 
     const chunkInfos = JSON.parse(chunkInfoText);
 
-    const dom = new JSDOM(responseText);
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
+    let output = "";
+    const rewriter = new HTMLRewriter((outputChunk) => {
+      output += decoder.decode(outputChunk);
+    });
 
     updateScriptReferences({
       chunkInfos,
-      dom,
+      rewriter,
       selector: "script[data-discourse-entrypoint]",
       attribute: "src",
       baseURL,
@@ -177,14 +221,21 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     updateScriptReferences({
       chunkInfos,
-      dom,
+      rewriter,
       selector: "link[rel=preload][data-discourse-entrypoint]",
       attribute: "href",
       baseURL,
       distAssets,
     });
 
-    res.send(dom.serialize());
+    try {
+      await rewriter.write(encoder.encode(responseText));
+      await rewriter.end();
+    } finally {
+      rewriter.free();
+    }
+
+    res.send(output);
   } else {
     res.send(Buffer.from(await response.arrayBuffer()));
   }
@@ -200,6 +251,7 @@ module.exports = {
   serverMiddleware(config) {
     const app = config.app;
     let { proxy, rootURL, baseURL } = config.options;
+    const outputPath = config.options.path ?? config.options.outputPath;
 
     if (!proxy) {
       // eslint-disable-next-line no-console
@@ -235,7 +287,7 @@ to serve API requests. For example:
     app.use(pathRestrictedRawMiddleware, async (req, res, next) => {
       try {
         if (this.shouldHandleRequest(req, baseURL)) {
-          await handleRequest(proxy, baseURL, req, res);
+          await handleRequest(proxy, baseURL, req, res, outputPath);
         } else {
           // Fixes issues when using e.g. "localhost" instead of loopback IP address
           req.headers.host = "127.0.0.1";

@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 ko:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 채팅
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "항상"
           never: "알림 받지 않기"
@@ -22,6 +25,7 @@ ko:
     chat:
       deleted_chat_username: 삭제되었습니다
       dates:
+        yesterday: "어제"
         time_tiny: "h:mm"
       all_loaded: "모든 메시지 보기"
       bot: "봇"
@@ -154,7 +158,7 @@ ko:
         back: "뒤로"
         title: 채널
         filter_all: 전체
-        filter_open: 열림
+        filter_open: 열기
         filter_closed: 닫힘
         filter_archived: 보관됨
         filter_input_placeholder: 이름으로 채널 검색
@@ -215,11 +219,6 @@ ko:
           topic: "글"
       reviewable:
         type: "채팅 메시지"
-      reactions:
-        you_and_single_user: "당신과 %{username}이 :%{emoji}:로 반응했습니다"
-        you_and_multiple_users: "당신, %{commaSeparatedUsernames}, %{username}이 :%{emoji}:로 반응했습니다"
-        you_multiple_users_and_more:
-          other: "당신, %{commaSeparatedUsernames} 외 %{count}명이 :%{emoji}:로 반응했습니다"
       composer:
         toggle_toolbar: "툴바 전환"
         italic_text: "강조하기"
@@ -260,6 +259,8 @@ ko:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
         cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
+      channel_list:
+        title: "채널"
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"

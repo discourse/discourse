@@ -28,9 +28,10 @@ de:
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
     chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
     chat_allow_archiving_channels: "Dem Team erlauben, Nachrichten zu einem Thema zu archivieren, wenn sie einen Kanal schließen."
-    chat_editing_grace_period: "Für (n) Sekunden nach dem Senden eines Chats wird das (bearbeitete) Schlagwort nicht in der Chat-Nachricht angezeigt."
-    chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die in der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das (bearbeitete) Schlagwort in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
-    chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die in der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das (bearbeitete) Schlagwort in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
+    chat_editing_grace_period: "Für (n) Sekunden nach dem Senden eines Chats wird das Schlagwort „(bearbeitet)“ nicht in der Chat-Nachricht angezeigt."
+    chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
+    chat_preferred_mobile_index: "Bevorzugter Tab beim Laden von /chat auf dem Handy."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -59,7 +60,7 @@ de:
   chat:
     deleted_chat_username: gelöscht
     errors:
-      users_cant_be_added_to_channel: "Diesem Kanal können keine Nutzer hinzugefügt werden."
+      users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
@@ -99,6 +100,7 @@ de:
       original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
       thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
       thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
+      invalid_direct_message: "Du bist nicht berechtigt, diese Direktnachricht zu erstellen."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -138,8 +140,8 @@ de:
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
     channel:
       users_invited_to_channel:
-        one: "%{invited_users} wurde von %{inviting_user}eingeladen."
-        other: "%{invited_users} sind von %{inviting_user}eingeladen worden."
+        one: "%{invited_users} wurde von %{inviting_user} eingeladen."
+        other: "%{invited_users} wurden von %{inviting_user} eingeladen."
       archive:
         first_post_raw: "Dieses Thema ist ein Archiv des Chat-Kanals [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -152,7 +154,7 @@ de:
           one: "%{comma_separated_usernames} und %{count} andere Person"
           other: "%{comma_separated_usernames} und %{count} andere"
     mention_warning:
-      dismiss: "schließen"
+      dismiss: "verwerfen"
       cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
       cannot_see_multiple:
         one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
@@ -170,7 +172,7 @@ de:
         one: "%{first_identifier} und %{count} andere Gruppe erlauben keine Erwähnungen."
         other: "%{first_identifier} und %{count} andere Gruppen erlauben keine Erwähnungen."
       global_mentions_disallowed: "Die Erwähnungen von @here und @all sind in diesem Kanal deaktiviert."
-      too_many_members: "%{first_identifier} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
+      too_many_members: "%{first_identifier} hat zu viele Mitglieder. Es wurde niemand benachrichtigt."
       too_many_members_multiple:
         one: "%{first_identifier} und %{count} andere Gruppe haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
         other: "%{first_identifier} und %{count} andere Gruppen haben zu viele Mitglieder. Es wurde niemand benachrichtigt."

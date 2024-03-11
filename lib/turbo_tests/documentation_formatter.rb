@@ -11,6 +11,8 @@ module TurboTests
                     :success,
                   )
 
+      output_activerecord_debug_logs(output, notification.example)
+
       output.flush
     end
 
@@ -31,10 +33,21 @@ module TurboTests
                     :failure,
                   )
 
+      output_activerecord_debug_logs(output, notification.example)
+
       output.flush
     end
 
     private
+
+    def output_activerecord_debug_logs(output, example)
+      if ENV["GITHUB_ACTIONS"] &&
+           active_record_debug_logs = example.metadata[:active_record_debug_logs]
+        output.puts "::group::ActiveRecord Debug Logs"
+        output.puts active_record_debug_logs
+        output.puts "::endgroup::"
+      end
+    end
 
     def output_example(example)
       output =

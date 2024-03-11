@@ -64,6 +64,14 @@ describe Chat::ThreadUnreadsQuery do
         )
       end
 
+      it "does not count messages in muted channels" do
+        channel_1.membership_for(current_user).update!(muted: true)
+
+        expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+          { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
+        )
+      end
+
       it "does not messages in threads where threading_enabled is false on the channel" do
         channel_1.update!(threading_enabled: false)
         expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(

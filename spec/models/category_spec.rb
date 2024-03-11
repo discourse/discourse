@@ -88,7 +88,7 @@ RSpec.describe Category do
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -632,7 +632,10 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
@@ -694,7 +697,7 @@ RSpec.describe Category do
     context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -1478,6 +1481,33 @@ RSpec.describe Category do
       it "allows limiting depth" do
         expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
       end
+    end
+  end
+
+  describe ".ancestors_of" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    fab!(:sub_subcategory) do
+      SiteSetting.max_category_nesting = 3
+      Fabricate(:category, parent_category: subcategory)
+    end
+
+    it "finds the parent" do
+      expect(Category.ancestors_of([subcategory.id]).to_a).to eq([category])
+    end
+
+    it "finds the grandparent" do
+      expect(Category.ancestors_of([sub_subcategory.id]).to_a).to contain_exactly(
+        category,
+        subcategory,
+      )
+    end
+
+    it "respects the relation it's called on" do
+      expect(Category.where.not(id: category.id).ancestors_of([sub_subcategory.id]).to_a).to eq(
+        [subcategory],
+      )
     end
   end
 end

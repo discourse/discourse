@@ -54,6 +54,9 @@ pt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
+  components:
+    enabled_filter: "Ativado"
+    disabled_filter: "Desativado"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
@@ -77,20 +80,15 @@ pt:
       optimized_link: Os links de imagens otimizadas são efémeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
-      data_type_not_a_number: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
+      data_type_inclusion: "A opção `%{name}` tipo não é suportada. Os tipos suportados são `integer`, `bool`, `list`, `enum` e `upload`"
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
-      default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
+      default_value_missing: "A configuração `%{name}` não tem um valor predefinido."
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
-      default_out_range: "O valor predefinido da configuração `%{name}` não se encontra nos valores possiveis."
       enum_value_not_valid: "O valor selecionado não é um dos enumerados."
-      number_value_not_valid: "O valor novo não está no intervalo permitido."
-      number_value_not_valid_min_max: "Deve estar entre %{min} e %{max}."
-      number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
-      number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
-      string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
-      string_value_not_valid_min_max: "Deve ter entre %{min} e %{max} caractéres de comprimento. "
-      string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
-      string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
+      number_value_not_valid_min_max: "O valor deve estar entre %{min} e %{max}."
+      objects:
+        required: "tem que estar preenchido"
+        not_valid_integer_value: "tem que ser um inteiro"
     locale_errors:
       top_level_locale: "A chave base de um ficheiro de locale deve coincidir com o nome do locale"
       invalid_yaml: "YAML de traduçaõ é inválido"
@@ -295,7 +293,7 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_embedded_media_allowed_trust: "Desculpe, você não pode incorporar itens de media num post."
+  no_embedded_media_allowed_group: "Desculpe, você não pode incorporar itens de media num post."
   no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
   too_many_embedded_media:
     one: "Sinto muito, novos usuários só podem colocar um item de mídia embutida por post."
@@ -592,8 +590,6 @@ pt:
     os:
       android: "Android"
   change_email:
-    confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, mas esta hiperligação de confirmação já não é valida. Talvez o seu email já tenha sido alterado?"
@@ -626,6 +622,9 @@ pt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
       email_title: 'A sua mensagem em "%{title}"'
@@ -658,6 +657,9 @@ pt:
       long_form: "sinalizou isto para obter a atenção do moderador"
       short_description: "Requer a atenção da equipa por outra razão"
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>"
@@ -955,7 +957,6 @@ pt:
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
-    topic_featured_link_enabled: "Permitir publicar uma ligação com tópicos."
     show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
@@ -982,7 +983,6 @@ pt:
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
-    max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
     manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -1017,22 +1017,17 @@ pt:
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
-    top_page_default_timeframe: "Intervalo de tempo por defeito para a página de visualizações do topo."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
-    enable_badges: "Ativar o sistema de distintivos"
     blocked_email_domains: "Uma lista delimitada de domínios de correio electrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são automaticamente tratados para os domínios especificados. Os símbolos wildcard * e ? não são suportados. Exemplo: mailinator.com|trashmail.net"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
-    min_password_length: "Tamanho mínimo da palavra-passe."
-    min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     discourse_connect_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
-    google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
@@ -1067,7 +1062,6 @@ pt:
     s3_upload_bucket: "Nome do balde da Amazon S3 que contém os ficheiros carregados. AVISO: tem que ser minúsculo, sem pontos e sem sublinhados."
     s3_cdn_url: "O URL CDN a ser usado para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: após alterar esta configuração deve refazer as últimas mensagens."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
-    external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço de avatares externo do sistema. Substituições permitidas são {username} {first_letter} {color} {size}"
     allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
@@ -1115,11 +1109,8 @@ pt:
     body_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o corpo de uma mensagem."
     allow_uppercase_posts: "Permitir tudo em maiúsculas num título de tópico ou corpo de mensagem."
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
-    desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     dark_mode_none: "Nenhum"
-    max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
-    authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Após todas estas visualizações, o campo de visitas fica ligeiramente destacado."
@@ -1149,11 +1140,9 @@ pt:
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
     min_first_post_typing_time: "O tempo mínimo em milissegundos que um utilizador deve digitar durante a sua primeira publicação, se o limite não for atingido a mensagem será inserida automaticamente na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
-    reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
-    short_email_length: "Comprimento de email curto, em Bytes"
     display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
     unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
     unsubscribe_via_email_footer: "Anexar um cancelamento de subscrição por email via um link mailto: no rodapé de emails enviados"
@@ -1171,12 +1160,8 @@ pt:
     reset_bounce_score_after_days: "Automaticamente repor pontuação de redirecionamento após X dias."
     always_show_trimmed_content: "Mostrar sempre a parte aparada dos emails recebidos. AVISO: poderá revelar endereços de email."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
-    pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
     pop3_polling_openssl_verify: "Verificar o certificado de TLS do server. (Por defeito: activado)"
-    pop3_polling_period_mins: "Período em minutos entre a verificação da conta POP3 para o email. NOTA: requer reinicialização."
-    pop3_polling_port: "A porta para obter uma conta POP3."
-    pop3_polling_host: "Servidor para solicitações de email via POP3."
     pop3_polling_username: "O nome de utilizador para a conta POP3 para obter e-mail."
     pop3_polling_password: "A palavra-passe para a conta POP3 obter e-mail."
     email_in_min_trust: "Nível de Confiança mínimo que um utilizador necessita de ter para poder publicar novos tópicos por email."
@@ -1196,11 +1181,9 @@ pt:
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
     suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
-    disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
     enable_user_directory: "Forneça uma diretoria de utilizadores para navegação"
-    allow_anonymous_posting: "Permitir que os utilizadores alterem para o modo anónimo"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar publicações anónimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
     hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
@@ -1215,28 +1198,20 @@ pt:
     disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
-    share_anonymized_statistics: "Partilhe estatísticas de utilização anonimizadas."
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
-    embed_truncate: "Truncar mensagens incorporadas."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
-    delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
-    enable_emoji: "Ativar emoji"
-    emoji_set: "Como gostaria de ter o seu emoji?"
     approve_post_count: "O número de publicações de um utilizador novo ou básico que devem ser aprovadas"
-    approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
-    watched_words_regular_expressions: "Palavras vigiadas são expressões regulares."
     enable_diffhtml_preview: "Funcionalidade experimental que utiliza diffHTML para sincronizar a pré-visualização em vez da re-renderização completa"
     blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
@@ -1252,7 +1227,6 @@ pt:
     default_other_enable_quoting: "Por defeito, ativar resposta por citação para texto destacado."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
     default_other_skip_new_user_tips: "Ignorar dicas e emblemas de integração de novos usuários."
-    default_other_like_notification_frequency: "Notificar, por omissão, os utilizadores quando alguém gostar"
     default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
@@ -1260,14 +1234,12 @@ pt:
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
-    tagging_enabled: "Permitir etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas que podem ser aplicadas a um tópico."
     max_tag_length: "O número máximo de carateres que pode ser utilizado numa etiqueta."
     max_tag_search_results: "Ao pesquisar por etiquetas, o número máximo de resultados a mostrar."
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
-    tag_style: "Estilo visual dos distintivos das etiquetas."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
@@ -2092,6 +2064,9 @@ pt:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
+  onebox:
+    github:
+      closed: "fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
@@ -2105,6 +2080,7 @@ pt:
       confirm_body: "Sucesso! As notificações foram ativadas."
       custom: "Notificação de %{username} em %{site_title}"
   staff_action_logs:
+    unknown: "desconhecido"
     api_key:
       revoked: Revogado
   reviewables:

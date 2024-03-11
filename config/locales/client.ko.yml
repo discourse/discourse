@@ -34,11 +34,9 @@ ko:
       long_with_year: "YYYY MMM D a h:mm"
       long_with_year_no_time: "YYYY MMM D"
       full_with_year_no_time: "YYYY MMMM Do"
-      long_date_with_year: "'YY MMM D. LT"
       long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "'YY MMM D"
+      long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "'YY MMM D <br/>LT"
       wrap_ago: "%{date} 전"
       wrap_on: "%{date}"
       tiny:
@@ -64,7 +62,7 @@ ko:
         almost_x_years:
           other: "%{count}년"
         date_month: "MMM D"
-        date_year: "'YY MMM"
+        date_year: "YYYY MMM"
       medium:
         less_than_x_minutes:
           other: "%{count}분 미만"
@@ -84,7 +82,7 @@ ko:
           other: "%{count}년 이상"
         almost_x_years:
           other: "대략 %{count}년"
-        date_year: "'YY MMM D"
+        date_year: "YYYY MMM D"
       medium_with_ago:
         x_minutes:
           other: "%{count}분 전"
@@ -154,7 +152,6 @@ ko:
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
-      message: "사이트가 업데이트되어 <span>새로고침</span>이 필요합니다. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
       dismiss: "무시"
     themes:
       default_description: "기본"
@@ -1214,6 +1211,15 @@ ko:
         success_via_admin: "이 주소로 이메일을 전송했습니다. 사용자는 이메일에 있는 확인 지침을 따라야 합니다."
         success_staff: "현재 주소로 이메일을 전송했습니다. 확인 지침을 따라주세요."
         back_to_preferences: "환경설정으로 돌아가기"
+        confirm_success: "이메일 주소가 변경되었습니다."
+        confirm: "확인"
+        authorizing_new:
+          description: "이메일 주소를 다음으로 변경할 것인지 확인하십시오:"
+          description_add: "보조 이메일 주소를 추가 할 것인지 확인하십시오:"
+        authorizing_old:
+          old_email: "오래된 이메일 : %{email}"
+          new_email: "새로운 이메일 : %{email}"
+          confirm_success: "변경 사항을 확인하기 위해 새 이메일 주소로 이메일을 보냈습니다!"
       change_avatar:
         title: "프로필 사진 변경"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, 기반:"
@@ -1782,6 +1788,8 @@ ko:
       components:
         categories_admin_dropdown:
           title: "카테고리 관리"
+        bulk_select_topics_dropdown:
+          title: "일괄 적용"
     date_time_picker:
       from: 시작
       to: 끝
@@ -2033,6 +2041,7 @@ ko:
         membership_request_consolidated: "새 멤버십 요청"
         reaction: "새 반응"
         votes_released: "투표가 시작되었습니다"
+        admin_problems: "사이트 대시 보드에 대한 새로운 조언"
     upload_selector:
       uploading: "업로드 중"
       processing: "업로드 처리 중"
@@ -2193,6 +2202,7 @@ ko:
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
+        confirm: "확인"
         select_all: "모두 선택"
         clear_all: "모두 지우기"
         unlist_topics: "목록에서 주제 숨기기"
@@ -2255,6 +2265,23 @@ ko:
         tag: "더 이상 %{tag} 주제가 없습니다."
         top: "더 이상 주요 주제가 없습니다."
         bookmarks: "더 이상 북마크한 주제가 없습니다."
+    topic_bulk_actions:
+      close_topics:
+        name: "글 닫기"
+      archive_topics:
+        name: "글 보관"
+      unlist_topics:
+        name: "목록에서 글 숨기기"
+      relist_topics:
+        name: "목록에서 글 다시 보이기"
+      remove_tags:
+        name: "태그 제거"
+      append_tags:
+        name: "태그 추가"
+      replace_tags:
+        name: "태그 바꾸기"
+      delete_topics:
+        name: "글 삭제"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
@@ -2623,9 +2650,7 @@ ko:
     post:
       confirm_delete: "정말 이 게시물을 삭제하시겠습니까?"
       quote_reply: "인용하기"
-      quote_reply_shortcut: "또는 q를 누르세요"
       quote_edit: "편집"
-      quote_edit_shortcut: "또는 e를 누르세요"
       quote_share: "공유"
       edit_reason: "사유: "
       post_number: "%{number}번째 글"
@@ -3439,6 +3464,7 @@ ko:
     fullscreen_table:
       expand_btn: "표 펼치기"
     sidebar:
+      title: "사이드바"
       unread_count:
         other: "%{count} unread"
       new_count:
@@ -3507,6 +3533,9 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
+      filter: "필터"
+      no_results:
+        title: "결과 없음"
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
@@ -3755,7 +3784,6 @@ ko:
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 포맷을 사용하면 북마크 미리 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
-              show: 사용자에 대한 정보를 얻습니다.
               check_emails: 사용자 이메일을 나열합니다.
               update: 사용자 프로필 정보를 업데이트합니다.
               log_out: 사용자의 모든 세션을 로그아웃합니다.
@@ -3936,11 +3964,14 @@ ko:
           body: "본문"
           revert: "변경사항 되돌리기"
           revert_confirm: "변경사항을 되돌릴까요?"
+        component:
+          all_filter: "전체"
+          enabled_filter: "활성화"
+          disabled_filter: "비활성"
         theme:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
-          filter_placeholder: "필터링하려면 입력…"
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."
@@ -4099,6 +4130,9 @@ ko:
             title: "YAML 포맷으로 테마 설정 정의"
           scss_color_variables_warning: '테마에서 핵심 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다. 대신 CSS 사용자 지정 프로퍼티를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">이 가이드</a>를 참조하세요.'
           scss_warning_inline: "테마에서 코어 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다."
+          all_filter: "전체"
+          active_filter: "활성화 사용자"
+          inactive_filter: "비활성화"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"
@@ -4171,7 +4205,6 @@ ko:
           instructions: "모든 html 이메일이 렌더링되는 템플릿을 사용자 지정하고 CSS를 사용하여 스타일을 지정하세요."
       email:
         title: "이메일"
-        settings: "설정"
         templates: "템플릿"
         preview_digest: "요약 미리보기"
         advanced_test:
@@ -4727,7 +4760,6 @@ ko:
             other: "최근 %{count}일간:"
           value_heading: "값"
           requirement_heading: "요구사항"
-          visits: "방문 횟수"
           days: "일"
           topics_replied_to: "댓글을 단 주제"
           topics_viewed: "읽은 주제"
@@ -4875,6 +4907,9 @@ ko:
         json_schema:
           edit: 에디터 실행
           modal_title: "%{name} 편집"
+        file_types_list:
+          add_image_types: "이미지"
+          add_audio_types: "오디오"
       badges:
         title: 배지
         new_badge: 새 배지
@@ -5005,6 +5040,7 @@ ko:
         category_title: "카테고리"
         tag_name: "태그 이름"
         external_url: "외부 또는 상대 URL"
+        username: "아이디"
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?

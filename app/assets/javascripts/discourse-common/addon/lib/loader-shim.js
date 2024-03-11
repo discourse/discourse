@@ -16,7 +16,7 @@ let { define: __define__, require: __require__ } = globalThis;
 // it appears to be unused in the static analysis.
 //
 // For Discourse, the AMD/loader.js mechanism is an important glue. It is what
-// allows Discourse core/admin/wizard/plugins to all be separate .js bundlers
+// allows Discourse core/admin/plugins to all be separate .js bundlers
 // and be "glued back together" as full module graph in the browser.
 //
 // For instance, a plugin module can `import Post from "discourse/models/post";

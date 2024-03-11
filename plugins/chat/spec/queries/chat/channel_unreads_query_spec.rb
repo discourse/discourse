@@ -128,7 +128,11 @@ describe Chat::ChannelUnreadsQuery do
           user_id: current_user.id,
           data: { chat_message_id: message.id, chat_channel_id: channel.id }.to_json,
         )
-      Chat::Mention.create!(notification: notification, user: current_user, chat_message: message)
+      Chat::UserMention.create!(
+        notifications: [notification],
+        user: current_user,
+        chat_message: message,
+      )
     end
 
     it "returns a correct unread mention" do

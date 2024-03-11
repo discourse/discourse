@@ -3,8 +3,10 @@
 class Invite < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class RedemptionFailed < StandardError
   end
+
   class ValidationFailed < StandardError
   end
 

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 import ActivationResent from "./activation-resent";
@@ -23,11 +23,11 @@ export default class ActivationEdit extends Component {
       await changeEmail({
         username: this.login?.loginName,
         password: this.login?.loginPassword,
-        email: this.args.model.newEmail,
+        email: this.newEmail,
       });
 
       this.modal.show(ActivationResent, {
-        model: { currentEmail: this.args.model.newEmail },
+        model: { currentEmail: this.newEmail },
       });
     } catch (e) {
       this.flash = extractError(e);
@@ -35,7 +35,7 @@ export default class ActivationEdit extends Component {
   }
 
   @action
-  updateNewEmail(e) {
-    this.newEmail = e.target.value;
+  updateNewEmail(email) {
+    this.newEmail = email;
   }
 }

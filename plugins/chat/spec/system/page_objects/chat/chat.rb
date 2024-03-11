@@ -27,6 +27,10 @@ module PageObjects
         find(".chat-header-icon").click
       end
 
+      def close_from_header
+        find(".chat-header-icon").click
+      end
+
       def has_header_href?(href)
         find(".chat-header-icon").has_link?(href: href)
       end
@@ -55,6 +59,7 @@ module PageObjects
 
       def visit_user_threads
         visit("/chat/threads")
+        has_css?(".spinner")
         has_no_css?(".spinner")
       end
 
@@ -87,16 +92,26 @@ module PageObjects
         PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
+      def visit_new_message(recipients)
+        if recipients.is_a?(Array)
+          recipients = recipients.map(&:username).join(",")
+        elsif recipients.respond_to?(:username)
+          recipients = recipients.username
+        end
+
+        visit("/chat/new-message?recipients=#{recipients}")
+      end
+
       def has_finished_loading?
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
 
       def minimize_full_page
-        find(".open-drawer-btn").click
+        find(".c-navbar__open-drawer-button").click
       end
 
-      NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"
+      NEW_CHANNEL_BUTTON_SELECTOR = ".c-navbar__new-channel-button"
 
       def new_channel_button
         find(NEW_CHANNEL_BUTTON_SELECTOR)

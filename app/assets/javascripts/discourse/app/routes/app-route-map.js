@@ -105,6 +105,8 @@ export default function () {
     this.route("resent");
     this.route("edit-email");
   });
+  this.route("confirm-new-email", { path: "/u/confirm-new-email/:token" });
+  this.route("confirm-old-email", { path: "/u/confirm-old-email/:token" });
   this.route(
     "user",
     { path: "/u/:username", resetNamespace: true },
@@ -275,5 +277,9 @@ export default function () {
 
   this.route("invites", { resetNamespace: true }, function () {
     this.route("show", { path: "/:token" });
+  });
+
+  this.route("wizard", function () {
+    this.route("step", { path: "/steps/:step_id" });
   });
 }

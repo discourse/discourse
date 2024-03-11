@@ -150,6 +150,27 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_ignore_users" do
+    let(:guardian) { Guardian.new(user) }
+    let(:payload) { serializer.as_json }
+
+    context "when user is a regular one" do
+      let(:user) { Fabricate(:user) }
+
+      it "return false for regular users" do
+        expect(payload[:can_ignore_users]).to eq(false)
+      end
+    end
+
+    context "when user is a staff member" do
+      let(:user) { Fabricate(:moderator) }
+
+      it "returns true" do
+        expect(payload[:can_ignore_users]).to eq(true)
+      end
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }

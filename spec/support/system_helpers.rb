@@ -66,7 +66,6 @@ module SystemHelpers
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
-    SiteSetting.content_security_policy = false
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
@@ -148,10 +147,9 @@ module SystemHelpers
   end
 
   def using_browser_timezone(timezone, &example)
-    using_session(timezone) do |session|
+    using_session(timezone) do
       page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
       freeze_time(&example)
-      session.quit
     end
   end
 

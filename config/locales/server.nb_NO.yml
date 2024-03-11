@@ -52,6 +52,9 @@ nb_NO:
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
+  components:
+    enabled_filter: "Aktivert"
+    disabled_filter: "Deaktivert"
   themes:
     other_error: "Noe gikk galt under oppdateringen av drakten"
     import_error:
@@ -63,17 +66,13 @@ nb_NO:
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
       name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
-      default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
+      default_value_missing: "Innstilling `%{name}` har ingen standardverdi."
       default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
-      default_out_range: "Innstilling `%{name}` sin standardverdi er utenfor de tillatte grenseverdiene."
       enum_value_not_valid: "Den valgte verdien er ikke en av de oppførte valgmulighetene."
-      number_value_not_valid: "Ny verdi er utenfor de tillatte grenseverdiene."
-      number_value_not_valid_min_max: "Den må være mellom %{min} og %{max}."
-      number_value_not_valid_min: "Den må være større enn eller lik %{min}."
-      number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
-      string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
-      string_value_not_valid_min: "Den må være minst %{min} tegn lang."
-      string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
+      number_value_not_valid_min_max: "Verdien må være mellom %{min} og %{max}."
+      objects:
+        required: "Må være til stede"
+        not_valid_integer_value: "må være ett heltall"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -509,8 +508,6 @@ nb_NO:
   email_login:
     title: "E-post innlogging"
   change_email:
-    confirmed: "E-postaddressen din er blitt oppdatert."
-    please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
@@ -546,6 +543,9 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
@@ -580,6 +580,9 @@ nb_NO:
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
       email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
@@ -912,12 +915,10 @@ nb_NO:
     allow_user_locale: "Tillat brukere å velge eget språk"
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
-    topic_featured_link_enabled: "Tillat publisering av lenker som emner."
     show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_personal_message_title_length: "Minste lengde i antall tegn for en meldingstittel"
-    max_emojis_in_title: "Maksimalt antall emojier i en emnetittel"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
     search_prefer_recent_posts: "Hvis søking er tregt på et stort forum, vil dette valget forsøke å søke i en index av de nyeste innleggene først"
     search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
@@ -946,7 +947,6 @@ nb_NO:
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
     allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
-    max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
@@ -959,18 +959,13 @@ nb_NO:
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
-    enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
     invite_expiry_days: "Hvor lenge en bruker invitasjons nøkkel er gyldig i dager"
-    min_password_length: "Minimums passordslengde."
-    min_admin_password_length: "Minimums passordslengde for administrator."
-    google_oauth2_client_id: "Klient-ID tilhørende din Google-søknad."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     rate_limit_new_user_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     max_likes_per_day: "Maximum antall likes per bruker per dag"
     max_invites_per_day: "Maksimalt antall invitasjoner en bruker kan sende hver dag."
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
-    selectable_avatars: "Liste over avatarer brukere kan velge mellom."
     allow_staff_to_upload_any_file_in_pm: "Tillat medlemmer av staben å laste opp hvilken som helst fil i private samtaler"
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
     dark_mode_none: "Ingen"
@@ -988,16 +983,12 @@ nb_NO:
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
     suppress_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
-    disable_digest_emails: "Deaktiver oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
     automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
-    embed_truncate: "Forkort de innebygde innleggene."
     embed_post_limit: "Maksimalt antall innlegg som skal bygges inn."
     embed_username_required: "Brukernavn kreves for opprettelse av emne."
-    enable_emoji: "Aktiver emoji."
-    emoji_set: "Hvordan vil du ha din emoji?"
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
@@ -1316,6 +1307,9 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1328,6 +1322,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
       custom: "Varsling fra %{username} på %{site_title}"
+  staff_action_logs:
+    unknown: "ukjent"
   reviewables:
     priorities:
       low: "Lav"

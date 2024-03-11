@@ -38,6 +38,15 @@ module PageObjects
       def click_delete_themes_button
         find(".btn-delete").click
       end
+
+      def click_edit_objects_theme_setting_button(setting_name)
+        find(".theme-setting[data-setting=\"#{setting_name}\"] .setting-value-edit-button").click
+      end
+
+      def click_theme_settings_editor_button
+        click_button(I18n.t("admin_js.admin.customize.theme.settings_editor"))
+        PageObjects::Components::AdminThemeSettingsEditor.new
+      end
     end
   end
 end

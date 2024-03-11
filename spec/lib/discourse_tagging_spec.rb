@@ -6,8 +6,8 @@ require "discourse_tagging"
 # More tests are found in the category_tag_spec integration specs
 
 RSpec.describe DiscourseTagging do
-  fab!(:admin)
-  fab!(:user)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:admin_guardian) { Guardian.new(admin) }
   let(:guardian) { Guardian.new(user) }
 
@@ -17,8 +17,8 @@ RSpec.describe DiscourseTagging do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   describe "visible_tags" do

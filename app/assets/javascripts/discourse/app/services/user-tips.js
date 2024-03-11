@@ -1,7 +1,6 @@
-import Service, { inject as service } from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import Service, { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
 
 @disableImplicitInjections
@@ -11,7 +10,7 @@ export default class UserTips extends Service {
 
   #availableTips = new Set();
   #renderedId;
-  #shouldRenderMap = new TrackedMap();
+  #shouldRenderSet = new TrackedSet();
 
   #updateRenderedId() {
     const tipsArray = [...this.#availableTips];
@@ -29,14 +28,14 @@ export default class UserTips extends Service {
       })?.id;
 
     if (this.#renderedId !== newId) {
-      this.#shouldRenderMap.delete(this.#renderedId);
-      this.#shouldRenderMap.set(newId, true);
+      this.#shouldRenderSet.delete(this.#renderedId);
+      this.#shouldRenderSet.add(newId);
       this.#renderedId = newId;
     }
   }
 
   shouldRender(id) {
-    return this.#shouldRenderMap.get(id);
+    return this.#shouldRenderSet.has(id);
   }
 
   addAvailableTip(tip) {
@@ -54,8 +53,7 @@ export default class UserTips extends Service {
       return false;
     }
 
-    const userTips = Site.currentProp("user_tips");
-
+    const userTips = this.site.user_tips;
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return false;
     }
@@ -81,7 +79,7 @@ export default class UserTips extends Service {
       return;
     }
 
-    const userTips = Site.currentProp("user_tips");
+    const userTips = this.site.user_tips;
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return;
     }

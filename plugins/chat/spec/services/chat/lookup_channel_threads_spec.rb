@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Chat::LookupChannelThreads::Contract, type: :model do
-  it { is_expected.to validate_presence_of :channel_id }
+  subject(:contract) { described_class.new(channel_id: 1) }
+
+  it { is_expected.to validate_presence_of(:channel_id) }
+  it { is_expected.to allow_values(1, 0, nil, "a").for(:limit) }
+  it do
+    is_expected.not_to allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit)
+  end
 end
 
 RSpec.describe ::Chat::LookupChannelThreads do
@@ -30,9 +36,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
     context "when limit is over max" do
       let(:limit) { described_class::THREADS_LIMIT + 1 }
 
-      it "defaults to a max value" do
-        expect(result.limit).to eq(described_class::THREADS_LIMIT)
-      end
+      it { is_expected.to fail_a_contract }
     end
 
     context "when limit is under min" do

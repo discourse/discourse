@@ -10,7 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
-} from "discourse/lib/hashtag-autocomplete";
+} from "discourse/lib/hashtag-decorator";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
@@ -101,6 +101,12 @@ export function addComposerUploadMarkdownResolver(resolver) {
 export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];
 }
+
+let apiImageWrapperBtnEvents = [];
+export function addApiImageWrapperButtonClickEvent(fn) {
+  apiImageWrapperBtnEvents.push(fn);
+}
+
 export default Component.extend(ComposerUploadUppy, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
@@ -773,6 +779,12 @@ export default Component.extend(ComposerUploadUppy, {
     preview.addEventListener("click", this._handleImageDeleteButtonClick);
     preview.addEventListener("keypress", this._handleAltTextInputKeypress);
     preview.addEventListener("click", this._handleImageGridButtonClick);
+
+    if (apiImageWrapperBtnEvents.length > 0) {
+      apiImageWrapperBtnEvents.forEach((fn) => {
+        preview.addEventListener("click", fn);
+      });
+    }
   },
 
   @on("willDestroyElement")
@@ -802,6 +814,12 @@ export default Component.extend(ComposerUploadUppy, {
     preview?.removeEventListener("click", this._handleImageGridButtonClick);
     preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
+
+    if (apiImageWrapperBtnEvents.length > 0) {
+      apiImageWrapperBtnEvents.forEach((fn) => {
+        preview?.removeEventListener("click", fn);
+      });
+    }
   },
 
   onExpandPopupMenuOptions(toolbarEvent) {

@@ -1,6 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import RelativeDate from "discourse/components/relative-date";
@@ -11,6 +12,11 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+const _beforeLoadMoreCallbacks = [];
+export function addBeforeLoadMoreCallback(fn) {
+  _beforeLoadMoreCallbacks.push(fn);
+}
+
 export default class UserNotificationsController extends Controller {
   @service modal;
   @service appEvents;
@@ -18,8 +24,9 @@ export default class UserNotificationsController extends Controller {
   @service site;
   @service siteSettings;
 
+  @tracked filter = "all";
+
   queryParams = ["filter"];
-  filter = "all";
 
   get listContainerClassNames() {
     return `user-notifications-list ${
@@ -56,9 +63,9 @@ export default class UserNotificationsController extends Controller {
     );
   }
 
-  @discourseComputed("isFiltered", "model.content.length")
-  doesNotHaveNotifications(isFiltered, contentLength) {
-    return !isFiltered && contentLength === 0;
+  @discourseComputed("isFiltered", "model.content.length", "loading")
+  doesNotHaveNotifications(isFiltered, contentLength, loading) {
+    return !loading && !isFiltered && contentLength === 0;
   }
 
   @discourseComputed("isFiltered", "model.content.length")
@@ -82,6 +89,12 @@ export default class UserNotificationsController extends Controller {
   }
 
   @action
+  updateFilter(value) {
+    this.loading = true;
+    this.filter = value;
+  }
+
+  @action
   async resetNew() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
       this.modal.show(DismissNotificationConfirmationModal, {
@@ -102,6 +115,14 @@ export default class UserNotificationsController extends Controller {
 
   @action
   loadMore() {
+    if (
+      _beforeLoadMoreCallbacks.length &&
+      !_beforeLoadMoreCallbacks.some((fn) => fn(this))
+    ) {
+      // Return early if any callbacks return false, short-circuiting the default loading more logic
+      return;
+    }
+
     this.model.loadMore();
   }
 }

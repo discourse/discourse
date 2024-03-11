@@ -32,6 +32,7 @@ class WebHookUserSerializer < UserSerializer
     can_change_website
     can_change_tracking_preferences
     user_api_keys
+    user_passkeys
     group_users
     user_auth_tokens
     user_auth_token_logs

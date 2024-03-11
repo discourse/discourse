@@ -25,10 +25,9 @@
       {{/if}}
     </div>
 
-    <PluginOutlet @name="menu-item-end" @outletArgs={{hash item=this}}>
-      {{#if this.endComponent}}
-        <this.endComponent />
-      {{/if}}
-    </PluginOutlet>
+    {{#if this.endComponent}}
+      <this.endComponent />
+    {{/if}}
   </a>
+  <PluginOutlet @name="menu-item-end" @outletArgs={{this.endOutletArgs}} />
 </li>

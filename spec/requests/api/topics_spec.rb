@@ -84,7 +84,7 @@ RSpec.describe "topics" do
                              type: :integer,
                            },
                            score: {
-                             type: :integer,
+                             type: :number,
                            },
                            yours: {
                              type: :boolean,

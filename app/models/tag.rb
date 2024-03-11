@@ -250,6 +250,7 @@ class Tag < ActiveRecord::Base
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?
   end
+
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
   end

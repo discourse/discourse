@@ -95,7 +95,8 @@ html {
     }
   }
 
-  .d-header-icons .d-icon {
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
     color: var(--primary-low-mid);
   }
 
@@ -411,11 +412,6 @@ html {
 
   .reviewable .status span.approved {
     color: var(--success-hover);
-  }
-
-  // Chat
-  .chat-channel .open-drawer-btn {
-    color: var(--primary-medium);
   }
 }
 
