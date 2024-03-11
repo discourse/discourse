@@ -52,7 +52,7 @@ export default class ChatChannelIcon extends Component {
       <div class="chat-channel-icon">
         <div class="chat-channel-icon --avatar">
           <ChatUserAvatar
-            @user={{@thread.originalMessage.user}}
+            @user={{@thread.preview.lastReplyUser}}
             @interactive={{true}}
             @showPresence={{false}}
           />
