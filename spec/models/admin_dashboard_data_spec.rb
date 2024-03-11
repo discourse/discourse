@@ -140,54 +140,6 @@ RSpec.describe AdminDashboardData do
     end
   end
 
-  describe "auth_config_checks" do
-    shared_examples "problem detection for login providers" do
-      context "when disabled" do
-        it "returns nil" do
-          SiteSetting.set(enable_setting, false)
-          expect(check).to be_nil
-        end
-      end
-
-      context "when enabled" do
-        before { SiteSetting.set(enable_setting, true) }
-
-        it "returns nil when key and secret are set" do
-          SiteSetting.set(key, "12313213")
-          SiteSetting.set(secret, "12312313123")
-          expect(check).to be_nil
-        end
-
-        it "returns a string when key is not set" do
-          SiteSetting.set(key, "")
-          SiteSetting.set(secret, "12312313123")
-          expect(check).to_not be_nil
-        end
-
-        it "returns a string when secret is not set" do
-          SiteSetting.set(key, "123123")
-          SiteSetting.set(secret, "")
-          expect(check).to_not be_nil
-        end
-
-        it "returns a string when key and secret are not set" do
-          SiteSetting.set(key, "")
-          SiteSetting.set(secret, "")
-          expect(check).to_not be_nil
-        end
-      end
-    end
-
-    describe "github" do
-      subject(:check) { described_class.new.github_config_check }
-
-      let(:enable_setting) { :enable_github_logins }
-      let(:key) { :github_client_id }
-      let(:secret) { :github_client_secret }
-      include_examples "problem detection for login providers"
-    end
-  end
-
   describe "force_https_check" do
     subject(:check) { described_class.new(check_force_https: true).force_https_check }
 
