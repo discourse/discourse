@@ -50,6 +50,10 @@ module PageObjects
         find("#topic-bulk-action-options__silent").click
       end
 
+      def click_dismiss_read_confirm
+        find("#dismiss-read-confirm").click
+      end
+
       private
 
       def bulk_select_dropdown_item(name)

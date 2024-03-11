@@ -1775,6 +1775,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -2482,7 +2483,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Message"
+      create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -4255,8 +4256,9 @@ en:
         search: "%{shortcut} Search"
         filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new: "%{shortcut} Dismiss New"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
+        toggle_bulk_select: "%{shortcut} Toggle bulk select"
+        dismiss: "%{shortcut} Dismiss selected topic(s)"
+        x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"

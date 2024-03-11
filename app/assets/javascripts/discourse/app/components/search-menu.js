@@ -146,8 +146,10 @@ export default class SearchMenu extends Component {
     return getURL(url);
   }
 
-  get advancedSearchButtonHref() {
-    return this.fullSearchUrl({ expanded: true });
+  @action
+  openAdvancedSearch() {
+    this.fullSearch();
+    this.close();
   }
 
   get displayMenuPanelResults() {
