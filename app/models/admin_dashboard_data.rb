@@ -141,8 +141,7 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :host_names_check,
-                      :force_https_check,
+    add_problem_check :force_https_check,
                       :ram_check,
                       :google_oauth2_config_check,
                       :facebook_config_check,
@@ -225,12 +224,6 @@ class AdminDashboardData
 
   def self.problem_message_key(i18n_key)
     "#{PROBLEM_MESSAGE_PREFIX}#{i18n_key}"
-  end
-
-  def host_names_check
-    if %w[localhost production.localhost].include?(Discourse.current_hostname)
-      I18n.t("dashboard.host_names_warning")
-    end
   end
 
   def sidekiq_check

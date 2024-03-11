@@ -106,25 +106,6 @@ RSpec.describe AdminDashboardData do
     end
   end
 
-  describe "host_names_check" do
-    subject(:check) { described_class.new.host_names_check }
-
-    it "returns nil when host_names is set" do
-      Discourse.stubs(:current_hostname).returns("something.com")
-      expect(check).to be_nil
-    end
-
-    it "returns a string when host_name is localhost" do
-      Discourse.stubs(:current_hostname).returns("localhost")
-      expect(check).to_not be_nil
-    end
-
-    it "returns a string when host_name is production.localhost" do
-      Discourse.stubs(:current_hostname).returns("production.localhost")
-      expect(check).to_not be_nil
-    end
-  end
-
   describe "sidekiq_check" do
     subject(:check) { described_class.new.sidekiq_check }
 
