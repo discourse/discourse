@@ -244,4 +244,22 @@ RSpec.describe "User threads", type: :system do
       expect(user_threads_page).to have_threads
     end
   end
+
+  context "when in mobile", mobile: true do
+    before do
+      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+    end
+
+    it "has the expected UI elements" do
+      chat_page.visit_user_threads
+
+      expect(user_threads_page).to have_threads(count: 1)
+      expect(user_threads_page).to have_css(".chat-user-avatar")
+      expect(user_threads_page).to have_css(".chat__thread-title__name")
+      expect(user_threads_page).to have_css(".chat-channel-name")
+      expect(user_threads_page).to have_css(".c-user-thread__excerpt")
+      expect(user_threads_page).to have_css(".c-user-thread__excerpt-poster")
+      expect(user_threads_page).to have_css(".c-user-thread .relative-date")
+    end
+  end
 end
