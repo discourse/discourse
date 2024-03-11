@@ -87,38 +87,38 @@ module("Unit | Utility | text-direction", function (hooks) {
     assertDirection(
       assert,
       quotedRtl,
-      "rtl",
-      "RTL paragraphs inside quote have rtl dir"
+      "auto",
+      "RTL paragraphs inside quote have auto dir"
     );
     assertDirection(
       assert,
       quotedLtr,
-      "ltr",
-      "LTR paragraphs inside quote have ltr dir"
+      "auto",
+      "LTR paragraphs inside quote have auto dir"
     );
     assertDirection(
       assert,
       quotedLtrNested,
-      "ltr",
-      "LTR paragraphs inside nested quote have ltr dir"
+      "auto",
+      "LTR paragraphs inside nested quote have auto dir"
     );
     assertDirection(
       assert,
       quotedRtlNested,
-      "rtl",
-      "RTL paragraphs inside nested quote have rtl dir"
+      "auto",
+      "RTL paragraphs inside nested quote have auto dir"
     );
     assertDirection(
       assert,
       notQuotedLtr,
-      "ltr",
-      "LTR paragraphs outside quotes have ltr dir"
+      "auto",
+      "LTR paragraphs outside quotes have auto dir"
     );
     assertDirection(
       assert,
       notQuotedRtl,
-      "rtl",
-      "RTL paragraphs outside quotes have rtl dir"
+      "auto",
+      "RTL paragraphs outside quotes have auto dir"
     );
   });
 });
