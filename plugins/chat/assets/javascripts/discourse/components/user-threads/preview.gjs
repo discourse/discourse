@@ -12,9 +12,12 @@ export default class ThreadPreview extends Component {
     </span>
     <div class="c-user-thread__excerpt">
       <div class="c-user-thread__excerpt-poster">
-        {{@preview.lastReplyUser.username}}<span>:</span>
+        {{@preview.lastReplyUser.username}}
       </div>
-      {{@preview.lastReplyExcerpt}}
+      <span>:</span>
+      <span class="c-user-thread__excerpt-text">
+        {{@preview.lastReplyExcerpt}}
+      </span>
     </div>
   </template>
 }

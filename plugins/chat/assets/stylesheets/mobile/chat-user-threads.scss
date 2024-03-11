@@ -59,9 +59,9 @@
     color: var(--primary-high);
   }
 
-  .c-user-thread__excerpt-poster {
-    span {
-      margin-right: 0.25em;
-    }
+  .c-user-thread__excerpt-text {
+    margin-left: 0.25em;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
