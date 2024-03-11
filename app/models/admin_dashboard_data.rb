@@ -142,7 +142,6 @@ class AdminDashboardData
     ]
 
     add_problem_check :force_https_check,
-                      :google_oauth2_config_check,
                       :facebook_config_check,
                       :twitter_config_check,
                       :github_config_check,
@@ -235,16 +234,6 @@ class AdminDashboardData
   def queue_size_check
     queue_size = Jobs.queued
     I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
-  end
-
-  def google_oauth2_config_check
-    if SiteSetting.enable_google_oauth2_logins &&
-         (
-           SiteSetting.google_oauth2_client_id.blank? ||
-             SiteSetting.google_oauth2_client_secret.blank?
-         )
-      I18n.t("dashboard.google_oauth2_config_warning", base_path: Discourse.base_path)
-    end
   end
 
   def facebook_config_check
