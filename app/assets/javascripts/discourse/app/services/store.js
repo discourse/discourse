@@ -74,7 +74,7 @@ export default class StoreService extends Service {
     const adapter = this.adapterFor(type);
 
     let store = this;
-    return adapter.findAll(this, type, findArgs).then((result) => {
+    return adapter.findAll(this, type, findArgs).then(async (result) => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
         results = adapter.afterFindAll(results, {
@@ -83,15 +83,21 @@ export default class StoreService extends Service {
           },
         });
       }
+      await adapter.applyTransformations?.([result]);
       return results;
     });
   }
 
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
-    return this.adapterFor(type)
+    const adapter = this.adapterFor(type);
+    return adapter
       .find(this, type, findArgs)
-      .then((result) => this._build(type, result));
+      .then((result) => this._build(type, result))
+      .then(async (result) => {
+        await adapter.applyTransformations?.([result]);
+        return result;
+      });
   }
 
   _hydrateFindResults(result, type, findArgs) {

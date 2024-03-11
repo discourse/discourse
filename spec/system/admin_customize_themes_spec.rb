@@ -110,5 +110,43 @@ describe "Admin Customize Themes", type: :system do
         "/admin/customize/themes/#{theme.id}/schema/objects_setting",
       )
     end
+
+    it "allows an admin to edit a theme setting of objects type via the settings editor" do
+      visit "/admin/customize/themes/#{theme.id}"
+
+      theme_settings_editor = admin_customize_themes_page.click_theme_settings_editor_button
+
+      theme_settings_editor.fill_in(<<~SETTING)
+      [
+        {
+          "setting": "objects_setting",
+          "value": [
+            {
+              "name": "new section",
+              "links": [
+                {
+                  "name": "new link",
+                  "url": "https://example.com"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      SETTING
+
+      theme_settings_editor.save
+
+      try_until_success do
+        expect(theme.reload.settings[:objects_setting].value).to eq(
+          [
+            {
+              "links" => [{ "name" => "new link", "url" => "https://example.com" }],
+              "name" => "new section",
+            },
+          ],
+        )
+      end
+    end
   end
 end

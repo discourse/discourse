@@ -130,6 +130,7 @@ let userOptionFields = [
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
   "watched_precedence_over_muted",
+  "topics_unread_when_closed",
 ];
 
 export function addSaveableUserOptionField(fieldName) {

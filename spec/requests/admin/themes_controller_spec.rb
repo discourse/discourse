@@ -1040,7 +1040,7 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#update_single_setting" do
-    let(:theme) { Fabricate(:theme) }
+    fab!(:theme)
 
     before do
       theme.set_field(target: :settings, name: :yaml, value: "bg: red")
@@ -1061,6 +1061,38 @@ RSpec.describe Admin::ThemesController do
         user_history = UserHistory.last
 
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
+      end
+
+      it "should be able to update a theme setting of `objects` typed" do
+        SiteSetting.experimental_objects_type_for_theme_settings = true
+
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
+
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "new link", url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(200)
+
+        expect(theme.settings[:objects_setting].value).to eq(
+          [
+            {
+              "name" => "new_section",
+              "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
+            },
+          ],
+        )
       end
 
       it "should clear a theme setting" do

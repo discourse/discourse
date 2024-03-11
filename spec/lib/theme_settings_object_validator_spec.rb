@@ -230,6 +230,26 @@ RSpec.describe ThemeSettingsObjectValidator do
         )
       end
 
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            float_property: {
+              type: "float",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/float_property"])
+        expect(errors["/float_property"].full_messages).to contain_exactly("must be present")
+      end
+
       it "should return the right hash of error messages when value of property is not of type float" do
         errors = described_class.new(schema: schema, object: { float_property: "string" }).validate
 
@@ -276,6 +296,26 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(described_class.new(schema: schema, object: { integer_property: 1 }).validate).to eq(
           {},
         )
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            integer_property: {
+              type: "integer",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/integer_property"])
+        expect(errors["/integer_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not of type integer" do
@@ -349,6 +389,26 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(
           described_class.new(schema: schema, object: { string_property: "string" }).validate,
         ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            string_property: {
+              type: "string",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/string_property"])
+        expect(errors["/string_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not of type string" do
@@ -474,6 +534,27 @@ RSpec.describe ThemeSettingsObjectValidator do
         ).to eq({})
       end
 
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { topic_property: { type: "topic" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            topic_property: {
+              type: "topic",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/topic_property"])
+        expect(errors["/topic_property"].full_messages).to contain_exactly("must be present")
+      end
+
       it "should return the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { topic_property: { type: "topic" } } }
 
@@ -543,6 +624,27 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(
           described_class.new(schema: schema, object: { upload_property: upload.id }).validate,
         ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            upload_property: {
+              type: "upload",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/upload_property"])
+        expect(errors["/upload_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not an integer" do
@@ -616,6 +718,19 @@ RSpec.describe ThemeSettingsObjectValidator do
         ).to eq({})
       end
 
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = { name: "section", properties: { tag_property: { type: "tag", required: true } } }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/tag_property"])
+        expect(errors["/tag_property"].full_messages).to contain_exactly("must be present")
+      end
+
       it "should return the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { tag_property: { type: "tag" } } }
 
@@ -683,6 +798,27 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(
           described_class.new(schema: schema, object: { group_property: group.id }).validate,
         ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { group_property: { type: "group" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            group_property: {
+              type: "group",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/group_property"])
+        expect(errors["/group_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not an integer" do
@@ -756,6 +892,27 @@ RSpec.describe ThemeSettingsObjectValidator do
         ).to eq({})
       end
 
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { post_property: { type: "post" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            post_property: {
+              type: "post",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/post_property"])
+        expect(errors["/post_property"].full_messages).to contain_exactly("must be present")
+      end
+
       it "should return the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { post_property: { type: "post" } } }
 
@@ -823,6 +980,27 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(
           described_class.new(schema: schema, object: { category_property: category.id }).validate,
         ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        schema = { name: "section", properties: { category_property: { type: "category" } } }
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            category_property: {
+              type: "category",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/category_property"])
+        expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not an integer" do

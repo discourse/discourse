@@ -205,7 +205,7 @@ jobs:
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation --use-runtime-info']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format progress --use-runtime-info']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
