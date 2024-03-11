@@ -106,25 +106,6 @@ RSpec.describe AdminDashboardData do
     end
   end
 
-  describe "rails_env_check" do
-    subject(:check) { described_class.new.rails_env_check }
-
-    it "returns nil when running in production mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("production"))
-      expect(check).to be_nil
-    end
-
-    it "returns a string when running in development mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("development"))
-      expect(check).to_not be_nil
-    end
-
-    it "returns a string when running in test mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("test"))
-      expect(check).to_not be_nil
-    end
-  end
-
   describe "host_names_check" do
     subject(:check) { described_class.new.host_names_check }
 

@@ -63,6 +63,8 @@ class AdminDashboardData
       message = self.class.problem_message_check(i18n_key)
       problems << Problem.new(message) if message.present?
     end
+    problems.concat(ProblemCheck.realtime.flat_map { |c| c.call.map(&:to_h) })
+
     problems += self.class.load_found_scheduled_check_problems
     problems.compact!
 
@@ -139,8 +141,7 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :rails_env_check,
-                      :host_names_check,
+    add_problem_check :host_names_check,
                       :force_https_check,
                       :ram_check,
                       :google_oauth2_config_check,
@@ -224,10 +225,6 @@ class AdminDashboardData
 
   def self.problem_message_key(i18n_key)
     "#{PROBLEM_MESSAGE_PREFIX}#{i18n_key}"
-  end
-
-  def rails_env_check
-    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env.production?
   end
 
   def host_names_check
