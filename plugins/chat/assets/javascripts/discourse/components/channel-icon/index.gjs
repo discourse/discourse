@@ -19,6 +19,10 @@ export default class ChatChannelIcon extends Component {
     return htmlSafe(`color: #${this.args.channel.chatable.color}`);
   }
 
+  get isThreadsList() {
+    return this.args.thread ?? false;
+  }
+
   <template>
     {{#if @channel.isDirectMessageChannel}}
       <div class="chat-channel-icon">
@@ -43,6 +47,19 @@ export default class ChatChannelIcon extends Component {
             {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
           {{/if}}
         </span>
+      </div>
+    {{else if this.isThreadsList}}
+      <div class="chat-channel-icon">
+        <div class="chat-channel-icon --avatar">
+          <ChatUserAvatar
+            @user={{@thread.originalMessage.user}}
+            @interactive={{true}}
+            @showPresence={{false}}
+          />
+          <div class="avatar-flair --threads">
+            {{icon "discourse-threads"}}
+          </div>
+        </div>
       </div>
     {{/if}}
   </template>
