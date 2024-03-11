@@ -61,6 +61,16 @@ export default class PostBookmarkManager {
     }).catch(popupAjaxError);
   }
 
+  // TODO (martin): Likely move this to some service.
+  update(data) {
+    return ajax(`/bookmarks/${this.trackedBookmark.id}.json`, {
+      method: "PUT",
+      data: {
+        reminder_at: data.reminder_at,
+      },
+    }).catch(popupAjaxError);
+  }
+
   afterModalClose(closeData) {
     if (!closeData) {
       return;

@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class BookmarkMenu extends Component {
@@ -24,7 +24,8 @@ export default class BookmarkMenu extends Component {
   @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
-  timeShortcuts = timeShortcuts(this.currentUser.timezone || moment.tz.guess());
+  timezone = this.currentUser.user_option.timezone || moment.tz.guess();
+  timeShortcuts = timeShortcuts(this.timezone);
 
   reminderAtOptions = [
     this.timeShortcuts.twoHours(),
@@ -43,10 +44,27 @@ export default class BookmarkMenu extends Component {
     return this.existingBookmark && !this.quicksaved;
   }
 
-  @action
-  async onBookmark(event) {
-    event.target.blur();
+  get buttonTitle() {
+    if (!this.existingBookmark) {
+      return I18n.t("bookmarks.not_bookmarked");
+    } else {
+      if (this.existingBookmark.reminderAt) {
+        const formattedReminder = formattedReminderTime(
+          this.existingBookmark.reminderAt,
+          this.timezone
+        );
+        return I18n.t("bookmarks.created_with_reminder", {
+          date: formattedReminder,
+          name: this.existingBookmark.name || "",
+        });
+      } else {
+        return I18n.t("bookmarks.created");
+      }
+    }
+  }
 
+  @action
+  async onBookmark() {
     if (this.existingBookmark) {
       return;
     }
@@ -61,7 +79,6 @@ export default class BookmarkMenu extends Component {
       // Also we have the opposite problem -- when closing the DMenu we have
       // no on-close hook, so we can't reset this.
       this.quicksaved = true;
-
       this.toasts.success({
         duration: 3000,
         data: { message: "Bookmarked!" },
@@ -72,24 +89,18 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  onCloseMenu() {
-    console.log("close");
-  }
-
-  @action
   onShowMenu() {
-    console.log("show");
+    // eslint-disable-next-line no-console
+    console.log("onShowMenu");
+    this.quicksaved = false;
+    this.onBookmark();
   }
 
   @action
   onRegisterApi(api) {
-    console.log(api);
-
-    api.show();
-
-    later(() => {
-      api.close();
-    }, 3000);
+    if (!this.dMenu) {
+      this.dMenu = api;
+    }
   }
 
   @action
@@ -98,21 +109,31 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
+  onCloseMenu() {
+    // eslint-disable-next-line no-console
+    console.log("close menu");
+  }
+
+  @action
   onRemoveBookmark() {
     this.bookmarkManager.delete().then(() => {
       this.bookmarkManager.afterDelete();
+      this.dMenu.close();
     });
   }
 
   @action
   onChooseReminderOption(option) {
-    // NOTE: We need to handle here:
-    //   * Bookmark already created since we opened the menu, so we are just
-    //   updating it with whatever quick option is chosen.
     //   * Same as above, but Custom option is chosen, so we open the modal
     //   for "editing" the bookmark.
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
+    } else {
+      // NOTE: We need to handle here:
+      //   * Bookmark already created since we opened the menu, so we are just
+      //   updating it with whatever quick option is chosen.
+
+      this.bookmarkManager.update({ reminder_at: option.time.toISOString() });
     }
   }
 
@@ -120,7 +141,7 @@ export default class BookmarkMenu extends Component {
     this.modal
       .show(BookmarkModal, {
         model: {
-          bookmark: this.bookmarkManager.trackedBookmark,
+          bookmark: this.existingBookmark,
           afterSave: (savedData) => {
             return this.bookmarkManager.afterSave(savedData);
           },
@@ -139,17 +160,17 @@ export default class BookmarkMenu extends Component {
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
       @arrow="true"
-      {{on "click" this.onBookmark}}
       class={{concatClass
         "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
         (if this.existingBookmark "bookmarked")
       }}
+      @title={{this.buttonTitle}}
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:trigger>
-        {{#if this.bookmarkManager.trackedBookmark.reminderAt}}
+        {{#if this.existingBookmark.reminderAt}}
           {{dIcon "discourse-bookmark-clock"}}
         {{else}}
           {{dIcon "bookmark"}}
@@ -167,12 +188,7 @@ export default class BookmarkMenu extends Component {
                   @class="bookmark-menu__row-btn btn-flat"
                 />
               </li>
-              <li
-                class="bookmark-menu__row -remove"
-                role="button"
-                tabindex="0"
-                {{on "click" this.onRemoveBookmark}}
-              >
+              <li class="bookmark-menu__row -remove" role="button" tabindex="0">
                 <DButton
                   @icon="trash-alt"
                   @translatedLabel="Delete"
