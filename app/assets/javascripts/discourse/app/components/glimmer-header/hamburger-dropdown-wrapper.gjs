@@ -11,7 +11,6 @@ import HamburgerDropdown from "../sidebar/hamburger-dropdown";
 export default class HamburgerDropdownWrapper extends Component {
   @action
   click(e) {
-    e.preventDefault();
     if (
       e.target.closest(
         ".sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link"
