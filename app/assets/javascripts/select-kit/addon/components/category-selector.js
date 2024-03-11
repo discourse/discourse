@@ -1,6 +1,5 @@
 import EmberObject, { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
 import CategoryRow from "select-kit/components/category-row";
@@ -70,19 +69,30 @@ export default MultiSelectComponent.extend({
       categories = this._super(filter);
     }
 
-    // If there is a single match and it has subcategories, add a row for
-    // selecting all
-    if (categories.length === 1) {
-      const descendants = categories[0].descendants;
-      if (descendants.length > 1) {
-        categories.push(
+    // If there is a single match or an exact match and it has subcategories,
+    // add a row for selecting all subcategories
+    if (
+      categories.length === 1 ||
+      (categories.length > 0 && categories[0].name.localeCompare(filter) === 0)
+    ) {
+      // Descendants may not be loaded if lazy loading is enabled. Search for
+      // subcategories will make sure these are loaded
+      if (this.site.lazy_load_categories) {
+        await Category.asyncSearch("", {
+          parentCategoryId: categories[0].id,
+        });
+      }
+
+      if (categories[0].descendants.length > 1) {
+        categories.splice(
+          1,
+          0,
           EmberObject.create({
-            label: categoryBadgeHTML(descendants[0], {
-              link: false,
-              recursive: true,
-              subcategoryCount: descendants.length - 1,
-            }),
-            categories: [...descendants],
+            // This is just a hack to ensure the IDs are unique, but ensure
+            // that parseInt still returns a valid ID in order to generate the
+            // label
+            id: `${categories[0].id}+subcategories`,
+            categories: categories[0].descendants,
           })
         );
       }

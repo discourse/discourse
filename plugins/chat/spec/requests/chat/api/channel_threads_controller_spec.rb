@@ -168,6 +168,13 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.status).to eq(404)
       end
     end
+
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{public_channel.id}/threads?limit=9999"
+        expect(response.status).to eq(400)
+      end
+    end
   end
 
   describe "update" do

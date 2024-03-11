@@ -10,6 +10,10 @@
       }
 
       .category-drop-header {
+        &[data-value=""] {
+          color: var(--primary-high);
+        }
+
         &.is-none .selected-name {
           color: inherit;
         }
@@ -40,6 +44,22 @@
           font-weight: normal;
           color: var(--primary-medium);
           font-size: var(--font-down-1);
+        }
+      }
+
+      .category-drop-footer {
+        align-items: center;
+        border-top: 1px solid var(--primary-low);
+        display: flex;
+        font-size: var(--font-down-1);
+        height: 30px;
+        justify-content: space-between;
+        width: 100%;
+
+        a,
+        span {
+          color: var(--primary-high);
+          margin: 0 10px;
         }
       }
     }

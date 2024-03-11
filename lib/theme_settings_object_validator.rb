@@ -146,6 +146,8 @@ class ThemeSettingsObjectValidator
     type = property_attributes[:type]
     value = @object[property_name]
 
+    return true if value.nil?
+
     case type
     when "topic", "category", "upload", "post", "group", "tag"
       if !valid_ids(type).include?(value)

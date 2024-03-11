@@ -50,14 +50,14 @@ module Chat
 
     private
 
-    def fetch_message(contract:, **)
+    def fetch_message(contract:)
       Chat::Message.includes(:chat_channel, :revisions).find_by(
         id: contract.message_id,
         chat_channel_id: contract.channel_id,
       )
     end
 
-    def can_flag_message_in_channel(guardian:, contract:, message:, **)
+    def can_flag_message_in_channel(guardian:, contract:, message:)
       guardian.can_join_chat_channel?(message.chat_channel) &&
         guardian.can_flag_chat_message?(message) &&
         guardian.can_flag_message_as?(
@@ -71,7 +71,7 @@ module Chat
         )
     end
 
-    def flag_message(message:, contract:, guardian:, **)
+    def flag_message(message:, contract:, guardian:)
       Chat::ReviewQueue.new.flag_message(
         message,
         guardian,
