@@ -142,7 +142,6 @@ class AdminDashboardData
     ]
 
     add_problem_check :force_https_check,
-                      :ram_check,
                       :google_oauth2_config_check,
                       :facebook_config_check,
                       :twitter_config_check,
@@ -236,10 +235,6 @@ class AdminDashboardData
   def queue_size_check
     queue_size = Jobs.queued
     I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
-  end
-
-  def ram_check
-    I18n.t("dashboard.memory_warning") if MemInfo.new.mem_total && MemInfo.new.mem_total < 950_000
   end
 
   def google_oauth2_config_check

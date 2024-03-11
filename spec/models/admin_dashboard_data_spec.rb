@@ -140,25 +140,6 @@ RSpec.describe AdminDashboardData do
     end
   end
 
-  describe "ram_check" do
-    subject(:check) { described_class.new.ram_check }
-
-    it "returns nil when total ram is 1 GB" do
-      MemInfo.any_instance.stubs(:mem_total).returns(1_025_272)
-      expect(check).to be_nil
-    end
-
-    it "returns nil when total ram cannot be determined" do
-      MemInfo.any_instance.stubs(:mem_total).returns(nil)
-      expect(check).to be_nil
-    end
-
-    it "returns a string when total ram is less than 1 GB" do
-      MemInfo.any_instance.stubs(:mem_total).returns(512_636)
-      expect(check).to_not be_nil
-    end
-  end
-
   describe "auth_config_checks" do
     shared_examples "problem detection for login providers" do
       context "when disabled" do
