@@ -133,12 +133,12 @@ function mustacheValue(node, state) {
         return `this.attach(${widgetString}, ${pairsToObj(hash.pairs)})`;
       }
 
-      if (node.escaped) {
-        return `${resolve(path)}`;
-      } else {
+      if (node.trusting) {
         return `new ${useHelper(state, "rawHtml")}({ html: '<span>' + ${resolve(
           path
         )} + '</span>'})`;
+      } else {
+        return `${resolve(path)}`;
       }
   }
 }
