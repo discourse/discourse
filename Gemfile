@@ -125,7 +125,6 @@ group :test do
   gem "capybara", require: false
   gem "webmock", require: false
   gem "fakeweb", require: false
-  gem "minitest", require: false
   gem "simplecov", require: false
   gem "selenium-webdriver", "~> 4.14", require: false
   gem "selenium-devtools", require: false

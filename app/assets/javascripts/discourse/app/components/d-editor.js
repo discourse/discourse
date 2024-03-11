@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";

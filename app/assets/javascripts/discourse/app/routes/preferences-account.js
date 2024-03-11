@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import UserBadge from "discourse/models/user-badge";
 import RestrictedUserRoute from "discourse/routes/restricted-user";

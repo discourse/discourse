@@ -2,7 +2,7 @@ import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";

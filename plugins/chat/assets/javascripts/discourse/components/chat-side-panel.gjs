@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import and from "truth-helpers/helpers/and";
+import { and } from "truth-helpers";
 import resizableNode from "../modifiers/chat/resizable-node";
 import ChatSidePanelResizer from "./chat-side-panel-resizer";
 

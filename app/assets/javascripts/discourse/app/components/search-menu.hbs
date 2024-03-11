@@ -46,7 +46,9 @@
         {{#if this.search.activeGlobalSearchTerm}}
           <SearchMenu::ClearButton @clearSearch={{this.clearSearch}} />
         {{/if}}
-        <SearchMenu::AdvancedButton @href={{this.advancedSearchButtonHref}} />
+        <SearchMenu::AdvancedButton
+          @openAdvancedSearch={{this.openAdvancedSearch}}
+        />
       </div>
     {{/if}}
   </div>
@@ -54,7 +56,6 @@
   {{#if @inlineResults}}
     <SearchMenu::Results
       @loading={{this.loading}}
-      @noResults={{this.noResults}}
       @invalidTerm={{this.invalidTerm}}
       @suggestionKeyword={{this.suggestionKeyword}}
       @suggestionResults={{this.suggestionResults}}
@@ -70,7 +71,6 @@
     <MenuPanel @panelClass="search-menu-panel">
       <SearchMenu::Results
         @loading={{this.loading}}
-        @noResults={{this.noResults}}
         @invalidTerm={{this.invalidTerm}}
         @suggestionKeyword={{this.suggestionKeyword}}
         @suggestionResults={{this.suggestionResults}}

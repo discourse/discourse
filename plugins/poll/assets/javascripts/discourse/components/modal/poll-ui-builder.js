@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";

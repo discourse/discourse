@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";

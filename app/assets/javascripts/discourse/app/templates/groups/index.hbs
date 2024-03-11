@@ -30,7 +30,7 @@
       <ComboBox
         @value={{this.type}}
         @content={{this.types}}
-        @onChange={{action (mut this.type)}}
+        @onChange={{fn (mut this.type)}}
         @options={{hash clearable=true none="groups.index.filter"}}
         class="groups-header-filters-type"
       />

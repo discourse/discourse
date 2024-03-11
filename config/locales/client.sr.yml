@@ -1835,6 +1835,7 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Upload"

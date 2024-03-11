@@ -52,23 +52,23 @@ module Chat
 
     private
 
-    def fetch_optional_membership(thread:, guardian:, **)
+    def fetch_optional_membership(thread:, guardian:)
       context.membership = thread.membership_for(guardian.user)
     end
 
-    def fetch_thread(contract:, **)
+    def fetch_thread(contract:)
       ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: contract.thread_id)
     end
 
-    def ensure_thread_enabled(thread:, **)
-      thread.channel.threading_enabled
+    def ensure_thread_enabled(thread:)
+      thread.channel.threading_enabled || thread.force
     end
 
-    def can_view_thread(guardian:, thread:, **)
+    def can_view_thread(guardian:, thread:)
       guardian.can_preview_chat_channel?(thread.channel)
     end
 
-    def determine_target_message_id(contract:, membership:, guardian:, **)
+    def determine_target_message_id(contract:, membership:, guardian:)
       if contract.fetch_from_last_read
         context.target_message_id = membership&.last_read_message_id
       else
@@ -76,7 +76,7 @@ module Chat
       end
     end
 
-    def target_message_exists(contract:, guardian:, **)
+    def target_message_exists(contract:, guardian:)
       return true if context.target_message_id.blank?
       target_message =
         ::Chat::Message.with_deleted.find_by(
@@ -88,7 +88,7 @@ module Chat
       target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
-    def fetch_messages(thread:, guardian:, contract:, **)
+    def fetch_messages(thread:, guardian:, contract:)
       messages_data =
         ::Chat::MessagesQuery.call(
           channel: thread.channel,

@@ -9,46 +9,32 @@
 enabled_site_setting :discourse_narrative_bot_enabled
 hide_plugin
 
-if Rails.env == "development"
-  # workaround, teach reloader to reload jobs
-  # if we do not do this then
-  #
-  # 1. on reload rails goes and undefines Jobs::Base
-  # 2. as a side effect this undefines Jobs::BotInput
-  # 3. we have a post_edited hook that queues a job for bot input
-  # 4. if you are not running sidekiq in dev every time you save a post it will trigger it
-  # 5. but the constant can not be autoloaded
-  Rails.configuration.autoload_paths << File.expand_path("../autoload/jobs", __FILE__)
-end
-
 require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting"
 register_asset "stylesheets/discourse-narrative-bot.scss"
 
+module ::DiscourseNarrativeBot
+  PLUGIN_NAME = "discourse-narrative-bot".freeze
+  BOT_USER_ID = -2
+end
+
+require_relative "lib/discourse_narrative_bot/engine"
+
 after_initialize do
+  if Rails.env.test?
+    ::SiteSetting.defaults.tap do |s|
+      # disable plugins
+      if ENV["LOAD_PLUGINS"] == "1"
+        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
+      end
+    end
+  end
+
   SeedFu.fixture_paths << Rails
     .root
     .join("plugins", "discourse-narrative-bot", "db", "fixtures")
     .to_s
 
   Mime::Type.register "image/svg+xml", :svg
-
-  require_relative "autoload/jobs/regular/bot_input"
-  require_relative "autoload/jobs/regular/narrative_timeout"
-  require_relative "autoload/jobs/regular/narrative_init"
-  require_relative "autoload/jobs/regular/send_default_welcome_message"
-  require_relative "autoload/jobs/onceoff/discourse_narrative_bot/grant_badges"
-  require_relative "autoload/jobs/onceoff/discourse_narrative_bot/remap_old_bot_images"
-  require_relative "lib/discourse_narrative_bot/actions"
-  require_relative "lib/discourse_narrative_bot/base"
-  require_relative "lib/discourse_narrative_bot/new_user_narrative"
-  require_relative "lib/discourse_narrative_bot/advanced_user_narrative"
-  require_relative "lib/discourse_narrative_bot/track_selector"
-  require_relative "lib/discourse_narrative_bot/certificate_generator"
-  require_relative "lib/discourse_narrative_bot/dice"
-  require_relative "lib/discourse_narrative_bot/quote_generator"
-  require_relative "lib/discourse_narrative_bot/magic_8_ball"
-  require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting"
-  require_relative "lib/discourse_narrative_bot/post_guardian_extension"
 
   RailsMultisite::ConnectionManagement.safe_each_connection do
     if SiteSetting.discourse_narrative_bot_enabled
@@ -62,79 +48,6 @@ after_initialize do
       end
     end
   end
-
-  require_dependency "plugin_store"
-
-  module ::DiscourseNarrativeBot
-    PLUGIN_NAME = "discourse-narrative-bot".freeze
-    BOT_USER_ID = -2
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscourseNarrativeBot
-    end
-
-    class Store
-      def self.set(key, value)
-        ::PluginStore.set(PLUGIN_NAME, key, value)
-      end
-
-      def self.get(key)
-        ::PluginStore.get(PLUGIN_NAME, key)
-      end
-
-      def self.remove(key)
-        ::PluginStore.remove(PLUGIN_NAME, key)
-      end
-    end
-
-    class CertificatesController < ::ApplicationController
-      layout false
-      skip_before_action :check_xhr
-      requires_login
-
-      def generate
-        immutable_for(24.hours)
-
-        %i[date user_id].each do |key|
-          unless params[key]&.present?
-            raise Discourse::InvalidParameters.new("#{key} must be present")
-          end
-        end
-
-        if params[:user_id].to_i != current_user.id
-          rate_limiter = RateLimiter.new(current_user, "svg_certificate", 3, 1.minute)
-        else
-          rate_limiter = RateLimiter.new(current_user, "svg_certificate_self", 30, 10.minutes)
-        end
-        rate_limiter.performed! unless current_user.staff?
-
-        user = User.find_by(id: params[:user_id])
-        raise Discourse::NotFound if user.blank?
-
-        hijack do
-          generator = CertificateGenerator.new(user, params[:date], avatar_url(user))
-
-          svg =
-            params[:type] == "advanced" ? generator.advanced_user_track : generator.new_user_track
-
-          respond_to { |format| format.svg { render inline: svg } }
-        end
-      end
-
-      private
-
-      def avatar_url(user)
-        UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub("{size}", "250"))
-      end
-    end
-  end
-
-  DiscourseNarrativeBot::Engine.routes.draw do
-    get "/certificate" => "certificates#generate", :format => :svg
-  end
-
-  Discourse::Application.routes.append { mount ::DiscourseNarrativeBot::Engine, at: "/discobot" }
 
   self.add_model_callback(User, :after_destroy) { DiscourseNarrativeBot::Store.remove(self.id) }
 
@@ -312,6 +225,18 @@ after_initialize do
         target_usernames: recipient.username,
       )
     end
+  end
+
+  self.on(:site_setting_changed) do |name, old_value, new_value|
+    next if name.to_s != "default_locale"
+    next if !SiteSetting.discourse_narrative_bot_enabled
+
+    profile = UserProfile.find_by(user_id: DiscourseNarrativeBot::BOT_USER_ID)
+
+    next if profile.blank?
+
+    new_bio = I18n.with_locale(new_value) { I18n.t("discourse_narrative_bot.bio") }
+    profile.update!(bio_raw: new_bio)
   end
 
   PostGuardian.prepend(DiscourseNarrativeBot::PostGuardianExtension)

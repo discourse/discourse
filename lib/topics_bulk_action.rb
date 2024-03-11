@@ -13,6 +13,7 @@ class TopicsBulkAction
     @operations ||= %w[
       change_category
       close
+      silent_close
       archive
       change_notification_level
       destroy_post_timing
@@ -165,6 +166,15 @@ class TopicsBulkAction
     topics.each do |t|
       if guardian.can_moderate?(t)
         t.update_status("closed", true, @user)
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def silent_close
+    topics.each do |t|
+      if guardian.can_moderate?(t)
+        t.update_status("autoclosed", true, @user)
         @changed_ids << t.id
       end
     end

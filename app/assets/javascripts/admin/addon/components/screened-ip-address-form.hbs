@@ -11,7 +11,7 @@
 <ComboBox
   @content={{this.actionNames}}
   @value={{this.actionName}}
-  @onChange={{action (mut this.actionName)}}
+  @onChange={{fn (mut this.actionName)}}
 />
 
 <DButton

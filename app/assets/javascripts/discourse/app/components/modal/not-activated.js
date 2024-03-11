@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import ActivationEdit from "./activation-edit";
 import ActivationResent from "./activation-resent";

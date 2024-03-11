@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import I18n from "discourse-i18n";

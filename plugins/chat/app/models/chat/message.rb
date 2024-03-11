@@ -279,7 +279,7 @@ module Chat
     end
 
     def thread_om?
-      in_thread? && self.thread.original_message_id == self.id
+      in_thread? && self.thread&.original_message_id == self.id
     end
 
     def parsed_mentions

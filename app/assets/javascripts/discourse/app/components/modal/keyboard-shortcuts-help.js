@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import I18n from "discourse-i18n";
@@ -88,11 +88,14 @@ export default class KeyboardShortcutsHelp extends Component {
             keysDelimiter: PLUS,
           }),
           help: buildShortcut("application.help", { keys1: ["?"] }),
-          dismiss_new: buildShortcut("application.dismiss_new", {
-            keys1: ["x", "r"],
+          bulk_select: buildShortcut("application.toggle_bulk_select", {
+            keys1: [SHIFT, "b"],
           }),
-          dismiss_topics: buildShortcut("application.dismiss_topics", {
-            keys1: ["x", "t"],
+          dismiss: buildShortcut("application.dismiss", {
+            keys1: [SHIFT, "d"],
+          }),
+          x: buildShortcut("application.x", {
+            keys1: ["x"],
           }),
           log_out: buildShortcut("application.log_out", {
             keys1: [SHIFT, "z"],

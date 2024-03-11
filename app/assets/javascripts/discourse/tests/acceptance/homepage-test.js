@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/application";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -27,9 +27,11 @@ acceptance("Dynamic homepage handling", function () {
     assertOnLatest("/");
 
     await router.transitionTo("/").followRedirects();
+    await settled();
     assertOnLatest("/");
 
     await router.transitionTo("discovery.index").followRedirects();
+    await settled();
     assertOnLatest("/");
 
     await click(".nav-item_latest a");
@@ -66,9 +68,11 @@ acceptance("Dynamic homepage handling", function () {
     assertOnCategories("/");
 
     await router.transitionTo("/").followRedirects();
+    await settled();
     assertOnCategories("/");
 
     await router.transitionTo("discovery.index").followRedirects();
+    await settled();
     assertOnCategories("/");
 
     await click(".nav-item_categories a");

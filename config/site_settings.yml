@@ -1992,7 +1992,7 @@ security:
     type: simple_list
     default: ""
   content_security_policy_strict_dynamic:
-    default: false
+    default: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0

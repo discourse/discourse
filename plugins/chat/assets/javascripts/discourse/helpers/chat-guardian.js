@@ -1,5 +1,5 @@
 import Helper from "@ember/component/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 
 export default class ChatGuardianHelper extends Helper {

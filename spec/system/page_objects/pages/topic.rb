@@ -210,6 +210,28 @@ module PageObjects
         @private_message_map_component.is_visible?
       end
 
+      def click_notifications_button
+        find(".topic-notifications-button .select-kit-header").click
+      end
+
+      def click_admin_menu_button
+        find("#topic-footer-buttons .topic-admin-menu-button").click
+      end
+
+      def watch_topic
+        click_notifications_button
+        find('li[data-name="watching"]').click
+      end
+
+      def close_topic
+        click_admin_menu_button
+        find(".topic-admin-popup-menu ul.topic-admin-menu-topic li.topic-admin-close").click
+      end
+
+      def has_read_post?(post)
+        post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
+      end
+
       private
 
       def topic_footer_button_id(button)

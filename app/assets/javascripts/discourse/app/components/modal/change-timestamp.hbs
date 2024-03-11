@@ -15,7 +15,7 @@
       <DatePickerPast
         @value={{readonly this.date}}
         @containerId="date-container"
-        @onSelect={{action (mut this.date)}}
+        @onSelect={{fn (mut this.date)}}
       />
       <Input @type="time" @value={{this.time}} />
     </form>

@@ -10,7 +10,7 @@
       @content={{this.shortcuts}}
       @clearable={{this.clearable}}
       @onChangeInput={{this.onChangeInput}}
-      @onChange={{action (mut this.selection)}}
+      @onChange={{fn (mut this.selection)}}
       @options={{hash none="time_shortcut.select_timeframe"}}
     />
   </div>

@@ -7,11 +7,12 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
   def value=(objects)
     ensure_is_valid_value!(objects)
-
-    record = has_record? ? db_record : create_record!
-    record.json_value = objects
-    record.save!
+    record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
     theme.reload
     record.json_value
+  end
+
+  def schema
+    @opts[:schema]
   end
 end

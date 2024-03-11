@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatController extends Controller {

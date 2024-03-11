@@ -1,5 +1,5 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";

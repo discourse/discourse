@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import icon from "discourse-common/helpers/d-icon";
 

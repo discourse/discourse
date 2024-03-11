@@ -400,6 +400,7 @@ export default class Category extends RestModel {
         categories: result["categories"].map((category) =>
           Site.current().updateCategory(category)
         ),
+        categoriesCount: result["categories_count"],
       };
     } else {
       return result["categories"].map((category) =>
@@ -462,6 +463,17 @@ export default class Category extends RestModel {
   @discourseComputed("parentCategory.ancestors")
   ancestors(parentAncestors) {
     return [...(parentAncestors || []), this];
+  }
+
+  @discourseComputed("subcategories")
+  descendants() {
+    const descendants = [this];
+    for (let i = 0; i < descendants.length; i++) {
+      if (descendants[i].subcategories) {
+        descendants.push(...descendants[i].subcategories);
+      }
+    }
+    return descendants;
   }
 
   @discourseComputed("parentCategory.level")

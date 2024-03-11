@@ -38,6 +38,22 @@ module PageObjects
         page.has_css?("#{topic_list_item_closed(topic)}")
       end
 
+      def has_unread_badge?(topic)
+        page.has_css?("#{topic_list_item_unread_badge(topic)}")
+      end
+
+      def has_no_unread_badge?(topic)
+        page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
+      end
+
+      def has_checkbox_selected_on_row?(n)
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+      end
+
+      def has_no_checkbox_selected_on_row?(n)
+        page.has_no_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+      end
+
       def click_topic_checkbox(topic)
         find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
       end
@@ -67,6 +83,10 @@ module PageObjects
 
       def topic_list_item_closed(topic)
         "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.locked"
+      end
+
+      def topic_list_item_unread_badge(topic)
+        "#{topic_list_item_class(topic)} .topic-post-badges .unread-posts"
       end
     end
   end

@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import DFloatBody from "float-kit/components/d-float-body";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {
   @service tooltip;
@@ -68,9 +68,7 @@ export default class DTooltip extends Component {
     >
       <div class="fk-d-tooltip__trigger-container">
         {{#if (has-block "trigger")}}
-          <div>
-            {{yield this.componentArgs to="trigger"}}
-          </div>
+          {{yield this.componentArgs to="trigger"}}
         {{else}}
           {{#if @icon}}
             <span class="fk-d-tooltip__icon">

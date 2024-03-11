@@ -13,7 +13,14 @@ class PostAlerter
     post
   end
 
-  def self.create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+  def self.create_notification_alert(
+    user:,
+    post:,
+    notification_type:,
+    excerpt: nil,
+    username: nil,
+    group_name: nil
+  )
     return if user.suspended?
 
     if post_url = post.url
@@ -34,6 +41,7 @@ class PostAlerter
         username: username || post.username,
         post_url: post_url,
       }
+      payload[:group_name] = group_name if group_name.present?
 
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
 
@@ -655,19 +663,28 @@ class PostAlerter
         post: original_post,
         notification_type: type,
         username: original_username,
+        group_name: group&.name,
       )
     end
 
     created.id ? created : nil
   end
 
-  def create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+  def create_notification_alert(
+    user:,
+    post:,
+    notification_type:,
+    excerpt: nil,
+    username: nil,
+    group_name: nil
+  )
     self.class.create_notification_alert(
       user: user,
       post: post,
       notification_type: notification_type,
       excerpt: excerpt,
       username: username,
+      group_name: group_name,
     )
   end
 
