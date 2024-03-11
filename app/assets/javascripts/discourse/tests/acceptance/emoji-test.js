@@ -1,4 +1,4 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
@@ -6,6 +6,8 @@ import {
   exists,
   normalizeHtml,
   query,
+  simulateKey,
+  simulateKeys,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -16,12 +18,13 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await fillIn(".d-editor-input", "this is an emoji :blonde_woman:");
+    await simulateKeys(query(".d-editor-input"), "a :blonde_wo\t");
+
     assert.ok(visible(".d-editor-preview"));
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
-        `<p>this is an emoji <img src="/images/emoji/twitter/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>a <img src="/images/emoji/twitter/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       )
     );
   });
@@ -30,13 +33,13 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await fillIn(".d-editor-input", "this is an emoji :blonde_woman:t5:");
+    await simulateKeys(query(".d-editor-input"), "a :blonde_woman:t5:");
 
     assert.ok(visible(".d-editor-preview"));
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
-        `<p>this is an emoji <img src="/images/emoji/twitter/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>a <img src="/images/emoji/twitter/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       )
     );
   });
@@ -49,13 +52,13 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await fillIn(".d-editor-input", ":s");
-    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowDown"); // ensures a keyup is triggered
+    const editor = query(".d-editor-input");
+
+    await simulateKeys(editor, ":s");
 
     assert.notOk(exists(".autocomplete.ac-emoji"));
 
-    await fillIn(".d-editor-input", ":sw");
-    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowDown"); // ensures a keyup is triggered
+    await simulateKey(editor, "w");
 
     assert.ok(exists(".autocomplete.ac-emoji"));
   });

@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
 import $ from "jquery";
+import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
 import * as AvatarUtils from "discourse-common/lib/avatar-utils";
@@ -421,34 +422,45 @@ export function postRNWebviewMessage(prop, value) {
   }
 }
 
-const CODE_BLOCKS_REGEX =
-  /^(  |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
-//|    ^     |   ^   |      ^      |           ^           |
-//     |         |          |                  |
-//     |         |          |       code blocks between [code]
-//     |         |          |
-//     |         |          +--- code blocks between three backticks
-//     |         |
-//     |         +----- inline code between backticks
-//     |
-//     +------- paragraphs starting with 2 spaces or tab
-
-const OPEN_CODE_BLOCKS_REGEX = /^(  |\t).*|`[^`]+|^```[^]*?|\[code\][^]*?/gm;
-
-export function inCodeBlock(text, pos) {
-  let end = 0;
-  for (const match of text.matchAll(CODE_BLOCKS_REGEX)) {
-    end = match.index + match[0].length;
-    if (match.index <= pos && pos <= end) {
-      return true;
+function pickMarker(text) {
+  // Uses the private use area (U+E000 to U+F8FF) to find a character that
+  // is not present in the text. This character will be used as a marker in
+  // place of the caret.
+  for (let code = 0xe000; code <= 0xf8ff; ++code) {
+    const char = String.fromCharCode(code);
+    if (!text.includes(char)) {
+      return char;
     }
   }
+  return null;
+}
 
-  // Character at position `pos` can be in a code block that is unfinished.
-  // To check this case, we look for any open code blocks after the last closed
-  // code block.
-  const lastOpenBlock = text.slice(end).search(OPEN_CODE_BLOCKS_REGEX);
-  return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
+function findToken(tokens, marker, level = 0) {
+  if (level > 50) {
+    return null;
+  }
+  const token = tokens.find((t) => (t.content ?? "").includes(marker));
+  return token?.children ? findToken(token.children, marker, level + 1) : token;
+}
+
+const CODE_MARKERS_REGEX = /    |```|~~~|(?<!`)`(?!`)|\[code\]/;
+const CODE_TOKEN_TYPES = ["code_inline", "code_block", "fence"];
+
+export async function inCodeBlock(text, pos) {
+  if (!CODE_MARKERS_REGEX.test(text)) {
+    return false;
+  }
+
+  const marker = pickMarker(text);
+  if (!marker) {
+    return false;
+  }
+
+  const markedText = text.slice(0, pos) + marker + text.slice(pos);
+  const tokens = await parseAsync(markedText);
+  const type = findToken(tokens, marker)?.type;
+
+  return CODE_TOKEN_TYPES.includes(type);
 }
 
 // Return an array of modifier keys that are pressed during a given `MouseEvent`

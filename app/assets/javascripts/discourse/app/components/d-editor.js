@@ -532,10 +532,6 @@ export default Component.extend(TextareaTextManipulation, {
       },
 
       onKeyUp: (text, cp) => {
-        if (inCodeBlock(text, cp)) {
-          return false;
-        }
-
         const matches =
           /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
             text.substring(0, cp)
@@ -639,8 +635,8 @@ export default Component.extend(TextareaTextManipulation, {
           });
       },
 
-      triggerRule: (textarea) =>
-        !inCodeBlock(textarea.value, caretPosition(textarea)),
+      triggerRule: async (textarea) =>
+        !(await inCodeBlock(textarea.value, caretPosition(textarea))),
     });
   },
 

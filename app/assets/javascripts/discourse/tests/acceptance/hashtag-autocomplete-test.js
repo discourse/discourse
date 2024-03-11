@@ -2,14 +2,13 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  emulateAutocomplete,
+  query,
+  simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("#hashtag autocompletion in composer", function (needs) {
   needs.user();
-  needs.settings({
-    tagging_enabled: true,
-  });
+  needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
     server.get("/hashtags", () => {
       return helper.response({
@@ -56,8 +55,7 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
   test(":emoji: unescape in autocomplete search results", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
-
-    await emulateAutocomplete(".d-editor-input", "abc #o");
+    await simulateKeys(query(".d-editor-input"), "abc #o");
 
     assert.dom(".hashtag-autocomplete__option").exists({ count: 3 });
     assert
