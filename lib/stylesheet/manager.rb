@@ -7,7 +7,7 @@ module Stylesheet
 end
 
 class Stylesheet::Manager
-  BASE_COMPILER_VERSION = 1
+  BASE_COMPILER_VERSION = 2
 
   CACHE_PATH = "tmp/stylesheet-cache"
   private_constant :CACHE_PATH
