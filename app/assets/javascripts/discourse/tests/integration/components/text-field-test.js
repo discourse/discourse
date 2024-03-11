@@ -29,7 +29,7 @@ module("Integration | Component | text-field", function (hooks) {
 
     await render(hbs`<TextField @value="זהו שם עברי עם מקום עברי" />`);
 
-    assert.strictEqual(query("input").getAttribute("dir"), "auto");
+    assert.dom("input").hasAttribute("dir", "auto");
   });
 
   test("supports onChange", async function (assert) {
