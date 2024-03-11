@@ -2,11 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { concat } from "@ember/helper";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import DFloatBody from "float-kit/components/d-float-body";
+import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
@@ -14,9 +16,9 @@ export default class DMenu extends Component {
 
   @tracked menuInstance = null;
 
-  registerTrigger = modifier((element) => {
+  registerTrigger = modifier((element, [properties]) => {
     const options = {
-      ...this.args,
+      ...properties,
       ...{
         autoUpdate: true,
         listeners: true,
@@ -55,6 +57,16 @@ export default class DMenu extends Component {
     };
   }
 
+  @action
+  allowedProperties() {
+    const keys = Object.keys(MENU.options);
+    return keys.reduce((result, key) => {
+      result[key] = this.args[key];
+
+      return result;
+    }, {});
+  }
+
   <template>
     <DButton
       class={{concatClass
@@ -71,7 +83,7 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{this.registerTrigger}}
+      {{this.registerTrigger (this.allowedProperties)}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
