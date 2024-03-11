@@ -1,6 +1,5 @@
 import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
-import { isRTL } from "discourse/lib/text-direction";
 import Site from "discourse/models/site";
 
 export function fancyTitle(topicTitle, supportMixedTextDirection) {
@@ -10,8 +9,7 @@ export function fancyTitle(topicTitle, supportMixedTextDirection) {
   );
 
   if (supportMixedTextDirection) {
-    const titleDir = isRTL(title) ? "rtl" : "ltr";
-    return `<span dir="${titleDir}">${title}</span>`;
+    return `<span dir="auto">${title}</span>`;
   }
 
   return title;
