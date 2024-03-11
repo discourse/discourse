@@ -178,15 +178,6 @@ RSpec.describe AdminDashboardData do
       end
     end
 
-    describe "twitter" do
-      subject(:check) { described_class.new.twitter_config_check }
-
-      let(:enable_setting) { :enable_twitter_logins }
-      let(:key) { :twitter_consumer_key }
-      let(:secret) { :twitter_consumer_secret }
-      include_examples "problem detection for login providers"
-    end
-
     describe "github" do
       subject(:check) { described_class.new.github_config_check }
 
