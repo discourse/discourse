@@ -141,10 +141,7 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :force_https_check,
-                      :s3_config_check,
-                      :watched_words_check,
-                      :google_analytics_version_check
+    add_problem_check :force_https_check, :s3_config_check, :watched_words_check
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -242,10 +239,6 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def google_analytics_version_check
-    I18n.t("dashboard.v3_analytics_deprecated") if SiteSetting.ga_version == "v3_analytics"
   end
 
   def missing_mailgun_api_key
