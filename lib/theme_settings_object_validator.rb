@@ -105,16 +105,20 @@ class ThemeSettingsObjectValidator
   end
 
   def validate_property(property_name, property_attributes)
-    return if property_attributes[:required] && !is_property_present?(property_name)
-    return if !has_valid_property_value_type?(property_attributes, property_name)
+    value = @object[property_name]
+
+    if property_attributes[:required]
+      return if !is_property_present?(property_name, value)
+    else
+      return if value.nil? && property_attributes[:type] != "enum"
+    end
+
+    return if !has_valid_property_value_type?(property_attributes, property_name, value)
     !has_valid_property_value?(property_attributes, property_name)
   end
 
-  def has_valid_property_value_type?(property_attributes, property_name)
-    value = @object[property_name]
+  def has_valid_property_value_type?(property_attributes, property_name, value)
     type = property_attributes[:type]
-
-    return true if (value.nil? && type != "enum")
 
     is_value_valid =
       case type
@@ -184,8 +188,8 @@ class ThemeSettingsObjectValidator
     true
   end
 
-  def is_property_present?(property_name)
-    if @object[property_name].nil?
+  def is_property_present?(property_name, value)
+    if value.nil?
       add_error(property_name, :required)
       false
     else

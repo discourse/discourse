@@ -18,6 +18,9 @@ RSpec.describe ThemeSettingsObjectValidator do
             type: "category",
             required: true,
           },
+          category_property_2: {
+            type: "category",
+          },
           links: {
             type: "objects",
             schema: {
