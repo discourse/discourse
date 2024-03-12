@@ -28,9 +28,15 @@ module DiscourseAutomation
     end
 
     def placeholders
-      DiscourseAutomation
-        .filter_by_trigger(scriptable&.placeholders || [], object.trigger)
-        .map { |placeholder| placeholder[:name] } + (triggerable&.placeholders || [])
+      scriptable_placeholders =
+        DiscourseAutomation
+          .filter_by_trigger(scriptable&.placeholders || [], object.trigger)
+          .map { |placeholder| placeholder[:name] }
+      triggerable_placeholders = triggerable&.placeholders || []
+
+      (scriptable_placeholders + triggerable_placeholders).map do |placeholder|
+        placeholder.to_s.gsub(/\s+/, "_").underscore
+      end
     end
 
     def script
