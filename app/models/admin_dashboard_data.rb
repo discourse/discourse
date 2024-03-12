@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :unreachable_themes,
                       :watched_words_check,
                       :google_analytics_version_check,
                       :translation_overrides_check
@@ -284,25 +283,5 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def unreachable_themes
-    themes = RemoteTheme.unreachable_themes
-    return unless themes.present?
-
-    themes_html_format(themes, "dashboard.unreachable_themes")
-  end
-
-  private
-
-  def themes_html_format(themes, i18n_key)
-    html =
-      themes
-        .map do |name, id|
-          "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
-        end
-        .join("\n")
-
-    "#{I18n.t(i18n_key)}<ul>#{html}</ul>"
   end
 end
