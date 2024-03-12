@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :s3_cdn_check,
                       :image_magick_check,
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
@@ -250,13 +249,6 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def s3_cdn_check
-    if (GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads) &&
-         SiteSetting.Upload.s3_cdn_url.blank?
-      I18n.t("dashboard.s3_cdn_warning")
-    end
   end
 
   def translation_overrides_check
