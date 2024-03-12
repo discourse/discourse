@@ -10,6 +10,11 @@ export default class SchemaThemeSettingTypeFloat extends Component {
   }
 
   <template>
-    <Input @value={{@value}} {{on "input" this.onInput}} @type="number" />
+    <Input
+      @value={{@value}}
+      {{on "input" this.onInput}}
+      @type="number"
+      step="0.1"
+    />
   </template>
 }
