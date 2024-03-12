@@ -169,10 +169,6 @@ pt_BR:
               description: Ativa apenas se o tópico for o primeiro tópico criado pelo(a) usuário(a)
           created: Criado(a)
           edited: Editado(a)
-        user_updated:
-          fields:
-            first_post_only:
-              label: Apenas primeira postagem
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ pt_BR:
               description: Responde apenas uma vez por tópico
             word_answer_list:
               label: Lista de pares palavra/resposta
-              description: "Define uma lista de grupos de chave/valor, em que `key` é o termo pesquisado e `value` é o texto da resposta. A `key` pode ficar em branco para responder a todos os gatilhos, seja qual for o conteúdo. Observe que `value` aceita `%%KEY%%` como um espaço reservado para ser substituído pelo valor de `key` na resposta. Observe que `key` será avaliado como um regex, e caracteres especiais como `.` devem ser evitados se você realmente se referir a um ponto, por exemplo: `\\.`"
             answering_user:
               label: Respondendo ao usuário
               description: Padrões para o usuário do Sistema

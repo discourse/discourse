@@ -169,10 +169,6 @@ tr_TR:
               description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
           created: Oluşturuldu
           edited: Düzenlendi
-        user_updated:
-          fields:
-            first_post_only:
-              label: Sadece ilk gönderi
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ tr_TR:
               description: Konuya göre yalnızca bir kez yanıt verir
             word_answer_list:
               label: Kelime/yanıt çiftlerinin listesi
-              description: "Anahtar/değer gruplarının bir listesini tanımlar; burada `key` aranan terim, `value` ise yanıt metnidir. İçeriğe bakılmaksızın tüm tetikleyicilere yanıt vermek için `key` boş bırakılabilir. `value` ifadesinin, yanıtta `key` değeriyle değiştirilecek bir yer tutucu olarak `%%KEY%%` ifadesini kabul ettiğini unutmayın. `key` ifadesinin bir regex olarak değerlendirileceğini ve `.` gibi özel karakterlerin aslında bir noktayı kastediyorsanız dışarıda olması gerektiğini unutmayın, örneğin: `\\.`"
             answering_user:
               label: Yanıtlayan kullanıcı
               description: Varsayılan olarak Sistem kullanıcısını ayarlar

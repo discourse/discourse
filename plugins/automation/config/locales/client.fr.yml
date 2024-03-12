@@ -169,10 +169,6 @@ fr:
               description: Se déclenchera uniquement si le sujet est le premier sujet créé par un utilisateur
           created: Créé
           edited: Édité
-        user_updated:
-          fields:
-            first_post_only:
-              label: Premier message uniquement
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ fr:
               description: Ne répond qu'une seule fois par sujet
             word_answer_list:
               label: Liste des paires mot/réponse
-              description: "Définit une liste de groupes clé/valeur, où la « key » est le terme recherché et la « value » le texte de la réponse. La « key » peut être laissée en blanc pour répondre à tous les déclencheurs, peu importe le contenu. Notez que la « value » accepte « %%KEY%% » comme espace réservé à remplacer par la valeur de « key » dans la réponse. Notez que « key » sera évaluée comme une expression régulière et que les caractères spéciaux tels que « . » devraient être évités si vous voulez réellement ajouter un point, par exemple : « \\ . »"
             answering_user:
               label: Utilisateur qui répond
               description: Par défaut, utilisateur système

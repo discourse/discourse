@@ -9,12 +9,16 @@ he:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "יש לציין לפחות אחת מבין האפשרויות ‚custom_fields’ (שדות מותאמים אישית) או ‚user_profile’ (פרופיל משתמש)."
       user_badge_granted:
         title: עיטור משתמש הוענק
         doc: מקפיץ אוטומציה כשמוענק עיטור למשתמש.
       user_first_logged_in:
         title: כניסת המשתמש לראשונה
         doc: מפעיל אוטומציה עם כניסת משתמש לראשונה
+      stalled_topic:
+        title: נושא מעוכב
       api_call:
         title: קריאת API
       category_created_edited:
@@ -71,6 +75,8 @@ he:
         title: החלפת מתנות
       suspend_user_by_email:
         title: השהיית משתמש לפי דוא״ל
+      user_global_notice:
+        description: מאפשר להציג הודעה גלובלית למשתמש
       user_group_membership_through_badge:
         title: חברות משתמשים בקבוצות לפי עיטורים
         description: שינוי חברות בקבוצת משתמשים לפי עיטור

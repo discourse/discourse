@@ -169,10 +169,6 @@ fi:
               description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
           created: Luotu
           edited: Muokattu
-        user_updated:
-          fields:
-            first_post_only:
-              label: Vain ensimmäinen viesti
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ fi:
               description: Vastaa vain kerran ketjua kohden
             word_answer_list:
               label: Sana ja vastaus -parien luettelo
-              description: "Määrittää avain/arvoryhmien luettelon, jossa avain on haettu ehto ja arvo on vastauksen teksti. Avaimen voi jättää tyhjäksi kaikkiin triggereihin reagoimiseksi sisällöstä riippumatta. Huomioi, että arvo hyväksyy tekstin \"%%KEY%%\" paikkamerkkinä, joka korvataan avaimen arvolla vastauksessa. Avain arvioidaan säännöllisenä lausekkeena, ja erikoismerkkien, kuten \".\", yhteydessä tulisi käyttää koodinvaihtomerkkiä, jos todella tarkoitat pistettä, esim. \"\\.\"."
             answering_user:
               label: Vastaava käyttäjä
               description: Oletuksena järjestelmäkäyttäjä

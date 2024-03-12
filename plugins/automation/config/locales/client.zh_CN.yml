@@ -168,10 +168,6 @@ zh_CN:
               description: 仅当该话题是用户创建的第一个话题时才会触发
           created: 创建
           edited: 编辑
-        user_updated:
-          fields:
-            first_post_only:
-              label: 仅第一个帖子
         category_created_edited:
           fields:
             restricted_category:
@@ -222,7 +218,6 @@ zh_CN:
               description: 仅按话题回复一次
             word_answer_list:
               label: 字词/答案对列表
-              description: "定义键/值组列表，其中 `key` 是搜索词，`value` 是回复的文本。`key`可以留空以响应所有触发器，而不考虑内容。请注意，`value` 接受 `%%KEY%%` 作为占位符，在回复中会被替换为 `key` 的值。请注意，`key` 将被评估为正则表达式，如果您实际上指的是点，则应转义 `.` 等特殊字符，例如：`\\.`"
             answering_user:
               label: 回答用户
               description: 默认为系统用户

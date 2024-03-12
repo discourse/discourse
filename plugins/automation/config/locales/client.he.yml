@@ -25,6 +25,12 @@ he:
       destroy_automation:
         confirm: "למחוק את `%{name}`?"
       fields:
+        key_value:
+          label:
+            one: עריכת הגדרה (%{count})
+            two: עריכת הגדרות (%{count})
+            many: עריכת הגדרות (%{count})
+            other: עריכת הגדרות (%{count})
         user:
           label: משתמש
         pm:
@@ -99,6 +105,11 @@ he:
           fields:
             restricted_category:
               label: מוגבל לקטגוריה
+            stalled_after:
+              label: השהיית הזנקה
+              description: הגדרת השהייה בין עריכת הוויקי האחרונה והזנקת האוטומציה
+            retriggered_after:
+              label: השהיית הזנקה חוזרת
         user_added_to_group:
           fields:
             joined_group:
@@ -137,8 +148,16 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
+              description: הגדרת רשות, להזניק רק אם נושא הפוסט בקטגוריה הזאת
             restricted_group:
               label: קבוצה
+              description: הגדרת רשות, להזניק רק אם נושא הפוסט הוא הודעה פרטית בתיבת הדואר הנכנס של הקבוצה הזאת
+            ignore_group_members:
+              label: התעלמות מחברי הקבוצה
+              description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
+            ignore_automated:
+              label: התעלמות מאוטומטי
+              description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על פוסטים שנוצרו דרך דוא״ל
             first_post_only:
               label: פוסט ראשון בלבד
               description: יוקפץ רק אם הפוסט הוא הפוסט הראשון שיצר המשתמש
@@ -151,13 +170,13 @@ he:
           fields:
             user_profile:
               label: שדות פרופיל המשתמש
-              description: יוזנק רק אם המשתמש מילא את נתוני הפרופיל שלו
+              description: יוזנק רק אם המשתמש מילא את השדות האלו
             custom_fields:
               label: להשתמש בשדות מותאמים אישית
-              description: יוזנק רק אם המשתמש מילא את השדה הזה שהותאם אישית
-            first_post_only:
-              label: פוסט ראשון בלבד
-              description: יוזנק רק אם הפוסט הזה הוא הפוסט הראשון שיצר המשתמש
+              description: יוזנק רק אם המשתמש מילא את השדות האלו
+            once_per_user:
+              label: פעם אחת לכל משתמש
+              description: יוזנק רק פעם אחת לכל משתמש
         category_created_edited:
           fields:
             restricted_category:
@@ -167,11 +186,19 @@ he:
           fields:
             restricted_user:
               label: משתמשים
+              description: יוזנק רק עבור הודעות פרטיות שנשלחות למשתמש הזה
             restricted_group:
               label: קבוצה
+              description: יוזנק רק עבור הודעות פרטיות שנשלחות לקבוצה הזאת
             ignore_staff:
               label: התעלמות מהסגל
               description: לדלג על גורם ההפעלה אם זה משתמש מהסגל
+            ignore_group_members:
+              label: התעלמות מחברי הקבוצה
+              description: לדלג על ההזנקה אם המוען הוא חבר קבוצה שצוינה לעיל
+            ignore_automated:
+              label: התעלמות מאוטומטי
+              description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על הודעות פרטיות שנוצרו דרך דוא״ל
             valid_trust_levels:
               label: דרגות אמון תקפות
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
@@ -182,8 +209,10 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
+              description: הגדרת רשות, להזניק רק אם נושא הפוסט בקטגוריה הזאת
             restricted_tags:
               label: תגיות
+              description: הגדרת רשות, להזניק רק אם לפוסט יש את אחת התגיות הבאות
       scriptables:
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
@@ -198,6 +227,7 @@ he:
               description: מגיב פעם אחת בלבד בכל נושא
             word_answer_list:
               label: רשימה של צמדי מילה/תשובה
+              description: "מגדיר רשימה של קבוצות מפתח/ערך כאשר `מפתח` הוא הערך אחריו מחפשים, ו`ערך` הוא טקסט התגובה. את ה`מפתח` אפשר להשאיר ריק כדי להגיב לכל ההזנקות ללא תלות בתוכן. נא לשים לב ש`ערך` מקבל `{{key}}` בתור ממלא מקום להחלפת הערך של ה`מפתח` בתגובה. נא לשים לב ש`מפתח` יפוענח כביטוי רגולרי, ותווים מיוחדים כגון `.` דורשים החרגה אם הכוונה שלך הייתה נקודה, למשל: `\\.`"
             answering_user:
               label: משתמש שענה
               description: ברירת המחדל היא משתמש המערכת
@@ -210,6 +240,8 @@ he:
           fields:
             creator:
               label: יוצר
+              post_creator_context: יוצר הפוסט
+              updated_user_context: המשתמש שעודכן
             topic:
               label: מזהה נושא
             post:
@@ -285,6 +317,9 @@ he:
           fields:
             words:
               label: רשימת מילים נדרשות
+        send_pms:
+          add_a_pm_btn:
+            label: הוספת הודעה פרטית
         close_topic:
           fields:
             topic:

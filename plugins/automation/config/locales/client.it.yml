@@ -169,10 +169,6 @@ it:
               description: Si attiverà solo se l'argomento è il primo creato da un utente
           created: Creati
           edited: Modificati
-        user_updated:
-          fields:
-            first_post_only:
-              label: Solo il primo messaggio
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ it:
               description: Risponde solo una volta per argomento
             word_answer_list:
               label: Elenco di coppie parole/risposte
-              description: "Definisce un elenco di gruppi chiave/valore (key/value), dove `key` è il termine cercato e `value` il testo della risposta. Il parametro `key` può essere lasciato vuoto per rispondere a tutte le attivazioni, indipendentemente dal contenuto Il parametro `value` accetta `%%KEY%%` come segnaposto che sarà sostituito con il valore di `key` nella risposta. Il parametro `key` sarà valutato come regex e i caratteri speciali come `.` devono essere preceduti da escape se si intende effettivamente indicare un punto, ad esempio: `\\.`"
             answering_user:
               label: Utente che risponde
               description: Ripristina impostazione predefinita Utente di sistema

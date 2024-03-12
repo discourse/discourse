@@ -14,6 +14,8 @@ de:
         invalid_field: Die Komponente `%{component}` des Feldes kann nicht bei `%{target}:%{target_name}` verwendet werden.
         invalid_metadata: Daten für `%{field}` sind ungültig oder Komponente `%{component}` ist unbekannt.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Zumindest eines von „custom_fields“ oder „user_profile“ muss angegeben werden."
       user_badge_granted:
         title: Benutzer-Abzeichen gewährt
         doc: Löst eine Automatisierung aus, wenn einem Benutzer ein Abzeichen gewährt wird.
@@ -60,6 +62,9 @@ de:
       after_post_cook:
         title: Nach Beitragsfinalisierung
         description: Wenn ein Beitragsinhalt finalisiert wird, wird die Automatisierung ausgelöst
+      user_updated:
+        title: Nach Benutzeraktualisierung
+        description: Wenn ein Benutzer irgendeine Information aktualisiert, wird die Automatisierung ausgelöst
     scriptables:
       post:
         title: Beitrag erstellen

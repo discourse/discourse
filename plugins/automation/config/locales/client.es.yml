@@ -169,10 +169,6 @@ es:
               description: Se activará solo si el tema es el primer tema que creó un usuario
           created: Creado
           edited: Editado
-        user_updated:
-          fields:
-            first_post_only:
-              label: Solo la primera publicación
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ es:
               description: Solo responde una vez por tema
             word_answer_list:
               label: Lista de pares de palabras/respuestas
-              description: "Define una lista de grupos clave/valor, donde la «clave» es el término buscado, y el «valor» el texto de la respuesta. La «clave» puede dejarse en blanco para responder a todos los activadores, independientemente de su contenido. Ten en cuenta que «valor» acepta «%%KEY%%» como marcador de posición que será sustituido por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, por ejemplo: «\\.»"
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema

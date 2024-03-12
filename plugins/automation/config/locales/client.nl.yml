@@ -169,10 +169,6 @@ nl:
               description: Wordt alleen geactiveerd als het topic het eerste topic is dat een gebruiker heeft gemaakt
           created: Gemaakt
           edited: Bewerkt
-        user_updated:
-          fields:
-            first_post_only:
-              label: Alleen eerste bericht
         category_created_edited:
           fields:
             restricted_category:
@@ -223,7 +219,6 @@ nl:
               description: Reageert slechts één keer per topic
             word_answer_list:
               label: Lijst van woord-antwoordparen
-              description: "Definieert een lijst van sleutel-waardegroepen, waarbij de 'sleutel' de gezochte term is en de 'waarde' de tekst van het antwoord. De 'sleutel' kan leeg worden gelaten om te reageren op alle triggers, ongeacht de inhoud. Merk op dat 'waarde' '%%KEY%%' accepteert als tijdelijke aanduiding die moet worden vervangen door de waarde van 'sleutel' in het antwoord. Merk op dat 'sleutel' wordt geëvalueerd als een reguliere expressie en dat speciale tekens zoals '.' moeten worden ge-escaped als je daadwerkelijk een punt bedoelt, bijvoorbeeld: '\\.'"
             answering_user:
               label: Antwoordende gebruiker
               description: Standaard ingesteld op Systeemgebruiker
