@@ -29,6 +29,18 @@
           {{i18n "download_calendar.save_google"}}
         </label>
       </div>
+      <div class="office365">
+        <label class="radio" for="office365">
+          <RadioButton
+            id="office365"
+            @name="select-calendar"
+            @value="office365"
+            @selection={{this.selectedCalendar}}
+            @onChange={{fn this.selectCalendar "office365"}}
+          />
+          {{i18n "download_calendar.save_office365"}}
+        </label>
+      </div>
     </div>
 
     <div class="control-group remember">

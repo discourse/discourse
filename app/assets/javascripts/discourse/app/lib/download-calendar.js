@@ -1,3 +1,4 @@
+import { google, office365 } from "calendar-link";
 import downloadCalendarModal from "discourse/components/modal/download-calendar";
 import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -19,6 +20,9 @@ export function downloadCalendar(title, dates, recurrenceRule = null) {
     case "google":
       downloadGoogle(title, formattedDates, recurrenceRule);
       break;
+    case "office365":
+      downloadOffice365(title, formattedDates);
+      break;
   }
 }
 
@@ -39,21 +43,36 @@ export function downloadIcs(title, dates, recurrenceRule) {
 
 export function downloadGoogle(title, dates, recurrenceRule) {
   dates.forEach((date) => {
-    const link = new URL("https://www.google.com/calendar/event");
-    link.searchParams.append("action", "TEMPLATE");
-    link.searchParams.append("text", title);
-    link.searchParams.append(
-      "dates",
-      `${_formatDateForGoogleApi(date.startsAt)}/${_formatDateForGoogleApi(
-        date.endsAt
-      )}`
+    const event = {
+      title,
+      start: date.startsAt,
+      end: date.endsAt,
+      rRule: recurrenceRule,
+    };
+
+    window.open(
+      getURL(google(event)).trim(),
+      "_blank",
+      "noopener",
+      "noreferrer"
     );
+  });
+}
 
-    if (recurrenceRule) {
-      link.searchParams.append("recur", `RRULE:${recurrenceRule}`);
-    }
+export function downloadOffice365(title, dates) {
+  dates.forEach((date) => {
+    const event = {
+      title,
+      start: date.startsAt,
+      end: date.endsAt,
+    };
 
-    window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
+    window.open(
+      getURL(office365(event)).trim(),
+      "_blank",
+      "noopener",
+      "noreferrer"
+    );
   });
 }
 
@@ -94,10 +113,4 @@ function _displayModal(title, dates, recurrenceRule) {
   modal.show(downloadCalendarModal, {
     model: { calendar: { title, dates, recurrenceRule } },
   });
-}
-
-function _formatDateForGoogleApi(date) {
-  return moment(date)
-    .toISOString()
-    .replace(/-|:|\.\d\d\d/g, "");
 }

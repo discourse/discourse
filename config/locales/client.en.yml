@@ -4348,6 +4348,7 @@ en:
       title: "Download calendar"
       save_ics: "Download .ics file"
       save_google: "Add to Google calendar"
+      save_office365: "Add to Office365"
       remember: "Don’t ask me again"
       remember_explanation: "(you can change this preference in your user prefs)"
       download: "Download"

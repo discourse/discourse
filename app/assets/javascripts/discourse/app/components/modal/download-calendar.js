@@ -2,7 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
+import {
+  downloadGoogle,
+  downloadIcs,
+  downloadOffice365,
+} from "discourse/lib/download-calendar";
 
 export default class downloadCalendar extends Component {
   @service currentUser;
@@ -25,11 +29,16 @@ export default class downloadCalendar extends Component {
         this.args.model.calendar.dates,
         this.args.model.calendar.recurrenceRule
       );
-    } else {
+    } else if (this.selectedCalendar === "google") {
       downloadGoogle(
         this.args.model.calendar.title,
         this.args.model.calendar.dates,
         this.args.model.calendar.recurrenceRule
+      );
+    } else if (this.selectedCalendar === "office365") {
+      downloadOffice365(
+        this.args.model.calendar.title,
+        this.args.model.calendar.dates
       );
     }
     this.args.closeModal();

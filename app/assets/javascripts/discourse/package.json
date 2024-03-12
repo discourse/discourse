@@ -18,6 +18,7 @@
   "dependencies": {
     "@glimmer/syntax": "^0.89.0",
     "@highlightjs/cdn-assets": "^11.9.0",
+    "calendar-link": "^2.6.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",
