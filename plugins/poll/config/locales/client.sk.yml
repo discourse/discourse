@@ -31,6 +31,21 @@ sk:
           title: "Výsledky sa zobrazujú len <strong>zamestnancom</strong>."
       multiple:
         help:
+          at_least_min_options:
+            one: "Vyberte aspoň <strong>%{count} možnosť </strong>."
+            few: "Vyberte aspoň <strong>%{count}</strong> možnosti."
+            many: "Vyberte aspoň <strong>%{count}</strong> možností."
+            other: "Vyberte aspoň <strong>%{count}</strong> možností."
+          up_to_max_options:
+            one: "Vyberte si <strong>%{count} možnosť </strong>."
+            few: "Vyberte až <strong>%{count}</strong> možnosti."
+            many: "Vyberte až <strong>%{count} možností</strong>."
+            other: "Vyberte až <strong>%{count} možností</strong>."
+          x_options:
+            one: "Vyberte <strong>%{count} možnosť</strong>."
+            few: "Vyberte <strong>%{count} možnosti</strong>."
+            many: "Vyberte <strong>%{count}</strong> možností."
+            other: "Vyberte <strong>%{count}</strong> možností."
           between_min_and_max_options: "Vyberte od <strong>%{min} do %{max} možností</strong>."
       cast-votes:
         title: "Hlasovať"

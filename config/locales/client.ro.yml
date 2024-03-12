@@ -966,7 +966,7 @@ ro:
       "15": "Ciorne"
     categories:
       all: "Toate categoriile"
-      all_subcategories: "tot"
+      all_subcategories: "toate"
       no_subcategory: "Niciuna"
       category: "Categorie"
       category_list: "Afișează lista de categorii"
