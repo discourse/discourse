@@ -148,25 +148,31 @@ module Chat
     # new channel, because it could be pointing to a message that has not
     # been moved.
     def create_destination_messages_in_channel(destination_channel, moved_thread_ids)
+      insert_messages = <<-SQL
+        INSERT INTO chat_messages (
+          chat_channel_id, user_id, last_editor_id, message, cooked, cooked_version, thread_id, created_at, updated_at
+        )
+        SELECT :destination_channel_id, user_id, last_editor_id, message, cooked, cooked_version, :new_thread_id, CLOCK_TIMESTAMP(), CLOCK_TIMESTAMP()
+        FROM chat_messages
+        WHERE id = :source_message_id
+        RETURNING id
+      SQL
+
       moved_message_ids =
         @source_messages.map do |source_message|
           new_thread_id = moved_thread_ids[source_message.thread_id]
 
-          new_message =
-            Chat::Message.create!(
-              chat_channel_id: destination_channel.id,
-              user_id: source_message.user_id,
-              message: source_message.message,
-              cooked: source_message.cooked,
-              cooked_version: source_message.cooked_version,
-              thread_id: new_thread_id,
-            )
+          new_message_id =
+            DB.query_single(
+              insert_messages,
+              {
+                destination_channel_id: destination_channel.id,
+                new_thread_id: new_thread_id,
+                source_message_id: source_message.id,
+              },
+            ).first
 
-          DB.exec(
-            "INSERT INTO moved_chat_messages (old_chat_message_id, new_chat_message_id) VALUES (#{source_message.id}, #{new_message.id})",
-          )
-
-          new_message.id
+          new_message_id
         end
       @movement_metadata =
         moved_message_ids.map.with_index do |chat_message_id, idx|

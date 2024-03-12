@@ -120,6 +120,43 @@ RSpec.describe "Move message to channel", type: :system do
 
         expect(channel_page.messages).to have_no_message(text: thread.original_message.message)
       end
+
+      context "when message has an upload and no text" do
+        fab!(:image) do
+          Fabricate(
+            :upload,
+            original_filename: "image.png",
+            width: 400,
+            height: 300,
+            extension: "png",
+          )
+        end
+        fab!(:message_with_upload) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: current_admin_user,
+            message: "",
+            uploads: [image],
+          )
+        end
+
+        it "moves the message without errors" do
+          chat_page.visit_channel(channel_1)
+          channel_page.messages.select(message_with_upload)
+          channel_page.selection_management.move
+          find(".chat-modal-move-message-to-channel__channel-chooser").click
+          find("[data-value='#{channel_2.id}']").click
+          click_button(I18n.t("js.chat.move_to_channel.confirm_move"))
+
+          expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
+          expect(channel_page.messages).to have_css(".chat-uploads .chat-img-upload")
+
+          chat_page.visit_channel(channel_1)
+
+          expect(channel_page.messages).to have_deleted_message(message_with_upload)
+        end
+      end
     end
   end
 end
