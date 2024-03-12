@@ -5,16 +5,10 @@ import Group from "discourse/models/group";
 import GroupChooser from "select-kit/components/group-chooser";
 
 export default class SchemaThemeSettingTypeGroup extends Component {
-  @tracked value;
-  @tracked groups;
-
-  constructor() {
-    super(...arguments);
-    this.value = this.args.value;
-    Group.findAll().then((groups) => {
-      this.groups = groups;
-    });
-  }
+  @tracked value = this.args.value;
+  @tracked groups = Group.findAll().then((groups) => {
+    this.groups = groups;
+  });
 
   @action
   onInput(newVal) {

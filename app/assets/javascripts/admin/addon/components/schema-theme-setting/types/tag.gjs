@@ -5,12 +5,7 @@ import { action } from "@ember/object";
 import TagChooser from "select-kit/components/tag-chooser";
 
 export default class SchemaThemeSettingTypeTag extends Component {
-  @tracked value;
-
-  constructor() {
-    super(...arguments);
-    this.value = this.args.value;
-  }
+  @tracked value = this.args.value;
 
   @action
   onInput(newVal) {
