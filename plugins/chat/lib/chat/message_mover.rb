@@ -21,13 +21,11 @@
 # messages into a new channel. Remaining messages that referenced moved ones
 # have their in_reply_to_id cleared so the data makes sense.
 #
-# Threads are even more complex. No threads are preserved when moving messages
-# into a new channel, they end up as just a flat series of messages that are
-# not in a chain. If the original message of a thread and N other messages
-# in that thread, then any messages left behind just get placed into a new
-# thread. Message moving will be disabled in the thread UI, its too complicated
-# to have end users reason about for now, and we may want a standalone
-# "Move Thread" UI later on.
+# The service supports moving threads. If any of the selected messages is the
+# original message of a thread, the entire thread with all its replies will be
+# moved to the destination channel. Moving individual messages out of a thread
+# is still disabled.
+
 module Chat
   class MessageMover
     class NoMessagesFound < StandardError
