@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :email_polling_errored_recently,
                       :out_of_date_themes,
                       :unreachable_themes,
                       :watched_words_check,
@@ -256,17 +255,6 @@ class AdminDashboardData
 
   def google_analytics_version_check
     I18n.t("dashboard.v3_analytics_deprecated") if SiteSetting.ga_version == "v3_analytics"
-  end
-
-  def email_polling_errored_recently
-    errors = Jobs::PollMailbox.errors_in_past_24_hours
-    if errors > 0
-      I18n.t(
-        "dashboard.email_polling_errored_recently",
-        count: errors,
-        base_path: Discourse.base_path,
-      )
-    end
   end
 
   def missing_mailgun_api_key
