@@ -27,7 +27,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_all_reports",
         route: "admin.dashboardReports",
         label: "admin.reports.sidebar_link.all",
-        icon: "folder",
+        icon: "chart-bar",
       },
     ],
   },
@@ -63,7 +63,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["all_results"],
         query: { filter: "notifications" },
         label: "admin.community.sidebar_link.notifications",
-        icon: "d-regular",
+        icon: "bell",
       },
       {
         name: "admin_permalinks",
@@ -145,7 +145,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["all_results"],
         query: { filter: "navigation" },
         label: "admin.appearance.sidebar_link.navigation",
-        icon: "align-left",
+        icon: "project-diagram",
       },
       {
         name: "admin_themes",
@@ -360,7 +360,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["uncategorized"],
         query: { filter: "" },
         label: "admin.advanced.sidebar_link.other_options",
-        icon: "far-circle",
+        icon: "discourse-other-tab",
       },
       {
         name: "admin_search",

@@ -220,7 +220,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     }
 
     if (siteSettings.experimental_form_templates) {
-      navMap.findBy("name", "customize").links.push({
+      navMap.findBy("name", "appearance").links.push({
         name: "admin_customize_form_templates",
         route: "adminCustomizeFormTemplates",
         label: "admin.form_templates.nav_title",
