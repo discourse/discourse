@@ -62,11 +62,11 @@ export default class PostBookmarkManager {
   }
 
   // TODO (martin): Likely move this to some service.
-  update(data) {
+  save() {
     return ajax(`/bookmarks/${this.trackedBookmark.id}.json`, {
       method: "PUT",
       data: {
-        reminder_at: data.reminder_at,
+        reminder_at: this.trackedBookmark.reminderAt?.toISOString(),
       },
     }).catch(popupAjaxError);
   }

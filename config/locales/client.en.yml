@@ -353,6 +353,8 @@ en:
 
     bookmarks:
       also_set_reminder: "Also set a reminder?"
+      bookmarked_success: "Bookmarked!"
+      reminder_set_success: "Reminder has beeen set!"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"

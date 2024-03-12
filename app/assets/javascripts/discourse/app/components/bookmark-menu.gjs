@@ -65,10 +65,6 @@ export default class BookmarkMenu extends Component {
 
   @action
   async onBookmark() {
-    if (this.existingBookmark) {
-      return;
-    }
-
     try {
       await this.bookmarkManager.create();
       // We show the menu with Edit/Delete options if the bokmark exists,
@@ -81,7 +77,7 @@ export default class BookmarkMenu extends Component {
       this.quicksaved = true;
       this.toasts.success({
         duration: 3000,
-        data: { message: "Bookmarked!" },
+        data: { message: I18n.t("bookmarks.bookmarked_success") },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -90,10 +86,9 @@ export default class BookmarkMenu extends Component {
 
   @action
   onShowMenu() {
-    // eslint-disable-next-line no-console
-    console.log("onShowMenu");
-    this.quicksaved = false;
-    this.onBookmark();
+    if (!this.existingBookmark) {
+      this.onBookmark();
+    }
   }
 
   @action
@@ -110,8 +105,7 @@ export default class BookmarkMenu extends Component {
 
   @action
   onCloseMenu() {
-    // eslint-disable-next-line no-console
-    console.log("close menu");
+    this.quicksaved = false;
   }
 
   @action
@@ -124,16 +118,17 @@ export default class BookmarkMenu extends Component {
 
   @action
   onChooseReminderOption(option) {
-    //   * Same as above, but Custom option is chosen, so we open the modal
-    //   for "editing" the bookmark.
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {
-      // NOTE: We need to handle here:
-      //   * Bookmark already created since we opened the menu, so we are just
-      //   updating it with whatever quick option is chosen.
-
-      this.bookmarkManager.update({ reminder_at: option.time.toISOString() });
+      this.existingBookmark.reminderAt = option.time;
+      this.bookmarkManager.save().then(() => {
+        this.toasts.success({
+          duration: 3000,
+          data: { message: I18n.t("bookmarks.reminder_set_success") },
+        });
+        this.dMenu.close();
+      });
     }
   }
 
@@ -168,6 +163,7 @@ export default class BookmarkMenu extends Component {
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
+      @closeOnClickOutside={{true}}
     >
       <:trigger>
         {{#if this.existingBookmark.reminderAt}}
