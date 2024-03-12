@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :email_polling_errored_recently,
                       :out_of_date_themes,
@@ -253,17 +252,6 @@ class AdminDashboardData
   def translation_overrides_check
     if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
       I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
-    end
-  end
-
-  def failing_emails_check
-    num_failed_jobs = Jobs.num_email_retry_jobs
-    if num_failed_jobs > 0
-      I18n.t(
-        "dashboard.failing_emails_warning",
-        num_failed_jobs: num_failed_jobs,
-        base_path: Discourse.base_path,
-      )
     end
   end
 
