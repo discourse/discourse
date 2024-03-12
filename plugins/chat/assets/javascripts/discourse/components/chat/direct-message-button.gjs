@@ -38,7 +38,7 @@ export default class ChatDirectMessageButton extends Component {
         @action={{this.startChatting}}
         @label="chat.title_capitalized"
         @icon="d-chat"
-        class="btn-primary chat-user-card-btn"
+        class="btn-primary chat-direct-message-btn"
       />
     {{/if}}
   </template>
