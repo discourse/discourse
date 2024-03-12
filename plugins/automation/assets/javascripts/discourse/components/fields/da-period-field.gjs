@@ -3,6 +3,7 @@ import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import I18n from "I18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -17,8 +18,17 @@ export default class PeriodField extends BaseField {
   constructor() {
     super(...arguments);
 
-    this.interval = this.args.field.metadata.value?.interval || 1;
-    this.frequency = this.args.field.metadata.value?.frequency;
+    next(() => {
+      if (!this.args.field.metadata.value) {
+        this.args.field.metadata.value = new TrackedObject({
+          interval: 1,
+          frequency: null,
+        });
+      }
+
+      this.interval = this.args.field.metadata.value.interval;
+      this.frequency = this.args.field.metadata.value.frequency;
+    });
   }
 
   get recurringLabel() {
@@ -34,24 +44,13 @@ export default class PeriodField extends BaseField {
     });
   }
 
-  ensureValue() {
-    if (!this.args.field.metadata.value) {
-      this.args.field.metadata.value = new TrackedObject({
-        interval: this.interval,
-        frequency: this.frequency,
-      });
-    }
-  }
-
   @action
   mutInterval(event) {
-    this.ensureValue();
     this.args.field.metadata.value.interval = event.target.value;
   }
 
   @action
   mutFrequency(value) {
-    this.ensureValue();
     this.args.field.metadata.value.frequency = value;
     this.frequency = value;
   }

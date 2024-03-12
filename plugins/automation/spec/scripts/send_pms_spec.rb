@@ -21,8 +21,8 @@ describe "SendPms" do
       {
         value: [
           {
-            title: "A message from %%SENDER_USERNAME%%",
-            raw: "This is a message sent to @%%RECEIVER_USERNAME%%",
+            title: "A message from {{sender_username}}",
+            raw: "This is a message sent to @{{receiver_username}}",
           },
         ],
       },
@@ -100,8 +100,8 @@ describe "SendPms" do
         {
           value: [
             {
-              title: "A message from %%SENDER_USERNAME%%",
-              raw: "This is a message sent to @%%RECEIVER_USERNAME%%",
+              title: "A message from {{sender_username}}",
+              raw: "This is a message sent to @{{receiver_username}}",
               delay: 1,
             },
           ],
@@ -122,8 +122,8 @@ describe "SendPms" do
         {
           value: [
             {
-              title: "A message from %%SENDER_USERNAME%%",
-              raw: "This is a message sent to @%%RECEIVER_USERNAME%%",
+              title: "A message from {{sender_username}}",
+              raw: "This is a message sent to @{{receiver_username}}",
               delay: 1,
               prefers_encrypt: false,
             },

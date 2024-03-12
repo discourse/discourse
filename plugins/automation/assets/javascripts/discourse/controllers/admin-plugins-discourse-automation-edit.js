@@ -14,8 +14,8 @@ export default class AutomationEdit extends Controller {
   isTriggeringAutomation = false;
 
   @reads("model.automation") automation;
-  @filterBy("automationForm.fields", "target", "script") scriptFields;
-  @filterBy("automationForm.fields", "target", "trigger") triggerFields;
+  @filterBy("automationForm.fields", "targetType", "script") scriptFields;
+  @filterBy("automationForm.fields", "targetType", "trigger") triggerFields;
 
   @computed("model.automation.next_pending_automation_at")
   get nextPendingAutomationAtFormatted() {

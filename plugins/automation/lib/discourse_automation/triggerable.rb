@@ -2,11 +2,11 @@
 
 module DiscourseAutomation
   class Triggerable
-    attr_reader :fields, :name, :not_found, :settings
+    attr_reader :fields, :name, :not_found, :settings, :automation
 
     MANUAL_TRIGGER_KEY = :manual_trigger
 
-    def initialize(name)
+    def initialize(name, automation = nil)
       @name = name
       @placeholders = []
       @fields = []
@@ -15,6 +15,7 @@ module DiscourseAutomation
       @on_call_block = proc {}
       @not_found = false
       @validations = []
+      @automation = automation
 
       eval! if @name
     end
@@ -42,11 +43,16 @@ module DiscourseAutomation
     end
 
     def placeholders
-      @placeholders.uniq.compact
+      @placeholders.uniq.compact.map(&:to_sym)
     end
 
-    def placeholder(placeholder)
-      @placeholders << placeholder
+    def placeholder(*args)
+      if args.present?
+        @placeholders << args[0]
+      elsif block_given?
+        @placeholders =
+          @placeholders.concat(Array(yield(@automation.serialized_fields, @automation)))
+      end
     end
 
     def field(name, component:, **options)
@@ -56,6 +62,7 @@ module DiscourseAutomation
         extra: {
         },
         accepts_placeholders: false,
+        accepted_contexts: [],
         required: false,
       }.merge(options || {})
     end

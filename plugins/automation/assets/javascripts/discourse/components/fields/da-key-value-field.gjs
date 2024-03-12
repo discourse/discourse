@@ -57,7 +57,7 @@ export default class KeyValueField extends BaseField {
   get value() {
     return (
       this.args.field.metadata.value ||
-      '[{"key":"example","value":"You posted %%KEY%%"}]'
+      '[{"key":"example","value":"You posted {{key}}"}]'
     );
   }
 

@@ -24,7 +24,14 @@ export default class AutomationEdit extends DiscourseRoute {
       const jsonField = automation[target].fields.find(
         (f) => f.name === template.name && f.component === template.component
       );
-      return Field.create(template, target, jsonField);
+      return Field.create(
+        template,
+        {
+          name: automation[target].id,
+          type: target,
+        },
+        jsonField
+      );
     });
   }
 

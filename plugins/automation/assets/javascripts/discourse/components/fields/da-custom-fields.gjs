@@ -24,7 +24,7 @@ export default class GroupField extends BaseField {
             @onChange={{this.mutValue}}
             @nameProperty={{null}}
             @valueProperty={{null}}
-            @options={{hash allowAny=true disabled=@field.isDisabled}}
+            @options={{hash allowAny=false disabled=@field.isDisabled}}
           />
           <DAFieldDescription @description={{@description}} />
         </div>

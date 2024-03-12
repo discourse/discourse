@@ -73,27 +73,26 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
-          has_created_post =
-            UserCustomField.find_by(name: automation.trigger_field("automation_name")["value"])
-          next if automation.trigger_field("first_post_only")["value"] && has_created_post
+          once_per_user = automation.trigger_field("once_per_user")["value"]
+          if once_per_user &&
+               UserCustomField.exists?(name: DiscourseAutomation::CUSTOM_FIELD, user_id: user.id)
+            next
+          end
 
           required_custom_fields = automation.trigger_field("custom_fields")
           user_data = {}
-          user_custom_fields_names = UserField.all.map(&:name)
           user_custom_fields_data = DB.query <<-SQL
             SELECT uf.name AS field_name, ucf.value AS field_value
             FROM user_fields uf
             JOIN user_custom_fields ucf ON CONCAT('user_field_', uf.id) = ucf.name
             WHERE ucf.user_id = #{user.id};
           SQL
-
           user_custom_fields_data =
             user_custom_fields_data.each_with_object({}) do |obj, hash|
               field_name = obj.field_name
               field_value = obj.field_value
               hash[field_name] = field_value
             end
-
           if required_custom_fields["value"]
             if required_custom_fields["value"].any? { |field|
                  user_custom_fields_data[field].blank?
@@ -102,6 +101,7 @@ module DiscourseAutomation
             end
             user_data[:custom_fields] = user_custom_fields_data
           end
+
           required_user_profile_fields = automation.trigger_field("user_profile")
           user_profile_data = UserProfile.find(user.id).attributes
           if required_user_profile_fields["value"]
@@ -113,6 +113,7 @@ module DiscourseAutomation
             user_data[:profile_data] = user_profile_data
           end
 
+          automation.attach_custom_field(user)
           automation.trigger!("kind" => name, "user" => user, "user_data" => user_data)
         end
     end

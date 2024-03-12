@@ -34,8 +34,8 @@ describe "GiftExchange" do
       {
         value: [
           {
-            title: "Gift %%YEAR%%",
-            raw: "@%%GIFTER_USERNAME%% you should send a gift to %%GIFTEE_USERNAME%%",
+            title: "Gift {{year}}",
+            raw: "@{{gifter_username}} you should send a gift to {{giftee_username}}",
           },
         ],
       },

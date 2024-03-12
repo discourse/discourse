@@ -130,9 +130,6 @@ module DiscourseAutomation
 
     def trigger!(context = {})
       if enabled
-        # we need this unconditionally for testing
-        scriptable = DiscourseAutomation::Scriptable.new(script)
-
         if scriptable.background && !running_in_background
           trigger_in_background!(context)
         else
@@ -143,11 +140,11 @@ module DiscourseAutomation
     end
 
     def triggerable
-      trigger && DiscourseAutomation::Triggerable.new(trigger)
+      trigger && @triggerable ||= DiscourseAutomation::Triggerable.new(trigger, self)
     end
 
     def scriptable
-      script && DiscourseAutomation::Scriptable.new(script)
+      script && @scriptable ||= DiscourseAutomation::Scriptable.new(script, self)
     end
 
     def serialized_fields

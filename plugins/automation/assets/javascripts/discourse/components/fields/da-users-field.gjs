@@ -21,6 +21,10 @@ export default class UsersField extends BaseField {
             }}
           />
 
+          {{#if @field.metadata.allowsAutomation}}
+            <span class="help-inline error">{{@field.metadata.error}}</span>
+          {{/if}}
+
           <DAFieldDescription @description={{@description}} />
         </div>
       </div>

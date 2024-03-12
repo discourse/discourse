@@ -166,18 +166,15 @@ en:
           edited: Edited
         user_updated:
           fields:
-            user_profile: 
+            user_profile:
               label: User profile fields
-              description: Will trigger only if the user has filled this profile data
-            custom_fields: 
+              description: Will trigger only if the user has filled all these fields
+            custom_fields:
               label: User custom fields
-              description: Will trigger only if the user has filled this custom field
-            first_post_only:
-              label: First post only
-              description: Will trigger only if this post is the first post a user created
-            automation_name:
-              label: Name of the automation trigger
-              description: Allows to have different user automations. Using the same name might cause issues.
+              description: Will trigger only if the user has filled all these fields
+            once_per_user:
+              label: Once per user
+              description: Will trigger only once per user
         category_created_edited:
           fields:
             restricted_category:
@@ -228,7 +225,7 @@ en:
               description: Only responds once by topic
             word_answer_list:
               label: List of word/answer pairs
-              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. The `key` can be left blank to respond to all triggers, regardless of content. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
+              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. The `key` can be left blank to respond to all triggers, regardless of content. Note that `value` accepts `{{key}}` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
             answering_user:
               label: Answering user
               description: Defaults to System user
@@ -241,6 +238,8 @@ en:
           fields:
             creator:
               label: Creator
+              post_creator_context: The creator of the post
+              updated_user_context: The updated user
             topic:
               label: Topic ID
             post:

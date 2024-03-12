@@ -33,8 +33,8 @@ describe "AutoResponder" do
         "key-value",
         {
           value: [
-            { key: "fooz?|bar", value: "this is %%KEY%%" },
-            { key: "bar", value: "this is %%KEY%%" },
+            { key: "fooz?|bar", value: "this is {{key}}" },
+            { key: "bar", value: "this is {{key}}" },
           ].to_json,
         },
       )

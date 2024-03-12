@@ -82,7 +82,7 @@ export default class AutomationField extends Component {
   }
 
   get target() {
-    return this.args.field.target === "script"
+    return this.args.field.targetType === "script"
       ? `.scriptables.${this.args.automation.script.id.replace(/-/g, "_")}.`
       : `.triggerables.${this.args.automation.trigger.id.replace(/-/g, "_")}.`;
   }

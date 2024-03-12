@@ -5,7 +5,9 @@ export default class DiscourseAutomationField {
   static create(template, target, json = {}) {
     const field = new DiscourseAutomationField();
     field.acceptsPlaceholders = template.accepts_placeholders;
-    field.target = target;
+    field.acceptedContexts = template.accepted_contexts;
+    field.targetName = target.name;
+    field.targetType = target.type;
     field.name = template.name;
     field.component = template.component;
     field.isDisabled = template.read_only;
@@ -36,12 +38,13 @@ export default class DiscourseAutomationField {
   @tracked isRequired = false;
   @tracked metadata = new TrackedObject();
   @tracked name;
-  @tracked target;
+  @tracked targetType;
+  @tracked targetName;
 
   toJSON() {
     return {
       name: this.name,
-      target: this.target,
+      target: this.targetType,
       component: this.component,
       metadata: this.metadata,
     };

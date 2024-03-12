@@ -94,12 +94,6 @@ describe "Post" do
           trigger: DiscourseAutomation::Triggerable::USER_UPDATED,
         )
       automation.upsert_field!(
-        "automation_name",
-        "text",
-        { value: "Automation Test" },
-        target: "trigger",
-      )
-      automation.upsert_field!(
         "custom_fields",
         "custom_fields",
         { value: ["custom field 1", "custom field 2"] },
@@ -115,7 +109,7 @@ describe "Post" do
       automation
     end
     let!(:user_raw_post) do
-      "This is a raw test post for user custom field 1: %%CUSTOM_FIELD_1%%, custom field 2: %%CUSTOM_FIELD_2%% and location: %%LOCATION%%"
+      "This is a raw test post for user custom field 1: {{custom_field_1}}, custom field 2: {{custom_field_2}} and location: {{location}}"
     end
     let!(:placeholder_applied_user_raw_post) do
       "This is a raw test post for user custom field 1: #{user.custom_fields["user_field_#{user_field_1.id}"]}, custom field 2: #{user.custom_fields["user_field_#{user_field_2.id}"]} and location: #{user.user_profile.location}"
@@ -131,6 +125,18 @@ describe "Post" do
         UserUpdater.new(user, user).update(location: "Japan")
         expect(topic_1.posts.last.raw).to eq(placeholder_applied_user_raw_post)
       }.to change { topic_1.posts.count }.by(1)
+    end
+
+    context "when creator is one of accepted context" do
+      before do
+        automation.upsert_field!("creator", "user", { value: "updated_user" }, target: "script")
+      end
+
+      it "sets the creator to the post creator" do
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
+          Post.where(user_id: user.id).count
+        }.by(1)
+      end
     end
   end
 end

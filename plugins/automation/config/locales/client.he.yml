@@ -158,9 +158,6 @@ he:
             first_post_only:
               label: פוסט ראשון בלבד
               description: יוזנק רק אם הפוסט הזה הוא הפוסט הראשון שיצר המשתמש
-            automation_name:
-              label: שם הזנקת האוטומציה
-              description: מאפשר לך להקים מגוון אוטומציות משתמש. שם זהה יכול לגרום לבעיות.
         category_created_edited:
           fields:
             restricted_category:

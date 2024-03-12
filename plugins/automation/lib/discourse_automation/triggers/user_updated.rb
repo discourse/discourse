@@ -5,10 +5,9 @@ class DiscourseAutomation::Triggerable
 end
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::USER_UPDATED) do
-  field :automation_name, component: :text, required: true
   field :custom_fields, component: :custom_fields
   field :user_profile, component: :user_profile
-  field :first_post_only, component: :boolean
+  field :once_per_user, component: :boolean
 
   validate do
     has_triggers = has_trigger_field?(:custom_fields) && has_trigger_field?(:user_profile)
@@ -24,5 +23,11 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::USER_UPDA
     else
       true
     end
+  end
+
+  placeholder do |fields, automation|
+    custom_fields = automation.trigger_field("custom_fields")["value"] || []
+    user_profile = automation.trigger_field("user_profile")["value"] || []
+    custom_fields + user_profile
   end
 end

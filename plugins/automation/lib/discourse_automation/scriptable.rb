@@ -2,7 +2,13 @@
 
 module DiscourseAutomation
   class Scriptable
-    attr_reader :fields, :name, :not_found, :forced_triggerable, :background
+    attr_reader :fields,
+                :name,
+                :not_found,
+                :forced_triggerable,
+                :background,
+                :automation,
+                :placeholders
 
     @@plugin_triggerables ||= {}
 
@@ -17,7 +23,7 @@ module DiscourseAutomation
       end
     end
 
-    def initialize(name)
+    def initialize(name, automation = nil)
       @name = name
       @version = 0
       @fields = []
@@ -28,6 +34,7 @@ module DiscourseAutomation
       @not_found = false
       @forced_triggerable = nil
       @background = false
+      @automation = automation
 
       eval! if @name
     end
@@ -66,12 +73,15 @@ module DiscourseAutomation
       end
     end
 
-    def placeholders
-      @placeholders.uniq.compact
-    end
-
-    def placeholder(placeholder)
-      @placeholders << placeholder
+    def placeholder(name = nil, triggerable: nil, &block)
+      if block_given?
+        result = yield(@automation.serialized_fields, @automation)
+        Array(result).each do |name|
+          @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
+        end
+      elsif name
+        @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
+      end
     end
 
     def version(*args)
@@ -117,6 +127,7 @@ module DiscourseAutomation
         extra: {
         },
         accepts_placeholders: false,
+        accepted_contexts: [],
         triggerable: nil,
         required: false,
       }.merge(options || {})
@@ -161,7 +172,7 @@ module DiscourseAutomation
 
         map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
 
-        input
+        input = Mustache.render(input, map).to_s
       end
 
       REPORT_REGEX = /%%REPORT=(.*?)%%/

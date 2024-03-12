@@ -69,7 +69,7 @@ describe "UserGlobalNotice" do
       automation_1.upsert_field!(
         "notice",
         "message",
-        { value: "notice for %%USERNAME%%" },
+        { value: "notice for {{username}}" },
         target: "script",
       )
       automation_1.upsert_field!("level", "choices", { value: "success" }, target: "script")

@@ -47,7 +47,7 @@ export default class PmsField extends BaseField {
             <div class="controls">
               <div class="field-wrapper">
                 <Input
-                  id={{concat @field.target @field.name "title"}}
+                  id={{concat @field.targetType @field.name "title"}}
                   @value={{pm.title}}
                   class="pm-input pm-title"
                   {{on "input" (fn this.mutPmTitle pm)}}

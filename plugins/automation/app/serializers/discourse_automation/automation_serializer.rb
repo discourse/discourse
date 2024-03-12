@@ -28,7 +28,9 @@ module DiscourseAutomation
     end
 
     def placeholders
-      (scriptable.placeholders || []) + (triggerable.placeholders || [])
+      DiscourseAutomation
+        .filter_by_trigger(scriptable&.placeholders || [], object.trigger)
+        .map { |placeholder| placeholder[:name] } + (triggerable&.placeholders || [])
     end
 
     def script
@@ -47,11 +49,7 @@ module DiscourseAutomation
         forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found,
         templates:
-          process_templates(
-            scriptable.fields.filter do |f|
-              !f[:triggerable] || f[:triggerable].to_sym == object.trigger&.to_sym
-            end,
-          ),
+          process_templates(filter_fields_with_priority(scriptable.fields, object.trigger&.to_sym)),
         fields: process_fields(object.fields.where(target: "script")),
       }
     end
@@ -65,14 +63,28 @@ module DiscourseAutomation
         name: I18n.t("#{key}.#{object.trigger}.title"),
         description: I18n.t("#{key}.#{object.trigger}.description"),
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
-        not_found: triggerable.not_found,
-        templates: process_templates(triggerable.fields),
+        not_found: triggerable&.not_found,
+        templates: process_templates(triggerable&.fields || []),
         fields: process_fields(object.fields.where(target: "trigger")),
-        settings: triggerable.settings,
+        settings: triggerable&.settings,
       }
     end
 
     private
+
+    def filter_fields_with_priority(arr, trigger)
+      unique_with_priority = {}
+
+      arr.each do |item|
+        name = item[:name]
+        if (item[:triggerable]&.to_sym == trigger&.to_sym || item[:triggerable].nil?) &&
+             (!unique_with_priority.key?(name) || unique_with_priority[name][:triggerable].nil?)
+          unique_with_priority[name] = item
+        end
+      end
+
+      unique_with_priority.values
+    end
 
     def process_templates(fields)
       ActiveModel::ArraySerializer.new(
@@ -92,11 +104,11 @@ module DiscourseAutomation
     end
 
     def scriptable
-      DiscourseAutomation::Scriptable.new(object.script)
+      object.scriptable
     end
 
     def triggerable
-      DiscourseAutomation::Triggerable.new(object.trigger)
+      object.triggerable
     end
   end
 end

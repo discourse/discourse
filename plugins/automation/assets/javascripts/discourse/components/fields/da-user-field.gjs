@@ -1,11 +1,33 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import I18n from "I18n";
 import UserChooser from "select-kit/components/user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
 
 export default class UserField extends BaseField {
+  @action
+  onChangeUsername(usernames) {
+    this.mutValue(usernames[0]);
+  }
+
+  @action
+  modifyContent(field, content) {
+    content = field.acceptedContexts
+      .map((context) => {
+        return {
+          name: I18n.t(
+            `discourse_automation.scriptables.${field.targetName}.fields.${field.name}.${context}_context`
+          ),
+          username: context,
+        };
+      })
+      .concat(content);
+
+    return content;
+  }
+
   <template>
     <section class="field user-field">
       <div class="control-group">
@@ -15,6 +37,7 @@ export default class UserField extends BaseField {
           <UserChooser
             @value={{@field.metadata.value}}
             @onChange={{this.onChangeUsername}}
+            @modifyContent={{fn this.modifyContent @field}}
             @options={{hash
               maximum=1
               excludeCurrentUser=false
@@ -27,9 +50,4 @@ export default class UserField extends BaseField {
       </div>
     </section>
   </template>
-
-  @action
-  onChangeUsername(usernames) {
-    this.mutValue(usernames[0]);
-  }
 }

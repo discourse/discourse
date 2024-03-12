@@ -23,12 +23,16 @@ module DiscourseAutomation
     def create
       automation_params = params.require(:automation).permit(:name, :script, :trigger)
 
-      enforce_trigger!(automation_params)
-
       automation =
-        DiscourseAutomation::Automation.create!(
+        DiscourseAutomation::Automation.new(
           automation_params.merge(last_updated_by_id: current_user.id),
         )
+      if automation.scriptable.forced_triggerable
+        automation.trigger = scriptable.forced_triggerable[:triggerable].to_s
+      end
+
+      automation.save!
+
       render_serialized_automation(automation)
     end
 
@@ -36,8 +40,9 @@ module DiscourseAutomation
       params.require(:automation)
 
       automation = DiscourseAutomation::Automation.find(params[:id])
-
-      enforce_trigger!(params[:automation])
+      if automation.scriptable.forced_triggerable
+        params[:trigger] = automation.scriptable.forced_triggerable[:triggerable].to_s
+      end
 
       attributes =
         request.parameters[:automation].slice(:name, :id, :script, :trigger, :enabled).merge(
@@ -81,13 +86,6 @@ module DiscourseAutomation
     end
 
     private
-
-    def enforce_trigger!(params)
-      scriptable = DiscourseAutomation::Scriptable.new(params[:script])
-      if scriptable.forced_triggerable
-        params[:trigger] = scriptable.forced_triggerable[:triggerable].to_s
-      end
-    end
 
     def render_serialized_automation(automation)
       serializer =

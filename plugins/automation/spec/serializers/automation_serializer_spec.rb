@@ -82,4 +82,35 @@ describe DiscourseAutomation::AutomationSerializer do
       end
     end
   end
+
+  context "when placeholders have triggerable" do
+    before do
+      DiscourseAutomation::Scriptable.add("foo_bar") do
+        version 1
+
+        placeholder :foo
+        placeholder :bar
+        placeholder :bar, triggerable: :user_updated
+        placeholder :bar, triggerable: :user_updated
+        placeholder :bar, triggerable: :something
+        placeholder(triggerable: :user_updated) { :cool }
+        placeholder(triggerable: :whatever) { :not_cool }
+
+        triggerables %i[user_updated something whatever]
+      end
+    end
+
+    fab!(:automation) { Fabricate(:automation, script: :foo_bar, trigger: :user_updated) }
+
+    it "correctly filters placeholders" do
+      serializer =
+        DiscourseAutomation::AutomationSerializer.new(
+          automation,
+          scope: Guardian.new(user),
+          root: false,
+        )
+
+      expect(serializer.placeholders).to eq(%i[foo bar cool])
+    end
+  end
 end

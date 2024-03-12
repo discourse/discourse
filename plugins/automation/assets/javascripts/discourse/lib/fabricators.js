@@ -13,12 +13,16 @@ let sequence = 0;
 function fieldFabricator(args = {}) {
   const template = args.template || {};
   template.accepts_placeholders = args.accepts_placeholders ?? true;
+  template.accepted_contexts = args.accepted_contexts ?? [];
   template.name = args.name ?? "name";
   template.component = args.component ?? "boolean";
   template.value = args.value ?? false;
   template.is_required = args.is_required ?? false;
   template.extra = args.extra ?? {};
-  return Field.create(template, args.target ?? "script");
+  return Field.create(template, {
+    type: args.target ?? "script",
+    name: "script_name",
+  });
 }
 
 function automationFabricator(args = {}) {

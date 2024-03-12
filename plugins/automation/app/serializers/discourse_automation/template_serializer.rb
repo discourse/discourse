@@ -6,6 +6,7 @@ module DiscourseAutomation
                :component,
                :extra,
                :accepts_placeholders,
+               :accepted_contexts,
                :read_only,
                :default_value,
                :is_required
@@ -32,6 +33,10 @@ module DiscourseAutomation
 
     def accepts_placeholders
       object[:accepts_placeholders]
+    end
+
+    def accepted_contexts
+      object[:accepted_contexts]
     end
 
     def is_required
