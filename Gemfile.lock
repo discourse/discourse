@@ -337,7 +337,7 @@ GEM
       activerecord (>= 6.1, <= 7.1)
       concurrent-ruby
       railties (>= 6.1, <= 7.1)
-    rails_multisite (5.0.0)
+    rails_multisite (5.0.1)
       activerecord (>= 6.0)
       railties (>= 6.0)
     railties (7.0.8.1)
