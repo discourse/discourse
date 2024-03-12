@@ -131,6 +131,7 @@ fa_IR:
       url: "کپی و اشتراک‌گذاری نشانی وب"
     word_connector:
       comma: "، "
+      last_item: "و"
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"

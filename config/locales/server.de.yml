@@ -2062,6 +2062,7 @@ de:
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
+    penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst."
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
