@@ -638,9 +638,12 @@ th:
       "14": "อยู่ระหว่างการพิจารณา"
       "15": "แบบร่าง"
     categories:
-      all: "ทุกหมวดหมู่"
-      all_subcategories: "ทั้งหมด"
-      no_subcategory: "ไม่มี"
+      categories_label: "หมวดหมู่"
+      subcategories_label: "หมวดหมู่ย่อย"
+      no_subcategories: "ไม่มีหมวดหมู่ย่อย"
+      remove_filter: "เอาตัวกรองออก"
+      plus_more_count: "อีก+%{count}"
+      view_all: "ดูทั้งหมด"
       category: "หมวดหมู่"
       category_list: "แสดงรายชื่อหมวดหมู่"
       reorder:
@@ -1342,7 +1345,6 @@ th:
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
-      create_pm: "ข้อความ"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
@@ -2269,7 +2271,6 @@ th:
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
         search: "%{shortcut}ค้นหา"
         help: "%{shortcut} เปิดความช่วยเหลือของแป้นพิมพ์"
-        dismiss_topics: "%{shortcut} ยกเลิกหัวข้อ"
         log_out: "%{shortcut} ออกจากระบบ"
       bookmarks:
         title: "บุ๊กมาร์ก"
@@ -2328,8 +2329,10 @@ th:
       download: "ดาวน์โหลด"
     tagging:
       other_tags: "แท็กอื่น"
+      selector_tags: "ป้าย"
       selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
+      selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
       info: "ข้อมูล"

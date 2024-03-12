@@ -910,9 +910,12 @@ hu:
       "14": "Folyamatban"
       "15": "Vázlatok"
     categories:
-      all: "összes kategória"
-      all_subcategories: "összes"
-      no_subcategory: "egyik sem"
+      categories_label: "kategóriák"
+      subcategories_label: "alkategóriák"
+      no_subcategories: "nincsenek alkategóriák"
+      remove_filter: "szűrő eltávolítása"
+      plus_more_count: "+még %{count}"
+      view_all: "mindent megtekint"
       category: "Kategória"
       category_list: "Kategória lista megjelenítése"
       reorder:
@@ -1927,6 +1930,9 @@ hu:
       alt: "Alt"
       enter: "Enter"
     category_row:
+      subcategory_count:
+        one: "+ %{count} alkategória"
+        other: "+ %{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -2028,7 +2034,6 @@ hu:
       reply: "Válasz"
       cancel: "Mégse"
       create_topic: "Téma létrehozása"
-      create_pm: "Üzenet"
       create_whisper: "Suttogás"
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
@@ -3366,7 +3371,6 @@ hu:
         show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
         search: "%{shortcut} Keresés"
         help: "%{shortcut}Billentyűzet segítségek megnyitása"
-        dismiss_topics: "%{shortcut} Témák elvetése"
         log_out: "%{shortcut} Kijelentkezés"
       composing:
         title: "Megfogalmaz"
@@ -3446,8 +3450,10 @@ hu:
     tagging:
       all_tags: "Minden címke"
       other_tags: "Egyéb címkék"
+      selector_tags: "címkék"
       selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
+      selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
       info: "Információ"

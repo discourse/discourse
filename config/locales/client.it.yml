@@ -957,9 +957,12 @@ it:
       "14": "In Attesa"
       "15": "Bozze"
     categories:
-      all: "tutte le categorie"
-      all_subcategories: "tutte"
-      no_subcategory: "nessuno"
+      categories_label: "categorie"
+      subcategories_label: "sottocategorie"
+      no_subcategories: "nessuna sottocategoria"
+      remove_filter: "rimuovi filtro"
+      plus_more_count: "+%{count} altri"
+      view_all: "vedi tutto"
       category: "Categoria"
       category_list: "Visualizza l'elenco delle categorie"
       reorder:
@@ -2117,6 +2120,9 @@ it:
     conditional_loading_section:
       loading: Caricamento…
     category_row:
+      subcategory_count:
+        one: "+ %{count} sottocategoria"
+        other: "+ %{count} sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
@@ -2241,7 +2247,6 @@ it:
       reply: "Rispondi"
       cancel: "Annulla"
       create_topic: "Crea Argomento"
-      create_pm: "Messaggio"
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
@@ -3873,8 +3878,6 @@ it:
         show_incoming_updated_topics: "%{shortcut} Mostra argomenti aggiornati"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Apri la legenda tasti"
-        dismiss_new: "%{shortcut} Ignora i nuovi"
-        dismiss_topics: "%{shortcut} Ignora Argomenti"
         log_out: "%{shortcut} Disconnetti"
       composing:
         title: "Scrittura"
@@ -3974,8 +3977,10 @@ it:
     tagging:
       all_tags: "Tutte le etichette"
       other_tags: "Altre Etichette"
+      selector_tags: "etichette"
       selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
+      selector_remove_filter: "rimuovi filtro"
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       choose_for_topic_required:

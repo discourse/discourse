@@ -129,6 +129,7 @@ fa_IR:
       url: "کپی و اشتراک‌گذاری نشانی وب"
     word_connector:
       comma: "، "
+      last_item: "و"
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -168,6 +169,8 @@ fa_IR:
     themes:
       default_description: "پیش‌فرض"
     broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
+    critical_deprecation:
+      id: "(شناسه:<em>%{id}</em>)"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -888,9 +891,11 @@ fa_IR:
       "14": "در انتظار"
       "15": "پیش‌نویس‌ها"
     categories:
-      all: "همه‌ی دسته‌بندی‌ها"
-      all_subcategories: "همه"
-      no_subcategory: "هیچی"
+      categories_label: "دسته‌بندی‌ها"
+      subcategories_label: "دسته‌‌بندی‌های فرزند"
+      remove_filter: "حذف فیلتر"
+      plus_more_count: "+%{count} مورد دیگر"
+      view_all: "مشاهده همه"
       category: "دسته‌بندی"
       category_list: "نمایش فهرست دسته‌بندی"
       reorder:
@@ -1910,7 +1915,6 @@ fa_IR:
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"
-      create_pm: "پیام"
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
@@ -3193,7 +3197,6 @@ fa_IR:
         show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
         search: "جستجو %{shortcut}"
         help: "%{shortcut} باز کردن کمک صفحه‌کلید"
-        dismiss_topics: "%{shortcut} بستن موضوعات"
         log_out: "%{shortcut} خروج"
       composing:
         title: "نوشتن"
@@ -3262,8 +3265,10 @@ fa_IR:
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
+      selector_tags: "برچسب‌ها"
       selector_all_tags: "تمام برچسب‌ها"
       selector_no_tags: "بدون برچسب"
+      selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
       info: "اطلاعات"
@@ -3912,6 +3917,7 @@ fa_IR:
           up_to_date: "قالب به روز است،‌ آخرین بررسی در:"
           add: "افزودن"
           theme_settings: "تنظیمات تم"
+          edit_objects_theme_setting: "ویرایشگر تنظیمات اشیاء"
           no_settings: "این تم تنظیماتی ندارد."
           theme_translations: "ترجمه تم"
           commits_behind:

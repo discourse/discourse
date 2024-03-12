@@ -810,9 +810,12 @@ gl:
       "14": "Pendente"
       "15": "Borradores"
     categories:
-      all: "todas as categorías"
-      all_subcategories: "todo"
-      no_subcategory: "ningunha"
+      categories_label: "categorías"
+      subcategories_label: "subcategorías"
+      no_subcategories: "sen subcategorías"
+      remove_filter: "eliminar filtro"
+      plus_more_count: "+%{count} máis"
+      view_all: "ver todos"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
       reorder:
@@ -1682,6 +1685,9 @@ gl:
       alt: "Alt"
       enter: "Intro"
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategoría"
+        other: "+ %{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -1770,7 +1776,6 @@ gl:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
-      create_pm: "Mensaxe"
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
@@ -3071,7 +3076,6 @@ gl:
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir a axuda do teclado"
-        dismiss_topics: "%{shortcut} Desbotar temas"
         log_out: "%{shortcut} Saír da sesión"
       composing:
         title: "Escribindo"
@@ -3147,8 +3151,10 @@ gl:
       download: "Descargar"
     tagging:
       other_tags: "Outras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
+      selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"

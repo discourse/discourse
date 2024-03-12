@@ -865,9 +865,12 @@ ur:
       "14": "زیرِاِلتوَاء"
       "15": "ڈرافٹس"
     categories:
-      all: "تمام زُمرَہ جات"
-      all_subcategories: "تمام"
-      no_subcategory: "کوئی نہیں"
+      categories_label: "اقسام"
+      subcategories_label: "ذیلی زمرے"
+      no_subcategories: "کوئی ذیلی زمرہ جات نہیں"
+      remove_filter: "فِلٹر ہٹائیں"
+      plus_more_count: "+%{count} مزید"
+      view_all: "سب دیکھیں"
       category: "زمرہ"
       category_list: "زمرہ جات کی فہرست ظاہر کریں"
       reorder:
@@ -1773,6 +1776,9 @@ ur:
       alt: "Alt"
       enter: "اَینٹر"
     category_row:
+      subcategory_count:
+        one: "+ %{count} ذیلی زمرہ"
+        other: "+ %{count} ذیلی زمرہ جات"
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
@@ -1872,7 +1878,6 @@ ur:
       reply: "جواب"
       cancel: "منسوخ"
       create_topic: "ٹاپک بنائیں"
-      create_pm: "پیغام"
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
@@ -3276,8 +3281,6 @@ ur:
         show_incoming_updated_topics: "%{shortcut} اپ ڈیٹ کردہ عنوانات دکھائیں"
         search: "%{shortcut} سرچ"
         help: "%{shortcut} کیبورڈ مدد کھولیں"
-        dismiss_new: "%{shortcut} نئے کو برخاست"
-        dismiss_topics: "%{shortcut} ٹاپک برخاست کریں"
         log_out: "%{shortcut} لاگ آوٹ"
       composing:
         title: "کمپوز کرنا"
@@ -3367,8 +3370,10 @@ ur:
       ics: "ICS"
     tagging:
       other_tags: "دیگر ٹیگز"
+      selector_tags: "ٹیگز"
       selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
+      selector_remove_filter: "فِلٹر ہٹائیں"
       tags: "ٹیگز"
       choose_for_topic: "اختیاری ٹیگز"
       info: "معلومات"

@@ -957,9 +957,12 @@ pt_BR:
       "14": "Pendentes"
       "15": "Rascunhos"
     categories:
-      all: "todas as categorias"
-      all_subcategories: "tudo"
-      no_subcategory: "nenhum"
+      categories_label: "categorias"
+      subcategories_label: "subcategorias"
+      no_subcategories: "nenhuma subcategoria"
+      remove_filter: "remover filtro"
+      plus_more_count: "mais %{count}"
+      view_all: "ver tudo"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
       reorder:
@@ -2121,6 +2124,9 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando…
     category_row:
+      subcategory_count:
+        one: "+%{count} subcategoria"
+        other: "+%{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2245,7 +2251,6 @@ pt_BR:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar tópico"
-      create_pm: "Mensagem"
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
@@ -3887,8 +3892,6 @@ pt_BR:
         show_incoming_updated_topics: "%{shortcut} Exibir tópicos atualizados"
         search: "%{shortcut} Procurar"
         help: "%{shortcut} Abrir ajuda de teclado"
-        dismiss_new: "%{shortcut} descartar novos(as)"
-        dismiss_topics: "%{shortcut} Descartar tópicos"
         log_out: "%{shortcut} Sair"
       composing:
         title: "Criação"
@@ -3988,8 +3991,10 @@ pt_BR:
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
+      selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       choose_for_topic_required:

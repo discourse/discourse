@@ -859,9 +859,10 @@ id:
       "14": "tertunda"
       "15": "Konsep"
     categories:
-      all: "Semua kategori"
-      all_subcategories: "Semua"
-      no_subcategory: "Tak ada"
+      categories_label: "kategori"
+      subcategories_label: "subkategori"
+      remove_filter: "hapus filter"
+      plus_more_count: "+%{count} lainnya"
       category: "Kategori"
       category_list: "Tampilan daftar kategori"
       reorder:
@@ -1561,7 +1562,6 @@ id:
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
-      create_pm: "Pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
@@ -1995,6 +1995,8 @@ id:
         posting:
           name: Posting
     tagging:
+      selector_tags: "label"
+      selector_remove_filter: "hapus filter"
       tags: "Label"
       add_synonyms: "Menambahkan"
       description: "Deskripsi (maks 1000 karakter)"

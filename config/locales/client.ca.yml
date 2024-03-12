@@ -772,9 +772,11 @@ ca:
       "14": "Pendents"
       "15": "Esborranys"
     categories:
-      all: "totes les categories"
-      all_subcategories: "tots"
-      no_subcategory: "cap"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      remove_filter: "elimina filtre"
+      plus_more_count: "+%{count} més"
+      view_all: "mostra-ho tot"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
       reorder:
@@ -1572,7 +1574,6 @@ ca:
       reply: "Respon"
       cancel: "Cancel·la"
       create_topic: "Crea un tema"
-      create_pm: "Missatge"
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
@@ -2691,7 +2692,6 @@ ca:
         show_incoming_updated_topics: "%{shortcut} Mostra temes actualitzats"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Obre l'ajuda de teclat"
-        dismiss_topics: "%{shortcut} Descarta temes"
         log_out: "%{shortcut} Tanca la sessió"
       composing:
         title: "Redactant"
@@ -2749,8 +2749,10 @@ ca:
       download: "Descarrega"
     tagging:
       other_tags: "Altres etiquetes"
+      selector_tags: "etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
+      selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
       choose_for_topic: "etiquetes opcionals"
       add_synonyms: "Afegeix"

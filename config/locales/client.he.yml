@@ -1067,9 +1067,13 @@ he:
       "14": "ממתין"
       "15": "טיוטות"
     categories:
-      all: "כל הקטגוריות"
-      all_subcategories: "הכול"
-      no_subcategory: "ללא"
+      categories_label: "קטגוריות"
+      subcategories_label: "תת־קטגוריות"
+      all_subcategories: "כל תת־הקטגוריות"
+      no_subcategories: "אין תת־קטגוריות"
+      remove_filter: "הסרת הסינון"
+      plus_more_count: "+עוד %{count}"
+      view_all: "להציג הכול"
       category: "קטגוריה"
       category_list: "הצגת רשימת קטגוריות"
       reorder:
@@ -2308,6 +2312,11 @@ he:
     conditional_loading_section:
       loading: בטעינה…
     category_row:
+      subcategory_count:
+        one: "+ תת־קטגוריה %{count}"
+        two: "+ %{count} תת־קטגוריות"
+        many: "+ %{count} תת־קטגוריות"
+        other: "+ %{count} תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"
@@ -2456,7 +2465,7 @@ he:
       reply: "תגובה"
       cancel: "ביטול"
       create_topic: "יצירת נושא"
-      create_pm: "הודעה"
+      create_pm: "שליחת הודעה"
       create_whisper: "לחישה"
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
@@ -2988,6 +2997,8 @@ he:
           many: "התקדמות: <strong>%{count}</strong> נושאים"
           other: "התקדמות: <strong>%{count}</strong> נושאים"
         silent: "לבצע את הפעולה הזאת בשקט."
+        performing: "מתבצעות פעולות במרוכז, נא להמתין…"
+        completed: "הפעולות במרוכזת הושלמו בהצלחה!"
       none:
         unread: "אין לך נושאים שלא נקראו."
         unseen: "אין לך נושאים שלא ראית."
@@ -4289,8 +4300,9 @@ he:
         search: "%{shortcut} חיפוש"
         filter_sidebar: "%{shortcut} סרגל צד סינון"
         help: "%{shortcut} פתיחת קיצורי מקשים"
-        dismiss_new: "%{shortcut} התעלמות מחדשים"
-        dismiss_topics: "%{shortcut} התעלמות מנושאים"
+        toggle_bulk_select: "%{shortcut} החלפת מצב בחירה במרוכז"
+        dismiss: "%{shortcut} התעלמות מהנושאים הנבחרים"
+        x: "%{shortcut} החלפת מצב בחירה (במצב בחירה במרוכז)"
         log_out: "%{shortcut} התנתקות"
       composing:
         title: "חיבור"
@@ -4400,8 +4412,10 @@ he:
     tagging:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
+      selector_tags: "תגיות"
       selector_all_tags: "כל התגיות"
       selector_no_tags: "ללא תגיות"
+      selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
@@ -5539,6 +5553,7 @@ he:
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
           theme_settings: "הגדרות ערכת עיצוב"
+          edit_objects_theme_setting: "עורך הגדרות עצמים"
           overriden_settings_explanation: "הגדרות שנדרסו מסומנות בנקודה ומודגשות. כדי לאפס את ההגדרות האלו לערך ברירת המחדל, יש ללחוץ על כפתור האיפוס שלצידן."
           no_settings: "לערכת עיצוב זו אין הגדרות."
           theme_translations: "תרגומים של ערכות עיצוב"

@@ -960,9 +960,12 @@ sv:
       "14": "Väntar"
       "15": "Utkast"
     categories:
-      all: "alla kategorier"
-      all_subcategories: "alla"
-      no_subcategory: "ingen"
+      categories_label: "kategorier"
+      subcategories_label: "underkategorier"
+      no_subcategories: "inga underkategorier"
+      remove_filter: "ta bort filter"
+      plus_more_count: "+ytterligare %{count}"
+      view_all: "visa alla"
       category: "Kategori"
       category_list: "Visa kategori-lista"
       reorder:
@@ -2127,6 +2130,9 @@ sv:
     conditional_loading_section:
       loading: Laddar…
     category_row:
+      subcategory_count:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2251,7 +2257,6 @@ sv:
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"
-      create_pm: "Nytt meddelande"
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
@@ -3898,8 +3903,6 @@ sv:
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
         search: "%{shortcut} Sök"
         help: "%{shortcut} Öppna tangentbordshjälp"
-        dismiss_new: "%{shortcut} Avfärda nya"
-        dismiss_topics: "%{shortcut} Avfärda ämnen"
         log_out: "%{shortcut} Logga ut"
       composing:
         title: "Skapar"
@@ -3999,8 +4002,10 @@ sv:
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
+      selector_tags: "taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
+      selector_remove_filter: "ta bort filter"
       tags: "Taggar"
       choose_for_topic: "alternativa taggar"
       choose_for_topic_required:

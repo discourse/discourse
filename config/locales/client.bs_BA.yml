@@ -793,9 +793,10 @@ bs_BA:
       "14": "Na čekanju."
       "15": "Skice"
     categories:
-      all: "Sve kategorije"
-      all_subcategories: "sve"
-      no_subcategory: "nijedna"
+      categories_label: "kategorije"
+      subcategories_label: "podkategorije"
+      remove_filter: "show all posts in this topic again."
+      plus_more_count: "+ još %{count}"
       category: "Kategorija"
       category_list: "Prikaži listu kategorija"
       reorder:
@@ -1628,7 +1629,6 @@ bs_BA:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
-      create_pm: "Kreiraj Privatnu Poruku"
       create_whisper: "Šapat"
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
@@ -2786,7 +2786,6 @@ bs_BA:
         show_incoming_updated_topics: "%{shortcut} Pročitaj promjenje teme"
         search: "%{shortcut} Traži"
         help: "%{shortcut} Otvori pomoć za tastaturu"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
         log_out: "%{shortcut} Odjavi se"
       composing:
         title: "komppziranje"
@@ -2865,8 +2864,10 @@ bs_BA:
       download: "Skinuti"
     tagging:
       other_tags: "Druge oznake"
+      selector_tags: "oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
+      selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"
