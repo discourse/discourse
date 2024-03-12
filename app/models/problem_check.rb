@@ -64,12 +64,12 @@ class ProblemCheck
 
   private
 
-  def problem
+  def problem(override_key = nil)
     [
       Problem.new(
         message ||
           I18n.t(
-            translation_key,
+            override_key || translation_key,
             base_path: Discourse.base_path,
             **translation_data.symbolize_keys,
           ),

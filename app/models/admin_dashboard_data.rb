@@ -141,7 +141,7 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :force_https_check, :s3_config_check, :watched_words_check
+    add_problem_check :force_https_check, :watched_words_check
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -220,25 +220,6 @@ class AdminDashboardData
   def queue_size_check
     queue_size = Jobs.queued
     I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
-  end
-
-  def s3_config_check
-    # if set via global setting it is validated during the `use_s3?` call
-    if !GlobalSetting.use_s3?
-      bad_keys =
-        (SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?) &&
-          !SiteSetting.s3_use_iam_profile
-
-      if SiteSetting.enable_s3_uploads && (bad_keys || SiteSetting.s3_upload_bucket.blank?)
-        return I18n.t("dashboard.s3_config_warning", base_path: Discourse.base_path)
-      end
-
-      if SiteSetting.backup_location == BackupLocationSiteSetting::S3 &&
-           (bad_keys || SiteSetting.s3_backup_bucket.blank?)
-        return I18n.t("dashboard.s3_backup_config_warning", base_path: Discourse.base_path)
-      end
-    end
-    nil
   end
 
   def missing_mailgun_api_key
