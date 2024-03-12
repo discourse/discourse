@@ -253,7 +253,7 @@ module Chat
       ).report
     end
 
-    def self.global_count(guardian)
+    def self.unreads_total(guardian)
       result = 0
 
       public_channels = secured_public_channels(guardian, status: :open, following: true)

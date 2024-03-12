@@ -244,7 +244,7 @@ after_initialize do
       @has_chat_enabled =
         SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
     end,
-  ) { Chat::ChannelFetcher.global_count(self.scope) }
+  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
