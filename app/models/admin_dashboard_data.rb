@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :subfolder_ends_in_slash_check,
                       :email_polling_errored_recently,
                       :out_of_date_themes,
                       :unreachable_themes,
@@ -253,10 +252,6 @@ class AdminDashboardData
     if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
       I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
     end
-  end
-
-  def subfolder_ends_in_slash_check
-    I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/\z}
   end
 
   def google_analytics_version_check
