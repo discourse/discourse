@@ -60,9 +60,10 @@ module(
     setupRenderingTest(hooks);
 
     test("activates the first node by default", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -73,9 +74,10 @@ module(
     });
 
     test("renders the 2nd level of nested items for the active item only", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -114,9 +116,10 @@ module(
     });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -191,9 +194,10 @@ module(
     });
 
     test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       assert.dom(".back-button").doesNotExist();
@@ -225,9 +229,10 @@ module(
     });
 
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -251,9 +256,10 @@ module(
     });
 
     test("the back button label includes the name of the item at the previous level", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -287,9 +293,10 @@ module(
     });
 
     test("input fields for items at different levels", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+      const setting = schemaAndData(2);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -332,9 +339,10 @@ module(
     });
 
     test("input fields of type integer", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -364,9 +372,10 @@ module(
     });
 
     test("input fields of type boolean", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -393,9 +402,10 @@ module(
     });
 
     test("input fields of type enum", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -419,9 +429,10 @@ module(
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+      const setting = schemaAndData(2);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -448,9 +459,10 @@ module(
     });
 
     test("edits are remembered when navigating between levels", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+      const setting = schemaAndData(2);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();

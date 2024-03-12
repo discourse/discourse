@@ -1,3 +1,5 @@
+import ThemeSettings from "admin/models/theme-settings";
+
 export default function schemaAndData(version = 1) {
   let schema, data;
   if (version === 1) {
@@ -196,5 +198,10 @@ export default function schemaAndData(version = 1) {
   } else {
     throw new Error("unknown fixture version");
   }
-  return [schema, data];
+
+  return ThemeSettings.create({
+    objects_schema: schema,
+    value: data,
+    setting: "objects_setting"
+  });
 }
