@@ -8,6 +8,7 @@ import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
 import { logSearchLinkClick } from "discourse/lib/search";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
@@ -381,10 +382,7 @@ createWidget("hamburger-dropdown-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "340px"
-          : "-340px";
+      const finishPosition = isDocumentRTL() ? "340px" : "-340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -438,10 +436,7 @@ createWidget("revamped-user-menu-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "-340px"
-          : "340px";
+      const finishPosition = isDocumentRTL() ? "-340px" : "340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,

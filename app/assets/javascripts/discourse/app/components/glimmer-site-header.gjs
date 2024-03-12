@@ -9,6 +9,7 @@ import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
 import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, debounce } from "discourse-common/utils/decorators";
@@ -51,7 +52,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   get leftMenuClass() {
-    if (document.querySelector("html").classList["direction"] === "rtl") {
+    if (isDocumentRTL()) {
       return "user-menu";
     } else {
       return "hamburger-panel";

@@ -3,15 +3,18 @@ import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ThreadTitle from "discourse/plugins/chat/discourse/components/thread-title";
+import ThreadPreview from "discourse/plugins/chat/discourse/components/user-threads/preview";
 
 export default class UserThreads extends Component {
   @service chat;
   @service chatApi;
   @service chatChannelsManager;
+  @service site;
 
   @cached
   get threadsCollection() {
@@ -41,14 +44,23 @@ export default class UserThreads extends Component {
     >
       <list.Item as |thread|>
         <div class="c-user-thread" data-id={{thread.id}}>
-          <ThreadTitle @thread={{thread}} />
+          {{#if this.site.mobileView}}
+            <ChannelIcon @thread={{thread}} />
+          {{/if}}
+
           <ChannelTitle @channel={{thread.channel}} />
-          <ThreadIndicator
-            @message={{thread.originalMessage}}
-            @interactiveUser={{false}}
-            @interactiveThread={{false}}
-            tabindex="-1"
-          />
+          <ThreadTitle @thread={{thread}} />
+
+          {{#if this.site.mobileView}}
+            <ThreadPreview @preview={{thread.preview}} />
+          {{else}}
+            <ThreadIndicator
+              @message={{thread.originalMessage}}
+              @interactiveUser={{false}}
+              @interactiveThread={{false}}
+              tabindex="-1"
+            />
+          {{/if}}
         </div>
       </list.Item>
       <list.EmptyState>

@@ -46,13 +46,13 @@ RSpec.describe PrettyText do
     it "works with multiple timezones" do
       cooked =
         PrettyText.cook(
-          '[date=2018-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
+          '[date=2023-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
         )
       cooked_mail =
         generate_html(
-          "2018-05-07T22:00:00Z UTC",
-          date: "2018-05-08",
-          email_preview: "2018-05-07T22:00:00Z UTC",
+          "2023-05-07T22:00:00Z UTC",
+          date: "2023-05-08",
+          email_preview: "2023-05-07T22:00:00Z UTC",
           timezone: "Europe/Paris",
           timezones: "America/Los_Angeles|Pacific/Auckland",
         )
