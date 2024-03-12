@@ -184,6 +184,7 @@ module SvgSprite
         plus-circle
         plus-square
         power-off
+        project-diagram
         puzzle-piece
         question
         question-circle
