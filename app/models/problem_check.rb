@@ -67,7 +67,12 @@ class ProblemCheck
   def problem
     [
       Problem.new(
-        I18n.t(translation_key, base_path: Discourse.base_path, **translation_data.symbolize_keys),
+        message ||
+          I18n.t(
+            translation_key,
+            base_path: Discourse.base_path,
+            **translation_data.symbolize_keys,
+          ),
         priority: self.config.priority,
         identifier:,
       ),
@@ -76,6 +81,10 @@ class ProblemCheck
 
   def no_problem
     []
+  end
+
+  def message
+    nil
   end
 
   def translation_key

@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :out_of_date_themes,
                       :unreachable_themes,
                       :watched_words_check,
                       :google_analytics_version_check,
@@ -285,13 +284,6 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def out_of_date_themes
-    old_themes = RemoteTheme.out_of_date_themes
-    return unless old_themes.present?
-
-    themes_html_format(old_themes, "dashboard.out_of_date_themes")
   end
 
   def unreachable_themes
