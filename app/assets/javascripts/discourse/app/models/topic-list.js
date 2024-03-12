@@ -185,13 +185,13 @@ export default class TopicList extends RestModel {
 
       this.set("loadingMore", true);
 
-      return ajax({ url: moreUrl }).then((result) => {
+      return ajax({ url: moreUrl }).then(async (result) => {
         let topicsAdded = 0;
 
         if (result) {
           // the new topics loaded from the server
           const newTopics = TopicList.topicsFrom(this.store, result);
-          Topic.applyTransformations(newTopics);
+          await Topic.applyTransformations(newTopics);
 
           this.forEachNew(newTopics, (t) => {
             t.set("highlight", topicsAdded++ === 0);
