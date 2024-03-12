@@ -237,7 +237,7 @@ after_initialize do
   end
 
   add_to_serializer(
-    :current_user_count,
+    :user_notification_total,
     :chat_notifications,
     include_condition: -> do
       return @has_chat_enabled if defined?(@has_chat_enabled)

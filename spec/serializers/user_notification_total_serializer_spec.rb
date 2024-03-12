@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe CurrentUserCountSerializer do
+RSpec.describe UserNotificationTotalSerializer do
   fab!(:user)
 
   fab!(:notification) { Fabricate(:notification, user: user, read: false) }

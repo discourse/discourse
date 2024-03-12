@@ -649,14 +649,6 @@ class SessionController < ApplicationController
     end
   end
 
-  def current_counts
-    if current_user.present?
-      render_serialized(current_user, CurrentUserCountSerializer, root: false)
-    else
-      render body: nil, status: 404
-    end
-  end
-
   def destroy
     redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
 

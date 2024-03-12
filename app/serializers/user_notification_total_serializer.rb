@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-class CurrentUserCountSerializer < BasicUserSerializer
-  attributes :unread_notifications,
+class UserNotificationTotalSerializer < ApplicationSerializer
+  attributes :id,
+             :username,
+             :unread_notifications,
              :unread_personal_messages,
              :unseen_reviewables,
              :topic_tracking,
-             :group_inboxes,
-             def unread_notifications
-               object.all_unread_notifications_count -
-                 object.new_personal_messages_notifications_count
-             end
+             :group_inboxes
+
+  def unread_notifications
+    object.all_unread_notifications_count - object.new_personal_messages_notifications_count
+  end
 
   def unread_personal_messages
     object.new_personal_messages_notifications_count

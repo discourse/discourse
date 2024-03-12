@@ -618,5 +618,12 @@ RSpec.describe NotificationsController do
         delete_notification(403, :to)
       end
     end
+
+    describe "#totals" do
+      it "can't see notification totals" do
+        get "/notifications/totals.json"
+        expect(response.status).to eq(403)
+      end
+    end
   end
 end
