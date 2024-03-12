@@ -143,7 +143,6 @@ class AdminDashboardData
 
     add_problem_check :force_https_check,
                       :s3_config_check,
-                      :image_magick_check,
                       :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :email_polling_errored_recently,
@@ -254,12 +253,6 @@ class AdminDashboardData
   def translation_overrides_check
     if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
       I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
-    end
-  end
-
-  def image_magick_check
-    if SiteSetting.create_thumbnails && !system("command -v convert >/dev/null;")
-      I18n.t("dashboard.image_magick_warning")
     end
   end
 
