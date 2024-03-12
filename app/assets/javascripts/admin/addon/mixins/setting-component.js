@@ -9,6 +9,7 @@ import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { splitString } from "discourse/lib/utilities";
+import { deepEqual } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
@@ -111,7 +112,7 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return bufferVal.toString() !== settingVal.toString();
+    return !deepEqual(bufferVal, settingVal);
   },
 
   @discourseComputed("setting", "buffered.value")
@@ -278,7 +279,7 @@ export default Mixin.create({
 
   @action
   resetDefault() {
-    this.set("buffered.value", this.get("setting.default"));
+    this.set("buffered.value", this.setting.default);
   },
 
   @action
