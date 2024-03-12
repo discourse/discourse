@@ -14,6 +14,7 @@ import PluginCommitHash from "./plugin-commit-hash";
 export default class AdminPluginsListItem extends Component {
   @service session;
   @service currentUser;
+  @service sidebarState;
 
   @action
   async togglePluginEnabled(plugin) {
@@ -30,8 +31,20 @@ export default class AdminPluginsListItem extends Component {
     }
   }
 
+  get isFiltered() {
+    if (!this.sidebarState.filter) {
+      return false;
+    }
+    return this.args.plugin.nameTitleized
+      .toLowerCase()
+      .match(this.sidebarState.filter);
+  }
+
   <template>
-    <tr data-plugin-name={{@plugin.name}}>
+    <tr
+      data-plugin-name={{@plugin.name}}
+      class={{if this.isFiltered "filtered"}}
+    >
       <td class="admin-plugins-list__row">
         <div class="admin-plugins-list__name-with-badges">
           <div class="admin-plugins-list__name">

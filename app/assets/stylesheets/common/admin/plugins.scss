@@ -41,6 +41,10 @@
       }
     }
 
+    tr.filtered {
+      background-color: var(--primary-low);
+    }
+
     &__author {
       font-size: var(--font-down-2);
       padding: 0 0 0.25em 0;

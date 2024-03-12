@@ -16,10 +16,16 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink, router }) {
+  constructor({
+    adminSidebarNavLink,
+    adminSidebarExperimentStateManager,
+    router,
+  }) {
     super(...arguments);
     this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
+    this.adminSidebarExperimentStateManager =
+      adminSidebarExperimentStateManager;
   }
 
   get name() {
@@ -80,14 +86,27 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
     return this.adminSidebarNavLink.route;
   }
+  get keywords() {
+    return (
+      this.adminSidebarExperimentStateManager.keywords[
+        this.adminSidebarNavLink.name
+      ] || []
+    );
+  }
 }
 
-function defineAdminSection(adminNavSectionData, router) {
+function defineAdminSection(
+  adminNavSectionData,
+  adminSidebarExperimentStateManager,
+  router
+) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
       this.adminNavSectionData = adminNavSectionData;
       this.hideSectionHeader = adminNavSectionData.hideSectionHeader;
+      this.adminSidebarExperimentStateManager =
+        adminSidebarExperimentStateManager;
     }
 
     get sectionLinks() {
@@ -113,6 +132,8 @@ function defineAdminSection(adminNavSectionData, router) {
         (sectionLinkData) =>
           new SidebarAdminSectionLink({
             adminSidebarNavLink: sectionLinkData,
+            adminSidebarExperimentStateManager:
+              this.adminSidebarExperimentStateManager,
             router,
           })
       );
@@ -256,7 +277,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      return defineAdminSection(adminNavSectionData, router);
+      return defineAdminSection(
+        adminNavSectionData,
+        this.adminSidebarExperimentStateManager,
+        router
+      );
     });
   }
 

@@ -7,7 +7,9 @@ import I18n from "discourse-i18n";
 export default class AdminRoute extends DiscourseRoute {
   @service sidebarState;
   @service siteSettings;
+  @service store;
   @service currentUser;
+  @service adminSidebarExperimentStateManager;
   @tracked initialSidebarState;
 
   titleToken() {
@@ -23,6 +25,12 @@ export default class AdminRoute extends DiscourseRoute {
 
     this.controllerFor("application").setProperties({
       showTop: false,
+    });
+
+    this.store.findAll("plugin").then((plugins) => {
+      this.adminSidebarExperimentStateManager.keywords[
+        "admin_installed_plugins"
+      ] = plugins.map((plugin) => plugin.name.toLowerCase());
     });
   }
 
