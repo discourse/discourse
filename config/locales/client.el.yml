@@ -823,9 +823,12 @@ el:
       "14": "Εκκρεμή"
       "15": "Προσχέδια"
     categories:
-      all: "όλες οι κατηγορίες"
-      all_subcategories: "όλα"
-      no_subcategory: "κανένα"
+      categories_label: "κατηγορίες"
+      subcategories_label: "υποκατηγορίες"
+      no_subcategories: "χωρίς υποκατηγορίες"
+      remove_filter: "αφαίρεση φίλτρου"
+      plus_more_count: "+%{count} περισσότερο"
+      view_all: "προβολή όλων"
       category: "Κατηγορία"
       category_list: "Εμφάνισε τη λίστα κατηγοριών"
       reorder:
@@ -1681,6 +1684,9 @@ el:
       alt: "Alt"
       enter: "Enter"
     category_row:
+      subcategory_count:
+        one: "+ %{count} υποκατηγορία"
+        other: "+ %{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -1754,7 +1760,6 @@ el:
       reply: "Απάντηση"
       cancel: "Ακύρωση"
       create_topic: "Δημιουργία Θέματος"
-      create_pm: "Μήνυμα"
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
@@ -3026,7 +3031,6 @@ el:
         show_incoming_updated_topics: "%{shortcut} Εμφάνιση ενημερωμένων νημάτων"
         search: "%{shortcut} Αναζήτηση"
         help: "%{shortcut} Εμφάνισε βοήθειας πληκτρολογίου"
-        dismiss_topics: "%{shortcut} Απόρριψη Νημάτων"
         log_out: "%{shortcut} Αποσύνδεση"
       composing:
         title: "Σύνθεση"
@@ -3110,8 +3114,10 @@ el:
     tagging:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
+      selector_tags: "ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
+      selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
       choose_for_topic: "προαιρετικές ετικέτες"
       info: "Πληροφορίες"

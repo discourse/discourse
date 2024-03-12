@@ -957,9 +957,12 @@ es:
       "14": "Pendiente"
       "15": "Borradores"
     categories:
-      all: "todas las categorías"
-      all_subcategories: "todas"
-      no_subcategory: "ninguna"
+      categories_label: "categorías"
+      subcategories_label: "subcategorías"
+      no_subcategories: "sin subcategoría"
+      remove_filter: "quitar filtro"
+      plus_more_count: "+%{count} más"
+      view_all: "ver todo"
       category: "Categoría"
       category_list: "Mostrar lista de categorías"
       reorder:
@@ -2118,6 +2121,9 @@ es:
     conditional_loading_section:
       loading: Cargando…
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategoría"
+        other: "+ %{count} subcategorías"
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
@@ -2242,7 +2248,6 @@ es:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
-      create_pm: "Mensaje"
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
@@ -3881,8 +3886,6 @@ es:
         show_incoming_updated_topics: "%{shortcut} Mostrar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir guía de atajos de teclado"
-        dismiss_new: "%{shortcut} Descartar nuevas"
-        dismiss_topics: "%{shortcut} Descartar temas"
         log_out: "%{shortcut} Cerrar sesión"
       composing:
         title: "Redactando"
@@ -3982,8 +3985,10 @@ es:
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas las etiquetas"
       selector_no_tags: "sin etiquetas"
+      selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas (opcional)"
       choose_for_topic_required:

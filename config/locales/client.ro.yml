@@ -967,9 +967,13 @@ ro:
       "14": "În așteptare"
       "15": "Ciorne"
     categories:
-      all: "Toate categoriile"
-      all_subcategories: "tot"
-      no_subcategory: "Niciuna"
+      categories_label: "categorii"
+      subcategories_label: "subcategorii"
+      all_subcategories: "toate subcategoriile"
+      no_subcategories: "nicio subcategorie"
+      remove_filter: "șterge filtru"
+      plus_more_count: "+încă %{count}"
+      view_all: "vezi toate"
       category: "Categorie"
       category_list: "Afișează lista de categorii"
       reorder:
@@ -1748,6 +1752,11 @@ ro:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Introdu"
+    category_row:
+      subcategory_count:
+        one: "+ %{count} subcategorie"
+        few: "+ %{count} subcategorii"
+        other: "+ %{count} de subcategorii"
     select_kit:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
@@ -1806,7 +1815,7 @@ ro:
       reply: "Răspunde"
       cancel: "Anulează"
       create_topic: "Creează un subiect"
-      create_pm: "Mesaj"
+      create_pm: "Trimite mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
       users_placeholder: "Adaugă utilizatori sau grupuri"
@@ -2060,6 +2069,8 @@ ro:
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
         choose_append_tags: "Alege etichete noi pentru aceste subiecte:"
         changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
+        performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
+        completed: "Operațiunile în masă s-au finalizat cu succes!"
       none:
         unread: "Nu sunt subiecte necitite."
         new: "Nu sunt subiecte noi."
@@ -2903,7 +2914,8 @@ ro:
         show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
         filter_sidebar: "%{shortcut} Filtru bară laterală"
         help: "%{shortcut} Deschide ajutor tastatură"
-        dismiss_topics: "%{shortcut} Abandonează subiecte"
+        toggle_bulk_select: "%{shortcut} Comută selectare în bloc"
+        x: "%{shortcut} Comută selecție (în modul selectare în bloc)"
         log_out: "%{shortcut} Ieșire"
       bookmarks:
         title: "Semne de carte"
@@ -2969,8 +2981,10 @@ ro:
       download: "Descărcare"
     tagging:
       other_tags: "Alte etichete"
+      selector_tags: "etichete"
       selector_all_tags: "toate etichetele"
       selector_no_tags: "fără etichete"
+      selector_remove_filter: "șterge filtru"
       tags: "Etichete"
       choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
@@ -3532,6 +3546,7 @@ ro:
           check_for_updates: "Caută actualizări"
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
+          edit_objects_theme_setting: "Editor de setări ale obiectelor"
           scss:
             text: "CSS"
           header:
