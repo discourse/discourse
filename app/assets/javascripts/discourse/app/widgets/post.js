@@ -16,7 +16,7 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-import hbsCompile from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
@@ -265,7 +265,7 @@ createWidget("post-avatar", {
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
-  template: hbsCompile`{{d-icon "lock"}}`,
+  template: widgetHbs`{{d-icon "lock"}}`,
   title: () => I18n.t("post.locked"),
 });
 
