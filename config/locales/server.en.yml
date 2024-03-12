@@ -2669,6 +2669,8 @@ en:
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
     invalid_parameter_value: "Authentication failed due to invalid value for `%{param}` parameter. Contact the site administrators to fix this problem."
+    payload_parse_error: "Authentication failed (payload is not valid Base64). Please contact the site's administrator."
+    signature_error: "Authentication failed (signature incorrect). Please contact the site's administrator."
 
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
