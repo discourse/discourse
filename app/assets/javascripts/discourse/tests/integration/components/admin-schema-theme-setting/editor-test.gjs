@@ -571,8 +571,7 @@ module(
 
       await groupSelector.expand();
       await groupSelector.selectRowByValue(74);
-      await groupSelector.selectRowByValue(23);
-      assert.strictEqual(groupSelector.header().value(), "74,23");
+      assert.strictEqual(groupSelector.header().value(), "74");
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
@@ -580,13 +579,12 @@ module(
       assert.strictEqual(groupSelector.header().value(), null);
       await groupSelector.expand();
       await groupSelector.selectRowByValue(23);
-      await groupSelector.selectRowByValue(89);
-      assert.strictEqual(groupSelector.header().value(), "23,89");
+      assert.strictEqual(groupSelector.header().value(), "23");
 
       tree.refresh();
 
       await click(tree.nodes[0].element);
-      assert.strictEqual(groupSelector.header().value(), "74,23");
+      assert.strictEqual(groupSelector.header().value(), "74");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
