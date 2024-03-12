@@ -144,8 +144,7 @@ class AdminDashboardData
     add_problem_check :force_https_check,
                       :s3_config_check,
                       :watched_words_check,
-                      :google_analytics_version_check,
-                      :translation_overrides_check
+                      :google_analytics_version_check
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -243,12 +242,6 @@ class AdminDashboardData
       end
     end
     nil
-  end
-
-  def translation_overrides_check
-    if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
-      I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
-    end
   end
 
   def google_analytics_version_check
