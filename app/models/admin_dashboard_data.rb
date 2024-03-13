@@ -187,11 +187,4 @@ class AdminDashboardData
     queue_size = Jobs.queued
     I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
   end
-
-  def missing_mailgun_api_key
-    return unless SiteSetting.reply_by_email_enabled
-    return unless ActionMailer::Base.smtp_settings[:address]["smtp.mailgun.org"]
-    return unless SiteSetting.mailgun_api_key.blank?
-    I18n.t("dashboard.missing_mailgun_api_key")
-  end
 end

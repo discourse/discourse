@@ -4,7 +4,7 @@ class ProblemCheck::FailingEmails < ProblemCheck
   self.priority = "low"
 
   def call
-    return no_problem if !(failed_job_count > 0)
+    return no_problem if failed_job_count.to_i == 0
 
     problem
   end

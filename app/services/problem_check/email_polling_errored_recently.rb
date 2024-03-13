@@ -4,7 +4,7 @@ class ProblemCheck::EmailPollingErroredRecently < ProblemCheck
   self.priority = "low"
 
   def call
-    return no_problem if !(polling_error_count > 0)
+    return no_problem if polling_error_count.to_i == 0
 
     problem
   end
