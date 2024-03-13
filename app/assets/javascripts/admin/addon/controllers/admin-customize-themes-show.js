@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import {
@@ -28,7 +27,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @service siteSettings;
   @service modal;
 
-  @tracked locale;
   editRouteName = "adminCustomizeThemes.edit";
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
@@ -300,11 +298,13 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return JSON.parse(this.siteSettings.available_locales);
   }
 
+  get locale() {
+    return this.get("model.locale") || this.siteSettings.default_locale;
+  }
+
   @action
   updateLocale(value) {
-    this.locale = value;
-    let model = this.model;
-    model.set("locale", value);
+    this.set("model.locale", value);
   }
 
   @action
