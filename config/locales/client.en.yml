@@ -4801,6 +4801,7 @@ en:
           copy: "Copy..."
           paste: "Paste..."
           save: "Save as..."
+    powered_by_discourse: "Powered by Discourse"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

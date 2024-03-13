@@ -2818,6 +2818,10 @@ uncategorized:
 
   share_anonymized_statistics: true
 
+  show_powered_by:
+    default: false
+    client: true
+
   auto_handle_queued_age:
     default: 60
     min: 0

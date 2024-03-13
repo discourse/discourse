@@ -2332,6 +2332,8 @@ en:
 
     share_anonymized_statistics: "Enable sharing of anonymized usage statistics with CDCK, Inc. (“Discourse”). When this setting is enabled, data concerning the usage of the site is collected and shared in anonymized form, ensuring no personal information is disclosed."
 
+    show_powered_by: "Show “Powered by Discourse” link to discourse.org at the bottom of most pages."
+
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     penalty_include_post_message: "Automatically include offending post message in email message template when silencing or suspending a user"
@@ -2498,8 +2500,8 @@ en:
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
-    governing_law:  "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
-    city_for_disputes:  "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
+    governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
+    city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
