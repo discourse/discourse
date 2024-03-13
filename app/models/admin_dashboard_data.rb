@@ -141,8 +141,6 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :watched_words_check
-
     add_problem_check { sidekiq_check || queue_size_check }
   end
   reset_problem_checks
@@ -227,21 +225,5 @@ class AdminDashboardData
     return unless ActionMailer::Base.smtp_settings[:address]["smtp.mailgun.org"]
     return unless SiteSetting.mailgun_api_key.blank?
     I18n.t("dashboard.missing_mailgun_api_key")
-  end
-
-  def watched_words_check
-    WatchedWord.actions.keys.each do |action|
-      begin
-        WordWatcher.compiled_regexps_for_action(action, raise_errors: true)
-      rescue RegexpError => e
-        translated_action = I18n.t("admin_js.admin.watched_words.actions.#{action}")
-        I18n.t(
-          "dashboard.watched_word_regexp_error",
-          base_path: Discourse.base_path,
-          action: translated_action,
-        )
-      end
-    end
-    nil
   end
 end
