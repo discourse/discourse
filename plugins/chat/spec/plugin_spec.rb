@@ -134,12 +134,12 @@ describe Chat do
 
     it "includes all incoming webhooks via :incoming_chat_webhooks" do
       webhook = Fabricate(:incoming_chat_webhook)
-      expect(serializer.incoming_chat_webhooks.map(&:id)).to contain_exactly(webhook.id)
+      expect(serializer.incoming_chat_webhooks).to contain_exactly(webhook)
     end
 
     it "includes all chat channels via :chat_channels" do
       channel = Fabricate(:chat_channel)
-      expect(serializer.chat_channels.map(&:id)).to contain_exactly(channel.id)
+      expect(serializer.chat_channels).to contain_exactly(channel)
     end
   end
 

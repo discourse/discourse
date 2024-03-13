@@ -30,8 +30,8 @@ export default class extends Component {
         </h2>
         <p>
           {{@plugin.about}}
-          |
           {{#if @plugin.linkUrl}}
+            |
             <a
               href={{@plugin.linkUrl}}
               rel="noopener noreferrer"
@@ -45,15 +45,11 @@ export default class extends Component {
       </div>
       <div class="admin-plugin-config-page__content">
         <div class={{this.mainAreaClasses}}>
-          {{#if @plugin.configNavRoutes}}
-            <AdminPluginConfigArea
-              @innerSidebarNavLinks={{@plugin.configNavRoutes}}
-            >
-              {{yield}}
-            </AdminPluginConfigArea>
-          {{else}}
+          <AdminPluginConfigArea
+            @innerSidebarNavLinks={{@plugin.configNavRoutes}}
+          >
             {{yield}}
-          {{/if}}
+          </AdminPluginConfigArea>
         </div>
       </div>
     </div>
