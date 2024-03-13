@@ -16,11 +16,15 @@ module PageObjects
       end
 
       def has_overridden_setting?(setting_name)
-        has_css?(overridden_setting_selector(setting_name))
+        has_css?(setting_selector(setting_name, overridden: true))
       end
 
       def has_no_overriden_setting?(setting_name)
-        has_no_css?(overridden_setting_selector(setting_name))
+        has_no_css?(setting_selector(setting_name, overridden: true))
+      end
+
+      def has_setting_description?(setting_name, description)
+        has_css?("#{setting_selector(setting_name)} .desc", exact_text: description)
       end
 
       def reset_overridden_setting(setting_name)
@@ -65,8 +69,8 @@ module PageObjects
 
       private
 
-      def overridden_setting_selector(setting_name)
-        "section.theme.settings .setting.overridden[data-setting=\"#{setting_name}\"]"
+      def setting_selector(setting_name, overridden: false)
+        "section.theme.settings .setting#{overridden ? ".overridden" : ""}[data-setting=\"#{setting_name}\"]"
       end
     end
   end

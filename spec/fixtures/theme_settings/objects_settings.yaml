@@ -1,4 +1,6 @@
 objects_setting:
+  description:
+    en: "This is a description for objects setting"
   type: objects
   default:
     - name: "section 1"

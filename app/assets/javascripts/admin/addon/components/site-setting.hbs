@@ -32,6 +32,8 @@
       @label={{this.settingEditButton.label}}
       class="setting-value-edit-button"
     />
+
+    <SiteSettings::Description @description={{this.setting.description}} />
   {{else}}
     {{component
       this.componentName
