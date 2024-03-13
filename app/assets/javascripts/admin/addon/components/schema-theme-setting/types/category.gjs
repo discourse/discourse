@@ -1,19 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import ComboBox from "select-kit/components/combo-box";
+import CategoryChooser from "select-kit/components/category-chooser";
 
-export default class SchemaThemeSettingTypeEnum extends Component {
+export default class SchemaThemeSettingTypeCategory extends Component {
   @tracked value = this.args.value;
-
-  get content() {
-    return this.args.spec.choices.map((choice) => {
-      return {
-        name: choice,
-        id: choice,
-      };
-    });
-  }
 
   @action
   onInput(newVal) {
@@ -22,10 +14,10 @@ export default class SchemaThemeSettingTypeEnum extends Component {
   }
 
   <template>
-    <ComboBox
-      @content={{this.content}}
+    <CategoryChooser
       @value={{this.value}}
       @onChange={{this.onInput}}
+      @options={{hash allowUncategorized=false}}
     />
   </template>
 }
