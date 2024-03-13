@@ -7,6 +7,7 @@ import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
+import ThemeSettings from "admin/models/theme-settings";
 
 class TreeFromDOM {
   constructor() {
@@ -294,29 +295,33 @@ module(
     });
 
     test("input fields are rendered even if they're not present in the data", async function (assert) {
-      const schema = {
-        name: "something",
-        identifier: "id",
-        properties: {
-          id: {
-            type: "string",
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "string",
+            },
+            name: {
+              type: "string",
+            },
           },
-          name: {
-            type: "string",
+        },
+        value: [
+          {
+            id: "bu1",
+            name: "Big U",
           },
-        },
-      };
-      const data = [
-        {
-          id: "bu1",
-          name: "Big U",
-        },
-        {
-          id: "fi2",
-        },
-      ];
+          {
+            id: "fi2",
+          },
+        ],
+      });
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -414,9 +419,10 @@ module(
     });
 
     test("input fields of type float", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -501,9 +507,10 @@ module(
     });
 
     test("input fields of type category", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -530,9 +537,10 @@ module(
     });
 
     test("input fields of type tag", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -567,9 +575,10 @@ module(
         ]);
       });
 
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
