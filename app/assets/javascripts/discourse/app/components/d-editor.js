@@ -429,7 +429,6 @@ export default Component.extend(TextareaTextManipulation, {
     if (this._state !== "inDOM" || !this.processPreview) {
       return;
     }
-
     const value = this.value;
 
     this.cachedCookAsync(value).then((cooked) => {

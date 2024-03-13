@@ -23,7 +23,7 @@ const IMAGE_TYPES = [
   "avif",
   "svg",
 ];
-const VIDEO_TYPES = ["mov", "mp4", "webm", "m4v", "3gp", "ogv", "avi", "mpeg"];
+const VIDEO_TYPES = ["mov", "mp4", "webm", "m4v", "3gp", "ogv", "avi", "mpeg", "m3u8"];
 const AUDIO_TYPES = ["mp3", "ogg", "m4a", "wav", "aac", "flac"];
 const DOCUMENT_TYPES = ["txt", "pdf", "doc", "docx", "csv"];
 const TOKEN_SEPARATOR = "|";

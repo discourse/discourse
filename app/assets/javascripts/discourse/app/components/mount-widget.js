@@ -2,6 +2,7 @@ import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { camelize } from "@ember/string";
+import jQuery from "jquery";
 import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { WidgetClickHook } from "discourse/widgets/hooks";
@@ -116,7 +117,12 @@ export default Component.extend({
     cancel(this._timeout);
   },
 
-  afterRender() {},
+  afterRender() {
+    const videoList = jQuery("video.video-js");
+    for (let i = 0; i < videoList.length; i++) {
+      window.videojs(videoList[i]);
+    }
+  },
 
   beforePatch() {},
 

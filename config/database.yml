@@ -7,8 +7,8 @@ development:
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
   port: 5432
   user: postgres
-  password: <%= ENV["PG_PASSWORD_D"] %>
-  host: <%= ENV["DISCOURSE_HOSTNAME"] %>
+  password: <%= ENV["PG_DISCOURSE_PASSWORD"] %>
+  host: <%= ENV["PG_DISCOURSE_HOST"] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

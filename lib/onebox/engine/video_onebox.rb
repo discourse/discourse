@@ -15,7 +15,7 @@ module Onebox
           # 获取时间戳，并添加一段八位随机数
           randomId = Time.now.to_i.to_s + rand(100000000).to_s
           video_tag_html = <<-HTML
-          <div class="onebox video-onebox videoWrap evan-hls-video">
+          <div class="videoWrap evan-hls-video">
             <video id='#{randomId}' class="video-js vjs-default-skin vjs-16-9" controls preload="auto" width="100%" data-setup='{"fluid": true}'>
               <source src="#{@url}" type="application/x-mpegURL">
             </video>

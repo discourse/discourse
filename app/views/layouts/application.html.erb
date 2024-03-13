@@ -29,7 +29,7 @@
     <%- else %>
       <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
       <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-    <%- end %>  
+    <%- end %>
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "vendor" %>
@@ -68,6 +68,7 @@
 
     <%= yield :head %>
 
+    <%= preload_script "video-js.min" %>
     <%= build_plugin_html 'server:before-head-close' %>
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
