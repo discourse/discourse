@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import {
@@ -24,8 +25,10 @@ const THEME_UPLOAD_VAR = 2;
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
+  @service siteSettings;
   @service modal;
 
+  @tracked locale;
   editRouteName = "adminCustomizeThemes.edit";
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
@@ -291,6 +294,17 @@ export default class AdminCustomizeThemesShowController extends Controller {
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
+  }
+
+  get availableLocales() {
+    return JSON.parse(this.siteSettings.available_locales);
+  }
+
+  @action
+  updateLocale(value) {
+    this.locale = value;
+    let model = this.model;
+    model.set("locale", value);
   }
 
   @action

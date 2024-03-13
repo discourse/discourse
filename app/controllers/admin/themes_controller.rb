@@ -369,6 +369,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           :enabled,
           :auto_update,
+          :locale,
           settings: {
           },
           translations: {
@@ -407,6 +408,10 @@ class Admin::ThemesController < Admin::AdminController
 
   def update_translations
     return unless target_translations = theme_params[:translations]
+
+    if theme_params[:locale].present?
+      I18n.locale = theme_params[:locale]
+    end
 
     target_translations.each_pair do |translation_key, new_value|
       @theme.update_translation(translation_key, new_value)

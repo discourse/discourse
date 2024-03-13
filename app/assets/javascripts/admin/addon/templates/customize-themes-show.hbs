@@ -466,6 +466,19 @@
           <section
             class="form-horizontal theme settings translations control-unit"
           >
+            <div class="row setting ember-view theme-translation">
+              <div class="setting-label">{{i18n "admin.site_text.locale"}}</div>
+              <div class="setting-value theme-setting ">
+              <ComboBox
+                @valueProperty="value"
+                @content={{this.availableLocales}}
+                @value={{this.locale}}
+                @onChange={{this.updateLocale}}
+                @options={{hash filterable=true}}
+              />
+              </div>
+            </div>
+
             {{#each this.translations as |translation|}}
               <ThemeTranslation
                 @translation={{translation}}
