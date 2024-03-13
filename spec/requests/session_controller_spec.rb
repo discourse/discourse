@@ -1268,6 +1268,23 @@ RSpec.describe SessionController do
       end
     end
 
+    it "returns the correct error code for invalid payload" do
+      sso = get_sso("/hello/world")
+      sso.external_id = "997"
+      sso.sso_url = "http://somewhere.over.com/sso_login"
+
+      params = Rack::Utils.parse_query(sso.payload)
+      params["sso"] = "#{params["sso"]}%3C"
+      params["sig"] = sso.sign(params["sso"])
+
+      get "/session/sso_login", params: params, headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).to include(I18n.t("discourse_connect.payload_parse_error"))
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     it "returns the correct error code for invalid signature" do
       sso = get_sso("/hello/world")
       sso.external_id = "997"
@@ -1278,6 +1295,7 @@ RSpec.describe SessionController do
           params: correct_params.merge(sig: "thisisnotthesigyouarelookingfor"),
           headers: headers
       expect(response.status).to eq(422)
+      expect(response.body).to include(I18n.t("discourse_connect.signature_error"))
       expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)

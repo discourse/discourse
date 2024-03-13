@@ -1061,9 +1061,12 @@ ru:
       "14": "Ожидают одобрения"
       "15": "Черновики"
     categories:
-      all: "все категории"
-      all_subcategories: "все"
-      no_subcategory: "нет"
+      categories_label: "категории"
+      subcategories_label: "подкатегории"
+      no_subcategories: "без подкатегорий"
+      remove_filter: "отменить фильтр"
+      plus_more_count: "+ещё %{count}"
+      view_all: "Просмотреть всё"
       category: "Категория"
       category_list: "Показать список категорий"
       reorder:
@@ -2293,6 +2296,11 @@ ru:
     conditional_loading_section:
       loading: Загрузка…
     category_row:
+      subcategory_count:
+        one: "+ %{count} подкатегория"
+        few: "+ %{count} подкатегории"
+        many: "+ %{count} подкатегорий"
+        other: "+ %{count} подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"
@@ -2441,7 +2449,6 @@ ru:
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
-      create_pm: "Сообщение"
       create_whisper: "Скрытое сообщение"
       create_shared_draft: "Создать общий черновик"
       edit_shared_draft: "Редактировать общий черновик"
@@ -4251,8 +4258,6 @@ ru:
         show_incoming_updated_topics: "%{shortcut} Показать обновлённые темы"
         search: "%{shortcut} Поиск"
         help: "%{shortcut} Показать эту справку"
-        dismiss_new: "%{shortcut} Отложить новые"
-        dismiss_topics: "%{shortcut} Отложить темы"
         log_out: "%{shortcut} Выйти"
       composing:
         title: "Редактирование"
@@ -4362,8 +4367,10 @@ ru:
     tagging:
       all_tags: "Все теги"
       other_tags: "Другие теги"
+      selector_tags: "теги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
+      selector_remove_filter: "отменить фильтр"
       tags: "Теги"
       choose_for_topic: "Выберите теги..."
       choose_for_topic_required:

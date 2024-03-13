@@ -12,7 +12,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  z-index: z("header");
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/

@@ -690,9 +690,10 @@ et:
       "14": "Ootel"
       "15": "Mustandid"
     categories:
-      all: "kõik foorumid"
-      all_subcategories: "kõik"
-      no_subcategory: "mitte ükski"
+      categories_label: "liigid"
+      subcategories_label: "alamfoorumid"
+      remove_filter: "eemalda filter"
+      plus_more_count: "+veel %{count}"
       category: "Foorum"
       category_list: "Kuva foorumid"
       reorder:
@@ -1381,7 +1382,6 @@ et:
       reply: "Vasta"
       cancel: "Tühista"
       create_topic: "Loo teema"
-      create_pm: "Sõnum"
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
@@ -2409,7 +2409,6 @@ et:
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
         help: "%{shortcut} Ava klaviatuuri abimenüü"
-        dismiss_topics: "%{shortcut} Ignoreeri teemasid"
         log_out: "%{shortcut} Logi välja"
       actions:
         title: "Tegevused"
@@ -2459,8 +2458,10 @@ et:
       download: "Lae alla"
     tagging:
       other_tags: "Muud sildid"
+      selector_tags: "sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
+      selector_remove_filter: "eemalda filter"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"

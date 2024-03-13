@@ -1,5 +1,11 @@
 import { later } from "@ember/runloop";
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -871,6 +877,16 @@ acceptance("User menu", function (needs) {
       exists("#quick-access-other-notifications"),
       "the other notifications panel can display using keyboard navigation"
     );
+  });
+
+  test("closes the menu when navigating away", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+    await click(".quick-access-panel .preferences a");
+
+    assert.dom(".user-menu").doesNotExist();
+    assert.strictEqual(currentRouteName(), "preferences.account");
   });
 });
 

@@ -254,6 +254,12 @@ html.composer-open {
       max-width: 100%;
       width: auto;
 
+      &.has-selection {
+        .name {
+          font-size: var(--font-up-1);
+        }
+      }
+
       .select-kit-header {
         color: var(--primary-high);
         white-space: nowrap;
@@ -269,7 +275,6 @@ html.composer-open {
         overflow: hidden;
         .name {
           display: flex;
-          font-size: var(--font-up-1);
           max-width: 100%;
           gap: 0 0.5em;
           .badge-category {

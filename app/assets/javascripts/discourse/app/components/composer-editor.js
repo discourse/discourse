@@ -241,8 +241,8 @@ export default Component.extend(ComposerUploadUppy, {
         key: "@",
         transformComplete: (v) => v.username || v.name,
         afterComplete: this._afterMentionComplete,
-        triggerRule: (textarea) =>
-          !inCodeBlock(textarea.value, caretPosition(textarea)),
+        triggerRule: async (textarea) =>
+          !(await inCodeBlock(textarea.value, caretPosition(textarea))),
         onClose: destroyUserStatuses,
       });
     }

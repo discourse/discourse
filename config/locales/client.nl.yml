@@ -957,9 +957,12 @@ nl:
       "14": "Wachtend"
       "15": "Concepten"
     categories:
-      all: "alle categorieën"
-      all_subcategories: "alles"
-      no_subcategory: "geen"
+      categories_label: "categorieën"
+      subcategories_label: "subcategorieën"
+      no_subcategories: "geen subcategorieën"
+      remove_filter: "filter verwijderen"
+      plus_more_count: "+Nog %{count}"
+      view_all: "alle bekijken"
       category: "Categorie"
       category_list: "Categorieënlijst weergeven"
       reorder:
@@ -2121,6 +2124,9 @@ nl:
     conditional_loading_section:
       loading: Laden…
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategorie"
+        other: "+ %{count} subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
@@ -2245,7 +2251,6 @@ nl:
       reply: "Antwoorden"
       cancel: "Annuleren"
       create_topic: "Topic maken"
-      create_pm: "Bericht"
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
@@ -3889,8 +3894,6 @@ nl:
         show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics weergeven"
         search: "%{shortcut} Zoeken"
         help: "%{shortcut} Toetsenbordhulp openen"
-        dismiss_new: "%{shortcut} Nieuwe negeren"
-        dismiss_topics: "%{shortcut} Topics negeren"
         log_out: "%{shortcut} Afmelden"
       composing:
         title: "Opstellen"
@@ -3990,8 +3993,10 @@ nl:
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
+      selector_tags: "tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
+      selector_remove_filter: "filter verwijderen"
       tags: "Tags"
       choose_for_topic: "optionele tags"
       choose_for_topic_required:

@@ -538,9 +538,9 @@ sw:
       "13": "kisanduku pokezi"
       "14": "Inasubiri"
     categories:
-      all: "kategoria zote"
-      all_subcategories: "Zote"
-      no_subcategory: "hakuna"
+      categories_label: "kategoria"
+      subcategories_label: "kategoria mtoto"
+      remove_filter: "ondoa uchujaji"
       category: "Kategoria"
       category_list: "Onyesha orodha ya kategoria"
       reorder:
@@ -1189,7 +1189,6 @@ sw:
       reply: "Jibu"
       cancel: "Ghairi"
       create_topic: "Unda mada"
-      create_pm: "Ujumbe"
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
@@ -2102,7 +2101,6 @@ sw:
         show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
         search: "%{shortcut} Tafuta"
         help: "%{shortcut} Fungua msaada wa kibodi"
-        dismiss_topics: "%{shortcut} Puuzia Mada"
         log_out: "%{shortcut} Ondoka"
       composing:
         title: "Andika"
@@ -2152,8 +2150,10 @@ sw:
       download: "Pakua"
     tagging:
       other_tags: "Lebo Zingine"
+      selector_tags: "lebo"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
+      selector_remove_filter: "ondoa uchujaji"
       tags: "Lebo"
       choose_for_topic: "lebo zisizo muhimu"
       add_synonyms: "Ongeza"

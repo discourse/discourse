@@ -38,6 +38,10 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     return this.adminSidebarNavLink.href;
   }
 
+  get query() {
+    return this.adminSidebarNavLink.query;
+  }
+
   get models() {
     return this.adminSidebarNavLink.routeModels;
   }
@@ -130,28 +134,10 @@ export function useAdminNavConfig(navMap) {
       hideSectionHeader: true,
       links: [
         {
-          name: "admin_dashboard",
-          route: "admin.dashboard",
+          name: "admin_home",
+          route: "admin.dashboard.general",
           label: "admin.dashboard.title",
           icon: "home",
-        },
-        {
-          name: "admin_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.site_settings.title",
-          icon: "cog",
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.users.title",
-          icon: "users",
-        },
-        {
-          name: "admin_badges",
-          route: "adminBadges",
-          label: "admin.badges.title",
-          icon: "certificate",
         },
       ],
     },
@@ -259,7 +245,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     }
 
     if (siteSettings.experimental_form_templates) {
-      navMap.findBy("name", "customize").links.push({
+      navMap.findBy("name", "appearance").links.push({
         name: "admin_customize_form_templates",
         route: "adminCustomizeFormTemplates",
         label: "admin.form_templates.nav_title",

@@ -917,9 +917,10 @@ bg:
       "14": "Чакащи"
       "15": "Чернови"
     categories:
-      all: "всички категории"
-      all_subcategories: "всички подкатегории"
-      no_subcategory: "без подкатегория"
+      categories_label: "категории"
+      subcategories_label: "подкатегории"
+      remove_filter: "премахни филтъра"
+      plus_more_count: "+още %{count}"
       category: "Категории"
       category_list: "Покажи списък с категориите"
       reorder:
@@ -2012,6 +2013,9 @@ bg:
       alt: "Alt"
       enter: "Въведете"
     category_row:
+      subcategory_count:
+        one: "+ %{count} подкатегория"
+        other: "+ %{count} подкатегории"
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
@@ -2107,7 +2111,6 @@ bg:
       reply: "Отговорете"
       cancel: "Прекрати"
       create_topic: "Създай тема"
-      create_pm: "Съобщение"
       create_whisper: "Шепот"
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
@@ -3227,7 +3230,6 @@ bg:
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
         search: "%{shortcut} Отписване"
         help: "%{shortcut} Помощ с клавиатурата "
-        dismiss_topics: "%{shortcut} Отхвърляне на темите"
         log_out: "%{shortcut} Отписване"
       composing:
         title: "Съставяне"
@@ -3276,8 +3278,10 @@ bg:
       download: "Изтегли"
     tagging:
       other_tags: "Други тагове"
+      selector_tags: "тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
+      selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
       choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"

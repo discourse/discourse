@@ -907,9 +907,11 @@ sl:
       "14": "Čaka odobritev"
       "15": "Osnutki"
     categories:
-      all: "vse kategorije"
-      all_subcategories: "vse"
-      no_subcategory: "brez"
+      categories_label: "kategorije"
+      subcategories_label: "pod Kategorija"
+      remove_filter: "odstrani filter"
+      plus_more_count: "+%{count} več"
+      view_all: "prikaži vse"
       category: "Kategorija"
       category_list: "Prikaži seznam kategorij"
       reorder:
@@ -1952,7 +1954,6 @@ sl:
       reply: "Odgovori"
       cancel: "Prekliči"
       create_topic: "Objavi temo"
-      create_pm: "Pošlji"
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
@@ -3295,7 +3296,6 @@ sl:
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
         search: "%{shortcut} Iskalnik"
         help: "%{shortcut} Odpri bližnjice na tipkovnici"
-        dismiss_topics: "%{shortcut} Opusti teme"
         log_out: "%{shortcut} Odjava"
       composing:
         title: "Urejevalnik"
@@ -3377,8 +3377,10 @@ sl:
       download: "Naloži"
     tagging:
       other_tags: "Druge oznake"
+      selector_tags: "oznake"
       selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
+      selector_remove_filter: "odstrani filter"
       tags: "Oznake"
       choose_for_topic: "neobvezne oznake"
       default_info: "Ta oznaka ni omejena na nobeno kategorijo in nima sopomenk."

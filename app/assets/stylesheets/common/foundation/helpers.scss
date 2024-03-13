@@ -40,13 +40,6 @@
   border: 0;
 }
 
-// Affix
-// --------------------------------------------------
-
-.affix {
-  position: fixed;
-}
-
 // Contain floats
 // --------------------------------------------------
 
@@ -75,8 +68,4 @@
 
 .clickable {
   cursor: pointer;
-}
-
-.non-clickable {
-  cursor: default;
 }

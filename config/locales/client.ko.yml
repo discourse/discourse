@@ -839,9 +839,12 @@ ko:
       "14": "보류 중"
       "15": "임시저장"
     categories:
-      all: "모든 카테고리"
-      all_subcategories: "모두"
-      no_subcategory: "없음"
+      categories_label: "카테고리"
+      subcategories_label: "하위 카테고리"
+      no_subcategories: "하위 카테고리 없음"
+      remove_filter: "필터 제거"
+      plus_more_count: "+%{count}개 더보기"
+      view_all: "모두 보기"
       category: "카테고리"
       category_list: "카테고리 목록 표시"
       reorder:
@@ -1771,6 +1774,8 @@ ko:
       alt: "Alt"
       enter: "시작"
     category_row:
+      subcategory_count:
+        other: "+ %{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
     select_kit:
@@ -1854,7 +1859,6 @@ ko:
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
-      create_pm: "메시지"
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
@@ -3223,8 +3227,6 @@ ko:
         show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"
         search: "%{shortcut} 검색"
         help: "%{shortcut} 키보드 도움말 열기"
-        dismiss_new: "%{shortcut} 신규 항목 무시"
-        dismiss_topics: "%{shortcut} 주제 무시"
         log_out: "%{shortcut} 로그아웃"
       composing:
         title: "글쓰기"
@@ -3312,8 +3314,10 @@ ko:
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
+      selector_tags: "태그"
       selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
+      selector_remove_filter: "필터 제거"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
       info: "정보"

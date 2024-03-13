@@ -168,13 +168,19 @@ class SessionController < ApplicationController
 
     begin
       sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
-    rescue DiscourseConnect::ParseError => e
+    rescue DiscourseConnect::PayloadParseError => e
       connect_verbose_warn do
-        "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}"
+        "Verbose SSO log: Payload is not base64\n\n#{e.message}\n\n#{sso&.diagnostics}"
+      end
+
+      return render_sso_error(text: I18n.t("discourse_connect.payload_parse_error"), status: 422)
+    rescue DiscourseConnect::SignatureError => e
+      connect_verbose_warn do
+        "Verbose SSO log: Signature verification failed\n\n#{e.message}\n\n#{sso&.diagnostics}"
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature
-      return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
+      return render_sso_error(text: I18n.t("discourse_connect.signature_error"), status: 422)
     end
 
     if !sso.nonce_valid?

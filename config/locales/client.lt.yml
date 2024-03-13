@@ -930,9 +930,11 @@ lt:
       "14": "Laukiama"
       "15": "Juodraščiai"
     categories:
-      all: "visos kategorijos"
-      all_subcategories: "visi"
-      no_subcategory: "nieko"
+      categories_label: "kategorijos"
+      subcategories_label: "subkategorijos"
+      no_subcategories: "nėra subkategorijų"
+      remove_filter: "išjungti filtrus"
+      plus_more_count: "+%{count} daugiau"
       category: "Kategorija"
       category_list: "Visos kategorijos"
       reorder:
@@ -1816,6 +1818,11 @@ lt:
       alt: "Alt"
       enter: "Įeiti"
     category_row:
+      subcategory_count:
+        one: "+ %{count} subkategorija"
+        few: "+ %{count} subkategorijos"
+        many: "+ %{count} subkategorijos"
+        other: "+ %{count} subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -1899,7 +1906,6 @@ lt:
       reply: "Atsakyti"
       cancel: "Atšaukti"
       create_topic: "Sukurti Temą"
-      create_pm: "Žinutės"
       create_whisper: "Gandas"
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
@@ -3272,8 +3278,6 @@ lt:
         show_incoming_updated_topics: "%{shortcut} Rodyti atnaujintas temas"
         search: "%{shortcut} Ieškoti"
         help: "%{shortcut} Atidaryti klavieturos pagalbą"
-        dismiss_new: "%{shortcut} Atmesti naują"
-        dismiss_topics: "%{shortcut} Praleisti Temas"
         log_out: "%{shortcut} Atsijungti"
       composing:
         title: "Komponavimas"
@@ -3360,8 +3364,10 @@ lt:
       ics: "ICS"
     tagging:
       other_tags: "Kitos žymos"
+      selector_tags: "žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
+      selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
       info: "Informacija"

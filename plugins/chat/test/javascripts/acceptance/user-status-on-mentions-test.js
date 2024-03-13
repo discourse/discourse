@@ -3,10 +3,10 @@ import { skip, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  emulateAutocomplete,
   loggedInUser,
   publishToMessageBus,
   query,
+  simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Chat | User status on mentions", function (needs) {
@@ -321,7 +321,7 @@ acceptance("Chat | User status on mentions", function (needs) {
   }
 
   async function typeWithAutocompleteAndSend(text) {
-    await emulateAutocomplete(".chat-composer__input", text);
+    await simulateKeys(query(".chat-composer__input"), text);
     await click(".autocomplete.ac-user .selected");
     await click(".chat-composer-button.-send");
   }

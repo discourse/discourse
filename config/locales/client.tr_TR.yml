@@ -963,9 +963,13 @@ tr_TR:
       "14": "Bekleyen"
       "15": "Taslaklar"
     categories:
-      all: "tüm kategoriler"
-      all_subcategories: "tüm"
-      no_subcategory: "hiçbiri"
+      categories_label: "kategoriler"
+      subcategories_label: "alt kategoriler"
+      all_subcategories: "tüm alt kategoriler"
+      no_subcategories: "alt kategori yok"
+      remove_filter: "filtreyi kaldır"
+      plus_more_count: "+%{count} daha"
+      view_all: "tümünü görüntüle"
       category: "Kategori"
       category_list: "Kategori listesini göster"
       reorder:
@@ -1648,6 +1652,7 @@ tr_TR:
         after_5_minutes: "5 dakika sonra"
         after_10_minutes: "10 dakika sonra"
       notification_level_when_replying: "Bir konuya gönderi yaptığımda, konuyu şuna ayarla:"
+      topics_unread_when_closed: "Konular kapatıldığında okunmamış olarak kabul edin"
       invited:
         title: "Davetler"
         pending_tab: "Bekleyen"
@@ -2130,6 +2135,9 @@ tr_TR:
     conditional_loading_section:
       loading: Yükleniyor…
     category_row:
+      subcategory_count:
+        one: "+ %{count} alt kategori"
+        other: "+ %{count} alt kategori"
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
@@ -2254,7 +2262,7 @@ tr_TR:
       reply: "Yanıtla"
       cancel: "İptal et"
       create_topic: "Konu Oluştur"
-      create_pm: "Mesaj"
+      create_pm: "Mesaj gönder"
       create_whisper: "Fısıltı"
       create_shared_draft: "Paylaşılmış Taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
@@ -2726,6 +2734,8 @@ tr_TR:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
         silent: "Bu eylemi sessizce gerçekleştirin."
+        performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
+        completed: "Toplu işlemler başarıyla tamamlandı!"
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -3912,8 +3922,9 @@ tr_TR:
         search: "%{shortcut} Ara"
         filter_sidebar: "%{shortcut} Kenar çubuğunu filtrele"
         help: "%{shortcut} Klavye yardım sayfasını aç"
-        dismiss_new: "%{shortcut} Yenileri Kapat"
-        dismiss_topics: "%{shortcut} Konuları Kapat"
+        toggle_bulk_select: "%{shortcut} Toplu seçimi aç/kapat"
+        dismiss: "%{shortcut} Seçilen konu(lar)ı kapat"
+        x: "%{shortcut} Seçimi değiştir (toplu seçim modunda)"
         log_out: "%{shortcut} Çıkış Yap"
       composing:
         title: "Beste yapma"
@@ -4013,8 +4024,10 @@ tr_TR:
     tagging:
       all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
+      selector_tags: "etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
+      selector_remove_filter: "filtreyi kaldır"
       tags: "Etiketler"
       choose_for_topic: "isteğe bağlı etiketler"
       choose_for_topic_required:
@@ -5108,6 +5121,7 @@ tr_TR:
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
           add: "Ekle"
           theme_settings: "Tema Ayarları"
+          edit_objects_theme_setting: "Nesneler Ayar Düzenleyicisi"
           overriden_settings_explanation: "Geçersiz kılınan ayarlar bir nokta ile işaretlenir ve vurgulanmış bir renge sahiptir. Bu ayarları varsayılan değere sıfırlamak için yanlarındaki sıfırlama düğmesine basın."
           no_settings: "Bu temanın ayarı yok."
           theme_translations: "Tema Çevirileri"
