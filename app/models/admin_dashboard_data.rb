@@ -5,32 +5,6 @@ class AdminDashboardData
 
   cattr_reader :problem_blocks, :problem_messages
 
-  class Problem
-    VALID_PRIORITIES = %w[low high].freeze
-
-    attr_reader :message, :priority, :identifier
-
-    def initialize(message, priority: "low", identifier: nil)
-      @message = message
-      @priority = VALID_PRIORITIES.include?(priority) ? priority : "low"
-      @identifier = identifier
-    end
-
-    def to_s
-      @message
-    end
-
-    def to_h
-      { message: message, priority: priority, identifier: identifier }
-    end
-
-    def self.from_h(h)
-      h = h.with_indifferent_access
-      return if h[:message].blank?
-      new(h[:message], priority: h[:priority], identifier: h[:identifier])
-    end
-  end
-
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
 
@@ -53,11 +27,11 @@ class AdminDashboardData
     problems = []
     self.class.problem_blocks.each do |blk|
       message = instance_exec(&blk)
-      problems << Problem.new(message) if message.present?
+      problems << ProblemCheck::Problem.new(message) if message.present?
     end
     self.class.problem_messages.each do |i18n_key|
       message = self.class.problem_message_check(i18n_key)
-      problems << Problem.new(message) if message.present?
+      problems << ProblemCheck::Problem.new(message) if message.present?
     end
     problems.concat(ProblemCheck.realtime.flat_map { |c| c.call(@opts).map(&:to_h) })
 
@@ -106,7 +80,7 @@ class AdminDashboardData
 
     found_problems.filter_map do |problem|
       begin
-        Problem.from_h(JSON.parse(problem))
+        ProblemCheck::Problem.from_h(JSON.parse(problem))
       rescue JSON::ParserError => err
         Discourse.warn_exception(
           err,

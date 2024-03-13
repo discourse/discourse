@@ -35,8 +35,8 @@ RSpec.describe AdminDashboardData do
 
   describe "adding scheduled checks" do
     it "does not add duplicate problems with the same identifier" do
-      prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
-      prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
+      prob1 = ProblemCheck::Problem.new("test problem", identifier: "test")
+      prob2 = ProblemCheck::Problem.new("test problem 2", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.add_found_scheduled_check_problem(prob2)
       expect(AdminDashboardData.load_found_scheduled_check_problems.map(&:to_s)).to eq(
@@ -50,15 +50,15 @@ RSpec.describe AdminDashboardData do
     end
 
     it "clears a specific problem by identifier" do
-      prob1 = AdminDashboardData::Problem.new("test problem 1", identifier: "test")
+      prob1 = ProblemCheck::Problem.new("test problem 1", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.clear_found_problem("test")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
 
     it "defaults to low priority, and uses low priority if an invalid priority is passed" do
-      prob1 = AdminDashboardData::Problem.new("test problem 1")
-      prob2 = AdminDashboardData::Problem.new("test problem 2", priority: "superbad")
+      prob1 = ProblemCheck::Problem.new("test problem 1")
+      prob2 = ProblemCheck::Problem.new("test problem 2", priority: "superbad")
       expect(prob1.priority).to eq("low")
       expect(prob2.priority).to eq("low")
     end
