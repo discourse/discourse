@@ -79,3 +79,4 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+.idea/
