@@ -9,13 +9,17 @@ RSpec.describe ProblemCheck::SubfolderEndsInSlash do
     context "when path doesn't end in a slash" do
       let(:path) { "cats" }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when path ends in a slash" do
       let(:path) { "cats/" }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash.",
+        )
+      end
     end
   end
 end

@@ -17,7 +17,7 @@ RSpec.describe ProblemCheck::S3BackupConfig do
       let(:globally_enabled) { true }
 
       it "relies on the check in GlobalSettings#use_s3?" do
-        expect(check.call).to be_empty
+        expect(check).to be_chill_about_it
       end
     end
 
@@ -25,7 +25,7 @@ RSpec.describe ProblemCheck::S3BackupConfig do
       let(:globally_enabled) { false }
       let(:backup_location) { nil }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when S3 backups are enabled" do
@@ -36,7 +36,7 @@ RSpec.describe ProblemCheck::S3BackupConfig do
       context "when configured to use IAM profile" do
         let(:use_iam_profile) { true }
 
-        it { expect(check.call).to be_empty }
+        it { expect(check).to be_chill_about_it }
       end
 
       context "when not configured to use IAM profile" do
@@ -51,14 +51,18 @@ RSpec.describe ProblemCheck::S3BackupConfig do
           let(:access_key) { "foo" }
           let(:secret_access_key) { "bar" }
 
-          it { expect(check.call).to be_empty }
+          it { expect(check).to be_chill_about_it }
         end
 
         context "when credentials are missing" do
           let(:access_key) { "foo" }
           let(:secret_access_key) { nil }
 
-          it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+          it do
+            expect(check).to have_a_problem.with_priority("low").with_message(
+              'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
+            )
+          end
         end
 
         context "when bucket name is missing" do
@@ -66,7 +70,11 @@ RSpec.describe ProblemCheck::S3BackupConfig do
           let(:secret_access_key) { "bar" }
           let(:bucket_name) { nil }
 
-          it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+          it do
+            expect(check).to have_a_problem.with_priority("low").with_message(
+              'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
+            )
+          end
         end
       end
     end

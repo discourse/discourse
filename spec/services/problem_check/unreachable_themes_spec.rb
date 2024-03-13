@@ -11,18 +11,22 @@ RSpec.describe ProblemCheck::UnreachableThemes do
       )
     end
 
-    before { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
+    before { Fabricate(:theme, id: 50, remote_theme: remote, name: "Test Theme") }
 
     context "when theme is unreachable" do
       let(:last_error) { "Can't reach. Too short." }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          'We were unable to check for updates on the following themes:<ul><li><a href="/admin/customize/themes/50">Test Theme</a></li></ul>',
+        )
+      end
     end
 
     context "when theme is reachable" do
       let(:last_error) { nil }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
   end
 end

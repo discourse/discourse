@@ -9,19 +9,27 @@ RSpec.describe ProblemCheck::HostNames do
     context "when a production host name is configured" do
       let(:hostname) { "something.com" }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when host name is set to localhost" do
       let(:hostname) { "localhost" }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname.",
+        )
+      end
     end
 
     context "when host name is set to production.localhost" do
       let(:hostname) { "production.localhost" }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname.",
+        )
+      end
     end
   end
 end

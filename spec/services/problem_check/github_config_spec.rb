@@ -9,7 +9,7 @@ RSpec.describe ProblemCheck::GithubConfig do
     context "when GitHub authentication is disabled" do
       let(:enabled) { false }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when GitHub authentication is enabled and configured" do
@@ -20,7 +20,7 @@ RSpec.describe ProblemCheck::GithubConfig do
         SiteSetting.stubs(github_client_secret: "bar")
       end
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when GitHub authentication is enabled but missing client ID" do
@@ -31,7 +31,11 @@ RSpec.describe ProblemCheck::GithubConfig do
         SiteSetting.stubs(github_client_secret: "bar")
       end
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
+        )
+      end
     end
 
     context "when GitHub authentication is enabled but missing client secret" do
@@ -42,7 +46,11 @@ RSpec.describe ProblemCheck::GithubConfig do
         SiteSetting.stubs(github_client_secret: nil)
       end
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.',
+        )
+      end
     end
   end
 end

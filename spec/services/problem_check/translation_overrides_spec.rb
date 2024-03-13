@@ -9,19 +9,27 @@ RSpec.describe ProblemCheck::TranslationOverrides do
     context "when there are outdated translation overrides" do
       let(:status) { "outdated" }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          "Some of your translation overrides are out of date. Please check your <a href='/admin/customize/site_texts?outdated=true'>text customizations</a>.",
+        )
+      end
     end
 
     context "when there are translation overrides with invalid interpolation keys" do
       let(:status) { "invalid_interpolation_keys" }
 
-      it { expect(check.call).to include(be_a(ProblemCheck::Problem)) }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_message(
+          "Some of your translation overrides are out of date. Please check your <a href='/admin/customize/site_texts?outdated=true'>text customizations</a>.",
+        )
+      end
     end
 
     context "when all translation overrides are fine" do
       let(:status) { "up_to_date" }
 
-      it { expect(check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
   end
 end
