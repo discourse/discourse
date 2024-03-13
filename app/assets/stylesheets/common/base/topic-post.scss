@@ -1775,3 +1775,11 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     transition: visibility 1s, opacity ease-out 1s;
   }
 }
+
+.time-gap {
+  .time-gap-widget,
+  .time-gap-content {
+    display: flex;
+    width: 100%;
+  }
+}
