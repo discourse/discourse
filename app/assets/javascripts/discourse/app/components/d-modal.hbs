@@ -11,7 +11,7 @@
       "modal"
       "d-modal"
       (if @inline "-inline")
-      (if this.closing "-closing")
+      (if this.closing "is-closing")
     }}
     data-keyboard="false"
     aria-modal="true"
@@ -51,17 +51,17 @@
                 @label="cancel"
                 @action={{this.handleCloseButton}}
                 @title="modal.close"
-                class="btn-transparent modal-close btn-primary"
+                class="btn-transparent btn-primary"
               />
             </div>
           {{/if}}
 
           {{#if @title}}
             <div class="d-modal__title">
-              <h3
+              <h1
                 id="discourse-modal-title"
                 class="d-modal__title-text"
-              >{{@title}}</h3>
+              >{{@title}}</h1>
 
               {{#if @subtitle}}
                 <p class="d-modal__subtitle-text">{{@subtitle}}</p>
@@ -111,12 +111,6 @@
           {{yield}}
         {{/if}}
       </div>
-
-      {{#if (has-block "footer")}}
-        <div class="d-modal__footer">
-          {{yield to="footer"}}
-        </div>
-      {{/if}}
 
       {{yield to="belowFooter"}}
     </div>

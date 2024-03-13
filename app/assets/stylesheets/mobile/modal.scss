@@ -18,29 +18,33 @@
   }
 }
 
+//to prevent bg scrolling when modal is open, don't think there's an alternative for :has unless you use JS?
+html:has(.d-modal) {
+  overflow: hidden;
+}
+
 .d-modal {
-  align-items: flex-start;
+  align-items: flex-end;
   &__container {
-    margin-top: calc(var(--composer-vh, var(--1dvh)) * 15);
     width: 100%;
     max-width: 100%;
     animation: slideUp 0.25s ease-out forwards;
-    min-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    max-height: calc(
+      var(--composer-vh, var(--1dvh)) * 85
+    ); //moved min height to overrides bcs not every modal will need to be 85% high, case-by-case basis depending on content and if the content is dynamic
     padding-bottom: env(safe-area-inset-bottom);
+
+    .is-closing & {
+      animation: slideDown 0.25s ease-out forwards;
+    }
   }
 
   &__header {
     padding: 0.5rem;
   }
 
-  &__body {
-    flex: 1;
-  }
-
-  &.-closing {
-    .d-modal__container {
-      animation: slideDown 0.25s ease-out forwards;
-    }
+  &__title-text {
+    font-size: var(--font-up-1-rem);
   }
 
   // fixes modal placement on Android when keyboard is visible

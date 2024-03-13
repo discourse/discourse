@@ -91,7 +91,6 @@
     z-index: z("modal", "overlay");
     background-color: #000;
     animation: fade 0.3s forwards;
-    filter: alpha(opacity=70);
 
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
@@ -190,7 +189,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.7;
+    opacity: 0.6;
   }
 }
 
