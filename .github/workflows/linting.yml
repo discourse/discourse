@@ -69,11 +69,11 @@ jobs:
         if: ${{ !cancelled() }}
         run: bundle exec rubocop --parallel .
 
-#      - name: syntax_tree
-#        if: ${{ !cancelled() }}
-#        run: |
-#          set -E
-#          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
+      - name: syntax_tree
+        if: ${{ !cancelled() }}
+        run: |
+          set -E
+          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
