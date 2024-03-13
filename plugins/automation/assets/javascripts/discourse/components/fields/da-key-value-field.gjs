@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
@@ -40,10 +41,12 @@ export default class KeyValueField extends BaseField {
 
           {{#if this.showJsonEditorModal}}
             <ModalJsonSchemaEditor
-              @updateValue={{this.handleValueChange}}
-              @value={{this.value}}
-              @settingName={{@label}}
-              @jsonSchema={{this.jsonSchema}}
+              @model={{hash
+                value=this.value
+                updateValue=this.handleValueChange
+                settingName=@label
+                jsonSchema=this.jsonSchema
+              }}
               @closeModal={{this.closeModal}}
             />
           {{/if}}
