@@ -54,9 +54,15 @@ class ProblemCheck
   end
   delegate :realtime?, to: :class
 
-  def self.call
-    new.call
+  def self.call(data = {})
+    new(data).call
   end
+
+  def initialize(data = {})
+    @data = OpenStruct.new(data)
+  end
+
+  attr_reader :data
 
   def call
     raise NotImplementedError

@@ -139,30 +139,4 @@ RSpec.describe AdminDashboardData do
       expect(check).to_not be_nil
     end
   end
-
-  describe "force_https_check" do
-    subject(:check) { described_class.new(check_force_https: true).force_https_check }
-
-    it "returns nil if force_https site setting enabled" do
-      SiteSetting.force_https = true
-      expect(check).to be_nil
-    end
-
-    it "returns nil if force_https site setting not enabled" do
-      SiteSetting.force_https = false
-      expect(check).to eq(I18n.t("dashboard.force_https_warning", base_path: Discourse.base_path))
-    end
-  end
-
-  describe "ignore force_https_check" do
-    subject(:check) { described_class.new(check_force_https: false).force_https_check }
-
-    it "returns nil" do
-      SiteSetting.force_https = true
-      expect(check).to be_nil
-
-      SiteSetting.force_https = false
-      expect(check).to be_nil
-    end
-  end
 end

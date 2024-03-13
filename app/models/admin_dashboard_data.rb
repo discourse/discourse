@@ -63,7 +63,7 @@ class AdminDashboardData
       message = self.class.problem_message_check(i18n_key)
       problems << Problem.new(message) if message.present?
     end
-    problems.concat(ProblemCheck.realtime.flat_map { |c| c.call.map(&:to_h) })
+    problems.concat(ProblemCheck.realtime.flat_map { |c| c.call(@opts).map(&:to_h) })
 
     problems += self.class.load_found_scheduled_check_problems
     problems.compact!
@@ -141,7 +141,7 @@ class AdminDashboardData
       dashboard.poll_pop3_auth_error
     ]
 
-    add_problem_check :force_https_check, :watched_words_check
+    add_problem_check :watched_words_check
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -227,13 +227,6 @@ class AdminDashboardData
     return unless ActionMailer::Base.smtp_settings[:address]["smtp.mailgun.org"]
     return unless SiteSetting.mailgun_api_key.blank?
     I18n.t("dashboard.missing_mailgun_api_key")
-  end
-
-  def force_https_check
-    return unless @opts[:check_force_https]
-    unless SiteSetting.force_https
-      I18n.t("dashboard.force_https_warning", base_path: Discourse.base_path)
-    end
   end
 
   def watched_words_check
