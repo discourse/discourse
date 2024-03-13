@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
@@ -9,7 +10,7 @@ export default class AdminRoute extends DiscourseRoute {
   @service siteSettings;
   @service store;
   @service currentUser;
-  @service adminSidebarExperimentStateManager;
+  @service adminSidebarStateManager;
   @tracked initialSidebarState;
 
   titleToken() {
@@ -27,11 +28,8 @@ export default class AdminRoute extends DiscourseRoute {
       showTop: false,
     });
 
-    this.store.findAll("plugin").then((plugins) => {
-      this.adminSidebarExperimentStateManager.keywords[
-        "admin_installed_plugins"
-      ] = plugins.map((plugin) => plugin.name.toLowerCase());
-    });
+    this.adminSidebarStateManager.keywords.admin_installed_plugins =
+      PreloadStore.get("visiblePlugins").mapBy("name");
   }
 
   deactivate(transition) {

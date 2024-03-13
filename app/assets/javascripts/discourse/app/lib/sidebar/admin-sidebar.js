@@ -24,8 +24,7 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     super(...arguments);
     this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
-    this.adminSidebarExperimentStateManager =
-      adminSidebarExperimentStateManager;
+    this.adminSidebarStateManager = adminSidebarStateManager;
   }
 
   get name() {
@@ -88,9 +87,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
   get keywords() {
     return (
-      this.adminSidebarExperimentStateManager.keywords[
-        this.adminSidebarNavLink.name
-      ] || []
+      this.adminSidebarNavLink.keywords ||
+      this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] ||
+      []
     );
   }
 }
@@ -105,8 +104,7 @@ function defineAdminSection(
       super(...arguments);
       this.adminNavSectionData = adminNavSectionData;
       this.hideSectionHeader = adminNavSectionData.hideSectionHeader;
-      this.adminSidebarExperimentStateManager =
-        adminSidebarExperimentStateManager;
+      this.adminSidebarStateManager = adminSidebarStateManager;
     }
 
     get sectionLinks() {
@@ -219,21 +217,21 @@ export function addAdminSidebarSectionLink(sectionName, link) {
 }
 
 function pluginAdminRouteLinks() {
-  return (PreloadStore.get("enabledPluginAdminRoutes") || []).map(
-    (pluginAdminRoute) => {
+  return (PreloadStore.get("visiblePlugins") || [])
+    .filter((plugin) => plugin.admin_route && plugin.enabled)
+    .map((plugin) => {
       return {
-        name: `admin_plugin_${pluginAdminRoute.location}`,
-        route: pluginAdminRoute.use_new_show_route
-          ? `adminPlugins.show.${pluginAdminRoute.location}`
-          : `adminPlugins.${pluginAdminRoute.location}`,
-        routeModels: pluginAdminRoute.use_new_show_route
-          ? [pluginAdminRoute.location]
+        name: `admin_plugin_${plugin.admin_route.location}`,
+        route: plugin.admin_route.use_new_show_route
+          ? `adminPlugins.show.${plugin.admin_route.location}`
+          : `adminPlugins.${plugin.admin_route.location}`,
+        routeModels: plugin.admin_route.use_new_show_route
+          ? [plugin.admin_route.location]
           : [],
         label: pluginAdminRoute.label,
         icon: "cog",
       };
-    }
-  );
+    });
 }
 
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
@@ -254,11 +252,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       return [];
     }
 
-    this.adminSidebarExperimentStateManager = getOwnerWithFallback(this).lookup(
-      "service:admin-sidebar-experiment-state-manager"
+    this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
+      "service:admin-sidebar-state-manager"
     );
 
-    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const savedConfig = this.adminSidebarStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
@@ -279,7 +277,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return navConfig.map((adminNavSectionData) => {
       return defineAdminSection(
         adminNavSectionData,
-        this.adminSidebarExperimentStateManager,
+        this.adminSidebarStateManager,
         router
       );
     });

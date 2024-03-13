@@ -12,7 +12,7 @@ import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 
 // TODO (martin) (2024-02-01) Remove this experimental UI.
 export default class AdminConfigAreaSidebarExperiment extends Component {
-  @service adminSidebarExperimentStateManager;
+  @service adminSidebarStateManager;
   @service toasts;
   @service router;
   @tracked editedNavConfig;
@@ -46,7 +46,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
 
   @action
   loadDefaultNavConfig() {
-    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const savedConfig = this.adminSidebarStateManager.navConfig;
     this.editedNavConfig = savedConfig
       ? JSON.stringify(savedConfig, null, 2)
       : this.defaultAdminNav;
@@ -116,7 +116,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
   }
 
   #saveConfig(config) {
-    this.adminSidebarExperimentStateManager.navConfig = config;
+    this.adminSidebarStateManager.navConfig = config;
     resetPanelSections(
       ADMIN_PANEL,
       useAdminNavConfig(config),

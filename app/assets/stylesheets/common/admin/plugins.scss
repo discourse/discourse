@@ -9,16 +9,16 @@
 
   .admin-plugins-list {
     @media screen and (min-width: 550px) {
-      tr {
+      .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(4, 1fr);
       }
     }
     @include breakpoint(mobile-extra-large) {
-      tr {
+      .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(3, 1fr);
       }
       .admin-plugins-list {
-        &__row {
+        &__name-details {
           grid-column-start: 2;
           grid-column-end: -1;
         }
@@ -41,7 +41,7 @@
       }
     }
 
-    tr.filtered {
+    .admin-plugins-list__row-filtered {
       background-color: var(--primary-low);
     }
 

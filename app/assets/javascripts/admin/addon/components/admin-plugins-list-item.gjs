@@ -43,9 +43,12 @@ export default class AdminPluginsListItem extends Component {
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
-      class={{if this.isFiltered "filtered"}}
+      class={{concat
+        "admin-plugins-list__row"
+        (if this.isFiltered "-filtered")
+      }}
     >
-      <td class="admin-plugins-list__row">
+      <td class="admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
           <div class="admin-plugins-list__name">
             {{#if @plugin.linkUrl}}

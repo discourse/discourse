@@ -13,10 +13,14 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    PreloadStore.store("enabledPluginAdminRoutes", [
+    PreloadStore.store("visiblePlugins", [
       {
-        location: "index",
-        label: "admin.plugins.title",
+        name: "plugin title",
+        admin_route: {
+          location: "index",
+          label: "admin.plugins.title",
+          enabled: true,
+        },
       },
     ]);
   });

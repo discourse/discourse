@@ -18,20 +18,28 @@ RSpec.describe ApplicationController do
   end
 
   context "when user is admin" do
-    it "has correctly loaded preloaded data for enabledPluginAdminRoutes" do
+    it "has correctly loaded preloaded data for visiblePlugins" do
       sign_in(admin)
       get "/latest"
-      expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to include(
-        { "label" => "chat.admin.title", "location" => "chat", "use_new_show_route" => false },
+      expect(JSON.parse(preloaded_json["visiblePlugins"])).to include(
+        {
+          "name" => "chat",
+          "admin_route" => {
+            "label" => "chat.admin.title",
+            "location" => "chat",
+            "use_new_show_route" => false,
+          },
+          "enabled" => true,
+        },
       )
     end
   end
 
   context "when user is not admin" do
-    it "does not include preloaded data for enabledPluginAdminRoutes" do
+    it "does not include preloaded data for visiblePlugins" do
       sign_in(user)
       get "/latest"
-      expect(preloaded_json["enabledPluginAdminRoutes"]).to eq(nil)
+      expect(preloaded_json["visiblePlugins"]).to eq(nil)
     end
   end
 end
