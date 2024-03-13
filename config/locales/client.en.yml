@@ -213,6 +213,7 @@ en:
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
+    back_button: "Back"
 
     themes:
       default_description: "Default"

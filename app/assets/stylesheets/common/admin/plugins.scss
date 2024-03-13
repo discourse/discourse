@@ -78,3 +78,19 @@
     }
   }
 }
+
+.admin-plugin-config-page {
+  &__main-area {
+    .admin-detail {
+      padding-top: 15px;
+    }
+
+    &.-without-inner-sidebar {
+      .admin-detail {
+        border-left: 0;
+        padding-left: 0;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -16,7 +16,12 @@ class AdminPluginSerializer < ApplicationSerializer
              :commit_hash,
              :commit_url,
              :meta_url,
-             :authors
+             :authors,
+             :admin_config_nav_routes
+
+  def admin_config_nav_routes
+    object.admin_config_nav_routes
+  end
 
   def id
     object.directory_name
@@ -67,7 +72,12 @@ class AdminPluginSerializer < ApplicationSerializer
     return unless route
 
     ret = route.slice(:location, :label)
-    ret[:full_location] = "adminPlugins.#{ret[:location]}"
+    if route[:use_new_show_route]
+      ret[:full_location] = "adminPlugins.show.#{ret[:location]}"
+      ret[:use_new_show_route] = true
+    else
+      ret[:full_location] = "adminPlugins.#{ret[:location]}"
+    end
     ret
   end
 

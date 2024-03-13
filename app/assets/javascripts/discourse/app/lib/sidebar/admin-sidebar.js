@@ -16,8 +16,9 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink }) {
+  constructor({ adminSidebarNavLink, router }) {
     super(...arguments);
+    this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
   }
 
@@ -62,9 +63,26 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   get title() {
     return this.adminSidebarNavLink.text;
   }
+
+  get currentWhen() {
+    // This is needed because the setting route is underneath /admin/plugins/:plugin_id,
+    // but is not a child route of the plugin routes themselves. E.g. discourse-ai
+    // for the plugin ID has its own nested routes defined in the plugin.
+    if (this.router.currentRoute.name === "adminPlugins.show.settings") {
+      if (
+        this.adminSidebarNavLink.route?.includes(
+          this.router.currentRoute.parent.params.plugin_id
+        )
+      ) {
+        return this.router.currentRoute.name;
+      }
+    }
+
+    return this.adminSidebarNavLink.route;
+  }
 }
 
-function defineAdminSection(adminNavSectionData) {
+function defineAdminSection(adminNavSectionData, router) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
@@ -95,6 +113,7 @@ function defineAdminSection(adminNavSectionData) {
         (sectionLinkData) =>
           new SidebarAdminSectionLink({
             adminSidebarNavLink: sectionLinkData,
+            router,
           })
       );
     }
@@ -183,7 +202,12 @@ function pluginAdminRouteLinks() {
     (pluginAdminRoute) => {
       return {
         name: `admin_plugin_${pluginAdminRoute.location}`,
-        route: `adminPlugins.${pluginAdminRoute.location}`,
+        route: pluginAdminRoute.use_new_show_route
+          ? `adminPlugins.show.${pluginAdminRoute.location}`
+          : `adminPlugins.${pluginAdminRoute.location}`,
+        routeModels: pluginAdminRoute.use_new_show_route
+          ? [pluginAdminRoute.location]
+          : [],
         label: pluginAdminRoute.label,
         icon: "cog",
       };
@@ -203,6 +227,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const siteSettings = getOwnerWithFallback(this).lookup(
       "service:site-settings"
     );
+    const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
     if (!currentUser.use_admin_sidebar) {
       return [];
@@ -231,7 +256,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      return defineAdminSection(adminNavSectionData);
+      return defineAdminSection(adminNavSectionData, router);
     });
   }
 

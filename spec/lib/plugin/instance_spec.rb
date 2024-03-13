@@ -999,4 +999,30 @@ TEXT
       expect(sum).to eq(3)
     end
   end
+
+  describe "#register_admin_config_nav_routes" do
+    let(:plugin) { Plugin::Instance.new }
+
+    it "adds the specified plugin id as the 'model' for the route" do
+      plugin.register_admin_config_nav_routes(
+        "discourse-awesome",
+        [{ route: "adminPlugins.show", label: "some.i18n.label" }],
+      )
+      expect(plugin.admin_config_nav_routes).to eq(
+        [{ route: "adminPlugins.show", label: "some.i18n.label", model: "discourse-awesome" }],
+      )
+    end
+
+    it "errors if the route or label is not provided" do
+      expect {
+        plugin.register_admin_config_nav_routes("discourse-awesome", [{ label: "some.i18n.label" }])
+      }.to raise_error(ArgumentError)
+      expect {
+        plugin.register_admin_config_nav_routes(
+          "discourse-awesome",
+          [{ route: "adminPlugins.show" }],
+        )
+      }.to raise_error(ArgumentError)
+    end
+  end
 end
