@@ -9,16 +9,14 @@ body {
   background-color: var(--secondary);
 }
 
-.ios-device {
-  textarea {
-    background-color: var(--secondary);
-    font-size: var(--font-size-ios-input);
-    -webkit-tap-highlight-color: transparent;
-  }
+textarea {
+  background-color: var(--secondary); // TODO: why was this iOS-only
+  font-size: var(--font-size-ios-input);
+  -webkit-tap-highlight-color: transparent;
+}
 
-  input#reply-title {
-    -webkit-tap-highlight-color: transparent;
-  }
+input#reply-title {
+  -webkit-tap-highlight-color: transparent;
 }
 
 blockquote {

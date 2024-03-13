@@ -114,11 +114,9 @@ $hpad: 0.65em;
   line-height: normal;
   box-sizing: border-box;
   padding: $vpad $hpad;
-  .ios-device & {
-    font-size: var(--font-size-ios-input);
-    padding-top: $vpad * 0.8;
-    padding-bottom: $vpad * 0.8;
-  }
+  font-size: var(--font-size-input);
+  padding-top: $vpad * 0.8; // TODO... what's this for?
+  padding-bottom: $vpad * 0.8; // TODO... what's this for?
 }
 
 @mixin sticky {
