@@ -3,7 +3,7 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_syms, :problem_blocks, :problem_messages
+  cattr_reader :problem_blocks, :problem_messages
 
   class Problem
     VALID_PRIORITIES = %w[low high].freeze
@@ -51,10 +51,6 @@ class AdminDashboardData
 
   def problems
     problems = []
-    self.class.problem_syms.each do |sym|
-      message = public_send(sym)
-      problems << Problem.new(message) if message.present?
-    end
     self.class.problem_blocks.each do |blk|
       message = instance_exec(&blk)
       problems << Problem.new(message) if message.present?
@@ -78,7 +74,6 @@ class AdminDashboardData
   end
 
   def self.add_problem_check(*syms, &blk)
-    @@problem_syms.push(*syms) if syms
     @@problem_blocks << blk if blk
   end
 
@@ -132,7 +127,6 @@ class AdminDashboardData
   # tests. It will also fire multiple times in development mode because
   # classes are not cached.
   def self.reset_problem_checks
-    @@problem_syms = []
     @@problem_blocks = []
 
     @@problem_messages = %w[

@@ -30,20 +30,6 @@ RSpec.describe AdminDashboardData do
         problems = AdminDashboardData.fetch_problems
         expect(problems.map(&:to_s)).to include("a problem was found")
       end
-
-      it "calls the passed method" do
-        klass =
-          Class.new(AdminDashboardData) do
-            def my_test_method
-              "a problem was found"
-            end
-          end
-
-        klass.add_problem_check :my_test_method
-
-        problems = klass.fetch_problems
-        expect(problems.map(&:to_s)).to include("a problem was found")
-      end
     end
   end
 
