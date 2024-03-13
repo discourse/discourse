@@ -460,19 +460,15 @@
 
       {{#if this.hasTranslations}}
         <div class="control-unit">
-          <section class="form-horizontal theme settings translations control-unit">
-            <div class="row setting ember-view theme-translation">
-              <span class="setting-label mini-title ">
-                {{i18n
-                "admin.customize.theme.theme_translations"
-                }}
-              </span>
-              <div class="setting-value theme-setting ">
-                <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}}
-                  @onChange={{this.updateLocale}} @options={{hash filterable=true}} />
-              </div>
-            </div>
-          </section>
+          <div class="translation-selector-container">
+            <span class="mini-title ">
+              {{i18n
+              "admin.customize.theme.theme_translations"
+              }}
+            </span>
+            <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}}
+              @onChange={{this.updateLocale}} @options={{hash filterable=true}} class="translation-selector" />
+          </div>
           <section
             class="form-horizontal theme settings translations control-unit"
           >
