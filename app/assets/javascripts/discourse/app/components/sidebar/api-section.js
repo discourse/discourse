@@ -31,7 +31,9 @@ export default class SidebarApiSection extends Component {
     return this.section.links.filter((link) => {
       return (
         link.text.toString().toLowerCase().match(this.sidebarState.filter) ||
-        link.keywords.some((keyword) => keyword.match(this.sidebarState.filter))
+        link.keywords.navigation.some((keyword) =>
+          keyword.match(this.sidebarState.filter)
+        )
       );
     });
   }

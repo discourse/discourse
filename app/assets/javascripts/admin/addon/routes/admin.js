@@ -28,8 +28,9 @@ export default class AdminRoute extends DiscourseRoute {
       showTop: false,
     });
 
-    this.adminSidebarStateManager.keywords.admin_installed_plugins =
-      PreloadStore.get("visiblePlugins").mapBy("name");
+    this.adminSidebarStateManager.keywords.admin_installed_plugins = {
+      navigation: PreloadStore.get("visiblePlugins").mapBy("name"),
+    };
   }
 
   deactivate(transition) {

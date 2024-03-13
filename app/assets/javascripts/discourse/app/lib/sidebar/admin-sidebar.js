@@ -83,8 +83,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
   get keywords() {
     return (
-      this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] ||
-      []
+      this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] || {
+        navigation: [],
+      }
     );
   }
 }
