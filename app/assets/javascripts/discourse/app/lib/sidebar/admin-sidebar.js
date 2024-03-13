@@ -16,11 +16,7 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({
-    adminSidebarNavLink,
-    adminSidebarExperimentStateManager,
-    router,
-  }) {
+  constructor({ adminSidebarNavLink, adminSidebarStateManager, router }) {
     super(...arguments);
     this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
@@ -96,7 +92,7 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
 function defineAdminSection(
   adminNavSectionData,
-  adminSidebarExperimentStateManager,
+  adminSidebarStateManager,
   router
 ) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
@@ -130,8 +126,7 @@ function defineAdminSection(
         (sectionLinkData) =>
           new SidebarAdminSectionLink({
             adminSidebarNavLink: sectionLinkData,
-            adminSidebarExperimentStateManager:
-              this.adminSidebarExperimentStateManager,
+            adminSidebarStateManager: this.adminSidebarStateManager,
             router,
           })
       );
@@ -228,7 +223,7 @@ function pluginAdminRouteLinks() {
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
           : [],
-        label: pluginAdminRoute.label,
+        label: plugin.admin_route.label,
         icon: "cog",
       };
     });
