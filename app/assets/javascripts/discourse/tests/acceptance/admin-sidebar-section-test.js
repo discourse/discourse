@@ -87,7 +87,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_plugin_index\"]"
+        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_installed_plugins\"]"
       ),
       "the admin plugin route is added to the plugins section"
     );

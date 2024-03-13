@@ -28,9 +28,12 @@ export default class AdminRoute extends DiscourseRoute {
       showTop: false,
     });
 
-    this.adminSidebarStateManager.keywords.admin_installed_plugins = {
-      navigation: PreloadStore.get("visiblePlugins").mapBy("name"),
-    };
+    const visiblePlugins = PreloadStore.get("visiblePlugins");
+    if (visiblePlugins) {
+      this.adminSidebarStateManager.keywords.admin_installed_plugins = {
+        navigation: visiblePlugins.mapBy("name"),
+      };
+    }
   }
 
   deactivate(transition) {
