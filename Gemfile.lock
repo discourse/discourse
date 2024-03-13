@@ -8,7 +8,7 @@ GIT
       rack (> 1, < 3)
 
 GEM
-  remote: https://rubygems.org/
+  remote: https://gems.ruby-china.com/
   specs:
     actionmailer (7.0.8.1)
       actionpack (= 7.0.8.1)
