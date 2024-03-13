@@ -696,33 +696,6 @@ class User < ActiveRecord::Base
     SQL
   end
 
-  def topic_tracking_counts
-    results = TopicTrackingState.report(self)
-
-    new, unread = 0, 0
-    results.each do |entry|
-      if entry.last_read_post_number == nil &&
-           (
-             entry.notification_level == nil ||
-               entry.notification_level >= NotificationLevels.all[:tracking]
-           )
-        new += 1
-      end
-
-      if entry.last_read_post_number != nil &&
-           entry.last_read_post_number < entry.highest_post_number &&
-           entry.notification_level >= NotificationLevels.all[:tracking]
-        unread += 1
-      end
-    end
-
-    if (self.new_new_view_enabled?)
-      { new: new + unread }
-    else
-      { new: new, unread: unread }
-    end
-  end
-
   # PERF: This safeguard is in place to avoid situations where
   # a user with enormous amounts of unread data can issue extremely
   # expensive queries

@@ -9,6 +9,7 @@ import User from "discourse/models/user";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
+// any changes here should also be reflected in TopicTrackingState.report_totals
 function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
@@ -19,6 +20,7 @@ function isNew(topic) {
   );
 }
 
+// any changes here should also be reflected in TopicTrackingState.report_totals
 function isUnread(topic) {
   return (
     topic.last_read_post_number !== null &&

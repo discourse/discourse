@@ -577,6 +577,34 @@ class TopicTrackingState
     post.publish_change_to_clients!(:read, opts)
   end
 
+  def self.report_totals(user)
+    new, unread = 0, 0
+
+    report(user).each do |entry|
+      # any changes here should also be reflected in model/topic-tracking-state.js
+      if entry.last_read_post_number == nil &&
+           (
+             entry.notification_level == nil ||
+               entry.notification_level >= NotificationLevels.all[:tracking] &&
+                 entry.created_at > user.user_option.treat_as_new_topic_start_date
+           )
+        new += 1
+      end
+
+      if entry.last_read_post_number != nil &&
+           entry.last_read_post_number < entry.highest_post_number &&
+           entry.notification_level >= NotificationLevels.all[:tracking]
+        unread += 1
+      end
+    end
+
+    if (user.new_new_view_enabled?)
+      { new: new + unread }
+    else
+      { new: new, unread: unread }
+    end
+  end
+
   def self.secure_category_group_ids(topic)
     category = topic.category
 

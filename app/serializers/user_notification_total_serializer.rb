@@ -22,7 +22,7 @@ class UserNotificationTotalSerializer < ApplicationSerializer
   end
 
   def topic_tracking
-    object.topic_tracking_counts
+    TopicTrackingState.report_totals(object)
   end
 
   def include_group_inboxes?
