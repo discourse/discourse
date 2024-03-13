@@ -43,13 +43,13 @@ export default class AdminSiteSettingsFilterControls extends Component {
             />
           {{/if}}
           <Input
-            @id="setting-filter"
             @type="text"
-            autocomplete="off"
             @value={{this.filter}}
-            @placeholderKey="type_to_filter"
+            placeholder={{i18n "type_to_filter"}}
             {{on "input" this.onChangeFilter}}
             class="no-blur"
+            id="setting-filter"
+            autocomplete="off"
           />
           <DButton
             @action={{this.clearFilter}}
@@ -66,6 +66,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
             @type="checkbox"
             @checked={{this.onlyOverridden}}
             class="toggle-overridden"
+            id="setting-filter-toggle-overridden"
             {{on "click" this.onToggleOverridden}}
           />
           {{i18n "admin.settings.show_overriden"}}

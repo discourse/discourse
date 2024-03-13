@@ -179,6 +179,7 @@ module SiteSettingExtension
   def all_settings(
     include_hidden: false,
     include_locale_setting: true,
+    only_overridden: false,
     filter_categories: nil,
     filter_plugin: nil
   )
@@ -243,7 +244,14 @@ module SiteSettingExtension
 
         opts
       end
-      .unshift(include_locale_setting ? locale_setting_hash : nil)
+      .select do |setting|
+        if only_overridden
+          setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .unshift(include_locale_setting && !only_overridden ? locale_setting_hash : nil)
       .compact
   end
 
