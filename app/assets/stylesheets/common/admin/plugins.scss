@@ -94,3 +94,17 @@
     }
   }
 }
+
+.admin-plugin-filtered-site-settings {
+  &__filter {
+    width: 100%;
+  }
+}
+
+.admin-plugin-config-area {
+  &__settings {
+    .admin-site-settings-filter-controls {
+      margin-bottom: 1em;
+    }
+  }
+}
