@@ -83,7 +83,6 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
   get keywords() {
     return (
-      this.adminSidebarNavLink.keywords ||
       this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] ||
       []
     );
@@ -266,6 +265,14 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         icon: "list",
       });
     }
+
+    navMap.forEach((section) =>
+      section.links.forEach((link) => {
+        if (link.keywords) {
+          this.adminSidebarStateManager.keywords[link.name] = link.keywords;
+        }
+      })
+    );
 
     const navConfig = useAdminNavConfig(navMap);
 
