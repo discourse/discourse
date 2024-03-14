@@ -308,8 +308,72 @@ sk:
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           Všimli ste si, že ste teraz späť na začiatku? Nakŕmte túto úbohú hladnú kapybaru **odpovedaním pomocou emoji `%{search_answer}`** a automaticky sa dostanete až na koniec.
+        reply: |-
+          Našli ste to :tada:
+
+          - Pre podrobnejšie vyhľadávanie prejdite na [úplnú stránku vyhľadávania](%{search_url}).
+
+          – Ak chcete v dlhej diskusii skočiť kamkoľvek, vyskúšajte ovládacie prvky časovej osi témy vpravo (a dole na mobile).
+
+          – Ak máte fyzické :keyboard:, stlačte <kbd>?</kbd> na zobrazenie našich praktických klávesových skratiek.
+        not_found: |-
+          Hmm… Zdá sa, že máte problémy. Ospravedlňujeme sa za to. Hľadali ste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> výraz **capy&#8203;bara**?
+      end:
+        message: |-
+          Ďakujem, že ste so mnou @%{username}! Urobil som to pre vás, myslím, že ste si to zaslúžili:
+
+          %{certificate}
+
+          To je zatiaľ všetko! Pozrite si [**naše najnovšie diskusné témy**](%{base_uri}/najnovšie) alebo [**kategórie diskusie**](%{base_uri}/kategórie). :sunglasses:
+
+          (Ak by ste sa so mnou chceli znova porozprávať a dozvedieť sa viac, kedykoľvek nám napíšte správu alebo spomeňte `@%{discobot_username}`!)
+      certificate:
+        alt: "Certifikát o dosiahnutí"
     advanced_user_narrative:
+      reset_trigger: "pokročilý tutoriál"
+      cert_title: "Ako uznanie za úspešné absolvovanie pokročilej používateľskej príručky"
       title: ":arrow_up: Pokročilé funkcie používateľa"
+      start_message: |-
+        Ako _pokročilý_ používateľ ste už navštívili stránku [vaše preferencie](%{base_uri}/my/preferences) @%{username}? Existuje veľa spôsobov, ako si prispôsobiť prostredie, napríklad výber tmavej alebo svetlej témy.
+
+        Ale odbočujem, začnime!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} je zďaleka najlepší bot, akého poznám :wink:"
+        instructions: |-
+          Každý robí chyby. Ale nebojte sa, svoje príspevky môžete kedykoľvek upraviť a opraviť!
+
+          Môžete začať **úpravou** príspevku, ktorý som práve vytvoril vo vašom mene?
+        not_found: |-
+          Zdá sa, že ste ešte neupravili [príspevok](%{url}), ktorý som pre vás vytvoril. Môžete to skúsiť znova?
+
+          Pomocou ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> vyvolajte editor.
+        reply: |-
+          Skvelá práca!
+
+          Upozorňujeme, že úpravy vykonané po 5 minútach sa zobrazia ako verejné revízie úprav a v pravom hornom rohu sa zobrazí malá ikona ceruzky s počtom revízií.
+      delete:
+        instructions: |-
+          Ak chcete stiahnuť príspevok, ktorý ste vytvorili, môžete ho odstrániť.
+
+          Pokračujte a **odstráňte** ktorýkoľvek z vyššie uvedených príspevkov pomocou akcie <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstrániť**. Neodstraňujte však prvý príspevok!
+        not_found: |-
+          Zatiaľ nevidím žiadne zmazané príspevky? Pamätajte, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobraziť viac zobrazí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> odstrániť.
+        reply: |-
+          Och! :boom:
+
+          Aby sa zachovala kontinuita diskusií, zmazanie nie je okamžité, takže príspevok bude po určitom čase odstránený.
+      recover:
+        deleted_post_raw: "Prečo @%{discobot_username} odstránil môj príspevok? :anguished:"
+        instructions: |-
+          Ale nie! Zdá sa, že som omylom odstránil nový príspevok, ktorý som pre vás práve vytvoril.
+
+          Môžete mi urobiť láskavosť a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **obnoviť** to?
+        not_found: |-
+          Mať problémy? Pamätajte, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobraziť viac odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> zrušenie zmazania.
+        reply: |-
+          Fíha, to bolo tesné! Ďakujeme za opravu :wink:
+
+          Upozorňujeme, že na zrušenie odstránenia príspevku máte iba %{deletion_after} hodín.
       category_hashtag:
         instructions: |-
           Vedeli ste, že vo svojom príspevku môžete odkazovať na kategórie a značky? Videli ste napríklad kategóriu %{category} ?
@@ -321,6 +385,75 @@ sk:
           ```text
           Môžem vytvoriť odkaz na kategóriu prostredníctvom #
           ```
+        reply: |-
+          Výborne! Pamätajte, že to funguje pre obe kategórie _a_ tagy, ak sú tagy povolené.
+      change_topic_notification_level:
+        instructions: |-
+          Každá téma má úroveň upozornení. Začína sa to „normálne“, čo znamená, že za normálnych okolností budete upozornení iba vtedy, keď niekto hovorí priamo s vami.
+
+          V predvolenom nastavení je úroveň upozornenia pre súkromnú správu nastavená na najvyššiu úroveň „sledovania“, čo znamená, že budete upozornení na každú novú odpoveď. Môžete však prepísať úroveň upozornení pre _akúkoľvek_ tému na „sledovať“, „sledovať“ alebo „vypnúť zvuk“.
+
+          Skúsme zmeniť úroveň upozornení pre túto tému. V spodnej časti témy nájdete tlačidlo, ktoré ukazuje, že túto tému **pozeráte**. Môžete zmeniť úroveň upozornení na **sledovanie**?
+        not_found: |-
+          Zdá sa, že stále sledujete :eyes: túto tému! Ak máte problém ho nájsť, tlačidlo úrovne upozornení sa nachádza v spodnej časti témy.
+        reply: |-
+          Úžasná práca! Dúfam, že ste túto tému neumlčali, keďže občas viem byť trochu zhovorčivý :grin:.
+
+          Upozorňujeme, že keď odpoviete na tému alebo si tému prečítate dlhšie ako niekoľko minút, automaticky sa nastaví na úroveň upozornenia „sledovanie“. Môžete to zmeniť v [vašich používateľských preferenciách](%{base_uri}/my/preferences).
+      poll:
+        instructions: |-
+          Vedeli ste, že ku každému príspevku môžete pridať anketu? Skúste použiť ozubené koliesko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore na **vytvorenie ankety**.
+        not_found: |-
+          Ups! Vo vašej odpovedi nebola žiadna anketa.
+
+          Použite ikonu ozubeného kolesa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore alebo skopírujte a vložte túto anketu do ďalšej odpovede:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ````
+        reply: |-
+          Ahoj, pekná anketa! Ako sa mi darilo, keď som ťa učil?
+
+          [anketa]
+          * :+1:
+          * :-1:
+          [/anketa]
       details:
+        instructions: |-
+          Niekedy možno budete chcieť vo svojich odpovediach **skryť podrobnosti**:
+
+          – Keď diskutujete o zápletkách filmu alebo televíznej relácie, ktoré by sa považovali za spoiler.
+
+          – Keď váš príspevok potrebuje veľa voliteľných podrobností, ktoré môžu byť pri prečítaní naraz zdrvujúce.
+
+          [detaily=Vyberte toto, aby ste videli, ako to funguje!]
+          1. Vyberte v editore prevod <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> .
+          2. Zvoľte „Skryť podrobnosti“.
+          3. Upravte súhrn podrobností a pridajte svoj obsah.
+          [/details]
+
+          Môžete použiť ozubené koliesko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editore na pridanie sekcie podrobností do vašej ďalšej odpovede?
+        not_found: |-
+          Máte problémy s vytvorením widgetu s podrobnosťami? Skúste do svojej ďalšej odpovede zahrnúť nasledujúce údaje:
+
+          ```text
+          [details=Vyberte si ma pre podrobnosti]
+          Tu sú podrobnosti
+          [/details]
+          ```
         reply: |-
           Super práca — vaše zameranie na _detail_ je obdivuhodné!
+      end:
+        message: |-
+          Naozaj ste to prežili ako _pokročilý používateľ_ :bow:
+
+          %{certificate}
+
+          To je všetko, čo pre vás mám.
+
+          Zatiaľ ahoj! Ak sa so mnou chcete znova porozprávať, pošlite mi správu kedykoľvek :sunglasses:
+      certificate:
+        alt: "Certifikát o úspechu pokročilého používateľa"

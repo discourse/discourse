@@ -844,9 +844,11 @@ nb_NO:
       "14": "Venter"
       "15": "Utkast"
     categories:
-      all: "alle kategorier"
-      all_subcategories: "alle"
-      no_subcategory: "ingen"
+      categories_label: "kategorier"
+      subcategories_label: "underkategorier"
+      no_subcategories: "ingen underkategorier"
+      remove_filter: "fjern filter"
+      plus_more_count: "+%{count} mer"
       category: "Kategori"
       category_list: "Vis kategoriliste"
       reorder:
@@ -1704,6 +1706,9 @@ nb_NO:
       alt: "Alt"
       enter: "Angi"
     category_row:
+      subcategory_count:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"
@@ -1777,7 +1782,6 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
@@ -3090,8 +3094,6 @@ nb_NO:
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
         search: "%{shortcut} Søk"
         help: "%{shortcut} Åpne tastaturhjelp"
-        dismiss_new: "%{shortcut} Avvis Ny"
-        dismiss_topics: "%{shortcut} Forkast Emner"
         log_out: "%{shortcut} Logg ut"
       composing:
         title: "Skriving"
@@ -3170,8 +3172,10 @@ nb_NO:
       download: "Last ned"
     tagging:
       other_tags: "Andre stikkord"
+      selector_tags: "stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
+      selector_remove_filter: "fjern filter"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
       info: "Informasjon"

@@ -957,9 +957,12 @@ fr:
       "14": "En attente"
       "15": "Brouillons"
     categories:
-      all: "toutes les catégories"
-      all_subcategories: "toutes"
-      no_subcategory: "aucune"
+      categories_label: "catégories"
+      subcategories_label: "sous-catégories"
+      no_subcategories: "aucune sous-catégorie"
+      remove_filter: "supprimer le filtre"
+      plus_more_count: "+%{count} autres"
+      view_all: "tout voir"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
       reorder:
@@ -2117,6 +2120,9 @@ fr:
     conditional_loading_section:
       loading: Chargement…
     category_row:
+      subcategory_count:
+        one: "+ %{count} sous-catégorie"
+        other: "+ %{count} sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -2241,7 +2247,6 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
-      create_pm: "Envoyer le message"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
@@ -3875,8 +3880,6 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
-        dismiss_new: "%{shortcut} Ignorer les nouveaux sujets"
-        dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
         title: "Édition"
@@ -3976,8 +3979,10 @@ fr:
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
+      selector_tags: "étiquettes"
       selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
+      selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       choose_for_topic_required:

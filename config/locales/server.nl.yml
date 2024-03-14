@@ -1591,7 +1591,6 @@ nl:
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
-    content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-aanvallen tegengaan met Content Security Policy</a> (CSP)."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."

@@ -4,6 +4,12 @@ class DiscourseConnectBase
   class ParseError < RuntimeError
   end
 
+  class PayloadParseError < ParseError
+  end
+
+  class SignatureError < ParseError
+  end
+
   ACCESSORS = %i[
     add_groups
     admin
@@ -80,19 +86,27 @@ class DiscourseConnectBase
     sso.sso_secret = sso_secret if sso_secret
 
     parsed = Rack::Utils.parse_query(payload)
+
+    raise PayloadParseError.new(<<~MSG) if parsed["sso"] =~ %r{[^a-zA-Z0-9=\r\n/+]}m
+        The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters.
+        
+        Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64.
+        
+        sso: #{parsed["sso"]}
+      MSG
+
     decoded = Base64.decode64(parsed["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
-    if sso.sign(parsed["sso"]) != parsed["sig"]
-      diags =
-        "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
-      if parsed["sso"] =~ %r{[^a-zA-Z0-9=\r\n/+]}m
-        raise ParseError,
-              "The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters. Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64 #{diags}"
-      else
-        raise ParseError, "Bad signature for payload #{diags}"
-      end
-    end
+    raise SignatureError, <<~MSG if sso.sign(parsed["sso"]) != parsed["sig"]
+        Bad signature for payload
+
+        sso: #{parsed["sso"]}
+        
+        sig: #{parsed["sig"]}
+        
+        expected sig: #{sso.sign(parsed["sso"])}
+        MSG
 
     ACCESSORS.each do |k|
       val = decoded_hash[k.to_s]

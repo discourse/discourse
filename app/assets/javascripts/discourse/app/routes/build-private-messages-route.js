@@ -107,12 +107,14 @@ export default (inboxType, path, filter) => {
 
     emptyState() {
       const title = I18n.t("user.no_messages_title");
-      const body = htmlSafe(
-        I18n.t("user.no_messages_body", {
-          aboutUrl: getURL("/about"),
-          icon: iconHTML("envelope"),
-        })
-      );
+      const body = this.currentUser?.can_send_private_messages
+        ? htmlSafe(
+            I18n.t("user.no_messages_body", {
+              aboutUrl: getURL("/about"),
+              icon: iconHTML("envelope"),
+            })
+          )
+        : "";
       return { title, body };
     },
 

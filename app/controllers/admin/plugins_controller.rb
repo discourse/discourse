@@ -8,4 +8,16 @@ class Admin::PluginsController < Admin::StaffController
       root: "plugins",
     )
   end
+
+  def show
+    plugin = Discourse.plugins_by_name[params[:plugin_id]]
+
+    # An escape hatch in case a plugin is using an un-prefixed
+    # version of their plugin name for a route.
+    plugin = Discourse.plugins_by_name["discourse-#{params[:plugin_id]}"] if !plugin
+
+    raise Discourse::NotFound if !plugin
+
+    render_serialized(plugin, AdminPluginSerializer, root: nil)
+  end
 end

@@ -1061,9 +1061,12 @@ pl_PL:
       "14": "Oczekujące"
       "15": "Szkice"
     categories:
-      all: "wszystkie kategorie"
-      all_subcategories: "wszystkie"
-      no_subcategory: "żadne"
+      categories_label: "kategorie"
+      subcategories_label: "podkategorie"
+      no_subcategories: "brak podkategorii"
+      remove_filter: "usuń filtr"
+      plus_more_count: "+%{count} więcej"
+      view_all: "pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
       reorder:
@@ -2299,6 +2302,11 @@ pl_PL:
     conditional_loading_section:
       loading: Ładowanie…
     category_row:
+      subcategory_count:
+        one: "+ %{count} podkategoria"
+        few: "+ %{count} podkategorie"
+        many: "+ %{count} podkategorii"
+        other: "+ %{count} podkategorii"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -2447,7 +2455,6 @@ pl_PL:
       reply: "Odpowiedz"
       cancel: "Anuluj"
       create_topic: "Utwórz temat"
-      create_pm: "Wiadomość"
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
@@ -4281,8 +4288,6 @@ pl_PL:
         search: "%{shortcut} Wyszukaj"
         filter_sidebar: "%{shortcut} Filtruj pasek boczny"
         help: "%{shortcut} Pokaż skróty klawiszowe"
-        dismiss_new: "%{shortcut} Odrzuć nowe"
-        dismiss_topics: "%{shortcut} wyczyść listę tematów"
         log_out: "%{shortcut} Wyloguj"
       composing:
         title: "Komponowanie"
@@ -4392,8 +4397,10 @@ pl_PL:
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
+      selector_tags: "tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
+      selector_remove_filter: "usuń filtr"
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       choose_for_topic_required:

@@ -132,6 +132,16 @@ after_initialize do
     end
   end
 
+  add_to_serializer(
+    :admin_plugin,
+    :incoming_chat_webhooks,
+    include_condition: -> { self.name == "chat" },
+  ) { Chat::IncomingWebhook.includes(:chat_channel).all }
+
+  add_to_serializer(:admin_plugin, :chat_channels, include_condition: -> { self.name == "chat" }) do
+    Chat::Channel.public_channels
+  end
+
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank?

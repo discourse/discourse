@@ -964,9 +964,12 @@ hr:
       "14": "Na čekanju"
       "15": "Skice"
     categories:
-      all: "sve kategorije"
-      all_subcategories: "sve"
-      no_subcategory: "ništa"
+      categories_label: "kategorije"
+      subcategories_label: "podkategorije"
+      no_subcategories: "nema podkategorija"
+      remove_filter: "uklonite filter"
+      plus_more_count: "+%{count} još"
+      view_all: "pregledaj sve"
       category: "Kategorija"
       category_list: "Prikaži popis kategorija"
       reorder:
@@ -2047,6 +2050,10 @@ hr:
       alt: "Alt"
       enter: "Unesi"
     category_row:
+      subcategory_count:
+        one: "+ %{count} potkategorija"
+        few: "+ %{count} potkategorija"
+        other: "+ %{count} potkategorija"
       topic_count:
         one: "%{count} tema u ovoj kategoriji"
         few: "%{count} tema u ovoj kategoriji"
@@ -2166,7 +2173,6 @@ hr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
-      create_pm: "Poruka"
       create_whisper: "Šapat"
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
@@ -3791,8 +3797,6 @@ hr:
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
         search: "%{shortcut} Traži"
         help: "%{shortcut} Otvori pomoć tipkovnice"
-        dismiss_new: "%{shortcut} Odbaci novo"
-        dismiss_topics: "%{shortcut} Odbaci teme"
         log_out: "%{shortcut} Odjava"
       composing:
         title: "Sastavljanje"
@@ -3887,8 +3891,10 @@ hr:
     tagging:
       all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
+      selector_tags: "oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
+      selector_remove_filter: "uklonite filter"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Info"

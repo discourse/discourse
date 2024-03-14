@@ -2,10 +2,12 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
+import ThemeSettings from "admin/models/theme-settings";
 
 class TreeFromDOM {
   constructor() {
@@ -60,9 +62,10 @@ module(
     setupRenderingTest(hooks);
 
     test("activates the first node by default", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -73,9 +76,10 @@ module(
     });
 
     test("renders the 2nd level of nested items for the active item only", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -114,9 +118,10 @@ module(
     });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -191,9 +196,10 @@ module(
     });
 
     test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       assert.dom(".back-button").doesNotExist();
@@ -225,9 +231,10 @@ module(
     });
 
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -251,9 +258,10 @@ module(
     });
 
     test("the back button label includes the name of the item at the previous level", async function (assert) {
-      const [schema, data] = schemaAndData(1);
+      const setting = schemaAndData(1);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const tree = new TreeFromDOM();
@@ -286,10 +294,56 @@ module(
       );
     });
 
-    test("input fields for items at different levels", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+    test("input fields are rendered even if they're not present in the data", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "string",
+            },
+            name: {
+              type: "string",
+            },
+          },
+        },
+        value: [
+          {
+            id: "bu1",
+            name: "Big U",
+          },
+          {
+            id: "fi2",
+          },
+        ],
+      });
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.id.inputElement).hasValue("bu1");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("Big U");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+      inputFields.refresh();
+
+      assert.strictEqual(inputFields.count, 2);
+      assert.dom(inputFields.fields.id.inputElement).hasValue("fi2");
+      assert.dom(inputFields.fields.name.inputElement).hasNoValue();
+    });
+
+    test("input fields for items at different levels", async function (assert) {
+      const setting = schemaAndData(2);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -332,9 +386,10 @@ module(
     });
 
     test("input fields of type integer", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -363,10 +418,42 @@ module(
         .hasValue("922229");
     });
 
-    test("input fields of type boolean", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+    test("input fields of type float", async function (assert) {
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.float_field.labelElement)
+        .hasText("float_field");
+      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+
+      await fillIn(inputFields.fields.float_field.inputElement, "6934.24");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+
+      tree.refresh();
+      await click(tree.nodes[0].element);
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.float_field.inputElement)
+        .hasValue("6934.24");
+    });
+
+    test("input fields of type boolean", async function (assert) {
+      const setting = schemaAndData(3);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -393,9 +480,10 @@ module(
     });
 
     test("input fields of type enum", async function (assert) {
-      const [schema, data] = schemaAndData(3);
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -418,10 +506,111 @@ module(
       assert.strictEqual(enumSelector.header().value(), "nice");
     });
 
-    test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+    test("input fields of type category", async function (assert) {
+      const setting = schemaAndData(3);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const categorySelector = selectKit(
+        `${inputFields.fields.category_field.selector} .select-kit`
+      );
+
+      assert.strictEqual(categorySelector.header().value(), null);
+
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(1);
+
+      const selectedCategoryId = categorySelector.header().value();
+      assert.ok(selectedCategoryId);
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+      assert.strictEqual(categorySelector.header().value(), null);
+
+      tree.refresh();
+
+      await click(tree.nodes[0].element);
+      assert.strictEqual(categorySelector.header().value(), selectedCategoryId);
+    });
+
+    test("input fields of type tag", async function (assert) {
+      const setting = schemaAndData(3);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const tagSelector = selectKit(
+        `${inputFields.fields.tag_field.selector} .select-kit`
+      );
+
+      assert.strictEqual(tagSelector.header().value(), null);
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(1);
+      await tagSelector.selectRowByIndex(3);
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+      assert.strictEqual(tagSelector.header().value(), null);
+
+      tree.refresh();
+
+      await click(tree.nodes[0].element);
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+    });
+
+    test("input fields of type group", async function (assert) {
+      pretender.get("/groups/search.json", () => {
+        return response(200, [
+          { id: 23, name: "testers" },
+          { id: 74, name: "devs" },
+          { id: 89, name: "customers" },
+        ]);
+      });
+
+      const setting = schemaAndData(3);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+      const groupSelector = selectKit(
+        `${inputFields.fields.group_field.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupSelector.header().value(), null);
+
+      await groupSelector.expand();
+      await groupSelector.selectRowByValue(74);
+      assert.strictEqual(groupSelector.header().value(), "74");
+
+      const tree = new TreeFromDOM();
+      await click(tree.nodes[1].element);
+
+      assert.strictEqual(groupSelector.header().value(), null);
+      await groupSelector.expand();
+      await groupSelector.selectRowByValue(23);
+      assert.strictEqual(groupSelector.header().value(), "23");
+
+      tree.refresh();
+
+      await click(tree.nodes[0].element);
+      assert.strictEqual(groupSelector.header().value(), "74");
+    });
+
+    test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
+      const setting = schemaAndData(2);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
@@ -448,9 +637,10 @@ module(
     });
 
     test("edits are remembered when navigating between levels", async function (assert) {
-      const [schema, data] = schemaAndData(2);
+      const setting = schemaAndData(2);
+
       await render(<template>
-        <AdminSchemaThemeSettingEditor @schema={{schema}} @data={{data}} />
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();

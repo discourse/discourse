@@ -3,7 +3,12 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
+import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 import FieldInput from "./field";
 
@@ -29,14 +34,19 @@ class Tree {
 }
 
 export default class SchemaThemeSettingEditor extends Component {
+  @service router;
   @tracked activeIndex = 0;
   @tracked backButtonText;
+  @tracked saveButtonDisabled = false;
+
+  data = cloneJSON(this.args.setting.value);
   history = [];
+  schema = this.args.setting.objects_schema;
 
   @cached
   get tree() {
-    let schema = this.args.schema;
-    let data = this.args.data;
+    let schema = this.schema;
+    let data = this.data;
 
     for (const point of this.history) {
       data = data[point.node.index][point.propertyName];
@@ -52,14 +62,18 @@ export default class SchemaThemeSettingEditor extends Component {
         object,
         text: object[schema.identifier],
       });
+
       if (index === this.activeIndex) {
         node.active = true;
+
         const childObjectsProperties = this.findChildObjectsProperties(
           schema.properties
         );
+
         for (const childObjectsProperty of childObjectsProperties) {
           const subtree = new Tree();
           subtree.propertyName = childObjectsProperty.name;
+
           data[index][childObjectsProperty.name].forEach(
             (childObj, childIndex) => {
               subtree.nodes.push(
@@ -72,11 +86,14 @@ export default class SchemaThemeSettingEditor extends Component {
               );
             }
           );
+
           node.trees.push(subtree);
         }
       }
+
       tree.nodes.push(node);
     });
+
     return tree;
   }
 
@@ -90,21 +107,25 @@ export default class SchemaThemeSettingEditor extends Component {
   get fields() {
     const node = this.activeNode;
     const list = [];
+
     for (const [name, spec] of Object.entries(node.schema.properties)) {
       if (spec.type === "objects") {
         continue;
       }
+
       list.push({
         name,
         spec,
         value: node.object[name],
       });
     }
+
     return list;
   }
 
   findChildObjectsProperties(properties) {
     const list = [];
+
     for (const [name, spec] of Object.entries(properties)) {
       if (spec.type === "objects") {
         list.push({
@@ -113,7 +134,26 @@ export default class SchemaThemeSettingEditor extends Component {
         });
       }
     }
+
     return list;
+  }
+
+  @action
+  saveChanges() {
+    this.saveButtonDisabled = true;
+
+    this.args.setting
+      .updateSetting(this.args.themeId, this.data)
+      .then((result) => {
+        this.args.setting.set("value", result[this.args.setting.setting]);
+
+        this.router.transitionTo(
+          "adminCustomizeThemes.show",
+          this.args.themeId
+        );
+      })
+      .catch(popupAjaxError)
+      .finally(() => (this.saveButtonDisabled = false));
   }
 
   @action
@@ -127,9 +167,11 @@ export default class SchemaThemeSettingEditor extends Component {
       propertyName: tree.propertyName,
       node: parentNode,
     });
+
     this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
       name: parentNode.text,
     });
+
     this.activeIndex = node.index;
   }
 
@@ -137,6 +179,7 @@ export default class SchemaThemeSettingEditor extends Component {
   backButtonClick() {
     const historyPoint = this.history.pop();
     this.activeIndex = historyPoint.node.index;
+
     if (this.history.length > 0) {
       this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
         name: this.history[this.history.length - 1].node.text,
@@ -151,6 +194,7 @@ export default class SchemaThemeSettingEditor extends Component {
     if (field.name === this.activeNode.schema.identifier) {
       this.activeNode.text = newVal;
     }
+
     this.activeNode.object[field.name] = newVal;
   }
 
@@ -164,6 +208,7 @@ export default class SchemaThemeSettingEditor extends Component {
           class="back-button"
         />
       {{/if}}
+
       <ul class="tree">
         {{#each this.tree.nodes as |node|}}
           <div class="item-container">
@@ -191,6 +236,7 @@ export default class SchemaThemeSettingEditor extends Component {
           </div>
         {{/each}}
       </ul>
+
       {{#each this.fields as |field|}}
         <FieldInput
           @name={{field.name}}
@@ -200,5 +246,20 @@ export default class SchemaThemeSettingEditor extends Component {
         />
       {{/each}}
     </div>
+
+    <DButton
+      @disabled={{this.saveButtonDisabled}}
+      @action={{this.saveChanges}}
+      @label="save"
+      class="btn-primary"
+    />
+
+    <LinkTo
+      @route="adminCustomizeThemes.show"
+      @model={{@themeId}}
+      class="btn-transparent"
+    >
+      {{i18n "cancel"}}
+    </LinkTo>
   </template>
 }

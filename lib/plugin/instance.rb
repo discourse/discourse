@@ -45,6 +45,7 @@ end
 class Plugin::Instance
   attr_accessor :path, :metadata
   attr_reader :admin_route
+  attr_reader :admin_config_nav_routes
 
   # Memoized array readers
   %i[
@@ -105,8 +106,25 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
+  end
+
+  def register_admin_config_nav_routes(plugin_id, nav)
+    @admin_config_nav_routes =
+      nav.each do |n|
+        if !n.key?(:label) || !n.key?(:route)
+          raise ArgumentError.new(
+                  "Admin config nav routes must have a `route` value that matches an Ember route and a `label` value that matches a client I18n key",
+                )
+        end
+
+        n[:model] = plugin_id
+      end
   end
 
   def configurable?

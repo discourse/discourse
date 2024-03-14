@@ -1700,7 +1700,6 @@ ru:
     content_security_policy_report_only: "Включить Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Включить отчёты о нарушениях CSP в /csp_reports"
     content_security_policy_frame_ancestors: "Ограничить через CSP число тех, кто может встроить этот сайт в iframes. Перечень разрешённых хостов настраивается на закладке <a href='%{base_path}/admin/customize/embedding'>Встраивание</a>."
-    content_security_policy_script_src: "Дополнительные источники сценариев в белом списке. Текущий хост и CDN включены по умолчанию. См. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>«Смягчение атак XSS с помощью политики безопасности контента».</a>(CSP)"
     invalidate_inactive_admin_email_after_days: "Аккаунты администраторов, которые не посещали сайт в течение указанного здесь количества дней, должны будут повторно подтвердить свой адрес электронной почты перед входом в систему. Для отключения параметра установите это значение в 0."
     include_secure_categories_in_tag_counts: "Если включить, число тем для тега будет включать в себя темы в категориях с ограничением на чтение для всех пользователей. Если отключить, обычные пользователи будут видеть число тем для тега, где все темы в общедоступных категориях."
     display_personal_messages_tag_counts: "Если включить, будет отображаться количество личных сообщений, помеченных данным тегом."

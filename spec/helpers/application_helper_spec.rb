@@ -10,6 +10,14 @@ RSpec.describe ApplicationHelper do
       HTML
     end
 
+    it "does not send crawler content to logged on users" do
+      controller.stubs(:use_crawler_layout?).returns(false)
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      helper.request.user_agent = "Firefox"
+      expect(helper.include_crawler_content?).to eq(false)
+    end
+
     it "sends crawler content to old mobiles" do
       controller.stubs(:use_crawler_layout?).returns(false)
 

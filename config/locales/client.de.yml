@@ -963,9 +963,13 @@ de:
       "14": "Ausstehend"
       "15": "Entwürfe"
     categories:
-      all: "alle Kategorien"
-      all_subcategories: "alle"
-      no_subcategory: "keine"
+      categories_label: "Kategorien"
+      subcategories_label: "Unterkategorien"
+      all_subcategories: "alle Unterkategorien"
+      no_subcategories: "keine Unterkategorien"
+      remove_filter: "Filter entfernen"
+      plus_more_count: "+%{count} weitere"
+      view_all: "alle ansehen"
       category: "Kategorie"
       category_list: "Kategorieliste anzeigen"
       reorder:
@@ -1648,6 +1652,7 @@ de:
         after_5_minutes: "nach 5 Minuten"
         after_10_minutes: "nach 10 Minuten"
       notification_level_when_replying: "Wenn ich in einem Thema antworte, setze das Thema auf"
+      topics_unread_when_closed: "Themen als ungelesen betrachten, wenn sie geschlossen sind"
       invited:
         title: "Einladungen"
         pending_tab: "Ausstehend"
@@ -2130,6 +2135,9 @@ de:
     conditional_loading_section:
       loading: Wird geladen …
     category_row:
+      subcategory_count:
+        one: "+ %{count} Unterkategorie"
+        other: "+ %{count} Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -2254,7 +2262,7 @@ de:
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
-      create_pm: "Nachricht"
+      create_pm: "Nachricht senden"
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
@@ -2726,6 +2734,8 @@ de:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
         silent: "Führe diese Aktion lautlos durch."
+        performing: "Massenoperationen werden durchgeführt, bitte warten…"
+        completed: "Massenoperationen erfolgreich abgeschlossen!"
       none:
         unread: "Du hast alle Themen gelesen."
         unseen: "Du hast keine ungesehenen Themen."
@@ -3912,8 +3922,9 @@ de:
         search: "%{shortcut} Suche"
         filter_sidebar: "%{shortcut} Seitenleiste filtern"
         help: "%{shortcut} Tastenkombinationen anzeigen"
-        dismiss_new: "%{shortcut} Neue Themen ignorieren"
-        dismiss_topics: "%{shortcut} Themen ignorieren"
+        toggle_bulk_select: "%{shortcut} Massenauswahl umschalten"
+        dismiss: "%{shortcut} Ausgewählte Themen verwerfen"
+        x: "%{shortcut} Auswahl umschalten (im Massenauswahlmodus)"
         log_out: "%{shortcut} Abmelden"
       composing:
         title: "Schreiben"
@@ -4013,8 +4024,10 @@ de:
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
+      selector_tags: "Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
+      selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
@@ -5108,6 +5121,7 @@ de:
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
           theme_settings: "Theme-Einstellungen"
+          edit_objects_theme_setting: "Editor für Objekteinstellungen"
           overriden_settings_explanation: "Überschriebene Einstellungen sind mit einem Punkt gekennzeichnet und farblich hervorgehoben. Um diese Einstellungen auf die Standardwerte zurückzusetzen, drücke auf die Schaltfläche „Zurücksetzen“ daneben."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"

@@ -1,7 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
-import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
@@ -150,7 +149,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let categoryName = escapeExpression(get(category, "name"));
 
   if (siteSettings.support_mixed_text_direction) {
-    categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
+    categoryDir = 'dir="auto"';
   }
 
   if (restricted) {
