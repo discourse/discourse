@@ -15,7 +15,6 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import { _addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
-import { _addBulkDropdownItem } from "discourse/components/modal/bulk-topic-actions";
 
 import MountWidget, {
   addWidgetCleanCallback,
@@ -2881,9 +2880,8 @@ class PluginApi {
     _addBulkDropdownButton(opts);
   }
 
-  addBulkDropdownItem(opts) {
+  addBulkActionDropdownButton(opts) {
     _addBulkDropdownButton(opts);
-    _addBulkDropdownItem(opts);
   }
 
   /**

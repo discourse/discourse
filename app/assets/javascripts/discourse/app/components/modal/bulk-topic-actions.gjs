@@ -15,33 +15,18 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
-import { getOwner } from "@ember/application";
-import { eq } from "truth-helpers";
-import { or } from "truth-helpers";
-import { fn, get, hash } from "@ember/helper";
+import { getOwner } from '@ember/application';
 
 const _customActions = {};
-const _bulkDropdownComponentsForAction = [];
-const _customButtons = [];
-export function _addBulkDropdownItem(opts) {
-  _customButtons.push({
-    id: opts.label,
-    icon: opts.icon,
-    name: opts.label,
-    display: opts.display,
-    action: opts.action,
-  });
-  _bulkDropdownComponentsForAction.push({
-    name: opts.label,
-    component: opts.component,
-  });
-  _customActions[opts.label] = opts.action;
+
+export function _addBulkDropdownAction(name, action) {
+  _customActions[name] = action
 }
 
 export default class BulkTopicActions extends Component {
   @service router;
   @service toasts;
-  // @tracked activeComponent = null;
+  @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
   @tracked loading;
@@ -54,15 +39,10 @@ export default class BulkTopicActions extends Component {
   constructor() {
     super(...arguments);
 
-    // if (_bulkDropdownComponents) {
-    //   this.activeComponent = _bulkDropdownComponent;
-    // }
-
-    // if (this.args.model.initialAction === "set-component") {
-    //   _customActions["topics.bulk.assign"]({
-    //     setComponent: this.setComponent.bind(this),
-    //   });
-    // }
+    if (this.args.model.initialAction === "set-component") {
+      //this.setComponent(BulkAssign);
+      _customActions["topics.bulk.assign"]({ setComponent: this.setComponent.bind(this) });
+    }
   }
 
   async perform(operation) {
@@ -134,15 +114,17 @@ export default class BulkTopicActions extends Component {
     });
   }
 
-  // @action
-  // setComponent(component) {
-  //   this.activeComponent = component;
-  // }
+  @action
+  setComponent(component) {
+    console.log('setComponent');
+    this.activeComponent = component;
+  }
 
-  // @action
-  // registerAction(action) {
-  //   this.childAction = action;
-  // }
+  @action
+  registerAction(action) {
+    console.log('registerAction');
+    this.childAction = action;
+  }
 
   @action
   performAction() {
@@ -200,7 +182,7 @@ export default class BulkTopicActions extends Component {
         );
         break;
       default:
-        // console.log("default");
+        console.log('default');
         // const owner = getOwner(this);
         // const bulkAssignManagerService = owner.lookup('service:bulk-assign-manager');
         // bulkAssignManagerService.invokeAction();
@@ -211,11 +193,8 @@ export default class BulkTopicActions extends Component {
         //   console.log('if');
         //   console.log(_customActions[this.args.model.action]);
         //   //this.setComponent(BulkAssign);
-
-        // console.log(this.args.model.action);
-        // console.log(this.args.model);
-        _customActions[this.args.model.action](this.performAndRefresh);
-      // }
+        _customActions['topics.bulk.assign']();
+        // }
     }
   }
 
@@ -344,64 +323,43 @@ export default class BulkTopicActions extends Component {
               /></p>
           {{/if}}
 
-          {{#if _bulkDropdownComponentsForAction}}
-            {{#each _bulkDropdownComponentsForAction as |obj|}}
-              {{#if (eq @model.action obj.name)}}
-                <obj.component />
-              {{/if}}
-            {{/each}}
+          {{#if this.activeComponent}}
+            {{component this.activeComponent onRegisterAction=this.registerAction}}
           {{/if}}
         </ConditionalLoadingSection>
       </:body>
 
       <:footer>
-        {{#if _customButtons}}
-          {{#each _customButtons as |button|}}
-            {{#if button.display}}
-              {{log this}}
-              <DButton
-                @action={{fn
-                  button.action
-                  (hash performAndRefresh=this.performAndRefresh model=@model)
-                }}
-                @icon={{button.icon}}
-                @label={{button.name}}
-                class="btn-primary"
-              />
-            {{/if}}
-          {{/each}}
-        {{else}}
-          {{#if @model.allowSilent}}
-            <div class="topic-bulk-actions-options">
-              <label
-                for="topic-bulk-action-options__silent"
-                class="checkbox-label"
-              >
-                <Input
-                  id="topic-bulk-action-options__silent"
-                  @type="checkbox"
-                  @checked={{this.isSilent}}
-                />{{i18n "topics.bulk.silent"}}</label>
-            </div>
-          {{/if}}
-
-          <DButton
-            @action={{@closeModal}}
-            @label="cancel"
-            class="btn-transparent d-modal-cancel"
-            id="bulk-topics-cancel"
-          />
-
-          <DButton
-            @action={{this.performAction}}
-            @disabled={{this.loading}}
-            @icon="check"
-            @label="topics.bulk.confirm"
-            id="bulk-topics-confirm"
-            class="btn-primary"
-          />
+        {{#if @model.allowSilent}}
+          <div class="topic-bulk-actions-options">
+            <label
+              for="topic-bulk-action-options__silent"
+              class="checkbox-label"
+            >
+              <Input
+                id="topic-bulk-action-options__silent"
+                @type="checkbox"
+                @checked={{this.isSilent}}
+              />{{i18n "topics.bulk.silent"}}</label>
+          </div>
         {{/if}}
+
+        <DButton
+          @action={{@closeModal}}
+          @label="cancel"
+          class="btn-transparent d-modal-cancel"
+          id="bulk-topics-cancel"
+        />
+        <DButton
+          @action={{this.performAction}}
+          @disabled={{this.loading}}
+          @icon="check"
+          @label="topics.bulk.confirm"
+          id="bulk-topics-confirm"
+          class="btn-primary"
+        />
       </:footer>
+
     </DModal>
   </template>
 }

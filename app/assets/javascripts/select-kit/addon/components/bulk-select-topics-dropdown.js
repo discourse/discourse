@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-// import { _addBulkDropdownAction } from "discourse/components/modal/bulk-topic-actions";
+import { _addBulkDropdownAction } from "discourse/components/modal/bulk-topic-actions";
 
 const _customButtons = [];
 const _customOnSelection = {};
@@ -15,7 +15,7 @@ export function _addBulkDropdownButton(opts) {
     name: i18n(opts.label),
     visible: opts.visible,
   });
-  // _addBulkDropdownAction(opts.label, opts.action);
+  _addBulkDropdownAction(opts.label, opts.action);
   _customOnSelection[opts.label] = opts.label;
 }
 
@@ -198,9 +198,7 @@ export default DropdownSelectBoxComponent.extend({
         break;
       default:
         if (_customOnSelection[id]) {
-          this.showBulkTopicActionsModal(id, _customOnSelection[id], {
-            custom: true,
-          });
+          this.showBulkTopicActionsModal(id, _customOnSelection[id], {custom: true})
         }
     }
   },
