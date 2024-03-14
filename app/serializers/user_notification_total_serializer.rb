@@ -38,7 +38,6 @@ class UserNotificationTotalSerializer < ApplicationSerializer
           notification_type: Notification.types[:group_message_summary],
         )
         .pluck(:data)
-        .to_a
 
     results = []
 
