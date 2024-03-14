@@ -48,67 +48,68 @@ export default {
     });
 
     withPluginApi("1.3.0", (api) => {
-      const isThreadEnabledInAnyChannel =
-        this.currentUser?.chat_channels?.public_channels?.some(
-          (channel) => channel.threading_enabled === true
-        );
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
+            @service chatStateManager;
 
-      if (isThreadEnabledInAnyChannel) {
-        api.addSidebarSection(
-          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-            const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
-              @service chatStateManager;
+            route = "chat.threads";
+            text = I18n.t("chat.my_threads.title");
+            title = I18n.t("chat.my_threads.title");
+            name = "user-threads";
+            prefixType = "icon";
+            prefixValue = "discourse-threads";
+            suffixType = "icon";
+            suffixCSSClass = "unread";
 
-              route = "chat.threads";
-              text = I18n.t("chat.my_threads.title");
-              title = I18n.t("chat.my_threads.title");
-              name = "user-threads";
-              prefixType = "icon";
-              prefixValue = "discourse-threads";
-              suffixType = "icon";
-              suffixCSSClass = "unread";
+            constructor() {
+              super(...arguments);
 
-              constructor() {
-                super(...arguments);
-
-                if (container.isDestroyed) {
-                  return;
-                }
+              if (container.isDestroyed) {
+                return;
               }
+            }
 
-              get suffixValue() {
-                return this.chatChannelsManager.publicMessageChannels.some(
-                  (channel) => channel.unreadThreadsCount > 0
-                )
-                  ? "circle"
-                  : "";
-              }
-            };
+            get suffixValue() {
+              return this.chatChannelsManager.publicMessageChannels.some(
+                (channel) => channel.unreadThreadsCount > 0
+              )
+                ? "circle"
+                : "";
+            }
+          };
 
-            const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
-              // we only show `My Threads` link
-              hideSectionHeader = true;
+          const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
+            @service chatChannelsManager;
 
-              name = "user-threads";
+            // we only show `My Threads` link
+            hideSectionHeader = true;
 
-              // sidebar API doesn’t let you have undefined values
-              // even if you don't show the section’s header
-              title = "";
+            name = "user-threads";
 
-              get links() {
-                return [new SidebarChatMyThreadsSectionLink()];
-              }
+            // sidebar API doesn’t let you have undefined values
+            // even if you don't show the section’s header
+            title = "";
 
-              get text() {
-                return null;
-              }
-            };
+            get links() {
+              return [new SidebarChatMyThreadsSectionLink()];
+            }
 
-            return SidebarChatMyThreadsSection;
-          },
-          CHAT_PANEL
-        );
-      }
+            get text() {
+              return null;
+            }
+
+            get displaySection() {
+              return this.chatChannelsManager.publicMessageChannels.some(
+                (channel) => channel.threadingEnabled
+              );
+            }
+          };
+
+          return SidebarChatMyThreadsSection;
+        },
+        CHAT_PANEL
+      );
 
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
