@@ -82,7 +82,7 @@ export default class AdminPlugin {
 
   @cached
   get nameTitleizedLower() {
-    this.nameTitleized.toLowerCase();
+    return this.nameTitleized.toLowerCase();
   }
 
   get author() {

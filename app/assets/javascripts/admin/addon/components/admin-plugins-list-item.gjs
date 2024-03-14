@@ -35,9 +35,7 @@ export default class AdminPluginsListItem extends Component {
     if (!this.sidebarState.filter) {
       return false;
     }
-    return this.args.plugin.nameTitleized
-      .toLowerCase()
-      .match(this.sidebarState.filter);
+    return this.args.plugin.nameTitleizedLower.match(this.sidebarState.filter);
   }
 
   <template>
