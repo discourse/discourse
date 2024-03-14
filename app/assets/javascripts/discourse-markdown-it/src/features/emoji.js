@@ -196,7 +196,7 @@ function applyEmoji(
   enableShortcuts,
   inlineEmoji,
   customEmojiTranslation,
-  watchedWordsReplacer,
+  watchedWordsReplace,
   emojiDenyList
 ) {
   let result = null;
@@ -206,19 +206,16 @@ function applyEmoji(
     content = emojiUnicodeReplacer(content);
   }
 
-  if (watchedWordsReplacer) {
-    const watchedWordRegex = Object.keys(watchedWordsReplacer);
-
-    watchedWordRegex.forEach((watchedWord) => {
-      if (content?.match(watchedWord)) {
-        const regex = new RegExp(watchedWord, "g");
+  if (content && watchedWordsReplace) {
+    Object.entries(watchedWordsReplace).forEach(([regexpString, options]) => {
+      if (content.match(regexpString)) {
+        const regex = new RegExp(regexpString, "g");
         const matches = content.match(regex);
-        const replacement = watchedWordsReplacer[watchedWord].replacement;
 
         matches.forEach(() => {
           const matchingRegex = regex.exec(content);
           if (matchingRegex) {
-            content = content.replace(matchingRegex[1], replacement);
+            content = content.replace(matchingRegex[1], options.replacement);
           }
         });
       }
@@ -226,9 +223,9 @@ function applyEmoji(
   }
 
   // prevent denied emoji and aliases from being rendered
-  if (emojiDenyList?.length > 0) {
+  if (content && emojiDenyList?.length > 0) {
     emojiDenyList.forEach((emoji) => {
-      if (content?.match(emoji)) {
+      if (content.match(emoji)) {
         const regex = new RegExp(`:${emoji}:`, "g");
         content = content.replace(regex, "");
       }

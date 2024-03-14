@@ -1,9 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
 
 export default class WatchedWordTest extends Component {
   @tracked value;
@@ -31,7 +27,8 @@ export default class WatchedWordTest extends Component {
     if (this.isReplace || this.isLink) {
       const matches = [];
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = createWatchedWordRegExp(word);
+        const caseFlag = word.case_sensitive ? "" : "i";
+        const regexp = new RegExp(word.regexp, `${caseFlag}gu`);
         let match;
 
         while ((match = regexp.exec(this.value)) !== null) {
@@ -45,7 +42,8 @@ export default class WatchedWordTest extends Component {
     } else if (this.isTag) {
       const matches = {};
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = createWatchedWordRegExp(word);
+        const caseFlag = word.case_sensitive ? "" : "i";
+        const regexp = new RegExp(word.regexp, `${caseFlag}gu`);
         let match;
 
         while ((match = regexp.exec(this.value)) !== null) {
@@ -66,12 +64,13 @@ export default class WatchedWordTest extends Component {
       }));
     } else {
       let matches = [];
-      this.args.model.watchedWord.compiledRegularExpression.forEach(
-        (regexp) => {
-          const wordRegexp = createWatchedWordRegExp(toWatchedWord(regexp));
-          matches.push(...(this.value.match(wordRegexp) || []));
-        }
-      );
+      this.args.model.watchedWord.compiledRegularExpression.forEach((entry) => {
+        const [regexp, options] = Object.entries(entry)[0];
+        const caseFlag = options.case_sensitive ? "" : "i";
+        const wordRegexp = new RegExp(regexp, `${caseFlag}gu`);
+
+        matches.push(...(this.value.match(wordRegexp) || []));
+      });
 
       return matches;
     }
