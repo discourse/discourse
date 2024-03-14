@@ -1785,6 +1785,7 @@ class UsersController < ApplicationController
       end
     end
   end
+  hijacks :revoke_account
 
   def revoke_auth_token
     user = fetch_user_from_params

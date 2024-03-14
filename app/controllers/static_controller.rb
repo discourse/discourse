@@ -186,6 +186,7 @@ class StaticController < ApplicationController
       end
     end
   end
+  hijacks :favicon
 
   def cdn_asset
     is_asset_path

@@ -35,6 +35,7 @@ class UserAvatarsController < ApplicationController
       raise Discourse::NotFound
     end
   end
+  hijacks :refresh_gravatar
 
   def show_proxy_letter
     is_asset_path
@@ -59,6 +60,7 @@ class UserAvatarsController < ApplicationController
       end
     end
   end
+  hijacks :show_proxy_letter
 
   def show_letter
     is_asset_path
@@ -80,6 +82,7 @@ class UserAvatarsController < ApplicationController
       send_file image, disposition: nil
     end
   end
+  hijacks :show_letter
 
   def show
     is_asset_path
@@ -89,6 +92,7 @@ class UserAvatarsController < ApplicationController
       hijack { show_in_site(params[:hostname]) }
     end
   end
+  hijacks :show
 
   protected
 

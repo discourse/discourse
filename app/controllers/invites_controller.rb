@@ -492,6 +492,7 @@ class InvitesController < ApplicationController
       end
     end
   end
+  hijacks :upload_csv
 
   private
 

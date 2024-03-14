@@ -59,6 +59,7 @@ class Admin::ReportsController < Admin::StaffController
       render_json_dump(reports: reports)
     end
   end
+  hijacks :bulk
 
   def show
     report_type = params[:type]
@@ -82,6 +83,7 @@ class Admin::ReportsController < Admin::StaffController
       render_json_dump(report: report)
     end
   end
+  hijacks :show
 
   private
 
