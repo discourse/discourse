@@ -673,8 +673,18 @@ class ApplicationController < ActionController::Base
 
       # Used to show plugin-specific admin routes in the sidebar.
       store_preloaded(
-        "enabledPluginAdminRoutes",
-        MultiJson.dump(Discourse.plugins_sorted_by_name.filter_map(&:admin_route)),
+        "visiblePlugins",
+        MultiJson.dump(
+          Discourse
+            .plugins_sorted_by_name(enabled_only: false)
+            .map do |plugin|
+              {
+                name: plugin.name.downcase,
+                admin_route: plugin.admin_route,
+                enabled: plugin.enabled?,
+              }
+            end,
+        ),
       )
     end
   end

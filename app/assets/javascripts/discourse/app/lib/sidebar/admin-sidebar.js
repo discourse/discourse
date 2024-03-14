@@ -16,10 +16,11 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink, router }) {
+  constructor({ adminSidebarNavLink, adminSidebarStateManager, router }) {
     super(...arguments);
     this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
+    this.adminSidebarStateManager = adminSidebarStateManager;
   }
 
   get name() {
@@ -80,14 +81,26 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
     return this.adminSidebarNavLink.route;
   }
+  get keywords() {
+    return (
+      this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] || {
+        navigation: [],
+      }
+    );
+  }
 }
 
-function defineAdminSection(adminNavSectionData, router) {
+function defineAdminSection(
+  adminNavSectionData,
+  adminSidebarStateManager,
+  router
+) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
       this.adminNavSectionData = adminNavSectionData;
       this.hideSectionHeader = adminNavSectionData.hideSectionHeader;
+      this.adminSidebarStateManager = adminSidebarStateManager;
     }
 
     get sectionLinks() {
@@ -113,6 +126,7 @@ function defineAdminSection(adminNavSectionData, router) {
         (sectionLinkData) =>
           new SidebarAdminSectionLink({
             adminSidebarNavLink: sectionLinkData,
+            adminSidebarStateManager: this.adminSidebarStateManager,
             router,
           })
       );
@@ -198,21 +212,21 @@ export function addAdminSidebarSectionLink(sectionName, link) {
 }
 
 function pluginAdminRouteLinks() {
-  return (PreloadStore.get("enabledPluginAdminRoutes") || []).map(
-    (pluginAdminRoute) => {
+  return (PreloadStore.get("visiblePlugins") || [])
+    .filter((plugin) => plugin.admin_route && plugin.enabled)
+    .map((plugin) => {
       return {
-        name: `admin_plugin_${pluginAdminRoute.location}`,
-        route: pluginAdminRoute.use_new_show_route
-          ? `adminPlugins.show.${pluginAdminRoute.location}`
-          : `adminPlugins.${pluginAdminRoute.location}`,
-        routeModels: pluginAdminRoute.use_new_show_route
-          ? [pluginAdminRoute.location]
+        name: `admin_plugin_${plugin.admin_route.location}`,
+        route: plugin.admin_route.use_new_show_route
+          ? `adminPlugins.show.${plugin.admin_route.location}`
+          : `adminPlugins.${plugin.admin_route.location}`,
+        routeModels: plugin.admin_route.use_new_show_route
+          ? [plugin.admin_route.location]
           : [],
-        label: pluginAdminRoute.label,
+        label: plugin.admin_route.label,
         icon: "cog",
       };
-    }
-  );
+    });
 }
 
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
@@ -233,11 +247,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       return [];
     }
 
-    this.adminSidebarExperimentStateManager = getOwnerWithFallback(this).lookup(
-      "service:admin-sidebar-experiment-state-manager"
+    this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
+      "service:admin-sidebar-state-manager"
     );
 
-    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const savedConfig = this.adminSidebarStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
@@ -253,10 +267,22 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       });
     }
 
+    navMap.forEach((section) =>
+      section.links.forEach((link) => {
+        if (link.keywords) {
+          this.adminSidebarStateManager.keywords[link.name] = link.keywords;
+        }
+      })
+    );
+
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      return defineAdminSection(adminNavSectionData, router);
+      return defineAdminSection(
+        adminNavSectionData,
+        this.adminSidebarStateManager,
+        router
+      );
     });
   }
 

@@ -17,7 +17,9 @@ describe "Admin Plugins List", type: :system, js: true do
     visit "/admin/plugins"
 
     plugin_row =
-      find(".admin-plugins-list tr[data-plugin-name=\"spoiler-alert\"] td.admin-plugins-list__row")
+      find(
+        ".admin-plugins-list tr[data-plugin-name=\"spoiler-alert\"] td.admin-plugins-list__name-details",
+      )
     expect(plugin_row).to have_css(
       ".admin-plugins-list__name-with-badges .admin-plugins-list__name",
       text: "Spoiler Alert",
