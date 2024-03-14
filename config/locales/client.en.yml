@@ -5328,6 +5328,7 @@ en:
           other_options: "Other"
           search: "Search"
           experimental: "Experimental"
+          all_site_settings: "All Site Settings"
 
       navigation_menu:
         sidebar: "Sidebar"
