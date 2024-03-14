@@ -186,7 +186,7 @@ export default class Chat extends Service {
       }
 
       if (this.loadingChannels) {
-        return this.loadingChannels;
+        return;
       }
 
       this.loadingChannels = new Promise((resolve) => {
