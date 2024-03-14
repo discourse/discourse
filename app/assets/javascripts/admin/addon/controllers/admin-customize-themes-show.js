@@ -9,6 +9,7 @@ import {
   readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -31,6 +32,8 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
   @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @url("model.id", "model.locale", "/admin/themes/%@/translations/%@")
+  getTranslationsUrl;
   @empty("selectedChildThemeId") addButtonDisabled;
   @mapBy("model.parentThemes", "name") parentThemesNames;
   @filterBy("allThemes", "component", false) availableParentThemes;
@@ -305,6 +308,9 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   updateLocale(value) {
     this.set("model.locale", value);
+    ajax(this.getTranslationsUrl).then(({ translations }) =>
+      this.set("model.translations", translations)
+    );
   }
 
   @action

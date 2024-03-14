@@ -311,6 +311,22 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
+  def get_translations
+    raise Discourse::InvalidParameters.new(:locale) unless params[:locale]
+
+    I18n.locale = params[:locale]
+
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    translations =
+      @theme.translations.map do |translation|
+        { key: translation.key, value: translation.value, default: translation.default }
+      end
+
+    render json: { translations: translations }, status: :ok
+  end
+
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
