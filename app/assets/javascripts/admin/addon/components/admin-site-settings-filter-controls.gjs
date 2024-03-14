@@ -28,16 +28,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
   }
 
   @action
-  onPaste(event) {
-    if (event.clipboardData) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.filter = event.clipboardData.getData("text");
-      this.onChangeFilter();
-    }
-  }
-
-  @action
   onToggleOverridden(event) {
     this.onlyOverridden = event.target.checked;
     this.onChangeFilter();

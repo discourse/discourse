@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import SiteSettingFilter from "discourse/lib/site-setting-filter";
 import i18n from "discourse-common/helpers/i18n";
