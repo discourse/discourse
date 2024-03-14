@@ -3,6 +3,21 @@ import { service } from "@ember/service";
 import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { _addBulkDropdownAction } from "discourse/components/modal/bulk-topic-actions";
+
+const _customButtons = [];
+const _customOnSelection = {};
+
+export function _addBulkDropdownButton(opts) {
+  _customButtons.push({
+    id: opts.label,
+    icon: opts.icon,
+    name: i18n(opts.label),
+    visible: opts.visible,
+  });
+  _addBulkDropdownAction(opts.label, opts.action);
+  _customOnSelection[opts.label] = opts.label;
+}
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-topics-dropdown"],
@@ -104,7 +119,7 @@ export default DropdownSelectBoxComponent.extend({
       },
     ]);
 
-    return [...options].filter(({ visible }) => {
+    return [...options, ..._customButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
           topics: this.bulkSelectHelper.selected,
@@ -122,13 +137,20 @@ export default DropdownSelectBoxComponent.extend({
     if (opts.allowSilent === true) {
       allowSilent = true;
     }
+    if (opts.custom === true) {
+      title = i18n(_customOnSelection[actionName]);
+    } else {
+      title = i18n(`topics.bulk.${title}`);
+    }
+
     this.modal.show(BulkTopicActions, {
       model: {
         action: actionName,
-        title: i18n(`topics.bulk.${title}`),
+        title: title,
         bulkSelectHelper: this.bulkSelectHelper,
         refreshClosure: () => this.router.refresh(),
         allowSilent,
+        initialAction: "set-component",
       },
     });
   },
@@ -174,6 +196,10 @@ export default DropdownSelectBoxComponent.extend({
       case "defer":
         this.showBulkTopicActionsModal(id, "defer");
         break;
+      default:
+        if (_customOnSelection[id]) {
+          this.showBulkTopicActionsModal(id, _customOnSelection[id], {custom: true})
+        }
     }
   },
 });

@@ -15,6 +15,13 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
+import { getOwner } from '@ember/application';
+
+const _customActions = {};
+
+export function _addBulkDropdownAction(name, action) {
+  _customActions[name] = action
+}
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -25,6 +32,7 @@ export default class BulkTopicActions extends Component {
   @tracked loading;
   @tracked errors;
   @tracked isSilent = false;
+  @tracked childAction = null;
 
   notificationLevelId = null;
 
@@ -32,7 +40,8 @@ export default class BulkTopicActions extends Component {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
-      this.setComponent(ChangeTags);
+      //this.setComponent(BulkAssign);
+      _customActions["topics.bulk.assign"]({ setComponent: this.setComponent.bind(this) });
     }
   }
 
@@ -107,7 +116,14 @@ export default class BulkTopicActions extends Component {
 
   @action
   setComponent(component) {
+    console.log('setComponent');
     this.activeComponent = component;
+  }
+
+  @action
+  registerAction(action) {
+    console.log('registerAction');
+    this.childAction = action;
   }
 
   @action
@@ -165,6 +181,20 @@ export default class BulkTopicActions extends Component {
           (t) => t.set("category_id", this.categoryId)
         );
         break;
+      default:
+        console.log('default');
+        // const owner = getOwner(this);
+        // const bulkAssignManagerService = owner.lookup('service:bulk-assign-manager');
+        // bulkAssignManagerService.invokeAction();
+        // if (this.childAction) {
+        //   this.childAction();
+        // }
+        // if (_customActions[this.args.model.action]) {
+        //   console.log('if');
+        //   console.log(_customActions[this.args.model.action]);
+        //   //this.setComponent(BulkAssign);
+        _customActions['topics.bulk.assign']();
+        // }
     }
   }
 
@@ -291,6 +321,10 @@ export default class BulkTopicActions extends Component {
                 @tags={{this.tags}}
                 @categoryId={{@categoryId}}
               /></p>
+          {{/if}}
+
+          {{#if this.activeComponent}}
+            {{component this.activeComponent onRegisterAction=this.registerAction}}
           {{/if}}
         </ConditionalLoadingSection>
       </:body>

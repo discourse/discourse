@@ -14,6 +14,8 @@ import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { _addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
+
 import MountWidget, {
   addWidgetCleanCallback,
 } from "discourse/components/mount-widget";
@@ -2875,6 +2877,11 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+    _addBulkDropdownButton(opts);
+  }
+
+  addBulkActionDropdownButton(opts) {
+    _addBulkDropdownButton(opts);
   }
 
   /**
