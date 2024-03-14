@@ -148,11 +148,8 @@ export default function (options) {
 
   function closeAutocomplete() {
     _autoCompletePopper?.destroy();
-    options.onClose && options.onClose();
-
-    if (div) {
-      div.hide().remove();
-    }
+    options.onClose?.();
+    div?.hide()?.remove();
     div = null;
     scrollElement = null;
     completeStart = null;
@@ -376,6 +373,7 @@ export default function (options) {
     ul.find("li").click(async function ({ originalEvent }) {
       // this is required to prevent the default behaviour when clicking on a <a> tag
       originalEvent.preventDefault();
+      originalEvent.stopPropagation();
 
       selectedOption = ul.find("li").index(this);
       // hack for Gboard, see meta.discourse.org/t/-/187009/24
