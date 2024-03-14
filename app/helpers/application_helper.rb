@@ -436,7 +436,7 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    crawler_layout? || !mobile_view? || !modern_mobile_device?
+    (crawler_layout? || !mobile_view? || !modern_mobile_device?) && !current_user
   end
 
   def modern_mobile_device?
