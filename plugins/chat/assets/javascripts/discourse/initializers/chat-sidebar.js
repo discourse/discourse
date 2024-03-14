@@ -57,6 +57,8 @@ export default {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
+              @service chatStateManager;
+
               route = "chat.threads";
               text = I18n.t("chat.my_threads.title");
               title = I18n.t("chat.my_threads.title");
@@ -72,10 +74,6 @@ export default {
                 if (container.isDestroyed) {
                   return;
                 }
-
-                this.chatChannelsManager = container.lookup(
-                  "service:chat-channels-manager"
-                );
               }
 
               get suffixValue() {
@@ -213,6 +211,9 @@ export default {
                   return;
                 }
                 this.chatService = container.lookup("service:chat");
+                this.chatStateManager = container.lookup(
+                  "service:chat-state-manager"
+                );
                 this.chatChannelsManager = container.lookup(
                   "service:chat-channels-manager"
                 );
@@ -261,8 +262,9 @@ export default {
 
               get displaySection() {
                 return (
-                  this.sectionLinks.length > 0 ||
-                  this.currentUserCanJoinPublicChannels
+                  this.chatStateManager.hasPreloadedChannels &&
+                  (this.sectionLinks.length > 0 ||
+                    this.currentUserCanJoinPublicChannels)
                 );
               }
             };
@@ -417,6 +419,7 @@ export default {
             @service modal;
             @service router;
             @service currentUser;
+            @service chatStateManager;
 
             @tracked
             userCanDirectMessage = this.chatService.userCanDirectMessage;
@@ -482,7 +485,10 @@ export default {
             }
 
             get displaySection() {
-              return this.sectionLinks.length > 0 || this.userCanDirectMessage;
+              return (
+                this.chatStateManager.hasPreloadedChannels &&
+                (this.sectionLinks.length > 0 || this.userCanDirectMessage)
+              );
             }
           };
 

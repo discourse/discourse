@@ -211,4 +211,12 @@ RSpec.describe Chat::ListChannelMessages do
       ).of(Time.zone.now)
     end
   end
+
+  context "when update_user_last_channel" do
+    it "updates the custom field" do
+      expect { result }.to change { user.custom_fields[Chat::LAST_CHAT_CHANNEL_ID] }.from(nil).to(
+        channel.id,
+      )
+    end
+  end
 end

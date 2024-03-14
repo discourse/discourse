@@ -15,13 +15,14 @@ export default class ChatFooter extends Component {
   @service chat;
   @service siteSettings;
   @service currentUser;
+  @service chatChannelsManager;
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
-    return this.currentUser?.chat_channels?.public_channels?.some(
-      (channel) => channel.threading_enabled
+    return this.chatChannelsManager.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
     );
   }
 

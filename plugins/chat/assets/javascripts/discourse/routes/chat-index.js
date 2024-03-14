@@ -12,8 +12,9 @@ export default class ChatIndexRoute extends DiscourseRoute {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
-    return this.currentUser?.chat_channels?.public_channels?.some(
-      (channel) => channel.threading_enabled
+
+    return this.chatChannelsManager.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
     );
   }
 
@@ -25,7 +26,9 @@ export default class ChatIndexRoute extends DiscourseRoute {
     this.chat.activeChannel = null;
   }
 
-  redirect() {
+  async redirect() {
+    await this.chat.loadChannels();
+
     // on mobile redirect user to the first footer tab route
     if (this.site.mobileView) {
       if (
@@ -43,8 +46,8 @@ export default class ChatIndexRoute extends DiscourseRoute {
       }
     }
 
-    // We are on desktop. Check for a channel to enter and transition if so
-    const id = this.chat.getIdealFirstChannelId();
+    // We are on desktop. Check for last visited channel and transition if so
+    const id = this.currentUser.custom_fields.last_chat_channel_id;
     if (id) {
       return this.chatChannelsManager.find(id).then((c) => {
         return this.router.replaceWith("chat.channel", ...c.routeModels);

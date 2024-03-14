@@ -13,6 +13,7 @@ import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
+  @service chatStateManager;
   @service chatTrackingStateManager;
   @service site;
   @service siteSettings;
@@ -23,11 +24,18 @@ export default class ChannelsListPublic extends Component {
   }
 
   get publicMessageChannelsEmpty() {
-    return this.chatChannelsManager.publicMessageChannels?.length === 0;
+    return (
+      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
   }
 
   get displayPublicChannels() {
     if (!this.siteSettings.enable_public_channels) {
+      return false;
+    }
+
+    if (!this.chatStateManager.hasPreloadedChannels) {
       return false;
     }
 
@@ -46,8 +54,8 @@ export default class ChannelsListPublic extends Component {
   }
 
   get isThreadEnabledInAnyChannel() {
-    return this.currentUser?.chat_channels?.public_channels?.some(
-      (channel) => channel.threading_enabled
+    return this.chatChannelsManager.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
     );
   }
 

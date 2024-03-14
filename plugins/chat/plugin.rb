@@ -49,6 +49,9 @@ after_initialize do
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
 
+  register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
+  DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
+
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
@@ -208,29 +211,6 @@ after_initialize do
       limit: 1,
       status: :open,
     ).exists?
-  end
-
-  add_to_serializer(:current_user, :chat_channels) do
-    structured = Chat::ChannelFetcher.structured(self.scope)
-
-    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
-      guardian: self.scope,
-      channel_ids: structured[:public_channels].map(&:id),
-      include_threads: true,
-      include_read: false,
-      include_last_reply_details: true,
-    ).thread_unread_overview_by_channel
-
-    category_ids = structured[:public_channels].map { |c| c.chatable_id }
-    post_allowed_category_ids =
-      Category.post_create_allowed(self.scope).where(id: category_ids).pluck(:id)
-
-    Chat::ChannelIndexSerializer.new(
-      structured,
-      scope: self.scope,
-      root: false,
-      post_allowed_category_ids: post_allowed_category_ids,
-    ).as_json
   end
 
   add_to_serializer(

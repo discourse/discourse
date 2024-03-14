@@ -51,6 +51,12 @@ module(
           meta: { can_delete_self: true },
         })
       );
+      pretender.get(`/chat/api/me/channels`, () =>
+        response({
+          direct_message_channels: [],
+          public_channels: [],
+        })
+      );
 
       this.channel = fabricators.channel({
         id: channelId,

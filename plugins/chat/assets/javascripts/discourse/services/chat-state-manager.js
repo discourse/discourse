@@ -30,6 +30,7 @@ export default class ChatStateManager extends Service {
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+  @tracked hasPreloadedChannels = false;
 
   @tracked _chatURL = null;
   @tracked _appURL = null;

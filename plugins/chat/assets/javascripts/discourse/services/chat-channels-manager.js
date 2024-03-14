@@ -33,6 +33,7 @@ export default class ChatChannelsManager extends Service {
     }
   }
 
+  @cached
   get channels() {
     return Object.values(this._cached);
   }
