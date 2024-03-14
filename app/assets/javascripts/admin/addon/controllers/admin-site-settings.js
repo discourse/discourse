@@ -12,6 +12,7 @@ export default class AdminSiteSettingsController extends Controller {
 
   @alias("model") allSiteSettings;
 
+  filter = "";
   visibleSiteSettings = null;
   siteSettingFilter = null;
 
@@ -29,6 +30,8 @@ export default class AdminSiteSettingsController extends Controller {
       }
       return;
     }
+
+    this.set("filter", filterData.filter);
 
     const matchesGroupedByCategory = this.siteSettingFilter.filterSettings(
       filterData.filter,
