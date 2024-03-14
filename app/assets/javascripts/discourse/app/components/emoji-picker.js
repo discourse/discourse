@@ -92,6 +92,8 @@ export default Component.extend({
         return;
       }
 
+      document.addEventListener("click", this.handleOutsideClick);
+
       const popperAnchor = this._getPopperAnchor();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
@@ -137,8 +139,6 @@ export default Component.extend({
       // of blocking the rendering of the picker
       discourseLater(() => {
         schedule("afterRender", () => {
-          document.addEventListener("click", this.handleOutsideClick);
-
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             emojiPicker.querySelector("input.filter")?.focus();
 
@@ -465,7 +465,7 @@ export default Component.extend({
 
   @bind
   handleOutsideClick(event) {
-    if (!document.querySelector(".emoji-picker")?.contains(event.target)) {
+    if (!event.target.closest(".emoji-picker")) {
       this.onClose(event);
     }
   },
