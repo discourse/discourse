@@ -2,6 +2,7 @@ import ThemeSettings from "admin/models/theme-settings";
 
 export default function schemaAndData(version = 1) {
   let schema, data;
+
   if (version === 1) {
     schema = {
       name: "level1",

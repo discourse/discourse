@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import htmlSafe from "discourse-common/helpers/html-safe";
 import BooleanField from "./types/boolean";
 import CategoryField from "./types/category";
 import EnumField from "./types/enum";
@@ -32,16 +34,32 @@ export default class SchemaThemeSettingField extends Component {
     }
   }
 
+  @cached
+  get description() {
+    return this.args.description.trim().replace(/\n/g, "<br>");
+  }
+
+  get hasDescription() {
+    return this.args.description?.length > 0;
+  }
+
   <template>
     <div class="schema-field" data-name={{@name}}>
-      <label>{{@name}}</label>
-      <div class="input">
+      <label class="schema-field__label">{{@name}}</label>
+
+      <div class="schema-field__input">
         <this.component
           @value={{@value}}
           @spec={{@spec}}
           @onChange={{@onValueChange}}
         />
       </div>
+
+      {{#if this.hasDescription}}
+        <div class="schema-field__description">
+          {{htmlSafe this.description}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }
