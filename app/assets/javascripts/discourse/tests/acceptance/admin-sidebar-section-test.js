@@ -13,10 +13,14 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    PreloadStore.store("enabledPluginAdminRoutes", [
+    PreloadStore.store("visiblePlugins", [
       {
-        location: "index",
-        label: "admin.plugins.title",
+        name: "plugin title",
+        admin_route: {
+          location: "index",
+          label: "admin.plugins.title",
+          enabled: true,
+        },
       },
     ]);
   });
@@ -83,7 +87,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_plugin_index\"]"
+        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_installed_plugins\"]"
       ),
       "the admin plugin route is added to the plugins section"
     );

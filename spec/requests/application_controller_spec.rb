@@ -1295,7 +1295,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
-            "enabledPluginAdminRoutes",
+            "visiblePlugins",
           ],
         )
       end
@@ -1309,9 +1309,9 @@ RSpec.describe ApplicationController do
         )
       end
 
-      it "has correctly loaded enabledPluginAdminRoutes" do
+      it "has correctly loaded visiblePlugins" do
         get "/latest"
-        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
+        expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
       end
     end
   end

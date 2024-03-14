@@ -92,4 +92,17 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.count).to eq(3)
     expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
   end
+
+  it "accepts hidden keywords like installed plugin names for filter" do
+    Discourse.instance_variable_set(
+      "@plugins",
+      Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins"),
+    )
+
+    visit("/admin")
+    filter.filter("csp_extension")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(1)
+    expect(links.map(&:text)).to eq(["Installed"])
+  end
 end

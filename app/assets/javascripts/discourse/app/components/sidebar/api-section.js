@@ -27,8 +27,14 @@ export default class SidebarApiSection extends Component {
     if (this.section.text.toLowerCase().match(this.sidebarState.filter)) {
       return this.section.links;
     }
+
     return this.section.links.filter((link) => {
-      return link.text.toString().toLowerCase().match(this.sidebarState.filter);
+      return (
+        link.text.toString().toLowerCase().match(this.sidebarState.filter) ||
+        link.keywords.navigation.some((keyword) =>
+          keyword.match(this.sidebarState.filter)
+        )
+      );
     });
   }
 }
