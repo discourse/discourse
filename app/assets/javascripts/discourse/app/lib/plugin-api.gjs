@@ -2116,12 +2116,12 @@ class PluginApi {
    *       endsAt: "2021-10-12T16:00:00.000Z",
    *     },
    *   ],
-   *   "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
+   *   { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
    * );
    * ```
    */
-  downloadCalendar(title, dates, recurrenceRule = null) {
-    downloadCalendar(title, dates, recurrenceRule);
+  downloadCalendar(title, dates, options = {}) {
+    downloadCalendar(title, dates, options);
   }
 
   /**
