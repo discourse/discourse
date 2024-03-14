@@ -2332,7 +2332,7 @@ en:
 
     share_anonymized_statistics: "Enable sharing of anonymized usage statistics with CDCK, Inc. (“Discourse”). When this setting is enabled, data concerning the usage of the site is collected and shared in anonymized form, ensuring no personal information is disclosed."
 
-    show_powered_by: "Show “Powered by Discourse” link to discourse.org at the bottom of most pages."
+    enable_powered_by_discourse: "Show “Powered by Discourse” link to discourse.org at the bottom of most pages."
 
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."

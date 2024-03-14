@@ -2818,7 +2818,7 @@ uncategorized:
 
   share_anonymized_statistics: true
 
-  show_powered_by:
+  enable_powered_by_discourse:
     default: false
     client: true
 

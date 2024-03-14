@@ -61,7 +61,7 @@ export default Controller.extend({
 
   @discourseComputed
   showPoweredBy() {
-    return this.showFooter && this.siteSettings.show_powered_by;
+    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   },
 
   _mainOutletAnimate() {
