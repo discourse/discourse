@@ -197,6 +197,7 @@ export default {
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
               @service currentUser;
+              @service chatStateManager;
 
               @tracked
               currentUserCanJoinPublicChannels =
@@ -211,9 +212,6 @@ export default {
                   return;
                 }
                 this.chatService = container.lookup("service:chat");
-                this.chatStateManager = container.lookup(
-                  "service:chat-state-manager"
-                );
                 this.chatChannelsManager = container.lookup(
                   "service:chat-channels-manager"
                 );
