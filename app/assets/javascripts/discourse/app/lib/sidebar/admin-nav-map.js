@@ -379,7 +379,7 @@ export const ADMIN_NAV_MAP = [
         icon: "discourse-sparkles",
       },
       {
-        name: "admin_experimental",
+        name: "admin_all_site_settings",
         route: "adminSiteSettings",
         label: "admin.advanced.sidebar_link.all_site_settings",
         icon: "cog",
