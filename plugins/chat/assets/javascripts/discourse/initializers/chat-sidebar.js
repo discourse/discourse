@@ -48,11 +48,13 @@ export default {
     });
 
     withPluginApi("1.3.0", (api) => {
+      const chatChannelsManager = container.lookup(
+        "service:chat-channels-manager"
+      );
+
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
-            @service chatStateManager;
-
             route = "chat.threads";
             text = I18n.t("chat.my_threads.title");
             title = I18n.t("chat.my_threads.title");
@@ -71,7 +73,7 @@ export default {
             }
 
             get suffixValue() {
-              return this.chatChannelsManager.publicMessageChannels.some(
+              return chatChannelsManager.publicMessageChannels.some(
                 (channel) => channel.unreadThreadsCount > 0
               )
                 ? "circle"
