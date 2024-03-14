@@ -31,7 +31,7 @@ export default class AdminPluginsListItem extends Component {
     }
   }
 
-  get isFiltered() {
+  get isAdminSearchFiltered() {
     if (!this.sidebarState.filter) {
       return false;
     }
@@ -43,7 +43,7 @@ export default class AdminPluginsListItem extends Component {
       data-plugin-name={{@plugin.name}}
       class={{concat
         "admin-plugins-list__row"
-        (if this.isFiltered "-filtered")
+        (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
     >
       <td class="admin-plugins-list__name-details">
