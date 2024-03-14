@@ -6,8 +6,20 @@ describe "Admin Customize Themes", type: :system do
   fab!(:admin)
 
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:translations_settings) do
+    theme.set_field(
+      target: :translations,
+      name: "yaml",
+      value: File.read("#{Rails.root}/spec/fixtures/theme_settings/translations_settings.en.yaml"),
+    )
 
-  before { sign_in(admin) }
+    theme.save!
+    theme.translations[:translations_settings]
+  end
+  before do
+    translations_settings
+    sign_in(admin)
+  end
 
   describe "when visiting the page to customize themes" do
     fab!(:theme_2) { Fabricate(:theme) }
@@ -81,6 +93,20 @@ describe "Admin Customize Themes", type: :system do
 
       ace_content = find(".ace_content")
       expect(ace_content.text).to eq("console.log('test')")
+    end
+  end
+
+  describe "when editing theme translations" do
+    it "should allow admin to edit the theme translations" do
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+
+      theme_translations_settings_editor.fill_in("Hello World")
+      theme_translations_settings_editor.save
+
+      expect(theme.reload.translations["Hello World"]).to eq("Hello World")
     end
   end
 end
