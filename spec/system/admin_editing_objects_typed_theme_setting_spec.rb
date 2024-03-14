@@ -28,6 +28,35 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
   end
 
   describe "when editing a theme setting of objects type" do
+    it "should display description for each property if the description has been configured in a locale file" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+      )
+
+      theme.save!
+
+      admin_objects_theme_setting_editor_page.visit(theme, "objects_setting")
+
+      expect(admin_objects_theme_setting_editor_page).to have_setting_field_description(
+        "name",
+        "Section Name",
+      )
+
+      admin_objects_theme_setting_editor_page.click_link("link 1")
+
+      expect(admin_objects_theme_setting_editor_page).to have_setting_field_description(
+        "name",
+        "Name of the link",
+      )
+
+      expect(admin_objects_theme_setting_editor_page).to have_setting_field_description(
+        "url",
+        "URL of the link",
+      )
+    end
+
     it "should allow admin to edit the theme setting of objects type" do
       visit("/admin/customize/themes/#{theme.id}")
 
