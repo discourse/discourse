@@ -5058,6 +5058,10 @@ en:
               delete: Delete a post.
               recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
+            revisions:
+              read: "Get the latest or a specific revision."
+              modify: "Hide, show, or revert revisions."
+              permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
             tag_groups:
