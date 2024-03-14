@@ -34,7 +34,6 @@ module("Integration | Component | time-gap", function (hooks) {
   test("it renders the correct elements", async function (assert) {
     this.set("daysSince", 10);
     await render(hbs`<TimeGap @daysSince={{this.daysSince}} />`);
-    assert.dom(".time-gap-content").exists();
     assert.dom(".topic-avatar").exists();
     assert.dom(".small-action-desc.timegap").exists();
   });

@@ -17,11 +17,9 @@ export default class TimeGap extends Component {
   }
 
   <template>
-    <div class="time-gap-content">
-      <div class="topic-avatar"></div>
-      <div class="small-action-desc timegap">
-        {{this.description}}
-      </div>
+    <div class="topic-avatar"></div>
+    <div class="small-action-desc timegap">
+      {{this.description}}
     </div>
   </template>
 }
