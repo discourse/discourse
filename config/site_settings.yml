@@ -169,6 +169,9 @@ basic:
     client: true
     default: ""
     regex: "^GTM-"
+  empty_homepage:
+    default: false
+    hidden: true
   top_menu:
     client: true
     refresh: true

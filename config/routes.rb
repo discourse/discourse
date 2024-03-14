@@ -1231,6 +1231,7 @@ Discourse::Application.routes.draw do
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
     get "filter" => "list#filter"
+    get "dynamic" => "list#dynamic"
 
     get "search/query" => "search#query"
     get "search" => "search#show"
@@ -1585,6 +1586,8 @@ Discourse::Application.routes.draw do
     root to: "finish_installation#index",
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
+
+    root to: "list#empty", constraints: HomePageConstraint.new("empty"), as: "empty_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

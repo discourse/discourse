@@ -63,6 +63,8 @@ export default function () {
     this.route("categoryNone", { path: "/c/*category_slug_path_with_id/none" });
     this.route("categoryAll", { path: "/c/*category_slug_path_with_id/all" });
     this.route("category", { path: "/c/*category_slug_path_with_id" });
+
+    this.route("empty");
   });
 
   this.route("groups", { resetNamespace: true, path: "/g" }, function () {

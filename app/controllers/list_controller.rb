@@ -47,6 +47,7 @@ class ListController < ApplicationController
                   TopTopic.periods.map { |p| :"category_none_top_#{p}" },
                   :group_topics,
                   :filter,
+                  :dynamic,
                 ].flatten
 
   # Create our filters
@@ -358,6 +359,10 @@ class ListController < ApplicationController
 
       render "list", formats: [:rss]
     end
+  end
+
+  def empty
+    render "default/empty"
   end
 
   protected
