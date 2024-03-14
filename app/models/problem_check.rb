@@ -35,6 +35,10 @@ class ProblemCheck
     checks.select(&:scheduled?)
   end
 
+  def self.realtime
+    checks.reject(&:scheduled?)
+  end
+
   def self.identifier
     name.demodulize.underscore.to_sym
   end
@@ -45,9 +49,20 @@ class ProblemCheck
   end
   delegate :scheduled?, to: :class
 
-  def self.call
-    new.call
+  def self.realtime?
+    !scheduled?
   end
+  delegate :realtime?, to: :class
+
+  def self.call(data = {})
+    new(data).call
+  end
+
+  def initialize(data = {})
+    @data = OpenStruct.new(data)
+  end
+
+  attr_reader :data
 
   def call
     raise NotImplementedError
@@ -55,10 +70,15 @@ class ProblemCheck
 
   private
 
-  def problem
+  def problem(override_key = nil)
     [
       Problem.new(
-        I18n.t(translation_key, base_path: Discourse.base_path),
+        message ||
+          I18n.t(
+            override_key || translation_key,
+            base_path: Discourse.base_path,
+            **translation_data.symbolize_keys,
+          ),
         priority: self.config.priority,
         identifier:,
       ),
@@ -69,8 +89,16 @@ class ProblemCheck
     []
   end
 
+  def message
+    nil
+  end
+
   def translation_key
     # TODO: Infer a default based on class name, then move translations in locale file.
     raise NotImplementedError
+  end
+
+  def translation_data
+    {}
   end
 end

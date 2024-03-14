@@ -30,27 +30,13 @@ RSpec.describe AdminDashboardData do
         problems = AdminDashboardData.fetch_problems
         expect(problems.map(&:to_s)).to include("a problem was found")
       end
-
-      it "calls the passed method" do
-        klass =
-          Class.new(AdminDashboardData) do
-            def my_test_method
-              "a problem was found"
-            end
-          end
-
-        klass.add_problem_check :my_test_method
-
-        problems = klass.fetch_problems
-        expect(problems.map(&:to_s)).to include("a problem was found")
-      end
     end
   end
 
   describe "adding scheduled checks" do
     it "does not add duplicate problems with the same identifier" do
-      prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
-      prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
+      prob1 = ProblemCheck::Problem.new("test problem", identifier: "test")
+      prob2 = ProblemCheck::Problem.new("test problem 2", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.add_found_scheduled_check_problem(prob2)
       expect(AdminDashboardData.load_found_scheduled_check_problems.map(&:to_s)).to eq(
@@ -64,15 +50,15 @@ RSpec.describe AdminDashboardData do
     end
 
     it "clears a specific problem by identifier" do
-      prob1 = AdminDashboardData::Problem.new("test problem 1", identifier: "test")
+      prob1 = ProblemCheck::Problem.new("test problem 1", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.clear_found_problem("test")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
 
     it "defaults to low priority, and uses low priority if an invalid priority is passed" do
-      prob1 = AdminDashboardData::Problem.new("test problem 1")
-      prob2 = AdminDashboardData::Problem.new("test problem 2", priority: "superbad")
+      prob1 = ProblemCheck::Problem.new("test problem 1")
+      prob2 = ProblemCheck::Problem.new("test problem 2", priority: "superbad")
       expect(prob1.priority).to eq("low")
       expect(prob2.priority).to eq("low")
     end
@@ -103,44 +89,6 @@ RSpec.describe AdminDashboardData do
       expect(described_class.problem_message_check(key)).to eq(
         I18n.t(key, base_path: Discourse.base_path),
       )
-    end
-  end
-
-  describe "rails_env_check" do
-    subject(:check) { described_class.new.rails_env_check }
-
-    it "returns nil when running in production mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("production"))
-      expect(check).to be_nil
-    end
-
-    it "returns a string when running in development mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("development"))
-      expect(check).to_not be_nil
-    end
-
-    it "returns a string when running in test mode" do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new("test"))
-      expect(check).to_not be_nil
-    end
-  end
-
-  describe "host_names_check" do
-    subject(:check) { described_class.new.host_names_check }
-
-    it "returns nil when host_names is set" do
-      Discourse.stubs(:current_hostname).returns("something.com")
-      expect(check).to be_nil
-    end
-
-    it "returns a string when host_name is localhost" do
-      Discourse.stubs(:current_hostname).returns("localhost")
-      expect(check).to_not be_nil
-    end
-
-    it "returns a string when host_name is production.localhost" do
-      Discourse.stubs(:current_hostname).returns("production.localhost")
-      expect(check).to_not be_nil
     end
   end
 
@@ -175,177 +123,6 @@ RSpec.describe AdminDashboardData do
       Jobs.stubs(:last_job_performed_at).returns(nil)
       Jobs.stubs(:queued).returns(1)
       expect(check).to_not be_nil
-    end
-  end
-
-  describe "ram_check" do
-    subject(:check) { described_class.new.ram_check }
-
-    it "returns nil when total ram is 1 GB" do
-      MemInfo.any_instance.stubs(:mem_total).returns(1_025_272)
-      expect(check).to be_nil
-    end
-
-    it "returns nil when total ram cannot be determined" do
-      MemInfo.any_instance.stubs(:mem_total).returns(nil)
-      expect(check).to be_nil
-    end
-
-    it "returns a string when total ram is less than 1 GB" do
-      MemInfo.any_instance.stubs(:mem_total).returns(512_636)
-      expect(check).to_not be_nil
-    end
-  end
-
-  describe "auth_config_checks" do
-    shared_examples "problem detection for login providers" do
-      context "when disabled" do
-        it "returns nil" do
-          SiteSetting.set(enable_setting, false)
-          expect(check).to be_nil
-        end
-      end
-
-      context "when enabled" do
-        before { SiteSetting.set(enable_setting, true) }
-
-        it "returns nil when key and secret are set" do
-          SiteSetting.set(key, "12313213")
-          SiteSetting.set(secret, "12312313123")
-          expect(check).to be_nil
-        end
-
-        it "returns a string when key is not set" do
-          SiteSetting.set(key, "")
-          SiteSetting.set(secret, "12312313123")
-          expect(check).to_not be_nil
-        end
-
-        it "returns a string when secret is not set" do
-          SiteSetting.set(key, "123123")
-          SiteSetting.set(secret, "")
-          expect(check).to_not be_nil
-        end
-
-        it "returns a string when key and secret are not set" do
-          SiteSetting.set(key, "")
-          SiteSetting.set(secret, "")
-          expect(check).to_not be_nil
-        end
-      end
-    end
-
-    describe "facebook" do
-      subject(:check) { described_class.new.facebook_config_check }
-
-      let(:enable_setting) { :enable_facebook_logins }
-      let(:key) { :facebook_app_id }
-      let(:secret) { :facebook_app_secret }
-      include_examples "problem detection for login providers"
-    end
-
-    describe "twitter" do
-      subject(:check) { described_class.new.twitter_config_check }
-
-      let(:enable_setting) { :enable_twitter_logins }
-      let(:key) { :twitter_consumer_key }
-      let(:secret) { :twitter_consumer_secret }
-      include_examples "problem detection for login providers"
-    end
-
-    describe "github" do
-      subject(:check) { described_class.new.github_config_check }
-
-      let(:enable_setting) { :enable_github_logins }
-      let(:key) { :github_client_id }
-      let(:secret) { :github_client_secret }
-      include_examples "problem detection for login providers"
-    end
-  end
-
-  describe "force_https_check" do
-    subject(:check) { described_class.new(check_force_https: true).force_https_check }
-
-    it "returns nil if force_https site setting enabled" do
-      SiteSetting.force_https = true
-      expect(check).to be_nil
-    end
-
-    it "returns nil if force_https site setting not enabled" do
-      SiteSetting.force_https = false
-      expect(check).to eq(I18n.t("dashboard.force_https_warning", base_path: Discourse.base_path))
-    end
-  end
-
-  describe "ignore force_https_check" do
-    subject(:check) { described_class.new(check_force_https: false).force_https_check }
-
-    it "returns nil" do
-      SiteSetting.force_https = true
-      expect(check).to be_nil
-
-      SiteSetting.force_https = false
-      expect(check).to be_nil
-    end
-  end
-
-  describe "#out_of_date_themes" do
-    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
-    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
-
-    it "outputs correctly formatted html" do
-      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
-      dashboard_data = described_class.new
-      expect(dashboard_data.out_of_date_themes).to eq(
-        I18n.t("dashboard.out_of_date_themes") +
-          "<ul><li><a href=\"/admin/customize/themes/#{theme.id}\">Test&lt; Theme</a></li></ul>",
-      )
-
-      remote.update!(local_version: "new version", commits_behind: 0)
-      expect(dashboard_data.out_of_date_themes).to eq(nil)
-    end
-  end
-
-  describe "#unreachable_themes" do
-    let(:remote) do
-      RemoteTheme.create!(
-        remote_url: "https://github.com/org/testtheme",
-        last_error_text: "can't reach repo :'(",
-      )
-    end
-    let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
-
-    it "outputs correctly formatted html" do
-      dashboard_data = described_class.new
-      expect(dashboard_data.unreachable_themes).to eq(
-        I18n.t("dashboard.unreachable_themes") +
-          "<ul><li><a href=\"/admin/customize/themes/#{theme.id}\">Test&lt; Theme</a></li></ul>",
-      )
-
-      remote.update!(last_error_text: nil)
-      expect(dashboard_data.out_of_date_themes).to eq(nil)
-    end
-  end
-
-  describe "#translation_overrides_check" do
-    subject(:dashboard_data) { described_class.new }
-
-    context "when there are outdated translations" do
-      before { Fabricate(:translation_override, translation_key: "foo.bar", status: "outdated") }
-
-      it "outputs the correct message" do
-        expect(dashboard_data.translation_overrides_check).to eq(
-          I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path),
-        )
-      end
-    end
-
-    context "when there are no outdated translations" do
-      before { Fabricate(:translation_override, status: "up_to_date") }
-
-      it "outputs nothing" do
-        expect(dashboard_data.translation_overrides_check).to eq(nil)
-      end
     end
   end
 end

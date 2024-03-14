@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheck::TwitterLogin do
-  let(:problem_check) { described_class.new }
+  let(:check) { described_class.new }
 
   let(:authenticator) { mock("Auth::TwitterAuthenticator") }
 
@@ -11,7 +11,7 @@ RSpec.describe ProblemCheck::TwitterLogin do
     context "when Twitter authentication isn't enabled" do
       before { authenticator.stubs(:enabled?).returns(false) }
 
-      it { expect(problem_check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when Twitter authentication appears to work" do
@@ -20,7 +20,7 @@ RSpec.describe ProblemCheck::TwitterLogin do
         authenticator.stubs(:healthy?).returns(true)
       end
 
-      it { expect(problem_check.call).to be_empty }
+      it { expect(check).to be_chill_about_it }
     end
 
     context "when Twitter authentication appears not to work" do
@@ -31,13 +31,8 @@ RSpec.describe ProblemCheck::TwitterLogin do
       end
 
       it do
-        expect(problem_check.call).to contain_exactly(
-          have_attributes(
-            identifier: :twitter_login,
-            priority: "high",
-            message:
-              'Twitter login appears to not be working at the moment. Check the credentials in <a href="foo.bar/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.',
-          ),
+        expect(check).to have_a_problem.with_priority("high").with_message(
+          'Twitter login appears to not be working at the moment. Check the credentials in <a href="foo.bar/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.',
         )
       end
     end
