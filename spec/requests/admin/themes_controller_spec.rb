@@ -1129,6 +1129,65 @@ RSpec.describe Admin::ThemesController do
     end
   end
 
+  describe "#update_translations" do
+    fab!(:theme)
+
+    before do
+      theme.set_field(
+        target: :translations,
+        name: :en,
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "should update a theme translation" do
+        put "/admin/themes/#{theme.id}",
+            params: {
+              theme: {
+                translations: {
+                  group: {
+                    hello: "Hello there! updated",
+                  },
+                },
+                locale: "en",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload
+
+        theme.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
+      end
+    end
+  end
+
+  describe "#get_translations" do
+    fab!(:theme)
+
+    before do
+      theme.set_field(
+        target: :translations,
+        name: :en,
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "get translations from theme" do
+        get "/admin/themes/#{theme.id}/translations/en"
+        translations = response.parsed_body["translations"]
+        expect(translations.first.value).to eq("Hello there!")
+      end
+    end
+  end
+
   describe "#bulk_destroy" do
     fab!(:theme) { Fabricate(:theme, name: "Awesome Theme") }
     fab!(:theme_2) { Fabricate(:theme, name: "Another awesome Theme") }

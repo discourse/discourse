@@ -9,12 +9,12 @@ describe "Admin Customize Themes", type: :system do
   let(:translations_settings) do
     theme.set_field(
       target: :translations,
-      name: "yaml",
-      value: File.read("#{Rails.root}/spec/fixtures/theme_settings/translations_settings.en.yaml"),
+      name: "en",
+      value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
     )
 
     theme.save!
-    theme.translations[:translations_settings]
+    theme.translations
   end
   before do
     translations_settings

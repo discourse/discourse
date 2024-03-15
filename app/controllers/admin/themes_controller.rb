@@ -312,7 +312,10 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def get_translations
-    raise Discourse::InvalidParameters.new(:locale) unless params[:locale]
+    params.require(:locale)
+    unless I18n.available_locales.include?(params[:locale].to_sym)
+      raise Discourse::InvalidParameters.new(:locale)
+    end
 
     I18n.locale = params[:locale]
 
@@ -425,7 +428,13 @@ class Admin::ThemesController < Admin::AdminController
   def update_translations
     return unless target_translations = theme_params[:translations]
 
-    I18n.locale = theme_params[:locale] if theme_params[:locale].present?
+    locale = theme_params[:locale].presence
+    if locale
+      unless I18n.available_locales.include?(locale.to_sym)
+        raise Discourse::InvalidParameters.new(:locale)
+      end
+      I18n.locale = locale
+    end
 
     target_translations.each_pair do |translation_key, new_value|
       @theme.update_translation(translation_key, new_value)
