@@ -378,6 +378,12 @@ export const ADMIN_NAV_MAP = [
         label: "admin.advanced.sidebar_link.experimental",
         icon: "discourse-sparkles",
       },
+      {
+        name: "admin_all_site_settings",
+        route: "adminSiteSettings",
+        label: "admin.advanced.sidebar_link.all_site_settings",
+        icon: "cog",
+      },
     ],
   },
 ];

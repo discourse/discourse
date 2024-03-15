@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
@@ -8,7 +8,6 @@ import {
   query,
   simulateKey,
   simulateKeys,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Emoji", function (needs) {
@@ -20,7 +19,6 @@ acceptance("Emoji", function (needs) {
 
     await simulateKeys(query(".d-editor-input"), "a :blonde_wo\t");
 
-    assert.ok(visible(".d-editor-preview"));
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
@@ -29,13 +27,31 @@ acceptance("Emoji", function (needs) {
     );
   });
 
+  test("emoji can be picked from the emoji-picker using the mouse", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await simulateKeys(query(".d-editor-input"), "an :arrow");
+    // the 6th item in the list is the "more..."
+    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+
+    assert.dom(".emoji-picker.opened.has-filter").exists();
+    await click(".emoji-picker .results img:first-of-type");
+
+    assert.strictEqual(
+      normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
+      normalizeHtml(
+        `<p>an <img src="/images/emoji/twitter/arrow_backward.png?v=${v}" title=":arrow_backward:" class="emoji" alt=":arrow_backward:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+      )
+    );
+  });
+
   test("skin toned emoji is cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(query(".d-editor-input"), "a :blonde_woman:t5:");
+    await fillIn(query(".d-editor-input"), "a :blonde_woman:t5:");
 
-    assert.ok(visible(".d-editor-preview"));
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
@@ -44,9 +60,7 @@ acceptance("Emoji", function (needs) {
     );
   });
 
-  needs.settings({
-    emoji_autocomplete_min_chars: 2,
-  });
+  needs.settings({ emoji_autocomplete_min_chars: 2 });
 
   test("siteSetting:emoji_autocomplete_min_chars", async function (assert) {
     await visit("/t/internationalization-localization/280");
