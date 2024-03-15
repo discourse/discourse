@@ -1145,22 +1145,18 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(admin) }
 
       it "should update a theme translation" do
-        put "/admin/themes/#{theme.id}",
+        put "/admin/themes/#{theme.id}.json",
             params: {
               theme: {
                 translations: {
-                  group: {
-                    hello: "Hello there! updated",
-                  },
+                  "group.hello" => "Hello there! updated",
                 },
                 locale: "en",
               },
             }
 
         expect(response.status).to eq(200)
-        theme.reload
-
-        theme.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
       end
     end
   end
@@ -1181,9 +1177,9 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(admin) }
 
       it "get translations from theme" do
-        get "/admin/themes/#{theme.id}/translations/en"
+        get "/admin/themes/#{theme.id}/translations/en.json"
         translations = response.parsed_body["translations"]
-        expect(translations.first.value).to eq("Hello there!")
+        expect(translations.first["value"]).to eq("Hello there!")
       end
     end
   end
