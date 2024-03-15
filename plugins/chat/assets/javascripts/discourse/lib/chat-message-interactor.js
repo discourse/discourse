@@ -337,12 +337,12 @@ export default class ChatMessageInteractor {
               this.message.id
             )
         ),
-        afterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
+        afterSave: (bookmarkFormData) => {
+          const bookmark = Bookmark.create(bookmarkFormData.saveData);
           this.message.bookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },
