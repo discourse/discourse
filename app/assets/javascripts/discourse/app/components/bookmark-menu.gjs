@@ -7,7 +7,6 @@ import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { formattedReminderTime } from "discourse/lib/bookmark";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
@@ -49,18 +48,22 @@ export default class BookmarkMenu extends Component {
       return I18n.t("bookmarks.not_bookmarked");
     } else {
       if (this.existingBookmark.reminderAt) {
-        const formattedReminder = formattedReminderTime(
-          this.existingBookmark.reminderAt,
-          this.timezone
-        );
         return I18n.t("bookmarks.created_with_reminder", {
-          date: formattedReminder,
+          date: this.existingBookmark.formattedReminder(this.timezone),
           name: this.existingBookmark.name || "",
         });
       } else {
         return I18n.t("bookmarks.created");
       }
     }
+  }
+
+  @action
+  reminderShortcutTimeTitle(option) {
+    if (!option.time) {
+      return "";
+    }
+    return option.time.format(I18n.t(option.timeFormatKey));
   }
 
   @action
@@ -110,8 +113,8 @@ export default class BookmarkMenu extends Component {
 
   @action
   onRemoveBookmark() {
-    this.bookmarkManager.delete().then(() => {
-      this.bookmarkManager.afterDelete();
+    this.bookmarkManager.delete().then((response) => {
+      this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.dMenu.close();
     });
   }
@@ -140,8 +143,8 @@ export default class BookmarkMenu extends Component {
           afterSave: (savedData) => {
             return this.bookmarkManager.afterSave(savedData);
           },
-          afterDelete: (topicBookmarked, bookmarkId) => {
-            this.bookmarkManager.afterDelete(topicBookmarked, bookmarkId);
+          afterDelete: (response, bookmarkId) => {
+            this.bookmarkManager.afterDelete(response, bookmarkId);
           },
         },
       })
@@ -176,7 +179,7 @@ export default class BookmarkMenu extends Component {
         <div class="bookmark-menu__body">
           {{#if this.showEditDeleteMenu}}
             <ul class="bookmark-menu__actions">
-              <li class="bookmark-menu__row -edit">
+              <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
                 <DButton
                   @icon="pencil-alt"
                   @translatedLabel="Edit"
@@ -184,7 +187,12 @@ export default class BookmarkMenu extends Component {
                   @class="bookmark-menu__row-btn btn-flat"
                 />
               </li>
-              <li class="bookmark-menu__row -remove" role="button" tabindex="0">
+              <li
+                class="bookmark-menu__row -remove"
+                role="button"
+                tabindex="0"
+                data-menu-option-id="delete"
+              >
                 <DButton
                   @icon="trash-alt"
                   @translatedLabel="Delete"
@@ -199,9 +207,14 @@ export default class BookmarkMenu extends Component {
               }}</span>
             <ul class="bookmark-menu__actions">
               {{#each this.reminderAtOptions as |option|}}
-                <li class={{concatClass "bookmark-menu__row" option.class}}>
+                <li
+                  class="bookmark-menu__row"
+                  data-menu-option-id={{option.id}}
+                >
+
                   <DButton
                     @label={{option.label}}
+                    @translatedTitle={{this.reminderShortcutTimeTitle option}}
                     @action={{fn this.onChooseReminderOption option}}
                     @class="bookmark-menu__row-btn btn-flat"
                   />

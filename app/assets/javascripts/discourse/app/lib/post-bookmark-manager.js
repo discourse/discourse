@@ -6,15 +6,15 @@ import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
 
 export default class PostBookmarkManager {
   @service currentUser;
+  @service bookmarkApi;
   @controller("topic") topicController;
   @tracked trackedBookmark;
+  @tracked bookmarkModel;
 
   constructor(owner, post) {
     setOwner(this, owner);
@@ -22,53 +22,29 @@ export default class PostBookmarkManager {
     this.model = post;
     this.type = "Post";
 
-    // NOTE: (martin) Not sure about this double-up of the bookmark with
-    // BookmarkFormData...but the latter is necessary because it allows
-    // @tracked and doen't deal with the RestModel nonsense. Will think...
-    this.bookmark =
+    this.bookmarkModel =
       this.topicController.model.bookmarks.find(
         (bookmark) =>
           bookmark.bookmarkable_id === this.model.id &&
           bookmark.bookmarkable_type === this.type
-      ) || this._createEmptyBookmark();
-    this.trackedBookmark = new BookmarkFormData(this.bookmark);
+      ) || this.bookmarkApi.buildNewBookmark(this.type, this.model.id);
+    this.trackedBookmark = new BookmarkFormData(this.bookmarkModel);
   }
 
-  get contextTitle() {
-    return this.model.topic.title;
-  }
-
-  // TODO (martin): Likely move this to some service.
   create() {
-    return ajax("/bookmarks.json", {
-      method: "POST",
-      data: {
-        bookmarkable_id: this.model.id,
-        bookmarkable_type: this.type,
-      },
-    })
-      .then((response) => {
-        this.trackedBookmark.id = response.id;
-        return this.trackedBookmark.id;
-      })
-      .catch(popupAjaxError);
+    return this.bookmarkApi
+      .create(this.trackedBookmark)
+      .then((updatedBookmark) => {
+        this.trackedBookmark = updatedBookmark;
+      });
   }
 
-  // TODO (martin): Likely move this to some service.
   delete() {
-    return ajax(`/bookmarks/${this.trackedBookmark.id}.json`, {
-      method: "DELETE",
-    }).catch(popupAjaxError);
+    return this.bookmarkApi.delete(this.trackedBookmark.id);
   }
 
-  // TODO (martin): Likely move this to some service.
   save() {
-    return ajax(`/bookmarks/${this.trackedBookmark.id}.json`, {
-      method: "PUT",
-      data: {
-        reminder_at: this.trackedBookmark.reminderAt?.toISOString(),
-      },
-    }).catch(popupAjaxError);
+    return this.bookmarkApi.update(this.trackedBookmark);
   }
 
   afterModalClose(closeData) {
@@ -87,19 +63,26 @@ export default class PostBookmarkManager {
     }
   }
 
-  afterSave(savedData) {
-    this._syncBookmarks(savedData);
+  afterSave(bookmarkFormData) {
+    this.trackedBookmark = bookmarkFormData;
+    this._syncBookmarks(bookmarkFormData.saveData);
     this.topicController.model.set("bookmarking", false);
-    this.model.createBookmark(savedData);
-    this.topicController.model.afterPostBookmarked(this.model, savedData);
+    this.model.createBookmark(bookmarkFormData.saveData);
+    this.topicController.model.afterPostBookmarked(
+      this.model,
+      bookmarkFormData.saveData
+    );
     return [this.model.id];
   }
 
-  afterDelete(topicBookmarked, bookmarkId) {
+  afterDelete(deleteResponse, bookmarkId) {
     this.topicController.model.removeBookmark(bookmarkId);
-    this.model.deleteBookmark(topicBookmarked);
-    this.bookmark = this._createEmptyBookmark();
-    this.trackedBookmark = new BookmarkFormData(this.bookmark);
+    this.model.deleteBookmark(deleteResponse.topic_bookmarked);
+    this.bookmarkModel = this.bookmarkApi.buildNewBookmark(
+      this.type,
+      this.model.id
+    );
+    this.trackedBookmark = new BookmarkFormData(this.bookmarkModel);
   }
 
   _syncBookmarks(data) {
@@ -115,9 +98,5 @@ export default class PostBookmarkManager {
       bookmark.name = data.name;
       bookmark.auto_delete_preference = data.auto_delete_preference;
     }
-  }
-
-  _createEmptyBookmark() {
-    return Bookmark.createFor(this.currentUser, this.type, this.model.id);
   }
 }
