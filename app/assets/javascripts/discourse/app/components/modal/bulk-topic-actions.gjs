@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
@@ -15,12 +16,11 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
-import { getOwner } from '@ember/application';
 
 const _customActions = {};
 
 export function _addBulkDropdownAction(name, action) {
-  _customActions[name] = action
+  _customActions[name] = action;
 }
 
 export default class BulkTopicActions extends Component {
@@ -41,7 +41,9 @@ export default class BulkTopicActions extends Component {
 
     if (this.args.model.initialAction === "set-component") {
       //this.setComponent(BulkAssign);
-      _customActions["topics.bulk.assign"]({ setComponent: this.setComponent.bind(this) });
+      _customActions["topics.bulk.assign"]({
+        setComponent: this.setComponent.bind(this),
+      });
     }
   }
 
@@ -116,14 +118,12 @@ export default class BulkTopicActions extends Component {
 
   @action
   setComponent(component) {
-    console.log('setComponent');
     this.activeComponent = component;
   }
 
   @action
-  registerAction(action) {
-    console.log('registerAction');
-    this.childAction = action;
+  registerCustomAction(customAction) {
+    this.customAction = customAction;
   }
 
   @action
@@ -182,19 +182,11 @@ export default class BulkTopicActions extends Component {
         );
         break;
       default:
-        console.log('default');
-        // const owner = getOwner(this);
-        // const bulkAssignManagerService = owner.lookup('service:bulk-assign-manager');
-        // bulkAssignManagerService.invokeAction();
-        // if (this.childAction) {
-        //   this.childAction();
-        // }
-        // if (_customActions[this.args.model.action]) {
-        //   console.log('if');
-        //   console.log(_customActions[this.args.model.action]);
-        //   //this.setComponent(BulkAssign);
-        _customActions['topics.bulk.assign']();
-        // }
+        // Plugins can register their own custom actions via onRegisterAction
+        // when the activeComponent is rendered.
+        if (this.customAction) {
+          this.customAction(this.performAndRefresh.bind(this));
+        }
     }
   }
 
@@ -324,7 +316,10 @@ export default class BulkTopicActions extends Component {
           {{/if}}
 
           {{#if this.activeComponent}}
-            {{component this.activeComponent onRegisterAction=this.registerAction}}
+            {{component
+              this.activeComponent
+              onRegisterAction=this.registerCustomAction
+            }}
           {{/if}}
         </ConditionalLoadingSection>
       </:body>
