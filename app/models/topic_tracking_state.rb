@@ -577,30 +577,40 @@ class TopicTrackingState
     post.publish_change_to_clients!(:read, opts)
   end
 
+  def self.report_count_by_type(user, type:)
+    tag_ids = muted_tag_ids(user)
+    sql =
+      report_raw_sql(
+        topic_id: nil,
+        skip_unread: type == "new",
+        skip_new: type == "unread",
+        skip_order: true,
+        staff: user.staff?,
+        admin: user.admin?,
+        whisperer: user.whisperer?,
+        user: user,
+        muted_tag_ids: tag_ids,
+      )
+    sql = tags_included_wrapped_sql(sql)
+
+    DB.query(
+      sql + "\n\n LIMIT :max_topics",
+      {
+        user_id: user.id,
+        topic_id: nil,
+        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        max_topics: TopicTrackingState::MAX_TOPICS,
+        user_first_unread_at: user.user_stat.first_unread_at,
+      }.merge(treat_as_new_topic_params),
+    ).count
+  end
+
   def self.report_totals(user)
-    new, unread = 0, 0
-
-    report(user).each do |entry|
-      # any changes here should also be reflected in model/topic-tracking-state.js
-      if entry.last_read_post_number == nil &&
-           (
-             entry.notification_level == nil ||
-               entry.notification_level >= NotificationLevels.all[:tracking] &&
-                 entry.created_at > user.user_option.treat_as_new_topic_start_date
-           )
-        new += 1
-      end
-
-      if entry.last_read_post_number != nil &&
-           entry.last_read_post_number < entry.highest_post_number &&
-           entry.notification_level >= NotificationLevels.all[:tracking]
-        unread += 1
-      end
-    end
-
     if (user.new_new_view_enabled?)
-      { new: new + unread }
+      { new: report(user).count }
     else
+      new = report_count_by_type(user, type: "new")
+      unread = report_count_by_type(user, type: "unread")
       { new: new, unread: unread }
     end
   end
