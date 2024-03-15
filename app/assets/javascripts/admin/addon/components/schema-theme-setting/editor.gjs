@@ -5,8 +5,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
@@ -77,7 +79,7 @@ export default class SchemaThemeSettingEditor extends Component {
           const subtree = new Tree();
           subtree.propertyName = childObjectsProperty.name;
 
-          data[index][childObjectsProperty.name].forEach(
+          data[index][childObjectsProperty.name]?.forEach(
             (childObj, childIndex) => {
               subtree.nodes.push(
                 new Node({
@@ -224,68 +226,99 @@ export default class SchemaThemeSettingEditor extends Component {
   }
 
   <template>
-    <div class="schema-editor-navigation">
-      {{#if this.backButtonText}}
-        <DButton
-          @action={{this.backButtonClick}}
-          @icon="chevron-left"
-          @translatedLabel={{this.backButtonText}}
-          class="back-button"
-        />
-      {{/if}}
-
-      <ul class="tree">
-        {{#each this.tree.nodes as |node|}}
-          <div class="item-container">
+    <div class="schema-theme-setting-editor">
+      <div class="schema-theme-setting-editor__navigation">
+        <ul class="schema-theme-setting-editor__tree">
+          {{#if this.backButtonText}}
             <li
               role="link"
-              class="parent node{{if node.active ' active'}}"
+              class="schema-theme-setting-editor__tree-node--back-btn"
+              {{on "click" this.backButtonClick}}
+            >
+              <div class="schema-theme-setting-editor__tree-node-text">
+                {{dIcon "chevron-left"}}
+                {{this.backButtonText}}
+              </div>
+            </li>
+          {{/if}}
+
+          {{#each this.tree.nodes as |node|}}
+            <li
+              role="link"
+              class="schema-theme-setting-editor__tree-node --parent
+                {{if node.active ' --active'}}"
               {{on "click" (fn this.onClick node)}}
             >
-              {{node.text}}
+              <div class="schema-theme-setting-editor__tree-node-text">
+                {{node.text}}
+
+                {{#if (gt node.trees.length 0)}}
+                  {{dIcon (if node.active "chevron-down" "chevron-right")}}
+                {{/if}}
+              </div>
             </li>
+
             {{#each node.trees as |nestedTree|}}
-              <ul>
-                {{#each nestedTree.nodes as |childNode|}}
-                  <li
-                    role="link"
-                    class="child node"
-                    {{on
-                      "click"
-                      (fn this.onChildClick childNode nestedTree node)
-                    }}
-                  >{{childNode.text}}</li>
-                {{/each}}
-              </ul>
+              {{#if (gt nestedTree.nodes.length 0)}}
+                <li
+                  class="schema-theme-setting-editor__tree-node --child --heading"
+                  data-test-parent-index={{node.index}}
+                >
+                  <div class="schema-theme-setting-editor__tree-node-text">
+                    {{nestedTree.propertyName}}
+                  </div>
+                </li>
+              {{/if}}
+
+              {{#each nestedTree.nodes as |childNode|}}
+                <li
+                  role="link"
+                  class="schema-theme-setting-editor__tree-node --child"
+                  {{on
+                    "click"
+                    (fn this.onChildClick childNode nestedTree node)
+                  }}
+                  data-test-parent-index={{node.index}}
+                >
+                  <div class="schema-theme-setting-editor__tree-node-text">
+                    {{childNode.text}}
+                    {{dIcon "chevron-right"}}
+                  </div>
+                </li>
+              {{/each}}
             {{/each}}
-          </div>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="schema-theme-setting-editor__fields">
+        {{#each this.fields as |field|}}
+          <FieldInput
+            @name={{field.name}}
+            @value={{field.value}}
+            @spec={{field.spec}}
+            @onValueChange={{fn this.inputFieldChanged field}}
+            @description={{field.description}}
+          />
         {{/each}}
-      </ul>
+      </div>
 
-      {{#each this.fields as |field|}}
-        <FieldInput
-          @name={{field.name}}
-          @value={{field.value}}
-          @spec={{field.spec}}
-          @onValueChange={{fn this.inputFieldChanged field}}
-          @description={{field.description}}
+      <div class="schema-theme-setting-editor__footer">
+        <DButton
+          @disabled={{this.saveButtonDisabled}}
+          @action={{this.saveChanges}}
+          @label="save"
+          class="btn-primary"
         />
-      {{/each}}
+
+        <LinkTo
+          @route="adminCustomizeThemes.show"
+          @model={{@themeId}}
+          class="btn-transparent"
+        >
+          {{i18n "cancel"}}
+        </LinkTo>
+      </div>
     </div>
-
-    <DButton
-      @disabled={{this.saveButtonDisabled}}
-      @action={{this.saveChanges}}
-      @label="save"
-      class="btn-primary"
-    />
-
-    <LinkTo
-      @route="adminCustomizeThemes.show"
-      @model={{@themeId}}
-      class="btn-transparent"
-    >
-      {{i18n "cancel"}}
-    </LinkTo>
   </template>
 }

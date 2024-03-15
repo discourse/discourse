@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
@@ -15,23 +15,39 @@ class TreeFromDOM {
   }
 
   refresh() {
-    this.nodes = [...queryAll(".tree .item-container")].map((container) => {
-      const li = container.querySelector(".parent.node");
-      const active = li.classList.contains("active");
-      const children = [...container.querySelectorAll(".node.child")].map(
-        (child) => {
-          return {
-            text: child.textContent.trim(),
-            element: child,
-          };
-        }
+    this.nodes = [
+      ...queryAll(
+        ".schema-theme-setting-editor__tree .schema-theme-setting-editor__tree-node.--parent"
+      ),
+    ].map((container, index) => {
+      const li = container;
+      const active = li.classList.contains("--active");
+
+      const children = [
+        ...queryAll(
+          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]:not(.--heading)`
+        ),
+      ].map((child) => {
+        return {
+          element: child,
+          textElement: child.querySelector(
+            ".schema-theme-setting-editor__tree-node-text"
+          ),
+        };
+      });
+
+      const childrenHeaderElement = query(
+        `.schema-theme-setting-editor__tree-node.--heading[data-test-parent-index="${index}"]`
       );
 
       return {
-        text: li.textContent.trim(),
         active,
         children,
+        childrenHeaderElement,
         element: li,
+        textElement: li.querySelector(
+          ".schema-theme-setting-editor__tree-node-text"
+        ),
       };
     });
   }
@@ -85,6 +101,8 @@ module(
       const tree = new TreeFromDOM();
 
       assert.true(tree.nodes[0].active);
+      assert.dom(tree.nodes[0].childrenHeaderElement).hasText("children");
+
       assert.strictEqual(
         tree.nodes[0].children.length,
         2,
@@ -127,12 +145,12 @@ module(
       const tree = new TreeFromDOM();
 
       assert.strictEqual(tree.nodes.length, 2);
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.strictEqual(tree.nodes[0].children.length, 2);
-      assert.strictEqual(tree.nodes[0].children[0].text, "child 1-1");
-      assert.strictEqual(tree.nodes[0].children[1].text, "child 1-2");
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("child 1-1");
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("child 1-2");
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.strictEqual(tree.nodes[1].children.length, 0);
 
       await click(tree.nodes[1].element);
@@ -140,35 +158,47 @@ module(
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 2);
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 3);
-      assert.strictEqual(tree.nodes[1].children[0].text, "child 2-1");
-      assert.strictEqual(tree.nodes[1].children[1].text, "child 2-2");
-      assert.strictEqual(tree.nodes[1].children[2].text, "child 2-3");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("child 2-1");
+      assert.dom(tree.nodes[1].children[1].textElement).hasText("child 2-2");
+      assert.dom(tree.nodes[1].children[2].textElement).hasText("child 2-3");
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
       assert.strictEqual(tree.nodes.length, 3);
 
-      assert.strictEqual(tree.nodes[0].text, "child 2-1");
+      assert.dom(tree.nodes[0].textElement).hasText("child 2-1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "child 2-2");
+      assert.dom(tree.nodes[1].textElement).hasText("child 2-2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 4);
-      assert.strictEqual(tree.nodes[1].children[0].text, "grandchild 2-2-1");
-      assert.strictEqual(tree.nodes[1].children[1].text, "grandchild 2-2-2");
-      assert.strictEqual(tree.nodes[1].children[2].text, "grandchild 2-2-3");
-      assert.strictEqual(tree.nodes[1].children[3].text, "grandchild 2-2-4");
 
-      assert.strictEqual(tree.nodes[2].text, "child 2-3");
+      assert
+        .dom(tree.nodes[1].children[0].textElement)
+        .hasText("grandchild 2-2-1");
+
+      assert
+        .dom(tree.nodes[1].children[1].textElement)
+        .hasText("grandchild 2-2-2");
+
+      assert
+        .dom(tree.nodes[1].children[2].textElement)
+        .hasText("grandchild 2-2-3");
+
+      assert
+        .dom(tree.nodes[1].children[3].textElement)
+        .hasText("grandchild 2-2-4");
+
+      assert.dom(tree.nodes[2].textElement).hasText("child 2-3");
       assert.false(tree.nodes[2].active);
       assert.strictEqual(tree.nodes[2].children.length, 0);
 
@@ -178,19 +208,19 @@ module(
 
       assert.strictEqual(tree.nodes.length, 4);
 
-      assert.strictEqual(tree.nodes[0].text, "grandchild 2-2-1");
+      assert.dom(tree.nodes[0].textElement).hasText("grandchild 2-2-1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "grandchild 2-2-2");
+      assert.dom(tree.nodes[1].textElement).hasText("grandchild 2-2-2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 0);
 
-      assert.strictEqual(tree.nodes[2].text, "grandchild 2-2-3");
+      assert.dom(tree.nodes[2].textElement).hasText("grandchild 2-2-3");
       assert.false(tree.nodes[2].active);
       assert.strictEqual(tree.nodes[2].children.length, 0);
 
-      assert.strictEqual(tree.nodes[3].text, "grandchild 2-2-4");
+      assert.dom(tree.nodes[3].textElement).hasText("grandchild 2-2-4");
       assert.false(tree.nodes[3].active);
       assert.strictEqual(tree.nodes[3].children.length, 0);
     });
@@ -202,32 +232,36 @@ module(
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
-      assert.dom(".back-button").doesNotExist();
+      assert
+        .dom(".schema-theme-setting-editor__tree-node--back-btn")
+        .doesNotExist();
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[0].children[0].element);
 
-      assert.dom(".back-button").exists();
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").exists();
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "child 1-1");
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
 
       await click(tree.nodes[0].children[0].element);
 
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "grandchild 1-1-1");
-      assert.dom(".back-button").exists();
+      assert.dom(tree.nodes[0].textElement).hasText("grandchild 1-1-1");
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").exists();
 
-      await click(".back-button");
-
-      tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "child 1-1");
-      assert.dom(".back-button").exists();
-
-      await click(".back-button");
+      await click(".schema-theme-setting-editor__tree-node--back-btn");
 
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "item 1");
-      assert.dom(".back-button").doesNotExist();
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").exists();
+
+      await click(".schema-theme-setting-editor__tree-node--back-btn");
+
+      tree.refresh();
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert
+        .dom(".schema-theme-setting-editor__tree-node--back-btn")
+        .doesNotExist();
     });
 
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
@@ -243,16 +277,16 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[1].element);
 
-      await click(".back-button");
+      await click(".schema-theme-setting-editor__tree-node--back-btn");
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 2);
 
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 3);
     });
@@ -270,7 +304,7 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[1].element);
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
@@ -279,15 +313,15 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[0].element);
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "child 2-2",
         })
       );
 
-      await click(".back-button");
+      await click(".schema-theme-setting-editor__tree-node--back-btn");
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
@@ -377,11 +411,12 @@ module(
       assert.dom(inputFields.fields.text.labelElement).hasText("text");
       assert.dom(inputFields.fields.url.labelElement).hasText("url");
       assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
-
       assert.dom(inputFields.fields.text.inputElement).hasValue("About");
+
       assert
         .dom(inputFields.fields.url.inputElement)
         .hasValue("https://example.com/about");
+
       assert.dom(inputFields.fields.icon.inputElement).hasValue("asterisk");
     });
 
@@ -657,16 +692,16 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.dom(tree.nodes[0].element).hasText("section 1");
-      assert.dom(tree.nodes[0].children[0].element).hasText("link 1");
-      assert.dom(tree.nodes[0].children[1].element).hasText("link 2");
-      assert.dom(tree.nodes[1].element).hasText("section 2");
+      assert.dom(tree.nodes[0].textElement).hasText("section 1");
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("link 2");
+      assert.dom(tree.nodes[1].textElement).hasText("section 2");
 
       await click(tree.nodes[1].element);
 
       tree.refresh();
 
-      assert.dom(tree.nodes[1].children[0].element).hasText("link 1");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("link 1");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
@@ -684,7 +719,9 @@ module(
         "nice section is really nice"
       );
 
-      assert.dom(tree.nodes[0].element).hasText("nice section is really nice");
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("nice section is really nice");
 
       await click(tree.nodes[0].children[0].element);
 
@@ -696,7 +733,9 @@ module(
         "Security instead of Privacy"
       );
 
-      assert.dom(tree.nodes[0].element).hasText("Security instead of Privacy");
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("Security instead of Privacy");
     });
 
     test("edits are remembered when navigating between levels", async function (assert) {
@@ -729,26 +768,26 @@ module(
       tree.refresh();
       inputFields.refresh();
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".schema-theme-setting-editor__tree-node--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
 
       await fillIn(inputFields.fields.text.inputElement, "Talk to us");
-
-      await click(".back-button");
+      await click(".schema-theme-setting-editor__tree-node--back-btn");
 
       tree.refresh();
       inputFields.refresh();
 
-      assert.dom(tree.nodes[0].element).hasText("changed section name");
+      assert.dom(tree.nodes[0].textElement).hasText("changed section name");
+
       assert
-        .dom(tree.nodes[1].element)
+        .dom(tree.nodes[1].textElement)
         .hasText("cool section is no longer cool");
 
-      assert.dom(tree.nodes[1].children[0].element).hasText("About");
-      assert.dom(tree.nodes[1].children[1].element).hasText("Talk to us");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("About");
+      assert.dom(tree.nodes[1].children[1].textElement).hasText("Talk to us");
 
       assert
         .dom(inputFields.fields.name.inputElement)
