@@ -170,21 +170,21 @@
       margin-bottom: 2em;
 
       .translation-selector-container {
-        display: grid;
-        grid-template-columns: calc(50% - 2px) 30% 20%;
+        display: flex;
+        justify-content: space-between;
+        width: 79.7%;
 
         @media screen and (max-width: 700px) {
-          grid-template-columns: none;
+          width: 100%;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 780px) {
-          grid-template-columns: calc(50% - 4.5vw) 30% 20%;
+        @media screen and (min-width: 700px) and (max-width: 768px) {
+          width: 73%;
         }
 
         .translation-selector {
           width: auto;
-          justify-self: right;
-          grid-column: 2;
+          margin-left: auto;
         }
       }
     }
