@@ -626,4 +626,28 @@ RSpec.describe NotificationsController do
       end
     end
   end
+
+  context "with user api keys" do
+    fab!(:user)
+    let(:user_api_key) do
+      UserApiKey.create!(
+        application_name: "my app",
+        client_id: "",
+        scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
+        user_id: user.id,
+      )
+    end
+
+    before { SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
+
+    it "allows access to notifications#totals" do
+      get "/notifications/totals.json", headers: { "User-Api-Key": user_api_key.key }
+      expect(response.status).to eq(200)
+    end
+
+    it "allows access to notifications#index" do
+      get "/notifications.json", headers: { "User-Api-Key": user_api_key.key }
+      expect(response.status).to eq(200)
+    end
+  end
 end
