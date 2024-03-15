@@ -33,7 +33,7 @@ RSpec.describe UserNotificationTotalSerializer do
   end
 
   context "when the user is staff" do
-    before { user.update(admin: true) }
+    before { user.update!(admin: true) }
 
     it "includes the count of unseen reviewables" do
       expect(serialized_data[:unseen_reviewables]).to eq(1)

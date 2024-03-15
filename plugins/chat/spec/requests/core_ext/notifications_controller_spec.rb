@@ -33,15 +33,14 @@ RSpec.describe NotificationsController do
     end
 
     describe "#totals" do
-      it "has a total of 0 by default" do
-        sign_in(user)
+      it "has a total of 0 chat notifications by default" do
         get "/notifications/totals.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_notifications"]).to eq(0)
       end
 
-      it "returns the correct count for unread DMs" do
+      it "returns the correct chat notifications count for unread DMs" do
         create_dm(user, direct_message_channel1, dm1)
 
         get "/notifications/totals.json"
