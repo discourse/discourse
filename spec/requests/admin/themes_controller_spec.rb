@@ -1138,6 +1138,11 @@ RSpec.describe Admin::ThemesController do
         name: :en,
         value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
       )
+      theme.set_field(
+        target: :translations,
+        name: :fr,
+        value: { fr: { group: { hello: "Bonjour Mes Amis!" } } }.deep_stringify_keys.to_yaml,
+      )
       theme.save!
     end
 
@@ -1151,6 +1156,20 @@ RSpec.describe Admin::ThemesController do
                 translations: {
                   "group.hello" => "Hello there! updated",
                 },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
+      end
+
+      it "should update a theme translation with locale" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Hello there! updated",
+                },
                 locale: "en",
               },
             }
@@ -1158,6 +1177,70 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(200)
         theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
       end
+
+      it "should fail update a theme translation when locale is wrong" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Hello there! updated",
+                },
+                locale: "foo",
+              },
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("invalid_params", message: :locale),
+        )
+      end
+
+      it "should update other locale and do not change current one" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Bonjour Mes Amis! updated",
+                },
+                locale: "fr",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there!") }
+
+        get "/admin/themes/#{theme.id}/translations/fr.json"
+        translations = response.parsed_body["translations"]
+        expect(translations.first["value"]).to eq("Bonjour Mes Amis! updated")
+      end
+    end
+
+    shared_examples "theme update not allowed" do
+      it "prevents updates with a 404 response" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Bonjour Mes Amis! updated",
+                },
+                locale: "fr",
+              },
+            }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "theme update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "theme update not allowed"
     end
   end
 
@@ -1181,6 +1264,34 @@ RSpec.describe Admin::ThemesController do
         translations = response.parsed_body["translations"]
         expect(translations.first["value"]).to eq("Hello there!")
       end
+
+      it "fail if get translations from theme with wrong locale" do
+        get "/admin/themes/#{theme.id}/translations/foo.json"
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("invalid_params", message: :locale),
+        )
+      end
+    end
+
+    shared_examples "get theme translations not allowed" do
+      it "prevents updates with a 404 response" do
+        get "/admin/themes/#{theme.id}/translations/en.json"
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "get theme translations not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "get theme translations not allowed"
     end
   end
 
