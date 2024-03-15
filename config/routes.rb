@@ -1129,6 +1129,7 @@ Discourse::Application.routes.draw do
         # creating an alias cause the api was extended to mark a single notification
         # this allows us to cleanly target it
         put "read" => "notifications#mark_read"
+        get "totals" => "notifications#totals"
       end
     end
 

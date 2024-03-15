@@ -146,6 +146,10 @@ class NotificationsController < ApplicationController
     render json: success_json
   end
 
+  def totals
+    render_serialized(current_user, UserNotificationTotalSerializer, root: false)
+  end
+
   private
 
   def set_notification

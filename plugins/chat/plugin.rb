@@ -246,6 +246,16 @@ after_initialize do
       .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
 
+  add_to_serializer(
+    :user_notification_total,
+    :chat_notifications,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled =
+        SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
+    end,
+  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
+
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
   add_to_serializer(
