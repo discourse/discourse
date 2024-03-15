@@ -1,7 +1,7 @@
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 
 export default {
-  after: "category-color-css-generator",
+  after: "register-hashtag-types",
 
   /**
    * This generates CSS classes for each hashtag type,
