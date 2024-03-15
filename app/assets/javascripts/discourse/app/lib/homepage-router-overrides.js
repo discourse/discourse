@@ -32,21 +32,28 @@ export function homepageDestination() {
 }
 
 function rewriteIfNeeded(url, transition) {
-  const intentUrl = transition?.intent?.url;
-  if (
-    intentUrl?.startsWith(homepageDestination()) ||
-    (transition?.intent.name === `discovery.${defaultHomepage()}` &&
-      transition?.intent.queryParams[homepageRewriteParam])
-  ) {
-    const params = (intentUrl || url).split("?", 2)[1];
-    url = "/";
-    if (params) {
-      const searchParams = new URLSearchParams(params);
-      searchParams.delete(homepageRewriteParam);
-      if (searchParams.size) {
-        url += `?${searchParams.toString()}`;
+  const { intent } = transition || {};
+  const { url: intentUrl, name, queryParams } = intent || {};
+
+  const isHomepageUrl = intentUrl?.startsWith(homepageDestination());
+  const isHomepageRoute = name === `discovery.${defaultHomepage()}`;
+  const hasRewriteParam = queryParams?.[homepageRewriteParam];
+
+  if (isHomepageUrl || (isHomepageRoute && hasRewriteParam)) {
+    const urlParams = new URLSearchParams((intentUrl || url).split("?", 2)[1]);
+
+    if (queryParams) {
+      for (const [key, value] of Object.entries(queryParams)) {
+        if (value !== null && value !== undefined) {
+          urlParams.set(key, value);
+        }
       }
     }
+
+    urlParams.delete(homepageRewriteParam);
+
+    url = urlParams.size > 0 ? `/?${urlParams}` : "/";
   }
+
   return url;
 }

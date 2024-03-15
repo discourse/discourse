@@ -8,12 +8,24 @@ export default class DiscoveryIndex extends DiscourseRoute {
   @service router;
 
   beforeModel(transition) {
-    const url = transition.intent.url;
-    const params = url?.split("?", 2)[1];
-    let destination = homepageDestination();
-    if (params) {
-      destination += `&${params}`;
+    const { intent } = transition || {};
+    const { url, queryParams } = intent || {};
+    const urlParams = new URLSearchParams(url?.split("?", 2)[1]);
+
+    if (queryParams) {
+      for (const [key, value] of Object.entries(queryParams)) {
+        if (value !== null && value !== undefined) {
+          urlParams.set(key, value);
+        }
+      }
     }
+
+    let destination = homepageDestination();
+
+    if (urlParams.size > 0) {
+      destination += `&${urlParams}`;
+    }
+
     this.router.transitionTo(destination);
   }
 }

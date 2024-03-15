@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
-import { defaultHomepage } from "discourse/lib/utilities";
 
 export default class SectionLink {
   @tracked linkDragCss;
@@ -18,19 +17,13 @@ export default class SectionLink {
     this.text = name;
     this.value = value;
     this.section = section;
-    this.withAnchor = value.match(/#\w+$/gi);
+    this.withAnchor = /#\w+$/i.test(value);
 
     if (!this.externalOrFullReload) {
-      const routeInfoHelper = new RouteInfoHelper(router, value);
-
-      if (routeInfoHelper.route === "discovery.index") {
-        this.route = `discovery.${defaultHomepage()}`;
-      } else {
-        this.route = routeInfoHelper.route;
-      }
-
-      this.models = routeInfoHelper.models;
-      this.query = routeInfoHelper.query;
+      const { route, models, query } = new RouteInfoHelper(router, value);
+      this.route = route;
+      this.models = models;
+      this.query = query;
     }
   }
 

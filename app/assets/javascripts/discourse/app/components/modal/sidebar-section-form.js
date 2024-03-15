@@ -228,10 +228,10 @@ class SectionLink {
   }
 
   #validInternal() {
-    const routeInfoHelper = new RouteInfoHelper(this.router, this.path);
+    const { route } = new RouteInfoHelper(this.router, this.path);
 
     return (
-      routeInfoHelper.route !== "unknown" ||
+      route !== "unknown" ||
       FULL_RELOAD_LINKS_REGEX.some((regex) => this.path.match(regex))
     );
   }
