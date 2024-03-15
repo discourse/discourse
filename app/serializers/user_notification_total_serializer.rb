@@ -1,20 +1,33 @@
 # frozen_string_literal: true
 
 class UserNotificationTotalSerializer < ApplicationSerializer
-  attributes :id,
-             :username,
+  attributes :username,
              :unread_notifications,
              :unread_personal_messages,
              :unseen_reviewables,
              :topic_tracking,
              :group_inboxes
 
+  def initialize(object, opts)
+    super(object, opts)
+
+    @new_personal_messages_notifications_count = object.new_personal_messages_notifications_count
+  end
+
   def unread_notifications
-    object.all_unread_notifications_count - object.new_personal_messages_notifications_count
+    object.all_unread_notifications_count - @new_personal_messages_notifications_count
+  end
+
+  def include_unread_personal_messages?
+    object.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
   end
 
   def unread_personal_messages
-    object.new_personal_messages_notifications_count
+    @new_personal_messages_notifications_count
+  end
+
+  def include_unseen_reviewables?
+    scope.user.staff?
   end
 
   def unseen_reviewables
@@ -23,10 +36,6 @@ class UserNotificationTotalSerializer < ApplicationSerializer
 
   def topic_tracking
     TopicTrackingState.report_totals(object)
-  end
-
-  def include_group_inboxes?
-    scope.user.staff?
   end
 
   def group_inboxes
