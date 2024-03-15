@@ -7,7 +7,7 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      STRING = "3.2.0"
+      STRING = "3.2.1"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
