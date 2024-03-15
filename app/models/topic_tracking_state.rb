@@ -606,7 +606,7 @@ class TopicTrackingState
   end
 
   def self.report_totals(user)
-    if (user.new_new_view_enabled?)
+    if user.new_new_view_enabled?
       { new: report(user).count }
     else
       new = report_count_by_type(user, type: "new")
