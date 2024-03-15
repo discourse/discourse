@@ -9,9 +9,6 @@ module PageObjects
       end
 
       def fill_input(content)
-        # Clear the input before filling it in because capybara's fill_in method doesn't seem to replace existing content
-        # unless the content is a blank string.
-        editor_input.fill_in(with: "")
         editor_input.fill_in(with: content)
         self
       end
@@ -21,7 +18,11 @@ module PageObjects
       end
 
       def editor_input
-        find(".ember-text-area .ember-view .input-setting-textarea")
+        find(".theme.translations .row:nth-child(1) textarea")
+      end
+
+      def get_input
+        editor_input.value
       end
     end
   end
