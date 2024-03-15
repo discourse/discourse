@@ -23,7 +23,7 @@ export default class BookmarkMenu extends Component {
   @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
-  timezone = this.currentUser.user_option.timezone || moment.tz.guess();
+  timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
 
   reminderAtOptions = [

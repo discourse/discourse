@@ -8,23 +8,21 @@ export default {
     const currentUser = container.lookup("service:current-user");
 
     withPluginApi("0.10.1", (api) => {
-      api.replacePostMenuButton("bookmark", {
-        name: "bookmark-menu-shim",
-        shouldRender: () => true,
-        buildAttrs: (widget) => {
-          if (!currentUser) {
-            return {};
-          }
-
-          return {
-            post: widget.findAncestorModel(),
-            bookmarkManager: new PostBookmarkManager(
-              container,
-              widget.findAncestorModel()
-            ),
-          };
-        },
-      });
+      if (currentUser) {
+        api.replacePostMenuButton("bookmark", {
+          name: "bookmark-menu-shim",
+          shouldRender: () => true,
+          buildAttrs: (widget) => {
+            return {
+              post: widget.findAncestorModel(),
+              bookmarkManager: new PostBookmarkManager(
+                container,
+                widget.findAncestorModel()
+              ),
+            };
+          },
+        });
+      }
     });
   },
 };
