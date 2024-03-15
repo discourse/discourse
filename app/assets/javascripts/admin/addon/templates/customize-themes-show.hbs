@@ -461,13 +461,17 @@
       {{#if this.hasTranslations}}
         <div class="control-unit">
           <div class="translation-selector-container">
-            <span class="mini-title ">
-              {{i18n
-              "admin.customize.theme.theme_translations"
-              }}
+            <span class="mini-title">
+              {{i18n "admin.customize.theme.theme_translations"}}
             </span>
-            <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}}
-              @onChange={{this.updateLocale}} @options={{hash filterable=true}} class="translation-selector" />
+            <ComboBox
+              @valueProperty="value"
+              @content={{this.availableLocales}}
+              @value={{this.locale}}
+              @onChange={{this.updateLocale}}
+              @options={{hash filterable=true}}
+              class="translation-selector"
+            />
           </div>
           <section
             class="form-horizontal theme settings translations control-unit"
