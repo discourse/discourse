@@ -18,13 +18,15 @@ class Node {
   schema;
   index;
   active = false;
+  parentTree;
   trees = [];
 
-  constructor({ text, index, object, schema }) {
+  constructor({ text, index, object, schema, parentTree }) {
     this.text = text;
     this.index = index;
     this.object = object;
     this.schema = schema;
+    this.parentTree = parentTree;
   }
 }
 
@@ -47,20 +49,21 @@ export default class SchemaThemeSettingEditor extends Component {
   get tree() {
     let schema = this.schema;
     let data = this.data;
+    let tree = new Tree();
 
     for (const point of this.history) {
+      tree.propertyName = point.propertyName;
       data = data[point.node.index][point.propertyName];
       schema = schema.properties[point.propertyName].schema;
     }
-
-    const tree = new Tree();
 
     data.forEach((object, index) => {
       const node = new Node({
         index,
         schema,
         object,
-        text: object[schema.identifier],
+        text: object[schema.identifier] || `${schema.name} ${index + 1}`,
+        parentTree: tree,
       });
 
       if (index === this.activeIndex) {
@@ -78,10 +81,13 @@ export default class SchemaThemeSettingEditor extends Component {
             (childObj, childIndex) => {
               subtree.nodes.push(
                 new Node({
-                  text: childObj[childObjectsProperty.schema.identifier],
+                  text:
+                    childObj[childObjectsProperty.schema.identifier] ||
+                    `${childObjectsProperty.schema.name} ${childIndex + 1}`,
                   index: childIndex,
                   object: childObj,
                   schema: childObjectsProperty.schema,
+                  parentTree: subtree,
                 })
               );
             }
@@ -117,6 +123,7 @@ export default class SchemaThemeSettingEditor extends Component {
         name,
         spec,
         value: node.object[name],
+        description: this.fieldDescription(name),
       });
     }
 
@@ -198,6 +205,24 @@ export default class SchemaThemeSettingEditor extends Component {
     this.activeNode.object[field.name] = newVal;
   }
 
+  fieldDescription(fieldName) {
+    const descriptions = this.args.setting.objects_schema_property_descriptions;
+
+    if (!descriptions) {
+      return;
+    }
+
+    let key;
+
+    if (this.activeNode.parentTree.propertyName) {
+      key = `${this.activeNode.parentTree.propertyName}.${fieldName}`;
+    } else {
+      key = `${fieldName}`;
+    }
+
+    return descriptions[key];
+  }
+
   <template>
     <div class="schema-editor-navigation">
       {{#if this.backButtonText}}
@@ -243,6 +268,7 @@ export default class SchemaThemeSettingEditor extends Component {
           @value={{field.value}}
           @spec={{field.spec}}
           @onValueChange={{fn this.inputFieldChanged field}}
+          @description={{field.description}}
         />
       {{/each}}
     </div>

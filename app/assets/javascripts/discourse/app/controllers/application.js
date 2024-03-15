@@ -59,6 +59,11 @@ export default Controller.extend({
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   },
 
+  @discourseComputed
+  showPoweredBy() {
+    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
+  },
+
   _mainOutletAnimate() {
     document.body.classList.remove("sidebar-animate");
   },

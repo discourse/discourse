@@ -3,7 +3,7 @@ import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 
-export function downloadCalendar(title, dates, recurrenceRule = null) {
+export function downloadCalendar(title, dates, options = {}) {
   const currentUser = User.current();
 
   const formattedDates = formatDates(dates);
@@ -11,20 +11,20 @@ export function downloadCalendar(title, dates, recurrenceRule = null) {
 
   switch (currentUser.user_option.default_calendar) {
     case "none_selected":
-      _displayModal(title, formattedDates, recurrenceRule);
+      _displayModal(title, formattedDates, options);
       break;
     case "ics":
-      downloadIcs(title, formattedDates, recurrenceRule);
+      downloadIcs(title, formattedDates, options);
       break;
     case "google":
-      downloadGoogle(title, formattedDates, recurrenceRule);
+      downloadGoogle(title, formattedDates, options);
       break;
   }
 }
 
-export function downloadIcs(title, dates, recurrenceRule) {
+export function downloadIcs(title, dates, options = {}) {
   const REMOVE_FILE_AFTER = 20_000;
-  const file = new File([generateIcsData(title, dates, recurrenceRule)], {
+  const file = new File([generateIcsData(title, dates, options)], {
     type: "text/plain",
   });
 
@@ -37,7 +37,7 @@ export function downloadIcs(title, dates, recurrenceRule) {
   setTimeout(() => window.URL.revokeObjectURL(file), REMOVE_FILE_AFTER); //remove file to avoid memory leaks
 }
 
-export function downloadGoogle(title, dates, recurrenceRule) {
+export function downloadGoogle(title, dates, options = {}) {
   dates.forEach((date) => {
     const link = new URL("https://www.google.com/calendar/event");
     link.searchParams.append("action", "TEMPLATE");
@@ -49,8 +49,16 @@ export function downloadGoogle(title, dates, recurrenceRule) {
       )}`
     );
 
-    if (recurrenceRule) {
-      link.searchParams.append("recur", `RRULE:${recurrenceRule}`);
+    if (options.recurrenceRule) {
+      link.searchParams.append("recur", `RRULE:${options.recurrenceRule}`);
+    }
+
+    if (options.location) {
+      link.searchParams.append("location", options.location);
+    }
+
+    if (options.details) {
+      link.searchParams.append("details", options.details);
     }
 
     window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
@@ -68,7 +76,7 @@ export function formatDates(dates) {
   });
 }
 
-export function generateIcsData(title, dates, recurrenceRule) {
+export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Discourse//EN\n";
   dates.forEach((date) => {
     const startDate = moment(date.startsAt);
@@ -80,7 +88,7 @@ export function generateIcsData(title, dates, recurrenceRule) {
         `DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z\n` +
         `DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z\n` +
         `DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z\n` +
-        (recurrenceRule ? `RRULE:${recurrenceRule}\n` : ``) +
+        (options.recurrenceRule ? `RRULE:${options.recurrenceRule}\n` : ``) +
         `SUMMARY:${title}\n` +
         "END:VEVENT\n"
     );
@@ -89,10 +97,12 @@ export function generateIcsData(title, dates, recurrenceRule) {
   return data;
 }
 
-function _displayModal(title, dates, recurrenceRule) {
+function _displayModal(title, dates, options = {}) {
   const modal = getOwnerWithFallback(this).lookup("service:modal");
   modal.show(downloadCalendarModal, {
-    model: { calendar: { title, dates, recurrenceRule } },
+    model: {
+      calendar: { title, dates, recurrenceRule: options.recurrenceRule },
+    },
   });
 }
 

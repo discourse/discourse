@@ -48,8 +48,8 @@ class InputFieldsFromDOM {
     [...queryAll(".schema-field")].forEach((field) => {
       this.count += 1;
       this.fields[field.dataset.name] = {
-        labelElement: field.querySelector("label"),
-        inputElement: field.querySelector(".input").children[0],
+        labelElement: field.querySelector(".schema-field__label"),
+        inputElement: field.querySelector(".schema-field__input").children[0],
         selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
@@ -604,6 +604,69 @@ module(
 
       await click(tree.nodes[0].element);
       assert.strictEqual(groupSelector.header().value(), "74");
+    });
+
+    test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "section",
+          properties: {
+            name: {
+              type: "string",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  title: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        value: [
+          {
+            name: "some section",
+            links: [
+              {
+                title: "some title",
+              },
+              {
+                title: "some other title",
+              },
+            ],
+          },
+          {
+            name: "some section 2",
+            links: [
+              {
+                title: "some title 3",
+              },
+            ],
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].element).hasText("section 1");
+      assert.dom(tree.nodes[0].children[0].element).hasText("link 1");
+      assert.dom(tree.nodes[0].children[1].element).hasText("link 2");
+      assert.dom(tree.nodes[1].element).hasText("section 2");
+
+      await click(tree.nodes[1].element);
+
+      tree.refresh();
+
+      assert.dom(tree.nodes[1].children[0].element).hasText("link 1");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {

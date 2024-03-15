@@ -1212,6 +1212,11 @@ eviltrout</p>
       '<pre><code class="lang-auto">   s</code></pre>',
       "it doesn't trim leading whitespace"
     );
+    assert.cooked(
+      "> [code]\n> line 1\n> line 2\n> line 3\n> [/code]",
+      '<blockquote>\n<pre><code class="lang-auto">line 1\nline 2\nline 3</code></pre>\n</blockquote>',
+      "supports quoting a whole [code] block"
+    );
   });
 
   test("tags with arguments", function (assert) {

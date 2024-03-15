@@ -450,6 +450,7 @@ RSpec.describe Admin::ApiController do
           "users",
           "email",
           "posts",
+          "revisions",
           "tags",
           "tag_groups",
           "uploads",
@@ -489,6 +490,12 @@ RSpec.describe Admin::ApiController do
         expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
         expect(
           scopes["posts"].any? { |h| h["urls"].include?("/posts/:post_id/recover (PUT)") },
+        ).to be_truthy
+
+        expect(
+          scopes["revisions"].any? do |h|
+            h["urls"].include?("/posts/:post_id/revisions/permanently_delete (DELETE)")
+          end,
         ).to be_truthy
 
         expect(scopes["users"].find { _1["key"] == "update" }["urls"]).to contain_exactly(
