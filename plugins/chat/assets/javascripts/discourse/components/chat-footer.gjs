@@ -16,6 +16,7 @@ export default class ChatFooter extends Component {
   @service siteSettings;
   @service currentUser;
   @service chatChannelsManager;
+  @service chatStateManager;
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
@@ -31,7 +32,10 @@ export default class ChatFooter extends Component {
   }
 
   get shouldRenderFooter() {
-    return this.includeThreads || this.directMessagesEnabled;
+    return (
+      this.chatStateManager.hasPreloadedChannels &&
+      (this.includeThreads || this.directMessagesEnabled)
+    );
   }
 
   <template>
