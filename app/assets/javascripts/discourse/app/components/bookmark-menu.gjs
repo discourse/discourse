@@ -182,7 +182,7 @@ export default class BookmarkMenu extends Component {
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
                 <DButton
                   @icon="pencil-alt"
-                  @translatedLabel="Edit"
+                  @label="edit"
                   @action={{this.onEditBookmark}}
                   @class="bookmark-menu__row-btn btn-flat"
                 />
@@ -195,7 +195,7 @@ export default class BookmarkMenu extends Component {
               >
                 <DButton
                   @icon="trash-alt"
-                  @translatedLabel="Delete"
+                  @label="delete"
                   @action={{this.onRemoveBookmark}}
                   @class="bookmark-menu__row-btn btn-flat"
                 />
