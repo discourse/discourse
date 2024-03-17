@@ -159,8 +159,9 @@ export default class BookmarkMenu extends Component {
       @triggers={{array "click"}}
       @arrow="true"
       class={{concatClass
-        "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
+        "bookmark widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
         (if this.existingBookmark "bookmarked")
+        (if this.existingBookmark.reminderAt "with-reminder")
       }}
       @title={{this.buttonTitle}}
       @onClose={{this.onCloseMenu}}
