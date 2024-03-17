@@ -111,32 +111,45 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  onRemoveBookmark() {
-    this.bookmarkManager.delete().then((response) => {
+  async onRemoveBookmark() {
+    try {
+      const response = await this.bookmarkManager.delete();
       this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
+      this.toasts.success({
+        duration: 3000,
+        data: { message: I18n.t("bookmarks.deleted_bookmark_success") },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
       this.dMenu.close();
-    });
+    }
   }
 
   @action
-  onChooseReminderOption(option) {
+  async onChooseReminderOption(option) {
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {
       this.existingBookmark.reminderAt = option.time;
-      this.bookmarkManager.save().then(() => {
+
+      try {
+        await this.bookmarkManager.save();
         this.toasts.success({
           duration: 3000,
           data: { message: I18n.t("bookmarks.reminder_set_success") },
         });
+      } catch (error) {
+        popupAjaxError(error);
+      } finally {
         this.dMenu.close();
-      });
+      }
     }
   }
 
-  _openBookmarkModal() {
-    this.modal
-      .show(BookmarkModal, {
+  async _openBookmarkModal() {
+    try {
+      const closeData = await this.modal.show(BookmarkModal, {
         model: {
           bookmark: this.existingBookmark,
           afterSave: (savedData) => {
@@ -146,10 +159,11 @@ export default class BookmarkMenu extends Component {
             this.bookmarkManager.afterDelete(response, bookmarkId);
           },
         },
-      })
-      .then((closeData) => {
-        this.bookmarkManager.afterModalClose(closeData);
       });
+      this.bookmarkManager.afterModalClose(closeData);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

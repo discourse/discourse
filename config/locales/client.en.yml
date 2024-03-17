@@ -259,7 +259,6 @@ en:
         us_west_2: "US West (Oregon)"
 
     clear_input: "Clear input"
-    edit: "edit the title and category of this topic"
     edit: "Edit"
     edit_topic: "edit the title and category of this topic"
     expand: "Expand"
@@ -357,6 +356,7 @@ en:
     bookmarks:
       also_set_reminder: "Also set a reminder?"
       bookmarked_success: "Bookmarked!"
+      deleted_bookmark_success: "Bookmark deleted!"
       reminder_set_success: "Reminder has beeen set!"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
