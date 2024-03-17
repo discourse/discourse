@@ -180,7 +180,7 @@ GEM
     in_threads (1.6.0)
     jmespath (1.6.2)
     json (2.7.1)
-    json-schema (4.1.1)
+    json-schema (4.2.0)
       addressable (>= 2.8)
     json_schemer (2.2.1)
       base64
