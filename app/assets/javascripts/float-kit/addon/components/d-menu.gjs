@@ -59,12 +59,12 @@ export default class DMenu extends Component {
 
   @action
   allowedProperties() {
-    const keys = Object.keys(MENU.options);
-    return keys.reduce((result, key) => {
-      result[key] = this.args[key];
-
-      return result;
-    }, {});
+    const properties = {};
+    Object.keys(MENU.options).forEach((key) => {
+      const value = MENU.options[key];
+      properties[key] = this.args[key] ?? value;
+    });
+    return properties;
   }
 
   <template>

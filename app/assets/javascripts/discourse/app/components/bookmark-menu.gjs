@@ -166,7 +166,6 @@ export default class BookmarkMenu extends Component {
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
-      @closeOnClickOutside={{true}}
     >
       <:trigger>
         {{#if this.existingBookmark.reminderAt}}

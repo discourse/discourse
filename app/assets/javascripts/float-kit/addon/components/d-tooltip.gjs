@@ -56,12 +56,12 @@ export default class DTooltip extends Component {
 
   @action
   allowedProperties() {
-    const keys = Object.keys(TOOLTIP.options);
-    return keys.reduce((result, key) => {
-      result[key] = this.args[key];
-
-      return result;
-    }, {});
+    const properties = {};
+    Object.keys(TOOLTIP.options).forEach((key) => {
+      const value = TOOLTIP.options[key];
+      properties[key] = this.args[key] ?? value;
+    });
+    return properties;
   }
 
   <template>
