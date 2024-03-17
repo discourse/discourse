@@ -53,7 +53,9 @@ export default class BookmarkMenu extends Component {
           name: this.existingBookmark.name || "",
         });
       } else {
-        return I18n.t("bookmarks.created");
+        return I18n.t("bookmarks.created", {
+          name: this.existingBookmark.name || "",
+        });
       }
     }
   }
