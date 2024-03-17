@@ -6,7 +6,7 @@ RSpec.describe ProblemCheck::MissingMailgunApiKey do
   describe ".call" do
     before do
       SiteSetting.stubs(reply_by_email_enabled: replies_enabled)
-      ActionMailer::Base.smtp_settings.stubs(dig: mailgun_address)
+      ActionMailer::Base.stubs(smtp_settings: { address: mailgun_address })
       SiteSetting.stubs(mailgun_api_key: api_key)
     end
 
@@ -28,7 +28,7 @@ RSpec.describe ProblemCheck::MissingMailgunApiKey do
 
     context "when using Mailgun without an API key" do
       let(:replies_enabled) { true }
-      let(:mailgun_address) { "foo" }
+      let(:mailgun_address) { "smtp.mailgun.org" }
       let(:api_key) { nil }
 
       it do
