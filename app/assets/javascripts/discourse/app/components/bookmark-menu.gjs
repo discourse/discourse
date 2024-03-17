@@ -11,7 +11,7 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -170,9 +170,9 @@ export default class BookmarkMenu extends Component {
     >
       <:trigger>
         {{#if this.existingBookmark.reminderAt}}
-          {{dIcon "discourse-bookmark-clock"}}
+          {{icon "discourse-bookmark-clock"}}
         {{else}}
-          {{dIcon "bookmark"}}
+          {{icon "bookmark"}}
         {{/if}}
       </:trigger>
       <:content>
