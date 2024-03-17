@@ -76,9 +76,6 @@ export default class BookmarkMenu extends Component {
       // so this "quicksave" will do nothing in that case.
       // NOTE: Need a nicer way to handle this; otherwise as soon as you save
       // a bookmark, it switches to the other Edit/Delete menu.
-      //
-      // Also we have the opposite problem -- when closing the DMenu we have
-      // no on-close hook, so we can't reset this.
       this.quicksaved = true;
       this.toasts.success({
         duration: 3000,
