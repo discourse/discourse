@@ -45,8 +45,26 @@ module PageObjects
         self
       end
 
+      def clear_search
+        find("#setting-filter").click
+        self
+      end
+
+      def toggle_only_show_overridden
+        find("#setting-filter-toggle-overridden").click
+        self
+      end
+
       def has_search_result?(setting)
-        page.has_selector?("div[data-setting='#{setting}']")
+        has_css?("div[data-setting='#{setting}']")
+      end
+
+      def has_n_results?(count)
+        has_css?(".admin-detail .row.setting", count: count)
+      end
+
+      def has_greater_than_n_results?(count)
+        assert_selector(".admin-detail .row.setting", minimum: count)
       end
     end
   end
