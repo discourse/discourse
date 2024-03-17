@@ -211,10 +211,9 @@ export default class BookmarkMenu extends Component {
                   class="bookmark-menu__row"
                   data-menu-option-id={{option.id}}
                 >
-
                   <DButton
                     @label={{option.label}}
-                    @translatedTitle={{this.reminderShortcutTimeTitle option}}
+                    @translatedTitle={{(this.reminderShortcutTimeTitle option)}}
                     @action={{fn this.onChooseReminderOption option}}
                     @class="bookmark-menu__row-btn btn-flat"
                   />
