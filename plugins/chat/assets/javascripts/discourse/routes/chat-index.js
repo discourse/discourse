@@ -26,9 +26,11 @@ export default class ChatIndexRoute extends DiscourseRoute {
     this.chat.activeChannel = null;
   }
 
-  async redirect() {
-    await this.chat.loadChannels();
+  async model() {
+    return await this.chat.loadChannels();
+  }
 
+  async redirect() {
     // on mobile redirect user to the first footer tab route
     if (this.site.mobileView) {
       if (
