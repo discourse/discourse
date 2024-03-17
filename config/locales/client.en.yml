@@ -260,6 +260,8 @@ en:
 
     clear_input: "Clear input"
     edit: "edit the title and category of this topic"
+    edit: "Edit"
+    edit_topic: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
