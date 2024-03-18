@@ -64,6 +64,12 @@
           font-weight: bold;
         }
       }
+
+      .schema-theme-setting-editor__tree-add-button {
+        &.--child {
+          margin-left: 0.5em;
+        }
+      }
     }
   }
 

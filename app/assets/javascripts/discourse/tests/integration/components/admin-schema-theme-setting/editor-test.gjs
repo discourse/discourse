@@ -39,11 +39,17 @@ class TreeFromDOM {
       const childrenHeaderElement = query(
         `.schema-theme-setting-editor__tree-node.--heading[data-test-parent-index="${index}"]`
       );
+      const addButtons = [
+        ...queryAll(
+          `.schema-theme-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+        ),
+      ];
 
       return {
         active,
         children,
         childrenHeaderElement,
+        addButtons,
         element: li,
         textElement: li.querySelector(
           ".schema-theme-setting-editor__tree-node-text"
@@ -71,6 +77,10 @@ class InputFieldsFromDOM {
     });
   }
 }
+
+const TOP_LEVEL_ADD_BTN =
+  ".schema-theme-setting-editor__tree-add-button.--root";
+const REMOVE_ITEM_BTN = ".schema-theme-setting-editor__remove-btn";
 
 module(
   "Integration | Admin | Component | schema-theme-setting/editor",
@@ -799,6 +809,181 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
+    });
+
+    test("adding an object to the root list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+
+      const tree = new TreeFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 2);
+
+      await click(TOP_LEVEL_ADD_BTN);
+      await click(TOP_LEVEL_ADD_BTN);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes.length, 4);
+      assert.dom(tree.nodes[2].textElement).hasText("level1 3");
+      assert.dom(tree.nodes[3].textElement).hasText("level1 4");
+    });
+
+    test("adding an object to a child list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes[0].children.length, 4);
+      assert.dom(tree.nodes[0].children[2].textElement).hasText("level2 3");
+      assert.dom(tree.nodes[0].children[3].textElement).hasText("level2 4");
+    });
+
+    test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level2");
+      assert.strictEqual(tree.nodes.length, 2);
+
+      await click(TOP_LEVEL_ADD_BTN);
+      await click(TOP_LEVEL_ADD_BTN);
+
+      tree.refresh();
+      assert.strictEqual(tree.nodes.length, 4);
+      assert.dom(tree.nodes[2].textElement).hasText("level2 3");
+      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
+    });
+
+    test("navigating 1 level deep and adding an object to a grandchild list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level3");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes[0].children.length, 4);
+      assert.dom(tree.nodes[0].children[2].textElement).hasText("level3 3");
+      assert.dom(tree.nodes[0].children[3].textElement).hasText("level3 4");
+    });
+
+    test("removing an object from the root list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 1);
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 2");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 0);
+      assert.strictEqual(inputFields.count, 0);
+      assert.dom(REMOVE_ITEM_BTN).doesNotExist();
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+    });
+
+    test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[1].element);
+      tree.refresh();
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(tree.nodes[1].textElement).hasText("child 1-2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("child 1-2");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 1);
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("child 1-1");
+
+      // removing the last object navigates back to the previous level
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
+
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+      assert
+        .dom(".schema-theme-setting-editor__tree-node--back-btn")
+        .doesNotExist();
     });
   }
 );
