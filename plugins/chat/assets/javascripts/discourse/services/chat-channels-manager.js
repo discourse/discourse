@@ -101,6 +101,13 @@ export default class ChatChannelsManager extends Service {
     delete this._cached[model.id];
   }
 
+  @cached
+  get hasThreadedChannels() {
+    return this.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
+    );
+  }
+
   get allChannels() {
     return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
       (a, b) => {

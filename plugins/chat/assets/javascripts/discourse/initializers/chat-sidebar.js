@@ -102,9 +102,7 @@ export default {
             }
 
             get displaySection() {
-              return this.chatChannelsManager.publicMessageChannels.some(
-                (channel) => channel.threadingEnabled
-              );
+              return this.chatChannelsManager.hasThreadedChannels;
             }
           };
 

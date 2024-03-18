@@ -53,10 +53,8 @@ export default class ChannelsListPublic extends Component {
     return this.chatTrackingStateManager.hasUnreadThreads;
   }
 
-  get isThreadEnabledInAnyChannel() {
-    return this.chatChannelsManager.publicMessageChannels?.some(
-      (channel) => channel.threadingEnabled
-    );
+  get hasThreadedChannels() {
+    return this.chatChannelsManager.hasThreadedChannels;
   }
 
   @action
@@ -65,7 +63,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{#if (and this.site.desktopView this.isThreadEnabledInAnyChannel)}}
+    {{#if (and this.site.desktopView this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}

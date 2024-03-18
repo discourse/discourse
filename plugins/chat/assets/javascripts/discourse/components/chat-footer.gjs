@@ -22,9 +22,7 @@ export default class ChatFooter extends Component {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
-    return this.chatChannelsManager.publicMessageChannels?.some(
-      (channel) => channel.threadingEnabled
-    );
+    return this.chatChannelsManager.hasThreadedChannels;
   }
 
   get directMessagesEnabled() {
