@@ -13,7 +13,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_whats_new",
-        route: "admin.dashboardNewFeatures",
+        route: "admin.whatsNewPage",
         label: "admin.account.sidebar_link.whats_new",
         icon: "gift",
       },
@@ -25,7 +25,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_all_reports",
-        route: "admin.dashboardReports",
+        route: "admin.reportsPage",
         label: "admin.reports.sidebar_link.all",
         icon: "chart-bar",
       },

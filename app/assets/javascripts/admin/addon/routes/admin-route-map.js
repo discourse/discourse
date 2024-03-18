@@ -223,6 +223,16 @@ export default function () {
         });
       }
     );
+
+    this.route("admin.reportsPage", {
+      path: "/reports-page",
+      resetNamespace: true,
+    });
+
+    this.route("admin.whatsNewPage", {
+      path: "/whats-new",
+      resetNamespace: true,
+    });
   });
 
   // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`

@@ -120,6 +120,7 @@ Discourse::Application.routes.draw do
       end
 
       get "reports" => "reports#index"
+      get "reports-page" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
@@ -324,6 +325,7 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
+      get "/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
