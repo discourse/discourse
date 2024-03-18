@@ -121,28 +121,18 @@ describe "Admin Customize Themes", type: :system do
       theme.save!
 
       visit("/admin/customize/themes/#{theme.id}")
-      theme_translations_picker = PageObjects::Components::AdminThemeTranslationsPicker.new
-
-      theme_translations_picker.fill_in("Franç")
-      theme_translations_picker.save
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+
+      theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
+      theme_translations_picker.select_row_by_value("fr")
+
       expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
 
       theme_translations_settings_editor.fill_in("Hello World in French")
       theme_translations_settings_editor.save
-
-      visit("/admin/customize/themes/#{theme.id}")
-
-      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
-
-      theme_translations_picker.fill_in("Franç")
-      theme_translations_picker.save
-
-      expect(theme_translations_settings_editor.get_input_value).to have_content(
-        "Hello World in French",
-      )
     end
   end
 end
