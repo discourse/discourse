@@ -32,7 +32,6 @@ export default class BulkTopicActions extends Component {
   @tracked loading;
   @tracked errors;
   @tracked isSilent = false;
-  @tracked childAction = null;
 
   notificationLevelId = null;
 
