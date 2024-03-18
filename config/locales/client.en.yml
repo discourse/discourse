@@ -5643,6 +5643,7 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           schema:
+            title: "Edit %{name} setting"
             back_button: "Back to %{name}"
         colors:
           select_base:
