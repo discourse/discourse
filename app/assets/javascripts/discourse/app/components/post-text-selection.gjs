@@ -194,6 +194,7 @@ export default class PostTextSelection extends Component {
         : ["bottom-start"],
       offset: this.shouldRenderUnder ? 25 : 3,
       trapTab: false,
+      closeOnScroll: false,
       data: {
         canEditPost: this.canEditPost,
         canCopyQuote: this.canCopyQuote,
