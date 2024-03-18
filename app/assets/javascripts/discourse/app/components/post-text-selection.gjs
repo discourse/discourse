@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
@@ -15,7 +15,7 @@ import {
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { bind, debounce } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 function getQuoteTitle(element) {
@@ -79,6 +79,7 @@ export default class PostTextSelection extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
+    cancel(this.debouncedSelectionChanged);
     this.menuInstance?.destroy();
   }
 
@@ -88,7 +89,6 @@ export default class PostTextSelection extends Component {
     await this.menuInstance?.close();
   }
 
-  @debounce(250)
   async selectionChanged(options = {}) {
     if (this.isSelecting) {
       return;
@@ -296,7 +296,15 @@ export default class PostTextSelection extends Component {
 
   @action
   handleTopicScroll() {
-    this.selectionChanged({ force: true });
+    if (this.site.mobileView) {
+      this.debouncedSelectionChanged = debounce(
+        this,
+        this.selectionChanged,
+        { force: true },
+        250,
+        false
+      );
+    }
   }
 
   @action
