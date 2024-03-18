@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
@@ -174,6 +175,8 @@ function userOption(userOptionKey) {
 export default class User extends RestModel.extend(Evented) {
   @service appEvents;
   @service userTips;
+
+  @tracked do_not_disturb_until;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
