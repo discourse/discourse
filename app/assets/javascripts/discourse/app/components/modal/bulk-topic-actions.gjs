@@ -40,10 +40,11 @@ export default class BulkTopicActions extends Component {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
-      //this.setComponent(BulkAssign);
-      _customActions["topics.bulk.assign"]({
-        setComponent: this.setComponent.bind(this),
-      });
+      if (this.args.model.initialActionLabel in _customActions) {
+        _customActions[this.args.model.initialActionLabel]({
+          setComponent: this.setComponent.bind(this),
+        });
+      }
     }
   }
 

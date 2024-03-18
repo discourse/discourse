@@ -1,9 +1,10 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
+import BulkTopicActions, {
+  _addBulkDropdownAction,
+} from "discourse/components/modal/bulk-topic-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { _addBulkDropdownAction } from "discourse/components/modal/bulk-topic-actions";
 
 const _customButtons = [];
 const _customOnSelection = {};
@@ -134,11 +135,15 @@ export default DropdownSelectBoxComponent.extend({
 
   showBulkTopicActionsModal(actionName, title, opts = {}) {
     let allowSilent = false;
+    let initialAction = null;
+    let initialActionLabel = null;
     if (opts.allowSilent === true) {
       allowSilent = true;
     }
     if (opts.custom === true) {
       title = i18n(_customOnSelection[actionName]);
+      initialAction = "set-component";
+      initialActionLabel = actionName;
     } else {
       title = i18n(`topics.bulk.${title}`);
     }
@@ -146,11 +151,12 @@ export default DropdownSelectBoxComponent.extend({
     this.modal.show(BulkTopicActions, {
       model: {
         action: actionName,
-        title: title,
+        title,
         bulkSelectHelper: this.bulkSelectHelper,
         refreshClosure: () => this.router.refresh(),
         allowSilent,
-        initialAction: "set-component",
+        initialAction,
+        initialActionLabel,
       },
     });
   },
@@ -198,7 +204,9 @@ export default DropdownSelectBoxComponent.extend({
         break;
       default:
         if (_customOnSelection[id]) {
-          this.showBulkTopicActionsModal(id, _customOnSelection[id], {custom: true})
+          this.showBulkTopicActionsModal(id, _customOnSelection[id], {
+            custom: true,
+          });
         }
     }
   },

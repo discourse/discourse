@@ -2880,10 +2880,6 @@ class PluginApi {
     _addBulkDropdownButton(opts);
   }
 
-  addBulkActionDropdownButton(opts) {
-    _addBulkDropdownButton(opts);
-  }
-
   /**
    * Include the passed user field property in the Admin User Field save request.
    * This is useful for plugins that are adding additional columns to the user field model and want
