@@ -4,7 +4,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
-import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
@@ -22,10 +21,12 @@ export function addChatDrawerStateCallback(callback) {
 export function resetChatDrawerStateCallbacks() {
   chatDrawerStateCallbacks = [];
 }
+
 export default class ChatStateManager extends Service {
   @service chat;
   @service chatHistory;
   @service router;
+  @service site;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
@@ -126,7 +127,7 @@ export default class ChatStateManager extends Service {
 
   get isFullPagePreferred() {
     return !!(
-      Site.currentProp("mobileView") ||
+      this.site.mobileView ||
       this._store.getObject(PREFERRED_MODE_KEY) === FULL_PAGE_CHAT
     );
   }
@@ -134,7 +135,7 @@ export default class ChatStateManager extends Service {
   get isDrawerPreferred() {
     return !!(
       !this.isFullPagePreferred ||
-      (!Site.currentProp("mobileView") &&
+      (this.site.desktopView &&
         (!this._store.getObject(PREFERRED_MODE_KEY) ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );

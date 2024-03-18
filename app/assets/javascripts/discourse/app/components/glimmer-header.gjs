@@ -161,10 +161,9 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) {
-      return;
+    if (this.site.mobileView) {
+      scrollLock(bool);
     }
-    scrollLock(bool);
   }
 
   @action
@@ -180,7 +179,6 @@ export default class GlimmerHeader extends Component {
           @toggleHamburger={{this.toggleHamburger}}
           @showSidebar={{@showSidebar}}
         >
-
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}

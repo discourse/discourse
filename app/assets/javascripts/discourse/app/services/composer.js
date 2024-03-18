@@ -206,7 +206,7 @@ export default class ComposerService extends Service {
 
   @observes("showPreview")
   showPreviewChanged() {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.keyValueStore.set({
         key: "composer.showPreview",
         value: this.showPreview,

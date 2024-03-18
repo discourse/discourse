@@ -310,7 +310,7 @@ export default class TopicTrackingState extends EmberObject {
     if (
       filter === "categories" &&
       data.message_type === "latest" &&
-      !Site.current().mobileView &&
+      Site.current().desktopView &&
       (this.siteSettings.desktop_category_page_style ===
         "categories_and_latest_topics" ||
         this.siteSettings.desktop_category_page_style ===

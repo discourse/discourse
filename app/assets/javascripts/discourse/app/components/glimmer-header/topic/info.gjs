@@ -129,7 +129,7 @@ export default class Info extends Component {
                   {{#if
                     (and
                       @topic.category.parentCategory.parentCategory
-                      (not this.site.mobileView)
+                      this.site.desktopView
                     )
                   }}
                     {{categoryLink

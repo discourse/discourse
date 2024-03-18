@@ -250,7 +250,7 @@ export default class NavItem extends EmberObject {
 
     if (
       this.name === "latest" &&
-      (!Site.currentProp("mobileView") || this.tagId !== undefined)
+      (Site.currentProp("desktopView") || this.tagId !== undefined)
     ) {
       count = 0;
     }

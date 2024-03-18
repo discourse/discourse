@@ -40,7 +40,7 @@ export default class ChatHeaderIcon extends Component {
     if (
       this.chatStateManager.isFullPageActive &&
       !this.chatSeparateSidebarMode.never &&
-      !this.site.mobileView
+      this.site.desktopView
     ) {
       return I18n.t("sidebar.panels.forum.label");
     }
@@ -52,7 +52,7 @@ export default class ChatHeaderIcon extends Component {
     if (
       this.chatStateManager.isFullPageActive &&
       !this.chatSeparateSidebarMode.never &&
-      !this.site.mobileView
+      this.site.desktopView
     ) {
       return "random";
     }

@@ -905,8 +905,8 @@ export default Component.extend(
             {
               name: "eventListeners",
               options: {
-                resize: !this.site.mobileView,
-                scroll: !this.site.mobileView,
+                resize: this.site.desktopView,
+                scroll: this.site.desktopView,
               },
             },
             {

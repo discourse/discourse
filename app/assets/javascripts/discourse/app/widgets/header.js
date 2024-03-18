@@ -674,10 +674,9 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) {
-      return;
+    if (this.site.mobileView) {
+      scrollLock(bool);
     }
-    scrollLock(bool);
   },
 
   togglePageSearch() {

@@ -19,7 +19,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
 
   findCategories() {
     let style =
-      !this.site.mobileView && this.siteSettings.desktop_category_page_style;
+      this.site.desktopView && this.siteSettings.desktop_category_page_style;
 
     if (
       style === "categories_and_latest_topics" ||
