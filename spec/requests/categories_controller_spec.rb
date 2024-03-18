@@ -1152,6 +1152,12 @@ RSpec.describe CategoriesController do
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
     end
 
+    it "does not generate N+1s" do
+      queries = track_sql_queries { get "/categories/search.json", params: { term: "Foo" } }
+
+      expect(queries.length).to eq(6)
+    end
+
     context "without include_ancestors" do
       it "doesn't return ancestors" do
         get "/categories/search.json", params: { term: "Notfoo" }

@@ -394,7 +394,21 @@ class CategoriesController < ApplicationController
 
     categories_count = categories.count
 
-    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+    categories =
+      categories
+        .includes(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .limit(limit || MAX_CATEGORIES_LIMIT)
 
     Category.preload_user_fields!(guardian, categories)
 
