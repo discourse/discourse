@@ -233,6 +233,7 @@ Discourse::Application.routes.draw do
                 constraints: AdminConstraint.new do
         member do
           get "preview" => "themes#preview"
+          get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
         end
         collection do

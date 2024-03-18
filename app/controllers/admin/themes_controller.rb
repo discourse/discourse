@@ -311,6 +311,25 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
+  def get_translations
+    params.require(:locale)
+    unless I18n.available_locales.include?(params[:locale].to_sym)
+      raise Discourse::InvalidParameters.new(:locale)
+    end
+
+    I18n.locale = params[:locale]
+
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    translations =
+      @theme.translations.map do |translation|
+        { key: translation.key, value: translation.value, default: translation.default }
+      end
+
+    render json: { translations: translations }, status: :ok
+  end
+
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
@@ -369,6 +388,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           :enabled,
           :auto_update,
+          :locale,
           settings: {
           },
           translations: {
@@ -407,6 +427,14 @@ class Admin::ThemesController < Admin::AdminController
 
   def update_translations
     return unless target_translations = theme_params[:translations]
+
+    locale = theme_params[:locale].presence
+    if locale
+      unless I18n.available_locales.include?(locale.to_sym)
+        raise Discourse::InvalidParameters.new(:locale)
+      end
+      I18n.locale = locale
+    end
 
     target_translations.each_pair do |translation_key, new_value|
       @theme.update_translation(translation_key, new_value)

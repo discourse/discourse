@@ -9,6 +9,7 @@ import {
   readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -24,12 +25,15 @@ const THEME_UPLOAD_VAR = 2;
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
+  @service siteSettings;
   @service modal;
 
   editRouteName = "adminCustomizeThemes.edit";
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
   @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @url("model.id", "model.locale", "/admin/themes/%@/translations/%@")
+  getTranslationsUrl;
   @empty("selectedChildThemeId") addButtonDisabled;
   @mapBy("model.parentThemes", "name") parentThemesNames;
   @filterBy("allThemes", "component", false) availableParentThemes;
@@ -291,6 +295,22 @@ export default class AdminCustomizeThemesShowController extends Controller {
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
+  }
+
+  get availableLocales() {
+    return JSON.parse(this.siteSettings.available_locales);
+  }
+
+  get locale() {
+    return this.get("model.locale") || this.siteSettings.default_locale;
+  }
+
+  @action
+  updateLocale(value) {
+    this.set("model.locale", value);
+    ajax(this.getTranslationsUrl).then(({ translations }) =>
+      this.set("model.translations", translations)
+    );
   }
 
   @action
