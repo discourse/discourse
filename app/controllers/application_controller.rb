@@ -1108,9 +1108,9 @@ class ApplicationController < ActionController::Base
         next if url.blank?
         base_url = URI.join(url, "/").to_s.chomp("/")
 
-        links.push("<#{base_url}>; rel=preconnect;")
+        links.push("<#{base_url}>; rel=preconnect")
         # Not all browsers support the preconnect resource hint so we are adding dns-prefetch as the fallback
-        links.push("<#{base_url}>; rel=dns-prefetch;")
+        links.push("<#{base_url}>; rel=dns-prefetch")
       end
     end
 

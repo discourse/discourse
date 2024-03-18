@@ -1200,7 +1200,7 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(200)
 
         expect(response.headers["Link"]).to include(
-          "<https://cdn.example.com>; rel=preconnect;, <https://cdn.example.com>; rel=dns-prefetch;",
+          "<https://cdn.example.com>; rel=preconnect, <https://cdn.example.com>; rel=dns-prefetch",
         )
       end
 
@@ -1212,7 +1212,7 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(200)
 
         expect(response.headers["Link"]).to include(
-          "<https://s3.some-cdn.com>; rel=preconnect;, <https://s3.some-cdn.com>; rel=dns-prefetch;",
+          "<https://s3.some-cdn.com>; rel=preconnect, <https://s3.some-cdn.com>; rel=dns-prefetch",
         )
       end
     end
