@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class ChatUserCardButton extends Component {
+export default class ChatDirectMessageButton extends Component {
   @service chat;
   @service appEvents;
   @service router;
@@ -26,7 +26,9 @@ export default class ChatUserCardButton extends Component {
     } catch (error) {
       popupAjaxError(error);
     } finally {
-      this.appEvents.trigger("card:close");
+      if (this.args.modal) {
+        this.appEvents.trigger("card:close");
+      }
     }
   }
 
@@ -36,7 +38,7 @@ export default class ChatUserCardButton extends Component {
         @action={{this.startChatting}}
         @label="chat.title_capitalized"
         @icon="d-chat"
-        class="btn-primary chat-user-card-btn"
+        class="btn-primary chat-direct-message-btn"
       />
     {{/if}}
   </template>

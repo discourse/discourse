@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
-  "Discourse Chat | Component | <Chat::UserCardButton />",
+  "Discourse Chat | Component | <Chat::DirectMessageButton />",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -16,9 +16,11 @@ module(
         .value(true);
       this.user = fabricators.user();
 
-      await render(hbs`<Chat::UserCardButton @user={{user}} />`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
-      assert.dom(".chat-user-card-btn").exists("it shows the chat button");
+      assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
     });
 
     test("when current user can’t send direct messages", async function (assert) {
@@ -27,10 +29,12 @@ module(
         .value(false);
       this.user = fabricators.user();
 
-      await render(hbs`<Chat::UserCardButton @user={{user}} />`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
       assert
-        .dom(".chat-user-card-btn")
+        .dom(".chat-direct-message-btn")
         .doesNotExist("it doesn’t show the chat button");
     });
 
@@ -43,10 +47,12 @@ module(
         suspended_till: moment().add(1, "year").toDate(),
       });
 
-      await render(hbs`<Chat::UserCardButton @user={{user}}/>`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
       assert
-        .dom(".chat-user-card-btn")
+        .dom(".chat-direct-message-btn")
         .doesNotExist("it doesn’t show the chat button");
     });
   }
