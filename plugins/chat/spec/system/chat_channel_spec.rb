@@ -184,7 +184,12 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
 
-    before { channel_1.add(other_user) }
+    before do
+      SiteSetting.enable_user_status = true
+      current_user.set_status!("off to dentist", "tooth")
+      other_user.set_status!("surfing", "surfing_man")
+      channel_1.add(other_user)
+    end
 
     it "highlights the mentions" do
       chat_page.visit_channel(channel_1)
@@ -200,9 +205,6 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "renders user status on mentions" do
-      SiteSetting.enable_user_status = true
-      current_user.set_status!("off to dentist", "tooth")
-      other_user.set_status!("surfing", "surfing_man")
       Fabricate(:user_chat_mention, user: current_user, chat_message: message)
       Fabricate(:user_chat_mention, user: other_user, chat_message: message)
 
@@ -213,6 +215,30 @@ RSpec.describe "Chat channel", type: :system do
       )
       expect(page).to have_selector(
         ".mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
+      )
+    end
+
+    it "renders user status when expanding collapsed message" do
+      message_1 =
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          message: "hello @#{other_user.username}",
+          user: current_user,
+        )
+      chat_page.visit_channel(channel_1)
+
+      channel_page.messages.delete(message_1)
+      channel_page.messages.restore(message_1)
+
+      expect(page).to have_selector(
+        ".chat-message-container[data-id=\"#{message_1.id}\"] .mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
+      )
+
+      other_user.set_status!("hello", "heart")
+
+      expect(page).to have_selector(
+        ".chat-message-container[data-id=\"#{message_1.id}\"] .mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
       )
     end
   end
