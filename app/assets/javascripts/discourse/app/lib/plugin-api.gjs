@@ -2873,6 +2873,7 @@ class PluginApi {
    * @param {string} opts.class
    * @param {buttonVisibilityCallback} opts.visible
    * @param {buttonAction} opts.action
+   * @param {string} opts.actionType - type of the action, either performanAndRefresh or setComponent
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);

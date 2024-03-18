@@ -184,6 +184,8 @@ export default class BulkTopicActions extends Component {
         // when the activeComponent is rendered.
         if (this.customAction) {
           this.customAction(this.performAndRefresh.bind(this));
+        } else {
+          _customActions[this.args.model.initialActionLabel](this);
         }
     }
   }

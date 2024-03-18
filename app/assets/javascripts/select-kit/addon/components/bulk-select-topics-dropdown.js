@@ -17,7 +17,14 @@ export function _addBulkDropdownButton(opts) {
     visible: opts.visible,
   });
   _addBulkDropdownAction(opts.label, opts.action);
-  _customOnSelection[opts.label] = opts.label;
+  const actionOpts = {
+    label: opts.label,
+    setComponent: true,
+  };
+  if (opts.actionType === "performAndRefresh") {
+    actionOpts.setComponent = false;
+  }
+  _customOnSelection[opts.label] = actionOpts;
 }
 
 export default DropdownSelectBoxComponent.extend({
@@ -141,9 +148,11 @@ export default DropdownSelectBoxComponent.extend({
       allowSilent = true;
     }
     if (opts.custom === true) {
-      title = i18n(_customOnSelection[actionName]);
-      initialAction = "set-component";
+      title = i18n(_customOnSelection[actionName].label);
       initialActionLabel = actionName;
+      if (opts.setComponent === true) {
+        initialAction = "set-component";
+      }
     } else {
       title = i18n(`topics.bulk.${title}`);
     }
@@ -204,8 +213,9 @@ export default DropdownSelectBoxComponent.extend({
         break;
       default:
         if (_customOnSelection[id]) {
-          this.showBulkTopicActionsModal(id, _customOnSelection[id], {
+          this.showBulkTopicActionsModal(id, _customOnSelection[id].label, {
             custom: true,
+            setComponent: _customOnSelection[id].setComponent,
           });
         }
     }
