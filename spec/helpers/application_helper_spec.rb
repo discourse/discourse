@@ -5,7 +5,6 @@ RSpec.describe ApplicationHelper do
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML
-          <link rel="preload" href="#{url}" as="script" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}">
           <script defer src="#{url}" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}"></script>
       HTML
     end
