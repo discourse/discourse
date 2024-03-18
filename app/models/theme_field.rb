@@ -191,7 +191,6 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
 
     doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-      <link rel="preload" href="#{javascript_cache.url}" as="script" nonce="#{CSP_NONCE_PLACEHOLDER}">
       <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
     HTML
     [doc.to_s, errors&.join("\n")]
@@ -300,7 +299,6 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <link rel="preload" href="#{javascript_cache.url}" as="script" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
           <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
