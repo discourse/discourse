@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -19,8 +17,8 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 const _customActions = {};
 
-export function _addBulkDropdownAction(name, action) {
-  _customActions[name] = action;
+export function _addBulkDropdownAction(name, customAction) {
+  _customActions[name] = customAction;
 }
 
 export default class BulkTopicActions extends Component {
