@@ -1189,7 +1189,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "Link header" do
-    describe "when `experimental_preconnect_link_header` site setting is enabledd" do
+    describe "when `experimental_preconnect_link_header` site setting is enabled" do
       before { SiteSetting.experimental_preconnect_link_header = true }
 
       it "should include the `preconnect` and `dns-prefetch` resource hints in the Link header when `GlobalSetting.cdn_url is configured`" do
