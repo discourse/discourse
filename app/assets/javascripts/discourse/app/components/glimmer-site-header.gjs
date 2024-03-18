@@ -432,7 +432,7 @@ export default class GlimmerSiteHeader extends Component {
   <template>
     <div
       class={{concatClass
-        (unless this.site.mobileView "drop-down-mode")
+        (if this.site.desktopView "drop-down-mode")
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}

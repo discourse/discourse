@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { and, readOnly } from "@ember/object/computed";
+import { and } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -22,7 +22,6 @@ export default Controller.extend({
   showTooltip: false,
   createdCategory: false,
   expandedMenu: false,
-  mobileView: readOnly("site.mobileView"),
   parentParams: null,
   showDeleteReason: and("showTooltip", "model.cannot_delete_reason"),
 

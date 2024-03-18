@@ -10,6 +10,6 @@ export default class NavigationMenu extends Service {
     const headerDropdownMode =
       this.siteSettings.navigation_menu === "header dropdown";
 
-    return !this.site.mobileView && headerDropdownMode;
+    return this.site.desktopView && headerDropdownMode;
   }
 }

@@ -25,14 +25,14 @@
         />
         {{#if this.canBulkInvite}}
           {{#if this.siteSettings.allow_bulk_invite}}
-            {{#unless this.site.mobileView}}
+            {{#if this.site.desktopView}}
               <DButton
                 @icon="upload"
                 @action={{this.createInviteCsv}}
                 @label="user.invited.bulk_invite.text"
                 class="btn-default"
               />
-            {{/unless}}
+            {{/if}}
           {{/if}}
         {{/if}}
         {{#if this.showBulkActionButtons}}
