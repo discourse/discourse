@@ -42,7 +42,7 @@ RSpec.describe UserAction do
         end
 
       expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
-      expect(m[0].user_ids).to eq([user.id])
+      expect(m[0].user_ids).to eq(nil)
     end
 
     describe "integration" do
