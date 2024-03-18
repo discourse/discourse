@@ -129,29 +129,55 @@ RSpec.describe TopicEmbed do
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "will make the topic unlisted if `embed_unlisted` is set until someone replies" do
-        Jobs.run_immediately!
-        SiteSetting.embed_unlisted = true
-        imported_post =
-          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-        expect(imported_post.topic).not_to be_visible
-        pc =
-          PostCreator.new(
-            Fabricate(:user),
-            raw: "this is a reply that will make the topic visible",
-            topic_id: imported_post.topic_id,
-            reply_to_post_number: 1,
-          )
-        pc.create
-        expect(imported_post.topic.reload).to be_visible
+      shared_examples "topic is unlisted" do
+        it "unlists the topic until someone replies" do
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+          expect(imported_post.topic).not_to be_visible
+          pc =
+            PostCreator.new(
+              Fabricate(:user),
+              raw: "this is a reply that will make the topic visible",
+              topic_id: imported_post.topic_id,
+              reply_to_post_number: 1,
+            )
+          pc.create
+          expect(imported_post.topic.reload).to be_visible
+        end
       end
 
-      it "won't be invisible if `embed_unlisted` is set to false" do
-        Jobs.run_immediately!
-        SiteSetting.embed_unlisted = false
-        imported_post =
-          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-        expect(imported_post.topic).to be_visible
+      context "when import embed unlisted is true" do
+        before { SiteSetting.import_embed_unlisted = true }
+
+        include_examples "topic is unlisted"
+
+        context "when embed unlisted is false" do
+          before { SiteSetting.embed_unlisted = false }
+
+          include_examples "topic is unlisted"
+        end
+      end
+
+      context "when import embed unlisted is false" do
+        before { SiteSetting.import_embed_unlisted = false }
+
+        context "when embed unlisted is false" do
+          before { SiteSetting.embed_unlisted = false }
+
+          it "lists the topic" do
+            Jobs.run_immediately!
+            imported_post =
+              TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+            expect(imported_post.topic).to be_visible
+          end
+        end
+
+        context "when embed unlisted is true" do
+          before { SiteSetting.embed_unlisted = true }
+
+          include_examples "topic is unlisted"
+        end
       end
 
       it "creates the topic in the category passed as a parameter" do

@@ -1494,6 +1494,23 @@ RSpec.describe PostCreator do
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
     end
+
+    context "when embed_unlisted is true" do
+      before { SiteSetting.embed_unlisted = true }
+
+      it "unlists the topic" do
+        creator =
+          PostCreator.new(
+            user,
+            embed_url: embed_url,
+            title: "Reviews of Science Ovens",
+            raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+          )
+        post = creator.create
+        expect(creator.errors).to be_blank
+        expect(post.topic).not_to be_visible
+      end
+    end
   end
 
   describe "read credit for creator" do
