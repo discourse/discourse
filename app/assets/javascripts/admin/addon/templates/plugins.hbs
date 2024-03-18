@@ -2,7 +2,15 @@
   <HorizontalOverflowNav class="main-nav nav plugin-nav">
     <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
     {{#each this.adminRoutes as |route|}}
-      <NavItem @route={{route.full_location}} @label={{route.label}} />
+      {{#if route.use_new_show_route}}
+        <NavItem
+          @route={{route.full_location}}
+          @label={{route.label}}
+          @routeParam={{route.location}}
+        />
+      {{else}}
+        <NavItem @route={{route.full_location}} @label={{route.label}} />
+      {{/if}}
     {{/each}}
   </HorizontalOverflowNav>
 </div>

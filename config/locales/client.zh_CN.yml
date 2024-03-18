@@ -911,9 +911,12 @@ zh_CN:
       "14": "待处理"
       "15": "草稿"
     categories:
-      all: "所有类别"
-      all_subcategories: "所有"
-      no_subcategory: "无"
+      categories_label: "类别"
+      subcategories_label: "子类别"
+      no_subcategories: "无子类别"
+      remove_filter: "移除筛选器"
+      plus_more_count: "其他 (+%{count})"
+      view_all: "查看全部"
       category: "类别"
       category_list: "显示类别列表"
       reorder:
@@ -2042,6 +2045,8 @@ zh_CN:
     conditional_loading_section:
       loading: 正在加载…
     category_row:
+      subcategory_count:
+        other: "+ %{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
     select_kit:
@@ -2154,7 +2159,7 @@ zh_CN:
       reply: "回复"
       cancel: "取消"
       create_topic: "创建话题"
-      create_pm: "发送私信"
+      create_pm: "发送消息"
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
@@ -2596,6 +2601,8 @@ zh_CN:
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
         silent: "静默执行此操作。"
+        performing: "正在执行批量操作，请稍候…"
+        completed: "批量操作顺利完成！"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -3724,8 +3731,8 @@ zh_CN:
         search: "%{shortcut} 搜索"
         filter_sidebar: "%{shortcut} 侧边栏过滤器"
         help: "%{shortcut} 打开键盘帮助"
-        dismiss_new: "%{shortcut} 忽略新话题"
-        dismiss_topics: "%{shortcut} 忽略话题"
+        toggle_bulk_select: "%{shortcut} 切换批量选择"
+        x: "%{shortcut} 切换选择 (批量选择模式下)"
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰写"
@@ -3820,8 +3827,10 @@ zh_CN:
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
+      selector_tags: "标签"
       selector_all_tags: "所有标签"
       selector_no_tags: "无标签"
+      selector_remove_filter: "移除筛选器"
       tags: "标签"
       choose_for_topic: "可选标签"
       choose_for_topic_required:
@@ -4893,6 +4902,7 @@ zh_CN:
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
           theme_settings: "主题设置"
+          edit_objects_theme_setting: "Objects 设置编辑器"
           overriden_settings_explanation: "被覆盖的设置标有一个点并具有突出显示的颜色。要将这些设置重置为默认值，请按它们旁边的重置按钮。"
           no_settings: "此主题没有设置。"
           theme_translations: "主题翻译"

@@ -647,14 +647,14 @@ RSpec.describe ApplicationController do
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to_not include("'unsafe-inline'")
+      expect(script_src).to_not include("'unsafe-eval'")
 
-      SiteSetting.content_security_policy_script_src = "'unsafe-inline'"
+      SiteSetting.content_security_policy_script_src = "'unsafe-eval'"
 
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to include("'unsafe-inline'")
+      expect(script_src).to include("'unsafe-eval'")
     end
 
     it "does not set CSP when responding to non-HTML" do
@@ -1295,7 +1295,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
-            "enabledPluginAdminRoutes",
+            "visiblePlugins",
           ],
         )
       end
@@ -1309,9 +1309,9 @@ RSpec.describe ApplicationController do
         )
       end
 
-      it "has correctly loaded enabledPluginAdminRoutes" do
+      it "has correctly loaded visiblePlugins" do
         get "/latest"
-        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
+        expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
       end
     end
   end

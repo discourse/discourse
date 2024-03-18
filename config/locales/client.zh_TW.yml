@@ -777,9 +777,11 @@ zh_TW:
       "14": "等待中"
       "15": "草稿"
     categories:
-      all: "所有分類"
-      all_subcategories: "所有"
-      no_subcategory: "無"
+      categories_label: "分類"
+      subcategories_label: "次分類"
+      remove_filter: "取消過濾"
+      plus_more_count: "+%{count} 更多"
+      view_all: "查看全部"
       category: "分類"
       category_list: "顯示分類列表"
       reorder:
@@ -1606,7 +1608,6 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
-      create_pm: "訊息"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -2705,7 +2706,6 @@ zh_TW:
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"
         help: "%{shortcut} 打開按鍵說明"
-        dismiss_topics: "%{shortcut} 解除話題提示"
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰寫中"
@@ -2761,8 +2761,10 @@ zh_TW:
     tagging:
       all_tags: "所有標記"
       other_tags: "其他標記"
+      selector_tags: "標記"
       selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
+      selector_remove_filter: "取消過濾"
       tags: "標記"
       choose_for_topic: "可選標籤"
       info: "資訊"

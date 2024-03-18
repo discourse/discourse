@@ -849,9 +849,12 @@ vi:
       "14": "Đang chờ xử lý"
       "15": "Nháp"
     categories:
-      all: "tất cả chuyên mục"
-      all_subcategories: "Tất cả"
-      no_subcategory: "không có gì"
+      categories_label: "danh mục"
+      subcategories_label: "phân loại phụ"
+      no_subcategories: "không có danh mục phụ"
+      remove_filter: "bỏ đièu kiện lọc"
+      plus_more_count: "+%{count} khác"
+      view_all: "xem tất cả"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
       reorder:
@@ -1769,6 +1772,8 @@ vi:
     conditional_loading_section:
       loading: Đang tải…
     category_row:
+      subcategory_count:
+        other: "+ %{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
     select_kit:
@@ -1863,7 +1868,6 @@ vi:
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"
-      create_pm: "Tin nhắn"
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
@@ -3276,7 +3280,6 @@ vi:
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Tìm kiếm"
         help: "%{shortcut} Mở trợ giúp bàn phím"
-        dismiss_topics: "%{shortcut} Bỏ qua bài viết"
         log_out: "%{shortcut} Đăng xuất"
       composing:
         title: "Viết bài"
@@ -3365,8 +3368,10 @@ vi:
     tagging:
       all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
+      selector_tags: "thẻ"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
+      selector_remove_filter: "bỏ đièu kiện lọc"
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       choose_for_topic_required:

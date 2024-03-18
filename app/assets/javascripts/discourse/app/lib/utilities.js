@@ -443,7 +443,7 @@ function findToken(tokens, marker, level = 0) {
   return token?.children ? findToken(token.children, marker, level + 1) : token;
 }
 
-const CODE_MARKERS_REGEX = /    |```|~~~|(?<!`)`(?!`)|\[code\]/;
+const CODE_MARKERS_REGEX = /    |```|~~~|[^`]`[^`]|\[code\]/;
 const CODE_TOKEN_TYPES = ["code_inline", "code_block", "fence"];
 
 export async function inCodeBlock(text, pos) {

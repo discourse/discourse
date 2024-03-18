@@ -1067,9 +1067,13 @@ uk:
       "14": "Очікують"
       "15": "Чернетки"
     categories:
-      all: "усі розділи"
-      all_subcategories: "усі"
-      no_subcategory: "немає"
+      categories_label: "розділи"
+      subcategories_label: "підрозділи"
+      all_subcategories: "всі підкатегорії"
+      no_subcategories: "немає підрозділів"
+      remove_filter: "прибрати фільтр"
+      plus_more_count: "+ще %{count}"
+      view_all: "подивитись все"
       category: "Розділ"
       category_list: "Показати список розділів"
       reorder:
@@ -2306,6 +2310,11 @@ uk:
     conditional_loading_section:
       loading: Завантаження…
     category_row:
+      subcategory_count:
+        one: "+ %{count} підрозділ"
+        few: "+ %{count} підрозділи"
+        many: "+ %{count} підрозділів"
+        other: "+ %{count} підрозділів"
       topic_count:
         one: "в цьому розділі %{count} тема"
         few: "в цьому розділі %{count} теми"
@@ -2454,7 +2463,6 @@ uk:
       reply: "Відповісти"
       cancel: "Скасувати"
       create_topic: "Створити тему"
-      create_pm: "Повідомлення"
       create_whisper: "Шепіт"
       create_shared_draft: "Створити спільну чернетку"
       edit_shared_draft: "Редагувати спільну чернетку"
@@ -2986,6 +2994,8 @@ uk:
           many: "Обробка: <strong>%{count}</strong> тем"
           other: "Обробка: <strong>%{count}</strong> тем"
         silent: "Виконати цю дію без звуку."
+        performing: "Виконання масових операцій, зачекайте…"
+        completed: "Масові операції успішно завершено!"
       none:
         unread: "У вас немає непрочитаних тем."
         unseen: "У Вас немає не переглянутих тем."
@@ -4286,9 +4296,8 @@ uk:
         user_profile_menu: "%{shortcut} Відкрити меню профілю"
         show_incoming_updated_topics: "%{shortcut} Показати оновлені теми"
         search: "%{shortcut} Пошук"
+        filter_sidebar: "%{shortcut} Бічна панель фільтрів"
         help: "%{shortcut} Показати поєднання клавіш"
-        dismiss_new: "%{shortcut} Відхилити нові"
-        dismiss_topics: "%{shortcut} Відкласти теми"
         log_out: "%{shortcut} Вийти"
       composing:
         title: "Редагування"
@@ -4398,8 +4407,10 @@ uk:
     tagging:
       all_tags: "Всі теґи"
       other_tags: "Інші теґи"
+      selector_tags: "теґи"
       selector_all_tags: "усі теґи"
       selector_no_tags: "без теґів"
+      selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"
       choose_for_topic: "додаткові теґи"
       choose_for_topic_required:
@@ -4735,8 +4746,10 @@ uk:
         forum:
           label: Форум
       filter: "Filter"
+      clear_filter: "Очистити фільтр"
       no_results:
         title: "Немає результатів"
+        description: "Ми не змогли знайти жодного результату '%{filter}'"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -5091,11 +5104,13 @@ uk:
               write: Створіть нову тему чи допис в наявній.
               update: Оновлення теми. Змініть заголовок, категорію, теги, статус, архетип, featured_link тощо.
               delete: Видалити тему.
+              recover: Відновити тему.
               read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
               status: "Оновлення статусу теми. Статуси: закрита, архівна, видима, закріплена. Увімкнено: true, false. Укажіть category_id тут і в параметрах запиту, щоб дозволити зміну статусу лише для тем у цій категорії."
             posts:
               edit: Редагуйте будь-який допис або якийсь конкретний.
               delete: Видалити допис.
+              recover: Відновити повідомлення.
               list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
             tags:
               list: Список тегів.
@@ -5533,6 +5548,7 @@ uk:
           has_overwritten_history: "Поточна версія теми вже не існує, оскільки історія Git була перезаписана примусово."
           add: "Додати"
           theme_settings: "Налаштування теми"
+          edit_objects_theme_setting: "Редактор налаштувань об'єктів"
           overriden_settings_explanation: "Перевизначені параметри позначені крапкою та виділені кольором. Щоб скинути ці налаштування до стандартних значень, натисніть кнопку скидання поруч із ними."
           no_settings: "Ця тема не має налаштувань."
           theme_translations: "Переклад Теми"

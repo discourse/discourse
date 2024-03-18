@@ -1807,7 +1807,6 @@ ar:
     content_security_policy_report_only: "تفعيل Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "تفعيل جمع تقارير انتهاك سياسة أمان المحتوى في /csp_reports"
     content_security_policy_frame_ancestors: "تقييد من يمكنه تضمين هذا الموقع في iframes عبر سياسة أمان المحتوى. يمكن التحكُّم في المضيفات المسموح بها في <a href='%{base_path}/admin/customize/embedding'>التضمين</a>"
-    content_security_policy_script_src: "مصادر النصوص الإضافية المُدرَجة في قائمة السماح. يتم تضمين المضيف الحالي وشبكة توصيل المحتوى بشكلٍ افتراضي. راجع <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>الحد من هجمات XSS باستخدام سياسة أمان المحتوى .</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "ستحتاج حسابات المسؤولين الذين لم يزوروا الموقع في هذا العدد من الأيام إلى إعادة التحقُّق من صحة عنوان بريدهم الإلكتروني قبل تسجيل الدخول. اتعيين القيمة على 0 للإيقاف."
     include_secure_categories_in_tag_counts: "عند التفعيل، سيتضمن عدد الموضوعات تحت وسمٍ ما الموضوعات الموجودة في الفئات المقيدة القراءة لجميع المستخدمين. وعند الإيقاف، لن يظهر للمستخدمين العاديين سوى عدد الموضوعات تحت وسمٍ ما حيث تكون جميع الموضوعات في الفئات العامة."
     display_personal_messages_tag_counts: "عند التفعيل، سيتم عرض عدد الرسائل الشخصية تحت وسمٍ معيَّن."

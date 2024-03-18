@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
@@ -89,24 +88,5 @@ export default class SummaryBox extends Component {
     }
 
     return "layer-group";
-  }
-
-  @action
-  toggleTopRepliesFilter() {
-    const filterFunction = this.topRepliesSummaryEnabled
-      ? "cancelFilter"
-      : "showTopReplies";
-
-    this.args.actionDispatchFunc(filterFunction);
-  }
-
-  @action
-  collapseSummary() {
-    this.args.actionDispatchFunc("collapseSummary");
-  }
-
-  @action
-  generateSummary() {
-    this.args.actionDispatchFunc("showSummary");
   }
 }

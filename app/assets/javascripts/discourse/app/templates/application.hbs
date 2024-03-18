@@ -87,6 +87,10 @@
     </div>
 
     <PluginOutlet @name="after-main-outlet" />
+
+    {{#if this.showPoweredBy}}
+      <PoweredByDiscourse />
+    {{/if}}
   </div>
 
   <PluginOutlet

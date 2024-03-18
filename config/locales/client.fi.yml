@@ -957,9 +957,12 @@ fi:
       "14": "Odottaa"
       "15": "Luonnokset"
     categories:
-      all: "kaikki alueet"
-      all_subcategories: "kaikki"
-      no_subcategory: "ei mitään"
+      categories_label: "luokat"
+      subcategories_label: "ala-alueet"
+      no_subcategories: "ei ala-alueita"
+      remove_filter: "poista suodatin"
+      plus_more_count: "+%{count} muuta"
+      view_all: "katso kaikki"
       category: "Alue"
       category_list: "Näytä alueluettelo"
       reorder:
@@ -2117,6 +2120,9 @@ fi:
     conditional_loading_section:
       loading: Ladataan…
     category_row:
+      subcategory_count:
+        one: "+ %{count} ala-alue"
+        other: "+ %{count} ala-aluetta"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
@@ -2241,7 +2247,6 @@ fi:
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"
-      create_pm: "Lähetä"
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
@@ -3875,8 +3880,6 @@ fi:
         show_incoming_updated_topics: "%{shortcut} Näytä päivitetyt ketjut"
         search: "%{shortcut} Haku"
         help: "%{shortcut} Näytä näppäinohjeet"
-        dismiss_new: "%{shortcut} Kuittaa uudet"
-        dismiss_topics: "%{shortcut} Kuittaa ketjut"
         log_out: "%{shortcut} Kirjaudu ulos"
       composing:
         title: "Kirjoittaminen"
@@ -3976,8 +3979,10 @@ fi:
     tagging:
       all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
+      selector_tags: "tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
+      selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"
       choose_for_topic: "valinnaiset tunnisteet"
       choose_for_topic_required:

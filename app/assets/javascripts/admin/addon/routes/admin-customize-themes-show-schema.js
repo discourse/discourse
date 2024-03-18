@@ -6,8 +6,8 @@ export default class AdminCustomizeThemesShowSchemaRoute extends Route {
     const setting = theme.settings.findBy("setting", params.setting_name);
 
     return {
-      data: setting.value,
-      schema: setting.objects_schema,
+      theme,
+      setting,
     };
   }
 

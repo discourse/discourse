@@ -218,6 +218,9 @@ export default function () {
       { path: "/plugins", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
+        this.route("show", { path: "/:plugin_id" }, function () {
+          this.route("settings");
+        });
       }
     );
   });

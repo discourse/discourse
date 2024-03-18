@@ -776,7 +776,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".topic-map"));
+    assert.dom(".topic-map").doesNotExist();
   });
 
   test("topic map - few posts", async function (assert) {
@@ -849,7 +849,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".toggle-summary"));
+    assert.dom(".toggle-summary").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
@@ -860,7 +860,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post" @args={{this.args}} @showTopReplies={{this.showTopReplies}} />`
     );
 
-    assert.strictEqual(count(".toggle-summary"), 1);
+    assert.dom(".toggle-summary").exists({ count: 1 });
 
     await click(".toggle-summary button");
     assert.ok(this.summaryToggled);
@@ -876,8 +876,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".private-message-map"), 1);
-    assert.strictEqual(count(".private-message-map .user"), 1);
+    assert.dom(".private-message-map").exists({ count: 1 });
+    assert.dom(".private-message-map .user").exists({ count: 1 });
   });
 
   test("post notice - with username", async function (assert) {

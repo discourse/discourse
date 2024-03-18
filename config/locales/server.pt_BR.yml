@@ -1592,7 +1592,6 @@ pt_BR:
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Ativar a coleta de relatórios de violação de CSP em /csp_reports"
     content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
-    content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "As contas de administrador(a) que não acessaram o site nesta quantidade de dias precisarão validar novamente seu endereço de e-mail antes de entrarem com a conta. Defina como 0 para desativar."
     include_secure_categories_in_tag_counts: "Ao ativar, a contagem de tópicos para uma etiqueta incluirá tópicos em categorias restritas de leitura para todos(as) os(as) usuários(as). Quando desativado, os(as) usuários(as) normais verão apenas uma contagem de tópicos para uma etiqueta em que todos os tópicos estão em categorias públicas."
     display_personal_messages_tag_counts: "Ao ativar, será exibida a contagem de mensagens pessoais com uma determinada etiqueta."

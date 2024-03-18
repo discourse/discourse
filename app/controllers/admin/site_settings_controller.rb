@@ -6,7 +6,15 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(site_settings: SiteSetting.all_settings)
+    params.permit(:categories, :plugin)
+
+    render_json_dump(
+      site_settings:
+        SiteSetting.all_settings(
+          filter_categories: params[:categories],
+          filter_plugin: params[:plugin],
+        ),
+    )
   end
 
   def update

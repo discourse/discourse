@@ -2228,6 +2228,9 @@ rate_limits:
   max_complete_multipart_per_minute:
     default: 10
     hidden: true
+  max_uploads_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2817,6 +2820,10 @@ uncategorized:
     textarea: true
 
   share_anonymized_statistics: true
+
+  enable_powered_by_discourse:
+    default: false
+    client: true
 
   auto_handle_queued_age:
     default: 60

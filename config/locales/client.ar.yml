@@ -1165,9 +1165,11 @@ ar:
       "14": "قيد الانتظار"
       "15": "المسودات"
     categories:
-      all: "كل الفئات"
-      all_subcategories: "الكل"
-      no_subcategory: "لا يوجد"
+      categories_label: "الفئات"
+      subcategories_label: "الفئات الفرعية"
+      no_subcategories: "لا توجد فئات فرعية"
+      remove_filter: "إزالة التصفية"
+      plus_more_count: "+%{count} أكثر"
       category: "الفئة"
       category_list: "عرض قائمة الفئات"
       reorder:
@@ -2465,6 +2467,13 @@ ar:
     conditional_loading_section:
       loading: جارٍ التحميل…
     category_row:
+      subcategory_count:
+        zero: "+ %{count} فئة فرعية"
+        one: "+ %{count} تصنيفات فرعية"
+        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        few: "+ %{count} فئات فرعية"
+        many: "+ %{count} فئة فرعية"
+        other: "+ %{count} فئة فرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -2637,7 +2646,6 @@ ar:
       reply: "الرد"
       cancel: "إلغاء"
       create_topic: "إنشاء موضوع"
-      create_pm: "رسالة"
       create_whisper: "همس"
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
@@ -4631,8 +4639,6 @@ ar:
         show_incoming_updated_topics: "%{shortcut} عرض الموضوعات المحدَّثة"
         search: "%{shortcut} البحث"
         help: "%{shortcut} فتح مساعدة لوحة المفاتيح"
-        dismiss_new: "%{shortcut} تجاهل الجديد"
-        dismiss_topics: "%{shortcut} تجاهل الموضوعات"
         log_out: "%{shortcut} تسجيل الخروج"
       composing:
         title: "الإنشاء"
@@ -4752,8 +4758,10 @@ ar:
     tagging:
       all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
+      selector_tags: "الوسوم"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
+      selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
       choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:

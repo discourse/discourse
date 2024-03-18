@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
@@ -14,6 +15,7 @@ import {
   stringToBuffer,
   WebauthnAbortHandler,
 } from "discourse/lib/webauthn";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 
 export default class UserPasskeys extends Component {
@@ -21,12 +23,6 @@ export default class UserPasskeys extends Component {
   @service currentUser;
   @service capabilities;
   @service router;
-
-  instructions = I18n.t("user.passkeys.short_description");
-  title = I18n.t("user.passkeys.title");
-  addedPrefix = I18n.t("user.passkeys.added_prefix");
-  lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
-  neverUsed = I18n.t("user.passkeys.never_used");
 
   get showActions() {
     return (
@@ -182,10 +178,10 @@ export default class UserPasskeys extends Component {
   <template>
     <div class="control-group pref-passkeys">
       <label class="control-label">
-        {{this.title}}
+        {{i18n "user.passkeys.title"}}
       </label>
       <div class="instructions">
-        {{this.instructions}}
+        {{i18n "user.passkeys.short_description"}}
       </div>
 
       <div class="pref-passkeys__rows">
@@ -194,27 +190,27 @@ export default class UserPasskeys extends Component {
             <div class="passkey-left">
               <div class="row-passkey__name">{{passkey.name}}</div>
               <div class="row-passkey__created-date">
-                <span class="prefix">
-                  {{this.addedPrefix}}
-                </span>
-                {{formatDate
-                  passkey.created_at
-                  format="medium"
-                  leaveAgo="true"
+                {{htmlSafe
+                  (i18n
+                    "user.passkeys.added_date"
+                    date=(formatDate
+                      passkey.created_at format="medium" leaveAgo="true"
+                    )
+                  )
                 }}
               </div>
               <div class="row-passkey__used-date">
                 {{#if passkey.last_used}}
-                  <span class="prefix">
-                    {{this.lastUsedPrefix}}
-                  </span>
-                  {{formatDate
-                    passkey.last_used
-                    format="medium"
-                    leaveAgo="true"
+                  {{htmlSafe
+                    (i18n
+                      "user.passkeys.last_used_date"
+                      date=(formatDate
+                        passkey.last_used format="medium" leaveAgo="true"
+                      )
+                    )
                   }}
                 {{else}}
-                  {{this.neverUsed}}
+                  {{i18n "user.passkeys.never_used"}}
                 {{/if}}
               </div>
             </div>

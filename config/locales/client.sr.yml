@@ -604,9 +604,10 @@ sr:
       "14": "U toku"
       "15": "Нацрти"
     categories:
-      all: "sve kategorije"
-      all_subcategories: "sve"
-      no_subcategory: "ništa"
+      categories_label: "kategorije"
+      subcategories_label: "podkategorije"
+      remove_filter: "uklonite filter"
+      plus_more_count: "+još %{count} članova"
       category: "Kategorija"
       reorder:
         title: "Promeni redosled katergorija"
@@ -1076,7 +1077,6 @@ sr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
-      create_pm: "Privatna poruka"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1703,7 +1703,6 @@ sr:
         user_profile_menu: "%{shortcut} Otvori korisnički meni"
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
         help: "%{shortcut} Otvori pomoć za tastaturu"
-        dismiss_topics: "%{shortcut} Odbaci Teme"
       actions:
         title: "Akcije"
         pin_unpin_topic: "%{shortcut} Zakvači/Odkvači temu"
@@ -1743,6 +1742,7 @@ sr:
     download_calendar:
       download: "Preuzmi"
     tagging:
+      selector_remove_filter: "uklonite filter"
       add_synonyms: "Dodaj"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"

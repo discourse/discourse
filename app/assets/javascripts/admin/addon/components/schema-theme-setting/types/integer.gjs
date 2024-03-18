@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 export default class SchemaThemeSettingTypeInteger extends Component {
   @action
   onInput(event) {
-    this.args.onChange(event.currentTarget.value);
+    this.args.onChange(parseInt(event.currentTarget.value, 10));
   }
 
   <template>

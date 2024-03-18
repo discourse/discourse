@@ -1,4 +1,6 @@
 objects_setting:
+  description:
+    en: "This is a description for objects setting"
   type: objects
   default:
     - name: "section 1"
@@ -14,7 +16,7 @@ objects_setting:
         - name: "link 4"
           url: "http://example.com"
   schema:
-    name: sections
+    name: section
     properties:
       name:
         type: string

@@ -406,9 +406,9 @@ be:
       "14": "чакаецца"
       "15": "Чарнавікі"
     categories:
-      all: "усе катэгорыі"
-      all_subcategories: "усе"
-      no_subcategory: "ёсць"
+      categories_label: "катэгорыі"
+      subcategories_label: "падкатэгорыі"
+      remove_filter: "прыбраць фільтр"
       category: "катэгорыя"
       reorder:
         apply_all: "прымяніць"
@@ -822,7 +822,6 @@ be:
       reply: "Адказаць"
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
-      create_pm: "паведамленне"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
@@ -1320,6 +1319,8 @@ be:
     download_calendar:
       download: "спампаваць"
     tagging:
+      selector_tags: "тэгі"
+      selector_remove_filter: "прыбраць фільтр"
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"

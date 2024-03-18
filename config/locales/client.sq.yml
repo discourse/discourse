@@ -453,9 +453,10 @@ sq:
       "13": "Inbox"
       "14": "Në pritje"
     categories:
-      all: "kategoritë"
-      all_subcategories: "të gjitha"
-      no_subcategory: "asnjë"
+      categories_label: "categories"
+      subcategories_label: "nënkategori"
+      remove_filter: "hiq filtrin"
+      plus_more_count: "+%{count} tjetër"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
       reorder:
@@ -1012,7 +1013,6 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
-      create_pm: "Mesazh"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
@@ -1783,7 +1783,6 @@ sq:
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
         help: "%{shortcut} Trego shkurtimet e tastierës"
-        dismiss_topics: "%{shortcut} Hiq temat"
         log_out: "%{shortcut} Shkëputu"
       actions:
         title: "Veprimet"
@@ -1834,8 +1833,10 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
+      selector_tags: "etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
+      selector_remove_filter: "hiq filtrin"
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"

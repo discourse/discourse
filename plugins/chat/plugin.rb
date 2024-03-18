@@ -132,6 +132,16 @@ after_initialize do
     end
   end
 
+  add_to_serializer(
+    :admin_plugin,
+    :incoming_chat_webhooks,
+    include_condition: -> { self.name == "chat" },
+  ) { Chat::IncomingWebhook.includes(:chat_channel).all }
+
+  add_to_serializer(:admin_plugin, :chat_channels, include_condition: -> { self.name == "chat" }) do
+    Chat::Channel.public_channels
+  end
+
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank?
@@ -235,6 +245,16 @@ after_initialize do
       .pluck(:chat_channel_id, :data, :thread_id)
       .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
+
+  add_to_serializer(
+    :user_notification_total,
+    :chat_notifications,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled =
+        SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
+    end,
+  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 

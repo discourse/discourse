@@ -209,12 +209,19 @@ class CategoryList
 
     allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
+    parent_ids =
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: categories_with_descendants.map(&:id))
+        .pluck("DISTINCT parent_category_id")
+        .to_set
+
     categories_with_descendants.each do |category|
       category.notification_level = notification_levels[category.id] || default_notification_level
       category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(
         category.id,
       )
-      category.has_children = category.subcategories.present?
+      category.has_children = parent_ids.include?(category.id)
     end
   end
 

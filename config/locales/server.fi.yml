@@ -1592,7 +1592,6 @@ fi:
     content_security_policy_report_only: "Käytä epäilyttävän sisällön raportointia (Content-Security-Policy-Report-Only)"
     content_security_policy_collect_reports: "Ota käyttöön CSP-seulontojen kerääminen lokiin kohteessa /csp_reports"
     content_security_policy_frame_ancestors: "Rajoita sitä, ketkä voivat upottaa tämän sivuston iframe-kehyksiin CSP:n kautta. Hallitse sallittuja isäntiä <a href='%{base_path}/admin/customize/embedding'>Upottaminen</a>-sivulla"
-    content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletusarvoisesti. Ks. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."

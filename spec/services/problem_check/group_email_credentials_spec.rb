@@ -4,6 +4,8 @@ require "net/smtp"
 require "net/imap"
 
 RSpec.describe ProblemCheck::GroupEmailCredentials do
+  subject(:check) { described_class.new }
+
   fab!(:group1) { Fabricate(:group) }
   fab!(:group2) { Fabricate(:smtp_group) }
   fab!(:group3) { Fabricate(:imap_group) }
@@ -12,7 +14,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
     it "does nothing if SMTP is disabled for the site" do
       expect_no_validate_any
       SiteSetting.enable_smtp = false
-      expect(described_class.new.call).to eq([])
+      expect(check).to be_chill_about_it
     end
 
     context "with smtp and imap enabled for the site" do
@@ -25,7 +27,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
         expect_no_validate_any
         group2.update!(smtp_enabled: false)
         group3.update!(smtp_enabled: false, imap_enabled: false)
-        expect(described_class.new.call).to eq([])
+        expect(check).to be_chill_about_it
       end
 
       it "returns a problem with the group's SMTP settings error" do

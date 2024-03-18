@@ -1,9 +1,8 @@
 let isWhiteSpace;
 
 function trailingSpaceOnly(src, start, max) {
-  let i;
-  for (i = start; i < max; i++) {
-    let code = src.charCodeAt(i);
+  for (let i = start; i < max; i++) {
+    const code = src.charCodeAt(i);
     if (code === 0x0a) {
       return true;
     }
@@ -35,10 +34,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   for (i = start + 1; i < max; i++) {
-    let letter = src[i];
-    if (
-      !((letter >= "a" && letter <= "z") || (letter >= "A" && letter <= "Z"))
-    ) {
+    if (!/[a-z]/i.test(src[i])) {
       break;
     }
   }
@@ -63,9 +59,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
   }
 
   for (; i < max; i++) {
-    let letter = src[i];
-
-    if (letter === "]") {
+    if (src[i] === "]") {
       closed = true;
       break;
     }
@@ -90,9 +84,7 @@ export function parseBBCodeTag(src, start, max, multiline) {
         val = match[1] || match[5];
 
         if (val) {
-          val = val.trim();
-          val = val.replace(/^["'“”](.*)["'“”]$/, "$1");
-          attrs[key] = val;
+          attrs[key] = val.trim().replace(/^["'“”](.*)["'“”]$/, "$1");
         }
       }
     }
@@ -227,7 +219,6 @@ function applyBBCode(state, startLine, endLine, silent, md) {
   nextLine = startLine;
 
   // We might have a single inline bbcode
-
   let closeTag = findInlineCloseTag(state, info, start + info.length, max);
 
   if (!closeTag) {
@@ -256,10 +247,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
     if (startLine === nextLine) {
       content = state.src.slice(start + info.length, closeTag.start);
     } else {
-      content = state.src.slice(
-        state.bMarks[startLine + 1],
-        state.eMarks[nextLine - 1]
-      );
+      content = state.getLines(startLine + 1, nextLine, 0, false);
     }
 
     if (!rule.replace.call(this, state, info, content)) {
@@ -343,30 +331,27 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    const ruler = md.block.bbcode.ruler;
+    isWhiteSpace = md.utils.isWhiteSpace;
 
-    ruler.push("excerpt", {
+    md.block.bbcode.ruler.push("excerpt", {
       tag: "excerpt",
       wrap: "div.excerpt",
     });
 
-    ruler.push("code", {
+    md.block.bbcode.ruler.push("code", {
       tag: "code",
       replace(state, tagInfo, content) {
-        let token;
-        token = state.push("fence", "code", 0);
+        let token = state.push("fence", "code", 0);
         token.content = content;
         return true;
       },
     });
 
-    isWhiteSpace = md.utils.isWhiteSpace;
     md.block.ruler.after(
       "fence",
       "bbcode",
-      (state, startLine, endLine, silent) => {
-        return applyBBCode(state, startLine, endLine, silent, md);
-      },
+      (state, startLine, endLine, silent) =>
+        applyBBCode(state, startLine, endLine, silent, md),
       { alt: ["paragraph", "reference", "blockquote", "list"] }
     );
   });

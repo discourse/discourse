@@ -893,9 +893,12 @@ da:
       "14": "Afventende"
       "15": "Kladder"
     categories:
-      all: "alle kategorier"
-      all_subcategories: "alle"
-      no_subcategory: "ingen"
+      categories_label: "kategorier"
+      subcategories_label: "underkategorier:"
+      no_subcategories: "ingen underkategorier"
+      remove_filter: "fjern filter"
+      plus_more_count: "+%{count} mere"
+      view_all: "vis alle"
       category: "Kategori"
       category_list: "Vis liste over kategorier"
       reorder:
@@ -1856,6 +1859,9 @@ da:
     conditional_loading_section:
       loading: Indlæser…
     category_row:
+      subcategory_count:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategori"
@@ -1955,7 +1961,6 @@ da:
       reply: "Svar"
       cancel: "Annuller"
       create_topic: "Opret emne"
-      create_pm: "Besked"
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
@@ -3359,7 +3364,6 @@ da:
         show_incoming_updated_topics: "%{shortcut} Vis opdaterede emner"
         search: "%{shortcut} Søg"
         help: "%{shortcut} Åben tastaturhjælp"
-        dismiss_topics: "%{shortcut} Afvis emner"
         log_out: "%{shortcut} Log ud"
       composing:
         title: "Componerer"
@@ -3446,8 +3450,10 @@ da:
     tagging:
       all_tags: "Alle mærker"
       other_tags: "Andre Mærker"
+      selector_tags: "mærker"
       selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
+      selector_remove_filter: "fjern filter"
       tags: "Mærker"
       choose_for_topic: "valgfrie mærker"
       choose_for_topic_required:

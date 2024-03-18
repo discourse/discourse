@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
       get "" => "admin#index"
 
       get "plugins" => "plugins#index"
+      get "plugins/:plugin_id" => "plugins#show"
+      get "plugins/:plugin_id/settings" => "plugins#show"
 
       resources :site_settings, only: %i[index update], constraints: AdminConstraint.new do
         collection { get "category/:id" => "site_settings#index" }
@@ -1127,6 +1129,7 @@ Discourse::Application.routes.draw do
         # creating an alias cause the api was extended to mark a single notification
         # this allows us to cleanly target it
         put "read" => "notifications#mark_read"
+        get "totals" => "notifications#totals"
       end
     end
 
