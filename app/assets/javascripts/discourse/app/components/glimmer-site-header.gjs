@@ -356,6 +356,7 @@ export default class GlimmerSiteHeader extends Component {
     menuPanels.forEach((panel) => {
       if (this._swipeEvents.shouldCloseMenu(e, this._swipeMenuOrigin)) {
         this._animateClosing(e, panel, this._swipeMenuOrigin);
+        scrollLock(false);
       } else {
         this._animateOpening(panel, e);
       }
