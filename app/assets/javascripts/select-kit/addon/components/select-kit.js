@@ -371,7 +371,9 @@ export default Component.extend(
     },
 
     addError(error) {
-      this.errorsCollection.pushObject(error);
+      if (!this.errorsCollection.includes(error)) {
+        this.errorsCollection.pushObject(error);
+      }
 
       this._safeAfterRender(() => this.popper && this.popper.update());
     },
@@ -646,6 +648,12 @@ export default Component.extend(
       return Promise.resolve(this.search(filter))
         .then((result) => {
           if (this.isDestroyed || this.isDestroying) {
+            return [];
+          }
+
+          if (this.selectKit.options.maximum === 0) {
+            this.set("selectKit.isLoading", false);
+            this.set("selectKit.hasNoContent", false);
             return [];
           }
 

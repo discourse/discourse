@@ -67,6 +67,29 @@ module(
       );
     });
 
+    test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
+      this.set("value", ["cat", "kit"]);
+      this.siteSettings.max_tags_per_topic = 0;
+
+      await render(hbs`<MiniTagChooser @value={{this.value}} />`);
+
+      assert.strictEqual(this.subject.header().value(), "cat,kit");
+      await this.subject.expand();
+
+      const error = query(".select-kit-error").innerText;
+      assert.strictEqual(
+        error,
+        I18n.t("select_kit.max_content_reached", {
+          count: 0,
+        })
+      );
+      await this.subject.fillInFilter("dawg");
+      assert.notOk(
+        exists(".select-kit-collection .select-kit-row"),
+        "it doesn’t show any options"
+      );
+    });
+
     test("required_tag_group", async function (assert) {
       this.set("value", ["foo", "bar"]);
 
