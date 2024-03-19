@@ -410,6 +410,10 @@ class CategoriesController < ApplicationController
         .select("categories.*, t.slug topic_slug")
         .limit(limit || MAX_CATEGORIES_LIMIT)
 
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
     Category.preload_user_fields!(guardian, categories)
 
     # Prioritize categories that start with the term, then top-level
