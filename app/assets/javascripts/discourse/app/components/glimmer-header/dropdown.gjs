@@ -42,8 +42,6 @@ export default class Dropdown extends Component {
         class="button icon btn-flat"
         aria-expanded={{@active}}
         aria-haspopup="true"
-        href={{@href}}
-        data-auto-route="true"
         title={{i18n @title}}
         aria-label={{i18n @title}}
         id={{@iconId}}
