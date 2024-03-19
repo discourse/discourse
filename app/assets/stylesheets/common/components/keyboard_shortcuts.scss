@@ -34,10 +34,18 @@
   background-color: inherit;
 }
 
-.keyboard-shortcuts-modal {
-  .modal-inner-container {
-    width: 100%;
-    --modal-max-width: 80vw;
+.keyboard-shortcuts-modal.d-modal.-max {
+  .d-modal__container {
+    max-width: 70vw;
+  }
+}
+
+.shortcut-category {
+  border: 1px solid var(--primary-low);
+
+  h4 {
+    background-color: var(--primary-very-low);
+    padding: 0.5rem 1rem;
   }
 }
 
@@ -45,7 +53,7 @@
   box-sizing: border-box;
 
   .keyboard-shortcuts-help__container {
-    columns: auto 20em;
+    columns: 2 20em; // Set maximum of 2 columns
     section {
       display: inline-block;
       margin-bottom: 1.5em;
@@ -74,8 +82,11 @@
     li {
       align-items: center;
       display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
+      flex-wrap: nowrap;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--primary-low);
+      padding: 0.25rem 1rem;
     }
 
     span {
@@ -86,7 +97,11 @@
     }
 
     span:first-child {
-      margin-left: 0;
+      margin-right: 0;
+    }
+
+    span:last-child {
+      margin-left: auto;
     }
 
     kbd {
