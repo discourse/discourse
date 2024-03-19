@@ -62,12 +62,17 @@ export default class ChatStateManager extends Service {
 
   didOpenDrawer(url = null) {
     withPluginApi("1.8.0", (api) => {
-      if (getUserChatSeparateSidebarMode(this.currentUser).always) {
-        api.setSidebarPanel(MAIN_PANEL);
-        api.setSeparatedSidebarMode();
-        api.hideSidebarSwitchPanelButtons();
-      } else {
-        api.setCombinedSidebarMode();
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
+
+      if (!adminSidebarStateManager.maybeForceAdminSidebar()) {
+        if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+          api.setSeparatedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+        }
       }
     });
 
@@ -84,20 +89,27 @@ export default class ChatStateManager extends Service {
 
   didCloseDrawer() {
     withPluginApi("1.8.0", (api) => {
-      api.setSidebarPanel(MAIN_PANEL);
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
         this.currentUser
       );
-      if (chatSeparateSidebarMode.fullscreen) {
-        api.setCombinedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else if (chatSeparateSidebarMode.always) {
-        api.setSeparatedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else {
-        api.setCombinedSidebarMode();
-        api.hideSidebarSwitchPanelButtons();
+
+      if (!adminSidebarStateManager.maybeForceAdminSidebar()) {
+        api.setSidebarPanel(MAIN_PANEL);
+
+        if (chatSeparateSidebarMode.fullscreen) {
+          api.setCombinedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else if (chatSeparateSidebarMode.always) {
+          api.setSeparatedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        }
       }
     });
 

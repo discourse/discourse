@@ -3,6 +3,7 @@
 describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
   fab!(:admin)
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
 
   before do
     chat_system_bootstrap
@@ -55,6 +56,18 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
       expect(sidebar).to have_no_section("chat-channels")
       find("#site-logo").click
       expect(sidebar).to have_section("chat-channels")
+    end
+
+    it "keeps the admin sidebar open instead of switching to the main panel when toggling the drawer" do
+      Fabricate(:user_chat_channel_membership, user: admin, chat_channel: Fabricate(:chat_channel))
+      chat_page.prefers_full_page
+      visit("/admin")
+      expect(sidebar).to have_section("admin-nav-section-root")
+      chat_page.open_from_header
+      expect(sidebar).to have_no_section("admin-nav-section-root")
+      chat_page.minimize_full_page
+      expect(chat_page).to have_drawer
+      expect(sidebar).to have_section("admin-nav-section-root")
     end
   end
 end
