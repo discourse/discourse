@@ -38,6 +38,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    @source_db.execute(<<~SQL)
+      CREATE VIRTUAL TABLE IF NOT EXISTS discourse_migration_mappings
+      USING VirtualPostgres (
+        'host=localhost port=5432 dbname=discourse user=test_user password=password',
+        public,
+        migration_mappings
+      )
+    SQL
+
     # enable_required_plugins
     # import_site_settings
 
@@ -2054,20 +2063,23 @@ class BulkImport::Generic < BulkImport::Base
 
     badges = query(<<~SQL)
       SELECT *
-        FROM badges
-       ORDER BY id
+        FROM badges b
+        WHERE b.id NOT IN (
+          SELECT original_id FROM discourse_migration_mappings mm WHERE mm.type = 2
+        )
+      ORDER BY b.id
     SQL
 
-    existing_badge_names = Badge.pluck(:name).to_set
+    # existing_badge_names = Badge.pluck(:name).to_set
 
     create_badges(badges) do |row|
-      next if badge_id_from_original_id(row["id"]).present?
+      # next if badge_id_from_original_id(row["id"]).present?
 
       badge_name = row["name"]
-      unless existing_badge_names.add?(badge_name)
-        badge_name = badge_name + "_1"
-        badge_name.next! until existing_badge_names.add?(badge_name)
-      end
+      # unless existing_badge_names.add?(badge_name)
+      #   badge_name = badge_name + "_1"
+      #   badge_name.next! until existing_badge_names.add?(badge_name)
+      # end
 
       {
         original_id: row["id"],
@@ -2240,6 +2252,8 @@ class BulkImport::Generic < BulkImport::Base
     sqlite.busy_timeout = 60_000 # 60 seconds
     sqlite.journal_mode = "wal"
     sqlite.synchronous = "normal"
+    sqlite.enable_load_extension(true)
+    sqlite.load_extension("/usr/local/lib/mod_virtualpg.so")
     sqlite
   end
 

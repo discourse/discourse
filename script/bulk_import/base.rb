@@ -284,7 +284,8 @@ class BulkImport::Base
     @upload_urls_by_id = Upload.pluck(:id, :url).to_h
 
     puts "Loading badge indexes..."
-    @badge_mapping = load_index(MAPPING_TYPES[:badge])
+    # @badge_mapping = load_index(MAPPING_TYPES[:badge])
+    @badge_mapping = {}
     @last_badge_id = last_id(Badge)
 
     # puts "Loading poll indexes..."
