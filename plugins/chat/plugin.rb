@@ -149,7 +149,8 @@ after_initialize do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank?
 
-    scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
+    scope.user.id != object.id && scope.can_direct_message? && object.user_option.chat_enabled? &&
+      Guardian.new(object).can_chat?
   end
 
   add_to_serializer(
@@ -166,7 +167,7 @@ after_initialize do
     :can_direct_message,
     include_condition: -> do
       return @can_direct_message if defined?(@can_direct_message)
-      @can_direct_message = SiteSetting.chat_enabled && scope.can_direct_message?
+      @can_direct_message = include_has_chat_enabled? && scope.can_direct_message?
     end,
   ) { true }
 

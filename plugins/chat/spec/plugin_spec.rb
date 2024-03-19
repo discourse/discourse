@@ -114,6 +114,24 @@ describe Chat do
           expect(serializer.can_chat_user).to eq(false)
         end
       end
+
+      context "when both users are in Chat.allowed_group_ids" do
+        before do
+          SiteSetting.chat_allowed_groups = group.id
+          GroupUser.create(user: target_user, group: group)
+          GroupUser.create(user: user, group: group)
+        end
+
+        it "returns false if current user has chat disabled" do
+          user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if target user has chat disabled" do
+          target_user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+      end
     end
 
     context "when chat not enabled" do
