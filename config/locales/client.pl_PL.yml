@@ -3728,7 +3728,7 @@ pl_PL:
           show: "Pokaż tę wersję"
           destroy: "Usuń wersje"
           destroy_confirm: "Czy na pewno chcesz usunąć wszystkie wersje tego posta? Ta czynność jest trwała."
-          revert: "Przywróć rewizję %{revision}"
+          revert: "Przywróć wersję %{revision}"
           edit_wiki: "Edytuj Wiki"
           edit_post: "Edytuj wpis"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"

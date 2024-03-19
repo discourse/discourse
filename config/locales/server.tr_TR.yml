@@ -285,6 +285,7 @@ tr_TR:
     requires_groups: "Belirtilen konuya erişilemediği için davet kaydedilmedi. Aşağıdaki gruplardan birini ekleyin: %{groups}."
     max_invite_emails_limit_exceeded: "E-posta sayısı maksimum değeri (%{max}) aştığı için istek başarısız oldu."
     domain_not_allowed: "E-postanız bu daveti kullanmak için kullanılamaz."
+    domain_not_allowed_admin: "Bu alan adı davetler için kullanılamaz."
     max_redemptions_allowed_one: "e-posta davetleri için 1 olmalıdır."
     redemption_count_less_than_max: "%{max_redemptions_allowed} değerinden küçük olmalı."
     email_xor_domain: "E-posta ve alan adı alanlarına aynı anda izin verilmez"
@@ -3925,104 +3926,6 @@ tr_TR:
     %{page_name} sayfasının içeriğini değiştirmek için bu konudaki ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Kılavuz"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Burası Kamusal Tartışma İçin Medeni Bir Yerdir] (#civilized)
-
-      Lütfen bu tartışma forumuna halka açık bir parka gösterdiğiniz saygıyı gösterin. Biz de ortak bir topluluk kaynağıyız &mdash; sürekli sohbet yoluyla beceri, bilgi ve ilgi alanlarının paylaşıldığı bir yeriz.
-
-      Bunlar kesin ve katı kurallar değildir. Topluluğumuzun insani yargılarına yardımcı olmak ve burayı medeni kamusal söylem için nazik, dostane bir yer olarak tutmak için yönergelerdir.
-
-      <a name="improve"></a>
-
-      ## [Tartışmayı Geliştirin] (#improve)
-
-      Tartışmaya her zaman küçük de olsa olumlu bir şeyler ekleyerek burayı tartışma için harika bir yer haline getirmemize yardımcı olun. Gönderinizin tartışmaya katkıda bulunacağından emin değilseniz, ne söylemek istediğinizi düşünün ve daha sonra tekrar deneyin.
-
-      Tartışmayı geliştirmenin bir yolu da zaten yapılmakta olan tartışmaları keşfetmektir. Cevap vermeden veya kendi konunuzu başlatmadan önce buradaki konulara göz atmak için zaman harcayın; böylece ilgi alanlarınızı paylaşan diğer kişilerle tanışma şansınız artacaktır.
-
-      Burada tartışılan konular bizim için önemlidir ve sizin de bu konular sizin için önemliymiş gibi davranmanızı istiyoruz. Söylenenlerin bazılarına katılmasanız bile konulara ve bunları tartışan kişilere saygılı olun.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      Katılmayarak yanıt vermek isteyebilirsiniz. Bu iyi bir şey. Ancak insanları değil fikirleri eleştirmeyi unutmayın. Lütfen kaçının:
-
-      * İsim takmak
-      * Ad hominem saldırılar
-      * Bir gönderinin gerçek içeriği yerine tonuna yanıt vermek
-      * Diz çökmüş çelişki
-
-      Bunun yerine, sohbeti geliştiren düşünceli içgörüler sağlayın.
-
-      <a name="participate"></a>
-
-      ## [Katılımınız Önemlidir] (#katılın)
-
-      Burada yaptığımız sohbetler, her yeni gelen için tonu belirler. Bu forumu &mdash; için ilginç bir yer haline getiren tartışmalara katılmayı seçerek ve bunu yapmayanlardan kaçınarak bu topluluğun geleceğini etkilememize yardımcı olun.
-
-      Discourse, topluluğun en iyi (ve en kötü) katkıları kolektif olarak belirlemesini sağlayan araçlar sunar: yer imleri, beğeniler, bayraklar, yanıtlar, düzenlemeler, izleme, sessize alma ve benzeri. Kendi deneyiminizi ve diğer herkesin deneyimini iyileştirmek için bu araçları kullanın.
-
-      Topluluğumuzu bulduğumuzdan daha iyi bırakalım.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderatörlerin özel yetkileri vardır; bu forumdan onlar sorumludur. Ama siz de sorumlusunuz. Sizin yardımınızla, moderatörler sadece hademe ya da polis değil, topluluğun kolaylaştırıcıları olabilirler.
-
-      Kötü bir davranış gördüğünüzde cevap vermeyin. Yanıt vermek kötü davranışı onaylayarak teşvik eder, enerjinizi tüketir ve herkesin zamanını boşa harcar. Sadece işaretleyin. Yeterli sayıda bayrak birikirse, otomatik olarak veya moderatör müdahalesiyle işlem yapılacaktır.
-
-      Topluluğumuzu korumak için, moderatörler herhangi bir içeriği ve herhangi bir kullanıcı hesabını herhangi bir nedenle herhangi bir zamanda kaldırma hakkını saklı tutar. Moderatörler yeni gönderileri ön izleme yapmaz; moderatörler ve site operatörleri topluluk tarafından gönderilen hiçbir içerik için sorumluluk kabul etmez.
-
-      <a name="be-civil"></a>
-
-      ## [Her Zaman Medeni Olun] (#be-civil)
-
-      Hiçbir şey sağlıklı bir sohbeti kabalık kadar sabote edemez:
-
-      * Medeni olun. Makul bir kişinin saldırgan, küfürlü veya nefret söylemi olarak değerlendireceği hiçbir şey göndermeyin.
-      * Temiz tutun. Müstehcen veya cinsel içerikli hiçbir şey paylaşmayın.
-      * Birbirinize saygı gösterin. Kimseyi taciz etmeyin veya üzmeyin, insanları taklit etmeyin veya özel bilgilerini ifşa etmeyin.
-      * Forumumuza saygı gösterin. Spam göndermeyin veya foruma zarar vermeyin.
-
-      Bunlar kesin tanımları olan somut terimler değildir &mdash; bunlardan herhangi birinin _görünüşünden_ bile kaçının. Emin değilseniz, yazınız büyük bir haber sitesinin ön sayfasında yer alsa ne hissedeceğinizi kendinize sorun.
-
-      Burası halka açık bir forum ve arama motorları bu tartışmaları indeksliyor. Dili, bağlantıları ve resimleri aileniz ve arkadaşlarınız için güvenli tutun.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Her şeyi doğru yere koymak için çaba gösterin, böylece tartışmaya daha fazla, temizliğe daha az zaman ayırabiliriz. Yani:
-
-      * Yanlış kategoride konu açmayın; lütfen kategori tanımlarını okuyun.
-      * Aynı şeyi birden fazla başlıkta çapraz göndermeyin.
-      * İçeriksiz yanıtlar göndermeyin.
-      * Bir konuyu ortasından değiştirerek saptırmayın.
-      * Gönderilerinizi imzalamayın &mdash; her gönderiye profil bilgileriniz eklenir.
-
-      "+1" veya "Katılıyorum" yazmak yerine Beğen düğmesini kullanın. Mevcut bir konuyu tamamen farklı bir yöne çekmek yerine, Bağlantılı Konu Olarak Yanıtla seçeneğini kullanın.
-
-      <a name="stealing"></a>
-
-      ## [Yalnızca Kendi Şeylerinizi Yayınlayın] (#çalma)
-
-      Başkasına ait dijital hiçbir şeyi izinsiz olarak yayınlayamazsınız. Birinin fikri mülkiyetini (yazılım, video, ses, görüntü) çalmak veya başka herhangi bir yasayı çiğnemek için tanımlar, bağlantılar veya yöntemler yayınlayamazsınız.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      Bu site [dost yerel personeliniz](%{base_path}/about) ve *siz*, yani topluluk tarafından işletilmektedir. Burada işlerin nasıl yürümesi gerektiğine dair başka sorularınız varsa, %{feedback_category} adresinde yeni bir konu açın ve tartışalım! Bir meta konu veya bayrakla ele alınamayan kritik veya acil bir sorun varsa, [personel sayfası](%{base_path}/hakkında) aracılığıyla bizimle iletişime geçin.
-
-      <a name="tos"></a>
-
-      ## [Hizmet Şartları](#tos)
-
-      Evet, hukuk dili sıkıcıdır, ancak kendimizi &ndash; ve dolayısıyla sizi ve verilerinizi &ndash; düşmanca kişilere karşı korumalıyız. İçerik, gizlilik ve yasalarla ilgili sizin (ve bizim) davranış ve haklarınızı açıklayan bir [Hizmet Koşulları](%{base_path}/tos) var. Bu hizmeti kullanmak için [TOS](%{base_path}/tos) kurallarımıza uymayı kabul etmelisiniz.
   tos_topic:
     title: "Hizmet Şartları"
     body: |
@@ -4744,6 +4647,7 @@ tr_TR:
       confirm_body: "Başarılı! Bildirimler etkinleştirildi."
       custom: "%{site_title}'da %{username} adlı kullanıcıdan bildirim"
   staff_action_logs:
+    json_too_long: "Sütun uzunluğu sınırlarını aştığından değerler günlüğe kaydedilmiyor"
     not_found: "bulunamadı"
     unknown: "bilinmeyen"
     user_merged: "%{username} bu hesapla birleştirildi"

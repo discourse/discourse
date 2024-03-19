@@ -135,6 +135,7 @@ ro:
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
     max_invite_emails_limit_exceeded: "Cererea a eșuat pentru că numărul de e-mailuri a depășit numărul maxim (%{max})."
+    domain_not_allowed_admin: "Acest domeniu nu poate fi folosit pentru invitații."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -168,7 +169,7 @@ ro:
       one: "Încă un răspuns"
       few: "Încă %{count} răspunsuri"
       other: "Încă %{count} de răspunsuri"
-    permalink: "Link permanent"
+    permalink: "Legătură permanentă"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
@@ -584,7 +585,7 @@ ro:
         edit_reason: Motiv
     user_flagging_ratio:
       labels:
-        user: Utilizatori
+        user: Utilizator
         score: Scor
     moderators_activity:
       labels:
@@ -689,11 +690,11 @@ ro:
       yaxis: "Număr de mesaje"
     top_referrers:
       title: "Top referenți"
-      xaxis: "Utilizatori"
+      xaxis: "Utilizator"
       num_clicks: "Click-uri"
       num_topics: "Subiecte"
       labels:
-        user: "Utilizatori"
+        user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
     top_traffic_sources:
@@ -775,26 +776,26 @@ ro:
         page_views: "Vizualizări"
     suspicious_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     staff_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     top_uploads:
       labels:
         filename: Numele fișierului
     top_users_by_likes_received:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
@@ -1161,7 +1162,7 @@ ro:
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
       pop3_polling_username_is_empty: "Trebuie să setezi „numele utilizator pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
-      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici detaliile din setările POP3."
+      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici datele de conectare POP3."
       reply_by_email_address_is_empty: "Trebuie să setezi o adresă pentru „răspunde prin email” înainte să poți activa răspunsul prin email."
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
@@ -2002,6 +2003,7 @@ ro:
       private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
+    json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"
     unknown: "necunoscută"
   reviewables:
     priorities:
@@ -2037,7 +2039,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-  fallback_username: "utilizatori"
+  fallback_username: "utilizator"
   activemodel:
     errors:
       <<: *errors
