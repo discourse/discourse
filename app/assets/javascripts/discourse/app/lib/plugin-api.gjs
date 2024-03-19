@@ -136,7 +136,7 @@ import {
   replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-import { _addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
+import { addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -2877,7 +2877,7 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
-    _addBulkDropdownButton(opts);
+    addBulkDropdownButton(opts);
   }
 
   /**

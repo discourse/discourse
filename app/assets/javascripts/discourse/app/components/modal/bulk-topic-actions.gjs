@@ -17,7 +17,7 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 const _customActions = {};
 
-export function _addBulkDropdownAction(name, customAction) {
+export function addBulkDropdownAction(name, customAction) {
   _customActions[name] = customAction;
 }
 

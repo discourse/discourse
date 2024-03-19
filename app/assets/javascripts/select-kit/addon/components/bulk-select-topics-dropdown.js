@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BulkTopicActions, {
-  _addBulkDropdownAction,
+  addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
@@ -9,14 +9,14 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 const _customButtons = [];
 const _customOnSelection = {};
 
-export function _addBulkDropdownButton(opts) {
+export function addBulkDropdownButton(opts) {
   _customButtons.push({
     id: opts.label,
     icon: opts.icon,
     name: i18n(opts.label),
     visible: opts.visible,
   });
-  _addBulkDropdownAction(opts.label, opts.action);
+  addBulkDropdownAction(opts.label, opts.action);
   const actionOpts = {
     label: opts.label,
     setComponent: true,
