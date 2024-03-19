@@ -1417,7 +1417,7 @@ acceptance("composer buttons API", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await click("#topic-footer-buttons .btn.create");
+    await click(".post-controls button.reply");
     assert.dom(".d-editor-input").exists("the composer input is visible");
 
     const expectedName = "[en.some_label]";
