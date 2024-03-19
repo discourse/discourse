@@ -187,11 +187,9 @@ createWidget(
             attributes: {
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
-              href: attrs.user.path,
               "aria-label": I18n.t("user.account_possessive", {
                 name: attrs.user.name || attrs.user.username,
               }),
-              "data-auto-route": true,
             },
           },
           this.attach("header-notifications", attrs)
@@ -222,8 +220,6 @@ createWidget(
             attributes: {
               "aria-expanded": attrs.active,
               "aria-haspopup": true,
-              href: attrs.href,
-              "data-auto-route": true,
               title,
               "aria-label": title,
               id: attrs.iconId,
