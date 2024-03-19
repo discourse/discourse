@@ -188,6 +188,7 @@ it:
     software_update_prompt:
       dismiss: "Ignora"
     bootstrap_mode: "Per iniziare"
+    back_button: "Indietro"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
@@ -1430,8 +1431,7 @@ it:
         save: "Salva"
         title: "Passkey"
         short_description: "Le passkey sostituiscono le password e convalidano la tua identità biometricamente (ad esempio touch, faceID) o tramite un PIN/password del dispositivo."
-        added_prefix: "Aggiunta"
-        last_used_prefix: "Ultimo utilizzo"
+        added_date: "Aggiunto %{date}"
         never_used: "Mai usata"
         not_allowed_error: "Il processo di registrazione della passkey è scaduto, è stato annullato o non è consentito."
         already_added_error: "Hai già registrato questa passkey. Non devi registrarla di nuovo."
@@ -4408,6 +4408,9 @@ it:
       reports:
         title: "Elenco dei rapporti disponibili"
         meta_doc: "Consulta la nostra documentazione <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> per una panoramica dettagliata dei report."
+        sidebar_title: "Rapporti"
+        sidebar_link:
+          all: "Tutte"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aggiornato:"
@@ -4804,6 +4807,50 @@ it:
           timestamp: "Creazione"
           completion: "Tempo Completamento"
           actions: "Azioni"
+      home:
+        title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backup"
+      community:
+        title: "Community"
+        sidebar_link:
+          badges: "Distintivi"
+          notifications: "Notifiche"
+          permalinks: "Collegamenti permanenti"
+          trust_levels: "Livelli di attendibilità"
+          users: "Utenti"
+          user_fields: "Campi Utente"
+          watched_words: "Parole Osservate"
+          legal: "Legale"
+      appearance:
+        title: "Aspetto"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigazione"
+          themes: "Temi"
+      email_settings:
+        sidebar_link:
+          appearance: "Aspetto"
+          preview_summary: "Anteprima Riepilogo"
+      email_logs:
+        sidebar_link:
+          sent: "Inviati"
+          skipped: "Omesse"
+          bounced: "Email rimbalzate"
+          received: "Ricevute"
+          rejected: "Rifiutato"
+      security:
+        title: "Sicurezza"
+        sidebar_link:
+          error_logs: "Log Errori"
+          screened_emails: "Email scansionate"
+          screened_ips: "IP scansionati"
+          screened_urls: "URL scansionati"
+          search_logs: "Log di ricerca"
+          security: "Sicurezza"
+          spam: "Spam"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"
@@ -4820,6 +4867,20 @@ it:
         author: "Da %{author}"
         experimental_badge: "sperimentale"
         learn_more: "Ulteriori informazioni"
+        sidebar_link:
+          installed: "Installato"
+      advanced:
+        title: "Avanzato"
+        sidebar_link:
+          developer: "Sviluppatore"
+          embedding: "Integrato"
+          rate_limits: "Limiti Frequenza"
+          user_api: "API Utente"
+          web_hooks: "Webhook"
+          onebox: "Onebox"
+          files: "File"
+          other_options: "Altri"
+          search: "Cerca"
       navigation_menu:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
@@ -4850,6 +4911,7 @@ it:
           uploading_progress: "Caricamento… %{progress}%"
           success: "'%{filename}' è stato caricato con successo. Il file è in via di elaborazione e potrebbe servire fino ad un minuto perché appaia nella lista."
           error: "Si è verificato un errore durante il caricamento %{filename}': %{message}"
+        settings: "Impostazioni"
         operations:
           is_running: "Un'operazione è attualmente in esecuzione…"
           failed: "%{operation} non è riuscito/a. Controlla i log per saperne di più."
@@ -6108,6 +6170,7 @@ it:
         image: "Immagine"
         alt: "anteprima emoji personalizzata"
         delete_confirm: "Sicuro di voler cancellare l'emoji :%{name}:?"
+        settings: "Impostazioni"
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"

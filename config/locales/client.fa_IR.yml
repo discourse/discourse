@@ -166,6 +166,7 @@ fa_IR:
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
       dismiss: "رد کردن"
+    back_button: "بازگشت"
     themes:
       default_description: "پیش‌فرض"
     broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
@@ -1222,7 +1223,8 @@ fa_IR:
           default: "کلید عبور اصلی"
         save: "ذخیره"
         title: "کلیدهای عبور"
-        added_prefix: "اضافه شده"
+        added_date: "%{date} اضافه شد"
+        last_used_date: "آخرین استفاده %{date}"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -3503,6 +3505,9 @@ fa_IR:
           never: "هیچوقت"
       reports:
         title: "لیستی از گزارشات موجود"
+        sidebar_title: "گزارشات"
+        sidebar_link:
+          all: "همه"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"
@@ -3728,6 +3733,59 @@ fa_IR:
           timestamp: "ساخته شد"
           completion: "زمان تکمیل"
           actions: "عملیات"
+      home:
+        title: "خانه"
+      account:
+        title: "حساب کاربری"
+        sidebar_link:
+          backups: "نسخه‌های پشتیبان"
+          whats_new: "چه چیزی جدید شده"
+      community:
+        title: "انجمن"
+        sidebar_link:
+          about_your_site: "درباره سایت شما"
+          badges: "نشان‌ها"
+          login_and_authentication: "ورود و احراز هویت"
+          notifications: "اعلان‌ها"
+          permalinks: " پیوند دائمی"
+          trust_levels: "سطوح اعتماد"
+          users: "کاربران"
+          user_fields: "زمینه‌های کاربر"
+          watched_words: "کلمات تماشا شده"
+          legal: "حقوقی"
+      appearance:
+        title: "ظاهر"
+        sidebar_link:
+          font_style: "نوع قلم"
+          site_logo: "آرم سایت"
+          color_schemes: "طرح‌های رنگ"
+          emoji: "شکلک"
+          navigation: "ناوبری"
+          themes: "قالب‌ها"
+          site_texts: "متن‌های سایت"
+      email_settings:
+        title: "تنظیمات ایمیل"
+        sidebar_link:
+          appearance: "ظاهر"
+          preview_summary: "پیشنمایش خلاصه"
+      email_logs:
+        title: "گزارش‌های ایمیل"
+        sidebar_link:
+          sent: "ارسال شده"
+          skipped: "رد شده"
+          bounced: "برگشته"
+          received: "دریافت شده"
+          rejected: "رد شده"
+      security:
+        title: "امنیت"
+        sidebar_link:
+          error_logs: "گزارش خطا"
+          screened_emails: "ایمیل ها نمایش داده شده"
+          screened_ips: "نمایش IP ها"
+          screened_urls: "URL های نمایش داده شده"
+          search_logs: "جستجوی گزارش‌ها"
+          security: "امنیت"
+          spam: "هرز‌نامه"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"
@@ -3741,6 +3799,23 @@ fa_IR:
         howto: "چگونه یک افزونه نصب کنیم؟"
         author: "توسط %{author}"
         learn_more: "بیشتر بدانید"
+        sidebar_link:
+          installed: "نصب"
+      advanced:
+        title: "پیشرفته"
+        sidebar_link:
+          api_keys: "کلیدهای API"
+          developer: "توسعه دهنده"
+          embedding: "جاسازی"
+          rate_limits: "میزان محدودیت‌ها "
+          user_api: "API کاربر"
+          web_hooks: "webhook ها"
+          onebox: "جعبه‌ی پیوند"
+          files: "فایل ها"
+          other_options: "دیگر"
+          search: "جستجو"
+          experimental: "آزمایشی"
+          all_site_settings: "تمام تنظیمات سایت"
       navigation_menu:
         sidebar: "نوار کناری"
       backups:
@@ -3765,6 +3840,7 @@ fa_IR:
           title: "آپلود یک نسخه پشتیبان برای نمونه"
           uploading: "در حال بارگذاری…"
           error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
+        settings: "تنظیمات"
         operations:
           failed: "%{operation} ناموفق شد. لطفا گزارشات را بررسی نمایید."
           cancel:
@@ -4587,6 +4663,7 @@ fa_IR:
         group: "گروه"
         image: "تصویر"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
+        settings: "تنظیمات"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"

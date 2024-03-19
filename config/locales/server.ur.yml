@@ -1301,7 +1301,6 @@ ur:
     force_https_warning: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
     out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
     unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
-    watched_word_regexp_error: "'%{action}' دیکھے گئے الفاظ کے لیے ریگولر ایکسپریشن غلط ہے۔ براہ کرم اپنی <a href='%{base_path}/admin/customize/watched_words'>دیکھے ہوئے لفظ کی ترتیبات</a>کو چیک کریں، یا 'دیکھے ہوئے الفاظ کے ریگولر ایکسپریشنز' سائٹ کی ترتیب کو غیر فعال کریں۔"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"

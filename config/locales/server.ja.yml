@@ -1369,7 +1369,6 @@ ja:
     force_https_warning: "ウェブサイトは SSL を使用していますが、サイト設定では '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' が有効になっていません。"
     out_of_date_themes: "次のテーマの更新があります:"
     unreachable_themes: "次のテーマの更新を確認できませんでした:"
-    watched_word_regexp_error: "'%{action}' のウォッチ語の正規表現は無効です。<a href='%{base_path}/admin/customize/watched_words'>ウォッチ語の設定</a>を確認するか、'ウォッチ語の正規表現' サイト設定を無効にしてください。"
     v3_analytics_deprecated: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
     category_style_deprecated: "あなたの Discourse は現在、Discourse 3.2 の最終ベータリリース前に削除が予定されている非推奨のカテゴリスタイルを使用しています。選択したカテゴリスタイルを維持する方法については、<a href='https://meta.discourse.org/t/282441'>単一カテゴリスタイルのサイト設定</a>をご覧ください。"
   site_settings:

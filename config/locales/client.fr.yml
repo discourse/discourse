@@ -188,6 +188,7 @@ fr:
     software_update_prompt:
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
+    back_button: "Revenir en arrière"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -1430,8 +1431,7 @@ fr:
         save: "Enregistrer"
         title: "Clés d'accès"
         short_description: "Les clés d'accès sont des remplacements de mots de passe qui valident votre identité de manière biométrique (par exemple, tactile, faceID) ou via le code PIN/mot de passe de l'appareil."
-        added_prefix: "Ajouté"
-        last_used_prefix: "Dernière utilisation"
+        added_date: "Ajout de %{date}"
         never_used: "Jamais utilisée"
         not_allowed_error: "Le processus d'enregistrement de la clé d'accès a expiré, a été annulé ou n'est pas autorisé."
         already_added_error: "Vous avez déjà enregistré cette clé d'accès. Vous n'avez pas besoin de le faire à nouveau."
@@ -4410,6 +4410,9 @@ fr:
       reports:
         title: "Liste des rapports disponibles"
         meta_doc: "Explorez notre <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> pour obtenir un aperçu détaillé des rapports."
+        sidebar_title: "Rapports"
+        sidebar_link:
+          all: "Tout"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4806,6 +4809,50 @@ fr:
           timestamp: "Créé"
           completion: "Temps d'exécution"
           actions: "Actions"
+      home:
+        title: "Accueil"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Sauvegardes"
+      community:
+        title: "Communauté"
+        sidebar_link:
+          badges: "Badges"
+          notifications: "Notifications"
+          permalinks: "Permaliens"
+          trust_levels: "Niveaux de confiance"
+          users: "Utilisateurs"
+          user_fields: "Champs utilisateurs"
+          watched_words: "Mots surveillés"
+          legal: "Légal"
+      appearance:
+        title: "Apparence"
+        sidebar_link:
+          emoji: "Émoji"
+          navigation: "Navigation"
+          themes: "Thèmes"
+      email_settings:
+        sidebar_link:
+          appearance: "Apparence"
+          preview_summary: "Prévisualisation de l'e-mail"
+      email_logs:
+        sidebar_link:
+          sent: "Envoyés"
+          skipped: "Ignorés"
+          bounced: "Non délivrés"
+          received: "Reçus"
+          rejected: "Rejetés"
+      security:
+        title: "Sécurité"
+        sidebar_link:
+          error_logs: "Journal d'erreurs"
+          screened_emails: "E-mails filtrés"
+          screened_ips: "IP sous surveillance"
+          screened_urls: "URL sous surveillance"
+          search_logs: "Journaux de recherche"
+          security: "Sécurité"
+          spam: "Spam"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"
@@ -4822,6 +4869,20 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
+        sidebar_link:
+          installed: "Installé"
+      advanced:
+        title: "Avancé"
+        sidebar_link:
+          developer: "Développeur"
+          embedding: "Intégration externe"
+          rate_limits: "Limites d'utilisation"
+          user_api: "API utilisateur"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Fichiers"
+          other_options: "Autre"
+          search: "Recherche"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -4852,6 +4913,7 @@ fr:
           uploading_progress: "Téléversement : %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
           error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
+        settings: "Paramètres"
         operations:
           is_running: "Une opération est en cours d'exécution…"
           failed: "L'opération %{operation} a échoué. Veuillez consulter les journaux."
@@ -6110,6 +6172,7 @@ fr:
         image: "Image"
         alt: "aperçu de l'émoji personnalisé"
         delete_confirm: "Voulez-vous vraiment supprimer l'émoji :%{name}: ?"
+        settings: "Paramètres"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"

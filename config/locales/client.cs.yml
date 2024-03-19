@@ -218,6 +218,7 @@ cs:
       message: "Aktualizovali jsme tyto stránky, <span>obnovte je prosím</span> , aby vše fungovalo hladce."
       dismiss: "Označit jako přečtené"
     bootstrap_mode: "Začínáme"
+    back_button: "Zpět"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -1007,9 +1008,11 @@ cs:
     categories:
       categories_label: "kategorie"
       subcategories_label: "podkategorie"
+      all_subcategories: "všechny podkategorie"
       no_subcategories: "žádné podkategorie"
       remove_filter: "zrušit filtr"
       plus_more_count: "+%{count} další"
+      view_all: "zobrazit vše"
       category: "Kategorie"
       category_list: "Zobrazit seznam kategorií"
       reorder:
@@ -1469,8 +1472,8 @@ cs:
         save: "Uložit"
         title: "Přístupové klíče Passkey"
         short_description: "Přístupové klíče Passkey jsou náhradou hesla, která ověřuje vaši identitu biometricky (např. dotykem, faceID) nebo prostřednictvím kódu PIN/hesla zařízení."
-        added_prefix: "Přidáno"
-        last_used_prefix: "Naposledy použito"
+        added_date: "Přidáno %{date}"
+        last_used_date: "Naposledy použito %{date}"
         never_used: "Nikdy nepoužito"
         not_allowed_error: "Proces registrace přístupového klíče Passkey buď vypršel, byl zrušen, nebo není povolen."
         already_added_error: "Tento přístupový klíč Passkey jste již zaregistrovali. Nemusíte jej znovu registrovat."
@@ -1684,6 +1687,7 @@ cs:
         after_5_minutes: "po 5 minutách"
         after_10_minutes: "po 10 minutách"
       notification_level_when_replying: "Když přidám příspěvek k tématu, nastav toto téma na:"
+      topics_unread_when_closed: "Po uzavření považovat témata za nepřečtená"
       invited:
         title: "Pozvánky"
         pending_tab: "Čeká na schválení"
@@ -2387,6 +2391,7 @@ cs:
       reply: "Odpovědět"
       cancel: "Zrušit"
       create_topic: "Vytvořit téma"
+      create_pm: "Odeslat zprávu"
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
@@ -4315,6 +4320,7 @@ cs:
       upload: "Nahrát štítky"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      delete_no_unused_tags: "Neexistují žádné nepoužité štítky."
       delete_unused: "Odstranit nepoužité štítky"
       delete_unused_description: "Odstranit všechny štítky, které nejsou připojeny k žádným tématům nebo osobním zprávám"
       filters:
@@ -4698,6 +4704,9 @@ cs:
       reports:
         title: "Seznam dostupných reportů"
         meta_doc: "Prohlédněte si naši <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentaci</a> , kde najdete podrobný přehled o reportech."
+        sidebar_title: "Přehledy"
+        sidebar_link:
+          all: "Celkem"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
@@ -4941,10 +4950,15 @@ cs:
               create: Odeslání e-mailové pozvánky nebo vygenerování odkazů na pozvánky
             badges:
               create: Vytvořit nový odznak.
+              show: Získání informací o odznaku.
+              update: Aktualizace odznaku.
+              delete: Odstranění odznaku.
+              list_user_badges: Seznam odznaků uživatele.
               assign_badge_to_user: Přiřadit odznak uživateli.
               revoke_badge_from_user: Odebrání odznaku uživateli.
             groups:
               manage_groups: Zobrazit, přidat a odebrat členy skupiny.
+              administer_groups: Prohlížet, zobrazovat, vytvářet, aktualizovat a mazat skupiny.
             logs:
               messages: Výpis zpráv z /logs nebo získání konkrétní zprávy protokolu.
       web_hooks:
@@ -5066,6 +5080,50 @@ cs:
           timestamp: "Vytvořený"
           completion: "čas dokončení"
           actions: "Akce"
+      home:
+        title: "Domů"
+      account:
+        title: "Účet"
+        sidebar_link:
+          backups: "Zálohy"
+      community:
+        title: "Komunita"
+        sidebar_link:
+          badges: "Odznaky"
+          notifications: "Upozornění"
+          permalinks: "Trvalé odkazy"
+          trust_levels: "Úrovně důvěry"
+          users: "Uživatelé"
+          user_fields: "User Fields"
+          watched_words: "Sledovaná slova"
+          legal: "Právní záležitosti"
+      appearance:
+        title: "Vzhled"
+        sidebar_link:
+          emoji: "Smajlíky :)"
+          navigation: "Navigace"
+          themes: "Motivy"
+      email_settings:
+        sidebar_link:
+          appearance: "Vzhled"
+          preview_summary: "Náhled souhrnu"
+      email_logs:
+        sidebar_link:
+          sent: "Odeslané"
+          skipped: "Přeskočené"
+          bounced: "Vrácené"
+          received: "Přijaté"
+          rejected: "Odmítnuté"
+      security:
+        title: "Zabezpečení"
+        sidebar_link:
+          error_logs: "Chybové protokoly"
+          screened_emails: "Filtrované emaily"
+          screened_ips: "Filtrované IP"
+          screened_urls: "Filtrované URL"
+          search_logs: "Hledání"
+          security: "Zabezpečení"
+          spam: "Spam"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"
@@ -5082,6 +5140,20 @@ cs:
         author: "Od uživatele %{author}"
         experimental_badge: "experimentální"
         learn_more: "Zjistit více"
+        sidebar_link:
+          installed: "Nainstalováno"
+      advanced:
+        title: "Pokročilý"
+        sidebar_link:
+          developer: "Vývojáři"
+          embedding: "Zabudování"
+          rate_limits: "Limity a omezení"
+          user_api: "Uživatelské API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Soubory"
+          other_options: "Ostatní"
+          search: "Vyhledat"
       navigation_menu:
         sidebar: "Postranní panel"
         header_dropdown: "Rozbalovací nabídka záhlaví"
@@ -5111,6 +5183,7 @@ cs:
           uploading_progress: "Nahrávání: %{progress}…"
           success: "'%{filename}' byl úspěšně nahraný. Soubor je nyní zpracováván a do minuty bude ukázán v seznamu. "
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Nastavení"
         operations:
           is_running: "Probíhá úloha..."
           failed: "%{operation} selhala. Zkontrolujte prosím protokoly."
@@ -6012,6 +6085,7 @@ cs:
         group: "Skupina"
         image: "Obrázek"
         delete_confirm: "Určitě chcete smazat :%{name}: emoji?"
+        settings: "Nastavení"
       embedding:
         get_started: "Pokud chcete zabudovat Discourse do jiných webových stránek, začněte přidáním názvu hostitele."
         confirm_delete: "Opravdu chcete smazat tento host?"

@@ -126,6 +126,9 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

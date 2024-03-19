@@ -148,6 +148,7 @@ th:
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
     software_update_prompt:
       dismiss: "ซ่อน"
+    back_button: "กลับ"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -855,8 +856,6 @@ th:
           save: "บันทึก"
       passkeys:
         save: "บันทึก"
-        added_prefix: "เพิ่ม"
-        last_used_prefix: "ใช้ครั้งล่าสุด"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -2486,6 +2485,9 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        sidebar_link:
+          all: "ทั้งหมด"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2616,6 +2618,38 @@ th:
           request: "ร้องขอ"
           timestamp: "สร้าง"
           actions: "การกระทำ"
+      home:
+        title: "หน้าแรก"
+      account:
+        title: "บัญชี"
+        sidebar_link:
+          backups: "สำรอง"
+      community:
+        title: "ชุมชน"
+        sidebar_link:
+          badges: "เหรียญ"
+          notifications: "การแจ้งเตือน"
+          permalinks: "ลิงค์ถาวร"
+          trust_levels: "ระดับความไว้ใจ"
+          users: "ผู้ใช้"
+          user_fields: "ช่องข้อมูลผู้ใช้"
+          legal: "กฎ"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "การนำทาง"
+          themes: "ธีม"
+      email_logs:
+        sidebar_link:
+          sent: "ส่ง"
+          skipped: "ข้าม"
+          received: "รับ"
+          rejected: "ถูกปฏิเสธ"
+      security:
+        title: "ความปลอดภัย"
+        sidebar_link:
+          security: "ความปลอดภัย"
+          spam: "ขยะ"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"
@@ -2628,6 +2662,16 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
+        sidebar_link:
+          installed: "ติดตั้งแล้ว"
+      advanced:
+        sidebar_link:
+          developer: "นักพัฒนา"
+          embedding: "ฝั่ง"
+          rate_limits: "ข้อจำกัด"
+          files: "ไฟล์"
+          other_options: "อื่นๆ"
+          search: "ค้นหา"
       backups:
         title: "สำรอง"
         menu:
@@ -2637,6 +2681,7 @@ th:
           size: "ขนาด"
         upload:
           label: "อัปโหลด"
+        settings: "การตั้งค่า"
         operations:
           cancel:
             label: "ยกเลิก"
@@ -3168,6 +3213,7 @@ th:
         group: "กลุ่ม"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
+        settings: "การตั้งค่า"
       embedding:
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"
         title: "ฝั่ง"

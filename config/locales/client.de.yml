@@ -191,6 +191,7 @@ de:
       message: "Wir haben diese Seite aktualisiert. <span>Bitte aktualisiere</span> , damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
     bootstrap_mode: "Erste Schritte"
+    back_button: "Zurück"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -1438,8 +1439,8 @@ de:
         save: "Speichern"
         title: "Passkeys"
         short_description: "Passkeys ersetzen Passwörter und validieren deine Identität biometrisch (z.B. durch Touch ID, Face ID) oder über eine Geräte-PIN/ein Passwort."
-        added_prefix: "Hinzugefügt"
-        last_used_prefix: "Zuletzt verwendet"
+        added_date: "%{date} hinzugefügt"
+        last_used_date: "Zuletzt verwendet %{date}"
         never_used: "Nie verwendet"
         not_allowed_error: "Bei der Registrierung des Passkeys wurde entweder das Zeitlimit überschritten, der Vorgang wurde abgebrochen oder er ist nicht zulässig."
         already_added_error: "Du hast diesen Passkey bereits registriert. Du musst ihn nicht erneut registrieren."
@@ -4443,6 +4444,7 @@ de:
           copy: "Kopieren …"
           paste: "Einfügen …"
           save: "Speichern als …"
+    powered_by_discourse: "Bereitgestellt von Discourse"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4457,6 +4459,9 @@ de:
       reports:
         title: "Verfügbare Berichte"
         meta_doc: "Schau dir unsere <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>Dokumentation</a> an, um einen detaillierten Überblick über die Berichte zu erhalten."
+        sidebar_title: "Berichte"
+        sidebar_link:
+          all: "Gesamt"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"
@@ -4689,6 +4694,10 @@ de:
               delete: Einen Beitrag löschen.
               recover: Einen Beitrag wiederherstellen.
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
+            revisions:
+              read: "Hol dir die letzte oder eine bestimmte Revision."
+              modify: "Überarbeitungen ausblenden, anzeigen oder rückgängig machen."
+              permanently_delete: "Eine Revision dauerhaft löschen."
             tags:
               list: Schlagwörter auflisten.
             tag_groups:
@@ -4860,6 +4869,61 @@ de:
           timestamp: "Erstellt"
           completion: "Fertigstellungszeit"
           actions: "Aktionen"
+      home:
+        title: "Startseite"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Backups"
+          whats_new: "Was ist neu?"
+      community:
+        title: "Gemeinschaft"
+        sidebar_link:
+          about_your_site: "Über deine Website"
+          badges: "Abzeichen"
+          login_and_authentication: "Anmeldung & Authentifizierung"
+          notifications: "Benachrichtigungen"
+          permalinks: "Permalinks"
+          trust_levels: "Vertrauensstufen"
+          users: "Benutzer"
+          user_fields: "Benutzerfelder"
+          watched_words: "Beobachtete Wörter"
+          legal: "Rechtliches"
+      appearance:
+        title: "Erscheinungsbild"
+        sidebar_link:
+          font_style: "Schriftart"
+          site_logo: "Website-Logo"
+          color_schemes: "Farbschemas"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes: "Themes"
+          site_texts: "Website-Texte"
+      email_settings:
+        title: "E-Mail-Einstellungen"
+        sidebar_link:
+          appearance: "Erscheinungsbild"
+          preview_summary: "Vorschau der Zusammenfassung"
+          server_setup: "Server Einrichtung"
+      email_logs:
+        title: "E-Mail-Protokolle"
+        sidebar_link:
+          sent: "Gesendet"
+          skipped: "Übersprungen"
+          bounced: "Unzustellbar"
+          received: "Empfangen"
+          rejected: "Abgelehnt"
+      security:
+        title: "Sicherheit"
+        sidebar_link:
+          error_logs: "Fehlerprotokolle"
+          screened_emails: "Gefilterte E-Mails"
+          screened_ips: "Gefilterte IPs"
+          screened_urls: "Gefilterte URLs"
+          search_logs: "Suchprotokolle"
+          security: "Sicherheit"
+          spam: "Spam"
+          staff_action_logs: "Team-Aktionen-Protokolle"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -4876,6 +4940,23 @@ de:
         author: "Von %{author}"
         experimental_badge: "experimentell"
         learn_more: "Mehr erfahren"
+        sidebar_link:
+          installed: "Installiert"
+      advanced:
+        title: "Erweitert "
+        sidebar_link:
+          api_keys: "API-Schlüssel"
+          developer: "Entwickler"
+          embedding: "Einbettung"
+          rate_limits: "Begrenzungen"
+          user_api: "Benutzer-API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Dateien"
+          other_options: "Sonstiges"
+          search: "Suche"
+          experimental: "Experimentell"
+          all_site_settings: "Alle Website-Einstellungen"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"
@@ -4906,6 +4987,7 @@ de:
           uploading_progress: "Wird hochgeladen … %{progress} %"
           success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
           error: "Beim Hochladen der Datei „%{filename}“ ist ein Fehler aufgetreten: %{message}"
+        settings: "Einstellungen"
         operations:
           is_running: "Ein Vorgang läuft gerade …"
           failed: "Der Vorgang „%{operation}“ ist fehlgeschlagen. Bitte überprüfe die Protokolle."
@@ -5179,6 +5261,7 @@ de:
           inactive_filter: "Inaktiv"
           updates_available_filter: "Updates verfügbar"
           schema:
+            title: "%{name} Einstellung bearbeiten"
             back_button: "Zurück zu %{name}"
         colors:
           select_base:
@@ -6170,6 +6253,7 @@ de:
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
+        settings: "Einstellungen"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"

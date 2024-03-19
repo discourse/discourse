@@ -176,6 +176,7 @@ bs_BA:
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
+    back_button: "Prethodno"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -1074,8 +1075,6 @@ bs_BA:
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
       passkeys:
         save: "Save"
-        added_prefix: "Doodano"
-        last_used_prefix: "Posljednji put korišten"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -3081,6 +3080,9 @@ bs_BA:
           never: "nikad"
       reports:
         title: "Lista dostupnih izvještaja"
+        sidebar_title: "Izvještaji"
+        sidebar_link:
+          all: "All"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3316,6 +3318,50 @@ bs_BA:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+      home:
+        title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Bedž"
+          notifications: "Obavijest"
+          permalinks: "Permalink-ovi"
+          trust_levels: "Trust Levels"
+          users: "Korisnici"
+          user_fields: "User Fields"
+          watched_words: "Pogledane Rijeći"
+          legal: "Legal"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+          themes: "Teme"
+      email_settings:
+        sidebar_link:
+          appearance: "Izgled"
+          preview_summary: "Pregled Sajta"
+      email_logs:
+        sidebar_link:
+          sent: "Poslano"
+          skipped: "Skipped"
+          bounced: "Vraćeni"
+          received: "Primljeno"
+          rejected: "Odbijeni"
+      security:
+        title: "Security"
+        sidebar_link:
+          error_logs: "Error Logs"
+          screened_emails: "Screened Emails"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          search_logs: "Logovi pretrage"
+          security: "Security"
+          spam: "Spam"
       plugins:
         title: "Pluginovi"
         installed: "Instalirani pluginovi"
@@ -3329,6 +3375,19 @@ bs_BA:
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        sidebar_link:
+          installed: "Installed"
+      advanced:
+        sidebar_link:
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Rate Limits"
+          user_api: "Korisnički API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Files"
+          other_options: "Other"
+          search: "Pretraži"
       backups:
         title: "Backups"
         menu:
@@ -3351,6 +3410,7 @@ bs_BA:
           title: "Prenesite rezervnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Postavke"
         operations:
           failed: "The %{operation} failed. Please check the logs."
           cancel:
@@ -4272,6 +4332,7 @@ bs_BA:
         group: "Grupa"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati: %{name}: emoji?"
+        settings: "Postavke"
       embedding:
         get_started: "Ako želite da ugradite Discourse na drugu web lokaciju, počnite sa dodavanjem njegovog hosta."
         confirm_delete: "Jeste li sigurni da želite izbrisati taj host?"
