@@ -244,6 +244,7 @@ ru:
     software_update_prompt:
       dismiss: "Закрыть"
     bootstrap_mode: "Начало работы"
+    back_button: "Назад"
     themes:
       default_description: "По умолчанию"
       broken_theme_alert: "Сайт может не работать: в теме (компоненте) есть ошибки."
@@ -1580,8 +1581,7 @@ ru:
         save: "Сохранить"
         title: "Ключи доступа"
         short_description: "Ключи доступа — это заменители пароля, которые подтверждают вашу личность биометрически (например, отпечаток, FaceID) либо с помощью ПИН-кода или пароля устройства."
-        added_prefix: "Добавлено"
-        last_used_prefix: "Последнее использование"
+        added_date: "Добавлено: %{date}"
         never_used: "Никогда не использовался"
         not_allowed_error: "Процесс регистрации ключа либо завершился по времени, либо был отменен, либо не разрешен."
         already_added_error: "Вы уже зарегистрировали этот ключ доступа. Вам не нужно регистрировать его снова."
@@ -4830,6 +4830,9 @@ ru:
       reports:
         title: "Список доступных отчётов"
         meta_doc: "Ознакомьтесь с нашей <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>документацией</a> для подробного обзора отчетов."
+        sidebar_title: "Отчёты"
+        sidebar_link:
+          all: "Все настройки"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
@@ -5238,6 +5241,50 @@ ru:
           timestamp: "Создано"
           completion: "Время завершения"
           actions: "Действия"
+      home:
+        title: "Главная"
+      account:
+        title: "Аккаунт"
+        sidebar_link:
+          backups: "Резервные копии"
+      community:
+        title: "Сообщество"
+        sidebar_link:
+          badges: "Значки"
+          notifications: "Уведомления"
+          permalinks: "Постоянные ссылки"
+          trust_levels: "Уровни доверия"
+          users: "По пользователям"
+          user_fields: "Поля пользователя"
+          watched_words: "Контролируемые слова"
+          legal: "Юридическое"
+      appearance:
+        title: "Внешний вид"
+        sidebar_link:
+          emoji: "Эмодзи"
+          navigation: "Навигация"
+          themes: "Темы"
+      email_settings:
+        sidebar_link:
+          appearance: "Внешний вид"
+          preview_summary: "Предпросмотр сводки"
+      email_logs:
+        sidebar_link:
+          sent: "Отправленные"
+          skipped: "Пропущено"
+          bounced: "Возвращено"
+          received: "Получено"
+          rejected: "Отклонено"
+      security:
+        title: "Безопасность"
+        sidebar_link:
+          error_logs: "Журнал ошибок"
+          screened_emails: "Проверяемые адреса электронной почты"
+          screened_ips: "Проверяемые IP-адреса"
+          screened_urls: "Проверяемые ссылки"
+          search_logs: "Журналы поиска"
+          security: "Безопасность"
+          spam: "Спам"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -5254,6 +5301,20 @@ ru:
         author: "Автор: %{author}"
         experimental_badge: "экспериментальный"
         learn_more: "Подробнее"
+        sidebar_link:
+          installed: "Установленные"
+      advanced:
+        title: "Дополнительно"
+        sidebar_link:
+          developer: "Разработчикам"
+          embedding: "Встраивание"
+          rate_limits: "Ограничения"
+          user_api: "Пользовательский API"
+          web_hooks: "Вебхуки"
+          onebox: "Умная вставка"
+          files: "Файлы"
+          other_options: "Разное"
+          search: "Найти"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
@@ -5284,6 +5345,7 @@ ru:
           uploading_progress: "Загрузка… %{progress}%"
           success: "Файл «%{filename}» загружен. Обработка файла займёт не более минуты, после чего он отобразится в списке."
           error: "При загрузке файла «%{filename}» произошла ошибка: %{message}"
+        settings: "Настройки"
         operations:
           is_running: "Операция в данный момент выполняется…"
           failed: "Операция %{operation} закончилась неудачей. Проверьте журнал."
@@ -6570,6 +6632,7 @@ ru:
         image: "Изображение"
         alt: "предпросмотр пользовательских эмодзи"
         delete_confirm: "Действительно удалить эмодзи :%{name}:?"
+        settings: "Настройки"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
         confirm_delete: "Действительно удалить этот хост?"

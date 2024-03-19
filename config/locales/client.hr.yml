@@ -207,6 +207,7 @@ hr:
     emails_are_disabled_non_staff: "Odlazna e-pošta onemogućena je za korisnike koji nisu zaposleni."
     software_update_prompt:
       dismiss: "Skloni"
+    back_button: "Natrag"
     themes:
       default_description: "Zadano"
       broken_theme_alert: "Vaša stranica možda neće raditi jer tema/komponenta ima pogreške."
@@ -1408,8 +1409,6 @@ hr:
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
       passkeys:
         save: "Spremi"
-        added_prefix: "Dodano"
-        last_used_prefix: "Posljednji put korišteno"
       change_about:
         title: "Promijeni O meni"
         error: "Došlo je do pogreške u promjeni ove vrijednosti."
@@ -4227,6 +4226,9 @@ hr:
           never: "nikad"
       reports:
         title: "Popis dostupnih izvještaja"
+        sidebar_title: "Izvještaji"
+        sidebar_link:
+          all: "Sve"
       dashboard:
         title: "Nadzorna ploča"
         last_updated: "Nadzorna ploča ažurirana:"
@@ -4537,6 +4539,50 @@ hr:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+      home:
+        title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Sigurnosne kopije"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obavijest"
+          permalinks: "Poveznice"
+          trust_levels: "Razine povjerenja"
+          users: "Korisnika"
+          user_fields: "Korisnička polja"
+          watched_words: "Gledane riječi"
+          legal: "Legalno"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+          themes: "Teme"
+      email_settings:
+        sidebar_link:
+          appearance: "Izgled"
+          preview_summary: "Sažetak pregleda"
+      email_logs:
+        sidebar_link:
+          sent: "Poslano"
+          skipped: "Preskočeno"
+          bounced: "Odskočio"
+          received: "Primljeno"
+          rejected: "Odbio"
+      security:
+        title: "Sigurnost"
+        sidebar_link:
+          error_logs: "Zapis grešak"
+          screened_emails: "Provjereni emailovi"
+          screened_ips: "Provjereni IP-pvi"
+          screened_urls: "Provjereni URL-ovi"
+          search_logs: "Pretraživanje dnevnika"
+          security: "Sigurnost"
+          spam: "Nepoželjno"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"
@@ -4551,6 +4597,19 @@ hr:
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
         author: "Od %{author}"
         learn_more: "Saznajte više"
+        sidebar_link:
+          installed: "Instalirano"
+      advanced:
+        sidebar_link:
+          developer: "Programer"
+          embedding: "Ugrađivanje"
+          rate_limits: "Granica omjera"
+          user_api: "Korisnički API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Datoteke"
+          other_options: "Ostalo"
+          search: "Pretraživanje"
       navigation_menu:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"
@@ -4577,6 +4636,7 @@ hr:
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
+        settings: "Postavke"
         operations:
           failed: "%{operation} neuspješna. Molimo provjerite zapise."
           cancel:
@@ -5720,6 +5780,7 @@ hr:
         image: "Slika"
         alt: "prilagođeni pregled emotikona"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
+        settings: "Postavke"
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         confirm_delete: "Jeste li sigurni da želite izbrisati tog hosta?"

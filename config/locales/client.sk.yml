@@ -242,6 +242,7 @@ sk:
       message: "Aktualizovali sme túto stránku, <span>prosím obnovte</span> , aby všetko fungovalo bez problémov."
       dismiss: "Zahodiť"
     bootstrap_mode: "Začíname"
+    back_button: "Späť"
     themes:
       default_description: "Predvolené"
       broken_theme_alert: "Vaša stránka nemusí fungovať, pretože téma/komponent obsahuje chyby."
@@ -1423,8 +1424,6 @@ sk:
         save: "Uložiť"
         title: "Prístupové kľúče"
         short_description: "Prístupové kľúče sú náhrady hesiel, ktoré overujú vašu identitu biometricky (napr. dotyk, faceID) alebo prostredníctvom PIN/hesla vášho zariadenia."
-        added_prefix: "Pridané"
-        last_used_prefix: "Naposledy použité"
         never_used: "Nikdy nepoužíté"
         not_allowed_error: "Proces registrácie prístupového kľúča buď vypršal, bol zrušený alebo nie je povolený."
         already_added_error: "Tento prístupový kľúč ste už zaregistrovali. Nemusíte ho registrovať znova."
@@ -3218,6 +3217,8 @@ sk:
           never: "nikdy"
       reports:
         meta_doc: "Podrobný prehľad správ nájdete v našej dokumentácii <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> ."
+        sidebar_link:
+          all: "Všetky"
       dashboard:
         title: "Ovládací panel"
         version: "Verzia"
@@ -3414,6 +3415,44 @@ sk:
           body: "Telo"
           timestamp: "Vytvorené"
           actions: "Akcie"
+      home:
+        title: "Domov"
+      account:
+        title: "Účet"
+        sidebar_link:
+          backups: "Zálohy"
+      community:
+        title: "Komunita"
+        sidebar_link:
+          badges: "Odznaky"
+          notifications: "Upozornenia"
+          permalinks: "Trvalé odkazy"
+          trust_levels: "Stupne dôvery"
+          users: "Používatelia"
+          user_fields: "Používateľské polia"
+          legal: "Právne záležitosti"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigácia"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Súhrn"
+      email_logs:
+        sidebar_link:
+          sent: "Odoslané"
+          skipped: "Preskočené"
+          received: "Obdržané"
+          rejected: "Zamietnuté"
+      security:
+        title: "Bezpečnosť"
+        sidebar_link:
+          error_logs: "Chybové Logy"
+          screened_emails: "Kontrolované emaily"
+          screened_ips: "Kontrolované IP adresy"
+          screened_urls: "Kontrolované URL adresy"
+          security: "Bezpečnosť"
+          spam: "Spam"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"
@@ -3429,6 +3468,18 @@ sk:
         author: "Od %{author}"
         experimental_badge: "experimentálne"
         learn_more: "Zistite viac"
+        sidebar_link:
+          installed: "Nainštalované"
+      advanced:
+        title: "Pokročilé"
+        sidebar_link:
+          developer: "Vývojár"
+          embedding: "Vkladám"
+          rate_limits: "Limity a obmedzenia"
+          onebox: "Onebox"
+          files: "Súbory"
+          other_options: "Ostatné"
+          search: "Hľadať"
       backups:
         title: "Zálohy"
         menu:
@@ -3454,6 +3505,7 @@ sk:
           uploading: "Nahráva sa…"
           uploading_progress: "Nahráva sa… %{progress}%"
           error: "Počas nahrávania '%{filename}' nastala chyba: %{message}"
+        settings: "Nastavenia"
         operations:
           is_running: "Momentálne prebieha operácia…"
           failed: " Zlyhalo vykonanie %{operation} . Prosím skontrolujte logy. "
@@ -4161,6 +4213,7 @@ sk:
         group: "Skupina"
         image: "Obrázok"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"
+        settings: "Nastavenia"
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
         confirm_delete: "Ste si istý, že chcete zmazať tohoto hostiteľa?"

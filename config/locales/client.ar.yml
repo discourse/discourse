@@ -300,6 +300,7 @@ ar:
     software_update_prompt:
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
+    back_button: "الرجوع"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
@@ -1722,8 +1723,7 @@ ar:
         save: "حفظ"
         title: "مفاتيح المرور"
         short_description: "مفاتيح المرور هي بدائل لكلمات المرور تتحقق من هويتك باستخدام القياسات الحيوية (على سبيل المثال، اللمس أو معرِّف الوجه) أو عبر رقم التعريف الشخصي/كلمة المرور للجهاز."
-        added_prefix: "تمت الإضافة"
-        last_used_prefix: "آخر استخدام"
+        added_date: "تمت إضافة %{date}"
         never_used: "لم يُستخدَم قط"
         not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح المرور أو تم إلغاؤها أو أنها غير مسموح بها."
         already_added_error: "لقد سجَّلت مفتاح المرور هذا بالفعل. ليس عليك تسجيله مرة أخرى."
@@ -5253,6 +5253,9 @@ ar:
       reports:
         title: "قائمة التقارير المتاحة"
         meta_doc: "استكشف <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>وثائقنا</a> للحصول على نظرة عامة مفصَّلة عن التقارير."
+        sidebar_title: "التقارير"
+        sidebar_link:
+          all: "الكل"
       dashboard:
         title: "لوحة المعلومات"
         last_updated: "تم تحديث لوحة المعلومات:"
@@ -5674,6 +5677,51 @@ ar:
           timestamp: "تاريخ الإنشاء"
           completion: "وقت الاكتمال"
           actions: "الإجراءات"
+      home:
+        title: "الصفحة الرئيسية"
+      account:
+        title: "الحساب"
+        sidebar_link:
+          backups: "النسخ الاحتياطية"
+      community:
+        title: "المجتمع"
+        sidebar_link:
+          badges: "الشارات"
+          notifications: "الإشعارات"
+          permalinks: "الروابط الثابتة"
+          trust_levels: "مستويات الثقة"
+          users: "المستخدمون"
+          user_fields: "حقول المستخدم"
+          watched_words: "الكلمات المُراقَبة"
+          legal: "المسائل القانونية"
+      appearance:
+        title: "الظهور"
+        sidebar_link:
+          emoji: "الرمز التعبيري"
+          navigation: "التنقل"
+          themes: "السمات"
+      email_settings:
+        title: "إعدادات البريد الإلكتروني"
+        sidebar_link:
+          appearance: "الظهور"
+          preview_summary: "معاينة الملخص"
+      email_logs:
+        sidebar_link:
+          sent: "المُرسَلة"
+          skipped: "المتخطاة"
+          bounced: "المرتدة"
+          received: "المتلقاة"
+          rejected: "المرفوضة"
+      security:
+        title: "الأمان"
+        sidebar_link:
+          error_logs: "سجلات الأخطاء"
+          screened_emails: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
+          screened_ips: "عناوين IP الخاضعة للمراقبة"
+          screened_urls: "عناوين URL الخاضعة للمراقبة"
+          search_logs: "سجلات البحث"
+          security: "الأمان"
+          spam: "غير مرغوب فيه"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"
@@ -5690,6 +5738,20 @@ ar:
         author: "بواسطة %{author}"
         experimental_badge: "تجريبي"
         learn_more: "معرفة المزيد"
+        sidebar_link:
+          installed: "مثبَّت"
+      advanced:
+        title: "متقدمة"
+        sidebar_link:
+          developer: "المطور"
+          embedding: "التضمين"
+          rate_limits: "حدود المعدلات"
+          user_api: "واجهة برمجة التطبيقات للمستخدم"
+          web_hooks: "خطافات الويب"
+          onebox: "لوحة المعاينة"
+          files: "الملفات"
+          other_options: "أخرى"
+          search: "البحث"
       navigation_menu:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"
@@ -5720,6 +5782,7 @@ ar:
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
           error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
+        settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"
           failed: "فشلت العملية %{operation}. يُرجى التحقُّق من السجلات."
@@ -7015,6 +7078,7 @@ ar:
         image: "الصورة"
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
+        settings: "الإعدادات"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"

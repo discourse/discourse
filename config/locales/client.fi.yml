@@ -188,6 +188,7 @@ fi:
     software_update_prompt:
       dismiss: "Sulje"
     bootstrap_mode: "Aloittaminen"
+    back_button: "Takaisin"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -1430,8 +1431,7 @@ fi:
         save: "Tallenna"
         title: "Suojausavaimet"
         short_description: "Suojausavaimet ovat perinteisen salasanan korvikkeita, joilla henkilöllisyytesi todennetaan biometrisesti (esim. sormenjäljellä tai kasvojen tunnistuksella) tai laitteen PIN-koodilla/salasanalla."
-        added_prefix: "Lisättiin"
-        last_used_prefix: "Viimeksi käytetty"
+        added_date: "Lisättiin %{date}"
         never_used: "Käyttämätön"
         not_allowed_error: "Suojausavaimen rekisteröintiprosessi aikakatkaistiin, peruttiin tai sitä ei sallita."
         already_added_error: "Olet jo rekisteröinyt tämän suojausavaimen. Sitä ei tarvitse rekisteröidä uudelleen."
@@ -4410,6 +4410,9 @@ fi:
       reports:
         title: "Saatavilla olevat raportit"
         meta_doc: "Tutustu <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>ohjeisiimme</a> saadaksesi yksityiskohtaisen yleiskatsauksen raporteista."
+        sidebar_title: "Raportit"
+        sidebar_link:
+          all: "Kaikki"
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli päivitetty:"
@@ -4805,6 +4808,50 @@ fi:
           timestamp: "Luotu"
           completion: "Suorituksen kesto"
           actions: "Toiminnot"
+      home:
+        title: "Aloitus"
+      account:
+        title: "Tili"
+        sidebar_link:
+          backups: "Varmuuskopiot"
+      community:
+        title: "Yhteisö"
+        sidebar_link:
+          badges: "Kunniamerkit"
+          notifications: "Ilmoitukset"
+          permalinks: "Pysyvät linkit"
+          trust_levels: "Luottamustasot"
+          users: "Käyttäjiä"
+          user_fields: "Käyttäjäkentät"
+          watched_words: "Tarkkaillut sanat"
+          legal: "Säännöt"
+      appearance:
+        title: "Ulkoasu"
+        sidebar_link:
+          emoji: "Emojit"
+          navigation: "Navigointi"
+          themes: "Teemat"
+      email_settings:
+        sidebar_link:
+          appearance: "Ulkoasu"
+          preview_summary: "Esikatsele yhteenveto"
+      email_logs:
+        sidebar_link:
+          sent: "Lähetetyt"
+          skipped: "Ohitettu"
+          bounced: "Toimitus epäonnistui"
+          received: "Vastaanotetut"
+          rejected: "Hylätty"
+      security:
+        title: "Tietoturva"
+        sidebar_link:
+          error_logs: "Virhelokit"
+          screened_emails: "Seulottavat sähköpostit"
+          screened_ips: "Seulottavat IP:t"
+          screened_urls: "Seulottavat URL-osoitteet"
+          search_logs: "Hakulokit"
+          security: "Tietoturva"
+          spam: "Roskaposti"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -4821,6 +4868,20 @@ fi:
         author: "Käyttäjältä %{author}"
         experimental_badge: "kokeellinen"
         learn_more: "Lue lisää"
+        sidebar_link:
+          installed: "Asennettu"
+      advanced:
+        title: "Lisäasetukset"
+        sidebar_link:
+          developer: "Kehittäjä"
+          embedding: "Upottaminen"
+          rate_limits: "Rajat"
+          user_api: "Käyttäjä-API"
+          web_hooks: "Webhookit"
+          onebox: "Onebox"
+          files: "Tiedostot"
+          other_options: "Muut"
+          search: "Hae"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
@@ -4851,6 +4912,7 @@ fi:
           uploading_progress: "Ladataan… %{progress}"
           success: "''%{filename}' ladattiin palvelimeen. Tiedostoa käsitellään, ja voi kestää enintään minuutti ennen kuin se näkyy luettelossa."
           error: "Tiedoston '%{filename}' lataamisessa tapahtui virhe: %{message}"
+        settings: "Asetukset"
         operations:
           is_running: "Toimintoa suoritetaan parhaillaan…"
           failed: "%{operation} epäonnistui. Tarkista lokit."
@@ -6109,6 +6171,7 @@ fi:
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
+        settings: "Asetukset"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"

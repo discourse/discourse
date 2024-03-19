@@ -163,6 +163,7 @@ zh_CN:
       message: "我们已经更新了网站， <span>请刷新</span> 以保持一切顺利进行。"
       dismiss: "忽略"
     bootstrap_mode: "使用入门"
+    back_button: "返回"
     themes:
       default_description: "默认"
       broken_theme_alert: "您的站点可能无法运行，因为主题/组件有错误。"
@@ -913,6 +914,7 @@ zh_CN:
     categories:
       categories_label: "类别"
       subcategories_label: "子类别"
+      all_subcategories: "所有子类别"
       no_subcategories: "无子类别"
       remove_filter: "移除筛选器"
       plus_more_count: "其他 (+%{count})"
@@ -1362,8 +1364,8 @@ zh_CN:
         save: "保存"
         title: "通行密钥"
         short_description: "通行密钥是密码替代方法，可以通过生物识别（例如触控 ID 或者面容 ID）或通过设备 PIN/密码验证您的身份。"
-        added_prefix: "添加："
-        last_used_prefix: "最后使用："
+        added_date: "添加了 %{date}"
+        last_used_date: "最后使用 %{date}"
         never_used: "从未使用"
         not_allowed_error: "通行密钥注册过程超时、被取消或不被允许。"
         already_added_error: "您已注册此通行密钥，无需再次注册。"
@@ -1575,6 +1577,7 @@ zh_CN:
         after_5_minutes: "5 分钟后"
         after_10_minutes: "10 分钟后"
       notification_level_when_replying: "当我在话题中发帖后，将该话题设置为"
+      topics_unread_when_closed: "主题关闭时视为未读"
       invited:
         title: "邀请"
         pending_tab: "待处理"
@@ -3732,6 +3735,7 @@ zh_CN:
         filter_sidebar: "%{shortcut} 侧边栏过滤器"
         help: "%{shortcut} 打开键盘帮助"
         toggle_bulk_select: "%{shortcut} 切换批量选择"
+        dismiss: "%{shortcut} 忽略所选话题"
         x: "%{shortcut} 切换选择 (批量选择模式下)"
         log_out: "%{shortcut} 退出"
       composing:
@@ -4230,6 +4234,7 @@ zh_CN:
           copy: "复制…"
           paste: "粘贴…"
           save: "另存为…"
+    powered_by_discourse: "Powered by Discourse"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4244,6 +4249,9 @@ zh_CN:
       reports:
         title: "可用报告列表"
         meta_doc: "浏览我们的 <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>文档</a>，了解举报的详细概述。"
+        sidebar_title: "报告"
+        sidebar_link:
+          all: "所有"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -4472,6 +4480,10 @@ zh_CN:
               delete: 删除帖子。
               recover: 恢复一个帖子。
               list: 列出最新帖子和不公开帖子。也支持 RSS。
+            revisions:
+              read: "获取最新版本或特定版本。"
+              modify: "隐藏、显示或恢复修订。"
+              permanently_delete: "永久删除修订。"
             tags:
               list: 列出标签。
             tag_groups:
@@ -4641,6 +4653,61 @@ zh_CN:
           timestamp: "创建时间"
           completion: "完成时间"
           actions: "操作"
+      home:
+        title: "首页"
+      account:
+        title: "帐户"
+        sidebar_link:
+          backups: "备份"
+          whats_new: "最新变化"
+      community:
+        title: "社区"
+        sidebar_link:
+          about_your_site: "关于你的网站"
+          badges: "徽章"
+          login_and_authentication: "登录 & 身份验证"
+          notifications: "通知"
+          permalinks: "永久链接"
+          trust_levels: "信任级别"
+          users: "用户"
+          user_fields: "用户字段"
+          watched_words: "关注词"
+          legal: "法律信息"
+      appearance:
+        title: "外观"
+        sidebar_link:
+          font_style: "字体样式"
+          site_logo: "站点 Logo"
+          color_schemes: "配色方案"
+          emoji: "表情符号"
+          navigation: "导航"
+          themes: "主题"
+          site_texts: "站点文本"
+      email_settings:
+        title: "电子邮件设置"
+        sidebar_link:
+          appearance: "外观"
+          preview_summary: "预览总结"
+          server_setup: "服务器设置"
+      email_logs:
+        title: "电子邮件日志"
+        sidebar_link:
+          sent: "已发送"
+          skipped: "已跳过"
+          bounced: "被退回"
+          received: "已收到"
+          rejected: "遭拒"
+      security:
+        title: "安全性"
+        sidebar_link:
+          error_logs: "错误日志"
+          screened_emails: "已屏蔽的电子邮件"
+          screened_ips: "已屏蔽的 IP"
+          screened_urls: "已屏蔽的 URL"
+          search_logs: "搜索日志"
+          security: "安全性"
+          spam: "垃圾信息"
+          staff_action_logs: "管理人员操作日志"
       plugins:
         title: "插件"
         installed: "安装的插件"
@@ -4657,6 +4724,23 @@ zh_CN:
         author: "作者 %{author}"
         experimental_badge: "实验性"
         learn_more: "了解详情"
+        sidebar_link:
+          installed: "已安装"
+      advanced:
+        title: "高级"
+        sidebar_link:
+          api_keys: "API 密钥"
+          developer: "开发者"
+          embedding: "嵌入"
+          rate_limits: "频率限制"
+          user_api: "用户 API"
+          web_hooks: "网络钩子"
+          onebox: "Onebox"
+          files: "文件"
+          other_options: "其他"
+          search: "搜索"
+          experimental: "实验性"
+          all_site_settings: "所有站点设置"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"
@@ -4687,6 +4771,7 @@ zh_CN:
           uploading_progress: "正在上传… %{progress}%"
           success: "'%{filename}' 已成功上传。文件正在处理，将在几分钟后显示在列表中。"
           error: "上传 '%{filename}' 时出错：%{message}"
+        settings: "设置"
         operations:
           is_running: "一个操作当前正在运行…"
           failed: "%{operation}失败。请检查日志。"
@@ -4959,6 +5044,7 @@ zh_CN:
           inactive_filter: "停用"
           updates_available_filter: "有可用更新"
           schema:
+            title: "编辑 %{name} 设置"
             back_button: "返回 %{name}"
         colors:
           select_base:
@@ -5942,6 +6028,7 @@ zh_CN:
         image: "图片"
         alt: "自定义表情符号预览"
         delete_confirm: "确定要删除 :%{name}: 表情符号吗？"
+        settings: "设置"
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"

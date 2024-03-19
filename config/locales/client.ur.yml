@@ -161,6 +161,7 @@ ur:
     emails_are_disabled_non_staff: "باہر جانے والی ای میل غیر عملہ صارفین کے لیے غیر فعال کر دی گئی ہیں"
     software_update_prompt:
       dismiss: "بر خاست کریں"
+    back_button: "واپس"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -1207,8 +1208,6 @@ ur:
           name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
       passkeys:
         save: "محفوظ کریں"
-        added_prefix: "شامل کر دیا گیا"
-        last_used_prefix: "آخری بار استعمال"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -3629,6 +3628,9 @@ ur:
           never: "کبھی نہیں"
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
+        sidebar_title: "رپورٹیں"
+        sidebar_link:
+          all: "تمام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -3922,6 +3924,50 @@ ur:
           timestamp: "بنایا گیا"
           completion: "مدتِ تکمیل"
           actions: "عوامل"
+      home:
+        title: "ہَوم"
+      account:
+        title: "اکاؤنٹ"
+        sidebar_link:
+          backups: "بیک اَپس"
+      community:
+        title: "کمیونٹی"
+        sidebar_link:
+          badges: "بَیج"
+          notifications: "اطلاعات"
+          permalinks: "دائمی لِنکس"
+          trust_levels: "ٹرسٹ لَیول"
+          users: "صارفین"
+          user_fields: "صارف کے لیے دیئے گئے خانے"
+          watched_words: "نظر رکھے ہوئے الفاظ"
+          legal: "قانونی"
+      appearance:
+        title: "ظاہری شکل"
+        sidebar_link:
+          emoji: "اِیمَوجی"
+          navigation: "نیویگیشن"
+          themes: "تِھیمز"
+      email_settings:
+        sidebar_link:
+          appearance: "ظاہری شکل"
+          preview_summary: "ڈائجسٹ کا مشاہدہ کریں"
+      email_logs:
+        sidebar_link:
+          sent: "بھیجا جا چکا"
+          skipped: "چھوڑا گیا"
+          bounced: "لوٹا دی گئی"
+          received: "موصول ہو گئی"
+          rejected: "مسترد کر دی گئی"
+      security:
+        title: "سیکورٹی"
+        sidebar_link:
+          error_logs: "خرابیوں کے لاگز"
+          screened_emails: "سکرین کی گئی اِیمیلز"
+          screened_ips: "سکرین کیے گئے IP"
+          screened_urls: "سکرین کیے گئے یو.آر.ایل."
+          search_logs: "لاگز سرچ کریں"
+          security: "سیکورٹی"
+          spam: "سپَیم"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"
@@ -3935,6 +3981,19 @@ ur:
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         author: "%{author} کی طرف سے"
         learn_more: "مزید جانیں"
+        sidebar_link:
+          installed: "انسٹال کیا ہوا"
+      advanced:
+        sidebar_link:
+          developer: "ڈیولپر"
+          embedding: "اَیمبَیڈ کرنا"
+          rate_limits: "رَیٹ لِمِٹس"
+          user_api: "یُوزَر API"
+          web_hooks: "وَیب ھُوک٘س٘"
+          onebox: "وَن باکس"
+          files: "فائلیں"
+          other_options: "دیگر"
+          search: "تلاش کریں"
       backups:
         title: "بیک اَپس"
         menu:
@@ -3957,6 +4016,7 @@ ur:
           title: "اِس صورتحال کیلئے ایک بیک اَپ اَپ لوڈ کریں"
           success: "'%{filename}' کامیابی سے اَپ لوڈ کردی گئی ہے۔ فائل پر اب کام جا ری ہے اور فہرست میں ظاہر ہونے کیلئے ایک منٹ تک لگ سکتا ہے۔"
           error: "اَپ لوڈ کرتے وقت ایک خرابی کا سامنا کرنا پڑا '%{filename}': %{message}"
+        settings: "ترتیبات"
         operations:
           failed: "%{operation} ناکام رہا۔ براہ مہربانی لاگز چیک کریں۔"
           cancel:
@@ -5058,6 +5118,7 @@ ur:
         image: "تصویر"
         alt: "حسب ضرورت ایموجی پیش نظارہ"
         delete_confirm: "کیا آپ واقعی :%{name}: اِیمَوجی حذف کرنا چاہتے ہیں؟"
+        settings: "ترتیبات"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"

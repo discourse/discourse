@@ -247,6 +247,7 @@ he:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
       dismiss: "התעלמות"
     bootstrap_mode: "איך מתחילים"
+    back_button: "חזרה"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -1588,8 +1589,8 @@ he:
         save: "שמירה"
         title: "מפתחות גישה"
         short_description: "מפתחות גישה הן חלופה לסיסמאות שמאמתות את הזיהוי שלך באופן ביומטרי (למשל: מגע, זיהוי פנים) או באמצעות קוד אישי/סיסמה במכשיר."
-        added_prefix: "הוסיף"
-        last_used_prefix: "שימוש אחרון"
+        added_date: "נוספו %{date}"
+        last_used_date: "שימוש אחרון: %{date}"
         never_used: "אף פעם לא היה בשימוש"
         not_allowed_error: "הזמן שהוקצב לתהליך רישום מפתח הגישה פג או בוטל או אסור מלכתחילה."
         already_added_error: "כבר רשמת את מפתח הגישה הזה. אין צורך לרשום אותו שוב."
@@ -1804,6 +1805,7 @@ he:
         after_5_minutes: "אחרי 5 דקות"
         after_10_minutes: "אחרי 10 דקות"
       notification_level_when_replying: "כאשר אני מפרסם נושא, קבע נושא זה ל"
+      topics_unread_when_closed: "להחשיב נושאים כלא נקראו כשהם סגורים"
       invited:
         title: "הזמנות"
         pending_tab: "ממתין"
@@ -4863,6 +4865,7 @@ he:
           copy: "העתקה…"
           paste: "הדבקה…"
           save: "שמירה בשם…"
+    powered_by_discourse: "מופעל על גבי Discrouse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     admin:
@@ -4877,6 +4880,9 @@ he:
       reports:
         title: "רשימת דיווחים זמינים"
         meta_doc: "אפשר לעיין ב<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>תיעוד</a> שלנו לסקירה מפורטת של הדוחות."
+        sidebar_title: "דוחות"
+        sidebar_link:
+          all: "הכול"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
@@ -5117,6 +5123,8 @@ he:
               delete: מחיקת פוסט.
               recover: שחזור פוסט.
               list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
+            revisions:
+              permanently_delete: "מחיקת מהדורה לצמיתות."
             tags:
               list: הצגת תגיות.
             tag_groups:
@@ -5292,6 +5300,61 @@ he:
           timestamp: "נוצר"
           completion: "זמן השלמה"
           actions: "פעולות"
+      home:
+        title: "בית"
+      account:
+        title: "חשבון"
+        sidebar_link:
+          backups: "גיבויים"
+          whats_new: "מה חדש"
+      community:
+        title: "קהילה"
+        sidebar_link:
+          about_your_site: "על האתר שלך"
+          badges: "עיטורים"
+          login_and_authentication: "כניסה ואימות"
+          notifications: "התראות"
+          permalinks: "קישורים קבועים"
+          trust_levels: "דרגת אמון"
+          users: "משתמשים"
+          user_fields: "שדות משתמש"
+          watched_words: "מילים במעקב"
+          legal: "משפטי"
+      appearance:
+        title: "מראה"
+        sidebar_link:
+          font_style: "סגנון גופן"
+          site_logo: "לוגו האתר"
+          color_schemes: "ערכות צבעים"
+          emoji: "אמוג׳י"
+          navigation: "ניווט"
+          themes: "תמות"
+          site_texts: "טקסטים של האתר"
+      email_settings:
+        title: "הגדרות דוא״ל"
+        sidebar_link:
+          appearance: "מראה"
+          preview_summary: "תצוגה מקדימה של תמצית"
+          server_setup: "הגדרת שרת"
+      email_logs:
+        title: "יומני דוא״ל"
+        sidebar_link:
+          sent: "נשלח"
+          skipped: "דולג"
+          bounced: "הוחזר"
+          received: "התקבל"
+          rejected: "נדחה"
+      security:
+        title: "אבטחה"
+        sidebar_link:
+          error_logs: "יומני שגיאות"
+          screened_emails: "הודעות דואר מסוננות"
+          screened_ips: "כתובות IP מפוקחות"
+          screened_urls: "כתובות מפוקחות"
+          search_logs: "חיפוש ביומנים"
+          security: "אבטחה"
+          spam: "ספאם"
+          staff_action_logs: "יומני פעולות סגל"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "הרחבות מותקנות"
@@ -5308,6 +5371,23 @@ he:
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
         learn_more: "מידע נוסף"
+        sidebar_link:
+          installed: "הותקן"
+      advanced:
+        title: "מתקדם"
+        sidebar_link:
+          api_keys: "מפתחות API"
+          developer: "מפתחים"
+          embedding: "שילוב (embedding)"
+          rate_limits: "מגבלות קצב"
+          user_api: "API של משתמש"
+          web_hooks: "Webhooks"
+          onebox: "תיבת תחימה"
+          files: "קבצים"
+          other_options: "אחר"
+          search: "חיפוש"
+          experimental: "ניסיוני"
+          all_site_settings: "כל הגדרות האתר"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
@@ -5338,6 +5418,7 @@ he:
           uploading_progress: "מתבצעת העלאה… %{progress}%"
           success: "ההעלאה של ‚%{filename}’ הושלמה בהצלחה. הקובץ עובר עיבוד כרגע ותחלוף עד דקה עד שיופיע ברשימה."
           error: "הייתה שגיאה במהלך העלאת '%{filename}': %{message}"
+        settings: "הגדרות"
         operations:
           is_running: "פעולה רצה כעת…"
           failed: "ה-%{operation} נכשל/ה. אנא בידקו את הלוגים."
@@ -5613,6 +5694,7 @@ he:
           inactive_filter: "לא פעיל"
           updates_available_filter: "עדכונים זמינים"
           schema:
+            title: "עריכת הגדרת %{name}"
             back_button: "חזרה אל %{name}"
         colors:
           select_base:
@@ -6620,6 +6702,7 @@ he:
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
+        settings: "הגדרות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "

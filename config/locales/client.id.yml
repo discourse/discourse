@@ -1149,7 +1149,7 @@ id:
           save: "Simpan"
       passkeys:
         save: "Simpan"
-        added_prefix: "Ditambahkan"
+        added_date: "Ditambahkan %{date}"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -2161,6 +2161,9 @@ id:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
+      reports:
+        sidebar_link:
+          all: "Semua"
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"
@@ -2246,15 +2249,40 @@ id:
           body: "Konten"
           timestamp: "Dibuat"
           actions: "Aksi"
+      home:
+        title: "Beranda"
+      account:
+        title: "Akun"
+      community:
+        sidebar_link:
+          notifications: "Pemberitahuan"
+          users: "Pengguna"
+      appearance:
+        sidebar_link:
+          navigation: "Navigasi"
+      email_logs:
+        sidebar_link:
+          sent: "Mengirim"
+          received: "Menerima"
+          rejected: "Ditolak"
+      security:
+        sidebar_link:
+          spam: "Spam"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
+      advanced:
+        sidebar_link:
+          user_api: "API Pengguna"
+          other_options: "Lainnya"
+          search: "Cari"
       backups:
         menu:
           logs: "Log"
         upload:
           label: "Unggah"
+        settings: "Pengaturan"
         operations:
           cancel:
             label: "Batal"
@@ -2554,6 +2582,7 @@ id:
         disabled: dinonaktifkan
       emoji:
         name: "Nama"
+        settings: "Pengaturan"
       embedding:
         edit: "ubah"
       permalink:
