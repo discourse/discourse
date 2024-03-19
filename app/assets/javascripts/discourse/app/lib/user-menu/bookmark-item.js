@@ -24,7 +24,11 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   }
 
   get label() {
-    return this.bookmark.user?.username;
+    if (this.siteSettings.prioritize_username_in_ux) {
+      return this.bookmark.user?.username;
+    }
+
+    return this.bookmark.user?.name || this.bookmark.user?.username;
   }
 
   get description() {

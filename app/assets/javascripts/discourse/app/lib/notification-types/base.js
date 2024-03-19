@@ -73,7 +73,11 @@ export default class NotificationTypeBase {
    * @returns {string} The label is the first part of the text content displayed in the notification. For example, in a like notification, the username of the user who liked the post is the label. If a falsey value is returned, the label is omitted.
    */
   get label() {
-    return this.username;
+    if (this.siteSettings.prioritize_username_in_ux) {
+      return this.username;
+    }
+
+    return this.notification.acting_user_name || this.username;
   }
 
   /**

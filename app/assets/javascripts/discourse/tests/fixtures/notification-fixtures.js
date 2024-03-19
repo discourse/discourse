@@ -7,6 +7,7 @@ export default {
         id: 5340,
         notification_type: NOTIFICATION_TYPES.edited,
         acting_user_avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
+        acting_user_name: "Veles In",
         read: false,
         post_number: 1,
         topic_id: 130,
