@@ -1,5 +1,6 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
+import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import getURL from "discourse-common/lib/get-url";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -527,6 +528,23 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
   );
+
+  pretender.get("/categories/find", () => {
+    return response({ categories: siteFixtures["site.json"].site.categories });
+  });
+
+  pretender.get("/categories/search", (request) => {
+    if (request.queryParams.include_ancestors) {
+      return response({
+        categories: siteFixtures["site.json"].site.categories,
+        ancestors: siteFixtures["site.json"].site.categories,
+      });
+    } else {
+      return response({
+        categories: siteFixtures["site.json"].site.categories,
+      });
+    }
+  });
 
   pretender.get("/c/testing/find_by_slug.json", () =>
     response(fixturesByUrl["/c/11/show.json"])
