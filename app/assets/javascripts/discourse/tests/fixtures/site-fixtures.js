@@ -3,6 +3,7 @@ import { NOTIFICATION_TYPES } from "./concerns/notification-types";
 export default {
   "site.json": {
     site: {
+      lazy_load_categories: true,
       default_archetype: "regular",
       shared_drafts_category_id: 24,
       notification_types: NOTIFICATION_TYPES,
