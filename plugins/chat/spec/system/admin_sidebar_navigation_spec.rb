@@ -59,7 +59,13 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
     end
 
     it "keeps the admin sidebar open instead of switching to the main panel when toggling the drawer" do
-      Fabricate(:user_chat_channel_membership, user: admin, chat_channel: Fabricate(:chat_channel))
+      membership =
+        Fabricate(
+          :user_chat_channel_membership,
+          user: admin,
+          chat_channel: Fabricate(:chat_channel),
+        )
+      admin.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => membership.chat_channel.id)
       chat_page.prefers_full_page
       visit("/admin")
       expect(sidebar).to have_section("admin-nav-section-root")

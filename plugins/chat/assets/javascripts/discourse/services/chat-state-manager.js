@@ -66,7 +66,10 @@ export default class ChatStateManager extends Service {
         "service:admin-sidebar-state-manager"
       );
 
-      if (!adminSidebarStateManager.maybeForceAdminSidebar()) {
+      if (
+        adminSidebarStateManager &&
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
         if (getUserChatSeparateSidebarMode(this.currentUser).always) {
           api.setSeparatedSidebarMode();
           api.hideSidebarSwitchPanelButtons();
@@ -97,7 +100,10 @@ export default class ChatStateManager extends Service {
         this.currentUser
       );
 
-      if (!adminSidebarStateManager.maybeForceAdminSidebar()) {
+      if (
+        adminSidebarStateManager &&
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
         api.setSidebarPanel(MAIN_PANEL);
 
         if (chatSeparateSidebarMode.fullscreen) {
