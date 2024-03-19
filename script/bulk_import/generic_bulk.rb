@@ -31,84 +31,71 @@ class BulkImport::Generic < BulkImport::Base
 
     # Now that the migration is complete, do some more work:
 
-    Discourse::Application.load_tasks
+    # Discourse::Application.load_tasks
 
-    puts "running 'import:ensure_consistency' rake task."
-    Rake::Task["import:ensure_consistency"].invoke
+    # puts "running 'import:ensure_consistency' rake task."
+    # Rake::Task["import:ensure_consistency"].invoke
   end
 
   def execute
-    enable_required_plugins
-    import_site_settings
+    # enable_required_plugins
+    # import_site_settings
 
-    import_uploads
-
+    # import_uploads
     # needs to happen before users, because keeping group names is more important than usernames
-    import_groups
+    # import_groups
+    # import_users
+    # import_user_emails
+    # import_user_profiles
+    # import_user_options
+    # import_user_fields
+    # import_user_field_values
+    # import_single_sign_on_records
+    # import_muted_users
+    # import_user_histories
+    # import_user_notes
+    # import_user_note_counts
+    # import_user_followers
+    # import_user_avatars
+    # update_uploaded_avatar_id
+    # import_group_members
+    # import_tag_groups
+    # import_tags
+    # import_tag_users
+    # import_categories
+    # import_category_custom_fields
+    # import_category_tag_groups
+    # import_category_permissions
+    # import_category_users
+    # import_topics
+    # import_posts
+    # import_post_custom_fields
+    # import_polls
+    # import_poll_options
+    # import_poll_votes
+    # import_topic_tags
+    # import_topic_allowed_users
+    # import_likes
+    # import_votes
+    # import_answers
+    # import_gamification_scores
+    # import_post_events
+    # import_badge_groupings
 
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_field_values
-    import_single_sign_on_records
-    import_muted_users
-    import_user_histories
-    import_user_notes
-    import_user_note_counts
-    import_user_followers
-
-    import_user_avatars
-    update_uploaded_avatar_id
-
-    import_group_members
-
-    import_tag_groups
-    import_tags
-    import_tag_users
-
-    import_categories
-    import_category_custom_fields
-    import_category_tag_groups
-    import_category_permissions
-    import_category_users
-
-    import_topics
-    import_posts
-    import_post_custom_fields
-
-    import_polls
-    import_poll_options
-    import_poll_votes
-
-    import_topic_tags
-    import_topic_allowed_users
-
-    import_likes
-    import_votes
-    import_answers
-    import_gamification_scores
-    import_post_events
-
-    import_badge_groupings
     import_badges
-    import_user_badges
 
-    import_upload_references
-    import_optimized_images
-
-    import_topic_users
-    update_topic_users
-
-    import_user_stats
-
-    import_permalink_normalizations
-    import_permalinks
+    # import_user_badges
+    # import_upload_references
+    # import_optimized_images
+    # import_topic_users
+    # update_topic_users
+    # import_user_stats
+    # import_permalink_normalizations
+    # import_permalinks
   end
 
   def execute_after
-    import_category_about_topics
+    # import_category_about_topics
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -2087,7 +2074,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: [1, 2, 3].sample,
         long_description: row["long_description"],
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,

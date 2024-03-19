@@ -71,7 +71,13 @@ class BulkImport::Base
     charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_db_config.configuration_hash
     @encoder = PG::TextEncoder::CopyRow.new
-    @raw_connection = PG.connect(dbname: db[:database], port: db[:port])
+    @raw_connection =
+      PG.connect(
+        dbname: db[:database],
+        port: db[:port],
+        user: db[:username],
+        password: db[:password],
+      )
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
@@ -91,16 +97,16 @@ class BulkImport::Base
 
     puts "Starting..."
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
-    preload_i18n
+    # preload_i18n
     create_migration_mappings_table
-    fix_highest_post_numbers
-    load_imported_ids
+    # fix_highest_post_numbers
+    # load_imported_ids
     load_indexes
     execute
     fix_primary_keys
     execute_after
-    puts "Done! (#{((Time.now - start_time) / 60).to_i} minutes)"
-    puts "Now run the 'import:ensure_consistency' rake task."
+    puts "Done! (#{Time.now - start_time} seconds)"
+    # puts "Now run the 'import:ensure_consistency' rake task."
   end
 
   def preload_i18n
@@ -222,55 +228,55 @@ class BulkImport::Base
   end
 
   def load_indexes
-    puts "Loading groups indexes..."
-    @last_group_id = last_id(Group)
-    @group_names_lower = Group.unscoped.pluck(:name).map(&:downcase).to_set
+    # puts "Loading groups indexes..."
+    # @last_group_id = last_id(Group)
+    # @group_names_lower = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
-    puts "Loading users indexes..."
-    @last_user_id = last_id(User)
-    @last_user_email_id = last_id(UserEmail)
-    @last_sso_record_id = last_id(SingleSignOnRecord)
-    @emails = UserEmail.pluck(:email, :user_id).to_h
-    @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
-    @usernames_lower = User.unscoped.pluck(:username_lower).to_set
-    @anonymized_user_suffixes =
-      DB.query_single(
-        "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
-      ).to_set
-    @mapped_usernames =
-      UserCustomField
-        .joins(:user)
-        .where(name: "import_username")
-        .pluck("user_custom_fields.value", "users.username")
-        .to_h
-    @last_user_avatar_id = last_id(UserAvatar)
-    @last_upload_id = last_id(Upload)
-    @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
-    @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
-    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
+    # puts "Loading users indexes..."
+    # @last_user_id = last_id(User)
+    # @last_user_email_id = last_id(UserEmail)
+    # @last_sso_record_id = last_id(SingleSignOnRecord)
+    # @emails = UserEmail.pluck(:email, :user_id).to_h
+    # @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
+    # @usernames_lower = User.unscoped.pluck(:username_lower).to_set
+    # @anonymized_user_suffixes =
+    #   DB.query_single(
+    #     "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
+    #   ).to_set
+    # @mapped_usernames =
+    #   UserCustomField
+    #     .joins(:user)
+    #     .where(name: "import_username")
+    #     .pluck("user_custom_fields.value", "users.username")
+    #     .to_h
+    # @last_user_avatar_id = last_id(UserAvatar)
+    # @last_upload_id = last_id(Upload)
+    # @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
+    # @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
+    # @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
 
-    puts "Loading categories indexes..."
-    @last_category_id = last_id(Category)
-    @last_category_group_id = last_id(CategoryGroup)
-    @highest_category_position = Category.unscoped.maximum(:position) || 0
-    @category_names =
-      Category
-        .unscoped
-        .pluck(:parent_category_id, :name)
-        .map { |pci, name| "#{pci}-#{name.downcase}" }
-        .to_set
+    # puts "Loading categories indexes..."
+    # @last_category_id = last_id(Category)
+    # @last_category_group_id = last_id(CategoryGroup)
+    # @highest_category_position = Category.unscoped.maximum(:position) || 0
+    # @category_names =
+    #   Category
+    #     .unscoped
+    #     .pluck(:parent_category_id, :name)
+    #     .map { |pci, name| "#{pci}-#{name.downcase}" }
+    #     .to_set
 
-    puts "Loading topics indexes..."
-    @last_topic_id = last_id(Topic)
-    @highest_post_number_by_topic_id = load_values("topics", "highest_post_number", @last_topic_id)
+    # puts "Loading topics indexes..."
+    # @last_topic_id = last_id(Topic)
+    # @highest_post_number_by_topic_id = load_values("topics", "highest_post_number", @last_topic_id)
 
-    puts "Loading posts indexes..."
-    @last_post_id = last_id(Post)
-    @post_number_by_post_id = load_values("posts", "post_number", @last_post_id)
-    @topic_id_by_post_id = load_values("posts", "topic_id", @last_post_id)
+    # puts "Loading posts indexes..."
+    # @last_post_id = last_id(Post)
+    # @post_number_by_post_id = load_values("posts", "post_number", @last_post_id)
+    # @topic_id_by_post_id = load_values("posts", "topic_id", @last_post_id)
 
-    puts "Loading post actions indexes..."
-    @last_post_action_id = last_id(PostAction)
+    # puts "Loading post actions indexes..."
+    # @last_post_action_id = last_id(PostAction)
 
     puts "Loading upload indexes..."
     @uploads_mapping = load_index(MAPPING_TYPES[:upload])
@@ -281,11 +287,11 @@ class BulkImport::Base
     @badge_mapping = load_index(MAPPING_TYPES[:badge])
     @last_badge_id = last_id(Badge)
 
-    puts "Loading poll indexes..."
-    @poll_mapping = load_index(MAPPING_TYPES[:poll])
-    @poll_option_mapping = load_index(MAPPING_TYPES[:poll_option])
-    @last_poll_id = last_id(Poll)
-    @last_poll_option_id = last_id(PollOption)
+    # puts "Loading poll indexes..."
+    # @poll_mapping = load_index(MAPPING_TYPES[:poll])
+    # @poll_option_mapping = load_index(MAPPING_TYPES[:poll_option])
+    # @last_poll_id = last_id(Poll)
+    # @last_poll_option_id = last_id(PollOption)
   end
 
   def use_bbcode_to_md?
@@ -300,53 +306,53 @@ class BulkImport::Base
   end
 
   def fix_primary_keys
-    puts "Updating primary key sequences..."
-    if @last_group_id > 0
-      @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
-    end
-    if @last_user_id > 0
-      @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
-    end
-    if @last_user_email_id > 0
-      @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
-    end
-    if @last_sso_record_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{SingleSignOnRecord.sequence_name}', #{@last_sso_record_id})",
-      )
-    end
-    if @last_category_id > 0
-      @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
-    end
-    if @last_category_group_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{CategoryGroup.sequence_name}', #{@last_category_group_id})",
-      )
-    end
-    if @last_topic_id > 0
-      @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
-    end
-    if @last_post_id > 0
-      @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
-    end
-    if @last_post_action_id > 0
-      @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
-    end
-    if @last_user_avatar_id > 0
-      @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
-    end
-    if @last_upload_id > 0
-      @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
-    end
+    # puts "Updating primary key sequences..."
+    # if @last_group_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
+    # end
+    # if @last_user_id > 0
+    #   @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
+    # end
+    # if @last_user_email_id > 0
+    #   @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
+    # end
+    # if @last_sso_record_id > 0
+    #   @raw_connection.exec(
+    #     "SELECT setval('#{SingleSignOnRecord.sequence_name}', #{@last_sso_record_id})",
+    #   )
+    # end
+    # if @last_category_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
+    # end
+    # if @last_category_group_id > 0
+    #   @raw_connection.exec(
+    #     "SELECT setval('#{CategoryGroup.sequence_name}', #{@last_category_group_id})",
+    #   )
+    # end
+    # if @last_topic_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
+    # end
+    # if @last_post_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
+    # end
+    # if @last_post_action_id > 0
+    #   @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
+    # end
+    # if @last_user_avatar_id > 0
+    #   @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
+    # end
+    # if @last_upload_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
+    # end
     if @last_badge_id > 0
       @raw_connection.exec("SELECT setval('#{Badge.sequence_name}', #{@last_badge_id})")
     end
-    if @last_poll_id > 0
-      @raw_connection.exec("SELECT setval('#{Poll.sequence_name}', #{@last_poll_id})")
-    end
-    if @last_poll_option_id > 0
-      @raw_connection.exec("SELECT setval('#{PollOption.sequence_name}', #{@last_poll_option_id})")
-    end
+    # if @last_poll_id > 0
+    #   @raw_connection.exec("SELECT setval('#{Poll.sequence_name}', #{@last_poll_id})")
+    # end
+    # if @last_poll_option_id > 0
+    #   @raw_connection.exec("SELECT setval('#{PollOption.sequence_name}', #{@last_poll_option_id})")
+    # end
   end
 
   def group_id_from_imported_id(id)
