@@ -4282,6 +4282,7 @@ cs:
       upload: "Nahrát štítky"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      delete_no_unused_tags: "Neexistují žádné nepoužité štítky."
       delete_unused: "Odstranit nepoužité štítky"
       delete_unused_description: "Odstranit všechny štítky, které nejsou připojeny k žádným tématům nebo osobním zprávám"
       filters:
@@ -4902,10 +4903,15 @@ cs:
               create: Odeslání e-mailové pozvánky nebo vygenerování odkazů na pozvánky
             badges:
               create: Vytvořit nový odznak.
+              show: Získání informací o odznaku.
+              update: Aktualizace odznaku.
+              delete: Odstranění odznaku.
+              list_user_badges: Seznam odznaků uživatele.
               assign_badge_to_user: Přiřadit odznak uživateli.
               revoke_badge_from_user: Odebrání odznaku uživateli.
             groups:
               manage_groups: Zobrazit, přidat a odebrat členy skupiny.
+              administer_groups: Prohlížet, zobrazovat, vytvářet, aktualizovat a mazat skupiny.
             logs:
               messages: Výpis zpráv z /logs nebo získání konkrétní zprávy protokolu.
       web_hooks:
