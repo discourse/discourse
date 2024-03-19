@@ -435,7 +435,7 @@ export default class ComposerService extends Service {
 
       return options.concat(
         customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption(option))
+          .map((option) => this._setupPopupMenuOption({ ...option }))
           .filter((o) => o)
       );
     }
