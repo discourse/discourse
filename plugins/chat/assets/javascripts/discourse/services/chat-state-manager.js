@@ -67,7 +67,7 @@ export default class ChatStateManager extends Service {
       );
 
       if (
-        adminSidebarStateManager &&
+        adminSidebarStateManager === undefined ||
         !adminSidebarStateManager.maybeForceAdminSidebar()
       ) {
         if (getUserChatSeparateSidebarMode(this.currentUser).always) {
@@ -101,7 +101,7 @@ export default class ChatStateManager extends Service {
       );
 
       if (
-        adminSidebarStateManager &&
+        adminSidebarStateManager === undefined ||
         !adminSidebarStateManager.maybeForceAdminSidebar()
       ) {
         api.setSidebarPanel(MAIN_PANEL);
