@@ -22,7 +22,7 @@ export default class AdminSidebarStateManager extends Service {
   }
 
   get currentUserUsingAdminSidebar() {
-    return this.currentUser.use_admin_sidebar;
+    return this.currentUser?.use_admin_sidebar;
   }
 
   maybeForceAdminSidebar(opts = {}) {
