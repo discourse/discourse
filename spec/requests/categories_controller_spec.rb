@@ -1153,12 +1153,19 @@ RSpec.describe CategoriesController do
     end
 
     it "does not generate N+1 queries" do
+      # Set up custom fields
+      Site.preloaded_category_custom_fields << "bob"
+      category2.upsert_custom_fields("bob" => "marley")
+
       # Warm up caches
-      get "/categories/search.json", params: { term: "Foo" }
+      get "/categories/search.json", params: { term: "Notfoo" }
 
-      queries = track_sql_queries { get "/categories/search.json", params: { term: "Foo" } }
+      queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
 
-      expect(queries.length).to eq(4)
+      expect(queries.length).to eq(5)
+
+      expect(response.parsed_body["categories"].length).to eq(1)
+      expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
     end
 
     context "without include_ancestors" do
