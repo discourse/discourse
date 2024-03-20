@@ -144,6 +144,23 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
   end
 
+  it "allows the user to create custom section with anchor link" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Faq", "/faq#someheading")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
+  end
+
   it "accessibility - when new row is added in custom section, first new input is focused" do
     sign_in user
     visit("/latest")
