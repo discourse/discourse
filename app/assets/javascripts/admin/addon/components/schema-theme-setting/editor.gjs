@@ -3,13 +3,11 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 import FieldInput from "./field";
@@ -284,17 +282,18 @@ export default class SchemaThemeSettingEditor extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-nested-interactive }}
     <div class="schema-theme-setting-editor">
       <div class="schema-theme-setting-editor__navigation">
         <ul class="schema-theme-setting-editor__tree">
           {{#if this.backButtonText}}
             <li
               role="link"
-              class="schema-theme-setting-editor__tree-node--back-btn"
+              class="schema-theme-setting-editor__tree-node --back-btn"
               {{on "click" this.backButtonClick}}
             >
               <div class="schema-theme-setting-editor__tree-node-text">
-                {{dIcon "chevron-left"}}
+                {{dIcon "arrow-left"}}
                 {{this.backButtonText}}
               </div>
             </li>
@@ -308,59 +307,59 @@ export default class SchemaThemeSettingEditor extends Component {
               {{on "click" (fn this.onClick node)}}
             >
               <div class="schema-theme-setting-editor__tree-node-text">
-                {{node.text}}
-
-                {{#if (gt node.trees.length 0)}}
+                <span>{{node.text}}</span>
+                {{#if node.parentTree.propertyName}}
+                  {{dIcon "chevron-right"}}
+                {{else}}
                   {{dIcon (if node.active "chevron-down" "chevron-right")}}
                 {{/if}}
               </div>
-            </li>
 
-            {{#each node.trees as |nestedTree|}}
-              {{#if (gt nestedTree.nodes.length 0)}}
-                <li
-                  class="schema-theme-setting-editor__tree-node --child --heading"
-                  data-test-parent-index={{node.index}}
-                >
-                  <div class="schema-theme-setting-editor__tree-node-text">
-                    {{nestedTree.propertyName}}
-                  </div>
-                </li>
-              {{/if}}
-
-              {{#each nestedTree.nodes as |childNode|}}
-                <li
-                  role="link"
-                  class="schema-theme-setting-editor__tree-node --child"
-                  {{on
-                    "click"
-                    (fn this.onChildClick childNode nestedTree node)
-                  }}
-                  data-test-parent-index={{node.index}}
-                >
-                  <div class="schema-theme-setting-editor__tree-node-text">
-                    {{childNode.text}}
-                    {{dIcon "chevron-right"}}
-                  </div>
-                </li>
+              {{#each node.trees as |nestedTree|}}
+                <ul>
+                  {{#each nestedTree.nodes as |childNode|}}
+                    <li
+                      role="link"
+                      class="schema-theme-setting-editor__tree-node --child"
+                      {{on
+                        "click"
+                        (fn this.onChildClick childNode nestedTree node)
+                      }}
+                      data-test-parent-index={{node.index}}
+                    >
+                      <div class="schema-theme-setting-editor__tree-node-text">
+                        <span>{{childNode.text}}</span>
+                        {{dIcon "chevron-right"}}
+                      </div>
+                    </li>
+                  {{/each}}
+                  <li
+                    class="schema-theme-setting-editor__tree-node --child --add-button"
+                  >
+                    <DButton
+                      @action={{fn this.addItem nestedTree}}
+                      @translatedLabel={{nestedTree.schema.name}}
+                      @icon="plus"
+                      class="btn-transparent schema-theme-setting-editor__tree-add-button --child"
+                      data-test-parent-index={{node.index}}
+                    />
+                  </li>
+                </ul>
               {{/each}}
-
-              <DButton
-                @action={{fn this.addItem nestedTree}}
-                @translatedLabel={{nestedTree.schema.name}}
-                @icon="plus"
-                class="schema-theme-setting-editor__tree-add-button --child"
-                data-test-parent-index={{node.index}}
-              />
-            {{/each}}
+            </li>
           {{/each}}
+
+          <li
+            class="schema-theme-setting-editor__tree-node --parent --add-button"
+          >
+            <DButton
+              @action={{fn this.addItem this.tree}}
+              @translatedLabel={{this.tree.schema.name}}
+              @icon="plus"
+              class="btn-transparent schema-theme-setting-editor__tree-add-button --root"
+            />
+          </li>
         </ul>
-        <DButton
-          @action={{fn this.addItem this.tree}}
-          @translatedLabel={{this.tree.schema.name}}
-          @icon="plus"
-          class="schema-theme-setting-editor__tree-add-button --root"
-        />
       </div>
 
       <div class="schema-theme-setting-editor__fields">
@@ -389,14 +388,6 @@ export default class SchemaThemeSettingEditor extends Component {
           @label="save"
           class="btn-primary"
         />
-
-        <LinkTo
-          @route="adminCustomizeThemes.show"
-          @model={{@themeId}}
-          class="btn-transparent"
-        >
-          {{i18n "cancel"}}
-        </LinkTo>
       </div>
     </div>
   </template>
