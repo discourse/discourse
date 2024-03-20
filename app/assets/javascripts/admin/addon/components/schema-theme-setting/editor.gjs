@@ -33,8 +33,10 @@ class Node {
 }
 
 class Tree {
-  propertyName = null;
-  nodes = [];
+  @tracked nodes = [];
+  data = [];
+  propertyName;
+  schema;
 }
 
 export default class SchemaThemeSettingEditor extends Component {
@@ -52,11 +54,16 @@ export default class SchemaThemeSettingEditor extends Component {
     let schema = this.schema;
     let data = this.data;
     let tree = new Tree();
+    tree.data = data;
+    tree.schema = schema;
 
     for (const point of this.history) {
-      tree.propertyName = point.propertyName;
-      data = data[point.node.index][point.propertyName];
+      data = data[point.parentNode.index][point.propertyName];
       schema = schema.properties[point.propertyName].schema;
+
+      tree.propertyName = point.propertyName;
+      tree.schema = point.node.schema;
+      tree.data = data;
     }
 
     data.forEach((object, index) => {
@@ -78,6 +85,8 @@ export default class SchemaThemeSettingEditor extends Component {
         for (const childObjectsProperty of childObjectsProperties) {
           const subtree = new Tree();
           subtree.propertyName = childObjectsProperty.name;
+          subtree.schema = childObjectsProperty.schema;
+          subtree.data = data[index][childObjectsProperty.name];
 
           data[index][childObjectsProperty.name]?.forEach(
             (childObj, childIndex) => {
@@ -115,6 +124,10 @@ export default class SchemaThemeSettingEditor extends Component {
   get fields() {
     const node = this.activeNode;
     const list = [];
+
+    if (!node) {
+      return list;
+    }
 
     for (const [name, spec] of Object.entries(node.schema.properties)) {
       if (spec.type === "objects") {
@@ -174,7 +187,8 @@ export default class SchemaThemeSettingEditor extends Component {
   onChildClick(node, tree, parentNode) {
     this.history.push({
       propertyName: tree.propertyName,
-      node: parentNode,
+      parentNode,
+      node,
     });
 
     this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
@@ -187,11 +201,11 @@ export default class SchemaThemeSettingEditor extends Component {
   @action
   backButtonClick() {
     const historyPoint = this.history.pop();
-    this.activeIndex = historyPoint.node.index;
+    this.activeIndex = historyPoint.parentNode.index;
 
     if (this.history.length > 0) {
       this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
-        name: this.history[this.history.length - 1].node.text,
+        name: this.history[this.history.length - 1].parentNode.text,
       });
     } else {
       this.backButtonText = null;
@@ -205,6 +219,26 @@ export default class SchemaThemeSettingEditor extends Component {
     }
 
     this.activeNode.object[field.name] = newVal;
+  }
+
+  @action
+  addItem(tree) {
+    const schema = tree.schema;
+    const node = this.createNodeFromSchema(schema, tree);
+    tree.data.push(node.object);
+    tree.nodes = [...tree.nodes, node];
+  }
+
+  @action
+  removeItem() {
+    const data = this.activeNode.parentTree.data;
+    data.splice(this.activeIndex, 1);
+    this.tree.nodes = this.tree.nodes.filter((n, i) => i !== this.activeIndex);
+    if (data.length > 0) {
+      this.activeIndex = Math.max(this.activeIndex - 1, 0);
+    } else if (this.history.length > 0) {
+      this.backButtonClick();
+    }
   }
 
   fieldDescription(fieldName) {
@@ -223,6 +257,30 @@ export default class SchemaThemeSettingEditor extends Component {
     }
 
     return descriptions[key];
+  }
+
+  createNodeFromSchema(schema, tree) {
+    const object = {};
+    const index = tree.nodes.length;
+    const defaultName = `${schema.name} ${index + 1}`;
+
+    if (schema.identifier) {
+      object[schema.identifier] = defaultName;
+    }
+
+    for (const [name, spec] of Object.entries(schema.properties)) {
+      if (spec.type === "objects") {
+        object[name] = [];
+      }
+    }
+
+    return new Node({
+      schema,
+      object,
+      index,
+      text: defaultName,
+      parentTree: tree,
+    });
   }
 
   <template>
@@ -286,9 +344,23 @@ export default class SchemaThemeSettingEditor extends Component {
                   </div>
                 </li>
               {{/each}}
+
+              <DButton
+                @action={{fn this.addItem nestedTree}}
+                @translatedLabel={{nestedTree.schema.name}}
+                @icon="plus"
+                class="schema-theme-setting-editor__tree-add-button --child"
+                data-test-parent-index={{node.index}}
+              />
             {{/each}}
           {{/each}}
         </ul>
+        <DButton
+          @action={{fn this.addItem this.tree}}
+          @translatedLabel={{this.tree.schema.name}}
+          @icon="plus"
+          class="schema-theme-setting-editor__tree-add-button --root"
+        />
       </div>
 
       <div class="schema-theme-setting-editor__fields">
@@ -301,6 +373,13 @@ export default class SchemaThemeSettingEditor extends Component {
             @description={{field.description}}
           />
         {{/each}}
+        {{#if (gt this.fields.length 0)}}
+          <DButton
+            @action={{this.removeItem}}
+            @icon="trash-alt"
+            class="btn-danger schema-theme-setting-editor__remove-btn"
+          />
+        {{/if}}
       </div>
 
       <div class="schema-theme-setting-editor__footer">
