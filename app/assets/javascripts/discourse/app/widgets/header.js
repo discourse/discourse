@@ -240,7 +240,7 @@ createWidget("header-icons", {
   init() {
     registerWidgetShim(
       "extra-icon",
-      "div.wrapper",
+      "span.wrapper",
       hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
     );
   },
@@ -495,7 +495,11 @@ export default createWidget("header", {
   services: ["router", "search"],
 
   init() {
-    registerWidgetShim("extra-button", "div.wrapper", hbs`<@data.component />`);
+    registerWidgetShim(
+      "extra-button",
+      "span.wrapper",
+      hbs`<@data.component />`
+    );
   },
 
   defaultState() {
