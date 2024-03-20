@@ -47,23 +47,23 @@ class BulkImport::Generic < BulkImport::Base
     #   )
     # SQL
 
-    @raw_connection.exec <<~SQL
-      CREATE FOREIGN TABLE IF NOT EXISTS idb_badges (
-        id INTEGER,
-        name TEXT,
-        description TEXT,
-        badge_type_id INTEGER,
-        badge_group TEXT,
-        long_description TEXT,
-        image_upload_id TEXT,
-        created_at TIMESTAMP,
-        multiple_grant BOOLEAN,
-        query TEXT
-      )
-      SERVER intermediate_db OPTIONS (table 'badges');
+    # @raw_connection.exec <<~SQL
+    #   CREATE FOREIGN TABLE IF NOT EXISTS idb_badges (
+    #     id INTEGER,
+    #     name TEXT,
+    #     description TEXT,
+    #     badge_type_id INTEGER,
+    #     badge_group TEXT,
+    #     long_description TEXT,
+    #     image_upload_id TEXT,
+    #     created_at TIMESTAMP,
+    #     multiple_grant BOOLEAN,
+    #     query TEXT
+    #   )
+    #   SERVER intermediate_db OPTIONS (table 'badges');
 
-      GRANT ALL PRIVILEGES ON TABLE idb_badges TO test_user;
-    SQL
+    #   GRANT ALL PRIVILEGES ON TABLE idb_badges TO test_user;
+    # SQL
 
     # enable_required_plugins
     # import_site_settings
@@ -2090,7 +2090,7 @@ class BulkImport::Generic < BulkImport::Base
     query = <<~SQL
       SELECT
         *
-      FROM idb_badges b
+      FROM idb.badges b
       WHERE NOT EXISTS (
         SELECT
           1
