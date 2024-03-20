@@ -22,15 +22,6 @@ RSpec.describe AdminDashboardData do
         expect(problems).not_to include(I18n.t("errors.messages.invalid"))
       end
     end
-
-    describe "adding new checks" do
-      it "calls the passed block" do
-        AdminDashboardData.add_problem_check { "a problem was found" }
-
-        problems = AdminDashboardData.fetch_problems
-        expect(problems.map(&:to_s)).to include("a problem was found")
-      end
-    end
   end
 
   describe "adding scheduled checks" do
@@ -89,40 +80,6 @@ RSpec.describe AdminDashboardData do
       expect(described_class.problem_message_check(key)).to eq(
         I18n.t(key, base_path: Discourse.base_path),
       )
-    end
-  end
-
-  describe "sidekiq_check" do
-    subject(:check) { described_class.new.sidekiq_check }
-
-    it "returns nil when sidekiq processed a job recently" do
-      Jobs.stubs(:last_job_performed_at).returns(1.minute.ago)
-      Jobs.stubs(:queued).returns(0)
-      expect(check).to be_nil
-    end
-
-    it "returns nil when last job processed was a long time ago, but no jobs are queued" do
-      Jobs.stubs(:last_job_performed_at).returns(7.days.ago)
-      Jobs.stubs(:queued).returns(0)
-      expect(check).to be_nil
-    end
-
-    it "returns nil when no jobs have ever been processed, but no jobs are queued" do
-      Jobs.stubs(:last_job_performed_at).returns(nil)
-      Jobs.stubs(:queued).returns(0)
-      expect(check).to be_nil
-    end
-
-    it "returns a string when no jobs were processed recently and some jobs are queued" do
-      Jobs.stubs(:last_job_performed_at).returns(20.minutes.ago)
-      Jobs.stubs(:queued).returns(1)
-      expect(check).to_not be_nil
-    end
-
-    it "returns a string when no jobs have ever been processed, and some jobs are queued" do
-      Jobs.stubs(:last_job_performed_at).returns(nil)
-      Jobs.stubs(:queued).returns(1)
-      expect(check).to_not be_nil
     end
   end
 end
