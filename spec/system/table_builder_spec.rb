@@ -144,7 +144,7 @@ describe "Table Builder", type: :system do
     end
 
     it "should not accept default Discourse keyboard shortcuts" do
-      # Some default keyboard shortcuts like Shift + S to bring up the share modal, override
+      # Some default keyboard shortcuts like Shift + S bring up a modal overriding
       # the table builder modal and therefore should not be accepted
 
       topic_page.visit_topic(topic)
