@@ -461,18 +461,14 @@ module PrettyText
   end
 
   def self.extract_mentions(cooked)
-    mentions = []
-
-    cooked
-      .css(".mention, .mention-group")
-      .each do |e|
-        if (name = e.inner_text)
-          if name[0] == "@"
-            name = name[1..-1]
-            mentions << User.normalize_username(name)
+    mentions =
+      cooked
+        .css(".mention, .mention-group")
+        .filter_map do |e|
+          if (name = e.inner_text)
+            User.normalize_username(name[1..-1]) if name[0] == "@"
           end
         end
-      end
 
     mentions =
       DiscoursePluginRegistry.apply_modifier(:pretty_text_extract_mentions, mentions, cooked)
