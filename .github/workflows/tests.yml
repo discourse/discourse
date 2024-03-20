@@ -340,7 +340,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
