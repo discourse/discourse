@@ -7,16 +7,9 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
-import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import { sanitize } from "discourse/lib/text";
 import { afterRender, bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-
-const FULL_RELOAD_LINKS_REGEX = [
-  /^\/my\/[a-z_\-\/]+$/,
-  /^\/pub\/[a-z_\-\/]+$/,
-  /^\/safe-mode$/,
-];
 
 class Section {
   @tracked title;
@@ -213,27 +206,15 @@ class SectionLink {
   }
 
   get #invalidValue() {
-    return (
-      this.path &&
-      (this.external ? !this.#validExternal() : !this.#validInternal())
-    );
+    return this.path && !this.#validLink();
   }
 
-  #validExternal() {
+  #validLink() {
     try {
-      return new URL(this.value);
+      return new URL(this.value, document.location.origin);
     } catch {
       return false;
     }
-  }
-
-  #validInternal() {
-    const routeInfoHelper = new RouteInfoHelper(this.router, this.path);
-
-    return (
-      routeInfoHelper.route !== "unknown" ||
-      FULL_RELOAD_LINKS_REGEX.some((regex) => this.path.match(regex))
-    );
   }
 }
 

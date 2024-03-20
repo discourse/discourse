@@ -9,38 +9,25 @@
   class={{this.section.dragCss}}
 >
   {{#each this.section.links as |link|}}
-    {{#if link.externalOrFullReload}}
-      <Sidebar::SectionLink
-        @shouldDisplay={{link.shouldDisplay}}
-        @linkName={{link.name}}
-        @content={{replace-emoji link.text}}
-        @prefixType="icon"
-        @prefixValue={{link.prefixValue}}
-        @fullReload={{link.fullReload}}
-        @href={{link.value}}
-        @linkClass={{link.linkDragCss}}
-      />
-    {{else}}
-      <Sidebar::SectionLink
-        @shouldDisplay={{link.shouldDisplay}}
-        @href={{link.href}}
-        @title={{link.title}}
-        @linkName={{link.name}}
-        @route={{link.route}}
-        @model={{link.model}}
-        @models={{link.models}}
-        @query={{link.query}}
-        @content={{replace-emoji link.text}}
-        @badgeText={{link.badgeText}}
-        @prefixType="icon"
-        @prefixValue={{link.prefixValue}}
-        @suffixCSSClass={{link.suffixCSSClass}}
-        @suffixValue={{link.suffixValue}}
-        @suffixType={{link.suffixType}}
-        @currentWhen={{link.currentWhen}}
-        @linkClass={{link.linkDragCss}}
-      />
-    {{/if}}
+    <Sidebar::SectionLink
+      @badgeText={{link.badgeText}}
+      @content={{replace-emoji link.text}}
+      @currentWhen={{link.currentWhen}}
+      @href={{or link.value link.href}}
+      @linkClass={{link.linkDragCss}}
+      @linkName={{link.name}}
+      @model={{link.model}}
+      @models={{link.models}}
+      @prefixType="icon"
+      @prefixValue={{link.prefixValue}}
+      @query={{link.query}}
+      @route={{link.route}}
+      @shouldDisplay={{link.shouldDisplay}}
+      @suffixCSSClass={{link.suffixCSSClass}}
+      @suffixType={{link.suffixType}}
+      @suffixValue={{link.suffixValue}}
+      @title={{link.title}}
+    />
   {{/each}}
 
   {{#if this.section.moreLinks}}
