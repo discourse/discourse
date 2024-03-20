@@ -69,7 +69,9 @@ export default class SchemaThemeSettingEditor extends Component {
         index,
         schema,
         object,
-        text: object[schema.identifier] || `${schema.name} ${index + 1}`,
+        text:
+          object[schema.identifier] ||
+          this.defaultSchemaIdentifier(schema.name, index),
         parentTree: tree,
       });
 
@@ -84,7 +86,7 @@ export default class SchemaThemeSettingEditor extends Component {
           const subtree = new Tree();
           subtree.propertyName = childObjectsProperty.name;
           subtree.schema = childObjectsProperty.schema;
-          subtree.data = data[index][childObjectsProperty.name];
+          subtree.data = data[index][childObjectsProperty.name] ||= [];
 
           data[index][childObjectsProperty.name]?.forEach(
             (childObj, childIndex) => {
@@ -232,6 +234,7 @@ export default class SchemaThemeSettingEditor extends Component {
     const data = this.activeNode.parentTree.data;
     data.splice(this.activeIndex, 1);
     this.tree.nodes = this.tree.nodes.filter((n, i) => i !== this.activeIndex);
+
     if (data.length > 0) {
       this.activeIndex = Math.max(this.activeIndex - 1, 0);
     } else if (this.history.length > 0) {
@@ -257,10 +260,14 @@ export default class SchemaThemeSettingEditor extends Component {
     return descriptions[key];
   }
 
+  defaultSchemaIdentifier(schemaName, index) {
+    return `${schemaName} ${index + 1}`;
+  }
+
   createNodeFromSchema(schema, tree) {
     const object = {};
     const index = tree.nodes.length;
-    const defaultName = `${schema.name} ${index + 1}`;
+    const defaultName = this.defaultSchemaIdentifier(schema.name, index);
 
     if (schema.identifier) {
       object[schema.identifier] = defaultName;
