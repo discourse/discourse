@@ -18,7 +18,7 @@ module PageObjects
 
       def click_link(name)
         find(
-          ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node",
+          ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node.--child",
           text: name,
         ).click
 
