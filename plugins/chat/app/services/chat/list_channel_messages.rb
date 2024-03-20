@@ -174,7 +174,7 @@ module Chat
 
     def update_user_last_channel(guardian:, channel:)
       Scheduler::Defer.later "Chat::ListChannelMessages - defer update_user_last_channel" do
-        return if guardian.user.custom_fields[::Chat::LAST_CHAT_CHANNEL_ID] == channel.id
+        next if guardian.user.custom_fields[::Chat::LAST_CHAT_CHANNEL_ID] == channel.id
         guardian.user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
       end
     end
