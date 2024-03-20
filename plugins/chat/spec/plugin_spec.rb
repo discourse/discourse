@@ -124,7 +124,7 @@ describe Chat do
           GroupUser.create(user: user, group: group)
         end
 
-        it "returns true" do
+        it "returns true when both users are valid" do
           expect(serializer.can_chat_user).to eq(true)
         end
 
