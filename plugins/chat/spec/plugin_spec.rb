@@ -82,6 +82,7 @@ describe Chat do
 
       it "returns true if the target user and the guardian user is in the Chat.allowed_group_ids" do
         SiteSetting.chat_allowed_groups = group.id
+        SiteSetting.direct_message_enabled_groups = group.id
         GroupUser.create(user: target_user, group: group)
         GroupUser.create(user: user, group: group)
         expect(serializer.can_chat_user).to eq(true)
@@ -118,8 +119,13 @@ describe Chat do
       context "when both users are in Chat.allowed_group_ids" do
         before do
           SiteSetting.chat_allowed_groups = group.id
+          SiteSetting.direct_message_enabled_groups = group.id
           GroupUser.create(user: target_user, group: group)
           GroupUser.create(user: user, group: group)
+        end
+
+        it "returns true" do
+          expect(serializer.can_chat_user).to eq(true)
         end
 
         it "returns false if current user has chat disabled" do
@@ -129,6 +135,11 @@ describe Chat do
 
         it "returns false if target user has chat disabled" do
           target_user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if user is not in dm allowed group" do
+          SiteSetting.direct_message_enabled_groups = 3
           expect(serializer.can_chat_user).to eq(false)
         end
       end
