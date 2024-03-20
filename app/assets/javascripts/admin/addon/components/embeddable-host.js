@@ -43,7 +43,7 @@ export default class EmbeddableHost extends Component.extend(
   }
 
   @action
-  save() {
+  async save() {
     if (this.cantSave) {
       return;
     }
@@ -57,13 +57,13 @@ export default class EmbeddableHost extends Component.extend(
 
     const host = this.host;
 
-    host
-      .save(props)
-      .then(() => {
-        host.set("category", Category.findById(this.categoryId));
-        this.set("editToggled", false);
-      })
-      .catch(popupAjaxError);
+    try {
+      await host.save(props);
+      host.set("category", await Category.asyncFindById(this.categoryId));
+      this.set("editToggled", false);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action

@@ -450,7 +450,7 @@ export default class Group extends RestModel {
     });
   }
 
-  findPosts(opts) {
+  async findPosts(opts) {
     opts = opts || {};
     const type = opts.type || "posts";
     const data = {};
@@ -463,13 +463,16 @@ export default class Group extends RestModel {
       data.category_id = parseInt(opts.categoryId, 10);
     }
 
-    return ajax(`/groups/${this.name}/${type}.json`, { data }).then((posts) => {
-      return posts.map((p) => {
-        p.user = User.create(p.user);
-        p.topic = Topic.create(p.topic);
-        p.category = Category.findById(p.category_id);
-        return EmberObject.create(p);
-      });
+    const posts = await ajax(`/groups/${this.name}/${type}.json`, { data });
+    const categories = await Category.asyncFindByIds(
+      posts.map((p) => p.category_id)
+    );
+
+    return posts.map((p) => {
+      p.user = User.create(p.user);
+      p.topic = Topic.create(p.topic);
+      p.category = categories[p.category_id];
+      return EmberObject.create(p);
     });
   }
 
