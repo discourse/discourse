@@ -93,31 +93,25 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
-      1
-    );
+    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 1);
 
-    await fillIn(".dashboard .filter-reports-input", "flags");
+    await fillIn(".dashboard .admin-reports-header__filter", "flags");
 
-    assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
-      0
-    );
+    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 0);
 
     await click(".dashboard .navigation-item.security .navigation-link");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
+      count(".dashboard .admin-reports-list__report"),
       1,
       "navigating back and forth resets filter"
     );
 
-    await fillIn(".dashboard .filter-reports-input", "activities");
+    await fillIn(".dashboard .admin-reports-header__filter", "activities");
 
     assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
+      count(".dashboard .admin-reports-list__report"),
       1,
       "filter is case insensitive"
     );
