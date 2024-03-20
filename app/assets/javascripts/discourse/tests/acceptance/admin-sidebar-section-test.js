@@ -97,7 +97,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     );
   });
 
-  test("reports page", async function (assert) {
+  test("Visit reports page", async function (assert) {
     await visit("/admin");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 

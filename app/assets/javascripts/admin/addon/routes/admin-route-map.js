@@ -158,6 +158,7 @@ export default function () {
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
+        this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
       }
     );
@@ -224,12 +225,7 @@ export default function () {
       }
     );
 
-    this.route("admin.reportsPage", {
-      path: "/reports-page",
-      resetNamespace: true,
-    });
-
-    this.route("admin.whatsNewPage", {
+    this.route("admin.whatsNew", {
       path: "/whats-new",
       resetNamespace: true,
     });
