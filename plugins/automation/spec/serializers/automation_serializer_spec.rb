@@ -41,6 +41,19 @@ describe DiscourseAutomation::AutomationSerializer do
       DiscourseAutomation::Scriptable.add("foo") do
         field :bar, component: :text, triggerable: DiscourseAutomation::Triggers::TOPIC
       end
+      I18n.backend.store_translations(
+        :en,
+        {
+          discourse_automation: {
+            scriptables: {
+              foo: {
+                title: "Something about us.",
+                description: "We rock!",
+              },
+            },
+          },
+        },
+      )
     end
 
     context "when automation is not using the specific trigger" do
