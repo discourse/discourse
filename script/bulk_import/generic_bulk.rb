@@ -38,13 +38,31 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    @source_db.execute(<<~SQL)
-      CREATE VIRTUAL TABLE IF NOT EXISTS discourse_migration_mappings
-      USING VirtualPostgres (
-        'host=localhost port=5432 dbname=discourse user=test_user password=password',
-        public,
-        migration_mappings
+    # @source_db.execute(<<~SQL)
+    #   CREATE VIRTUAL TABLE IF NOT EXISTS discourse_migration_mappings
+    #   USING VirtualPostgres (
+    #     'host=localhost port=5432 dbname=discourse user=test_user password=password',
+    #     public,
+    #     migration_mappings
+    #   )
+    # SQL
+
+    @raw_connection.exec <<~SQL
+      CREATE FOREIGN TABLE IF NOT EXISTS idb_badges (
+        id INTEGER,
+        name TEXT,
+        description TEXT,
+        badge_type_id INTEGER,
+        badge_group TEXT,
+        long_description TEXT,
+        image_upload_id TEXT,
+        created_at TIMESTAMP,
+        multiple_grant BOOLEAN,
+        query TEXT
       )
+      SERVER intermediate_db OPTIONS (table 'badges');
+
+      GRANT ALL PRIVILEGES ON TABLE idb_badges TO test_user;
     SQL
 
     # enable_required_plugins
@@ -2061,14 +2079,32 @@ class BulkImport::Generic < BulkImport::Base
   def import_badges
     puts "", "Importing badges..."
 
-    badges = query(<<~SQL)
-      SELECT *
-        FROM badges b
-        WHERE b.id NOT IN (
-          SELECT original_id FROM discourse_migration_mappings mm WHERE mm.type = 2
-        )
-      ORDER BY b.id
-    SQL
+    # query = <<~SQL
+    #   SELECT
+    #     *
+    #   FROM idb_badges b LEFT JOIN migration_mappings mm ON b.id::TEXT = mm.original_id AND mm.type = 2
+    #   WHERE mm.original_id IS NULL
+    #   ORDER BY b.id;
+    # SQL
+
+    query = <<~SQL
+      SELECT
+        *
+      FROM idb_badges b
+      WHERE NOT EXISTS (
+        SELECT
+          1
+        FROM
+          migration_mappings mm
+        WHERE b.id::TEXT = mm.original_id AND mm.type = 2
+      ) ORDER BY b.id;
+     SQL
+
+    badges = PG.connect(@raw_connection.conninfo_hash.compact)
+    badges.send_query(query)
+    badges.set_single_row_mode
+
+    # badges = @raw_connection.query(query)
 
     # existing_badge_names = Badge.pluck(:name).to_set
 
@@ -2252,8 +2288,8 @@ class BulkImport::Generic < BulkImport::Base
     sqlite.busy_timeout = 60_000 # 60 seconds
     sqlite.journal_mode = "wal"
     sqlite.synchronous = "normal"
-    sqlite.enable_load_extension(true)
-    sqlite.load_extension("/usr/local/lib/mod_virtualpg.so")
+    # sqlite.enable_load_extension(true)
+    # sqlite.load_extension("/usr/local/lib/mod_virtualpg.so")
     sqlite
   end
 

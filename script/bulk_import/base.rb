@@ -1601,6 +1601,60 @@ class BulkImport::Base
     permalink
   end
 
+  def create_records_alt(records_conn, name, columns, &block)
+    start = Time.now
+    imported_ids = []
+    process_method_name = "process_#{name}"
+
+    rows_created = 0
+
+    # all_rows.each_slice(1_000) do |rows|
+
+    sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
+
+    begin
+      @raw_connection.copy_data(sql, @encoder) do
+        records_conn.get_result.stream_each do |row|
+          begin
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
+            end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
+          end
+        end
+      end
+    rescue => e
+      # puts "First Row: #{rows.first.inspect}"
+      raise e
+    end
+
+    if rows_created > 0
+      print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)]
+    end
+
+    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
+    return true unless respond_to?(id_mapping_method_name)
+    create_custom_fields(name, "id", imported_ids) do |imported_id|
+      { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
+    end
+    true
+  rescue => e
+    # FIXME: errors catched here stop the rest of the COPY
+    puts e.message
+    puts e.backtrace.join("\n")
+    false
+  end
+
   def create_records(all_rows, name, columns, &block)
     start = Time.now
     imported_ids = []
@@ -1659,7 +1713,8 @@ class BulkImport::Base
 
   def create_records_with_mapping(all_rows, name, columns, &block)
     @imported_records = {}
-    if create_records(all_rows, name, columns, &block)
+    # if create_records(all_rows, name, columns, &block)
+    if create_records_alt(all_rows, name, columns, &block)
       store_mappings(MAPPING_TYPES[name.to_sym], @imported_records)
     end
   end
