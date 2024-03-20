@@ -6,7 +6,6 @@
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
-# transpile_js: true
 # meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
