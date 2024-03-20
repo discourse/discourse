@@ -90,6 +90,8 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color
@@ -947,6 +949,18 @@ class Theme < ActiveRecord::Base
     end
 
     [content, Digest::SHA1.hexdigest(content)]
+  end
+
+  def repository_url
+    return unless remote_url
+    remote_url.gsub(
+      %r{([^@]+@)?(http(s)?://)?(?<host>[^:/]+)[:/](?<path>((?!\.git).)*)(\.git)?(?<rest>.*)},
+      '\k<host>/\k<path>\k<rest>',
+    )
+  end
+
+  def user_selectable_count
+    UserOption.where(theme_ids: [id]).count
   end
 
   private
