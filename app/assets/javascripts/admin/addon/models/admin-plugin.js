@@ -26,7 +26,6 @@ export default class AdminPlugin {
     this.version = args.version;
     this.metaUrl = args.meta_url;
     this.authors = args.authors;
-    this.configNavRoutes = args.admin_config_nav_routes;
   }
 
   get snakeCaseName() {

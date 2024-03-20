@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
+import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
 
 export default class AdminPluginConfigArea extends Component {
+  @service adminPluginConfigNavManager;
+
   linkText(navLink) {
     if (navLink.label) {
       return I18n.t(navLink.label);
@@ -13,10 +16,13 @@ export default class AdminPluginConfigArea extends Component {
   }
 
   <template>
-    {{#if @innerSidebarNavLinks}}
+    {{#if this.adminPluginConfigNavManager.isSidebarMode}}
       <nav class="admin-nav admin-plugin-inner-sidebar-nav pull-left">
         <ul class="nav nav-stacked">
-          {{#each @innerSidebarNavLinks as |navLink|}}
+          {{#each
+            this.adminPluginConfigNavManager.currentConfigNav.links
+            as |navLink|
+          }}
             <li
               class={{concatClass
                 "admin-plugin-inner-sidebar-nav__item"

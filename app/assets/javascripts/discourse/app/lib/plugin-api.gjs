@@ -49,6 +49,11 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import {
+  PLUGIN_CONFIG_NAV_MODE_SIDEBAR,
+  PLUGIN_CONFIG_NAV_MODE_TOP,
+  registerAdminPluginConfigNav,
+} from "discourse/lib/admin-plugin-config-nav";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -2913,6 +2918,29 @@ class PluginApi {
   addComposerImageWrapperButton(label, btnClass, icon, fn) {
     addImageWrapperButton(label, btnClass, icon);
     addApiImageWrapperButtonClickEvent(fn);
+  }
+
+  addAdminPluginConfigurationNav(pluginId, mode, links) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    const validModes = [
+      PLUGIN_CONFIG_NAV_MODE_SIDEBAR,
+      PLUGIN_CONFIG_NAV_MODE_TOP,
+    ];
+    if (!validModes.includes(mode)) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        consolePrefix(),
+        `${mode} is an invalid mode for admin plugin config pages, only ${validModes} are usable.`
+      );
+      return;
+    }
+
+    registerAdminPluginConfigNav(pluginId, mode, links);
   }
 }
 
