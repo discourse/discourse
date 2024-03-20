@@ -10,13 +10,7 @@ body {
 }
 
 textarea {
-  background-color: var(--secondary); // TODO: why was this iOS-only
-  font-size: var(--font-size-ios-input);
-  -webkit-tap-highlight-color: transparent;
-}
-
-input#reply-title {
-  -webkit-tap-highlight-color: transparent;
+  font-size: var(--font-size-input);
 }
 
 blockquote {

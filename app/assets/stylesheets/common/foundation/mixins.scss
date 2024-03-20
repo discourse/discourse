@@ -115,8 +115,6 @@ $hpad: 0.65em;
   box-sizing: border-box;
   padding: $vpad $hpad;
   font-size: var(--font-size-input);
-  padding-top: $vpad * 0.8; // TODO... what's this for?
-  padding-bottom: $vpad * 0.8; // TODO... what's this for?
 }
 
 @mixin sticky {
