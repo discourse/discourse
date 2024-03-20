@@ -2920,6 +2920,16 @@ class PluginApi {
     addApiImageWrapperButtonClickEvent(fn);
   }
 
+  /**
+   * Defines a list of links used in the adminPlugins.show page for
+   * a specific plugin. Each link must have:
+   *
+   * * route
+   * * label OR text
+   *
+   * And the mode must be one of "sidebar" or "top", which controls
+   * where in the admin plugin show UI the links will be displayed.
+   */
   addAdminPluginConfigurationNav(pluginId, mode, links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
