@@ -569,13 +569,13 @@ RSpec.describe PrettyText do
           <a class="mention" href="/u/test">@test</a>,
           <a class="mention-group" href="/g/test-group">@test-group</a>,
           <a class="custom-mention" href="/custom-mention">@test-custom</a>,
+          <a class="mention" href="/u/test1">test1</a>,
           this is a test
         </p>
         HTML
 
         extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
-        expect(extracted_mentions).to include("test", "test-group")
-        expect(extracted_mentions).not_to include("test-custom")
+        expect(extracted_mentions).to contain_exactly("test", "test-group")
 
         Plugin::Instance
           .new
