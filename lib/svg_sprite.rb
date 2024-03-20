@@ -78,6 +78,8 @@ module SvgSprite
         discourse-sparkles
         discourse-threads
         discourse-sidebar
+        discourse-chevron-collapse
+        discourse-chevron-expand
         download
         ellipsis-h
         ellipsis-v
