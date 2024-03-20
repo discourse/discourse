@@ -282,6 +282,7 @@ export default class SchemaThemeSettingEditor extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-nested-interactive }}
     <div class="schema-theme-setting-editor">
       <div class="schema-theme-setting-editor__navigation">
         <ul class="schema-theme-setting-editor__tree">
@@ -307,10 +308,10 @@ export default class SchemaThemeSettingEditor extends Component {
             >
               <div class="schema-theme-setting-editor__tree-node-text">
                 <span>{{node.text}}</span>
-                {{#if (not node.parentTree.propertyName)}}
-                  {{dIcon (if node.active "chevron-down" "chevron-right")}}
-                {{else}}
+                {{#if node.parentTree.propertyName}}
                   {{dIcon "chevron-right"}}
+                {{else}}
+                  {{dIcon (if node.active "chevron-down" "chevron-right")}}
                 {{/if}}
               </div>
 
