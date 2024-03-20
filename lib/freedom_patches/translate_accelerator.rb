@@ -122,7 +122,8 @@ module I18n
       dup_options = nil
       if options
         dup_options = options.dup
-        should_raise = dup_options.delete(:raise)
+        should_raise =
+          dup_options.delete(:raise) || Rails.application.config.i18n.raise_on_missing_translations
         locale = dup_options.delete(:locale)
       end
 
