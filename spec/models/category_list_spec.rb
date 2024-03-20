@@ -392,7 +392,6 @@ RSpec.describe CategoryList do
     fab!(:category) { Fabricate(:category, user: admin) }
 
     before { category.upsert_custom_fields("bob" => "marley") }
-    after { Site.reset_preloaded_category_custom_fields }
 
     it "can preloads custom fields" do
       Site.preloaded_category_custom_fields << "bob"

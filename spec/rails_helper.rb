@@ -116,6 +116,7 @@ module TestSetup
     NotificationEmailer.disable
     SiteIconManager.disable
     WordWatcher.disable_cache
+    Site.reset_preloaded_category_custom_fields
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 
