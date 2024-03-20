@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class SchemaThemeSettingTypeEnum extends Component {
@@ -27,5 +28,6 @@ export default class SchemaThemeSettingTypeEnum extends Component {
       @value={{this.value}}
       @onChange={{this.onInput}}
     />
+    <FieldInputDescription @description={{@description}} />
   </template>
 }

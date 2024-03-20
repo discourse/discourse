@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import Group from "discourse/models/group";
+import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
 import GroupChooser from "select-kit/components/group-chooser";
 
 export default class SchemaThemeSettingTypeGroup extends Component {
@@ -24,5 +25,7 @@ export default class SchemaThemeSettingTypeGroup extends Component {
       @onChange={{this.onInput}}
       @options={{hash maximum=1}}
     />
+
+    <FieldInputDescription @description={{@description}} />
   </template>
 }

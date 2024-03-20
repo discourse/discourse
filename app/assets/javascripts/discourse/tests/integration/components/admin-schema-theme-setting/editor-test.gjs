@@ -421,6 +421,56 @@ module(
       assert.dom(inputFields.fields.icon.inputElement).hasValue("phone");
     });
 
+    test("input fields of type string", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "string",
+              required: true,
+              validations: {
+                max_length: 5,
+                min_length: 2,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: "bu1",
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const fieldSelector =
+        ".schema-field[data-name='id'] .schema-field__input";
+
+      assert.dom(`${fieldSelector} .schema-field__input-count`).hasText("3/5");
+
+      await fillIn(`${fieldSelector} input`, "1");
+
+      assert.dom(`${fieldSelector} .schema-field__input-error`).hasText(
+        I18n.t("admin.customize.theme.schema.fields.string.too_short", {
+          count: 2,
+        })
+      );
+
+      await fillIn(`${fieldSelector} input`, "");
+
+      assert.dom(`${fieldSelector} .schema-field__input-count`).hasText("0/5");
+
+      assert
+        .dom(`${fieldSelector} .schema-field__input-error`)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+    });
+
     test("input fields of type integer", async function (assert) {
       const setting = schemaAndData(3);
 
