@@ -124,7 +124,6 @@ function buildImageDeleteButton() {
   return `
   <span class="delete-image-button" 
     title="${I18n.t("composer.delete_image_button")}" 
-    aria-label="${I18n.t("composer.delete_image_button")}"
   >
     <svg class="fa d-icon d-icon-trash-alt svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
       <use href="#far-trash-alt"></use>
