@@ -140,7 +140,7 @@ class CategoryList
 
     query = self.class.order_categories(query)
 
-    if @guardian.can_lazy_load_categories?
+    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
       page = [1, @options[:page].to_i].max
       query =
         query
@@ -154,7 +154,7 @@ class CategoryList
 
     @categories = query.to_a
 
-    if @guardian.can_lazy_load_categories?
+    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
       categories_with_rownum =
         Category
           .secured(@guardian)

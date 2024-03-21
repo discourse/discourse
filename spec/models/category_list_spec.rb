@@ -437,5 +437,13 @@ RSpec.describe CategoryList do
         category.id,
       )
     end
+
+    context "with parent_category_id" do
+      it "returns subcategories" do
+        category_list = CategoryList.new(Guardian.new(user), parent_category_id: category.id)
+
+        expect(category_list.categories.size).to eq(1)
+      end
+    end
   end
 end
