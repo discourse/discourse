@@ -25,7 +25,7 @@ class TreeFromDOM {
 
       const children = [
         ...queryAll(
-          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]:not(.--heading)`
+          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
         ),
       ].map((child) => {
         return {
@@ -822,6 +822,70 @@ module(
       assert.strictEqual(tree.nodes.length, 5);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(tree.nodes[3].textElement).hasText("level1 4");
+    });
+
+    test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            title: {
+              type: "string",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  url: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+            chairs: {
+              type: "objects",
+              schema: {
+                name: "chair",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        value: [
+          {
+            title: "some title",
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].addButtons[0]);
+
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
+
+      await click(tree.nodes[0].addButtons[1]);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("chair 1");
+
+      await click(tree.nodes[0].children[0].element);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.url.labelElement).hasText("url");
     });
 
     test("adding an object to a child list of objects", async function (assert) {
