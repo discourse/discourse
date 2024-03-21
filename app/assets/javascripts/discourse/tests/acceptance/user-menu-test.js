@@ -513,7 +513,7 @@ acceptance("User menu", function (needs) {
       "drafts link has the right label with count of the user's drafts"
     );
     assert.ok(
-      dratsLink.querySelector(".d-icon-user_menu.drafts"),
+      dratsLink.querySelector(".d-icon-user_menu\\.drafts"),
       "drafts link has the right icon"
     );
 
