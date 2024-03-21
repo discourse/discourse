@@ -16,12 +16,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :commit_hash,
              :commit_url,
              :meta_url,
-             :authors,
-             :admin_config_nav_routes
-
-  def admin_config_nav_routes
-    object.admin_config_nav_routes
-  end
+             :authors
 
   def id
     object.directory_name

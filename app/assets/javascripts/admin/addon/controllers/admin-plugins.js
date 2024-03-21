@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { service } from "@ember/service";
 
 export default class AdminPluginsController extends Controller {
+  @service adminPluginNavManager;
   @service router;
 
   get adminRoutes() {
@@ -19,6 +20,13 @@ export default class AdminPluginsController extends Controller {
         return plugin.adminRoute;
       })
       .filter(Boolean);
+  }
+
+  get showTopNav() {
+    return (
+      !this.adminPluginNavManager.currentPlugin ||
+      this.adminPluginNavManager.isSidebarMode
+    );
   }
 
   routeExists(route) {
