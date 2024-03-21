@@ -9,8 +9,16 @@ body {
   background-color: var(--secondary);
 }
 
-textarea {
-  font-size: var(--font-size-input);
+.ios-device {
+  textarea {
+    background-color: var(--secondary);
+    font-size: var(--font-size-ios-input);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input#reply-title {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 blockquote {
