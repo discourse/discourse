@@ -61,22 +61,4 @@ export default class DiscoveryRoute extends DiscourseRoute {
   triggerRefresh() {
     this.refresh();
   }
-
-  activate(transition) {
-    super.activate(...arguments);
-
-    if (transition?.to.name === "discovery.custom") {
-      this.controllerFor("application").setProperties({
-        sidebarDisabledRouteOverride: true,
-      });
-    }
-  }
-
-  deactivate() {
-    super.deactivate(...arguments);
-
-    this.controllerFor("application").setProperties({
-      sidebarDisabledRouteOverride: false,
-    });
-  }
 }
