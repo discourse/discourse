@@ -42,7 +42,7 @@ module PageObjects
       end
 
       def input_field_description(field_name)
-        page.find(".schema-field[data-name=\"#{field_name}\"] .schema-field__description")
+        page.find(".schema-field[data-name=\"#{field_name}\"] .schema-field__input-description")
       end
     end
   end

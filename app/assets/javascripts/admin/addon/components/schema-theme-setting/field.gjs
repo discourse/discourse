@@ -36,30 +36,28 @@ export default class SchemaThemeSettingField extends Component {
 
   @cached
   get description() {
-    return this.args.description.trim().replace(/\n/g, "<br>");
-  }
+    if (!this.args.description) {
+      return;
+    }
 
-  get hasDescription() {
-    return this.args.description?.length > 0;
+    return htmlSafe(this.args.description.trim().replace(/\n/g, "<br>"));
   }
 
   <template>
     <div class="schema-field" data-name={{@name}}>
-      <label class="schema-field__label">{{@name}}</label>
+      <label class="schema-field__label">{{@name}}{{if
+          @spec.required
+          "*"
+        }}</label>
 
       <div class="schema-field__input">
         <this.component
           @value={{@value}}
           @spec={{@spec}}
           @onChange={{@onValueChange}}
+          @description={{this.description}}
         />
       </div>
-
-      {{#if this.hasDescription}}
-        <div class="schema-field__description">
-          {{htmlSafe this.description}}
-        </div>
-      {{/if}}
     </div>
   </template>
 }

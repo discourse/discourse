@@ -5647,6 +5647,11 @@ en:
           schema:
             title: "Edit %{name} setting"
             back_button: "Back to %{name}"
+            fields:
+              required: "*required"
+              string:
+                too_short: "must be at least %{count} characters"
+
         colors:
           select_base:
             title: "Select base color palette"
