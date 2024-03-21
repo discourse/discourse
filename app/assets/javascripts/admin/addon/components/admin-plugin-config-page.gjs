@@ -45,7 +45,7 @@ export default class extends Component {
                 @route={{navLink.route}}
                 @i18nLabel={{this.linkText navLink}}
                 title={{this.linkText navLink}}
-                class="admin-plugin-config-page__nav-item"
+                class="admin-plugin-config-page__top-nav-item"
               >
                 {{this.linkText navLink}}
               </NavItem>

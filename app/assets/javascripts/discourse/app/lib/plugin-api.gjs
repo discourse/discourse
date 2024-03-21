@@ -50,8 +50,8 @@ import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-usernam
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import {
-  PLUGIN_CONFIG_NAV_MODE_SIDEBAR,
-  PLUGIN_CONFIG_NAV_MODE_TOP,
+  PLUGIN_NAV_MODE_SIDEBAR,
+  PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
@@ -2937,10 +2937,7 @@ class PluginApi {
       return;
     }
 
-    const validModes = [
-      PLUGIN_CONFIG_NAV_MODE_SIDEBAR,
-      PLUGIN_CONFIG_NAV_MODE_TOP,
-    ];
+    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
     if (!validModes.includes(mode)) {
       // eslint-disable-next-line no-console
       console.warn(

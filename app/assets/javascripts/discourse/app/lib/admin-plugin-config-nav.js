@@ -1,5 +1,5 @@
-export const PLUGIN_CONFIG_NAV_MODE_SIDEBAR = "sidebar";
-export const PLUGIN_CONFIG_NAV_MODE_TOP = "top";
+export const PLUGIN_NAV_MODE_SIDEBAR = "sidebar";
+export const PLUGIN_NAV_MODE_TOP = "top";
 let pluginConfigNav = {};
 export function registerAdminPluginConfigNav(pluginId, mode, links) {
   pluginConfigNav[pluginId] = { mode, links };

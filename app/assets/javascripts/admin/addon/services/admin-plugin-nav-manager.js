@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import {
   configNavForPlugin,
-  PLUGIN_CONFIG_NAV_MODE_SIDEBAR,
-  PLUGIN_CONFIG_NAV_MODE_TOP,
+  PLUGIN_NAV_MODE_SIDEBAR,
+  PLUGIN_NAV_MODE_TOP,
 } from "discourse/lib/admin-plugin-config-nav";
 
 export default class AdminPluginNavManager extends Service {
@@ -19,10 +19,10 @@ export default class AdminPluginNavManager extends Service {
   }
 
   get isSidebarMode() {
-    return this.currentConfigNav.mode === PLUGIN_CONFIG_NAV_MODE_SIDEBAR;
+    return this.currentConfigNav.mode === PLUGIN_NAV_MODE_SIDEBAR;
   }
 
   get isTopMode() {
-    return this.currentConfigNav.mode === PLUGIN_CONFIG_NAV_MODE_TOP;
+    return this.currentConfigNav.mode === PLUGIN_NAV_MODE_TOP;
   }
 }
