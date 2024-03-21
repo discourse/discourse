@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { assert } from "@ember/debug";
-import { dasherize } from "@ember/string";
 import { hash } from "@ember/helper";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {
