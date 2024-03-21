@@ -62,7 +62,7 @@ class Sitemap < ActiveRecord::Base
     else
       offset = (name.to_i - 1) * max_page_size
 
-      indexable_topics.limit(max_page_size).offset(offset)
+      indexable_topics.order(id: :asc).limit(max_page_size).offset(offset)
     end
   end
 end
