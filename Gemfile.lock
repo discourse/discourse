@@ -512,7 +512,7 @@ GEM
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
     uri (0.13.0)
-    version_gem (1.1.3)
+    version_gem (1.1.4)
     web-push (3.0.1)
       jwt (~> 2.0)
       openssl (~> 3.0)
