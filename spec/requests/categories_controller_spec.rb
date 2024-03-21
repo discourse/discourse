@@ -1166,6 +1166,8 @@ RSpec.describe CategoriesController do
 
       expect(response.parsed_body["categories"].length).to eq(1)
       expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
     end
 
     context "without include_ancestors" do
