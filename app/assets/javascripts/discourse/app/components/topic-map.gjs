@@ -25,8 +25,10 @@ export default class TopicMap extends Component {
       />
     </section>
     {{#unless this.collapsed}}
-      {{! The ID is required for aria-controls}}
-      <section class="topic-map-expanded" id="topic-map-expanded-content">
+      <section
+        class="topic-map-expanded"
+        id="topic-map-expanded__aria-controls"
+      >
         <TopicMapExpanded @postAttrs={{@postAttrs}} />
       </section>
     {{/unless}}
