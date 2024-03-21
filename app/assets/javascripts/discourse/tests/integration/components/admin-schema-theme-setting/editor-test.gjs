@@ -63,11 +63,15 @@ class InputFieldsFromDOM {
   refresh() {
     this.fields = {};
     this.count = 0;
+
     [...queryAll(".schema-field")].forEach((field) => {
       this.count += 1;
+
       this.fields[field.dataset.name] = {
         labelElement: field.querySelector(".schema-field__label"),
         inputElement: field.querySelector(".schema-field__input").children[0],
+        countElement: field.querySelector(".schema-field__input-count"),
+        errorElement: field.querySelector(".schema-field__input-error"),
         selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
@@ -449,59 +453,96 @@ module(
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
-      const fieldSelector =
-        ".schema-field[data-name='id'] .schema-field__input";
+      const inputFields = new InputFieldsFromDOM();
 
-      assert.dom(`${fieldSelector} .schema-field__input-count`).hasText("3/5");
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.countElement).hasText("3/5");
 
-      await fillIn(`${fieldSelector} input`, "1");
+      await fillIn(inputFields.fields.id.inputElement, "1");
 
-      assert.dom(`${fieldSelector} .schema-field__input-error`).hasText(
+      assert.dom(inputFields.fields.id.countElement).hasText("1/5");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
         I18n.t("admin.customize.theme.schema.fields.string.too_short", {
           count: 2,
         })
       );
 
-      await fillIn(`${fieldSelector} input`, "");
+      await fillIn(inputFields.fields.id.inputElement, "");
 
-      assert.dom(`${fieldSelector} .schema-field__input-count`).hasText("0/5");
+      assert.dom(inputFields.fields.id.countElement).hasText("0/5");
 
       assert
-        .dom(`${fieldSelector} .schema-field__input-error`)
+        .dom(inputFields.fields.id.errorElement)
         .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "integer",
+              required: true,
+              validations: {
+                max: 10,
+                min: 5,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 6,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("6");
+
       assert
-        .dom(inputFields.fields.integer_field.labelElement)
-        .hasText("integer_field");
-      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("92");
-      assert
-        .dom(inputFields.fields.integer_field.inputElement)
+        .dom(inputFields.fields.id.inputElement)
         .hasAttribute("type", "number");
-      await fillIn(inputFields.fields.integer_field.inputElement, "922229");
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
+      await fillIn(inputFields.fields.id.inputElement, "922229");
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("820");
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+          count: 10,
+        })
+      );
 
-      tree.refresh();
-      await click(tree.nodes[0].element);
+      await fillIn(inputFields.fields.id.inputElement, "0");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+          count: 5,
+        })
+      );
+
+      await fillIn(inputFields.fields.id.inputElement, "");
+
       inputFields.refresh();
 
       assert
-        .dom(inputFields.fields.integer_field.inputElement)
-        .hasValue("922229");
+        .dom(inputFields.fields.id.errorElement)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
