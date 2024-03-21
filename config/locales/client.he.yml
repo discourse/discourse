@@ -247,6 +247,7 @@ he:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
       dismiss: "התעלמות"
     bootstrap_mode: "איך מתחילים"
+    back_button: "חזרה"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -1067,9 +1068,13 @@ he:
       "14": "ממתין"
       "15": "טיוטות"
     categories:
-      all: "כל הקטגוריות"
-      all_subcategories: "הכול"
-      no_subcategory: "ללא"
+      categories_label: "קטגוריות"
+      subcategories_label: "תת־קטגוריות"
+      all_subcategories: "כל תת־הקטגוריות"
+      no_subcategories: "אין תת־קטגוריות"
+      remove_filter: "הסרת הסינון"
+      plus_more_count: "+עוד %{count}"
+      view_all: "להציג הכול"
       category: "קטגוריה"
       category_list: "הצגת רשימת קטגוריות"
       reorder:
@@ -1584,8 +1589,8 @@ he:
         save: "שמירה"
         title: "מפתחות גישה"
         short_description: "מפתחות גישה הן חלופה לסיסמאות שמאמתות את הזיהוי שלך באופן ביומטרי (למשל: מגע, זיהוי פנים) או באמצעות קוד אישי/סיסמה במכשיר."
-        added_prefix: "הוסיף"
-        last_used_prefix: "שימוש אחרון"
+        added_date: "נוספו %{date}"
+        last_used_date: "שימוש אחרון: %{date}"
         never_used: "אף פעם לא היה בשימוש"
         not_allowed_error: "הזמן שהוקצב לתהליך רישום מפתח הגישה פג או בוטל או אסור מלכתחילה."
         already_added_error: "כבר רשמת את מפתח הגישה הזה. אין צורך לרשום אותו שוב."
@@ -1800,6 +1805,7 @@ he:
         after_5_minutes: "אחרי 5 דקות"
         after_10_minutes: "אחרי 10 דקות"
       notification_level_when_replying: "כאשר אני מפרסם נושא, קבע נושא זה ל"
+      topics_unread_when_closed: "להחשיב נושאים כלא נקראו כשהם סגורים"
       invited:
         title: "הזמנות"
         pending_tab: "ממתין"
@@ -2308,6 +2314,11 @@ he:
     conditional_loading_section:
       loading: בטעינה…
     category_row:
+      subcategory_count:
+        one: "+ תת־קטגוריה %{count}"
+        two: "+ %{count} תת־קטגוריות"
+        many: "+ %{count} תת־קטגוריות"
+        other: "+ %{count} תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"
@@ -2456,7 +2467,7 @@ he:
       reply: "תגובה"
       cancel: "ביטול"
       create_topic: "יצירת נושא"
-      create_pm: "הודעה"
+      create_pm: "שליחת הודעה"
       create_whisper: "לחישה"
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
@@ -2988,6 +2999,8 @@ he:
           many: "התקדמות: <strong>%{count}</strong> נושאים"
           other: "התקדמות: <strong>%{count}</strong> נושאים"
         silent: "לבצע את הפעולה הזאת בשקט."
+        performing: "מתבצעות פעולות במרוכז, נא להמתין…"
+        completed: "הפעולות במרוכזת הושלמו בהצלחה!"
       none:
         unread: "אין לך נושאים שלא נקראו."
         unseen: "אין לך נושאים שלא ראית."
@@ -4289,8 +4302,9 @@ he:
         search: "%{shortcut} חיפוש"
         filter_sidebar: "%{shortcut} סרגל צד סינון"
         help: "%{shortcut} פתיחת קיצורי מקשים"
-        dismiss_new: "%{shortcut} התעלמות מחדשים"
-        dismiss_topics: "%{shortcut} התעלמות מנושאים"
+        toggle_bulk_select: "%{shortcut} החלפת מצב בחירה במרוכז"
+        dismiss: "%{shortcut} התעלמות מהנושאים הנבחרים"
+        x: "%{shortcut} החלפת מצב בחירה (במצב בחירה במרוכז)"
         log_out: "%{shortcut} התנתקות"
       composing:
         title: "חיבור"
@@ -4400,8 +4414,10 @@ he:
     tagging:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
+      selector_tags: "תגיות"
       selector_all_tags: "כל התגיות"
       selector_no_tags: "ללא תגיות"
+      selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
@@ -4849,6 +4865,7 @@ he:
           copy: "העתקה…"
           paste: "הדבקה…"
           save: "שמירה בשם…"
+    powered_by_discourse: "מופעל על גבי Discrouse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     admin:
@@ -4863,6 +4880,9 @@ he:
       reports:
         title: "רשימת דיווחים זמינים"
         meta_doc: "אפשר לעיין ב<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>תיעוד</a> שלנו לסקירה מפורטת של הדוחות."
+        sidebar_title: "דוחות"
+        sidebar_link:
+          all: "הכול"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
@@ -5103,6 +5123,8 @@ he:
               delete: מחיקת פוסט.
               recover: שחזור פוסט.
               list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
+            revisions:
+              permanently_delete: "מחיקת מהדורה לצמיתות."
             tags:
               list: הצגת תגיות.
             tag_groups:
@@ -5278,6 +5300,61 @@ he:
           timestamp: "נוצר"
           completion: "זמן השלמה"
           actions: "פעולות"
+      home:
+        title: "בית"
+      account:
+        title: "חשבון"
+        sidebar_link:
+          backups: "גיבויים"
+          whats_new: "מה חדש"
+      community:
+        title: "קהילה"
+        sidebar_link:
+          about_your_site: "על האתר שלך"
+          badges: "עיטורים"
+          login_and_authentication: "כניסה ואימות"
+          notifications: "התראות"
+          permalinks: "קישורים קבועים"
+          trust_levels: "דרגת אמון"
+          users: "משתמשים"
+          user_fields: "שדות משתמש"
+          watched_words: "מילים במעקב"
+          legal: "משפטי"
+      appearance:
+        title: "מראה"
+        sidebar_link:
+          font_style: "סגנון גופן"
+          site_logo: "לוגו האתר"
+          color_schemes: "ערכות צבעים"
+          emoji: "אמוג׳י"
+          navigation: "ניווט"
+          themes: "תמות"
+          site_texts: "טקסטים של האתר"
+      email_settings:
+        title: "הגדרות דוא״ל"
+        sidebar_link:
+          appearance: "מראה"
+          preview_summary: "תצוגה מקדימה של תמצית"
+          server_setup: "הגדרת שרת"
+      email_logs:
+        title: "יומני דוא״ל"
+        sidebar_link:
+          sent: "נשלח"
+          skipped: "דולג"
+          bounced: "הוחזר"
+          received: "התקבל"
+          rejected: "נדחה"
+      security:
+        title: "אבטחה"
+        sidebar_link:
+          error_logs: "יומני שגיאות"
+          screened_emails: "הודעות דואר מסוננות"
+          screened_ips: "כתובות IP מפוקחות"
+          screened_urls: "כתובות מפוקחות"
+          search_logs: "חיפוש ביומנים"
+          security: "אבטחה"
+          spam: "ספאם"
+          staff_action_logs: "יומני פעולות סגל"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "הרחבות מותקנות"
@@ -5294,6 +5371,23 @@ he:
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
         learn_more: "מידע נוסף"
+        sidebar_link:
+          installed: "הותקן"
+      advanced:
+        title: "מתקדם"
+        sidebar_link:
+          api_keys: "מפתחות API"
+          developer: "מפתחים"
+          embedding: "שילוב (embedding)"
+          rate_limits: "מגבלות קצב"
+          user_api: "API של משתמש"
+          web_hooks: "Webhooks"
+          onebox: "תיבת תחימה"
+          files: "קבצים"
+          other_options: "אחר"
+          search: "חיפוש"
+          experimental: "ניסיוני"
+          all_site_settings: "כל הגדרות האתר"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
@@ -5324,6 +5418,7 @@ he:
           uploading_progress: "מתבצעת העלאה… %{progress}%"
           success: "ההעלאה של ‚%{filename}’ הושלמה בהצלחה. הקובץ עובר עיבוד כרגע ותחלוף עד דקה עד שיופיע ברשימה."
           error: "הייתה שגיאה במהלך העלאת '%{filename}': %{message}"
+        settings: "הגדרות"
         operations:
           is_running: "פעולה רצה כעת…"
           failed: "ה-%{operation} נכשל/ה. אנא בידקו את הלוגים."
@@ -5539,6 +5634,7 @@ he:
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
           theme_settings: "הגדרות ערכת עיצוב"
+          edit_objects_theme_setting: "עורך הגדרות עצמים"
           overriden_settings_explanation: "הגדרות שנדרסו מסומנות בנקודה ומודגשות. כדי לאפס את ההגדרות האלו לערך ברירת המחדל, יש ללחוץ על כפתור האיפוס שלצידן."
           no_settings: "לערכת עיצוב זו אין הגדרות."
           theme_translations: "תרגומים של ערכות עיצוב"
@@ -5598,6 +5694,7 @@ he:
           inactive_filter: "לא פעיל"
           updates_available_filter: "עדכונים זמינים"
           schema:
+            title: "עריכת הגדרת %{name}"
             back_button: "חזרה אל %{name}"
         colors:
           select_base:
@@ -6605,6 +6702,7 @@ he:
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
+        settings: "הגדרות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "

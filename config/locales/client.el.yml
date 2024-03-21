@@ -161,6 +161,7 @@ el:
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
       dismiss: "Απόρριψη"
+    back_button: "Πίσω"
     themes:
       default_description: "Προεπιλογή"
     s3:
@@ -823,9 +824,12 @@ el:
       "14": "Εκκρεμή"
       "15": "Προσχέδια"
     categories:
-      all: "όλες οι κατηγορίες"
-      all_subcategories: "όλα"
-      no_subcategory: "κανένα"
+      categories_label: "κατηγορίες"
+      subcategories_label: "υποκατηγορίες"
+      no_subcategories: "χωρίς υποκατηγορίες"
+      remove_filter: "αφαίρεση φίλτρου"
+      plus_more_count: "+%{count} περισσότερο"
+      view_all: "προβολή όλων"
       category: "Κατηγορία"
       category_list: "Εμφάνισε τη λίστα κατηγοριών"
       reorder:
@@ -1137,8 +1141,6 @@ el:
           name_required_error: "Πρέπει να δώσετε ένα όνομα για το κλειδί ασφαλείας σας."
       passkeys:
         save: "Αποθήκευση"
-        added_prefix: "Προστέθηκε"
-        last_used_prefix: "Τελευταία χρήση"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
         error: "Προέκυψε σφάλμα στην αλλαγή της αξίας."
@@ -1681,6 +1683,9 @@ el:
       alt: "Alt"
       enter: "Enter"
     category_row:
+      subcategory_count:
+        one: "+ %{count} υποκατηγορία"
+        other: "+ %{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -1754,7 +1759,6 @@ el:
       reply: "Απάντηση"
       cancel: "Ακύρωση"
       create_topic: "Δημιουργία Θέματος"
-      create_pm: "Μήνυμα"
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
@@ -3026,7 +3030,6 @@ el:
         show_incoming_updated_topics: "%{shortcut} Εμφάνιση ενημερωμένων νημάτων"
         search: "%{shortcut} Αναζήτηση"
         help: "%{shortcut} Εμφάνισε βοήθειας πληκτρολογίου"
-        dismiss_topics: "%{shortcut} Απόρριψη Νημάτων"
         log_out: "%{shortcut} Αποσύνδεση"
       composing:
         title: "Σύνθεση"
@@ -3110,8 +3113,10 @@ el:
     tagging:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
+      selector_tags: "ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
+      selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
       choose_for_topic: "προαιρετικές ετικέτες"
       info: "Πληροφορίες"
@@ -3351,6 +3356,9 @@ el:
           never: "ποτέ"
       reports:
         title: "Λίστα διαθέσιμων αναφορών"
+        sidebar_title: "Αναφορές"
+        sidebar_link:
+          all: "Όλα"
       dashboard:
         title: "Πίνακας ελέγχου"
         last_updated: "Το ταμπλό ενημερώθηκε:"
@@ -3603,6 +3611,50 @@ el:
           timestamp: "Δημιουργήθηκε"
           completion: "Χρόνος Ολοκλήρωσης"
           actions: "Ενέργειες"
+      home:
+        title: "Αρχική Σελίδα"
+      account:
+        title: "Λογαριασμός"
+        sidebar_link:
+          backups: "Αντίγραφα ασφαλέιας"
+      community:
+        title: "Κοινότητα"
+        sidebar_link:
+          badges: "Παράσημα"
+          notifications: "Ειδοποιήσεις"
+          permalinks: "Permalinks"
+          trust_levels: "Επίπεδα Εμπιστοσύνης"
+          users: "Χρήστες"
+          user_fields: "Πεδία Χρήστη"
+          watched_words: "Επιτηρούμενες Λέξεις"
+          legal: "Νομικά"
+      appearance:
+        title: "Εμφάνιση"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Πλοήγηση"
+          themes: "Θέματα"
+      email_settings:
+        sidebar_link:
+          appearance: "Εμφάνιση"
+          preview_summary: "Προεπισκόπηση Σύνοψης"
+      email_logs:
+        sidebar_link:
+          sent: "Απεσταλμένα"
+          skipped: "Παραβλέφθηκε"
+          bounced: "Επιστρεφόμενα μηνύματα"
+          received: "Ελήφθη"
+          rejected: "Απορρίφθηκε"
+      security:
+        title: "Ασφάλεια"
+        sidebar_link:
+          error_logs: "Error Logs"
+          screened_emails: "Ελεγχόμενα Emails"
+          screened_ips: "Ελεγχόμενες IP"
+          screened_urls: "Ελεγχόμενα URL"
+          search_logs: "Αναζήτηση καταγραφών"
+          security: "Ασφάλεια"
+          spam: "Ανεπιθύμητα"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -3616,6 +3668,19 @@ el:
         howto: "Πως εγκαθιστώ πρόσθετα;"
         author: "Του/της %{author}"
         learn_more: "Μάθε περισσότερα"
+        sidebar_link:
+          installed: "Εγκατεστημένα"
+      advanced:
+        sidebar_link:
+          developer: "Developer"
+          embedding: "Ενσωμάτωση"
+          rate_limits: "Όριο Συχνότητας"
+          user_api: "User API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Αρχεία"
+          other_options: "Άλλα"
+          search: "Αναζήτηση"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:
@@ -3638,6 +3703,7 @@ el:
           title: "Ανέβασε ένα αντίγραφο ασφαλείας για αυτό το στιγμιότυπο"
           success: "Το «%{filename}» επιφορτώθηκε με επιτυχία. Το αρχείο βρίσκεται υπό επεξεργασία και θα χρειαστεί έως και ένα λεπτό για να εμφανιστεί στη λίστα."
           error: "Παρουσιάστηκε ένα σφάλμα κατά το ανέβασμα του '%{filename}': %{message}"
+        settings: "Ρυθμίσεις"
         operations:
           failed: "Η λειτουργία '%{operation}' απέτυχε. Έλεγξε τα αρχεία καταγραφής."
           cancel:
@@ -4630,6 +4696,7 @@ el:
         image: "Εικόνα"
         alt: "προεπισκόπηση προσαρμοσμένου emoji"
         delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις το emoji :%{name}:;"
+        settings: "Ρυθμίσεις"
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"

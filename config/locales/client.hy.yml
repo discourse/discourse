@@ -152,6 +152,7 @@ hy:
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
       dismiss: "Չեղարկել"
+    back_button: "Ետ"
     themes:
       default_description: "Լռելյայն"
     s3:
@@ -698,9 +699,11 @@ hy:
       "14": "Սպասող"
       "15": "Սևագրեր"
     categories:
-      all: "բոլոր կատեգորիաները"
-      all_subcategories: "բոլորը"
-      no_subcategory: "ոչ մեկը"
+      categories_label: "կատեգորիաներ"
+      subcategories_label: "ենթակատեգորիաներ"
+      remove_filter: "հանել ֆիլտրը"
+      plus_more_count: "+%{count} ավելի"
+      view_all: "դիտել բոլոը"
       category: "Կատեգորիա"
       category_list: "Ցուցադրել կատեգորիաների ցանկը"
       reorder:
@@ -960,8 +963,6 @@ hy:
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
       passkeys:
         save: "Պահպանել"
-        added_prefix: "Ավելացված"
-        last_used_prefix: "Վերջին Օգտագործվածը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
         error: "Այս արժեքը փոփոխելիս տեղի է ունեցել սխալ:"
@@ -1486,7 +1487,6 @@ hy:
       reply: "Պատասխանել"
       cancel: "Չեղարկել"
       create_topic: "Ստեղծել Թեմա"
-      create_pm: "Նոր Հաղորդագրություն"
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
@@ -2632,7 +2632,6 @@ hy:
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
         search: "%{shortcut} Որոնել"
         help: "%{shortcut} Բացել ստեղնաշարի օգնականը"
-        dismiss_topics: "%{shortcut} Չեղարկել Թեմաները"
         log_out: "%{shortcut} Ելք"
       composing:
         title: "Կազմում"
@@ -2708,8 +2707,10 @@ hy:
       download: "Ներբեռնել"
     tagging:
       other_tags: "Այլ Թեգեր"
+      selector_tags: "թեգեր"
       selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
+      selector_remove_filter: "հանել ֆիլտրը"
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
@@ -2900,6 +2901,9 @@ hy:
           never: "երբեք"
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
+        sidebar_title: "Հաշվետվություններ"
+        sidebar_link:
+          all: "Բոլորը"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -3134,6 +3138,50 @@ hy:
           timestamp: "Ստեղծված"
           completion: "Ավարտի Ժամանակը"
           actions: "Գործողություններ"
+      home:
+        title: "Գլխավոր էջ"
+      account:
+        title: "Հաշիվ"
+        sidebar_link:
+          backups: "Պահուտսներ"
+      community:
+        title: "Համայնք"
+        sidebar_link:
+          badges: "Կրծքանշաններ"
+          notifications: "Ծանուցումներ"
+          permalinks: "Մշտահղումներ"
+          trust_levels: "Վստահության Մակարդակներ"
+          users: "Օգտատերեր"
+          user_fields: "Օգտատիրոջ Դաշտերը"
+          watched_words: "Դիտված Բառեր"
+          legal: "Օրինական"
+      appearance:
+        title: "Արտաքին տեսք"
+        sidebar_link:
+          emoji: "Էմոջի"
+          navigation: "Նավիգացիա"
+          themes: "Թեմաներ"
+      email_settings:
+        sidebar_link:
+          appearance: "Արտաքին տեսք"
+          preview_summary: "Նախադիտման Ամփոփումը"
+      email_logs:
+        sidebar_link:
+          sent: "Ուղարկված"
+          skipped: "Բաց է թողնված"
+          bounced: "Վերադարձված է"
+          received: "Ստացված է"
+          rejected: "Մերժված է"
+      security:
+        title: "Անվտանգություն"
+        sidebar_link:
+          error_logs: "Սխալների Գրառումներ"
+          screened_emails: "Ցուցադրված Էլ. հասցեները"
+          screened_ips: "Ցուցադրված IP-ներ"
+          screened_urls: "Ցուցադրված URL-ները"
+          search_logs: "Որոնել Գրառումներ"
+          security: "Անվտանգություն"
+          spam: "Սպամ"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"
@@ -3147,6 +3195,19 @@ hy:
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         author: "%{author}-Ի կողմԻց"
         learn_more: "Իմանալ ավելին"
+        sidebar_link:
+          installed: "Տեղադրված"
+      advanced:
+        sidebar_link:
+          developer: "Ծրագրավորող"
+          embedding: "Զետեղում"
+          rate_limits: "Գնահատման Սահմաններ"
+          user_api: "Օգտատիրոջ API"
+          web_hooks: "Webhook-ներ"
+          onebox: "Onebox"
+          files: "Ֆայլեր"
+          other_options: "Այլ"
+          search: "Որոնում"
       backups:
         title: "Պահուստներ"
         menu:
@@ -3169,6 +3230,7 @@ hy:
           title: "Վերբեռնել պահուստ այս օրինակում"
           success: "'%{filename}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
           error: " '%{filename}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ %{message}"
+        settings: "Կարգավորումներ"
         operations:
           failed: "%{operation}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"
           cancel:
@@ -4141,6 +4203,7 @@ hy:
         image: "Նկար"
         alt: "մասնավոր էմոջիի նախնական դիտում "
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել :%{name}: էմոջին:"
+        settings: "Կարգավորումներ"
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հոսթը:"

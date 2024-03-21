@@ -209,13 +209,13 @@ module("Unit | Model | topic", function (hooks) {
 
     assert.strictEqual(
       rtlTopic.fancyTitle,
-      `<span dir="rtl">هذا اختبار</span>`,
-      "sets the dir-span to rtl"
+      `<span dir="auto">هذا اختبار</span>`,
+      "sets the dir-span to auto"
     );
     assert.strictEqual(
       ltrTopic.fancyTitle,
-      `<span dir="ltr">This is a test</span>`,
-      "sets the dir-span to ltr"
+      `<span dir="auto">This is a test</span>`,
+      "sets the dir-span to auto"
     );
   });
 

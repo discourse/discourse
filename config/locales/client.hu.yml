@@ -181,6 +181,7 @@ hu:
     emails_are_disabled_non_staff: "A kimenő e-mailek le vannak tiltva a nem stábtagok számára."
     software_update_prompt:
       dismiss: "Elvetés"
+    back_button: "Vissza"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -910,9 +911,12 @@ hu:
       "14": "Folyamatban"
       "15": "Vázlatok"
     categories:
-      all: "összes kategória"
-      all_subcategories: "összes"
-      no_subcategory: "egyik sem"
+      categories_label: "kategóriák"
+      subcategories_label: "alkategóriák"
+      no_subcategories: "nincsenek alkategóriák"
+      remove_filter: "szűrő eltávolítása"
+      plus_more_count: "+még %{count}"
+      view_all: "mindent megtekint"
       category: "Kategória"
       category_list: "Kategória lista megjelenítése"
       reorder:
@@ -1303,8 +1307,6 @@ hu:
           name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
       passkeys:
         save: "Mentés"
-        added_prefix: "Hozzáadva"
-        last_used_prefix: "Utoljára használva"
       change_about:
         title: "Névjegy módosítása"
         error: "Hiba történt az érték módosításakor."
@@ -1927,6 +1929,9 @@ hu:
       alt: "Alt"
       enter: "Enter"
     category_row:
+      subcategory_count:
+        one: "+ %{count} alkategória"
+        other: "+ %{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -2028,7 +2033,6 @@ hu:
       reply: "Válasz"
       cancel: "Mégse"
       create_topic: "Téma létrehozása"
-      create_pm: "Üzenet"
       create_whisper: "Suttogás"
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
@@ -3366,7 +3370,6 @@ hu:
         show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
         search: "%{shortcut} Keresés"
         help: "%{shortcut}Billentyűzet segítségek megnyitása"
-        dismiss_topics: "%{shortcut} Témák elvetése"
         log_out: "%{shortcut} Kijelentkezés"
       composing:
         title: "Megfogalmaz"
@@ -3446,8 +3449,10 @@ hu:
     tagging:
       all_tags: "Minden címke"
       other_tags: "Egyéb címkék"
+      selector_tags: "címkék"
       selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
+      selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
       info: "Információ"
@@ -3711,6 +3716,9 @@ hu:
           never: "soha"
       reports:
         title: "Aktív bejelentések listája"
+        sidebar_title: "Jelentések"
+        sidebar_link:
+          all: "Összes"
       dashboard:
         title: "Vezérlőpult"
         last_updated: "Az irányítópult frissítve:"
@@ -3974,6 +3982,46 @@ hu:
           timestamp: "Létrehozott"
           completion: "Elvégzési idő"
           actions: "Műveletek"
+      home:
+        title: "Kezdőlap"
+      account:
+        title: "Fiók"
+        sidebar_link:
+          backups: "Biztonsági mentések"
+      community:
+        title: "Közösség"
+        sidebar_link:
+          badges: "Jelvények"
+          notifications: "Értesítések"
+          permalinks: "Közvetlen hivatkozás"
+          trust_levels: "Bizalmi szintek"
+          users: "Felhasználók"
+          user_fields: "Felhasználói mezők"
+          watched_words: "Figyelt szavak"
+      appearance:
+        title: "Megjelenés"
+        sidebar_link:
+          emoji: "Emodzsi"
+          navigation: "Navigáció"
+          themes: "Témák"
+      email_settings:
+        sidebar_link:
+          appearance: "Megjelenés"
+          preview_summary: "Előnézet összefoglalója"
+      email_logs:
+        sidebar_link:
+          sent: "Elküldött"
+          skipped: "Átlépve"
+          received: "Kapott"
+          rejected: "Elutasított"
+      security:
+        title: "Biztonság"
+        sidebar_link:
+          error_logs: "Hiba-naplók"
+          screened_emails: "Szűrt e-mailek"
+          screened_ips: "Szkennelt IP-k"
+          security: "Biztonság"
+          spam: "Szemét"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -3987,6 +4035,17 @@ hu:
         howto: "Hogyan lehet plugin-eket telepíteni?"
         author: "Szerző %{author}"
         learn_more: "Tudjon meg többet"
+        sidebar_link:
+          installed: "Telepítve"
+      advanced:
+        sidebar_link:
+          developer: "Fejlesztő"
+          embedding: "Beágyazás"
+          user_api: "Felhasználói API"
+          web_hooks: "Webhooks"
+          files: "Fájlok"
+          other_options: "Egyéb"
+          search: "Keresés"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
@@ -4011,6 +4070,7 @@ hu:
           label: "Feltöltés"
           success: "'%{filename}' sikeresen feltöltésre került. A fájl feldolgozása folyamatban van, és egy percig eltarthat, amíg megjelenik a listán."
           error: "Egy hiba lépett fel feltöltés közben '%{filename}': %{message}"
+        settings: "Beállítások"
         operations:
           failed: "A(z) %{operation} sikertelen. Nézze meg a naplókat."
           cancel:
@@ -4866,6 +4926,7 @@ hu:
         image: "Kép"
         alt: "egyéni emodzsi előnézete"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
+        settings: "Beállítások"
       embedding:
         get_started: "Ha a Discourse-ot egy másik weboldalba akarja ágyazni, akkor kezdje a gépnév megadásával."
         title: "Beágyazás"

@@ -3,9 +3,7 @@ import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -43,11 +41,9 @@ acceptance("Topic - Summary", function (needs) {
 
     await click(".topic-strategy-summarization");
 
-    assert.strictEqual(
-      query(".summary-box .generated-summary p").innerText,
-      partialSummary,
-      "Updates the summary with a partial result"
-    );
+    assert
+      .dom(".summary-box .generated-summary p")
+      .hasText(partialSummary, "Updates the summary with a partial result");
 
     const finalSummary = "This is a completed summary";
     await publishToMessageBus("/summaries/topic/1", {
@@ -62,13 +58,11 @@ acceptance("Topic - Summary", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(".summary-box .generated-summary p").innerText,
-      finalSummary,
-      "Updates the summary with a partial result"
-    );
+    assert
+      .dom(".summary-box .generated-summary p")
+      .hasText(finalSummary, "Updates the summary with a final result");
 
-    assert.ok(exists(".summary-box .summarized-on"), "summary metadata exists");
+    assert.dom(".summary-box .summarized-on").exists("summary metadata exists");
   });
 });
 
@@ -103,12 +97,10 @@ acceptance("Topic - Summary - Anon", function (needs) {
 
     await click(".topic-strategy-summarization");
 
-    assert.strictEqual(
-      query(".summary-box .generated-summary p").innerText,
-      finalSummary,
-      "Updates the summary with the result"
-    );
+    assert
+      .dom(".summary-box .generated-summary p")
+      .hasText(finalSummary, "Updates the summary with the result");
 
-    assert.ok(exists(".summary-box .summarized-on"), "summary metadata exists");
+    assert.dom(".summary-box .summarized-on").exists("summary metadata exists");
   });
 });

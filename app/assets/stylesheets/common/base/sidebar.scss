@@ -130,17 +130,6 @@
       }
     }
   }
-  .sidebar-footer-wrapper {
-    .btn-flat.add-section {
-      padding: 0.25em 0.4em;
-      &:hover {
-        background: var(--d-sidebar-highlight-background);
-        svg {
-          color: var(--d-sidebar-link-icon-color);
-        }
-      }
-    }
-  }
 }
 
 .sidebar-section-form-modal {

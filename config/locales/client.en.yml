@@ -213,6 +213,7 @@ en:
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
+    back_button: "Back"
 
     themes:
       default_description: "Default"
@@ -1163,6 +1164,7 @@ en:
           warning: "Are you sure you want to clear your featured topic?"
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
+      login_to_view_profile: "You must log in to view user profiles"
       inactive_user: "This user is no longer active."
       expand_profile: "Expand"
       sr_expand_profile: "Expand profile details"
@@ -1536,8 +1538,8 @@ en:
         save: "Save"
         title: "Passkeys"
         short_description: "Passkeys are password replacements that validate your identity biometrically (e.g. touch, faceID) or via a device PIN/password."
-        added_prefix: "Added"
-        last_used_prefix: "Last Used"
+        added_date: "Added %{date}"
+        last_used_date: "Last Used %{date}"
         never_used: "Never Used"
         not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
@@ -1774,6 +1776,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -2481,7 +2484,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Message"
+      create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -4254,8 +4257,9 @@ en:
         search: "%{shortcut} Search"
         filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new: "%{shortcut} Dismiss New"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
+        toggle_bulk_select: "%{shortcut} Toggle bulk select"
+        dismiss: "%{shortcut} Dismiss selected topic(s)"
+        x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"
@@ -4799,6 +4803,7 @@ en:
           copy: "Copy..."
           paste: "Paste..."
           save: "Save as..."
+    powered_by_discourse: "Powered by Discourse"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4809,6 +4814,7 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
+      filter_reports: Filter reports
 
       tags:
         remove_muted_tags_from_latest:
@@ -4819,7 +4825,12 @@ en:
       reports:
         title: "List of available reports"
         meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        sidebar_title: "Reports"
+        sidebar_link:
+          all: "All"
 
+      new_features:
+        title: "What's new"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -4877,7 +4888,6 @@ en:
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
-        filter_reports: Filter reports
         custom_date_range: Custom date range
 
         reports:
@@ -5056,6 +5066,10 @@ en:
               delete: Delete a post.
               recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
+            revisions:
+              read: "Get the latest or a specific revision."
+              modify: "Hide, show, or revert revisions."
+              permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
             tag_groups:
@@ -5228,6 +5242,67 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+      home:
+        title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backups"
+          whats_new: "What's New"
+
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "About Your Site"
+          badges: "Badges"
+          login_and_authentication: "Login & Authentication"
+          notifications: "Notifications"
+          permalinks: "Permalinks"
+          trust_levels: "Trust Levels"
+          users: "Users"
+          user_fields: "User Fields"
+          watched_words: "Watched Words"
+          legal: "Legal"
+
+      appearance:
+        title: "Appearance"
+        sidebar_link:
+          font_style: "Font Style"
+          site_logo: "Site Logo"
+          color_schemes: "Color Schemes"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes: "Themes"
+          site_texts: "Site Texts"
+
+      email_settings:
+        title: "Email Settings"
+        sidebar_link:
+          appearance: "Appearance"
+          preview_summary: "Preview Summary"
+          server_setup: "Server Setup"
+
+      email_logs:
+        title: "Email Logs"
+        sidebar_link:
+          sent: "Sent"
+          skipped: "Skipped"
+          bounced: "Bounced"
+          received: "Received"
+          rejected: "Rejected"
+
+      security:
+        title: "Security"
+        sidebar_link:
+          error_logs: "Error Logs"
+          screened_emails: "Screened Emails"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          search_logs: "Search Logs"
+          security: "Security"
+          spam: "Spam"
+          staff_action_logs: "Staff Action Logs"
+
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -5244,6 +5319,24 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
+        sidebar_link:
+          installed: "Installed"
+
+      advanced:
+        title: "Advanced"
+        sidebar_link:
+          api_keys: "API keys"
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Rate Limits"
+          user_api: "User API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Files"
+          other_options: "Other"
+          search: "Search"
+          experimental: "Experimental"
+          all_site_settings: "All Site Settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5276,6 +5369,7 @@ en:
           uploading_progress: "Uploading… %{progress}%"
           success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Settings"
         operations:
           is_running: "An operation is currently running…"
           failed: "The %{operation} failed. Please check the logs."
@@ -5552,7 +5646,16 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           schema:
+            title: "Edit %{name} setting"
             back_button: "Back to %{name}"
+            fields:
+              required: "*required"
+              string:
+                too_short: "must be at least %{count} characters"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
+
         colors:
           select_base:
             title: "Select base color palette"
@@ -6588,6 +6691,7 @@ en:
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+        settings: "Settings"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

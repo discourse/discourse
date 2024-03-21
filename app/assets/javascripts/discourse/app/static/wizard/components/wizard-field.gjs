@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
+import { hash } from "@ember/helper";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {
@@ -77,6 +79,15 @@ export default class WizardFieldComponent extends Component {
         <div class="wizard-container__description extra">
           {{htmlSafe this.field.extraDescription}}
         </div>
+
+        <PluginOutlet
+          @name="below-wizard-extra-description"
+          @outletArgs={{hash
+            id=@field.id
+            disabled=@field.disabled
+            value=@field.value
+          }}
+        />
       {{/if}}
     </div>
   </template>

@@ -342,6 +342,7 @@ en:
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
     max_invite_emails_limit_exceeded: "Request failed because number of emails exceeded the maximum (%{max})."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
+    domain_not_allowed_admin: "This domain cannot be used for invites."
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
@@ -1557,7 +1558,7 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
-    watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
     back_from_logster_text: "Back to site"
@@ -1791,7 +1792,7 @@ en:
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
-    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the <a href='https://www.discourse.org/discover'>Discover page</a> and in Discourse marketing materials. By doing so, you will share community metadata and anonymized usage statistics with Discourse. Please note that the promotion of communities is at Discourse’s discretion."
+    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the <a href='https://www.discourse.org/discover'>Discover page</a> and in Discourse marketing materials. By doing so, you will share the data required for your site to be included in the service. Please note that the promotion of communities is at Discourse’s discretion."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
@@ -2332,6 +2333,8 @@ en:
 
     share_anonymized_statistics: "Enable sharing of anonymized usage statistics with CDCK, Inc. (“Discourse”). When this setting is enabled, data concerning the usage of the site is collected and shared in anonymized form, ensuring no personal information is disclosed."
 
+    enable_powered_by_discourse: "Show “Powered by Discourse” link to discourse.org at the bottom of most pages."
+
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     penalty_include_post_message: "Automatically include offending post message in email message template when silencing or suspending a user"
@@ -2498,8 +2501,8 @@ en:
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
-    governing_law:  "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
-    city_for_disputes:  "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
+    governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
+    city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
@@ -2669,6 +2672,8 @@ en:
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
     invalid_parameter_value: "Authentication failed due to invalid value for `%{param}` parameter. Contact the site administrators to fix this problem."
+    payload_parse_error: "Authentication failed (payload is not valid Base64). Please contact the site's administrator."
+    signature_error: "Authentication failed (signature incorrect). Please contact the site's administrator."
 
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
@@ -5316,6 +5321,7 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
+    json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"

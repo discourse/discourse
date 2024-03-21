@@ -241,8 +241,8 @@ export default Component.extend(ComposerUploadUppy, {
         key: "@",
         transformComplete: (v) => v.username || v.name,
         afterComplete: this._afterMentionComplete,
-        triggerRule: (textarea) =>
-          !inCodeBlock(textarea.value, caretPosition(textarea)),
+        triggerRule: async (textarea) =>
+          !(await inCodeBlock(textarea.value, caretPosition(textarea))),
         onClose: destroyUserStatuses,
       });
     }
@@ -899,7 +899,7 @@ export default Component.extend(ComposerUploadUppy, {
         unshift: true,
       });
 
-      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
+      if (this.allowUpload && this.uploadIcon && this.site.desktopView) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",

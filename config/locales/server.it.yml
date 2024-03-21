@@ -1423,7 +1423,6 @@ it:
     force_https_warning: "Il tuo sito web utilizza SSL. Ma ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> non è ancora abilitato nelle impostazioni del tuo sito."
     out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
-    watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
     v3_analytics_deprecated: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
     category_style_deprecated: "La tua istanza di Discourse utilizza attualmente uno stile di categoria deprecato che verrà rimosso prima della versione beta finale di Discourse 3.2. Fai riferimento a <a href='https://meta.discourse.org/t/282441'>Passaggio a un'impostazione del sito con stile di categoria singola</a> per istruzioni su come mantenere lo stile di categoria selezionato."
   site_settings:
@@ -1592,7 +1591,6 @@ it:
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Abilita raccolta di report di violazioni CSP in /csp_reports"
     content_security_policy_frame_ancestors: "Limita chi può incorporare questo sito in iframes tramite CSP. Controlla gli host ammessi su <a href='%{base_path}/admin/customize/embedding'>Incorporamenti</a>"
-    content_security_policy_script_src: "Sorgenti di script aggiuntivi consentiti. Il server e la rete CDN attualmente in uso sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un tag includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un tag in cui tutti gli argomenti sono nelle categorie pubbliche."
     display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con un determinato tag."

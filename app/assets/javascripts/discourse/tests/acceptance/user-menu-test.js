@@ -1,5 +1,11 @@
 import { later } from "@ember/runloop";
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -496,18 +502,18 @@ acceptance("User menu", function (needs) {
       "invites link not shown when the user can't invite"
     );
 
-    const dratsLink = query("#quick-access-profile ul li.drafts a");
+    const draftsLink = query("#quick-access-profile ul li.drafts a");
     assert.ok(
-      dratsLink.href.endsWith("/u/eviltrout/activity/drafts"),
+      draftsLink.href.endsWith("/u/eviltrout/activity/drafts"),
       "has a link to the drafts page of the user"
     );
     assert.strictEqual(
-      dratsLink.textContent.trim(),
+      draftsLink.textContent.trim(),
       I18n.t("drafts.label_with_count", { count: 13 }),
       "drafts link has the right label with count of the user's drafts"
     );
     assert.ok(
-      dratsLink.querySelector(".d-icon-pencil-alt"),
+      draftsLink.querySelector(".d-icon-user_menu\\.drafts"),
       "drafts link has the right icon"
     );
 
@@ -871,6 +877,16 @@ acceptance("User menu", function (needs) {
       exists("#quick-access-other-notifications"),
       "the other notifications panel can display using keyboard navigation"
     );
+  });
+
+  test("closes the menu when navigating away", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+    await click(".quick-access-panel .preferences a");
+
+    assert.dom(".user-menu").doesNotExist();
+    assert.strictEqual(currentRouteName(), "preferences.account");
   });
 });
 

@@ -191,6 +191,7 @@ sv:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
+    back_button: "Tillbaka"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -960,9 +961,12 @@ sv:
       "14": "Väntar"
       "15": "Utkast"
     categories:
-      all: "alla kategorier"
-      all_subcategories: "alla"
-      no_subcategory: "ingen"
+      categories_label: "kategorier"
+      subcategories_label: "underkategorier"
+      no_subcategories: "inga underkategorier"
+      remove_filter: "ta bort filter"
+      plus_more_count: "+ytterligare %{count}"
+      view_all: "visa alla"
       category: "Kategori"
       category_list: "Visa kategori-lista"
       reorder:
@@ -1431,8 +1435,7 @@ sv:
         save: "Spara"
         title: "Inloggningsnycklar"
         short_description: "Inloggningsnycklar är lösenordsersättningar som validerar din identitet biometriskt (t.ex. fingeravtryck, ansikte) eller via en enhets PIN/lösenord."
-        added_prefix: "Tillagd"
-        last_used_prefix: "Senast använd"
+        added_date: "Lade till %{date}"
         never_used: "Aldrig använd"
         not_allowed_error: "Registreringsprocessen för inloggningsnycklar dröjde antingen för länge, avbröts eller tillåts inte."
         already_added_error: "Du har redan registrerat denna inloggningsnyckel.\nDu behöver inte registrera den igen."
@@ -2127,6 +2130,9 @@ sv:
     conditional_loading_section:
       loading: Laddar…
     category_row:
+      subcategory_count:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2251,7 +2257,6 @@ sv:
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"
-      create_pm: "Nytt meddelande"
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
@@ -3898,8 +3903,6 @@ sv:
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
         search: "%{shortcut} Sök"
         help: "%{shortcut} Öppna tangentbordshjälp"
-        dismiss_new: "%{shortcut} Avfärda nya"
-        dismiss_topics: "%{shortcut} Avfärda ämnen"
         log_out: "%{shortcut} Logga ut"
       composing:
         title: "Skapar"
@@ -3999,8 +4002,10 @@ sv:
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
+      selector_tags: "taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
+      selector_remove_filter: "ta bort filter"
       tags: "Taggar"
       choose_for_topic: "alternativa taggar"
       choose_for_topic_required:
@@ -4426,6 +4431,9 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         meta_doc: "Utforska vår <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentation</a> för att se en detaljerad översikt över rapporterna."
+        sidebar_title: "Rapporter"
+        sidebar_link:
+          all: "Alla"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4827,6 +4835,51 @@ sv:
           timestamp: "Skapad"
           completion: "Sluttid"
           actions: "Åtgärder"
+      home:
+        title: "Hem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Säkerhetskopior"
+      community:
+        title: "Community"
+        sidebar_link:
+          badges: "Utmärkelser"
+          notifications: "Aviseringar"
+          permalinks: "Permalänkar"
+          trust_levels: "Förtroendenivåer"
+          users: "Användare"
+          user_fields: "Användarfält"
+          watched_words: "Bevakade ord"
+          legal: "Juridik"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigering"
+          themes: "Teman"
+      email_settings:
+        title: "E-postinställningar"
+        sidebar_link:
+          appearance: "Utseende"
+          preview_summary: "Förhandsgranska sammandrag"
+      email_logs:
+        sidebar_link:
+          sent: "Skickade"
+          skipped: "Överhoppade"
+          bounced: "Studsade"
+          received: "Mottagna"
+          rejected: "Avvisade"
+      security:
+        title: "Säkerhet"
+        sidebar_link:
+          error_logs: "Felprotokoll"
+          screened_emails: "Kontrollerade e-postadresser"
+          screened_ips: "Granskade IP-adresser"
+          screened_urls: "Granskade URL:er"
+          search_logs: "Söklogg"
+          security: "Säkerhet"
+          spam: "Skräppost"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
@@ -4843,6 +4896,20 @@ sv:
         author: "Av %{author}"
         experimental_badge: "experimentell"
         learn_more: "Läs mer"
+        sidebar_link:
+          installed: "Installerad"
+      advanced:
+        title: "Avancerat"
+        sidebar_link:
+          developer: "Utvecklare"
+          embedding: "Inbäddning"
+          rate_limits: "Begränsningar"
+          user_api: "Användar-API"
+          web_hooks: "Webhookar"
+          onebox: "Onebox"
+          files: "Filer"
+          other_options: "Övrigt"
+          search: "Sök"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
@@ -4873,6 +4940,7 @@ sv:
           uploading_progress: "Laddar upp… %{progress}%"
           success: "'%{filename}' har laddats upp. Filen bearbetas nu och det kan dröja upp till en minut innan den syns i listan."
           error: "Ett fel har uppstått vid uppladdning av '%{filename}': %{message}"
+        settings: "Inställningar"
         operations:
           is_running: "En åtgärd är just nu igång…"
           failed: "%{operation} misslyckades. Kontrollera loggarna."
@@ -6133,6 +6201,7 @@ sv:
         image: "Bild"
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"
+        settings: "Inställningar"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"

@@ -7,7 +7,7 @@ export default {
     const site = owner.lookup("service:site");
     this.capabilities = owner.lookup("service:capabilities");
 
-    if (!this.capabilities.isIpadOS && !site.mobileView) {
+    if (!this.capabilities.isIpadOS && site.desktopView) {
       return;
     }
 

@@ -29,6 +29,7 @@ module Chat
     step :fetch_thread_participants
     step :fetch_thread_memberships
     step :update_membership_last_viewed_at
+    step :update_user_last_channel
 
     class Contract
       attribute :channel_id, :integer
@@ -168,6 +169,13 @@ module Chat
     def update_membership_last_viewed_at(guardian:)
       Scheduler::Defer.later "Chat::ListChannelMessages - defer update_membership_last_viewed_at" do
         context.membership&.update!(last_viewed_at: Time.zone.now)
+      end
+    end
+
+    def update_user_last_channel(guardian:, channel:)
+      Scheduler::Defer.later "Chat::ListChannelMessages - defer update_user_last_channel" do
+        next if guardian.user.custom_fields[::Chat::LAST_CHAT_CHANNEL_ID] == channel.id
+        guardian.user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
       end
     end
   end

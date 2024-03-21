@@ -46,7 +46,9 @@
         {{#if this.search.activeGlobalSearchTerm}}
           <SearchMenu::ClearButton @clearSearch={{this.clearSearch}} />
         {{/if}}
-        <SearchMenu::AdvancedButton @href={{this.advancedSearchButtonHref}} />
+        <SearchMenu::AdvancedButton
+          @openAdvancedSearch={{this.openAdvancedSearch}}
+        />
       </div>
     {{/if}}
   </div>

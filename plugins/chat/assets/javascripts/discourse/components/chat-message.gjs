@@ -589,7 +589,10 @@ export default class ChatMessage extends Component {
               {{/unless}}
 
               {{#if this.hideUserInfo}}
-                <ChatMessageLeftGutter @message={{@message}} />
+                <ChatMessageLeftGutter
+                  @message={{@message}}
+                  @threadContext={{this.threadContext}}
+                />
               {{else}}
                 <ChatMessageAvatar @message={{@message}} />
               {{/if}}

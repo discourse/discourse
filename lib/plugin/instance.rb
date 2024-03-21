@@ -105,8 +105,12 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
   end
 
   def configurable?

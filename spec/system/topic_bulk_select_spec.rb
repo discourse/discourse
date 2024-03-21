@@ -87,5 +87,37 @@ describe "Topic bulk select", type: :system do
       visit("/latest")
       expect(topic_list).to have_no_unread_badge(topics.first)
     end
+
+    it "works with keyboard shortcuts" do
+      sign_in(admin)
+      visit("/latest")
+
+      send_keys([:shift, "b"])
+      send_keys("j")
+      send_keys("x") # toggle select
+      expect(topic_list).to have_checkbox_selected_on_row(1)
+
+      send_keys("x") # toggle deselect
+      expect(topic_list).to have_no_checkbox_selected_on_row(1)
+
+      # watch topic and add a reply so we have something in /unread
+      topic = topics.first
+      visit("/t/#{topic.slug}/#{topic.id}")
+      topic_page.watch_topic
+      expect(topic_page).to have_read_post(1)
+      Fabricate(:post, topic: topic)
+
+      visit("/unread")
+      expect(topic_list).to have_topics
+
+      send_keys([:shift, "b"])
+      send_keys("j")
+      send_keys("x")
+      send_keys([:shift, "d"])
+
+      topic_list_header.click_dismiss_read_confirm
+
+      expect(topic_list).to have_no_topics
+    end
   end
 end

@@ -187,6 +187,7 @@ ro:
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
     max_invite_emails_limit_exceeded: "Cererea a eșuat pentru că numărul de e-mailuri a depășit numărul maxim (%{max})."
+    domain_not_allowed_admin: "Acest domeniu nu poate fi folosit pentru invitații."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -220,7 +221,7 @@ ro:
       one: "Încă un răspuns"
       few: "Încă %{count} răspunsuri"
       other: "Încă %{count} de răspunsuri"
-    permalink: "Link permanent"
+    permalink: "Legătură permanentă"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
@@ -398,7 +399,7 @@ ro:
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
       email_already_used_in_category: "'%{email}' este deja folosit de categoria '%{category_name}'."
     cannot_delete:
-      has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
+      has_subcategories: "Nu putem șterge această categorie pentru că are subcategorii."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
@@ -646,7 +647,7 @@ ro:
         edit_reason: Motiv
     user_flagging_ratio:
       labels:
-        user: Utilizatori
+        user: Utilizator
         score: Scor
     moderators_activity:
       labels:
@@ -751,11 +752,11 @@ ro:
       yaxis: "Număr de mesaje"
     top_referrers:
       title: "Top referenți"
-      xaxis: "Utilizatori"
+      xaxis: "Utilizator"
       num_clicks: "Click-uri"
       num_topics: "Subiecte"
       labels:
-        user: "Utilizatori"
+        user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
     top_traffic_sources:
@@ -837,26 +838,26 @@ ro:
         page_views: "Vizualizări"
     suspicious_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     staff_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     top_uploads:
       labels:
         filename: Numele fișierului
     top_users_by_likes_received:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
   dashboard:
     twitter_login_warning: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
@@ -942,6 +943,7 @@ ro:
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
+    include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://www.discourse.org/discover'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
@@ -1139,6 +1141,7 @@ ro:
     disable_system_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
+    enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
@@ -1204,7 +1207,7 @@ ro:
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
       pop3_polling_username_is_empty: "Trebuie să setezi „numele utilizator pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
-      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici detaliile din setările POP3."
+      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici datele de conectare POP3."
       reply_by_email_address_is_empty: "Trebuie să setezi o adresă pentru „răspunde prin email” înainte să poți activa răspunsul prin email."
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
@@ -1240,6 +1243,8 @@ ro:
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
     unknown_error: "Există o problema legată de contul tău. Te rugăm contactează administratorul site-ului."
     timeout_expired: "Autentificarea în cont a expirat, te rugăm să încerci din să te autentifici din nou."
+    payload_parse_error: "Autentificarea a eșuat (sarcina nu este validă Base64). Te rugăm să contactezi administratorul site-ului."
+    signature_error: "Autentificarea a eșuat (semnătură incorectă). Te rugăm să contactezi administratorul site-ului."
   original_poster: "Creatorul unui subiect"
   most_recent_poster: "Cel mai recent autor"
   frequent_poster: "Autor prodigios"
@@ -2048,6 +2053,7 @@ ro:
       private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
+    json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"
     unknown: "necunoscută"
   reviewables:
     priorities:
@@ -2083,7 +2089,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-  fallback_username: "utilizatori"
+  fallback_username: "utilizator"
   activemodel:
     errors:
       <<: *errors

@@ -900,7 +900,6 @@ sk:
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_script_src: "Ďalšie povolené zdroje skriptov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmierňovanie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP)"
     top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
     post_menu: "Určite, ktoré položky sa zobrazia v ponuke príspevkov a v akom poradí."
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."

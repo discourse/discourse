@@ -8,7 +8,7 @@
           @icon="plus"
           @action={{this.addSection}}
           @title="sidebar.sections.custom.add"
-          class="btn-flat add-section"
+          class="btn-flat sidebar-footer-actions-button add-section"
         />
       {{/if}}
 
@@ -22,7 +22,7 @@
           @action={{route-action "toggleMobileView"}}
           @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
           @icon={{if this.site.mobileView "desktop" "mobile-alt"}}
-          class="sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
+          class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
         />
       {{/if}}
 

@@ -259,26 +259,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        latest = messages.find { |m| m.channel == "/latest" }
-        expect(latest).not_to eq(nil)
+        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        latest = messages.find { |m| m.channel == "/new" }
-        expect(latest).not_to eq(nil)
-
-        read = messages.find { |m| m.channel == "/unread/#{p.user_id}" }
-        expect(read).not_to eq(nil)
-
-        user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
-        expect(user_action).not_to eq(nil)
-
-        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
-        expect(draft_count).not_to eq(nil)
+        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
+        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do

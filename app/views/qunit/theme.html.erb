@@ -31,7 +31,6 @@
       </style>
 
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
-      <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
     <%- else %>
       <style>
         html {
@@ -63,5 +62,7 @@
       <%= preload_script "scripts/discourse-test-listen-boot" %>
       <%= preload_script "scripts/discourse-boot" %>
     <%- end %>
+
+    <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
   </body>
 </html>

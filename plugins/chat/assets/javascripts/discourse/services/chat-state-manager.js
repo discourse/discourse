@@ -4,7 +4,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
-import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
@@ -22,14 +21,17 @@ export function addChatDrawerStateCallback(callback) {
 export function resetChatDrawerStateCallbacks() {
   chatDrawerStateCallbacks = [];
 }
+
 export default class ChatStateManager extends Service {
   @service chat;
   @service chatHistory;
   @service router;
+  @service site;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+  @tracked hasPreloadedChannels = false;
 
   @tracked _chatURL = null;
   @tracked _appURL = null;
@@ -60,12 +62,20 @@ export default class ChatStateManager extends Service {
 
   didOpenDrawer(url = null) {
     withPluginApi("1.8.0", (api) => {
-      if (getUserChatSeparateSidebarMode(this.currentUser).always) {
-        api.setSidebarPanel(MAIN_PANEL);
-        api.setSeparatedSidebarMode();
-        api.hideSidebarSwitchPanelButtons();
-      } else {
-        api.setCombinedSidebarMode();
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
+
+      if (
+        adminSidebarStateManager === undefined ||
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
+        if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+          api.setSeparatedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+        }
       }
     });
 
@@ -82,20 +92,30 @@ export default class ChatStateManager extends Service {
 
   didCloseDrawer() {
     withPluginApi("1.8.0", (api) => {
-      api.setSidebarPanel(MAIN_PANEL);
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
         this.currentUser
       );
-      if (chatSeparateSidebarMode.fullscreen) {
-        api.setCombinedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else if (chatSeparateSidebarMode.always) {
-        api.setSeparatedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else {
-        api.setCombinedSidebarMode();
-        api.hideSidebarSwitchPanelButtons();
+
+      if (
+        adminSidebarStateManager === undefined ||
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
+        api.setSidebarPanel(MAIN_PANEL);
+
+        if (chatSeparateSidebarMode.fullscreen) {
+          api.setCombinedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else if (chatSeparateSidebarMode.always) {
+          api.setSeparatedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        }
       }
     });
 
@@ -125,7 +145,7 @@ export default class ChatStateManager extends Service {
 
   get isFullPagePreferred() {
     return !!(
-      Site.currentProp("mobileView") ||
+      this.site.mobileView ||
       this._store.getObject(PREFERRED_MODE_KEY) === FULL_PAGE_CHAT
     );
   }
@@ -133,7 +153,7 @@ export default class ChatStateManager extends Service {
   get isDrawerPreferred() {
     return !!(
       !this.isFullPagePreferred ||
-      (!Site.currentProp("mobileView") &&
+      (this.site.desktopView &&
         (!this._store.getObject(PREFERRED_MODE_KEY) ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );

@@ -81,7 +81,7 @@ export default Component.extend({
   click(e) {
     // Mobile basic-topic-list doesn't use the `topic-list-item` view so
     // the event for the topic entrance is never wired up.
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 

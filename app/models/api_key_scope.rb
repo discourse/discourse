@@ -71,6 +71,20 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[posts#latest],
           },
         },
+        revisions: {
+          read: {
+            actions: %w[posts#latest_revision posts#revisions],
+            params: %i[post_id],
+          },
+          modify: {
+            actions: %w[posts#hide_revision posts#show_revision posts#revert],
+            params: %i[post_id],
+          },
+          permanently_delete: {
+            actions: %w[posts#permanently_delete_revisions],
+            params: %i[post_id],
+          },
+        },
         tags: {
           list: {
             actions: %w[tags#index],

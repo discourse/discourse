@@ -19,3 +19,12 @@
     }
   }
 }
+.admin-emojis__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    font-size: var(--font-up-1);
+    margin-bottom: 10px;
+  }
+}

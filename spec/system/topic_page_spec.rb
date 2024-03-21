@@ -2,6 +2,7 @@
 
 describe "Topic page", type: :system do
   fab!(:topic)
+  fab!(:admin)
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
     <h2 dir="ltr" id="toc-h2-testing" data-d-toc="toc-h2-testing" class="d-toc-post-heading">
@@ -58,7 +59,7 @@ describe "Topic page", type: :system do
       PostDestroyer.new(Discourse.system_user, post2).destroy
       PostDestroyer.new(Discourse.system_user, post3).destroy
 
-      sign_in Fabricate(:admin)
+      sign_in admin
     end
 
     it "displays the gap to admins, and allows them to expand it" do
@@ -68,5 +69,21 @@ describe "Topic page", type: :system do
       find(".post-stream .gap").click()
       expect(page).to have_css(".topic-post", count: 4)
     end
+  end
+
+  it "supports shift+a kbd shortcut to toggle admin menu" do
+    sign_in admin
+
+    visit("/t/#{topic.slug}/#{topic.id}")
+
+    expect(".topic-admin-menu-button-container").to be_present
+
+    send_keys([:shift, "a"])
+
+    expect(page).to have_css(".topic-admin-popup-menu")
+
+    send_keys([:shift, "a"])
+
+    expect(page).to have_no_css(".topic-admin-popup-menu")
   end
 end

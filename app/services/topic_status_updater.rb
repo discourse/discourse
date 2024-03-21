@@ -90,6 +90,21 @@ TopicStatusUpdater =
         # actually read the topic
         PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
       end
+
+      if status.closed? && status.enabled?
+        sql_query = <<-SQL
+          SELECT DISTINCT post_timings.user_id
+          FROM post_timings
+          JOIN user_options ON user_options.user_id = post_timings.user_id
+          WHERE post_timings.topic_id = :topic_id
+            AND user_options.topics_unread_when_closed = 'f'
+        SQL
+        user_ids = DB.query_single(sql_query, topic_id: topic.id)
+
+        if user_ids.present?
+          PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
+        end
+      end
     end
 
     def message_for(status)

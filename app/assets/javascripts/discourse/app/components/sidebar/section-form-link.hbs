@@ -14,11 +14,11 @@
   role="row"
   data-row-id={{@link.objectId}}
 >
-  {{#unless this.site.mobileView}}
+  {{#if this.site.desktopView}}
     <div class="draggable" data-link-name={{@link.name}}>
       {{d-icon "grip-lines"}}
     </div>
-  {{/unless}}
+  {{/if}}
   <div class="input-group" role="cell">
     <IconPicker
       @name="icon"

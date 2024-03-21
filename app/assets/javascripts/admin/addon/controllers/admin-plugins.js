@@ -2,18 +2,15 @@ import Controller from "@ember/controller";
 import { service } from "@ember/service";
 
 export default class AdminPluginsController extends Controller {
+  @service adminPluginNavManager;
   @service router;
 
   get adminRoutes() {
-    return this.allAdminRoutes.filter((route) =>
-      this.routeExists(route.full_location)
-    );
+    return this.allAdminRoutes.filter((route) => this.routeExists(route));
   }
 
   get brokenAdminRoutes() {
-    return this.allAdminRoutes.filter(
-      (route) => !this.routeExists(route.full_location)
-    );
+    return this.allAdminRoutes.filter((route) => !this.routeExists(route));
   }
 
   get allAdminRoutes() {
@@ -25,9 +22,20 @@ export default class AdminPluginsController extends Controller {
       .filter(Boolean);
   }
 
-  routeExists(routeName) {
+  get showTopNav() {
+    return (
+      !this.adminPluginNavManager.currentPlugin ||
+      this.adminPluginNavManager.isSidebarMode
+    );
+  }
+
+  routeExists(route) {
     try {
-      this.router.urlFor(routeName);
+      if (route.use_new_show_route) {
+        this.router.urlFor(route.full_location, route.location);
+      } else {
+        this.router.urlFor(route.full_location);
+      }
       return true;
     } catch (e) {
       return false;

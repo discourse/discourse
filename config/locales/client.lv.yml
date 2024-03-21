@@ -164,6 +164,7 @@ lv:
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       dismiss: "Nerādīt"
+    back_button: "Atpakaļ"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -789,9 +790,10 @@ lv:
       "14": "Gaida apstiprinājumu"
       "15": "Melnraksti"
     categories:
-      all: "visas sadaļas"
-      all_subcategories: "Viss"
-      no_subcategory: "nekas"
+      categories_label: "sadaļas"
+      subcategories_label: "apakšsadaļas"
+      remove_filter: "noņemt filtru"
+      plus_more_count: "+vēl %{count}"
       category: "Sadaļa"
       category_list: "Parādīt sadaļu sarakstu"
       reorder:
@@ -1101,7 +1103,6 @@ lv:
           name_required_error: "Jums ir jānorāda drošības atslēgas nosaukums."
       passkeys:
         save: "Saglabāt"
-        added_prefix: "Pievienots"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."
@@ -1652,7 +1653,6 @@ lv:
       reply: "Atbildēt"
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
-      create_pm: "Ziņa"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -2601,7 +2601,6 @@ lv:
         user_profile_menu: "%{shortcut} Atvērt lietotaja menu"
         show_incoming_updated_topics: "%{shortcut} Parādīt tēmas ar izmaiņām"
         help: "%{shortcut} Atvērt klaviatūras palīdzību"
-        dismiss_topics: "%{shortcut} Ignorēt tēmas"
         log_out: "%{shortcut} Iziet no foruma"
       actions:
         title: "Darbības"
@@ -2655,8 +2654,10 @@ lv:
     download_calendar:
       download: "Lejuplādēt"
     tagging:
+      selector_tags: "birkas"
       selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
+      selector_remove_filter: "noņemt filtru"
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
@@ -2809,6 +2810,9 @@ lv:
         remove_muted_tags_from_latest:
           always: "vienmēr"
           never: "nekad"
+      reports:
+        sidebar_link:
+          all: "Viss"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
@@ -2955,6 +2959,44 @@ lv:
           timestamp: "Izveidots"
           completion: "Pabeigšanas laiks"
           actions: "Darbības"
+      home:
+        title: "Mājas"
+      account:
+        title: "Konts"
+        sidebar_link:
+          backups: "Dublējums (Backups)"
+      community:
+        title: "Kopiena"
+        sidebar_link:
+          badges: "Žetoni"
+          notifications: "Paziņojumi"
+          permalinks: "Patstāvīgā saite"
+          trust_levels: "Uzticības Līmenis"
+          users: "Lietotāji"
+          user_fields: "Lietotāja lauki"
+          watched_words: "Vārdi, kas tiek novēroti"
+          legal: "Jurid."
+      appearance:
+        sidebar_link:
+          emoji: "Smaidiņi"
+          navigation: "Pārvietošanās"
+          themes: "Dizaini"
+      email_logs:
+        sidebar_link:
+          sent: "Nosūtne"
+          skipped: "Izlaists"
+          bounced: "Pārsūtīts"
+          received: "Saņemts"
+          rejected: "Noraidīts"
+      security:
+        title: "Drošība"
+        sidebar_link:
+          error_logs: "Kļūdu saraksts (log)"
+          screened_emails: "Pārbaudītie e-pasti"
+          screened_ips: "Pārbaudītās IP"
+          screened_urls: "Pārbaudītie URL"
+          security: "Drošība"
+          spam: "Spams"
       plugins:
         title: "Spraudņi"
         installed: "Uzinstalētie spraudņi"
@@ -2967,6 +3009,18 @@ lv:
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
         learn_more: "Uzzināt vairāk"
+        sidebar_link:
+          installed: "Uzinstalēts"
+      advanced:
+        sidebar_link:
+          developer: "Izstrādātājs"
+          embedding: "Ieguldīšana"
+          rate_limits: "(Rate Limits)"
+          user_api: "Lietotāja API"
+          onebox: "Onebox"
+          files: "Faili"
+          other_options: "Citi"
+          search: "Meklēt"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -2988,6 +3042,7 @@ lv:
           label: "Augšupielādēt"
           title: "Augšupielādēt rezerves kopiju uz šo instanci"
           error: "Augšupielādējot '%{filename}', notika kļūda: %{message}"
+        settings: "Iestatījumi"
         operations:
           failed: "%{operation} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."
           cancel:
@@ -3661,6 +3716,7 @@ lv:
         group: "Grupa"
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
+        settings: "Iestatījumi"
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Vai tiešām vēlies dzēst šo?"

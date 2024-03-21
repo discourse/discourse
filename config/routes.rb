@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
       get "" => "admin#index"
 
       get "plugins" => "plugins#index"
+      get "plugins/:plugin_id" => "plugins#show"
+      get "plugins/:plugin_id/settings" => "plugins#show"
 
       resources :site_settings, only: %i[index update], constraints: AdminConstraint.new do
         collection { get "category/:id" => "site_settings#index" }
@@ -231,6 +233,7 @@ Discourse::Application.routes.draw do
                 constraints: AdminConstraint.new do
         member do
           get "preview" => "themes#preview"
+          get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
         end
         collection do
@@ -322,6 +325,7 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
+      get "/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -1127,6 +1131,7 @@ Discourse::Application.routes.draw do
         # creating an alias cause the api was extended to mark a single notification
         # this allows us to cleanly target it
         put "read" => "notifications#mark_read"
+        get "totals" => "notifications#totals"
       end
     end
 

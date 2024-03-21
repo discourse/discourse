@@ -6,6 +6,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def value=(objects)
+    objects = JSON.parse(objects) if objects.is_a?(::String)
     ensure_is_valid_value!(objects)
     record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
     theme.reload

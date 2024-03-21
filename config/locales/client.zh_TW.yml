@@ -152,6 +152,7 @@ zh_TW:
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
       dismiss: "忽略"
+    back_button: "上一步"
     themes:
       default_description: "預設"
       broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
@@ -777,9 +778,11 @@ zh_TW:
       "14": "等待中"
       "15": "草稿"
     categories:
-      all: "所有分類"
-      all_subcategories: "所有"
-      no_subcategory: "無"
+      categories_label: "分類"
+      subcategories_label: "次分類"
+      remove_filter: "取消過濾"
+      plus_more_count: "+%{count} 更多"
+      view_all: "查看全部"
       category: "分類"
       category_list: "顯示分類列表"
       reorder:
@@ -1069,7 +1072,7 @@ zh_TW:
           name_required_error: "您必須提供安全金鑰名稱"
       passkeys:
         save: "保存"
-        added_prefix: "已新增"
+        added_date: "已新增 %{date}"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -1606,7 +1609,6 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
-      create_pm: "訊息"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -2705,7 +2707,6 @@ zh_TW:
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"
         help: "%{shortcut} 打開按鍵說明"
-        dismiss_topics: "%{shortcut} 解除話題提示"
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰寫中"
@@ -2761,8 +2762,10 @@ zh_TW:
     tagging:
       all_tags: "所有標記"
       other_tags: "其他標記"
+      selector_tags: "標記"
       selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
+      selector_remove_filter: "取消過濾"
       tags: "標記"
       choose_for_topic: "可選標籤"
       info: "資訊"
@@ -2980,6 +2983,9 @@ zh_TW:
           never: "永不"
       reports:
         title: "可見報告列表"
+        sidebar_title: "報告"
+        sidebar_link:
+          all: "全部"
       dashboard:
         title: "控制台"
         version: "版本"
@@ -3189,6 +3195,50 @@ zh_TW:
           timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
+      home:
+        title: "主頁"
+      account:
+        title: "帳號"
+        sidebar_link:
+          backups: "備份"
+      community:
+        title: "社群"
+        sidebar_link:
+          badges: "徽章"
+          notifications: "通知"
+          permalinks: "固定連結"
+          trust_levels: "信任等級"
+          users: "使用者"
+          user_fields: "使用者欄位"
+          watched_words: "已關注的文字"
+          legal: "法律"
+      appearance:
+        title: "外觀"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "導覽"
+          themes: "佈景主題"
+      email_settings:
+        sidebar_link:
+          appearance: "外觀"
+          preview_summary: "預覽文摘"
+      email_logs:
+        sidebar_link:
+          sent: "送出"
+          skipped: "跳過"
+          bounced: "退回"
+          received: "收到"
+          rejected: "拒絶"
+      security:
+        title: "安全性"
+        sidebar_link:
+          error_logs: "錯誤紀錄"
+          screened_emails: "過濾的電子郵件地址"
+          screened_ips: "過濾的 IP 位址"
+          screened_urls: "過濾的網址"
+          search_logs: "搜尋紀錄"
+          security: "安全性"
+          spam: "垃圾內容"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"
@@ -3202,6 +3252,19 @@ zh_TW:
         howto: "如何安裝外掛?"
         author: "作者 %{author}"
         learn_more: "了解更多"
+        sidebar_link:
+          installed: "已安裝"
+      advanced:
+        sidebar_link:
+          developer: "開發人員"
+          embedding: "嵌入"
+          rate_limits: "評等限制"
+          user_api: "使用者 API"
+          web_hooks: "Webhooks"
+          onebox: "單一框"
+          files: "檔案"
+          other_options: "其他"
+          search: "搜索"
       navigation_menu:
         sidebar: "側選單"
         legacy: "舊版"
@@ -3227,6 +3290,7 @@ zh_TW:
           title: "上傳備份"
           success: "%{filename}已成功上傳，該檔案正在被處理中，需花費幾分鐘才會顯示於列表。"
           error: "上載時發生問題： '%{filename}': %{message}"
+        settings: "設定"
         operations:
           failed: "%{operation} 執行失敗。請觀看紀錄。"
           cancel:
@@ -4152,6 +4216,7 @@ zh_TW:
         group: "群組"
         image: "圖片"
         delete_confirm: "你確定要刪除 :%{name}: emoji ?"
+        settings: "設定"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         confirm_delete: "你確定要刪除此主機？"

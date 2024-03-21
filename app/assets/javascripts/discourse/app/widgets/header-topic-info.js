@@ -142,7 +142,7 @@ export default createWidget("header-topic-info", {
         if (parentCategory) {
           if (
             this.siteSettings.max_category_nesting > 2 &&
-            !this.site.mobileView
+            this.site.desktopView
           ) {
             const grandParentCategory = parentCategory.get("parentCategory");
             if (grandParentCategory) {

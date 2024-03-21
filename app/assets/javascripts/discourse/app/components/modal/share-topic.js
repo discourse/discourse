@@ -49,7 +49,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   @afterRender
   _selectUrl() {
     const input = document.querySelector("input.invite-link");
-    if (input && !this.site.mobileView) {
+    if (input && this.site.desktopView) {
       // if the input is auto-focused on mobile, iOS requires two taps of the copy button
       input.setSelectionRange(0, this.url.length);
       input.focus();

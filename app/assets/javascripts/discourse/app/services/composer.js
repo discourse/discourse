@@ -206,7 +206,7 @@ export default class ComposerService extends Service {
 
   @observes("showPreview")
   showPreviewChanged() {
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.keyValueStore.set({
         key: "composer.showPreview",
         value: this.showPreview,
@@ -435,7 +435,7 @@ export default class ComposerService extends Service {
 
       return options.concat(
         customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption(option))
+          .map((option) => this._setupPopupMenuOption({ ...option }))
           .filter((o) => o)
       );
     }

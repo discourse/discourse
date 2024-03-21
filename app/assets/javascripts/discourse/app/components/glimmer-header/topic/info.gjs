@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -62,6 +62,10 @@ export default class Info extends Component {
     return participants.slice(0, this.maxExtraItems);
   }
 
+  get pmHref() {
+    return this.currentUser.pmPath(this.args.topic);
+  }
+
   @action
   jumpToTopPost(e) {
     e.preventDefault();
@@ -82,7 +86,7 @@ export default class Info extends Component {
             {{#if this.showPM}}
               <a
                 class="private-message-glyph-wrapper"
-                href={{fn this.currentUser.pmPath @topic}}
+                href={{this.pmHref}}
                 aria-label={{i18n "user.messages.inbox"}}
               >
                 {{icon "envelope" class="private-message-glyph"}}
@@ -125,7 +129,7 @@ export default class Info extends Component {
                   {{#if
                     (and
                       @topic.category.parentCategory.parentCategory
-                      (not this.site.mobileView)
+                      this.site.desktopView
                     )
                   }}
                     {{categoryLink

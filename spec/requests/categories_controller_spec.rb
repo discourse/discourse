@@ -314,6 +314,31 @@ RSpec.describe CategoriesController do
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
+    it "doesn't do more queries when more categories exist" do
+      SiteSetting.lazy_load_categories_groups = true
+      Theme.cache.clear
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      before_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      Theme.cache.clear
+
+      after_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      expect(after_queries.size).to eq(before_queries.size)
+    end
+
     it "does not result in N+1 queries problem with multiple topics" do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
@@ -1125,6 +1150,24 @@ RSpec.describe CategoriesController do
     before do
       SearchIndexer.enable
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
+    end
+
+    it "does not generate N+1 queries" do
+      # Set up custom fields
+      Site.preloaded_category_custom_fields << "bob"
+      category2.upsert_custom_fields("bob" => "marley")
+
+      # Warm up caches
+      get "/categories/search.json", params: { term: "Notfoo" }
+
+      queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
+
+      expect(queries.length).to eq(5)
+
+      expect(response.parsed_body["categories"].length).to eq(1)
+      expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
     end
 
     context "without include_ancestors" do

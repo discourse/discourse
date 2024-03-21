@@ -152,6 +152,7 @@ vi:
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
       dismiss: "Hủy bỏ"
+    back_button: "Quay lại"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -849,9 +850,12 @@ vi:
       "14": "Đang chờ xử lý"
       "15": "Nháp"
     categories:
-      all: "tất cả chuyên mục"
-      all_subcategories: "Tất cả"
-      no_subcategory: "không có gì"
+      categories_label: "danh mục"
+      subcategories_label: "phân loại phụ"
+      no_subcategories: "không có danh mục phụ"
+      remove_filter: "bỏ đièu kiện lọc"
+      plus_more_count: "+%{count} khác"
+      view_all: "xem tất cả"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
       reorder:
@@ -1181,8 +1185,6 @@ vi:
           name_required_error: "Bạn phải cung cấp tên cho khóa bảo mật của mình."
       passkeys:
         save: "Lưu lại"
-        added_prefix: "Đã thêm"
-        last_used_prefix: "Được sử dụng lần cuối"
       change_about:
         title: "Thay đổi thông tin về tôi"
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
@@ -1769,6 +1771,8 @@ vi:
     conditional_loading_section:
       loading: Đang tải…
     category_row:
+      subcategory_count:
+        other: "+ %{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
     select_kit:
@@ -1863,7 +1867,6 @@ vi:
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"
-      create_pm: "Tin nhắn"
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
@@ -3276,7 +3279,6 @@ vi:
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Tìm kiếm"
         help: "%{shortcut} Mở trợ giúp bàn phím"
-        dismiss_topics: "%{shortcut} Bỏ qua bài viết"
         log_out: "%{shortcut} Đăng xuất"
       composing:
         title: "Viết bài"
@@ -3365,8 +3367,10 @@ vi:
     tagging:
       all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
+      selector_tags: "thẻ"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
+      selector_remove_filter: "bỏ đièu kiện lọc"
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       choose_for_topic_required:
@@ -3632,6 +3636,9 @@ vi:
           never: "không bao giờ"
       reports:
         title: "Danh sách các báo cáo có sẵn"
+        sidebar_title: "Báo cáo"
+        sidebar_link:
+          all: "All"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
@@ -3962,6 +3969,50 @@ vi:
           timestamp: "Tạo bởi"
           completion: "Thời gian hoàn thành"
           actions: "Hành động"
+      home:
+        title: "Trang chủ"
+      account:
+        title: "Tài khoản"
+        sidebar_link:
+          backups: "Bản sao lưu"
+      community:
+        title: "Cộng đồng"
+        sidebar_link:
+          badges: "Huy hiệu"
+          notifications: "Thông báo"
+          permalinks: "Liên kết cố định"
+          trust_levels: "Độ tin tưởng"
+          users: "Thành viên"
+          user_fields: "Trường tài khoản"
+          watched_words: "Từ đã xem"
+          legal: "Legal"
+      appearance:
+        title: "Ngoại hình"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Điều hướng"
+          themes: "Themes"
+      email_settings:
+        sidebar_link:
+          appearance: "Ngoại hình"
+          preview_summary: "Xem trước tập san"
+      email_logs:
+        sidebar_link:
+          sent: "Đã gửi"
+          skipped: "Đã bỏ qua"
+          bounced: "Bị trả lại"
+          received: "Đã nhận"
+          rejected: "Từ chối"
+      security:
+        title: "Bảo mật"
+        sidebar_link:
+          error_logs: "Log lỗi"
+          screened_emails: "Screened Emails"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          search_logs: "Nhật ký tìm kiếm"
+          security: "Bảo mật"
+          spam: "Rác"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"
@@ -3975,6 +4026,20 @@ vi:
         howto: "Plugin cài như thế nào?"
         author: "Bởi %{author}"
         learn_more: "Tìm hiểu thêm"
+        sidebar_link:
+          installed: "Đã cài đặt"
+      advanced:
+        title: "Nâng cao"
+        sidebar_link:
+          developer: "Nhà phát triển"
+          embedding: "Nhúng"
+          rate_limits: "Rate Limits"
+          user_api: "API người dùng"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Tập tin"
+          other_options: "Khác"
+          search: "Tìm kiếm"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:
@@ -4003,6 +4068,7 @@ vi:
           uploading_progress: "Đang tải lên… %{progress}%"
           success: "'%{filename}' đã được tải lên thành công. Tệp hiện đang được xử lý và sẽ mất đến một phút để hiển thị trong danh sách."
           error: "Có lõi trong quá trình tải lên '%{filename}': %{message}"
+        settings: "Cài đặt"
         operations:
           failed: "%{operation} Thấy bại. Vui lòng xem log."
           cancel:
@@ -5069,6 +5135,7 @@ vi:
         image: "Hình ảnh"
         alt: "xem trước biểu tượng cảm xúc tùy chỉnh"
         delete_confirm: "Bạn có chắc chắn muốn xóa emoji :%{name}:?"
+        settings: "Cài đặt"
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"

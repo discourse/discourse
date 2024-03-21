@@ -206,6 +206,7 @@ lt:
     software_update_prompt:
       dismiss: "Praleisti"
     bootstrap_mode: "Darbo pradžia"
+    back_button: "Atgal"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
@@ -930,9 +931,11 @@ lt:
       "14": "Laukiama"
       "15": "Juodraščiai"
     categories:
-      all: "visos kategorijos"
-      all_subcategories: "visi"
-      no_subcategory: "nieko"
+      categories_label: "kategorijos"
+      subcategories_label: "subkategorijos"
+      no_subcategories: "nėra subkategorijų"
+      remove_filter: "išjungti filtrus"
+      plus_more_count: "+%{count} daugiau"
       category: "Kategorija"
       category_list: "Visos kategorijos"
       reorder:
@@ -1249,8 +1252,6 @@ lt:
           name_required_error: "Turite nurodyti saugos rakto pavadinimą."
       passkeys:
         save: "Išsaugoti"
-        added_prefix: "Pridėta"
-        last_used_prefix: "Paskutinis naudotas"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1816,6 +1817,11 @@ lt:
       alt: "Alt"
       enter: "Įeiti"
     category_row:
+      subcategory_count:
+        one: "+ %{count} subkategorija"
+        few: "+ %{count} subkategorijos"
+        many: "+ %{count} subkategorijos"
+        other: "+ %{count} subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -1899,7 +1905,6 @@ lt:
       reply: "Atsakyti"
       cancel: "Atšaukti"
       create_topic: "Sukurti Temą"
-      create_pm: "Žinutės"
       create_whisper: "Gandas"
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
@@ -3272,8 +3277,6 @@ lt:
         show_incoming_updated_topics: "%{shortcut} Rodyti atnaujintas temas"
         search: "%{shortcut} Ieškoti"
         help: "%{shortcut} Atidaryti klavieturos pagalbą"
-        dismiss_new: "%{shortcut} Atmesti naują"
-        dismiss_topics: "%{shortcut} Praleisti Temas"
         log_out: "%{shortcut} Atsijungti"
       composing:
         title: "Komponavimas"
@@ -3360,8 +3363,10 @@ lt:
       ics: "ICS"
     tagging:
       other_tags: "Kitos žymos"
+      selector_tags: "žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
+      selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
       info: "Informacija"
@@ -3597,6 +3602,9 @@ lt:
           never: "niekada"
       reports:
         title: "Galimų ataskaitų sąrašas"
+        sidebar_title: "Pranešimai"
+        sidebar_link:
+          all: "Visos"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -3850,6 +3858,49 @@ lt:
           timestamp: "Sukurta"
           completion: "Sukurimo laikas"
           actions: "Veiksmai"
+      home:
+        title: "Pradinis"
+      account:
+        title: "Paskyra"
+        sidebar_link:
+          backups: "Atsarginės kopijos"
+      community:
+        title: "Bendruomenė"
+        sidebar_link:
+          badges: "Trofėjai"
+          notifications: "Pranešimai"
+          permalinks: "Laikinos Nuorodos"
+          trust_levels: "Pasitikėjimo lygiai"
+          users: "Vartotojai"
+          user_fields: "Vartotojo laukeliai"
+          watched_words: "Peržiūrėti Žodžiai"
+          legal: "Naudojimosi taisyklės"
+      appearance:
+        title: "išvaizda"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+          themes: "Temos"
+      email_settings:
+        sidebar_link:
+          appearance: "išvaizda"
+          preview_summary: "Parodyti Santrauką"
+      email_logs:
+        sidebar_link:
+          sent: "Išsiųsti"
+          skipped: "Praleisti"
+          received: "Gauta"
+          rejected: "Atmesta"
+      security:
+        title: "Apsauga"
+        sidebar_link:
+          error_logs: "Klaidų įrašai"
+          screened_emails: "Tikrinti el. laiškai"
+          screened_ips: "Tikrinti IP adresai"
+          screened_urls: "Tikrintos nuorodos"
+          search_logs: "Paieškos žurnalas"
+          security: "Apsauga"
+          spam: "Šlamštas"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -3863,6 +3914,18 @@ lt:
         howto: "Kaip galiu instaliuoti plungin'us?"
         author: "Pagal %{author}"
         learn_more: "Sužinoti daugiau"
+        sidebar_link:
+          installed: "Įrašyta"
+      advanced:
+        sidebar_link:
+          developer: "Programuotojams"
+          embedding: "Įterpimai"
+          rate_limits: "Reitingo Limitai"
+          user_api: "Nario API"
+          onebox: "Laukelio nustatymai"
+          files: "Failai"
+          other_options: "Kiti"
+          search: "Paieška"
       backups:
         title: "Atsarginės kopijos"
         menu:
@@ -3885,6 +3948,7 @@ lt:
           title: "Įkelti atsarginę kopiją šiam atskiram atvejui"
           success: "“%{filename}” sėkmingai įkelta. Failas dabar yra apdorojamas ir užtruks iki minutės, kol pasirodys sąraše."
           error: "Įvyko klaida įkeliant '%{filename}': %{message}"
+        settings: "Nustatymai"
         operations:
           failed: "Įvyko klaida su %{operation}. Prašome patikrinti logaritmus."
           cancel:
@@ -4897,6 +4961,7 @@ lt:
         group: "Grupė"
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
+        settings: "Nustatymai"
       embedding:
         get_started: "Norėčiau pridėti Discourse prie kito puslapio. Pradėk tiesiog pridėdamas valdytoją."
         confirm_delete: "Ar tikrai nori ištrinti šį šeimininką?"

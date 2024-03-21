@@ -188,6 +188,7 @@ nl:
     software_update_prompt:
       dismiss: "Negeren"
     bootstrap_mode: "Aan de slag"
+    back_button: "Vorige"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je website werkt mogelijk niet, omdat het thema/onderdeel fouten bevat."
@@ -957,9 +958,12 @@ nl:
       "14": "Wachtend"
       "15": "Concepten"
     categories:
-      all: "alle categorieën"
-      all_subcategories: "alles"
-      no_subcategory: "geen"
+      categories_label: "categorieën"
+      subcategories_label: "subcategorieën"
+      no_subcategories: "geen subcategorieën"
+      remove_filter: "filter verwijderen"
+      plus_more_count: "+Nog %{count}"
+      view_all: "alle bekijken"
       category: "Categorie"
       category_list: "Categorieënlijst weergeven"
       reorder:
@@ -1428,8 +1432,7 @@ nl:
         save: "Opslaan"
         title: "Passkeys"
         short_description: "Passkeys zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
-        added_prefix: "Toegevoegd"
-        last_used_prefix: "Laatst gebruikt"
+        added_date: "%{date} toegevoegd"
         never_used: "Nooit gebruikt"
         not_allowed_error: "Er is een time-out opgetreden in het passkeyregistratieproces, het proces is geannuleerd of het is niet toegestaan."
         already_added_error: "Je hebt deze passkey al geregistreerd. Je hoeft deze niet opnieuw te registreren."
@@ -2121,6 +2124,9 @@ nl:
     conditional_loading_section:
       loading: Laden…
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategorie"
+        other: "+ %{count} subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
@@ -2245,7 +2251,6 @@ nl:
       reply: "Antwoorden"
       cancel: "Annuleren"
       create_topic: "Topic maken"
-      create_pm: "Bericht"
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
@@ -3889,8 +3894,6 @@ nl:
         show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics weergeven"
         search: "%{shortcut} Zoeken"
         help: "%{shortcut} Toetsenbordhulp openen"
-        dismiss_new: "%{shortcut} Nieuwe negeren"
-        dismiss_topics: "%{shortcut} Topics negeren"
         log_out: "%{shortcut} Afmelden"
       composing:
         title: "Opstellen"
@@ -3990,8 +3993,10 @@ nl:
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
+      selector_tags: "tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
+      selector_remove_filter: "filter verwijderen"
       tags: "Tags"
       choose_for_topic: "optionele tags"
       choose_for_topic_required:
@@ -4419,6 +4424,9 @@ nl:
       reports:
         title: "Lijst van beschikbare rapporten"
         meta_doc: "Bekijk onze <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentatie</a> voor een gedetailleerd overzicht van de rapporten."
+        sidebar_title: "Rapporten"
+        sidebar_link:
+          all: "Alles"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
@@ -4816,6 +4824,50 @@ nl:
           timestamp: "Gemaakt"
           completion: "Voltooiingstijd"
           actions: "Acties"
+      home:
+        title: "Start"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Back-ups"
+      community:
+        title: "Community"
+        sidebar_link:
+          badges: "Badges"
+          notifications: "Meldingen"
+          permalinks: "Permalinks"
+          trust_levels: "Vertrouwensniveaus"
+          users: "Gebruikers"
+          user_fields: "Gebruikersvelden"
+          watched_words: "Geobserveerde woorden"
+          legal: "Juridisch"
+      appearance:
+        title: "Vormgeving"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigatie"
+          themes: "Thema's"
+      email_settings:
+        sidebar_link:
+          appearance: "Vormgeving"
+          preview_summary: "Voorbeeld van samenvatting"
+      email_logs:
+        sidebar_link:
+          sent: "Verzonden"
+          skipped: "Overgeslagen"
+          bounced: "Gebouncet"
+          received: "Ontvangen"
+          rejected: "Geweigerd"
+      security:
+        title: "Beveiliging"
+        sidebar_link:
+          error_logs: "Foutenlogs"
+          screened_emails: "Gecontroleerde e-mails"
+          screened_ips: "Gecontroleerde IP-adressen"
+          screened_urls: "Gecontroleerde URL's"
+          search_logs: "Zoeken in logs"
+          security: "Beveiliging"
+          spam: "Spam"
       plugins:
         title: "Plug-ins"
         installed: "Geïnstalleerde plug-ins"
@@ -4832,6 +4884,20 @@ nl:
         author: "Van %{author}"
         experimental_badge: "experimenteel"
         learn_more: "Meer informatie"
+        sidebar_link:
+          installed: "Geïnstalleerd"
+      advanced:
+        title: "Geavanceerd"
+        sidebar_link:
+          developer: "Ontwikkelaar"
+          embedding: "Insluiting"
+          rate_limits: "Frequentielimieten"
+          user_api: "Gebruikers-API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Bestanden"
+          other_options: "Overig"
+          search: "Zoeken"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
@@ -4862,6 +4928,7 @@ nl:
           uploading_progress: "Uploaden… %{progress}%"
           success: "'%{filename}' is geüpload. Het bestand wordt nu verwerkt, het kan tot een minuut duren voordat het in de lijst wordt weergegeven."
           error: "Er is een fout opgetreden bij het uploaden van '%{filename}': %{message}"
+        settings: "Instellingen"
         operations:
           is_running: "Er wordt momenteel een bewerking uitgevoerd…"
           failed: "%{operation} mislukt. Controleer de logs."
@@ -6120,6 +6187,7 @@ nl:
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"
         delete_confirm: "Weet je zeker dat je de emoji :%{name}: wilt verwijderen?"
+        settings: "Instellingen"
       embedding:
         get_started: "Als je Discourse wilt insluiren op een andere website, begin dan door de host ervan toe te voegen."
         confirm_delete: "Weet je zeker dat je die host wilt verwijderen?"

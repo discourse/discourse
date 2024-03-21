@@ -6,6 +6,7 @@ import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
@@ -104,12 +105,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this.pxClosed = null;
     },
 
-    _isRTL() {
-      return document.querySelector("html").classList["direction"] === "rtl";
-    },
-
     _leftMenuClass() {
-      return this._isRTL() ? "user-menu" : "hamburger-panel";
+      return isDocumentRTL() ? "user-menu" : "hamburger-panel";
     },
 
     @bind

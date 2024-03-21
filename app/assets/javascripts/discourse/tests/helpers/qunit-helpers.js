@@ -1,9 +1,9 @@
 import { run } from "@ember/runloop";
 import {
-  fillIn,
   getApplication,
   settled,
   triggerKeyEvent,
+  typeIn,
 } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
@@ -32,6 +32,7 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -244,6 +245,7 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
+  resetAdminPluginConfigNav();
 }
 
 function cleanupCssGeneratorTags() {
@@ -610,14 +612,31 @@ export async function paste(element, text, otherClipboardData = {}) {
   return e;
 }
 
-export async function emulateAutocomplete(inputSelector, text) {
-  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-  await fillIn(inputSelector, `${text} `);
-  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+export async function simulateKey(element, key) {
+  if (key === "\b") {
+    await triggerKeyEvent(element, "keydown", "Backspace");
 
-  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-  await fillIn(inputSelector, text);
-  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+    const pos = element.selectionStart;
+    element.value = element.value.slice(0, pos - 1) + element.value.slice(pos);
+    element.selectionStart = pos - 1;
+    element.selectionEnd = pos - 1;
+
+    await triggerKeyEvent(element, "keyup", "Backspace");
+  } else if (key === "\t") {
+    await triggerKeyEvent(element, "keydown", "Tab");
+    await triggerKeyEvent(element, "keyup", "Tab");
+  } else if (key === "\r") {
+    await triggerKeyEvent(element, "keydown", "Enter");
+    await triggerKeyEvent(element, "keyup", "Enter");
+  } else {
+    await typeIn(element, key);
+  }
+}
+
+export async function simulateKeys(element, keys) {
+  for (let key of keys) {
+    await simulateKey(element, key);
+  }
 }
 
 // The order of attributes can vary in different browsers. When comparing

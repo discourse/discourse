@@ -158,6 +158,7 @@ export default function () {
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
+        this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
       }
     );
@@ -218,8 +219,16 @@ export default function () {
       { path: "/plugins", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
+        this.route("show", { path: "/:plugin_id" }, function () {
+          this.route("settings");
+        });
       }
     );
+
+    this.route("admin.whatsNew", {
+      path: "/whats-new",
+      resetNamespace: true,
+    });
   });
 
   // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`

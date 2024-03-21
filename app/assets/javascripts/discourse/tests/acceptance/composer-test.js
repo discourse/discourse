@@ -1394,3 +1394,48 @@ acceptance("Composer - current time", function (needs) {
     );
   });
 });
+
+acceptance("composer buttons API", function (needs) {
+  needs.user();
+  needs.settings({
+    allow_uncategorized_topics: true,
+  });
+
+  test("buttons can be added conditionally", async function (assert) {
+    withPluginApi("0", (api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: (toolbarEvent) => {
+          toolbarEvent.applySurround("**", "**");
+        },
+        icon: "far-bold",
+        label: "some_label",
+        condition: (composer) => {
+          return composer.model.creatingTopic;
+        },
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+
+    await click(".post-controls button.reply");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
+
+    const expectedName = "[en.some_label]";
+    const dropdown = selectKit(".toolbar-popup-menu-options");
+    await dropdown.expand();
+
+    assert.false(
+      dropdown.rowByName(expectedName).exists(),
+      "custom button is not displayed for reply"
+    );
+
+    await visit("/latest");
+    await click("#create-topic");
+
+    await dropdown.expand();
+    assert.true(
+      dropdown.rowByName(expectedName).exists(),
+      "custom button is displayed for new topic"
+    );
+  });
+});

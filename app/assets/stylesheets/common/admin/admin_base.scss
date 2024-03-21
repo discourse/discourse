@@ -1050,6 +1050,7 @@ a.inline-editable-field {
 @import "common/admin/badges";
 @import "common/admin/emails";
 @import "common/admin/json_schema_editor";
+@import "common/admin/schema_field";
 @import "common/admin/staff_logs";
 @import "common/admin/customize";
 @import "common/admin/customize-install-theme";
@@ -1067,6 +1068,8 @@ a.inline-editable-field {
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
 @import "common/admin/mini_profiler";
+@import "common/admin/schema_theme_setting_editor";
+@import "common/admin/customize_themes_show_schema";
 
 // EXPERIMENTAL: Revamped admin styles, probably can be split up later down the line.
 @import "common/admin/admin_revamp";

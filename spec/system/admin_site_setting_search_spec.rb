@@ -9,6 +9,23 @@ describe "Admin Site Setting Search", type: :system do
     sign_in(admin)
   end
 
+  it "clears the filter" do
+    settings_page.visit
+    settings_page.type_in_search("min personal message post length")
+    expect(settings_page).to have_n_results(1)
+    settings_page.clear_search
+    expect(settings_page).to have_greater_than_n_results(1)
+  end
+
+  it "can show only overridden settings" do
+    overridden_setting_count = SiteSetting.all_settings(only_overridden: true).length
+    settings_page.visit
+    settings_page.toggle_only_show_overridden
+    assert_selector(".admin-detail .row.setting.overridden", count: overridden_setting_count)
+    settings_page.toggle_only_show_overridden
+    expect(settings_page).to have_greater_than_n_results(overridden_setting_count)
+  end
+
   describe "when searching for keywords" do
     it "finds the associated site setting" do
       settings_page.visit

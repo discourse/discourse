@@ -1422,7 +1422,6 @@ nl:
     force_https_warning: "Je website gebruikt SSL, maar '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' is nog niet ingeschakeld in je website-instellingen."
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
-    watched_word_regexp_error: "De reguliere expressie voor '%{action}' geobserveerde woorden is ongeldig. Controleer je <a href='%{base_path}/admin/customize/watched_words'>instellingen voor geobserveerde woorden</a> of schakel de website-instelling 'reguliere expressies voor geobserveerde woorden' uit."
     v3_analytics_deprecated: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
     category_style_deprecated: "Je Discourse gebruikt op dit moment een verouderde categoriestijl die wordt verwijderd voorafgaand aan de definitieve bètaversie van Discourse 3.2. Zie <a href='https://meta.discourse.org/t/282441'>Overstappen op een website-instelling met één categoriestijl</a> voor instructies over hoe je de geselecteerde categoriestijl kunt behouden."
   site_settings:
@@ -1591,7 +1590,6 @@ nl:
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
-    content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-aanvallen tegengaan met Content Security Policy</a> (CSP)."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."

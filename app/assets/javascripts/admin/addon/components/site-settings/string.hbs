@@ -1,10 +1,15 @@
 {{#if this.setting.textarea}}
   <Textarea @value={{this.value}} class="input-setting-textarea" />
 {{else if this.isSecret}}
-  <Input @type="password" @value={{this.value}} class="input-setting-string" />
+  <Input
+    @type="password"
+    @value={{this.value}}
+    class="input-setting-string"
+    autocomplete="new-password"
+  />
 {{else}}
   <TextField @value={{this.value}} @classNames="input-setting-string" />
 {{/if}}
 
 <SettingValidationMessage @message={{this.validationMessage}} />
-<div class="desc">{{html-safe this.setting.description}}</div>
+<SiteSettings::Description @description={{this.setting.description}} />

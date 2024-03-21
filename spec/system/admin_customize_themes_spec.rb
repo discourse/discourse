@@ -84,31 +84,55 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
-  describe "when editing a theme setting of objects type" do
-    let(:objects_setting) do
+  describe "when editing theme translations" do
+    it "should allow admin to edit and save the theme translations" do
       theme.set_field(
-        target: :settings,
-        name: "yaml",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
       )
 
       theme.save!
-      theme.settings[:objects_setting]
-    end
 
-    before do
-      SiteSetting.experimental_objects_type_for_theme_settings = true
-      objects_setting
-    end
-
-    it "should allow admin to edit the theme setting of objecst type" do
       visit("/admin/customize/themes/#{theme.id}")
 
-      admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
 
-      expect(page).to have_current_path(
-        "/admin/customize/themes/#{theme.id}/schema/objects_setting",
+      theme_translations_settings_editor.fill_in("Hello World")
+      theme_translations_settings_editor.save
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
+    end
+
+    it "should allow admin to edit and save the theme translations from other languages" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
       )
+      theme.set_field(
+        target: :translations,
+        name: "fr",
+        value: { fr: { group: { hello: "Bonjour!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+
+      theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
+      theme_translations_picker.select_row_by_value("fr")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
+
+      theme_translations_settings_editor.fill_in("Hello World in French")
+      theme_translations_settings_editor.save
     end
   end
 end

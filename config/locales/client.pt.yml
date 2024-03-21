@@ -185,6 +185,7 @@ pt:
     software_update_prompt:
       dismiss: "Marcar como visto"
     bootstrap_mode: "Primeiros passos"
+    back_button: "Retroceder"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -918,9 +919,11 @@ pt:
       "14": "Pendente"
       "15": "Rascunhos"
     categories:
-      all: "todas as categorias"
-      all_subcategories: "todos"
-      no_subcategory: "nenhuma"
+      categories_label: "categorias"
+      subcategories_label: "subcategorias"
+      no_subcategories: "sem subcategorias"
+      remove_filter: "remover filtro"
+      plus_more_count: "+%{count} mais"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
       reorder:
@@ -1262,8 +1265,6 @@ pt:
           name_required_error: "Tem de fornecer um nome para a sua chave de segurança."
       passkeys:
         save: "Guardar"
-        added_prefix: "Adicionado(a)"
-        last_used_prefix: "Último Uso"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1839,6 +1840,9 @@ pt:
     conditional_loading_section:
       loading: A carregar...
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategoria"
+        other: "+ %{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -1929,7 +1933,6 @@ pt:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
-      create_pm: "Mensagem"
       create_whisper: "Sussurro"
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
@@ -3255,8 +3258,6 @@ pt:
         show_incoming_updated_topics: "%{shortcut} Mostrar tópicos atualizados"
         search: "%{shortcut} Pesquisar"
         help: "%{shortcut} Abrir ajuda do teclado"
-        dismiss_new: "%{shortcut} Dispensar Novo"
-        dismiss_topics: "%{shortcut} Marcar Visto Tópicos"
         log_out: "%{shortcut} Sair"
       composing:
         title: "Composição"
@@ -3335,8 +3336,10 @@ pt:
       add_to_calendar: "Adicionar ao calendário"
     tagging:
       other_tags: "Outras Tags"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
+      selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
       choose_for_topic: "tags opcionais"
       info: "Informações"
@@ -3557,6 +3560,9 @@ pt:
           never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
+        sidebar_title: "Relatórios"
+        sidebar_link:
+          all: "Tudo"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3813,6 +3819,50 @@ pt:
           timestamp: "Criado"
           completion: "Tempo de Resposta"
           actions: "Ações"
+      home:
+        title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Fazer Cópias de Segurança"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Crachás"
+          notifications: "Notificações"
+          permalinks: "Hiperligações Permanentes"
+          trust_levels: "Níveis de Confiança"
+          users: "Utilizadores"
+          user_fields: "Campos de utilizador"
+          watched_words: "Palavras Vigiadas"
+          legal: "Legal"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegação"
+          themes: "Temas"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparência"
+          preview_summary: "Pré-visualizar Resumo"
+      email_logs:
+        sidebar_link:
+          sent: "Enviado"
+          skipped: "Ignorado"
+          bounced: "Redirecionado"
+          received: "Recebido"
+          rejected: "Rejeitado"
+      security:
+        title: "Segurança"
+        sidebar_link:
+          error_logs: "Registo de Erros em Logs"
+          screened_emails: "Emails Filtrados"
+          screened_ips: "IPs Filtrados"
+          screened_urls: "URLs Filtrados"
+          search_logs: "Logs de Pesquisa"
+          security: "Segurança"
+          spam: "Spam"
       plugins:
         title: "Plugins"
         installed: "Plugins Instalados"
@@ -3826,6 +3876,19 @@ pt:
         howto: "Como instalo plugins?"
         author: "Por %{author}"
         learn_more: "Saiba mais"
+        sidebar_link:
+          installed: "Instalado"
+      advanced:
+        sidebar_link:
+          developer: "Desenvolvedor"
+          embedding: "Incorporação"
+          rate_limits: "Limites de Classificação"
+          user_api: "API de Utlizador"
+          web_hooks: "Webhooks"
+          onebox: "Caixa Única"
+          files: "Ficheiros"
+          other_options: "Outro"
+          search: "Pesquisar"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:
@@ -3851,6 +3914,7 @@ pt:
           uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
           error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
+        settings: "Configurações"
         operations:
           failed: "A %{operation} falhou. Por favor verifique o registo dos logs."
           cancel:
@@ -4701,6 +4765,7 @@ pt:
         group: "Grupo"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
+        settings: "Configurações"
       embedding:
         get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
         confirm_delete: "Tem certeza que deseja eliminar este servidor?"

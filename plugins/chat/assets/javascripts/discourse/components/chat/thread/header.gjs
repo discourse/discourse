@@ -20,11 +20,7 @@ export default class ChatThreadHeader extends Component {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
       models = this.channel?.routeModels;
-    } else if (prevPage === "chat.channel.index" && !this.site.mobileView) {
-      route = "chat.channel.threads";
-      title = I18n.t("chat.return_to_threads_list");
-      models = this.channel?.routeModels;
-    } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
+    } else if (prevPage === "chat.channel.index" && this.site.desktopView) {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
       models = this.channel?.routeModels;
@@ -32,6 +28,10 @@ export default class ChatThreadHeader extends Component {
       route = "chat.threads";
       title = I18n.t("chat.my_threads.title");
       models = [];
+    } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
+      route = "chat.channel.threads";
+      title = I18n.t("chat.return_to_threads_list");
+      models = this.channel?.routeModels;
     } else {
       route = "chat.channel.index";
       title = I18n.t("chat.return_to_channel");
@@ -53,6 +53,12 @@ export default class ChatThreadHeader extends Component {
     return this.channel?.threadsManager?.unreadThreadCount;
   }
 
+  get showThreadUnreadIndicator() {
+    return (
+      this.backLink.route === "chat.channel.threads" && this.unreadCount > 0
+    );
+  }
+
   <template>
     <Navbar @showFullTitle={{@showFullTitle}} as |navbar|>
       {{#if (and this.channel.threadingEnabled @thread)}}
@@ -61,7 +67,9 @@ export default class ChatThreadHeader extends Component {
           @routeModels={{this.backLink.models}}
           @title={{this.backLink.title}}
         >
-          <ChatThreadHeaderUnreadIndicator @channel={{this.channel}} />
+          {{#if this.showThreadUnreadIndicator}}
+            <ChatThreadHeaderUnreadIndicator @channel={{this.channel}} />
+          {{/if}}
           {{icon "chevron-left"}}
         </navbar.BackButton>
       {{/if}}

@@ -57,13 +57,13 @@
             {{/if}}
           </div>
 
-          {{#unless this.site.mobileView}}
+          {{#if this.site.desktopView}}
             <TimezoneInput
               @options={{hash icon="globe"}}
               @value={{this.timezone}}
               @onChange={{fn (mut this.timezone)}}
             />
-          {{/unless}}
+          {{/if}}
         </div>
 
         <div class="picker-panel">

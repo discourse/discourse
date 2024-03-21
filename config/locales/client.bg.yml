@@ -187,6 +187,7 @@ bg:
     software_update_prompt:
       dismiss: "Отмени"
     bootstrap_mode: "Първи стъпки"
+    back_button: "Назад"
     themes:
       default_description: "По подразбиране"
       broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
@@ -917,9 +918,10 @@ bg:
       "14": "Чакащи"
       "15": "Чернови"
     categories:
-      all: "всички категории"
-      all_subcategories: "всички подкатегории"
-      no_subcategory: "без подкатегория"
+      categories_label: "категории"
+      subcategories_label: "подкатегории"
+      remove_filter: "премахни филтъра"
+      plus_more_count: "+още %{count}"
       category: "Категории"
       category_list: "Покажи списък с категориите"
       reorder:
@@ -1373,7 +1375,7 @@ bg:
           name_required_error: "Трябва да посочите име за вашия ключ за сигурност."
       passkeys:
         save: "Запази "
-        added_prefix: "Добавено"
+        added_date: "Добавен %{date}"
       change_about:
         title: "Смяна на За мен"
         error: "Имаше грешка при промяна на тази стойност."
@@ -2012,6 +2014,9 @@ bg:
       alt: "Alt"
       enter: "Въведете"
     category_row:
+      subcategory_count:
+        one: "+ %{count} подкатегория"
+        other: "+ %{count} подкатегории"
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
@@ -2107,7 +2112,6 @@ bg:
       reply: "Отговорете"
       cancel: "Прекрати"
       create_topic: "Създай тема"
-      create_pm: "Съобщение"
       create_whisper: "Шепот"
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
@@ -3227,7 +3231,6 @@ bg:
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
         search: "%{shortcut} Отписване"
         help: "%{shortcut} Помощ с клавиатурата "
-        dismiss_topics: "%{shortcut} Отхвърляне на темите"
         log_out: "%{shortcut} Отписване"
       composing:
         title: "Съставяне"
@@ -3276,8 +3279,10 @@ bg:
       download: "Изтегли"
     tagging:
       other_tags: "Други тагове"
+      selector_tags: "тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
+      selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
       choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
@@ -3443,6 +3448,9 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
+      reports:
+        sidebar_link:
+          all: "Всички"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3558,6 +3566,46 @@ bg:
           body: "Тяло"
           timestamp: "Създадени"
           actions: "Действия"
+      home:
+        title: "Начало"
+      account:
+        title: "Профил"
+        sidebar_link:
+          backups: "Бекъпи"
+      community:
+        title: "Общност "
+        sidebar_link:
+          badges: "Значки"
+          notifications: "Известия"
+          permalinks: "Постоянни адреси"
+          trust_levels: "Нива на доверие"
+          users: "Потребители"
+          user_fields: "User Fields"
+          watched_words: "Наблюдавани думи"
+          legal: "Правни"
+      appearance:
+        sidebar_link:
+          emoji: "Емотикони"
+          navigation: "Навигация"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Преглед на справочника"
+      email_logs:
+        sidebar_link:
+          sent: "Изпрати"
+          skipped: "Пропусни"
+          received: "Получени"
+          rejected: "Отхвърлени"
+      security:
+        title: "Сигурност"
+        sidebar_link:
+          error_logs: "Логове с грешки"
+          screened_emails: "Проверени имейли"
+          screened_ips: "Проверени IP-та"
+          screened_urls: "Проверени URL-та"
+          search_logs: "Търсене в логовете"
+          security: "Сигурност"
+          spam: "Спам"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"
@@ -3571,6 +3619,17 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
+        sidebar_link:
+          installed: "Инсталирани"
+      advanced:
+        sidebar_link:
+          developer: "Разработчик"
+          embedding: "Ембедване"
+          rate_limits: "Лимити"
+          onebox: "Onebox"
+          files: "Файлове"
+          other_options: "Други"
+          search: "Търсене"
       navigation_menu:
         sidebar: "Странична лента"
       backups:
@@ -3594,6 +3653,7 @@ bg:
           label: "Качи"
           title: "Качи бекъп за тази инстанция"
           error: "Появи се грешка при качването на '%{filename}': %{message}"
+        settings: "Настройки"
         operations:
           failed: "Задачата се провали. Моля проверете логовете."
           cancel:
@@ -4315,6 +4375,7 @@ bg:
         group: "Група"
         image: "Изображение "
         delete_confirm: "Сигурни ли сте че искате да изтриете тази :%{name}% емотикона? "
+        settings: "Настройки"
       embedding:
         get_started: "Ако искате да внедрите Discourse в друг сайт, започнете с добавянето на хоста му."
         confirm_delete: "Сигурни ли сте, че искате да изтриете този хост?"

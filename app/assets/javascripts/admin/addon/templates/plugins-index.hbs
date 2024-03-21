@@ -1,20 +1,22 @@
-{{#if this.model.length}}
-  <h3>{{i18n "admin.plugins.installed"}}</h3>
-  <AdminPluginsList @plugins={{this.model}} />
-{{else}}
-  <p>{{i18n "admin.plugins.none_installed"}}</p>
-{{/if}}
+<div class="admin-plugins-list-container">
+  {{#if this.model.length}}
+    <h2>{{i18n "admin.plugins.installed"}}</h2>
+    <AdminPluginsList @plugins={{this.model}} />
+  {{else}}
+    <p>{{i18n "admin.plugins.none_installed"}}</p>
+  {{/if}}
 
-<p class="admin-plugins-howto">
-  <a href="https://meta.discourse.org/t/install-a-plugin/19157">
-    {{i18n "admin.plugins.howto"}}
-  </a>
-</p>
+  <p class="admin-plugins-howto">
+    <a href="https://meta.discourse.org/t/install-a-plugin/19157">
+      {{i18n "admin.plugins.howto"}}
+    </a>
+  </p>
 
-<span>
-  <PluginOutlet
-    @name="admin-below-plugins-index"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model}}
-  />
-</span>
+  <span>
+    <PluginOutlet
+      @name="admin-below-plugins-index"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+  </span>
+</div>

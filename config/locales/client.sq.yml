@@ -134,6 +134,7 @@ sq:
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
+    back_button: "Kthehu mbrapa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -453,9 +454,10 @@ sq:
       "13": "Inbox"
       "14": "Në pritje"
     categories:
-      all: "kategoritë"
-      all_subcategories: "të gjitha"
-      no_subcategory: "asnjë"
+      categories_label: "categories"
+      subcategories_label: "nënkategori"
+      remove_filter: "hiq filtrin"
+      plus_more_count: "+%{count} tjetër"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
       reorder:
@@ -1012,7 +1014,6 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
-      create_pm: "Mesazh"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
@@ -1783,7 +1784,6 @@ sq:
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
         help: "%{shortcut} Trego shkurtimet e tastierës"
-        dismiss_topics: "%{shortcut} Hiq temat"
         log_out: "%{shortcut} Shkëputu"
       actions:
         title: "Veprimet"
@@ -1834,8 +1834,10 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
+      selector_tags: "etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
+      selector_remove_filter: "hiq filtrin"
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
@@ -1977,6 +1979,9 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      reports:
+        sidebar_link:
+          all: "Të Gjithë"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -2085,6 +2090,44 @@ sq:
           body: "Trupi"
           timestamp: "Krijuar"
           actions: "Veprimet"
+      home:
+        title: "Kryefaqja"
+      account:
+        title: "Llogaria"
+        sidebar_link:
+          backups: "Rezervat"
+      community:
+        title: "Komuniteti"
+        sidebar_link:
+          badges: "Stemat"
+          notifications: "Njoftimet"
+          permalinks: "Permalinks"
+          trust_levels: "Nivelet e besimit"
+          users: "Users"
+          user_fields: "Fushat e përdoruesit"
+          legal: "Legale"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Shfletimi"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Parashiko emailin përmbledhës"
+      email_logs:
+        sidebar_link:
+          sent: "Dërguar"
+          skipped: "Skipped"
+          received: "Marrë"
+          rejected: "Rejected"
+      security:
+        title: "Siguria"
+        sidebar_link:
+          error_logs: "Ditar Gabimesh"
+          screened_emails: "Kontroll Email-ash"
+          screened_ips: "Kontroll IP-sh"
+          screened_urls: "Kontroll URL-sh"
+          security: "Siguria"
+          spam: "Spam"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"
@@ -2098,6 +2141,19 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
+        sidebar_link:
+          installed: "Instaluar"
+      advanced:
+        sidebar_link:
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Kufizimet"
+          user_api: "API e përdoruesit"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Skedarë"
+          other_options: "Të tjerë"
+          search: "Kërko"
       backups:
         title: "Rezervat"
         menu:
@@ -2119,6 +2175,7 @@ sq:
           label: "Ngarko"
           title: "Upload a backup to this instance"
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Rregullimet"
         operations:
           failed: "The %{operation} failed. Please check the logs."
           cancel:
@@ -2754,6 +2811,7 @@ sq:
         group: "Grupi"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+        settings: "Rregullimet"
       embedding:
         title: "Embedding"
         edit: "redakto"

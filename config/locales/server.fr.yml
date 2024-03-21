@@ -1423,7 +1423,6 @@ fr:
     force_https_warning: "Votre site Web utilise SSL. Mais l'option « <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a> » n'est pas encore activée dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
-    watched_word_regexp_error: "L'expression régulière pour détecter des mots suivis et déclencher l'action « %{action} » n'est pas valide. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des mots surveillés</a> ou désactiver le paramètre « watched words regular expressions »."
     v3_analytics_deprecated: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
     category_style_deprecated: "Votre Discourse utilise actuellement un style de catégorie obsolète qui sera supprimé avant la version bêta finale de Discourse 3.2. Veuillez vous référer à <a href='https://meta.discourse.org/t/282441'>Passage à un paramètre de site de style de catégorie unique</a> pour obtenir des instructions sur la façon de conserver le style de catégorie sélectionné."
   site_settings:
@@ -1592,7 +1591,6 @@ fr:
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Activer la collecte des rapports de violation CSP sur la page /csp_reports"
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
-    content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS avec Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."

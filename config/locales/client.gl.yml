@@ -156,6 +156,7 @@ gl:
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
+    back_button: "Volver"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -810,9 +811,12 @@ gl:
       "14": "Pendente"
       "15": "Borradores"
     categories:
-      all: "todas as categorías"
-      all_subcategories: "todo"
-      no_subcategory: "ningunha"
+      categories_label: "categorías"
+      subcategories_label: "subcategorías"
+      no_subcategories: "sen subcategorías"
+      remove_filter: "eliminar filtro"
+      plus_more_count: "+%{count} máis"
+      view_all: "ver todos"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
       reorder:
@@ -1129,8 +1133,6 @@ gl:
           name_required_error: "Debe escribir un nome para a clave de seguranza."
       passkeys:
         save: "Gardar"
-        added_prefix: "Engadido"
-        last_used_prefix: "Último utilizado"
       change_about:
         title: "Cambiar «Verbo de min»"
         error: "Produciuse un erro ao cambiar este valor."
@@ -1682,6 +1684,9 @@ gl:
       alt: "Alt"
       enter: "Intro"
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategoría"
+        other: "+ %{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -1770,7 +1775,6 @@ gl:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
-      create_pm: "Mensaxe"
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
@@ -3071,7 +3075,6 @@ gl:
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir a axuda do teclado"
-        dismiss_topics: "%{shortcut} Desbotar temas"
         log_out: "%{shortcut} Saír da sesión"
       composing:
         title: "Escribindo"
@@ -3147,8 +3150,10 @@ gl:
       download: "Descargar"
     tagging:
       other_tags: "Outras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
+      selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
@@ -3367,6 +3372,9 @@ gl:
           never: "nunca"
       reports:
         title: "Listaxe dos informes dispoñíbeis"
+        sidebar_title: "Informes"
+        sidebar_link:
+          all: "Todas"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3632,6 +3640,50 @@ gl:
           timestamp: "Creado"
           completion: "Tempo para completar"
           actions: "Accións"
+      home:
+        title: "Inicio"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Copias de seguranza"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Insignias"
+          notifications: "Notificacións"
+          permalinks: "Ligazóns permanentes"
+          trust_levels: "Niveis de confianza"
+          users: "Usuarios"
+          user_fields: "Campos do usuario"
+          watched_words: "Palabras observadas"
+          legal: "Legal"
+      appearance:
+        title: "Aparencia"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes: "Temas"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparencia"
+          preview_summary: "Visualización do compendio"
+      email_logs:
+        sidebar_link:
+          sent: "Enviada"
+          skipped: "Saltada"
+          bounced: "Rebotada"
+          received: "Recibidas"
+          rejected: "Rexeitada"
+      security:
+        title: "Seguranza"
+        sidebar_link:
+          error_logs: "Rexistros de erros"
+          screened_emails: "Correos controlados"
+          screened_ips: "IP controlados"
+          screened_urls: "URL controlados"
+          search_logs: "Buscar rexistros"
+          security: "Seguranza"
+          spam: "Lixo"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"
@@ -3645,6 +3697,19 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        sidebar_link:
+          installed: "Instalado"
+      advanced:
+        sidebar_link:
+          developer: "Desenvolvedor"
+          embedding: "Incorporando"
+          rate_limits: "Límites de frecuencia"
+          user_api: "API de usuario"
+          web_hooks: "Enganches de web (webhooks)"
+          onebox: "Onebox"
+          files: "Ficheiros"
+          other_options: "Outro"
+          search: "Buscar"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3667,6 +3732,7 @@ gl:
           title: "Cargar unha copia de seguranza a esta instancia"
           success: "Cargouse correctamente «%{filename}». O ficheiro está agora sendo procesado e tardará ata un minuto en aparecer na lista."
           error: "Produciuse un erro durante a carga de «%{filename}»: %{message}"
+        settings: "Configuración"
         operations:
           failed: "Produciuse un fallo %{operation} . Revisa os rexistros."
           cancel:
@@ -4731,6 +4797,7 @@ gl:
         image: "Imaxe"
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"
+        settings: "Configuración"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         confirm_delete: "Confirma a eliminación deste servidor?"

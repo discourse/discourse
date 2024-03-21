@@ -11,7 +11,7 @@ module PageObjects
             I18n.t("js.filters.new.title_with_count", count: count)
           end
 
-        has_css?(".nav-item_new", text: text)
+        has_css?(".nav-item_new", exact_text: text)
       end
 
       def has_unread?(count:)
@@ -22,7 +22,7 @@ module PageObjects
             I18n.t("js.filters.unread.title_with_count", count: count)
           end
 
-        has_css?(".nav-item_unread", text: text)
+        has_css?(".nav-item_unread", exact_text: text)
       end
 
       def dismiss_unread(untrack: false)
@@ -34,6 +34,11 @@ module PageObjects
 
       def dismiss_new
         click_button("dismiss-new-top")
+        self
+      end
+
+      def click_latest
+        find(".nav-item_latest").click
         self
       end
     end

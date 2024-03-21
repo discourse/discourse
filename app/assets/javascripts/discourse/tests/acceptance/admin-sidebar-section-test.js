@@ -1,9 +1,13 @@
-import { visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
@@ -13,10 +17,14 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    PreloadStore.store("enabledPluginAdminRoutes", [
+    PreloadStore.store("visiblePlugins", [
       {
-        location: "index",
-        label: "admin.plugins.title",
+        name: "plugin title",
+        admin_route: {
+          location: "index",
+          label: "admin.plugins.title",
+          enabled: true,
+        },
       },
     ]);
   });
@@ -29,30 +37,52 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       "root section is displayed"
     );
     assert.ok(
+      exists(".sidebar-section[data-section-name='admin-nav-section-account']"),
+      "account section is displayed"
+    );
+    assert.ok(
+      exists(".sidebar-section[data-section-name='admin-nav-section-reports']"),
+      "reports section is displayed"
+    );
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='admin-nav-section-community']"
+      ),
+      "community section is displayed"
+    );
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='admin-nav-section-appearance']"
+      ),
+      "appearance section is displayed"
+    );
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='admin-nav-section-email_settings']"
+      ),
+      "email settings section is displayed"
+    );
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='admin-nav-section-email_logs']"
+      ),
+      "email logs settings section is displayed"
+    );
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='admin-nav-section-security']"
+      ),
+      "security settings section is displayed"
+    );
+    assert.ok(
       exists(".sidebar-section[data-section-name='admin-nav-section-plugins']"),
       "plugins section is displayed"
     );
     assert.ok(
-      exists(".sidebar-section[data-section-name='admin-nav-section-email']"),
-      "email section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-nav-section-logs']"),
-      "logs section is displayed"
-    );
-    assert.ok(
       exists(
-        ".sidebar-section[data-section-name='admin-nav-section-customize']"
+        ".sidebar-section[data-section-name='admin-nav-section-advanced']"
       ),
-      "customize section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-nav-section-api']"),
-      "api section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-nav-section-backups']"),
-      "backups section is displayed"
+      "advanced section is displayed"
     );
   });
 
@@ -61,9 +91,39 @@ acceptance("Admin Sidebar - Sections", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_plugin_index\"]"
+        ".sidebar-section[data-section-name='admin-nav-section-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_installed_plugins\"]"
       ),
       "the admin plugin route is added to the plugins section"
+    );
+  });
+
+  test("Visit reports page", async function (assert) {
+    await visit("/admin");
+    await click(".sidebar-section-link[data-link-name='admin_all_reports']");
+
+    assert.strictEqual(count(".admin-reports-list__report"), 1);
+
+    await fillIn(".admin-reports-header__filter", "flags");
+
+    assert.strictEqual(count(".admin-reports-list__report"), 0);
+
+    await click(
+      ".sidebar-section-link[data-link-name='admin_about_your_site']"
+    );
+    await click(".sidebar-section-link[data-link-name='admin_all_reports']");
+
+    assert.strictEqual(
+      count(".admin-reports-list__report"),
+      1,
+      "navigating back and forth resets filter"
+    );
+
+    await fillIn(".admin-reports-header__filter", "activities");
+
+    assert.strictEqual(
+      count(".admin-reports-list__report"),
+      1,
+      "filter is case insensitive"
     );
   });
 });

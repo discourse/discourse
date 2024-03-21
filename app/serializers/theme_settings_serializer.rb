@@ -6,6 +6,7 @@ class ThemeSettingsSerializer < ApplicationSerializer
              :default,
              :value,
              :description,
+             :objects_schema_property_descriptions,
              :valid_values,
              :list_type,
              :textarea,
@@ -29,13 +30,29 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def description
+    description_regexp = /^theme_metadata\.settings\.#{setting}(\.description)?$/
+
     locale_file_description =
-      object
-        .theme
-        .internal_translations
-        .find { |t| t.key == "theme_metadata.settings.#{setting}" }
-        &.value
+      object.theme.internal_translations.find { |t| t.key.match?(description_regexp) }&.value
+
     locale_file_description || object.description
+  end
+
+  def objects_schema_property_descriptions
+    locales = {}
+    key = "theme_metadata.settings.#{setting}.schema.properties."
+
+    object.theme.internal_translations.each do |internal_translation|
+      if internal_translation.key.start_with?(key)
+        locales[internal_translation.key.delete_prefix(key)] = internal_translation.value
+      end
+    end
+
+    locales
+  end
+
+  def include_objects_schema_property_descriptions?
+    include_objects_schema?
   end
 
   def valid_values

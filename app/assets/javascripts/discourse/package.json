@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@glimmer/syntax": "^0.88.1",
+    "@glimmer/syntax": "^0.89.0",
     "@highlightjs/cdn-assets": "^11.9.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
@@ -28,8 +28,8 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@babel/standalone": "^7.24.0",
+    "@babel/core": "^7.24.3",
+    "@babel/standalone": "^7.24.3",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -104,15 +104,15 @@
     "pretender": "^3.4.7",
     "qunit": "^2.20.1",
     "qunit-dom": "^3.0.0",
-    "sass": "^1.71.1",
+    "sass": "^1.72.0",
     "select-kit": "1.0.0",
     "sinon": "^17.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.29.1",
+    "terser": "^5.29.2",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.90.3",
+    "webpack": "^5.91.0",
     "webpack-stats-plugin": "^1.1.3",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",

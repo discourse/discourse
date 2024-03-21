@@ -162,6 +162,7 @@ ca:
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
       dismiss: "Descarta-ho"
+    back_button: "Enrere"
     themes:
       default_description: "Per defecte"
     s3:
@@ -772,9 +773,11 @@ ca:
       "14": "Pendents"
       "15": "Esborranys"
     categories:
-      all: "totes les categories"
-      all_subcategories: "tots"
-      no_subcategory: "cap"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      remove_filter: "elimina filtre"
+      plus_more_count: "+%{count} més"
+      view_all: "mostra-ho tot"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
       reorder:
@@ -1033,8 +1036,6 @@ ca:
           save: "Desa"
       passkeys:
         save: "Desa"
-        added_prefix: "Afegit"
-        last_used_prefix: "Darrer utilitzat"
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -1572,7 +1573,6 @@ ca:
       reply: "Respon"
       cancel: "Cancel·la"
       create_topic: "Crea un tema"
-      create_pm: "Missatge"
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
@@ -2691,7 +2691,6 @@ ca:
         show_incoming_updated_topics: "%{shortcut} Mostra temes actualitzats"
         search: "%{shortcut} Cerca"
         help: "%{shortcut} Obre l'ajuda de teclat"
-        dismiss_topics: "%{shortcut} Descarta temes"
         log_out: "%{shortcut} Tanca la sessió"
       composing:
         title: "Redactant"
@@ -2749,8 +2748,10 @@ ca:
       download: "Descarrega"
     tagging:
       other_tags: "Altres etiquetes"
+      selector_tags: "etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
+      selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
       choose_for_topic: "etiquetes opcionals"
       add_synonyms: "Afegeix"
@@ -2931,6 +2932,9 @@ ca:
           never: "mai"
       reports:
         title: "Llista de reports disponibles"
+        sidebar_title: "Reports"
+        sidebar_link:
+          all: "Tot"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3160,6 +3164,50 @@ ca:
           timestamp: "Creat"
           completion: "Temps de finalització"
           actions: "Accions"
+      home:
+        title: "Pàgina principal"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Còpies de seguretat"
+      community:
+        title: "Comunitat"
+        sidebar_link:
+          badges: "Insígnies"
+          notifications: "Notificacions"
+          permalinks: "Enllaços permanents"
+          trust_levels: "Nivells de confiança"
+          users: "Usuaris"
+          user_fields: "Camps d'usuari"
+          watched_words: "Paraules vigilades"
+          legal: "Legal"
+      appearance:
+        title: "Aparença"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegació"
+          themes: "Aparences"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparença"
+          preview_summary: "Previsualitza el resum"
+      email_logs:
+        sidebar_link:
+          sent: "Enviat"
+          skipped: "Saltat"
+          bounced: "Rebotat"
+          received: "Rebut"
+          rejected: "Rebutjat"
+      security:
+        title: "Seguretat"
+        sidebar_link:
+          error_logs: "Error de registres (logs)"
+          screened_emails: "Correus sota supervisió"
+          screened_ips: "IPs sota supervisió"
+          screened_urls: "URLs sota supervisió"
+          search_logs: "Cerca els registres (logs)"
+          security: "Seguretat"
+          spam: "Brossa"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"
@@ -3173,6 +3221,19 @@ ca:
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
         learn_more: "Per a saber-ne més"
+        sidebar_link:
+          installed: "Instal·lat"
+      advanced:
+        sidebar_link:
+          developer: "Desenvolupador"
+          embedding: "Incrustant"
+          rate_limits: "Límits de freqüència"
+          user_api: "API d'usuari"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Fitxers"
+          other_options: "Altres"
+          search: "Cerca"
       backups:
         title: "Còpies de seguretat"
         menu:
@@ -3195,6 +3256,7 @@ ca:
           title: "Carrega una còpia de seguretat a aquesta instància"
           success: "%{filename} s'ha carregat amb èxit. El fitxer ara és processat i trigarà fins a un minut a aparèixer en la llista."
           error: "S'ha produït un error en carregar '%{filename}': %{message}"
+        settings: "Configuració"
         operations:
           failed: "Ha fallat %{operation}. Consulteu els registres (logs)."
           cancel:
@@ -4130,6 +4192,7 @@ ca:
         group: "Grup"
         image: "Imatge"
         delete_confirm: "Esteu segur que voleu suprimir l'emoji :%{name}:?"
+        settings: "Configuració"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
