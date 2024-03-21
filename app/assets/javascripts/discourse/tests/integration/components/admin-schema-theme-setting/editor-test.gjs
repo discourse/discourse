@@ -546,34 +546,69 @@ module(
     });
 
     test("input fields of type float", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "float",
+              required: true,
+              validations: {
+                max: 10.5,
+                min: 5.5,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 6.5,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("6.5");
+
       assert
-        .dom(inputFields.fields.float_field.labelElement)
-        .hasText("float_field");
-      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+        .dom(inputFields.fields.id.inputElement)
+        .hasAttribute("type", "number");
 
-      await fillIn(inputFields.fields.float_field.inputElement, "6934.24");
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
+      await fillIn(inputFields.fields.id.inputElement, "100.0");
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+          count: 10.5,
+        })
+      );
 
-      tree.refresh();
-      await click(tree.nodes[0].element);
+      await fillIn(inputFields.fields.id.inputElement, "0.2");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+          count: 5.5,
+        })
+      );
+
+      await fillIn(inputFields.fields.id.inputElement, "");
+
       inputFields.refresh();
 
       assert
-        .dom(inputFields.fields.float_field.inputElement)
-        .hasValue("6934.24");
+        .dom(inputFields.fields.id.errorElement)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
