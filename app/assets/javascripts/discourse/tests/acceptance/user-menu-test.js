@@ -502,18 +502,18 @@ acceptance("User menu", function (needs) {
       "invites link not shown when the user can't invite"
     );
 
-    const dratsLink = query("#quick-access-profile ul li.drafts a");
+    const draftsLink = query("#quick-access-profile ul li.drafts a");
     assert.ok(
-      dratsLink.href.endsWith("/u/eviltrout/activity/drafts"),
+      draftsLink.href.endsWith("/u/eviltrout/activity/drafts"),
       "has a link to the drafts page of the user"
     );
     assert.strictEqual(
-      dratsLink.textContent.trim(),
+      draftsLink.textContent.trim(),
       I18n.t("drafts.label_with_count", { count: 13 }),
       "drafts link has the right label with count of the user's drafts"
     );
     assert.ok(
-      dratsLink.querySelector(".d-icon-pencil-alt"),
+      draftsLink.querySelector(".d-icon-user_menu\\.drafts"),
       "drafts link has the right icon"
     );
 

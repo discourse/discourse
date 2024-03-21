@@ -36,7 +36,7 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     id = "replies";
-    icon = "reply";
+    icon = "user_menu.replies";
     panelComponent = UserMenuRepliesNotificationsList;
     notificationTypes = [
       "mentioned",
