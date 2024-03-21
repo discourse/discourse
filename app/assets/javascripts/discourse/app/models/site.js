@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
@@ -103,9 +104,12 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     return result;
   }
 
+  @tracked categories;
+
   @alias("is_readonly") isReadOnly;
 
   @sort("categories", "topicCountDesc") categoriesByCount;
+
   init() {
     super.init(...arguments);
 
