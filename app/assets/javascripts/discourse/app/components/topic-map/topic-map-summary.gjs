@@ -17,7 +17,7 @@ export default class TopicMapSummary extends Component {
         : "topic.collapse_details",
       icon: this.args.collapsed ? "chevron-down" : "chevron-up",
       ariaExpanded: this.args.collapsed ? "false" : "true",
-      ariaControls: "topic-map-expanded",
+      ariaControls: "topic-map-expanded-content",
       action: this.args.toggleMap,
     };
   }
