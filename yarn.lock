@@ -1930,10 +1930,10 @@
   dependencies:
     ember-template-imports "^3.0.0"
 
-"@glint/template@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@glint/template/-/template-1.3.0.tgz#8fa1e0c466d84cc8665e2253bbe1992af7c89542"
-  integrity sha512-FUfbXSyh+KnwUaMTG4skESPPYL6trwAIKOp9yMwDo+Uw4LxCJjQ9/RCAJTTXZ0/kiTHLr7S2P4vsIbHeorOvaA==
+"@glint/template@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@glint/template/-/template-1.4.0.tgz#1c9a2f5b84f2944abe52f4e209e3c00b5c6bd710"
+  integrity sha512-yD271NhLei/HSQ6utm6hKgoU+B5D5DY+B1irPvgI4KsDEcZI7v/INf5HAMJfzCg92bP1sIxSOuXu5DU6VsY7Mw==
 
 "@handlebars/parser@~2.0.0":
   version "2.0.0"
