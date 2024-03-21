@@ -295,6 +295,54 @@ describe DiscourseAutomation::Scriptable do
           expect(Topic.last.allowed_users).to contain_exactly(Discourse.system_user, user)
         end
       end
+
+      context "when pm target_groups with valid group" do
+        it "sends the pm" do
+          group = Fabricate(:group)
+
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_group_names: [group.name],
+              },
+            )
+          }.to change { Topic.count }
+
+          expect(Topic.last.allowed_groups).to contain_exactly(group)
+        end
+      end
+
+      context "when pm target_groups contain an invalid group" do
+        it "skips sending if there is only one target" do
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_group_names: ["non-existent-group"],
+              },
+            )
+          }.not_to change { Topic.count }
+        end
+
+        it "sends the pm without the invalid group" do
+          group = Fabricate(:group)
+
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_group_names: ["non-existent-group", group.name],
+              },
+            )
+          }.to change { Topic.count }
+
+          expect(Topic.last.allowed_groups).to contain_exactly(group)
+        end
+      end
     end
   end
 end

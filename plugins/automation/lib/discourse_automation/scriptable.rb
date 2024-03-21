@@ -228,22 +228,40 @@ module DiscourseAutomation
             return
           end
 
-          if (pm[:target_usernames] || []).empty?
-            Rails.logger.warn "[discourse-automation] Did not send PM - no target usernames"
+          if (pm[:target_usernames] || []).empty? && (pm[:target_group_names] || []).empty?
+            Rails.logger.warn "[discourse-automation] Did not send PM - no target usernames or groups"
             return
           end
 
-          existing_target_usernames = User.where(username: pm[:target_usernames]).pluck(:username)
-          if existing_target_usernames.length != pm[:target_usernames].length
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - target users do not exist: `#{(pm[:target_usernames] - existing_target_usernames).join(",")}`"
-            pm[:target_usernames] = existing_target_usernames
-            return if pm[:target_usernames].empty?
+          non_existing_targets = []
+
+          if pm[:target_usernames].present?
+            existing_target_usernames = User.where(username: pm[:target_usernames]).pluck(:username)
+            if existing_target_usernames.length != pm[:target_usernames].length
+              non_existing_targets += pm[:target_usernames] - existing_target_usernames
+              pm[:target_usernames] = existing_target_usernames
+            end
+          end
+
+          if pm[:target_group_names].present?
+            existing_target_groups = Group.where(name: pm[:target_group_names]).pluck(:name)
+            if existing_target_groups.length != pm[:target_group_names].length
+              non_existing_targets += pm[:target_group_names] - existing_target_groups
+              pm[:target_group_names] = existing_target_groups
+            end
           end
 
           post_created = false
           pm = pm.merge(archetype: Archetype.private_message)
           pm[:target_usernames] = (pm[:target_usernames] || []).join(",")
-          pm[:target_usernames]
+          pm[:target_group_names] = (pm[:target_group_names] || []).join(",")
+
+          if pm[:target_usernames].blank? && pm[:target_group_names].blank?
+            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - no valid targets exist"
+            return
+          elsif non_existing_targets.any?
+            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`"
+          end
 
           post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
 
