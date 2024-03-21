@@ -74,7 +74,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.homepage
-    SiteSetting.empty_homepage? ? "empty" : top_menu_items[0].name
+    SiteSetting.experimental_custom_homepage? ? "custom" : top_menu_items[0].name
   end
 
   def self.anonymous_menu_items
@@ -82,7 +82,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_homepage
-    return "empty" if SiteSetting.empty_homepage?
+    return "custom" if SiteSetting.experimental_custom_homepage?
 
     top_menu_items
       .map { |item| item.name }

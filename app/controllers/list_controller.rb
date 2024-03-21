@@ -47,7 +47,7 @@ class ListController < ApplicationController
                   TopTopic.periods.map { |p| :"category_none_top_#{p}" },
                   :group_topics,
                   :filter,
-                  :empty,
+                  :custom,
                 ].flatten
 
   # Create our filters
@@ -361,8 +361,8 @@ class ListController < ApplicationController
     end
   end
 
-  def empty
-    render "default/empty"
+  def custom
+    render "default/custom"
   end
 
   protected

@@ -169,7 +169,7 @@ basic:
     client: true
     default: ""
     regex: "^GTM-"
-  empty_homepage:
+  experimental_custom_homepage:
     default: false
     hidden: true
   top_menu:

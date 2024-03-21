@@ -1586,7 +1586,7 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "list#empty", constraints: HomePageConstraint.new("empty"), as: "empty_index"
+    root to: "list#custom", constraints: HomePageConstraint.new("custom"), as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

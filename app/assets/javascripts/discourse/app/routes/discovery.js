@@ -20,6 +20,7 @@ export default class DiscoveryRoute extends DiscourseRoute {
 
   beforeModel(transition) {
     const url = transition.intent.url;
+
     let matches;
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
@@ -64,7 +65,7 @@ export default class DiscoveryRoute extends DiscourseRoute {
   activate(transition) {
     super.activate(...arguments);
 
-    if (transition.to.name === "discovery.empty") {
+    if (transition?.to.name === "discovery.custom") {
       this.controllerFor("application").setProperties({
         sidebarDisabledRouteOverride: true,
       });
