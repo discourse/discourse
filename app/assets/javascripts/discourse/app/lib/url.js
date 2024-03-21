@@ -177,6 +177,11 @@ const DiscourseURL = EmberObject.extend({
     }
   },
 
+  pushState(path) {
+    path = withoutPrefix(path);
+    this.router._routerMicrolib.updateURL(path);
+  },
+
   routeToTag(a) {
     // skip when we are provided nowhere to route to
     if (!a || !a.href) {
