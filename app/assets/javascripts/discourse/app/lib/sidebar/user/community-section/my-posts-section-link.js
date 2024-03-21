@@ -98,11 +98,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     return this.draftCount > 0;
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
       return "pencil-alt";
     }
-    return "sidebar.my_posts";
+    return "user";
   }
 
   get suffixCSSClass() {
