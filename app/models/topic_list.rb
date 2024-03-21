@@ -77,7 +77,7 @@ class TopicList
 
   def categories
     @categories ||=
-      topics.map { |t| [t.category&.parent_category, t.category] }.uniq.flatten.compact
+      topics.map { |t| [t.category&.parent_category, t.category] }.flatten.uniq.compact
   end
 
   def load_topics
