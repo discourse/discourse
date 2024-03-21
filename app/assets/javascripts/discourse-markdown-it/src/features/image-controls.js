@@ -82,7 +82,7 @@ function buildScaleButton(selectedScale, scale) {
   const activeScaleClass = selectedScale === scale ? " active" : "";
   return `<span title="
             ${I18n.t("composer.image_scale_button", { percent: scale })}" 
-            class='scale-btn${activeScaleClass}' data-scale='${scale}'
+            class="scale-btn${activeScaleClass}" data-scale="${scale}"
           >
             ${scale}%
           </span>`;
