@@ -1903,10 +1903,10 @@
     "@glimmer/interfaces" "^0.89.0"
     "@glimmer/util" "^0.89.0"
 
-"@glint/core@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@glint/core/-/core-1.3.0.tgz#9af9414bca52733a1295e74ab17e49bc165d2b18"
-  integrity sha512-R5Y1QmkZs6lJHQ0LTRRcTKDI1EdeM32YuR2J67LG4qKT+WUNZhmetkqPiAMW9hQAOdrG/PqDZWV+J7Jf3xOlAg==
+"@glint/core@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@glint/core/-/core-1.4.0.tgz#cc977d295788dd25fa3049830abc2c8044ec4a74"
+  integrity sha512-nq27a/1R6kc3lsuciz8z9IZO1NQCbNkEBxf5KJI7AUrnps6RzQzmq3pmwO24zQYmFcH4sqpod8fleNIpg8YEqg==
   dependencies:
     "@glimmer/syntax" "^0.84.3"
     escape-string-regexp "^4.0.0"
