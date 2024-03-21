@@ -6,7 +6,7 @@ import AdminPlugin from "admin/models/admin-plugin";
 
 export default class AdminPluginsShowRoute extends Route {
   @service router;
-  @service adminPluginConfigNavManager;
+  @service adminPluginNavManager;
 
   model(params) {
     const pluginId = sanitize(params.plugin_id).substring(0, 100);
@@ -16,10 +16,10 @@ export default class AdminPluginsShowRoute extends Route {
   }
 
   afterModel(model) {
-    this.adminPluginConfigNavManager.currentPlugin = model;
+    this.adminPluginNavManager.currentPlugin = model;
   }
 
   deactivate() {
-    this.adminPluginConfigNavManager.currentPlugin = null;
+    this.adminPluginNavManager.currentPlugin = null;
   }
 }

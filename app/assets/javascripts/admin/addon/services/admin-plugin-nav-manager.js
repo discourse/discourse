@@ -6,7 +6,7 @@ import {
   PLUGIN_CONFIG_NAV_MODE_TOP,
 } from "discourse/lib/admin-plugin-config-nav";
 
-export default class AdminPluginConfigNavManager extends Service {
+export default class AdminPluginNavManager extends Service {
   @service currentUser;
   @tracked currentPlugin;
 

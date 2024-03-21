@@ -8,12 +8,12 @@ import AdminPluginConfigArea from "./admin-plugin-config-area";
 
 export default class extends Component {
   @service currentUser;
-  @service adminPluginConfigNavManager;
+  @service adminPluginNavManager;
 
   get mainAreaClasses() {
     let classes = ["admin-plugin-config-page__main-area"];
 
-    if (this.adminPluginConfigNavManager.isSidebarMode) {
+    if (this.adminPluginNavManager.isSidebarMode) {
       classes.push("-with-inner-sidebar");
     } else {
       classes.push("-without-inner-sidebar");
@@ -32,13 +32,13 @@ export default class extends Component {
 
   <template>
     <div class="admin-plugin-config-page">
-      {{#if this.adminPluginConfigNavManager.isTopMode}}
+      {{#if this.adminPluginNavManager.isTopMode}}
         <div class="admin-controls">
           <HorizontalOverflowNav
             class="nav-pills action-list main-nav nav plugin-nav"
           >
             {{#each
-              this.adminPluginConfigNavManager.currentConfigNav.links
+              this.adminPluginNavManager.currentConfigNav.links
               as |navLink|
             }}
               <NavItem

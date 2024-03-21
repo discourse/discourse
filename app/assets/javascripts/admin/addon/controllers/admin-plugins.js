@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import { service } from "@ember/service";
 
 export default class AdminPluginsController extends Controller {
-  @service adminPluginConfigNavManager;
+  @service adminPluginNavManager;
   @service router;
 
   get adminRoutes() {
@@ -24,8 +24,8 @@ export default class AdminPluginsController extends Controller {
 
   get showTopNav() {
     return (
-      !this.adminPluginConfigNavManager.currentPlugin ||
-      this.adminPluginConfigNavManager.isSidebarMode
+      !this.adminPluginNavManager.currentPlugin ||
+      this.adminPluginNavManager.isSidebarMode
     );
   }
 

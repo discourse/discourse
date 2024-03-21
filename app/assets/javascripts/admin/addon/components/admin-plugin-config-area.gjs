@@ -5,7 +5,7 @@ import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
 
 export default class AdminPluginConfigArea extends Component {
-  @service adminPluginConfigNavManager;
+  @service adminPluginNavManager;
 
   linkText(navLink) {
     if (navLink.label) {
@@ -16,11 +16,11 @@ export default class AdminPluginConfigArea extends Component {
   }
 
   <template>
-    {{#if this.adminPluginConfigNavManager.isSidebarMode}}
+    {{#if this.adminPluginNavManager.isSidebarMode}}
       <nav class="admin-nav admin-plugin-inner-sidebar-nav pull-left">
         <ul class="nav nav-stacked">
           {{#each
-            this.adminPluginConfigNavManager.currentConfigNav.links
+            this.adminPluginNavManager.currentConfigNav.links
             as |navLink|
           }}
             <li
