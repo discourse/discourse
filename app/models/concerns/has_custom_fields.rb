@@ -270,7 +270,7 @@ module HasCustomFields
   # set of fields.
   def upsert_custom_fields(fields)
     fields.each do |k, v|
-      row_count = _custom_fields.where(name: k).update_all(value: v)
+      row_count = _custom_fields.where(name: k).update_all(value: v, updated_at: Time.now)
       _custom_fields.create!(name: k, value: v) if row_count == 0
 
       custom_fields[k.to_s] = v # We normalize custom_fields as strings

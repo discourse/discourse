@@ -59,7 +59,7 @@ class DiscourseConnectBase
   ]
 
   def self.nonce_expiry_time
-    @nonce_expiry_time ||= 10.minutes
+    @nonce_expiry_time ||= 30.minutes
   end
 
   def self.nonce_expiry_time=(v)

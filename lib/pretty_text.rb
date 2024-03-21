@@ -464,11 +464,9 @@ module PrettyText
     mentions =
       cooked
         .css(".mention, .mention-group")
-        .map do |e|
+        .filter_map do |e|
           if (name = e.inner_text)
-            name = name[1..-1]
-            name = User.normalize_username(name)
-            name
+            User.normalize_username(name[1..-1]) if name[0] == "@"
           end
         end
 

@@ -4813,6 +4813,7 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
+      filter_reports: Filter reports
 
       tags:
         remove_muted_tags_from_latest:
@@ -4827,6 +4828,8 @@ en:
         sidebar_link:
           all: "All"
 
+      new_features:
+        title: "What's new"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -4884,7 +4887,6 @@ en:
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
-        filter_reports: Filter reports
         custom_date_range: Custom date range
 
         reports:

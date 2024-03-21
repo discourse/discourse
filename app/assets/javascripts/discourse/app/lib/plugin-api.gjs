@@ -785,7 +785,7 @@ class PluginApi {
 
   addToolbarPopupMenuOptionsCallback(opts) {
     deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
+      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",

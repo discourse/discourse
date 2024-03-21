@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="{{rootURL}}assets/discourse.css">
     <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
     <link rel="stylesheet" href="{{rootURL}}assets/qunit.css" data-embroider-ignore />
-    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" data-embroider-ignore />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
 
@@ -73,5 +72,6 @@
     <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
     <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script>
 
+    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" data-embroider-ignore />
   </body>
 </html>

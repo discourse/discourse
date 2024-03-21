@@ -1,5 +1,6 @@
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
+moment.tz.link(["Asia/Kolkata|IST", "Asia/Seoul|KST", "Asia/Tokyo|JST"]);
 const timezoneNames = moment.tz.names();
 
 function addSingleLocalDate(buffer, state, config) {

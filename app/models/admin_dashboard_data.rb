@@ -3,7 +3,7 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_blocks, :problem_messages
+  cattr_reader :problem_messages
 
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
@@ -25,10 +25,6 @@ class AdminDashboardData
 
   def problems
     problems = []
-    self.class.problem_blocks.each do |blk|
-      message = instance_exec(&blk)
-      problems << ProblemCheck::Problem.new(message) if message.present?
-    end
     self.class.problem_messages.each do |i18n_key|
       message = self.class.problem_message_check(i18n_key)
       problems << ProblemCheck::Problem.new(message) if message.present?
@@ -48,7 +44,10 @@ class AdminDashboardData
   end
 
   def self.add_problem_check(*syms, &blk)
-    @@problem_blocks << blk if blk
+    Discourse.deprecate(
+      "`AdminDashboardData#add_problem_check` is deprecated. Implement a class that inherits `ProblemCheck` instead.",
+      drop_from: "3.3",
+    )
   end
 
   def self.add_found_scheduled_check_problem(problem)
@@ -101,15 +100,11 @@ class AdminDashboardData
   # tests. It will also fire multiple times in development mode because
   # classes are not cached.
   def self.reset_problem_checks
-    @@problem_blocks = []
-
     @@problem_messages = %w[
       dashboard.bad_favicon_url
       dashboard.poll_pop3_timeout
       dashboard.poll_pop3_auth_error
     ]
-
-    add_problem_check { sidekiq_check || queue_size_check }
   end
   reset_problem_checks
 
@@ -174,17 +169,5 @@ class AdminDashboardData
 
   def self.problem_message_key(i18n_key)
     "#{PROBLEM_MESSAGE_PREFIX}#{i18n_key}"
-  end
-
-  def sidekiq_check
-    last_job_performed_at = Jobs.last_job_performed_at
-    if Jobs.queued > 0 && (last_job_performed_at.nil? || last_job_performed_at < 2.minutes.ago)
-      I18n.t("dashboard.sidekiq_warning")
-    end
-  end
-
-  def queue_size_check
-    queue_size = Jobs.queued
-    I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
   end
 end

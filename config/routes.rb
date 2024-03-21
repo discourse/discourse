@@ -325,6 +325,7 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
+      get "/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }

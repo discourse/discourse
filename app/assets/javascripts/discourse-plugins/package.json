@@ -8,7 +8,7 @@
     "ember-addon"
   ],
   "dependencies": {
-    "@babel/core": "^7.24.1",
+    "@babel/core": "^7.24.3",
     "deprecation-silencer": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-cli-babel": "^8.2.0",
@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "ember-cli": "~5.7.0",
-    "webpack": "^5.90.3"
+    "webpack": "^5.91.0"
   },
   "engines": {
     "node": ">= 18",

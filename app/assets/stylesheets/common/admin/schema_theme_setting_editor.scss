@@ -1,9 +1,12 @@
 .schema-theme-setting-editor {
+  --schema-space: 0.5em;
   display: grid;
-  grid-template-columns: 0.2fr 0.8fr;
+  grid-template-columns: minmax(10em, 0.3fr) 1fr;
+  gap: 2em 4vw;
 
   &__navigation {
-    margin-right: 2em;
+    overflow: hidden;
+    border: 1px solid var(--primary-low);
 
     ul {
       list-style: none;
@@ -11,26 +14,46 @@
 
     .schema-theme-setting-editor__tree {
       margin: 0;
+      ul {
+        padding: 0;
+        margin: var(--schema-space) var(--schema-space) 1em 0;
+        li:hover {
+          background: var(--primary-very-low);
+        }
+        &:last-child {
+          margin-bottom: calc(var(--schema-space) * 2);
+        }
+      }
 
-      .schema-theme-setting-editor__tree-node--back-btn {
+      .schema-theme-setting-editor__tree-node.--back-btn {
         cursor: pointer;
         width: 100%;
-        text-align: left;
+        border-bottom: 1px solid var(--primary-low);
+        color: var(--primary-700);
+        &:hover {
+          color: var(--primary-800);
+          background: var(--primary-very-low);
+        }
 
         .schema-theme-setting-editor__tree-node-text {
+          color: currentColor;
           .d-icon {
+            color: currentColor;
             margin-left: 0;
-            margin-right: 0.5em;
+            margin-right: var(--schema-space);
           }
         }
       }
 
       .schema-theme-setting-editor__tree-node-text {
-        padding: 0.5em;
+        padding: var(--schema-space);
         color: var(--primary);
         display: flex;
-        flex-direction: row;
         align-items: center;
+
+        span {
+          @include ellipsis;
+        }
 
         .d-icon {
           margin-left: auto;
@@ -53,24 +76,53 @@
           }
         }
 
-        &.--child {
-          margin-left: 0.5em;
-          border-left: 1.5px solid var(--primary-200);
+        &.--parent {
+          border: 2px solid transparent;
+
+          &:not(:has(ul)) {
+            &:hover {
+              background: var(--primary-very-low);
+            }
+          }
+
+          &.--active {
+            border: 2px solid var(--tertiary);
+          }
+
+          &.--add-button {
+            border-top: 1px solid var(--primary-low);
+          }
         }
 
-        &.--heading {
-          cursor: default;
-          margin-top: 0.5em;
-          font-weight: bold;
+        &.--child {
+          margin-left: var(--schema-space);
+          border-left: 1px solid var(--primary-200);
+        }
+      }
+    }
+
+    .schema-theme-setting-editor__tree-add-button {
+      color: var(--tertiary);
+      width: 100%;
+      line-height: 1.4; // match li height
+      justify-content: start;
+
+      .d-icon {
+        color: currentColor;
+        font-size: var(--font-down-1);
+      }
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--tertiary-hover);
+        .d-icon {
+          color: currentColor;
         }
       }
     }
   }
 
   &__fields {
-  }
-
-  &__footer {
-    margin-top: 0.5em;
+    margin-top: -0.15em; // visual alignment with top of nav
   }
 }

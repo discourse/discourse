@@ -590,6 +590,7 @@ en:
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."
         inappropriate: "This message contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"%{basePath}/guidelines\">our community guidelines</a>."
+        illegal: "This post requires staff attention because I believe it contains content that is illegal."
         spam: "This message is an advertisement, or vandalism. It is not useful or relevant to the current channel."
         notify_user: "I want to talk to this person directly and personally about their message."
         notify_moderators: "This message requires staff attention for another reason not listed above."
