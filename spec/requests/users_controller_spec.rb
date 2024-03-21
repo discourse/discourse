@@ -4542,12 +4542,19 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_blank
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "should 403 correctly for crawlers when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_tag("body.crawler")
       end
 
       describe "user profile views" do
