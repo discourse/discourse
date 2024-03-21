@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
 import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 
 export default class extends Component {
@@ -24,7 +23,7 @@ export default class extends Component {
 
   linkText(navLink) {
     if (navLink.label) {
-      return I18n.t(navLink.label);
+      return i18n(navLink.label);
     } else {
       return navLink.text;
     }
