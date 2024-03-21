@@ -99,6 +99,7 @@ module SvgSprite
         fab-facebook
         fab-github
         fab-instagram
+        fab-linkedin-in
         fab-linux
         fab-threads
         fab-threads-square

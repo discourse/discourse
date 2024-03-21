@@ -1931,6 +1931,10 @@ en:
     discord_secret: "Discord Client Secret Key Used for authenticating and enabling Discord related features on the site, such as Discord logins. This secret key corresponds to the Discord application created for the website, and is necessary for securely communicating with the Discord API."
     discord_trusted_guilds: 'Only allow members of these Discord guilds to log in via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
+    enable_linkedin_oidc_logins: "Enable LinkedIn authentication, requires linkedin_client_id and linkedin_client_secret."
+    linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
