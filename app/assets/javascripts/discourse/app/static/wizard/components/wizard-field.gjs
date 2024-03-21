@@ -82,7 +82,11 @@ export default class WizardFieldComponent extends Component {
 
         <PluginOutlet
           @name="below-wizard-extra-description"
-          @outletArgs={{hash id=@field.id disabled=@field.disabled value=@field.value}}
+          @outletArgs={{hash
+            id=@field.id
+            disabled=@field.disabled
+            value=@field.value
+          }}
         />
       {{/if}}
     </div>
