@@ -480,6 +480,7 @@ en:
   is_invalid: "seems unclear, is it a complete sentence?"
   next_page: "next page →"
   prev_page: "← previous page"
+  show_post_in_topic: "show post in topic"
   page_num: "Page %{num}"
   crawler_content_hidden: "HTML content omitted because you are logged in or using a modern mobile device."
   home_title: "Home"
