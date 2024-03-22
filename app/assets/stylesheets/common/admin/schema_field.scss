@@ -2,12 +2,30 @@
   margin-bottom: 1em;
   width: 50%;
   min-width: 200px;
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  gap: 1em;
+
+  .schema-field__label {
+    word-break: break-all;
+  }
+
+  .schema-field__input:has(input[type="checkbox"]) {
+    flex-direction: row;
+  }
 
   .schema-field__input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     input {
       width: 100%;
       margin-bottom: 0;
-      width: 100%;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
     }
 
     .select-kit {
@@ -19,6 +37,7 @@
       color: var(--primary-medium);
     }
   }
+
   .schema-field__input-supporting-text {
     display: flex;
     flex-direction: row;
