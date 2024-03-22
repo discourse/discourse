@@ -118,7 +118,7 @@ class ThemeSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string", "tag"
+      when "string"
         value.is_a?(String)
       when "integer", "category", "topic", "post", "group", "upload"
         value.is_a?(Integer)
@@ -128,6 +128,8 @@ class ThemeSettingsObjectValidator
         [true, false].include?(value)
       when "enum"
         property_attributes[:choices].include?(value)
+      when "tags"
+        value.is_a?(Array) && value.all? { |tag| tag.is_a?(String) }
       else
         add_error(property_name, :invalid_type, type:)
         return false
@@ -149,9 +151,24 @@ class ThemeSettingsObjectValidator
     return true if value.nil?
 
     case type
-    when "topic", "category", "upload", "post", "group", "tag"
+    when "topic", "category", "upload", "post", "group"
       if !valid_ids(type).include?(value)
         add_error(property_name, :"not_valid_#{type}_value")
+        return false
+      end
+    when "tags"
+      if !Array(value).to_set.subset?(valid_ids(type))
+        add_error(property_name, :"not_valid_#{type}_value")
+        return false
+      end
+
+      if (min = validations&.dig(:min)) && value.length < min
+        add_error(property_name, :tags_value_not_valid_min, min:)
+        return false
+      end
+
+      if (max = validations&.dig(:max)) && value.length > max
+        add_error(property_name, :tags_value_not_valid_max, max:)
         return false
       end
     when "string"
@@ -223,7 +240,7 @@ class ThemeSettingsObjectValidator
     "upload" => {
       klass: Upload,
     },
-    "tag" => {
+    "tags" => {
       klass: Tag,
       column: :name,
     },
@@ -247,7 +264,7 @@ class ThemeSettingsObjectValidator
 
     properties.each do |property_name, property_attributes|
       if property_attributes[:type] == type
-        values << object[property_name]
+        values.merge(Array(object[property_name]))
       elsif property_attributes[:type] == "objects"
         object[property_name]&.each do |child_object|
           values.merge(

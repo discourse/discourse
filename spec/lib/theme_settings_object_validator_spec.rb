@@ -708,53 +708,107 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for tag properties" do
-      it "should not return any error message when the value of the property is a valid name of a tag record" do
-        tag = Fabricate(:tag)
+      fab!(:tag_1) { Fabricate(:tag) }
+      fab!(:tag_2) { Fabricate(:tag) }
+      fab!(:tag_3) { Fabricate(:tag) }
 
-        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
+      it "should not return any error message when the value of the property is an array of valid tag names" do
+        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
 
         expect(
-          described_class.new(schema: schema, object: { tag_property: tag.name }).validate,
+          described_class.new(
+            schema: schema,
+            object: {
+              tags_property: [tag_1.name, tag_2.name],
+            },
+          ).validate,
         ).to eq({})
       end
 
       it "should not return any error messages when the value is not present and it's not required in the schema" do
-        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
+        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
       it "should return the right hash of error messages when value of property is not present and it's required" do
-        schema = { name: "section", properties: { tag_property: { type: "tag", required: true } } }
-        errors = described_class.new(schema: schema, object: {}).validate
-
-        expect(errors.keys).to eq(["/tag_property"])
-        expect(errors["/tag_property"].full_messages).to contain_exactly("must be present")
-      end
-
-      it "should return the right hash of error messages when value of property is not a valid tag name" do
-        schema = { name: "section", properties: { tag_property: { type: "tag" } } }
-
-        errors = described_class.new(schema: schema, object: { tag_property: "string" }).validate
-
-        expect(errors.keys).to eq(["/tag_property"])
-
-        expect(errors["/tag_property"].full_messages).to contain_exactly("must be a valid tag name")
-      end
-
-      it "should return the right hash of error messages when value of property is not a valid name of a tag record" do
         schema = {
           name: "section",
           properties: {
-            tag_property: {
-              type: "tag",
+            tags_property: {
+              type: "tags",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/tags_property"])
+        expect(errors["/tags_property"].full_messages).to contain_exactly("must be present")
+      end
+
+      it "should return the right hash of error messages when value of property is not an array of tag names" do
+        schema = { name: "section", properties: { tags_property: { type: "tags" } } }
+
+        errors = described_class.new(schema: schema, object: { tags_property: "string" }).validate
+
+        expect(errors.keys).to eq(["/tags_property"])
+
+        expect(errors["/tags_property"].full_messages).to contain_exactly(
+          "must be an array of valid tag names",
+        )
+      end
+
+      it "should return the right hash of error messages when number of tag names does not satisfy min or max validations" do
+        schema = {
+          name: "section",
+          properties: {
+            tags_property: {
+              type: "tags",
+              validations: {
+                min: 1,
+                max: 2,
+              },
+            },
+          },
+        }
+
+        errors = described_class.new(schema: schema, object: { tags_property: [] }).validate
+
+        expect(errors.keys).to eq(["/tags_property"])
+
+        expect(errors["/tags_property"].full_messages).to contain_exactly(
+          "must have at least 1 tag names",
+        )
+
+        errors =
+          described_class.new(
+            schema: schema,
+            object: {
+              tags_property: [tag_1.name, tag_2.name, tag_3.name],
+            },
+          ).validate
+
+        expect(errors.keys).to eq(["/tags_property"])
+
+        expect(errors["/tags_property"].full_messages).to contain_exactly(
+          "must have at most 2 tag names",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property contain tag names which are invalid" do
+        schema = {
+          name: "section",
+          properties: {
+            tags_property: {
+              type: "tags",
             },
             child_tags: {
               type: "objects",
               schema: {
                 name: "child_tag",
                 properties: {
-                  tag_property_2: {
-                    type: "tag",
+                  tags_property_2: {
+                    type: "tags",
                   },
                 },
               },
@@ -762,25 +816,27 @@ RSpec.describe ThemeSettingsObjectValidator do
           },
         }
 
+        tag_1
+
         queries =
           track_sql_queries do
             errors =
               described_class.new(
                 schema:,
                 object: {
-                  tag_property: "some random tag name",
-                  child_tags: [{ tag_property_2: "some random tag name" }],
+                  tags_property: ["some random tag name", tag_1.name],
+                  child_tags: [{ tags_property_2: ["some random tag name", tag_1.name, "abcdef"] }],
                 },
               ).validate
 
-            expect(errors.keys).to eq(%w[/tag_property /child_tags/0/tag_property_2])
+            expect(errors.keys).to eq(%w[/tags_property /child_tags/0/tags_property_2])
 
-            expect(errors["/tag_property"].full_messages).to contain_exactly(
-              "must be a valid tag name",
+            expect(errors["/tags_property"].full_messages).to contain_exactly(
+              "must be an array of valid tag names",
             )
 
-            expect(errors["/child_tags/0/tag_property_2"].full_messages).to contain_exactly(
-              "must be a valid tag name",
+            expect(errors["/child_tags/0/tags_property_2"].full_messages).to contain_exactly(
+              "must be an array of valid tag names",
             )
           end
 

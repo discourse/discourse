@@ -8,10 +8,12 @@ import FloatField from "./types/float";
 import GroupField from "./types/group";
 import IntegerField from "./types/integer";
 import StringField from "./types/string";
-import TagField from "./types/tag";
+import TagsField from "./types/tags";
 
 export default class SchemaThemeSettingField extends Component {
   get component() {
+    const type = this.args.spec.type;
+
     switch (this.args.spec.type) {
       case "string":
         return StringField;
@@ -25,12 +27,12 @@ export default class SchemaThemeSettingField extends Component {
         return EnumField;
       case "category":
         return CategoryField;
-      case "tag":
-        return TagField;
+      case "tags":
+        return TagsField;
       case "group":
         return GroupField;
       default:
-        throw new Error("unknown type");
+        throw new Error(`unknown type ${type}`);
     }
   }
 

@@ -5650,6 +5650,10 @@ en:
             back_button: "Back to %{name}"
             fields:
               required: "*required"
+              tags:
+                at_least_tag:
+                  one: "at least %{count} tag is required"
+                  other: "at least %{count} tags are required"
               string:
                 too_short: "must be at least %{count} characters"
               number:

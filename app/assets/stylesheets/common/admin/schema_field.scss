@@ -30,6 +30,12 @@
 
     .select-kit {
       width: 100%;
+
+      &.--invalid {
+        summary {
+          border-color: var(--danger);
+        }
+      }
     }
 
     .schema-field__input-description {
