@@ -163,6 +163,7 @@ createWidget("reply-to-tab", {
     };
 
     if (!this.attrs.mobileView) {
+      result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
       result["aria-expanded"] = this.attrs.repliesAbove.length
         ? "true"
