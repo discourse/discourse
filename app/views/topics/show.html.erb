@@ -139,7 +139,9 @@
     </div>
   <% end %>
 
-  <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
+    <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
+  <% else %>
+    <%= t(:crawler_content_hidden) %>
   <% end %>
 
   <% content_for :head do %>
