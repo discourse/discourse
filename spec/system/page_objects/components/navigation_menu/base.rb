@@ -151,6 +151,8 @@ module PageObjects
             click_button(class: "sidebar-section-header-button", visible: false)
           end
 
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+
           PageObjects::Modals::SidebarEditCategories.new
         end
 

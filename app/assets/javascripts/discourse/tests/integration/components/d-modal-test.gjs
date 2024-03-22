@@ -5,6 +5,7 @@ import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | d-modal", function (hooks) {
@@ -42,6 +43,43 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom(".d-modal").includesText("bodyContent");
     assert.dom(".d-modal").includesText("footerContent");
     assert.dom(".d-modal").includesText("belowFooterContent");
+  });
+
+  test("headerPrimaryAction block", async function (assert) {
+    await render(<template>
+      <DModal @inline={{true}} @title="test">
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    this.site.mobileView = true;
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").includesText("headerPrimaryActionContent");
+    assert.dom(".d-modal__dismiss-action-button").exists();
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test">
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal__dismiss-action-button").doesNotExist();
   });
 
   test("flash", async function (assert) {

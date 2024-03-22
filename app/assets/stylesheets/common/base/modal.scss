@@ -47,6 +47,13 @@
     }
   }
 
+  .d-modal__primary-action,
+  .d-modal__dismiss-action {
+    .btn {
+      text-transform: capitalize;
+    }
+  }
+
   &__title-text,
   &__subtitle-text {
     margin: 0;
@@ -91,11 +98,14 @@
     z-index: z("modal", "overlay");
     background-color: #000;
     animation: fade 0.3s forwards;
-    filter: alpha(opacity=70);
 
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
+  }
+
+  &.is-closing + .d-modal__backdrop {
+    display: none;
   }
 }
 
@@ -190,7 +200,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.7;
+    opacity: 0.6;
   }
 }
 
