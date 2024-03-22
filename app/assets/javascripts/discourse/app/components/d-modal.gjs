@@ -11,33 +11,66 @@ import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
+import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
+import { bind } from "discourse-common/utils/decorators";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
 export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
+export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
 const FLASH_TYPES = ["success", "error", "warning", "info"];
 
+const ANIMATE_MODAL_DURATION = 250;
+const MIN_SWIPE_THRESHOLD = -5;
+
 export default class DModal extends Component {
   @service modal;
+  @service site;
+  @service appEvents;
+
   @tracked wrapperElement;
+  @tracked closing = false;
 
   @action
-  setupListeners(element) {
+  setupModal(element) {
     document.documentElement.addEventListener(
       "keydown",
       this.handleDocumentKeydown
     );
+
+    this.appEvents.on(
+      "keyboard-visibility-change",
+      this.handleKeyboardVisibilityChange
+    );
+
+    disableBodyScroll(element.querySelector(".d-modal__body"));
+
+    element.animate(
+      [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+      {
+        duration: ANIMATE_MODAL_DURATION,
+        easing: "ease",
+        fill: "forwards",
+      }
+    );
+
     this.wrapperElement = element;
   }
 
   @action
-  cleanupListeners() {
+  cleanupModal() {
     document.documentElement.removeEventListener(
       "keydown",
       this.handleDocumentKeydown
+    );
+
+    this.appEvents.off(
+      "keyboard-visibility-change",
+      this.handleKeyboardVisibilityChange
     );
   }
 
@@ -68,6 +101,35 @@ export default class DModal extends Component {
   }
 
   @action
+  async handleSwipe(state) {
+    if (this.closing) {
+      return;
+    }
+
+    if (state.deltaY < 0) {
+      await this.#animateWrapperPosition(Math.abs(state.deltaY));
+      return;
+    }
+  }
+
+  @action
+  handleSwipeEnded(state) {
+    if (this.closing) {
+      // if the modal is closing we don't want to risk resetting the position
+      // as the user releases the swipe at the same time
+      return;
+    }
+
+    if (state.deltaY < MIN_SWIPE_THRESHOLD) {
+      this.wrapperElement.querySelector(
+        ".d-modal__container"
+      ).style.transform = `translateY(${Math.abs(state.deltaY)}px)`;
+
+      this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
+    }
+  }
+
+  @action
   handleWrapperClick(e) {
     if (e.button !== 0) {
       return; // Non-default mouse button
@@ -77,9 +139,34 @@ export default class DModal extends Component {
       return;
     }
 
-    return this.args.closeModal?.({
-      initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-    });
+    return this.closeModal(CLOSE_INITIATED_BY_CLICK_OUTSIDE);
+  }
+
+  @action
+  async closeModal(initiatedBy) {
+    if (!this.args.closeModal) {
+      return;
+    }
+
+    if (this.site.mobileView) {
+      await this.wrapperElement.animate(
+        [
+          // hidding first ms to avoid flicker
+          { visibility: "hidden", offset: 0 },
+          {
+            visibility: "visible",
+            offset: 0.01,
+          },
+          { transform: "translateY(100%)", offset: 1 },
+        ],
+        {
+          duration: ANIMATE_MODAL_DURATION,
+          fill: "forwards",
+        }
+      ).finished;
+    }
+
+    this.args.closeModal({ initiatedBy });
   }
 
   @action
@@ -90,7 +177,7 @@ export default class DModal extends Component {
 
     if (event.key === "Escape" && this.dismissable) {
       event.stopPropagation();
-      this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
+      this.closeModal(CLOSE_INITIATED_BY_ESC);
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
@@ -103,7 +190,7 @@ export default class DModal extends Component {
 
   @action
   handleCloseButton() {
-    this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
+    this.closeModal(CLOSE_INITIATED_BY_BUTTON);
   }
 
   @action
@@ -127,6 +214,22 @@ export default class DModal extends Component {
     };
   }
 
+  @bind
+  handleKeyboardVisibilityChange(visible) {
+    if (visible) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  async #animateWrapperPosition(position) {
+    await this.wrapperElement.animate(
+      [{ transform: `translateY(${position}px)` }],
+      {
+        fill: "forwards",
+      }
+    ).finished;
+  }
+
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
@@ -137,17 +240,21 @@ export default class DModal extends Component {
       @append={{true}}
     >
       <this.dynamicElement
-        class={{concatClass "modal" "d-modal" (if @inline "-inline")}}
+        class={{concatClass
+          "modal"
+          "d-modal"
+          (if @inline "-inline")
+          (if this.closing "is-closing")
+        }}
         data-keyboard="false"
         aria-modal="true"
         role="dialog"
         aria-labelledby={{if @title "discourse-modal-title"}}
         ...attributes
-        {{didInsert this.setupListeners}}
-        {{willDestroy this.cleanupListeners}}
+        {{didInsert this.setupModal}}
+        {{willDestroy this.cleanupModal}}
         {{trapTab preventScroll=false}}
       >
-
         <div class="d-modal__container">
           {{yield to="aboveHeader"}}
 
@@ -162,16 +269,39 @@ export default class DModal extends Component {
               )
             )
           }}
-            <div class={{concatClass "d-modal__header" @headerClass}}>
-
+            <div
+              class={{concatClass "d-modal__header" @headerClass}}
+              {{swipe
+                didStartSwipe=this.handleSwipeStarted
+                didSwipe=this.handleSwipe
+                didEndSwipe=this.handleSwipeEnded
+              }}
+            >
               {{yield to="headerAboveTitle"}}
+
+              {{#if
+                (and
+                  this.site.mobileView
+                  this.dismissable
+                  (has-block "headerPrimaryAction")
+                )
+              }}
+                <div class="d-modal__dismiss-action">
+                  <DButton
+                    @label="cancel"
+                    @action={{this.handleCloseButton}}
+                    @title="modal.close"
+                    class="btn-transparent btn-primary d-modal__dismiss-action-button"
+                  />
+                </div>
+              {{/if}}
 
               {{#if @title}}
                 <div class="d-modal__title">
-                  <h3
+                  <h1
                     id="discourse-modal-title"
                     class="d-modal__title-text"
-                  >{{@title}}</h3>
+                  >{{@title}}</h1>
 
                   {{#if @subtitle}}
                     <p class="d-modal__subtitle-text">{{@subtitle}}</p>
@@ -182,7 +312,13 @@ export default class DModal extends Component {
               {{/if}}
               {{yield to="headerBelowTitle"}}
 
-              {{#if this.dismissable}}
+              {{#if
+                (and this.site.mobileView (has-block "headerPrimaryAction"))
+              }}
+                <div class="d-modal__primary-action">
+                  {{yield to="headerPrimaryAction"}}
+                </div>
+              {{else if this.dismissable}}
                 <DButton
                   @icon="times"
                   @action={{this.handleCloseButton}}
@@ -229,6 +365,11 @@ export default class DModal extends Component {
       {{#unless @inline}}
         <div
           class="d-modal__backdrop"
+          {{swipe
+            didStartSwipe=this.handleSwipeStarted
+            didSwipe=this.handleSwipe
+            didEndSwipe=this.handleSwipeEnded
+          }}
           {{on "click" this.handleWrapperClick}}
         ></div>
       {{/unless}}

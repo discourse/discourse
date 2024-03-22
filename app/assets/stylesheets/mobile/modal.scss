@@ -1,9 +1,54 @@
 // base styles for every modal popup used in Discourse
 
+// prevents bg scrolling when modal is open
+html:has(.d-modal) {
+  overflow: hidden;
+}
+
+html.keyboard-visible.mobile-view {
+  .d-modal {
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    bottom: 0;
+  }
+
+  .d-modal__container {
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+  }
+}
+
+html:not(.keyboard-visible.mobile-view) {
+  .d-modal__container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 .d-modal {
+  align-items: flex-end;
+
   &__container {
+    // this is a hack to prevent issues on safari with transforms
+    position: fixed;
+
     width: 100%;
     max-width: 100%;
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    will-change: auto;
+  }
+
+  &__header {
+    padding: 0.5rem;
+  }
+
+  .ios-device & {
+    &__footer {
+      margin-top: auto;
+    }
+  }
+
+  &__title-text {
+    font-size: var(--font-up-1-rem);
   }
 
   // fixes modal placement on Android when keyboard is visible
