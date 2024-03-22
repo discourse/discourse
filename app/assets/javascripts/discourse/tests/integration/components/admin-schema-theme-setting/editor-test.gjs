@@ -726,34 +726,76 @@ module(
       assert.dom(categorySelector.clearButton()).exists("is clearable");
     });
 
-    test("input fields of type tag", async function (assert) {
-      const setting = schemaAndData(3);
+    test("input fields of type tags which is required", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_tags: {
+              type: "tags",
+              required: true,
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_tags: ["gazelle", "cat"],
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
       const tagSelector = selectKit(
-        `${inputFields.fields.tag_field.selector} .select-kit`
+        `${inputFields.fields.required_tags.selector} .select-kit`
       );
 
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(2);
+      await tagSelector.collapse();
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.deselectItemByName("cat");
+      await tagSelector.deselectItemByName("dog");
+      await tagSelector.collapse();
+
       assert.strictEqual(tagSelector.header().value(), null);
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
+          count: 2,
+        })
+      );
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
-      await tagSelector.selectRowByIndex(3);
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.strictEqual(tagSelector.header().value(), "gazelle");
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(tagSelector.header().value(), null);
+      inputFields.refresh();
 
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
+          count: 2,
+        })
+      );
     });
 
     test("input fields of type group", async function (assert) {
