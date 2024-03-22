@@ -2,7 +2,6 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
@@ -729,43 +728,57 @@ module(
     });
 
     test("input fields of type group", async function (assert) {
-      pretender.get("/groups/search.json", () => {
-        return response(200, [
-          { id: 23, name: "testers" },
-          { id: 74, name: "devs" },
-          { id: 89, name: "customers" },
-        ]);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_group: {
+              type: "group",
+              required: true,
+            },
+            not_required_group: {
+              type: "group",
+            },
+          },
+        },
+        value: [
+          {
+            required_group: 6,
+          },
+        ],
       });
-
-      const setting = schemaAndData(3);
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const groupSelector = selectKit(
-        `${inputFields.fields.group_field.selector} .select-kit`
+
+      assert
+        .dom(inputFields.fields.required_group.labelElement)
+        .hasText("required_group*");
+
+      let groupSelector = selectKit(
+        `${inputFields.fields.required_group.selector} .select-kit`
       );
 
-      assert.strictEqual(groupSelector.header().value(), null);
+      assert.strictEqual(groupSelector.header().value(), "6");
+      assert.dom(groupSelector.clearButton()).doesNotExist("is not clearable");
+
+      assert
+        .dom(inputFields.fields.not_required_group.labelElement)
+        .hasText("not_required_group");
+
+      groupSelector = selectKit(
+        `${inputFields.fields.not_required_group.selector} .select-kit`
+      );
 
       await groupSelector.expand();
-      await groupSelector.selectRowByValue(74);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      await groupSelector.selectRowByIndex(1);
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-
-      assert.strictEqual(groupSelector.header().value(), null);
-      await groupSelector.expand();
-      await groupSelector.selectRowByValue(23);
-      assert.strictEqual(groupSelector.header().value(), "23");
-
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      assert.dom(groupSelector.clearButton()).exists("is clearable");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
