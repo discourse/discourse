@@ -1140,6 +1140,26 @@ RSpec.describe CategoriesController do
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
     end
+
+    context "with a read restricted child category" do
+      before_all { subcategory.update!(read_restricted: true) }
+
+      it "indicates to an admin that the category has a child" do
+        sign_in(admin)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(true)
+      end
+
+      it "indicates to a normal user that the category has no child" do
+        sign_in(user)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(false)
+      end
+    end
   end
 
   describe "#search" do

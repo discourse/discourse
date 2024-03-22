@@ -241,7 +241,7 @@ class Category < ActiveRecord::Base
     # Categories with children
     with_children =
       Category
-        .secured(@guardian)
+        .secured(guardian)
         .where(parent_category_id: category_ids)
         .pluck(:parent_category_id)
         .to_set
