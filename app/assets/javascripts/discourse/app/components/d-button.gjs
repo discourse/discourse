@@ -6,7 +6,6 @@ import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
-import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
@@ -103,9 +102,9 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   }
 
   _triggerAction(event) {
-    const { action: actionVal, route, href } = this.args;
+    const { action: actionVal, route } = this.args;
 
-    if (actionVal || route || href?.length) {
+    if (actionVal || route) {
       if (actionVal) {
         const { actionParam, forwardEvent } = this.args;
 
@@ -133,8 +132,6 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
         }
       } else if (route) {
         this.router.transitionTo(route);
-      } else if (href?.length) {
-        DiscourseURL.routeTo(href);
       }
 
       event.preventDefault();
@@ -144,9 +141,19 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
     }
   }
 
+  get wrapperElement() {
+    const { href, type } = this.args;
+
+    return href
+      ? <template><a href={{href}} ...attributes>{{yield}}</a></template>
+      : <template>
+          <button type={{or type "button"}} ...attributes>{{yield}}</button>
+        </template>;
+  }
+
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
-    <button
+    <this.wrapperElement
       {{! For legacy compatibility. Prefer passing class as attributes. }}
       class={{concatClass
         @class
@@ -161,11 +168,10 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
       aria-controls={{@ariaControls}}
       aria-expanded={{this.computedAriaExpanded}}
       tabindex={{@tabindex}}
-      type={{or @type "button"}}
-      ...attributes
       disabled={{this.isDisabled}}
       title={{this.computedTitle}}
       aria-label={{this.computedAriaLabel}}
+      ...attributes
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
       {{on "mousedown" this.mouseDown}}
@@ -197,6 +203,6 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
       {{~/if~}}
 
       {{yield}}
-    </button>
+    </this.wrapperElement>
   </template>
 }
