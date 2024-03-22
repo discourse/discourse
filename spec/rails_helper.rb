@@ -425,23 +425,6 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    Capybara.register_driver :selenium_firefox_headless do |app|
-      options =
-        Selenium::WebDriver::Firefox::Options.new(
-          args: %w[--window-size=1400,1400 --headless],
-          prefs: {
-            "browser.download.dir": Downloads::FOLDER,
-          },
-          log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn,
-        )
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :firefox,
-        timeout: BROWSER_READ_TIMEOUT,
-        options: options,
-      )
-    end
-
     if ENV["ELEVATED_UPLOADS_ID"]
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -945,22 +928,6 @@ def apply_base_chrome_options(options)
 
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
-  end
-
-  if ENV["DISCOURSE_SYSTEM_TEST_CHROMIUM"] == "1"
-    options.binary =
-      case RUBY_PLATFORM
-      when /linux/
-        "/usr/bin/chromium"
-      when /darwin/
-        "/Applications/Chromium.app/Contents/MacOS/Chromium"
-      else
-        "Running Discourse system test with Chromium on #{RUBY_PLATFORM} is not supported"
-      end
-  end
-
-  if (chromedriver_path = ENV["DISCOURSE_SYSTEM_TEST_CHROMEDRIVER_PATH"]).present?
-    Selenium::WebDriver::Chrome::Service.driver_path = chromedriver_path
   end
 end
 
