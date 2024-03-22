@@ -15,7 +15,9 @@ module Migrations
       end
 
       def reset!(path)
-        [path, "#{path}-wal", "#{path}-shm"].each { |p| FileUtils.rm_f(p) if File.exist?(p) }
+        [path, "#{path}-wal", "#{path}-shm"].each do |p|
+          FileUtils.rm_f(p) if File.exist?(p)
+        end
       end
 
       def migrate(path)
@@ -28,7 +30,7 @@ module Migrations
         connection.close
       end
 
-      def open
+      def connect
         db = self.class.new
         yield(db)
       ensure

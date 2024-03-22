@@ -5,5 +5,3 @@ gemfile do
 
   gem "hashids"
 end
-
-Hashids.new
