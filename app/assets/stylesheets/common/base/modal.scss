@@ -103,10 +103,6 @@
       animation-duration: 0s;
     }
   }
-
-  &.is-closing + .d-modal__backdrop {
-    display: none;
-  }
 }
 
 //legacy
