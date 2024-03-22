@@ -153,6 +153,12 @@ export function useAdminNavConfig(navMap) {
           label: "admin.dashboard.title",
           icon: "home",
         },
+        {
+          name: "admin_all_site_settings",
+          route: "adminSiteSettings",
+          label: "admin.advanced.sidebar_link.all_site_settings",
+          icon: "cog",
+        },
       ],
     },
   ];
