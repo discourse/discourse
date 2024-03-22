@@ -19,6 +19,17 @@ acceptance("Header API - authenticated", function (needs) {
     await visit("/");
     assert.dom("button.test-button").exists("button is displayed");
   });
+
+  test("can add icons to the header", async function (assert) {
+    withPluginApi("1.29.0", (api) => {
+      api.headerIcons.add("test", <template>
+        <span class="test-icon">Test</span>
+      </template>);
+    });
+
+    await visit("/");
+    assert.dom(".test-icon").exists("icon is displayed");
+  });
 });
 
 acceptance("Header API - anonymous", function () {
@@ -47,6 +58,34 @@ acceptance("Header API - anonymous", function () {
       testButton.compareDocumentPosition(authButtons),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test button is positioned before auth-buttons"
+    );
+  });
+
+  test("can add icons to the header", async function (assert) {
+    withPluginApi("1.29.0", (api) => {
+      api.headerIcons.add("test", <template>
+        <span class="test-icon">Test</span>
+      </template>);
+    });
+
+    await visit("/");
+    assert.dom(".test-icon").exists("icon is displayed");
+  });
+
+  test("icons are positioned to the left of search icon by default", async function (assert) {
+    withPluginApi("1.29.0", (api) => {
+      api.headerIcons.add("test", <template>
+        <span class="test-icon">Test</span>
+      </template>);
+    });
+
+    await visit("/");
+    const testIcon = document.querySelector(".test-icon");
+    const search = document.querySelector(".search-dropdown");
+    assert.equal(
+      testIcon.compareDocumentPosition(search),
+      Node.DOCUMENT_POSITION_FOLLOWING,
+      "Test icon is positioned before search icon"
     );
   });
 });
@@ -88,6 +127,40 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 button is positioned before Test1 button"
+    );
+  });
+
+  test("can add icons to the header", async function (assert) {
+    withPluginApi("1.29.0", (api) => {
+      api.headerIcons.add("test", <template>
+        <span class="test-icon">Test</span>
+      </template>);
+    });
+
+    await visit("/");
+    assert.dom(".test-icon").exists("icon is displayed");
+  });
+
+  test("icons can be repositioned", async function (assert) {
+    withPluginApi("1.29.0", (api) => {
+      api.headerIcons.add("test1", <template>
+        <span class="test1-icon">Test1</span>
+      </template>);
+
+      api.headerIcons.add(
+        "test2",
+        <template><span class="test2-icon">Test2</span></template>,
+        { before: "test1" }
+      );
+    });
+
+    await visit("/");
+    const test1 = document.querySelector(".test1-icon");
+    const test2 = document.querySelector(".test2-icon");
+    assert.equal(
+      test2.compareDocumentPosition(test1),
+      Node.DOCUMENT_POSITION_FOLLOWING,
+      "Test2 icon is positioned before Test1 icon"
     );
   });
 });
