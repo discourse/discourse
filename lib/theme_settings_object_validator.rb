@@ -118,9 +118,9 @@ class ThemeSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string"
+      when "string", "tag"
         value.is_a?(String)
-      when "integer", "category", "topic", "post", "group", "upload", "tag"
+      when "integer", "category", "topic", "post", "group", "upload"
         value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
@@ -208,21 +208,38 @@ class ThemeSettingsObjectValidator
   end
 
   TYPE_TO_MODEL_MAP = {
-    "category" => Category,
-    "topic" => Topic,
-    "post" => Post,
-    "group" => Group,
-    "upload" => Upload,
-    "tag" => Tag,
+    "category" => {
+      klass: Category,
+    },
+    "topic" => {
+      klass: Topic,
+    },
+    "post" => {
+      klass: Post,
+    },
+    "group" => {
+      klass: Group,
+    },
+    "upload" => {
+      klass: Upload,
+    },
+    "tag" => {
+      klass: Tag,
+      column: :name,
+    },
   }
   private_constant :TYPE_TO_MODEL_MAP
 
   def valid_ids(type)
-    valid_ids_lookup[type] ||= Set.new(
-      TYPE_TO_MODEL_MAP[type].where(
-        id: fetch_property_values_of_type(@properties, @object, type),
-      ).pluck(:id),
-    )
+    valid_ids_lookup[type] ||= begin
+      column = TYPE_TO_MODEL_MAP[type][:column] || :id
+
+      Set.new(
+        TYPE_TO_MODEL_MAP[type][:klass].where(
+          column => fetch_property_values_of_type(@properties, @object, type),
+        ).pluck(column),
+      )
+    end
   end
 
   def fetch_property_values_of_type(properties, object, type)

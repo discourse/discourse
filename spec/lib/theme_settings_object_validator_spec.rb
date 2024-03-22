@@ -708,13 +708,13 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for tag properties" do
-      it "should not return any error message when the value of the property is a valid id of a tag record" do
+      it "should not return any error message when the value of the property is a valid name of a tag record" do
         tag = Fabricate(:tag)
 
         schema = { name: "section", properties: { tag_property: { type: "tag" } } }
 
         expect(
-          described_class.new(schema: schema, object: { tag_property: tag.id }).validate,
+          described_class.new(schema: schema, object: { tag_property: tag.name }).validate,
         ).to eq({})
       end
 
@@ -731,17 +731,17 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors["/tag_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
+      it "should return the right hash of error messages when value of property is not a valid tag name" do
         schema = { name: "section", properties: { tag_property: { type: "tag" } } }
 
         errors = described_class.new(schema: schema, object: { tag_property: "string" }).validate
 
         expect(errors.keys).to eq(["/tag_property"])
 
-        expect(errors["/tag_property"].full_messages).to contain_exactly("must be a valid tag id")
+        expect(errors["/tag_property"].full_messages).to contain_exactly("must be a valid tag name")
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a tag record" do
+      it "should return the right hash of error messages when value of property is not a valid name of a tag record" do
         schema = {
           name: "section",
           properties: {
@@ -768,19 +768,19 @@ RSpec.describe ThemeSettingsObjectValidator do
               described_class.new(
                 schema:,
                 object: {
-                  tag_property: 99_999_999,
-                  child_tags: [{ tag_property_2: 99_999_999 }],
+                  tag_property: "some random tag name",
+                  child_tags: [{ tag_property_2: "some random tag name" }],
                 },
               ).validate
 
             expect(errors.keys).to eq(%w[/tag_property /child_tags/0/tag_property_2])
 
             expect(errors["/tag_property"].full_messages).to contain_exactly(
-              "must be a valid tag id",
+              "must be a valid tag name",
             )
 
             expect(errors["/child_tags/0/tag_property_2"].full_messages).to contain_exactly(
-              "must be a valid tag id",
+              "must be a valid tag name",
             )
           end
 
