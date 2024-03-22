@@ -669,15 +669,54 @@ module(
     });
 
     test("input fields of type category", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_category: {
+              type: "category",
+              required: true,
+            },
+            not_required_category: {
+              type: "category",
+            },
+          },
+        },
+        value: [
+          {
+            required_category: 6,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const categorySelector = selectKit(
-        `${inputFields.fields.category_field.selector} .select-kit`
+
+      assert
+        .dom(inputFields.fields.required_category.labelElement)
+        .hasText("required_category*");
+
+      let categorySelector = selectKit(
+        `${inputFields.fields.required_category.selector} .select-kit`
+      );
+
+      assert.strictEqual(categorySelector.header().value(), "6");
+
+      assert
+        .dom(categorySelector.clearButton())
+        .doesNotExist("is not clearable");
+
+      assert
+        .dom(inputFields.fields.not_required_category.labelElement)
+        .hasText("not_required_category");
+
+      categorySelector = selectKit(
+        `${inputFields.fields.not_required_category.selector} .select-kit`
       );
 
       assert.strictEqual(categorySelector.header().value(), null);
@@ -685,17 +724,7 @@ module(
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
 
-      const selectedCategoryId = categorySelector.header().value();
-      assert.ok(selectedCategoryId);
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(categorySelector.header().value(), null);
-
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(categorySelector.header().value(), selectedCategoryId);
+      assert.dom(categorySelector.clearButton()).exists("is clearable");
     });
 
     test("input fields of type tag", async function (assert) {
