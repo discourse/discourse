@@ -237,11 +237,7 @@ createWidget("header-icons", {
   tagName: "ul.icons.d-header-icons",
 
   init() {
-    registerWidgetShim(
-      "extra-icon",
-      "span.wrapper",
-      hbs`<@data.component />`
-    );
+    registerWidgetShim("extra-icon", "span.wrapper", hbs`<@data.component />`);
   },
 
   html(attrs) {
