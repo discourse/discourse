@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Jobs::NotifyReviewable < ::Jobs::Base
+  # this job can take a very long time if there are many mods
+  # do not swamp the queue with it
+  cluster_concurrency 1
+
   def execute(args)
     return unless reviewable = Reviewable.find_by(id: args[:reviewable_id])
 
