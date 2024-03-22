@@ -33,7 +33,7 @@ export default class DModal extends Component {
   @service appEvents;
 
   @tracked wrapperElement;
-  @tracked closing = false;
+  @tracked animating = false;
 
   @action
   setupModal(element) {
@@ -50,10 +50,15 @@ export default class DModal extends Component {
     if (this.site.mobileView) {
       disableBodyScroll(element.querySelector(".d-modal__body"));
 
-      element.animate(
-        [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
-        { duration: ANIMATE_MODAL_DURATION, easing: "ease", fill: "forwards" }
-      );
+      this.animating = true;
+      element
+        .animate(
+          [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+          { duration: ANIMATE_MODAL_DURATION, easing: "ease", fill: "forwards" }
+        )
+        .finished.then(() => {
+          this.animating = false;
+        });
     }
 
     this.wrapperElement = element;
@@ -104,7 +109,7 @@ export default class DModal extends Component {
       return;
     }
 
-    if (this.closing) {
+    if (this.animating) {
       return;
     }
 
@@ -120,8 +125,8 @@ export default class DModal extends Component {
       return;
     }
 
-    if (this.closing) {
-      // if the modal is closing we don't want to risk resetting the position
+    if (this.animating) {
+      // if the modal is animating we don't want to risk resetting the position
       // as the user releases the swipe at the same time
       return;
     }
@@ -155,6 +160,7 @@ export default class DModal extends Component {
     }
 
     if (this.site.mobileView) {
+      this.animating = true;
       await this.wrapperElement.animate(
         [
           // hidding first ms to avoid flicker
@@ -164,6 +170,7 @@ export default class DModal extends Component {
         ],
         { duration: ANIMATE_MODAL_DURATION, fill: "forwards" }
       ).finished;
+      this.animating = false;
     }
 
     this.args.closeModal({ initiatedBy });
@@ -244,7 +251,7 @@ export default class DModal extends Component {
           "modal"
           "d-modal"
           (if @inline "-inline")
-          (if this.closing "is-closing")
+          (if this.animating "is-animating")
         }}
         data-keyboard="false"
         aria-modal="true"
