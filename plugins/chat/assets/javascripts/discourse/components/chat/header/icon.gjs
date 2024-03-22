@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
@@ -81,8 +82,8 @@ export default class ChatHeaderIcon extends Component {
 
   <template>
     <li class="header-dropdown-toggle chat-header-icon">
-      <a
-        href={{this.href}}
+      <DButton
+        @href={{this.href}}
         tabindex="0"
         class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
         title={{this.title}}
@@ -95,7 +96,7 @@ export default class ChatHeaderIcon extends Component {
             @indicatorPreference={{@indicatorPreference}}
           />
         {{/if}}
-      </a>
+      </DButton>
     </li>
   </template>
 }

@@ -182,7 +182,7 @@ createWidget(
 
       html(attrs) {
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
@@ -215,7 +215,7 @@ createWidget(
         }
 
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
