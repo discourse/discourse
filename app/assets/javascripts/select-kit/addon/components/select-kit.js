@@ -38,6 +38,7 @@ export default Component.extend(
     tagName: "details",
     pluginApiIdentifiers: ["select-kit"],
     classNames: ["select-kit"],
+    attributeBindings: ["ariaBusy:aria-busy"],
     classNameBindings: [
       "selectKit.isLoading:is-loading",
       "selectKit.isExpanded:is-expanded",
@@ -337,6 +338,10 @@ export default Component.extend(
         });
       }
     ),
+
+    ariaBusy: computed("selectKit.isLoading", function () {
+      return this.selectKit.isLoading ? "true" : "false";
+    }),
 
     createContentFromInput(input) {
       return input;
