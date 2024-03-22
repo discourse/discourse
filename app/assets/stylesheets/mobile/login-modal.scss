@@ -97,3 +97,13 @@
     display: none;
   }
 }
+
+// this is a hack for email input which can show an email suggestion bar
+// preventing us to have enough enough space for the modal body
+html:not(.ios-device) {
+  .d-modal.create-account {
+    .d-modal__body {
+      padding-bottom: 50px;
+    }
+  }
+}
