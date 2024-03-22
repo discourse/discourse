@@ -33,6 +33,7 @@ a.hashtag {
   .hashtag-icon-placeholder {
     font-size: var(--font-down-2);
     margin: 0 0.33em 0 0.1em;
+    vertical-align: inherit;
   }
 
   img.emoji {
