@@ -47,16 +47,14 @@ export default class DModal extends Component {
       this.handleKeyboardVisibilityChange
     );
 
-    disableBodyScroll(element.querySelector(".d-modal__body"));
+    if (this.site.mobileView) {
+      disableBodyScroll(element.querySelector(".d-modal__body"));
 
-    element.animate(
-      [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
-      {
-        duration: ANIMATE_MODAL_DURATION,
-        easing: "ease",
-        fill: "forwards",
-      }
-    );
+      element.animate(
+        [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+        { duration: ANIMATE_MODAL_DURATION, easing: "ease", fill: "forwards" }
+      );
+    }
 
     this.wrapperElement = element;
   }
@@ -102,6 +100,10 @@ export default class DModal extends Component {
 
   @action
   async handleSwipe(state) {
+    if (!this.site.mobileView) {
+      return;
+    }
+
     if (this.closing) {
       return;
     }
@@ -114,6 +116,10 @@ export default class DModal extends Component {
 
   @action
   handleSwipeEnded(state) {
+    if (!this.site.mobileView) {
+      return;
+    }
+
     if (this.closing) {
       // if the modal is closing we don't want to risk resetting the position
       // as the user releases the swipe at the same time
@@ -153,16 +159,10 @@ export default class DModal extends Component {
         [
           // hidding first ms to avoid flicker
           { visibility: "hidden", offset: 0 },
-          {
-            visibility: "visible",
-            offset: 0.01,
-          },
+          { visibility: "visible", offset: 0.01 },
           { transform: "translateY(100%)", offset: 1 },
         ],
-        {
-          duration: ANIMATE_MODAL_DURATION,
-          fill: "forwards",
-        }
+        { duration: ANIMATE_MODAL_DURATION, fill: "forwards" }
       ).finished;
     }
 
