@@ -268,6 +268,10 @@ export default function selectKit(selector) {
       return rowHelper(query(selector).querySelector(".select-kit-row.none"));
     },
 
+    clearButton() {
+      return query(selector).querySelector(".btn-clear");
+    },
+
     validationMessage() {
       const validationMessage = query(selector).querySelector(
         ".validation-message"

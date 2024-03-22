@@ -1,29 +1,36 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import Group from "discourse/models/group";
+import { service } from "@ember/service";
 import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
-import GroupChooser from "select-kit/components/group-chooser";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default class SchemaThemeSettingTypeGroup extends Component {
+  @service site;
   @tracked value = this.args.value;
-  @tracked groups = Group.findAll().then((groups) => {
-    this.groups = groups;
-  });
+
+  required = this.args.spec.required;
 
   @action
   onInput(newVal) {
-    this.value = newVal[0];
-    this.args.onChange(newVal[0]);
+    this.value = newVal;
+    this.args.onChange(newVal);
+  }
+
+  get groupChooserOptions() {
+    return {
+      clearable: !this.required,
+      filterable: true,
+      none: null,
+    };
   }
 
   <template>
-    <GroupChooser
-      @content={{this.groups}}
+    <ComboBoxComponent
+      @content={{this.site.groups}}
       @value={{this.value}}
       @onChange={{this.onInput}}
-      @options={{hash maximum=1}}
+      @options={{this.groupChooserOptions}}
     />
 
     <FieldInputDescription @description={{@description}} />
