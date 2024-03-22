@@ -97,4 +97,12 @@ class About
   def category_mods_limit=(number)
     @category_mods_limit = number
   end
+
+  def self.discourse_discover
+    @discourse_discover ||= {
+      enrolled: SiteSetting.include_in_discourse_discover?,
+      logo_url: UrlHelper.absolute(SiteSetting.site_logo_url),
+      locale: SiteSetting.default_locale,
+    }
+  end
 end

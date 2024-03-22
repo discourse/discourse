@@ -15,7 +15,7 @@ RSpec.describe SiteController do
       SiteSetting.include_in_discourse_discover = true
       Theme.clear_default!
 
-      get "/site/basic-info.json"
+      get "/site/basic-info.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
       json = response.parsed_body
 
       expected_url = UrlHelper.absolute(upload.url)
@@ -29,7 +29,7 @@ RSpec.describe SiteController do
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
       expect(json["login_required"]).to eq(true)
-      expect(json["discourse_discover_enrolled"]).to eq(true)
+      expect(json["discourse_discover"]["enrolled"]).to eq(true)
     end
 
     it "skips `discourse_discover_enrolled` if `include_in_discourse_discover` setting disabled" do
@@ -38,7 +38,7 @@ RSpec.describe SiteController do
       get "/site/basic-info.json"
       json = response.parsed_body
 
-      expect(json.keys).not_to include("discourse_discover_enrolled")
+      expect(json.keys).not_to include("discourse_discover")
     end
   end
 
@@ -75,6 +75,8 @@ RSpec.describe SiteController do
       json = response.parsed_body
 
       expect(json["discourse_discover_enrolled"]).to be_truthy
+      expect(json["discourse_discover_logo_url"]).to eq(SiteSetting.site_logo_url)
+      expect(json["discourse_discover_locale"]).to eq(SiteSetting.default_locale)
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do

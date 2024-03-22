@@ -42,9 +42,10 @@ class SiteController < ApplicationController
       results[:mobile_logo_url] = UrlHelper.absolute(mobile_logo_url)
     end
 
-    results[:discourse_discover_enrolled] = true if SiteSetting.include_in_discourse_discover?
-
-    DiscourseHub.stats_fetched_at = Time.zone.now if request.user_agent == "Discourse Hub"
+    if request.user_agent == "Discourse Hub"
+      DiscourseHub.stats_fetched_at = Time.zone.now
+      results[:discourse_discover] = About.discourse_discover
+    end
 
     # this info is always available cause it can be scraped from a 404 page
     render json: results
@@ -52,6 +53,7 @@ class SiteController < ApplicationController
 
   def statistics
     return redirect_to path("/") unless SiteSetting.share_anonymized_statistics?
-    render json: About.fetch_cached_stats
+    stats = About.fetch_cached_stats
+    render json: stats
   end
 end
