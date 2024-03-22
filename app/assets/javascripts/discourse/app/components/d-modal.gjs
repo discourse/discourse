@@ -161,6 +161,9 @@ export default class DModal extends Component {
 
     if (this.site.mobileView) {
       this.animating = true;
+
+      this.#animateBackdropOpacity(window.innerHeight);
+
       await this.wrapperElement.animate(
         [
           // hidding first ms to avoid flicker
@@ -228,7 +231,27 @@ export default class DModal extends Component {
     }
   }
 
+  #animateBackdropOpacity(position) {
+    const backdrop = this.wrapperElement.nextElementSibling;
+
+    if (!backdrop) {
+      return;
+    }
+
+    // 85vh is the max height of the modal
+    const opacity = 1 - position / (window.innerHeight * 0.85);
+    requestAnimationFrame(() => {
+      backdrop.style.setProperty(
+        "opacity",
+        Math.max(0, Math.min(opacity, 0.6)),
+        "important"
+      );
+    });
+  }
+
   async #animateWrapperPosition(position) {
+    this.#animateBackdropOpacity(position);
+
     await this.wrapperElement.animate(
       [{ transform: `translateY(${position}px)` }],
       {
