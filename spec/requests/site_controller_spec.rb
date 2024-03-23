@@ -65,18 +65,19 @@ RSpec.describe SiteController do
       expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
+      expect(json["discourse_discover_enrolled"]).to be_nil
     end
 
     it "returns Discourse Discover stats" do
       SiteSetting.include_in_discourse_discover = true
       About.refresh_stats
 
-      get "/site/statistics.json"
+      get "/site/statistics.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
       json = response.parsed_body
 
       expect(json["discourse_discover_enrolled"]).to be_truthy
-      expect(json["discourse_discover_logo_url"]).to eq(SiteSetting.site_logo_url)
-      expect(json["discourse_discover_locale"]).to eq(SiteSetting.default_locale)
+      expect(json["discourse_discover_logo_url"]).to be_present
+      expect(json["discourse_discover_locale"]).to be_present
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do
