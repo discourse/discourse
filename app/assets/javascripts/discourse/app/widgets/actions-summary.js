@@ -1,7 +1,8 @@
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { userPath } from "discourse/lib/url";
-import hbs from "discourse/widgets/hbs-compiler";
 import { avatarFor } from "discourse/widgets/post";
+import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
@@ -101,19 +102,8 @@ createWidget("action-link", {
   },
 });
 
-export default createWidget("actions-summary", {
-  tagName: "section.post-actions",
-  template: hbs`
-    {{#each attrs.actionsSummary as |as|}}
-      <div class='post-action'>{{as.description}}</div>
-      <div class='clearfix'></div>
-    {{/each}}
-    {{#if attrs.deleted_at}}
-      <div class='post-action deleted-post'>
-        {{d-icon "far-trash-alt"}}
-        {{avatar size="small" template=attrs.deletedByAvatarTemplate username=attrs.deletedByUsername}}
-        {{date attrs.deleted_at}}
-      </div>
-    {{/if}}
-  `,
-});
+registerWidgetShim(
+  "actions-summary",
+  "section.post-actions",
+  hbs`<ActionsSummary @data={{@data}} /> `
+);
