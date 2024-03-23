@@ -42,7 +42,7 @@ class SiteController < ApplicationController
       results[:mobile_logo_url] = UrlHelper.absolute(mobile_logo_url)
     end
 
-    if request.user_agent == "Discourse Hub"
+    if guardian.is_discourse_hub_request?
       DiscourseHub.stats_fetched_at = Time.zone.now
       results[:discourse_discover] = About.discourse_discover
     end
@@ -54,7 +54,7 @@ class SiteController < ApplicationController
   def statistics
     return redirect_to path("/") unless SiteSetting.share_anonymized_statistics?
     stats = About.fetch_cached_stats
-    stats.merge!(Stat.discourse_hub_stats) if request.user_agent == "Discourse Hub"
+    stats.merge!(Stat.discourse_hub_stats) if guardian.is_discourse_hub_request?
     render json: stats
   end
 end
