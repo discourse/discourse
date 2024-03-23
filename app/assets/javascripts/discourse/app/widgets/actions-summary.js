@@ -89,19 +89,6 @@ createWidget("small-user-list", {
   },
 });
 
-createWidget("action-link", {
-  tagName: "span.action-link",
-  template: hbs`<a>{{attrs.text}}. </a>`,
-
-  buildClasses(attrs) {
-    return attrs.className;
-  },
-
-  click() {
-    this.sendWidgetAction(this.attrs.action);
-  },
-});
-
 registerWidgetShim(
   "actions-summary",
   "section.post-actions",
