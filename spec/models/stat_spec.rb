@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Stat do
-  describe "#api_stats" do
+  describe "#discourse_hub_stats" do
     it "skips discover stats when disabled" do
-      Stat.api_stats.keys.exclude?("discourse_discover_enrolled")
+      Stat.discourse_hub_stats.keys.exclude?("discourse_discover_enrolled")
     end
 
     it "includes discover stats when enrolled" do
@@ -13,7 +13,7 @@ RSpec.describe Stat do
         discourse_discover_logo_url
         discourse_discover_locale
       ]
-      expect(Stat.api_stats.keys).to include(*discover_keys)
+      expect(Stat.discourse_hub_stats.keys).to include(*discover_keys)
     end
   end
 end
