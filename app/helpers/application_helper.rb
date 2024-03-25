@@ -555,6 +555,7 @@ module ApplicationHelper
   end
 
   def current_homepage
+    return "custom" if SiteSetting.experimental_custom_homepage?
     current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
 
@@ -752,6 +753,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def anonymous_top_menu_items
+    Discourse.anonymous_top_menu_items.map(&:to_s)
   end
 
   def authentication_data

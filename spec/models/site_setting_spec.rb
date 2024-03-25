@@ -53,6 +53,11 @@ RSpec.describe SiteSetting do
     it "returns latest" do
       expect(SiteSetting.anonymous_homepage).to eq("latest")
     end
+
+    it "returns custom when experimental_custom_homepage is enabled" do
+      SiteSetting.experimental_custom_homepage = true
+      expect(SiteSetting.anonymous_homepage).to eq("custom")
+    end
   end
 
   describe "top_menu" do

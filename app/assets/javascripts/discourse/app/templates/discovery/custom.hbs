@@ -1,3 +1,7 @@
 <PluginOutlet @name="custom-homepage" @connectorTagName="div">
-  [custom-homepage] placeholder
+  {{#if this.currentUser.admin}}
+    <p class="alert alert-info">
+      {{i18n "custom_homepage.admin_message"}}
+    </p>
+  {{/if}}
 </PluginOutlet>
