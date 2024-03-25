@@ -5653,7 +5653,7 @@ en:
             fields:
               required: "*required"
               tags:
-                at_least_tag:
+                at_least:
                   one: "at least %{count} tag is required"
                   other: "at least %{count} tags are required"
               string:

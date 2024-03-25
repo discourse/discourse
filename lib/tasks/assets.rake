@@ -21,7 +21,8 @@ task "assets:precompile:build" do
       compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
     end
 
-    compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
+    ember_env = ENV["EMBER_ENV"] || "production"
+    compile_command = "#{compile_command} -prod" if ember_env == "production"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
