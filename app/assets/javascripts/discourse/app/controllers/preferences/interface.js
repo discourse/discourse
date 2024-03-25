@@ -48,6 +48,10 @@ export default Controller.extend({
     if (this.siteSettings.top_menu.split("|").includes("hot")) {
       USER_HOMES[8] = "hot";
     }
+
+    if (this.siteSettings.experimental_custom_homepage) {
+      USER_HOMES[-1] = "default";
+    }
   },
 
   @discourseComputed("makeThemeDefault")
@@ -200,6 +204,14 @@ export default Controller.extend({
     });
 
     let result = [];
+
+    if (this.siteSettings.experimental_custom_homepage) {
+      result.push({
+        name: I18n.t("user.homepage.default"),
+        value: -1,
+      });
+    }
+
     this.siteSettings.top_menu.split("|").forEach((m) => {
       let id = homeValues[m];
       if (id) {

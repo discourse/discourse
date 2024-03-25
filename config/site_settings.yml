@@ -172,6 +172,7 @@ basic:
   experimental_custom_homepage:
     default: false
     hidden: true
+    client: true
   top_menu:
     client: true
     refresh: true
