@@ -51,4 +51,8 @@ class DistributedCache < MessageBus::DistributedCache
   def clear_regex(regex)
     hash.keys.select { |k| k =~ regex }.each { |k| delete(k) }
   end
+
+  def keys
+    hash.keys
+  end
 end

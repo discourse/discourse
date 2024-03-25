@@ -15,6 +15,7 @@ if defined?(RailsFailover::Redis)
     MessageBus.keepalive_interval = message_bus_keepalive_interval
 
     ObjectSpace.each_object(DistributedCache) { |cache| cache.clear }
+    ObjectSpace.each_object(LiveCache) { |cache| cache.clear_all }
 
     SiteSetting.refresh!
   end

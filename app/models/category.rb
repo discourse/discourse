@@ -275,7 +275,7 @@ class Category < ActiveRecord::Base
   end
 
   def self.topic_id_cache
-    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+    @topic_id_cache ||= Discourse.new_cache("category_topic_ids", max_size_per_site: 1)
   end
 
   def self.topic_ids
@@ -334,7 +334,7 @@ class Category < ActiveRecord::Base
     DB.query_single(sqls.join("\nUNION ALL\n"), params)
   end
 
-  @@subcategory_ids = DistributedCache.new("subcategory_ids")
+  @@subcategory_ids = Discourse.new_cache("subcategory_ids", max_size_per_site: 1000)
 
   def self.subcategory_ids(category_id)
     @@subcategory_ids.defer_get_set(category_id.to_s) do
@@ -929,7 +929,7 @@ class Category < ActiveRecord::Base
     url[start_idx..-1].gsub("/", separator)
   end
 
-  @@url_cache = DistributedCache.new("category_url")
+  @@url_cache = Discourse.new_cache("category_url", max_size_per_site: 1000)
 
   def clear_url_cache
     @@url_cache.clear

@@ -13,11 +13,12 @@ class Emoji
   attr_accessor :name, :url, :tonable, :group, :search_aliases
 
   def self.global_emoji_cache
-    @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
+    @global_emoji_cache ||=
+      Discourse.new_cache("global_emoji_cache", max_size_per_site: 1000, namespace: false)
   end
 
   def self.site_emoji_cache
-    @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
+    @site_emoji_cache ||= Discourse.new_cache("site_emoji_cache", max_size_per_site: 1000)
   end
 
   def self.all

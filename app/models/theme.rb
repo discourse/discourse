@@ -14,7 +14,8 @@ class Theme < ActiveRecord::Base
   attr_accessor :child_components
 
   def self.cache
-    @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+    @cache ||=
+      Discourse.new_cache("theme:compiler:#{BASE_COMPILER_VERSION}", max_size_per_site: 10_000)
   end
 
   belongs_to :user

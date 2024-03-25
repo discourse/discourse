@@ -714,7 +714,7 @@ class ApplicationController < ActionController::Base
   end
 
   def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
+    @banner_json_cache ||= Discourse.new_cache("banner_json", max_size_per_site: 1)
   end
 
   def banner_json

@@ -1619,7 +1619,7 @@ RSpec.describe Topic do
 
         channels = messages.map(&:channel)
         expect(channels).to include("/site/banner")
-        expect(channels).to include("/distributed_hash")
+        expect(channels.intersection(%w[/distributed_hash /live_cache])).not_to be_empty
       end
 
       it "ensures only one banner topic at all time" do

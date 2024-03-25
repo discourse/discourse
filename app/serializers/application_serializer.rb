@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "distributed_cache"
-
 class ApplicationSerializer < ActiveModel::Serializer
   embed :ids, include: true
 
@@ -25,7 +23,7 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def self.fragment_cache
-    @cache ||= DistributedCache.new("am_serializer_fragment_cache")
+    @cache ||= Discourse.new_cache("am_serializer_fragment_cache", max_size_per_site: 10_000)
   end
 
   protected

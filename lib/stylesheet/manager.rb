@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "distributed_cache"
 require "stylesheet/compiler"
 
 module Stylesheet
@@ -19,7 +18,7 @@ class Stylesheet::Manager
   @@lock = Mutex.new
 
   def self.cache
-    @cache ||= DistributedCache.new("discourse_stylesheet")
+    @cache ||= Discourse.new_cache("discourse_stylesheet", max_size_per_site: 1000)
   end
 
   def self.clear_theme_cache!
