@@ -42,7 +42,7 @@ class DiscourseIpInfo
         max_file_size: 100.megabytes,
         tmp_file_name: "#{name}.gz",
         validate_uri: false,
-        follow_redirect: false,
+        follow_redirect: true,
       )
 
     filename = File.basename(gz_file.path)
