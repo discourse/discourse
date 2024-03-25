@@ -17,7 +17,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import loadScript from "discourse/lib/load-script";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
 import {
@@ -231,6 +230,7 @@ export default Component.extend(TextareaTextManipulation, {
   ready: false,
   lastSel: null,
   _itsatrap: null,
+  _previewElement: null,
   showLink: true,
   emojiPickerIsActive: false,
   emojiFilter: "",
@@ -292,6 +292,7 @@ export default Component.extend(TextareaTextManipulation, {
   didInsertElement() {
     this._super(...arguments);
 
+    this._previewElement = this.element.querySelector(".d-editor-preview");
     this._previewMutationObserver = this._disablePreviewTabIndex();
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
@@ -319,9 +320,10 @@ export default Component.extend(TextareaTextManipulation, {
     );
 
     // disable clicking on links in the preview
-    this.element
-      .querySelector(".d-editor-preview")
-      .addEventListener("click", this._handlePreviewLinkClick);
+    this._previewElement.addEventListener(
+      "click",
+      this._handlePreviewLinkClick
+    );
 
     if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "insertBlock");
@@ -379,10 +381,10 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
-    this.element
-      .querySelector(".d-editor-preview")
-      ?.removeEventListener("click", this._handlePreviewLinkClick);
-
+    this._previewElement?.removeEventListener(
+      "click",
+      this._handlePreviewLinkClick
+    );
     this._previewMutationObserver?.disconnect();
 
     if (isTesting()) {
@@ -390,6 +392,7 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     this._cachedCookFunction = null;
+    this._previewElement = null;
   },
 
   @discourseComputed()
@@ -413,92 +416,78 @@ export default Component.extend(TextareaTextManipulation, {
     return toolbar;
   },
 
-  cachedCookAsync(text) {
-    if (this._cachedCookFunction) {
-      return Promise.resolve(this._cachedCookFunction(text));
-    }
-
-    const markdownOptions = this.markdownOptions || {};
-    return generateCookFunction(markdownOptions).then((cook) => {
-      this._cachedCookFunction = cook;
-      return cook(text);
-    });
+  async cachedCookAsync(text, options = {}) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
   },
 
-  _updatePreview() {
-    if (this._state !== "inDOM" || !this.processPreview) {
+  async _updatePreview() {
+    if (
+      this._state !== "inDOM" ||
+      !this.processPreview ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
       return;
     }
 
-    const value = this.value;
+    const cooked = await this.cachedCookAsync(this.value, this.markdownOptions);
 
-    this.cachedCookAsync(value).then((cooked) => {
-      if (this.isDestroyed) {
-        return;
-      }
+    if (this.preview === cooked) {
+      return;
+    }
 
-      if (this.preview === cooked) {
-        return;
-      }
+    this.preview = cooked;
 
-      this.set("preview", cooked);
+    if (this.siteSettings.enable_diffhtml_preview) {
+      const cookedElement = this._previewElement.cloneNode(false);
+      cookedElement.innerHTML = cooked;
 
-      let previewPromise = Promise.resolve();
+      // Same order of operation as in the "previewUpdated" method in "composer-editor.js"
+      linkSeenMentions(cookedElement, this.siteSettings);
 
-      if (this.siteSettings.enable_diffhtml_preview) {
-        const cookedElement = document.createElement("div");
-        cookedElement.innerHTML = cooked;
-        linkSeenHashtagsInContext(
-          this.site.hashtag_configurations["topic-composer"],
-          cookedElement
-        );
-        linkSeenMentions(cookedElement, this.siteSettings);
-        resolveCachedShortUrls(this.siteSettings, cookedElement);
-        loadOneboxes(
-          cookedElement,
-          ajax,
-          null,
-          null,
-          this.siteSettings.max_oneboxes_per_post,
-          false,
-          true
-        );
+      linkSeenHashtagsInContext(
+        this.site.hashtag_configurations["topic-composer"],
+        cookedElement
+      );
 
-        previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
-          const previewElement =
-            this.element.querySelector(".d-editor-preview");
-          window.diff.innerHTML(previewElement, cookedElement.innerHTML);
-        });
-      }
+      loadOneboxes(
+        cookedElement,
+        ajax,
+        this.topicId,
+        this.categoryId,
+        this.siteSettings.max_oneboxes_per_post,
+        false,
+        true
+      );
 
-      previewPromise.then(() => {
-        schedule("afterRender", () => {
-          if (this._state !== "inDOM" || !this.element) {
-            return;
-          }
+      resolveCachedShortUrls(this.siteSettings, cookedElement);
 
-          const preview = this.element.querySelector(".d-editor-preview");
-          if (!preview) {
-            return;
-          }
+      (await import("morphlex")).morph(this._previewElement, cookedElement);
+    }
 
-          if (this.previewUpdated) {
-            this.previewUpdated(preview);
-          }
-        });
-      });
-    });
+    scheduleOnce("afterRender", this, this._updatePreviewComplete);
+  },
+
+  _updatePreviewComplete() {
+    if (
+      this._state === "inDOM" &&
+      this._previewElement &&
+      this.previewUpdated
+    ) {
+      this.previewUpdated(this._previewElement);
+    }
   },
 
   @observes("ready", "value", "processPreview")
-  _watchForChanges() {
+  async _watchForChanges() {
     if (!this.ready) {
       return;
     }
 
     // Debouncing in test mode is complicated
     if (isTesting()) {
-      this._updatePreview();
+      await this._updatePreview();
     } else {
       discourseDebounce(this, this._updatePreview, 30);
     }
@@ -836,13 +825,13 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _disablePreviewTabIndex() {
-    const observer = new MutationObserver(function () {
+    const observer = new MutationObserver(() => {
       document.querySelectorAll(".d-editor-preview a").forEach((anchor) => {
         anchor.setAttribute("tabindex", "-1");
       });
     });
 
-    observer.observe(document.querySelector(".d-editor-preview"), {
+    observer.observe(this._previewElement, {
       childList: true,
       subtree: true,
       attributes: false,
