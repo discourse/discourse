@@ -6,7 +6,6 @@
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
-# transpile_js: true
 # meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
@@ -48,6 +47,9 @@ after_initialize do
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
+
+  register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
+  DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
 
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
@@ -144,9 +146,10 @@ after_initialize do
 
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
-    return false if scope.user.blank?
+    return false if scope.user.blank? || scope.user.id == object.id
+    return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat?
   end
 
   add_to_serializer(
@@ -163,7 +166,7 @@ after_initialize do
     :can_direct_message,
     include_condition: -> do
       return @can_direct_message if defined?(@can_direct_message)
-      @can_direct_message = SiteSetting.chat_enabled && scope.can_direct_message?
+      @can_direct_message = include_has_chat_enabled? && scope.can_direct_message?
     end,
   ) { true }
 
@@ -210,29 +213,6 @@ after_initialize do
     ).exists?
   end
 
-  add_to_serializer(:current_user, :chat_channels) do
-    structured = Chat::ChannelFetcher.structured(self.scope)
-
-    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
-      guardian: self.scope,
-      channel_ids: structured[:public_channels].map(&:id),
-      include_threads: true,
-      include_read: false,
-      include_last_reply_details: true,
-    ).thread_unread_overview_by_channel
-
-    category_ids = structured[:public_channels].map { |c| c.chatable_id }
-    post_allowed_category_ids =
-      Category.post_create_allowed(self.scope).where(id: category_ids).pluck(:id)
-
-    Chat::ChannelIndexSerializer.new(
-      structured,
-      scope: self.scope,
-      root: false,
-      post_allowed_category_ids: post_allowed_category_ids,
-    ).as_json
-  end
-
   add_to_serializer(
     :current_user,
     :chat_drafts,
@@ -245,6 +225,16 @@ after_initialize do
       .pluck(:chat_channel_id, :data, :thread_id)
       .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
+
+  add_to_serializer(
+    :user_notification_total,
+    :chat_notifications,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled =
+        SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
+    end,
+  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 

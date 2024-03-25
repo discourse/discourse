@@ -727,9 +727,9 @@ class TopicView
   end
 
   def categories
-    categories = [category, category&.parent_category]
-    categories += suggested_topics.categories if suggested_topics
-    categories.compact.uniq
+    @categories ||= [category&.parent_category, category, suggested_topics&.categories].flatten
+      .uniq
+      .compact
   end
 
   protected

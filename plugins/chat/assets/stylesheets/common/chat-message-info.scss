@@ -70,6 +70,7 @@
 .chat-message-info__original-message {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   font-size: var(--font-down-2);
   color: var(--primary-high);
   gap: 0.5em;
@@ -87,9 +88,16 @@
   }
 
   .chat-channel-icon {
-    .d-icon {
+    .d-icon-d-chat {
       height: 0.9em;
       width: 0.9em;
+    }
+    &__restricted-category-icon {
+      background: var(--tertiary-very-low);
+      height: 0.355em;
+      width: 0.35em;
+      margin-right: 0.4em;
+      padding: 1px 1px 2px 1px;
     }
   }
 

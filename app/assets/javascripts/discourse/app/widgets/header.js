@@ -182,16 +182,14 @@ createWidget(
 
       html(attrs) {
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
-              href: attrs.user.path,
               "aria-label": I18n.t("user.account_possessive", {
                 name: attrs.user.name || attrs.user.username,
               }),
-              "data-auto-route": true,
             },
           },
           this.attach("header-notifications", attrs)
@@ -217,13 +215,11 @@ createWidget(
         }
 
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
               "aria-haspopup": true,
-              href: attrs.href,
-              "data-auto-route": true,
               title,
               "aria-label": title,
               id: attrs.iconId,
@@ -244,7 +240,7 @@ createWidget("header-icons", {
   init() {
     registerWidgetShim(
       "extra-icon",
-      "div.wrapper",
+      "span.wrapper",
       hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
     );
   },
@@ -257,48 +253,47 @@ createWidget("header-icons", {
     const icons = [];
 
     const resolvedIcons = _extraHeaderIcons.resolve();
+
     resolvedIcons.forEach((icon) => {
-      if (["search", "user-menu", "hamburger"].includes(icon.key)) {
-        return;
+      if (icon.key === "search") {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "search.title",
+            icon: "search",
+            iconId: SEARCH_BUTTON_ID,
+            action: "toggleSearchMenu",
+            active: this.search.visible,
+            href: getURL("/search"),
+            classNames: ["search-dropdown"],
+          })
+        );
+      } else if (icon.key === "user-menu" && attrs.user) {
+        icons.push(
+          this.attach("user-dropdown", {
+            active: attrs.userVisible,
+            action: "toggleUserMenu",
+            user: attrs.user,
+          })
+        );
+      } else if (
+        icon.key === "hamburger" &&
+        (!attrs.sidebarEnabled || this.site.mobileView)
+      ) {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "hamburger_menu",
+            icon: "bars",
+            iconId: "toggle-hamburger-menu",
+            active: attrs.hamburgerVisible,
+            action: "toggleHamburger",
+            href: "",
+            classNames: ["hamburger-dropdown"],
+          })
+        );
+      } else {
+        icons.push(this.attach("extra-icon", { component: icon.value }));
       }
-      icons.push(this.attach("extra-icon", { component: icon.value }));
     });
-
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: SEARCH_BUTTON_ID,
-      action: "toggleSearchMenu",
-      active: this.search.visible,
-      href: getURL("/search"),
-      classNames: ["search-dropdown"],
-    });
-
-    icons.push(search);
-
-    const hamburger = this.attach("header-dropdown", {
-      title: "hamburger_menu",
-      icon: "bars",
-      iconId: "toggle-hamburger-menu",
-      active: attrs.hamburgerVisible,
-      action: "toggleHamburger",
-      href: "",
-      classNames: ["hamburger-dropdown"],
-    });
-
-    if (!attrs.sidebarEnabled || this.site.mobileView) {
-      icons.push(hamburger);
-    }
-
-    if (attrs.user) {
-      icons.push(
-        this.attach("user-dropdown", {
-          active: attrs.userVisible,
-          action: "toggleUserMenu",
-          user: attrs.user,
-        })
-      );
-    }
 
     return icons;
   },
@@ -500,7 +495,11 @@ export default createWidget("header", {
   services: ["router", "search"],
 
   init() {
-    registerWidgetShim("extra-button", "div.wrapper", hbs`<@data.component />`);
+    registerWidgetShim(
+      "extra-button",
+      "span.wrapper",
+      hbs`<@data.component />`
+    );
   },
 
   defaultState() {
@@ -542,12 +541,10 @@ export default createWidget("header", {
       const resolvedButtons = _extraHeaderButtons.resolve();
       resolvedButtons.forEach((button) => {
         if (button.key === "auth") {
-          return;
+          buttons.push(this.attach("header-buttons", attrs));
         }
         buttons.push(this.attach("extra-button", { component: button.value }));
       });
-
-      buttons.push(this.attach("header-buttons", attrs));
 
       const panels = [];
       panels.push(h("span.header-buttons", buttons), headerIcons);
@@ -674,10 +671,9 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) {
-      return;
+    if (this.site.mobileView) {
+      scrollLock(bool);
     }
-    scrollLock(bool);
   },
 
   togglePageSearch() {

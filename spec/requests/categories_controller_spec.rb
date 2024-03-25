@@ -314,6 +314,31 @@ RSpec.describe CategoriesController do
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
+    it "doesn't do more queries when more categories exist" do
+      SiteSetting.lazy_load_categories_groups = true
+      Theme.cache.clear
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      before_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      Theme.cache.clear
+
+      after_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      expect(after_queries.size).to eq(before_queries.size)
+    end
+
     it "does not result in N+1 queries problem with multiple topics" do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
@@ -1115,6 +1140,26 @@ RSpec.describe CategoriesController do
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
     end
+
+    context "with a read restricted child category" do
+      before_all { subcategory.update!(read_restricted: true) }
+
+      it "indicates to an admin that the category has a child" do
+        sign_in(admin)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(true)
+      end
+
+      it "indicates to a normal user that the category has no child" do
+        sign_in(user)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(false)
+      end
+    end
   end
 
   describe "#search" do
@@ -1125,6 +1170,24 @@ RSpec.describe CategoriesController do
     before do
       SearchIndexer.enable
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
+    end
+
+    it "does not generate N+1 queries" do
+      # Set up custom fields
+      Site.preloaded_category_custom_fields << "bob"
+      category2.upsert_custom_fields("bob" => "marley")
+
+      # Warm up caches
+      get "/categories/search.json", params: { term: "Notfoo" }
+
+      queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
+
+      expect(queries.length).to eq(5)
+
+      expect(response.parsed_body["categories"].length).to eq(1)
+      expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
     end
 
     context "without include_ancestors" do

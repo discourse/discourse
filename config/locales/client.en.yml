@@ -1173,6 +1173,7 @@ en:
           warning: "Are you sure you want to clear your featured topic?"
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
+      login_to_view_profile: "You must log in to view user profiles"
       inactive_user: "This user is no longer active."
       expand_profile: "Expand"
       sr_expand_profile: "Expand profile details"
@@ -2596,7 +2597,9 @@ en:
 
       image_alt_text:
         aria_label: Alt text for image
+        title: "Add image description"
 
+      image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
 
@@ -4822,6 +4825,7 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
+      filter_reports: Filter reports
 
       tags:
         remove_muted_tags_from_latest:
@@ -4836,6 +4840,8 @@ en:
         sidebar_link:
           all: "All"
 
+      new_features:
+        title: "What's new"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -4893,7 +4899,6 @@ en:
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
-        filter_reports: Filter reports
         custom_date_range: Custom date range
 
         reports:
@@ -5652,7 +5657,20 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           schema:
+            title: "Edit %{name} setting"
             back_button: "Back to %{name}"
+            fields:
+              required: "*required"
+              tags:
+                at_least_tag:
+                  one: "at least %{count} tag is required"
+                  other: "at least %{count} tags are required"
+              string:
+                too_short: "must be at least %{count} characters"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
+
         colors:
           select_base:
             title: "Select base color palette"

@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 80
+  BASE_COMPILER_VERSION = 81
 
   class SettingsMigrationError < StandardError
   end
@@ -89,6 +89,8 @@ class Theme < ActiveRecord::Base
             theme_fields: %i[upload theme_settings_migration],
           )
         end
+
+  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
@@ -471,7 +473,6 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="preload" href="#{c.url}" as="script" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
           <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
       end
@@ -948,6 +949,18 @@ class Theme < ActiveRecord::Base
     end
 
     [content, Digest::SHA1.hexdigest(content)]
+  end
+
+  def repository_url
+    return unless remote_url
+    remote_url.gsub(
+      %r{([^@]+@)?(http(s)?://)?(?<host>[^:/]+)[:/](?<path>((?!\.git).)*)(\.git)?(?<rest>.*)},
+      '\k<host>/\k<path>\k<rest>',
+    )
+  end
+
+  def user_selectable_count
+    UserOption.where(theme_ids: [id]).count
   end
 
   private

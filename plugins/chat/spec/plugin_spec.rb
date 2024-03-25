@@ -82,6 +82,7 @@ describe Chat do
 
       it "returns true if the target user and the guardian user is in the Chat.allowed_group_ids" do
         SiteSetting.chat_allowed_groups = group.id
+        SiteSetting.direct_message_enabled_groups = group.id
         GroupUser.create(user: target_user, group: group)
         GroupUser.create(user: user, group: group)
         expect(serializer.can_chat_user).to eq(true)
@@ -111,6 +112,34 @@ describe Chat do
         let!(:guardian) { Guardian.new }
 
         it "returns false" do
+          expect(serializer.can_chat_user).to eq(false)
+        end
+      end
+
+      context "when both users are in Chat.allowed_group_ids" do
+        before do
+          SiteSetting.chat_allowed_groups = group.id
+          SiteSetting.direct_message_enabled_groups = group.id
+          GroupUser.create(user: target_user, group: group)
+          GroupUser.create(user: user, group: group)
+        end
+
+        it "returns true when both users are valid" do
+          expect(serializer.can_chat_user).to eq(true)
+        end
+
+        it "returns false if current user has chat disabled" do
+          user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if target user has chat disabled" do
+          target_user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if user is not in dm allowed group" do
+          SiteSetting.direct_message_enabled_groups = 3
           expect(serializer.can_chat_user).to eq(false)
         end
       end
@@ -270,75 +299,6 @@ describe Chat do
       global_setting :allow_unsecure_chat_uploads, true
       expect { enable_secure_uploads }.not_to change { UserHistory.count }
       expect(SiteSetting.chat_allow_uploads).to eq(true)
-    end
-  end
-
-  describe "current_user_serializer#chat_channels" do
-    before do
-      SiteSetting.chat_enabled = true
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    end
-
-    fab!(:user)
-
-    let(:serializer) { CurrentUserSerializer.new(user, scope: Guardian.new(user)) }
-
-    it "returns the global presence channel state" do
-      expect(serializer.chat_channels[:global_presence_channel_state]).to be_present
-    end
-
-    context "when no channels exist" do
-      it "returns an empty array" do
-        expect(serializer.chat_channels[:direct_message_channels]).to eq([])
-        expect(serializer.chat_channels[:public_channels]).to eq([])
-      end
-    end
-
-    context "when followed direct message channels exist" do
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
-
-      it "returns them" do
-        expect(serializer.chat_channels[:public_channels]).to eq([])
-        expect(serializer.chat_channels[:direct_message_channels].count).to eq(1)
-        expect(serializer.chat_channels[:direct_message_channels][0].id).to eq(channel.id)
-      end
-    end
-
-    context "when followed public channels exist" do
-      fab!(:channel) { Fabricate(:chat_channel) }
-
-      before do
-        Fabricate(:user_chat_channel_membership, user: user, chat_channel: channel, following: true)
-        Fabricate(:chat_channel)
-      end
-
-      it "returns them" do
-        expect(serializer.chat_channels[:direct_message_channels]).to eq([])
-        expect(serializer.chat_channels[:public_channels].count).to eq(1)
-        expect(serializer.chat_channels[:public_channels][0].id).to eq(channel.id)
-      end
-    end
-
-    context "when the category is restricted and user has readonly persmissions" do
-      fab!(:channel_1) { Fabricate(:chat_channel) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:private_channel_1) { Fabricate(:private_category_channel, group: group_1) }
-
-      before do
-        private_channel_1.chatable.category_groups.first.update!(
-          permission_type: CategoryGroup.permission_types[:readonly],
-        )
-        group_1.add(user)
-        channel_1.add(user)
-        private_channel_1.add(user)
-      end
-
-      it "doesn’t list the associated channel" do
-        expect(serializer.chat_channels[:public_channels].map(&:id)).to contain_exactly(
-          channel_1.id,
-        )
-      end
     end
   end
 

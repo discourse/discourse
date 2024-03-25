@@ -83,4 +83,56 @@ describe "Admin Customize Themes", type: :system do
       expect(ace_content.text).to eq("console.log('test')")
     end
   end
+
+  describe "when editing theme translations" do
+    it "should allow admin to edit and save the theme translations" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+
+      theme_translations_settings_editor.fill_in("Hello World")
+      theme_translations_settings_editor.save
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
+    end
+
+    it "should allow admin to edit and save the theme translations from other languages" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.set_field(
+        target: :translations,
+        name: "fr",
+        value: { fr: { group: { hello: "Bonjour!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+
+      theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
+      theme_translations_picker.select_row_by_value("fr")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
+
+      theme_translations_settings_editor.fill_in("Hello World in French")
+      theme_translations_settings_editor.save
+    end
+  end
 end

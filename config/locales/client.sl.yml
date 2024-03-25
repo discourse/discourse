@@ -201,6 +201,7 @@ sl:
     software_update_prompt:
       dismiss: "Opusti"
     bootstrap_mode: "Začetki"
+    back_button: "Nazaj"
     themes:
       default_description: "Privzeto"
       broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema/komponenta napake."
@@ -1247,8 +1248,6 @@ sl:
         rename_passkey: "Preimenuj Passkey"
         add_passkey: "Dodaj Passkey"
         save: "Shrani"
-        added_prefix: "Dodano"
-        last_used_prefix: "Nazadnje uporabljeno"
         never_used: "Nikoli uporabljeno"
       change_about:
         title: "Spremeni O meni"
@@ -3652,6 +3651,9 @@ sl:
           never: "nikoli"
       reports:
         title: "Seznam poročil"
+        sidebar_title: "Poročila"
+        sidebar_link:
+          all: "Vse"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3851,6 +3853,47 @@ sl:
           request: "Zahteva"
           timestamp: "Ustvarjeno"
           actions: "Akcije"
+      home:
+        title: "Domov"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Varnostne kopije"
+      community:
+        title: "Skupnost"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obvestila"
+          permalinks: "Trajne povezave"
+          trust_levels: "Nivo zaupanja"
+          users: "Uporabniki"
+          user_fields: "Podatki uporabnika"
+          watched_words: "Nadzorovane besede"
+          legal: "Pravno"
+      appearance:
+        title: "Videz"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+          themes: "Videzi"
+      email_settings:
+        sidebar_link:
+          appearance: "Videz"
+      email_logs:
+        sidebar_link:
+          sent: "Poslano"
+          received: "Prejeto"
+          rejected: "Zavrnjeno"
+      security:
+        title: "Varnost"
+        sidebar_link:
+          error_logs: "Dnevnik napak"
+          screened_emails: "Nadzorovani e-naslovi"
+          screened_ips: "Nadzorovani IPji"
+          screened_urls: "Nadzorovani URLji"
+          search_logs: "Dnevnik iskanj"
+          security: "Varnost"
+          spam: "Neželeno"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"
@@ -3864,6 +3907,18 @@ sl:
         author: "Od %{author}"
         experimental_badge: "eksperimentalno"
         learn_more: "Več o tem"
+        sidebar_link:
+          installed: "Nameščeno"
+      advanced:
+        sidebar_link:
+          developer: "Razvijalci"
+          embedding: "Vdelovanje"
+          rate_limits: "Omejitve"
+          user_api: "Uporabniški API"
+          onebox: "Onebox"
+          files: "Datoteke"
+          other_options: "Drugo"
+          search: "Išči"
       backups:
         title: "Varnostne kopije"
         menu:
@@ -3880,6 +3935,7 @@ sl:
           uploading_progress: "Nalagam %{progress}%..."
           success: "'%{filename}' je bila uspešno naložena. Datoteka se procesira, zato bo potrebnih nekaj minut, preden se bo pojavila na seznamu."
           error: "Prišlo je do napake med prenašanjem '%{filename}': %{message}"
+        settings: "Nastavitve"
         operations:
           cancel:
             label: "Prekliči"
@@ -4560,6 +4616,7 @@ sl:
         group: "Skupina"
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
+        settings: "Nastavitve"
       embedding:
         title: "Vdelovanje"
         edit: "uredi"

@@ -153,6 +153,7 @@ ko:
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       dismiss: "무시"
+    back_button: "뒤로"
     themes:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
@@ -1193,8 +1194,6 @@ ko:
           name_required_error: "보안 키의 이름을 제공해야 합니다."
       passkeys:
         save: "저장"
-        added_prefix: "추가됨"
-        last_used_prefix: "마지막 사용"
       change_about:
         title: "내 정보 변경"
         error: "이 값을 변경하는 중에 오류가 발생했습니다."
@@ -3575,6 +3574,9 @@ ko:
           never: "거부"
       reports:
         title: "사용 가능한 리포트 목록"
+        sidebar_title: "보고서"
+        sidebar_link:
+          all: "전체"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -3863,6 +3865,50 @@ ko:
           timestamp: "생성일"
           completion: "완료 시간"
           actions: "작업"
+      home:
+        title: "홈"
+      account:
+        title: "계정"
+        sidebar_link:
+          backups: "백업"
+      community:
+        title: "커뮤니티"
+        sidebar_link:
+          badges: "배지"
+          notifications: "알림"
+          permalinks: "고유링크"
+          trust_levels: "회원등급"
+          users: "사용자들"
+          user_fields: "사용자 필드"
+          watched_words: "검열 단어"
+          legal: "법률조항"
+      appearance:
+        title: "외관"
+        sidebar_link:
+          emoji: "이모티콘"
+          navigation: "내비게이션"
+          themes: "테마"
+      email_settings:
+        sidebar_link:
+          appearance: "외관"
+          preview_summary: "요약 미리보기"
+      email_logs:
+        sidebar_link:
+          sent: "보낸 편지함"
+          skipped: "생략됨"
+          bounced: "반송됨"
+          received: "받음"
+          rejected: "거부됨"
+      security:
+        title: "보안"
+        sidebar_link:
+          error_logs: "에러 로그"
+          screened_emails: "블락된 이메일들"
+          screened_ips: "노출된 IP들"
+          screened_urls: "노출된 URL들"
+          search_logs: "검색 로그"
+          security: "보안"
+          spam: "스팸"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"
@@ -3876,6 +3922,19 @@ ko:
         howto: "플러그인은 어떻게 설치하나요?"
         author: "%{author}에 의해"
         learn_more: "더 보기"
+        sidebar_link:
+          installed: "설치됨"
+      advanced:
+        sidebar_link:
+          developer: "개발자"
+          embedding: "삽입(Embedding)"
+          rate_limits: "제한"
+          user_api: "사용자 API"
+          web_hooks: "Webhook"
+          onebox: "Onebox"
+          files: "파일"
+          other_options: "기타"
+          search: "검색"
       navigation_menu:
         sidebar: "사이드바"
       backups:
@@ -3900,6 +3959,7 @@ ko:
           title: "이 인스턴스에 백업 업로드"
           success: "'%{filename}' 파일이 업로드되었습니다. 파일이 현재 처리 중이며 목록에 표시되는 데 최대 1분이 걸립니다."
           error: "'%{filename}' 파일 업로드 중에 오류가 발생했습니다. %{message}"
+        settings: "설정"
         operations:
           failed: "%{operation} 작업을 실행하지 못했습니다. 로그를 확인하세요."
           cancel:
@@ -5011,6 +5071,7 @@ ko:
         image: "이미지"
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"
+        settings: "설정"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
         confirm_delete: "호스트를 삭제할까요?"

@@ -189,8 +189,8 @@ export default function schemaAndData(version = 1) {
         group_field: {
           type: "group",
         },
-        tag_field: {
-          type: "tag",
+        tags_field: {
+          type: "tags",
         }
       },
     };

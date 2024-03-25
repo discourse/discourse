@@ -68,17 +68,21 @@
             @flashTypeChanged={{this.flashTypeChanged}}
             @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
           />
-          <Modal::Login::Footer
-            @canLoginLocal={{this.canLoginLocal}}
-            @showSecurityKey={{this.showSecurityKey}}
-            @login={{this.triggerLogin}}
-            @loginButtonLabel={{this.loginButtonLabel}}
-            @loginDisabled={{this.loginDisabled}}
-            @showSignupLink={{this.showSignupLink}}
-            @createAccount={{this.createAccount}}
-            @loggingIn={{this.loggingIn}}
-            @showSecondFactor={{this.showSecondFactor}}
-          />
+          {{#if this.site.desktopView}}
+            <div class="d-modal__footer">
+              <Modal::Login::Footer
+                @canLoginLocal={{this.canLoginLocal}}
+                @showSecurityKey={{this.showSecurityKey}}
+                @login={{this.triggerLogin}}
+                @loginButtonLabel={{this.loginButtonLabel}}
+                @loginDisabled={{this.loginDisabled}}
+                @showSignupLink={{this.showSignupLink}}
+                @createAccount={{this.createAccount}}
+                @loggingIn={{this.loggingIn}}
+                @showSecondFactor={{this.showSecondFactor}}
+              />
+            </div>
+          {{/if}}
         </div>
       {{/if}}
 
@@ -102,4 +106,22 @@
       {{/if}}
     {{/if}}
   </:body>
+
+  <:footer>
+    {{#if this.site.mobileView}}
+      {{#unless this.hasNoLoginOptions}}
+        <Modal::Login::Footer
+          @canLoginLocal={{this.canLoginLocal}}
+          @showSecurityKey={{this.showSecurityKey}}
+          @login={{this.triggerLogin}}
+          @loginButtonLabel={{this.loginButtonLabel}}
+          @loginDisabled={{this.loginDisabled}}
+          @showSignupLink={{this.showSignupLink}}
+          @createAccount={{this.createAccount}}
+          @loggingIn={{this.loggingIn}}
+          @showSecondFactor={{this.showSecondFactor}}
+        />
+      {{/unless}}
+    {{/if}}
+  </:footer>
 </DModal>

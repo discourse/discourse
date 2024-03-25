@@ -188,6 +188,7 @@ pt_BR:
     software_update_prompt:
       dismiss: "Descartar"
     bootstrap_mode: "Primeiros passos"
+    back_button: "Voltar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
@@ -1431,8 +1432,7 @@ pt_BR:
         save: "Salvar"
         title: "Passkeys"
         short_description: "Passkeys são substitutos de senhas que validam sua identidade através de biometria (ex.: toque, ID facial) ou senha/PIN."
-        added_prefix: "Adicionado"
-        last_used_prefix: "Usados(as) por último"
+        added_date: "Adicionou %{date}"
         never_used: "Nunca usou"
         not_allowed_error: "O processo de registro do passkey teve o tempo expirado ou foi cancelado, ou não obteve permissão."
         already_added_error: "Você já registrou este passkey. Não precisa registrar novamente."
@@ -4422,6 +4422,9 @@ pt_BR:
       reports:
         title: "Lista de relatórios disponíveis"
         meta_doc: "Explore nossa <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentação</a> para uma visão detalhada dos relatórios."
+        sidebar_title: "Relatórios"
+        sidebar_link:
+          all: "Tudo"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
@@ -4819,6 +4822,50 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+      home:
+        title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Emblemas"
+          notifications: "Notificações"
+          permalinks: "Links permanentes"
+          trust_levels: "Níveis de confiança"
+          users: "Usuários(as)"
+          user_fields: "Campos de usuário(a)"
+          watched_words: "Palavras acompanhadas"
+          legal: "Jurídico"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegação"
+          themes: "Temas"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparência"
+          preview_summary: "Visualizar resumo"
+      email_logs:
+        sidebar_link:
+          sent: "Enviado(a)"
+          skipped: "Ignorado(a)"
+          bounced: "Devolvido(a)"
+          received: "Recebido(a)"
+          rejected: "Rejeitado(a)"
+      security:
+        title: "Segurança"
+        sidebar_link:
+          error_logs: "Registro de erros"
+          screened_emails: "E-mails filtrados"
+          screened_ips: "IPs filtrados"
+          screened_urls: "URLs filtradas"
+          search_logs: "Registros de pesquisa"
+          security: "Segurança"
+          spam: "Spam"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"
@@ -4835,6 +4882,20 @@ pt_BR:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Saiba mais"
+        sidebar_link:
+          installed: "Instalado(a)"
+      advanced:
+        title: "Avançado"
+        sidebar_link:
+          developer: "Desenvolvedor"
+          embedding: "Incorporar"
+          rate_limits: "Limites de taxa"
+          user_api: "API de usuário(a)"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Arquivos"
+          other_options: "Outros(as)"
+          search: "Pesquisar"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
@@ -4865,6 +4926,7 @@ pt_BR:
           uploading_progress: "Enviando… %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
           error: "Houve um erro ao carregar \"%{filename}\": %{message}"
+        settings: "Configurações"
         operations:
           is_running: "Uma operação está sendo executada…"
           failed: "A %{operation} falhou. Confira os registros."
@@ -6123,6 +6185,7 @@ pt_BR:
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}:?"
+        settings: "Configurações"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         confirm_delete: "Você tem certeza que deseja excluir este host?"

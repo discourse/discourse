@@ -10,6 +10,7 @@ import DModalCancel from "discourse/components/d-modal-cancel";
 import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import {
   arrayToTable,
   findTableRegex,
@@ -30,6 +31,12 @@ export default class SpreadsheetEditor extends Component {
   constructor() {
     super(...arguments);
     this.loadJspreadsheet();
+    KeyboardShortcuts.pause();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    KeyboardShortcuts.unpause();
   }
 
   get modalAttributes() {

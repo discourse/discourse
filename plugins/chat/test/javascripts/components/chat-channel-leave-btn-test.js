@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
@@ -47,11 +47,11 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   });
 
   test("is not visible on mobile", async function (assert) {
-    this.site.mobileView = true;
+    this.site.desktopView = false;
     this.channel = fabricators.channel();
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    assert.false(exists(".chat-channel-leave-btn"));
+    assert.dom(".chat-channel-leave-btn").doesNotExist();
   });
 });

@@ -8,7 +8,7 @@ import { on } from "discourse-common/utils/decorators";
 export default Component.extend({
   @on("init")
   _init() {
-    if (!this.get("site.mobileView")) {
+    if (this.site.desktopView) {
       let classes = this.desktopClass;
       if (classes) {
         classes = classes.split(" ");

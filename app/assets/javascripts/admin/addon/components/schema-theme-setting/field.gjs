@@ -8,10 +8,12 @@ import FloatField from "./types/float";
 import GroupField from "./types/group";
 import IntegerField from "./types/integer";
 import StringField from "./types/string";
-import TagField from "./types/tag";
+import TagsField from "./types/tags";
 
 export default class SchemaThemeSettingField extends Component {
   get component() {
+    const type = this.args.spec.type;
+
     switch (this.args.spec.type) {
       case "string":
         return StringField;
@@ -25,41 +27,39 @@ export default class SchemaThemeSettingField extends Component {
         return EnumField;
       case "category":
         return CategoryField;
-      case "tag":
-        return TagField;
+      case "tags":
+        return TagsField;
       case "group":
         return GroupField;
       default:
-        throw new Error("unknown type");
+        throw new Error(`unknown type ${type}`);
     }
   }
 
   @cached
   get description() {
-    return this.args.description.trim().replace(/\n/g, "<br>");
-  }
+    if (!this.args.description) {
+      return;
+    }
 
-  get hasDescription() {
-    return this.args.description?.length > 0;
+    return htmlSafe(this.args.description.trim().replace(/\n/g, "<br>"));
   }
 
   <template>
     <div class="schema-field" data-name={{@name}}>
-      <label class="schema-field__label">{{@name}}</label>
+      <label class="schema-field__label">{{@name}}{{if
+          @spec.required
+          "*"
+        }}</label>
 
       <div class="schema-field__input">
         <this.component
           @value={{@value}}
           @spec={{@spec}}
           @onChange={{@onValueChange}}
+          @description={{this.description}}
         />
       </div>
-
-      {{#if this.hasDescription}}
-        <div class="schema-field__description">
-          {{htmlSafe this.description}}
-        </div>
-      {{/if}}
     </div>
   </template>
 }

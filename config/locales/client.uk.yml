@@ -247,6 +247,7 @@ uk:
       message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
       dismiss: "Відхилити"
     bootstrap_mode: "Початок роботи"
+    back_button: "Назад"
     themes:
       default_description: "Типово"
       broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
@@ -1588,8 +1589,7 @@ uk:
         save: "Зберегти"
         title: "Ключі доступу"
         short_description: "Ключі доступу – це заміна пароля, яка підтверджує вашу особу біометрично (наприклад, дотик, faceID) або через PIN-код/пароль пристрою."
-        added_prefix: "Додано"
-        last_used_prefix: "Використано"
+        added_date: "Додано %{date}"
         never_used: "Ніколи не використовувався"
         not_allowed_error: "Процес реєстрації ключа або закінчився, або його було скасовано, або він не дозволений."
         already_added_error: "Ви вже зареєстрували цей ключ. Вам не потрібно реєструвати його знову."
@@ -1804,6 +1804,7 @@ uk:
         after_5_minutes: "після 5 хвилин"
         after_10_minutes: "після 10 хвилин"
       notification_level_when_replying: "Коли я пишу в темі, встановити цю тему для"
+      topics_unread_when_closed: "Вважати теми непрочитаними, якщо вони закриті"
       invited:
         title: "Запрошення"
         pending_tab: "Очікують"
@@ -2463,6 +2464,7 @@ uk:
       reply: "Відповісти"
       cancel: "Скасувати"
       create_topic: "Створити тему"
+      create_pm: "Надіслати повідомлення"
       create_whisper: "Шепіт"
       create_shared_draft: "Створити спільну чернетку"
       edit_shared_draft: "Редагувати спільну чернетку"
@@ -4298,6 +4300,9 @@ uk:
         search: "%{shortcut} Пошук"
         filter_sidebar: "%{shortcut} Бічна панель фільтрів"
         help: "%{shortcut} Показати поєднання клавіш"
+        toggle_bulk_select: "%{shortcut} Перемкнути масовий вибір"
+        dismiss: "%{shortcut} Відхилити вибрану тему(и)"
+        x: "%{shortcut} Перемикання вибору (в режимі масового вибору)"
         log_out: "%{shortcut} Вийти"
       composing:
         title: "Редагування"
@@ -4872,6 +4877,9 @@ uk:
       reports:
         title: "Список доступних звітів"
         meta_doc: "Ознайомтеся з нашою документацією <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> для детального огляду звітів."
+        sidebar_title: "Звіти"
+        sidebar_link:
+          all: "Все"
       dashboard:
         title: "Майстерня"
         last_updated: "Приладова панель оновлена:"
@@ -5287,6 +5295,61 @@ uk:
           timestamp: "Створено"
           completion: "Час Завершення"
           actions: "Дії"
+      home:
+        title: "Головна"
+      account:
+        title: "Обліковий запис"
+        sidebar_link:
+          backups: "Резервні копії"
+          whats_new: "Що нового"
+      community:
+        title: "Спільнота"
+        sidebar_link:
+          about_your_site: "Про ваш сайт"
+          badges: "Нагороди"
+          login_and_authentication: "Вхід та аутентифікація"
+          notifications: "Сповіщення"
+          permalinks: "Постійні посилання"
+          trust_levels: "Рівні довіри"
+          users: "Користувачі"
+          user_fields: "Поля користувача"
+          watched_words: "Відслідковувані слова"
+          legal: "Legal"
+      appearance:
+        title: "Зовнішній вигляд"
+        sidebar_link:
+          font_style: "Стиль шрифту"
+          site_logo: "Логотип сайту"
+          color_schemes: "Схеми кольорів"
+          emoji: "Смайли"
+          navigation: "Навігація"
+          themes: "Стилі"
+          site_texts: "Тексти сайту"
+      email_settings:
+        title: "Налаштування електронної пошти"
+        sidebar_link:
+          appearance: "Зовнішній вигляд"
+          preview_summary: "Стислий виклад новин"
+          server_setup: "Налаштування сервера"
+      email_logs:
+        title: "Журнал електронної пошти"
+        sidebar_link:
+          sent: "Надіслані"
+          skipped: "Пропущено"
+          bounced: "Повернено"
+          received: "Отримано"
+          rejected: "Відхилено"
+      security:
+        title: "Безпека"
+        sidebar_link:
+          error_logs: "Журнал помилок"
+          screened_emails: "Screened Emails"
+          screened_ips: "IP адреси"
+          screened_urls: "Посилання"
+          search_logs: "Логи пошуку"
+          security: "Безпека"
+          spam: "Спам"
+          staff_action_logs: "Журнали дій персоналу"
       plugins:
         title: "Плагіни"
         installed: "Встановлені плагіни"
@@ -5303,6 +5366,23 @@ uk:
         author: "Від %{author}"
         experimental_badge: "експериментальний"
         learn_more: "Дізнатися більше"
+        sidebar_link:
+          installed: "Встановлена"
+      advanced:
+        title: "Розширений"
+        sidebar_link:
+          api_keys: "Ключі API"
+          developer: "Для розробників"
+          embedding: "Взаємодія"
+          rate_limits: "Обмеження швидкості"
+          user_api: "API користувача"
+          web_hooks: "Вебгуки"
+          onebox: "Розумна вставка"
+          files: "Файли"
+          other_options: "Інше"
+          search: "Пошук"
+          experimental: "Експериментальний"
+          all_site_settings: "Усі налаштування сайту"
       navigation_menu:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
@@ -5333,6 +5413,7 @@ uk:
           uploading_progress: "Завантаження: %{progress}…"
           success: "'%{filename}' успішно завантажений. Файл тепер обробляється та займе хвилин, щоб його рядки відбилися в списку."
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Налаштування"
         operations:
           is_running: "Зараз виконується операція…"
           failed: "The %{operation} failed. Please check the logs."
@@ -6615,6 +6696,7 @@ uk:
         image: "Зображення"
         alt: "попередній перегляд смайлів"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
+        settings: "Налаштування"
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         confirm_delete: "Ви впевнені, що хочете видалити цей хост?"

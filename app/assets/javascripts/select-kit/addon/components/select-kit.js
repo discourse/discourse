@@ -371,7 +371,9 @@ export default Component.extend(
     },
 
     addError(error) {
-      this.errorsCollection.pushObject(error);
+      if (!this.errorsCollection.includes(error)) {
+        this.errorsCollection.pushObject(error);
+      }
 
       this._safeAfterRender(() => this.popper && this.popper.update());
     },
@@ -649,6 +651,12 @@ export default Component.extend(
             return [];
           }
 
+          if (this.selectKit.options.maximum === 0) {
+            this.set("selectKit.isLoading", false);
+            this.set("selectKit.hasNoContent", false);
+            return [];
+          }
+
           content = content.concat(makeArray(result));
           content = this.selectKit.modifyContent(content).filter(Boolean);
 
@@ -905,8 +913,8 @@ export default Component.extend(
             {
               name: "eventListeners",
               options: {
-                resize: !this.site.mobileView,
-                scroll: !this.site.mobileView,
+                resize: this.site.desktopView,
+                scroll: this.site.desktopView,
               },
             },
             {

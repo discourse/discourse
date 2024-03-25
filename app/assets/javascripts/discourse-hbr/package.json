@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.24.0",
+    "@babel/core": "^7.24.3",
     "ember-auto-import": "^2.7.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
@@ -35,7 +35,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.90.3"
+    "webpack": "^5.91.0"
   },
   "engines": {
     "node": ">= 18",

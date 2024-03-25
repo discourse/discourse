@@ -6,8 +6,9 @@ export default {
   initialize(owner) {
     const site = owner.lookup("service:site");
     this.capabilities = owner.lookup("service:capabilities");
+    this.appEvents = owner.lookup("service:app-events");
 
-    if (!this.capabilities.isIpadOS && !site.mobileView) {
+    if (!this.capabilities.isIpadOS && site.desktopView) {
       return;
     }
 
@@ -78,6 +79,8 @@ export default {
         );
       }
     }
+
+    this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
 
     keyboardVisible
       ? doc.classList.add("keyboard-visible")

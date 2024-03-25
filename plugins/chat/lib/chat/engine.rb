@@ -2,6 +2,7 @@
 
 module ::Chat
   HAS_CHAT_ENABLED = "has_chat_enabled"
+  LAST_CHAT_CHANNEL_ID = "last_chat_channel_id"
 
   class Engine < ::Rails::Engine
     engine_name PLUGIN_NAME

@@ -51,6 +51,9 @@ export const REPLACEMENTS = {
   "notification.reaction": "bell",
   "notification.votes_released": "plus",
   "notification.chat_quoted": "quote-right",
+  "user_menu.replies": "reply",
+  "user_menu.drafts": "pencil-alt",
+  "sidebar.all_categories": "list",
 };
 
 export function replaceIcon(source, destination) {

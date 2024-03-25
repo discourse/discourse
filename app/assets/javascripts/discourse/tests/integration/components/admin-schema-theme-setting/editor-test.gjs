@@ -2,7 +2,6 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
@@ -15,23 +14,41 @@ class TreeFromDOM {
   }
 
   refresh() {
-    this.nodes = [...queryAll(".tree .item-container")].map((container) => {
-      const li = container.querySelector(".parent.node");
-      const active = li.classList.contains("active");
-      const children = [...container.querySelectorAll(".node.child")].map(
-        (child) => {
-          return {
-            text: child.textContent.trim(),
-            element: child,
-          };
-        }
-      );
+    this.nodes = [
+      ...queryAll(
+        ".schema-theme-setting-editor__tree .schema-theme-setting-editor__tree-node.--parent"
+      ),
+    ].map((container, index) => {
+      const li = container;
+      const active = li.classList.contains("--active");
+
+      const children = [
+        ...queryAll(
+          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
+        ),
+      ].map((child) => {
+        return {
+          element: child,
+          textElement: child.querySelector(
+            ".schema-theme-setting-editor__tree-node-text"
+          ),
+        };
+      });
+
+      const addButtons = [
+        ...queryAll(
+          `.schema-theme-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+        ),
+      ];
 
       return {
-        text: li.textContent.trim(),
         active,
         children,
+        addButtons,
         element: li,
+        textElement: li.querySelector(
+          ".schema-theme-setting-editor__tree-node-text"
+        ),
       };
     });
   }
@@ -45,16 +62,24 @@ class InputFieldsFromDOM {
   refresh() {
     this.fields = {};
     this.count = 0;
+
     [...queryAll(".schema-field")].forEach((field) => {
       this.count += 1;
+
       this.fields[field.dataset.name] = {
         labelElement: field.querySelector(".schema-field__label"),
         inputElement: field.querySelector(".schema-field__input").children[0],
+        countElement: field.querySelector(".schema-field__input-count"),
+        errorElement: field.querySelector(".schema-field__input-error"),
         selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
   }
 }
+
+const TOP_LEVEL_ADD_BTN =
+  ".schema-theme-setting-editor__tree-add-button.--root";
+const REMOVE_ITEM_BTN = ".schema-theme-setting-editor__remove-btn";
 
 module(
   "Integration | Admin | Component | schema-theme-setting/editor",
@@ -70,7 +95,7 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes.length, 3);
       assert.true(tree.nodes[0].active, "the first node is active");
       assert.false(tree.nodes[1].active, "other nodes are not active");
     });
@@ -85,6 +110,7 @@ module(
       const tree = new TreeFromDOM();
 
       assert.true(tree.nodes[0].active);
+
       assert.strictEqual(
         tree.nodes[0].children.length,
         2,
@@ -126,49 +152,61 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.strictEqual(tree.nodes.length, 2);
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.strictEqual(tree.nodes[0].children.length, 2);
-      assert.strictEqual(tree.nodes[0].children[0].text, "child 1-1");
-      assert.strictEqual(tree.nodes[0].children[1].text, "child 1-2");
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("child 1-1");
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("child 1-2");
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.strictEqual(tree.nodes[1].children.length, 0);
 
       await click(tree.nodes[1].element);
 
       tree.refresh();
 
-      assert.strictEqual(tree.nodes.length, 2);
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 3);
-      assert.strictEqual(tree.nodes[1].children[0].text, "child 2-1");
-      assert.strictEqual(tree.nodes[1].children[1].text, "child 2-2");
-      assert.strictEqual(tree.nodes[1].children[2].text, "child 2-3");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("child 2-1");
+      assert.dom(tree.nodes[1].children[1].textElement).hasText("child 2-2");
+      assert.dom(tree.nodes[1].children[2].textElement).hasText("child 2-3");
 
       await click(tree.nodes[1].children[1].element);
 
       tree.refresh();
-      assert.strictEqual(tree.nodes.length, 3);
+      assert.strictEqual(tree.nodes.length, 4);
 
-      assert.strictEqual(tree.nodes[0].text, "child 2-1");
+      assert.dom(tree.nodes[0].textElement).hasText("child 2-1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "child 2-2");
+      assert.dom(tree.nodes[1].textElement).hasText("child 2-2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 4);
-      assert.strictEqual(tree.nodes[1].children[0].text, "grandchild 2-2-1");
-      assert.strictEqual(tree.nodes[1].children[1].text, "grandchild 2-2-2");
-      assert.strictEqual(tree.nodes[1].children[2].text, "grandchild 2-2-3");
-      assert.strictEqual(tree.nodes[1].children[3].text, "grandchild 2-2-4");
 
-      assert.strictEqual(tree.nodes[2].text, "child 2-3");
+      assert
+        .dom(tree.nodes[1].children[0].textElement)
+        .hasText("grandchild 2-2-1");
+
+      assert
+        .dom(tree.nodes[1].children[1].textElement)
+        .hasText("grandchild 2-2-2");
+
+      assert
+        .dom(tree.nodes[1].children[2].textElement)
+        .hasText("grandchild 2-2-3");
+
+      assert
+        .dom(tree.nodes[1].children[3].textElement)
+        .hasText("grandchild 2-2-4");
+
+      assert.dom(tree.nodes[2].textElement).hasText("child 2-3");
       assert.false(tree.nodes[2].active);
       assert.strictEqual(tree.nodes[2].children.length, 0);
 
@@ -176,21 +214,21 @@ module(
 
       tree.refresh();
 
-      assert.strictEqual(tree.nodes.length, 4);
+      assert.strictEqual(tree.nodes.length, 5);
 
-      assert.strictEqual(tree.nodes[0].text, "grandchild 2-2-1");
+      assert.dom(tree.nodes[0].textElement).hasText("grandchild 2-2-1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "grandchild 2-2-2");
+      assert.dom(tree.nodes[1].textElement).hasText("grandchild 2-2-2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 0);
 
-      assert.strictEqual(tree.nodes[2].text, "grandchild 2-2-3");
+      assert.dom(tree.nodes[2].textElement).hasText("grandchild 2-2-3");
       assert.false(tree.nodes[2].active);
       assert.strictEqual(tree.nodes[2].children.length, 0);
 
-      assert.strictEqual(tree.nodes[3].text, "grandchild 2-2-4");
+      assert.dom(tree.nodes[3].textElement).hasText("grandchild 2-2-4");
       assert.false(tree.nodes[3].active);
       assert.strictEqual(tree.nodes[3].children.length, 0);
     });
@@ -202,32 +240,32 @@ module(
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
-      assert.dom(".back-button").doesNotExist();
+      assert.dom(".--back-btn").doesNotExist();
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[0].children[0].element);
 
-      assert.dom(".back-button").exists();
+      assert.dom(".--back-btn").exists();
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "child 1-1");
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
 
       await click(tree.nodes[0].children[0].element);
 
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "grandchild 1-1-1");
-      assert.dom(".back-button").exists();
+      assert.dom(tree.nodes[0].textElement).hasText("grandchild 1-1-1");
+      assert.dom(".--back-btn").exists();
 
-      await click(".back-button");
-
-      tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "child 1-1");
-      assert.dom(".back-button").exists();
-
-      await click(".back-button");
+      await click(".--back-btn");
 
       tree.refresh();
-      assert.strictEqual(tree.nodes[0].text, "item 1");
-      assert.dom(".back-button").doesNotExist();
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(".--back-btn").exists();
+
+      await click(".--back-btn");
+
+      tree.refresh();
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(".--back-btn").doesNotExist();
     });
 
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
@@ -243,16 +281,16 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[1].element);
 
-      await click(".back-button");
+      await click(".--back-btn");
       tree.refresh();
 
-      assert.strictEqual(tree.nodes.length, 2);
+      assert.strictEqual(tree.nodes.length, 3);
 
-      assert.strictEqual(tree.nodes[0].text, "item 1");
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
 
-      assert.strictEqual(tree.nodes[1].text, "item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.true(tree.nodes[1].active);
       assert.strictEqual(tree.nodes[1].children.length, 3);
     });
@@ -270,7 +308,7 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[1].element);
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
@@ -279,15 +317,15 @@ module(
       tree.refresh();
       await click(tree.nodes[1].children[0].element);
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "child 2-2",
         })
       );
 
-      await click(".back-button");
+      await click(".--back-btn");
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
@@ -377,76 +415,199 @@ module(
       assert.dom(inputFields.fields.text.labelElement).hasText("text");
       assert.dom(inputFields.fields.url.labelElement).hasText("url");
       assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
+      assert.dom(inputFields.fields.text.inputElement).hasValue("Contact");
 
-      assert.dom(inputFields.fields.text.inputElement).hasValue("About");
       assert
         .dom(inputFields.fields.url.inputElement)
-        .hasValue("https://example.com/about");
-      assert.dom(inputFields.fields.icon.inputElement).hasValue("asterisk");
+        .hasValue("https://example.com/contact");
+
+      assert.dom(inputFields.fields.icon.inputElement).hasValue("phone");
+    });
+
+    test("input fields of type string", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "string",
+              required: true,
+              validations: {
+                max_length: 5,
+                min_length: 2,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: "bu1",
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.countElement).hasText("3/5");
+
+      await fillIn(inputFields.fields.id.inputElement, "1");
+
+      assert.dom(inputFields.fields.id.countElement).hasText("1/5");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.string.too_short", {
+          count: 2,
+        })
+      );
+
+      await fillIn(inputFields.fields.id.inputElement, "");
+
+      assert.dom(inputFields.fields.id.countElement).hasText("0/5");
+
+      assert
+        .dom(inputFields.fields.id.errorElement)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "integer",
+              required: true,
+              validations: {
+                max: 10,
+                min: 5,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 6,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("6");
+
       assert
-        .dom(inputFields.fields.integer_field.labelElement)
-        .hasText("integer_field");
-      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("92");
-      assert
-        .dom(inputFields.fields.integer_field.inputElement)
+        .dom(inputFields.fields.id.inputElement)
         .hasAttribute("type", "number");
-      await fillIn(inputFields.fields.integer_field.inputElement, "922229");
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
+      await fillIn(inputFields.fields.id.inputElement, "922229");
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.integer_field.inputElement).hasValue("820");
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+          count: 10,
+        })
+      );
 
-      tree.refresh();
-      await click(tree.nodes[0].element);
+      await fillIn(inputFields.fields.id.inputElement, "0");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+          count: 5,
+        })
+      );
+
+      await fillIn(inputFields.fields.id.inputElement, "");
+
       inputFields.refresh();
 
       assert
-        .dom(inputFields.fields.integer_field.inputElement)
-        .hasValue("922229");
+        .dom(inputFields.fields.id.errorElement)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            id: {
+              type: "float",
+              required: true,
+              validations: {
+                max: 10.5,
+                min: 5.5,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 6.5,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("6.5");
+
       assert
-        .dom(inputFields.fields.float_field.labelElement)
-        .hasText("float_field");
-      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+        .dom(inputFields.fields.id.inputElement)
+        .hasAttribute("type", "number");
 
-      await fillIn(inputFields.fields.float_field.inputElement, "6934.24");
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
+      await fillIn(inputFields.fields.id.inputElement, "100.0");
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.float_field.inputElement).hasValue("");
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+          count: 10.5,
+        })
+      );
 
-      tree.refresh();
-      await click(tree.nodes[0].element);
+      await fillIn(inputFields.fields.id.inputElement, "0.2");
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+          count: 5.5,
+        })
+      );
+
+      await fillIn(inputFields.fields.id.inputElement, "");
+
       inputFields.refresh();
 
       assert
-        .dom(inputFields.fields.float_field.inputElement)
-        .hasValue("6934.24");
+        .dom(inputFields.fields.id.errorElement)
+        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
@@ -507,15 +668,54 @@ module(
     });
 
     test("input fields of type category", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_category: {
+              type: "category",
+              required: true,
+            },
+            not_required_category: {
+              type: "category",
+            },
+          },
+        },
+        value: [
+          {
+            required_category: 6,
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const categorySelector = selectKit(
-        `${inputFields.fields.category_field.selector} .select-kit`
+
+      assert
+        .dom(inputFields.fields.required_category.labelElement)
+        .hasText("required_category*");
+
+      let categorySelector = selectKit(
+        `${inputFields.fields.required_category.selector} .select-kit`
+      );
+
+      assert.strictEqual(categorySelector.header().value(), "6");
+
+      assert
+        .dom(categorySelector.clearButton())
+        .doesNotExist("is not clearable");
+
+      assert
+        .dom(inputFields.fields.not_required_category.labelElement)
+        .hasText("not_required_category");
+
+      categorySelector = selectKit(
+        `${inputFields.fields.not_required_category.selector} .select-kit`
       );
 
       assert.strictEqual(categorySelector.header().value(), null);
@@ -523,87 +723,133 @@ module(
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
 
-      const selectedCategoryId = categorySelector.header().value();
-      assert.ok(selectedCategoryId);
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(categorySelector.header().value(), null);
-
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(categorySelector.header().value(), selectedCategoryId);
+      assert.dom(categorySelector.clearButton()).exists("is clearable");
     });
 
-    test("input fields of type tag", async function (assert) {
-      const setting = schemaAndData(3);
+    test("input fields of type tags which is required", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_tags: {
+              type: "tags",
+              required: true,
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_tags: ["gazelle", "cat"],
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
       const tagSelector = selectKit(
-        `${inputFields.fields.tag_field.selector} .select-kit`
+        `${inputFields.fields.required_tags.selector} .select-kit`
       );
 
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(2);
+      await tagSelector.collapse();
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.deselectItemByName("cat");
+      await tagSelector.deselectItemByName("dog");
+      await tagSelector.collapse();
+
       assert.strictEqual(tagSelector.header().value(), null);
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
+          count: 2,
+        })
+      );
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
-      await tagSelector.selectRowByIndex(3);
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.strictEqual(tagSelector.header().value(), "gazelle");
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(tagSelector.header().value(), null);
+      inputFields.refresh();
 
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
+          count: 2,
+        })
+      );
     });
 
     test("input fields of type group", async function (assert) {
-      pretender.get("/groups/search.json", () => {
-        return response(200, [
-          { id: 23, name: "testers" },
-          { id: 74, name: "devs" },
-          { id: 89, name: "customers" },
-        ]);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_group: {
+              type: "group",
+              required: true,
+            },
+            not_required_group: {
+              type: "group",
+            },
+          },
+        },
+        value: [
+          {
+            required_group: 6,
+          },
+        ],
       });
-
-      const setting = schemaAndData(3);
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const groupSelector = selectKit(
-        `${inputFields.fields.group_field.selector} .select-kit`
+
+      assert
+        .dom(inputFields.fields.required_group.labelElement)
+        .hasText("required_group*");
+
+      let groupSelector = selectKit(
+        `${inputFields.fields.required_group.selector} .select-kit`
       );
 
-      assert.strictEqual(groupSelector.header().value(), null);
+      assert.strictEqual(groupSelector.header().value(), "6");
+      assert.dom(groupSelector.clearButton()).doesNotExist("is not clearable");
+
+      assert
+        .dom(inputFields.fields.not_required_group.labelElement)
+        .hasText("not_required_group");
+
+      groupSelector = selectKit(
+        `${inputFields.fields.not_required_group.selector} .select-kit`
+      );
 
       await groupSelector.expand();
-      await groupSelector.selectRowByValue(74);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      await groupSelector.selectRowByIndex(1);
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-
-      assert.strictEqual(groupSelector.header().value(), null);
-      await groupSelector.expand();
-      await groupSelector.selectRowByValue(23);
-      assert.strictEqual(groupSelector.header().value(), "23");
-
-      tree.refresh();
-
-      await click(tree.nodes[0].element);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      assert.dom(groupSelector.clearButton()).exists("is clearable");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
@@ -657,16 +903,16 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.dom(tree.nodes[0].element).hasText("section 1");
-      assert.dom(tree.nodes[0].children[0].element).hasText("link 1");
-      assert.dom(tree.nodes[0].children[1].element).hasText("link 2");
-      assert.dom(tree.nodes[1].element).hasText("section 2");
+      assert.dom(tree.nodes[0].textElement).hasText("section 1");
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("link 2");
+      assert.dom(tree.nodes[1].textElement).hasText("section 2");
 
       await click(tree.nodes[1].element);
 
       tree.refresh();
 
-      assert.dom(tree.nodes[1].children[0].element).hasText("link 1");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("link 1");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
@@ -684,7 +930,9 @@ module(
         "nice section is really nice"
       );
 
-      assert.dom(tree.nodes[0].element).hasText("nice section is really nice");
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("nice section is really nice");
 
       await click(tree.nodes[0].children[0].element);
 
@@ -696,7 +944,9 @@ module(
         "Security instead of Privacy"
       );
 
-      assert.dom(tree.nodes[0].element).hasText("Security instead of Privacy");
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("Security instead of Privacy");
     });
 
     test("edits are remembered when navigating between levels", async function (assert) {
@@ -729,26 +979,26 @@ module(
       tree.refresh();
       inputFields.refresh();
 
-      assert.dom(".back-button").hasText(
+      assert.dom(".--back-btn").hasText(
         I18n.t("admin.customize.theme.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
 
       await fillIn(inputFields.fields.text.inputElement, "Talk to us");
-
-      await click(".back-button");
+      await click(".--back-btn");
 
       tree.refresh();
       inputFields.refresh();
 
-      assert.dom(tree.nodes[0].element).hasText("changed section name");
+      assert.dom(tree.nodes[0].textElement).hasText("changed section name");
+
       assert
-        .dom(tree.nodes[1].element)
+        .dom(tree.nodes[1].textElement)
         .hasText("cool section is no longer cool");
 
-      assert.dom(tree.nodes[1].children[0].element).hasText("About");
-      assert.dom(tree.nodes[1].children[1].element).hasText("Talk to us");
+      assert.dom(tree.nodes[1].children[0].textElement).hasText("About");
+      assert.dom(tree.nodes[1].children[1].textElement).hasText("Talk to us");
 
       assert
         .dom(inputFields.fields.name.inputElement)
@@ -760,6 +1010,243 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
+    });
+
+    test("adding an object to the root list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+
+      const tree = new TreeFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 3);
+
+      await click(TOP_LEVEL_ADD_BTN);
+      await click(TOP_LEVEL_ADD_BTN);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes.length, 5);
+      assert.dom(tree.nodes[2].textElement).hasText("level1 3");
+      assert.dom(tree.nodes[3].textElement).hasText("level1 4");
+    });
+
+    test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            title: {
+              type: "string",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  url: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+            chairs: {
+              type: "objects",
+              schema: {
+                name: "chair",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        value: [
+          {
+            title: "some title",
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].addButtons[0]);
+
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
+
+      await click(tree.nodes[0].addButtons[1]);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].children[1].textElement).hasText("chair 1");
+
+      await click(tree.nodes[0].children[0].element);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.url.labelElement).hasText("url");
+    });
+
+    test("adding an object to a child list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes[0].children.length, 4);
+      assert.dom(tree.nodes[0].children[2].textElement).hasText("level2 3");
+      assert.dom(tree.nodes[0].children[3].textElement).hasText("level2 4");
+    });
+
+    test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level2");
+      assert.strictEqual(tree.nodes.length, 3);
+
+      await click(TOP_LEVEL_ADD_BTN);
+      await click(TOP_LEVEL_ADD_BTN);
+
+      tree.refresh();
+      assert.strictEqual(tree.nodes.length, 5);
+      assert.dom(tree.nodes[2].textElement).hasText("level2 3");
+      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
+    });
+
+    test("navigating 1 level deep and adding an object to a grandchild list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level3");
+      assert.strictEqual(tree.nodes[0].children.length, 2);
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.strictEqual(tree.nodes[0].children.length, 4);
+      assert.dom(tree.nodes[0].children[2].textElement).hasText("level3 3");
+      assert.dom(tree.nodes[0].children[3].textElement).hasText("level3 4");
+    });
+
+    test("removing an object from the root list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 2");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 1);
+      assert.strictEqual(inputFields.count, 0);
+      assert.dom(REMOVE_ITEM_BTN).doesNotExist();
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+    });
+
+    test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      await click(tree.nodes[0].children[1].element);
+      tree.refresh();
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(tree.nodes[1].textElement).hasText("child 1-2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("child 1-1");
+
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("child 1-2");
+
+      // removing the last object navigates back to the previous level
+      await click(REMOVE_ITEM_BTN);
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.strictEqual(tree.nodes[0].children.length, 0);
+
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+      assert.dom(".--back-btn").doesNotExist();
     });
   }
 );

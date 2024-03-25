@@ -37,12 +37,10 @@ export default class UserDropdown extends Component {
         class="icon btn-flat"
         aria-haspopup="true"
         aria-expanded={{@active}}
-        href={{this.currentUser.path}}
         aria-label={{i18n
           "user.account_possessive"
           name=(or this.currentUser.name this.currentUser.username)
         }}
-        data-auto-route="true"
         {{on "click" this.click}}
       >
         <Notifications @active={{@active}} />

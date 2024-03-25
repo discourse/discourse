@@ -49,6 +49,11 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import {
+  PLUGIN_NAV_MODE_SIDEBAR,
+  PLUGIN_NAV_MODE_TOP,
+  registerAdminPluginConfigNav,
+} from "discourse/lib/admin-plugin-config-nav";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -780,7 +785,7 @@ class PluginApi {
 
   addToolbarPopupMenuOptionsCallback(opts) {
     deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
+      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
@@ -2913,6 +2918,36 @@ class PluginApi {
   addComposerImageWrapperButton(label, btnClass, icon, fn) {
     addImageWrapperButton(label, btnClass, icon);
     addApiImageWrapperButtonClickEvent(fn);
+  }
+
+  /**
+   * Defines a list of links used in the adminPlugins.show page for
+   * a specific plugin. Each link must have:
+   *
+   * * route
+   * * label OR text
+   *
+   * And the mode must be one of "sidebar" or "top", which controls
+   * where in the admin plugin show UI the links will be displayed.
+   */
+  addAdminPluginConfigurationNav(pluginId, mode, links) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
+    if (!validModes.includes(mode)) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        consolePrefix(),
+        `${mode} is an invalid mode for admin plugin config pages, only ${validModes} are usable.`
+      );
+      return;
+    }
+
+    registerAdminPluginConfigNav(pluginId, mode, links);
   }
 }
 

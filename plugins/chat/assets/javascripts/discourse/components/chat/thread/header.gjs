@@ -20,7 +20,7 @@ export default class ChatThreadHeader extends Component {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
       models = this.channel?.routeModels;
-    } else if (prevPage === "chat.channel.index" && !this.site.mobileView) {
+    } else if (prevPage === "chat.channel.index" && this.site.desktopView) {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
       models = this.channel?.routeModels;

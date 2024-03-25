@@ -2,7 +2,8 @@
   .admin-area &,
   .has-full-page-chat &,
   .static-login &,
-  .invite-page & {
+  .invite-page &,
+  .account-activation-page & {
     display: none !important;
   }
   grid-area: below-content;

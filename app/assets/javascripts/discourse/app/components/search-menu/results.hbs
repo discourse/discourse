@@ -1,8 +1,8 @@
 {{#if (and this.search.inTopicContext (not @searchTopics))}}
   <SearchMenu::BrowserSearchTip />
 {{else}}
-  <div class="results">
-    {{#unless @loading}}
+  <ConditionalLoadingSection @isLoading={{this.loading}}>
+    <div class="results">
       <PluginOutlet
         @name="search-menu-results-top"
         @outletArgs={{hash
@@ -75,6 +75,6 @@
           closeSearchMenu=@closeSearchMenu
         }}
       />
-    {{/unless}}
-  </div>
+    </div>
+  </ConditionalLoadingSection>
 {{/if}}

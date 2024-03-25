@@ -2228,6 +2228,9 @@ rate_limits:
   max_complete_multipart_per_minute:
     default: 10
     hidden: true
+  max_uploads_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2363,6 +2366,9 @@ developer:
     allow_any: false
     refresh: true
   experimental_objects_type_for_theme_settings:
+    default: false
+    hidden: true
+  experimental_preconnect_link_header:
     default: false
     hidden: true
 

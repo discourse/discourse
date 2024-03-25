@@ -17,10 +17,10 @@
     {{#if @model.edit_reason}}
       <span class="edit-reason">{{@model.edit_reason}}</span>
     {{/if}}
-    {{#unless @mobileView}}
+
+    {{#if this.site.desktopView}}
       <span>
         {{#if @model.user_changes}}
-
           {{bound-avatar-template
             @model.user_changes.previous.avatar_template
             "small"
@@ -33,24 +33,25 @@
           }}
           {{@model.user_changes.current.username}}
         {{/if}}
-        {{#if @model.wiki_changes}}
 
+        {{#if @model.wiki_changes}}
           <DisabledIcon @icon="far-edit" @disabled={{@wikiDisabled}} />
         {{/if}}
-        {{#if @model.post_type_changes}}
 
+        {{#if @model.post_type_changes}}
           <DisabledIcon @icon="shield-alt" @disabled={{@postTypeDisabled}} />
         {{/if}}
-        {{#if @model.category_id_changes}}
 
+        {{#if @model.category_id_changes}}
           {{html-safe @previousCategory}}
           &rarr;
           {{html-safe @currentCategory}}
         {{/if}}
       </span>
-    {{/unless}}
+    {{/if}}
   </div>
-  {{#unless @mobileView}}
+
+  {{#if this.site.desktopView}}
     <div id="display-modes">
       <ul class="nav nav-pills">
         <li>
@@ -102,5 +103,5 @@
         </li>
       </ul>
     </div>
-  {{/unless}}
+  {{/if}}
 </div>

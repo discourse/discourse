@@ -410,7 +410,7 @@ export default class Composer extends RestModel {
       options.label = I18n.t(`post.${action}`);
       options.userAvatar = tinyAvatar(post.avatar_template);
 
-      if (!this.site.mobileView) {
+      if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
         const originalUserAvatar = post.get("reply_to_user.avatar_template");
         if (originalUserName && originalUserAvatar && isEdit(action)) {

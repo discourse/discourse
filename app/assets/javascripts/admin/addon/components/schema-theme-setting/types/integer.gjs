@@ -1,15 +1,10 @@
-import Component from "@glimmer/component";
-import { Input } from "@ember/component";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import SchemaThemeSettingNumberField from "admin/components/schema-theme-setting/number-field";
 
-export default class SchemaThemeSettingTypeInteger extends Component {
-  @action
-  onInput(event) {
-    this.args.onChange(parseInt(event.currentTarget.value, 10));
+export default class SchemaThemeSettingTypeInteger extends SchemaThemeSettingNumberField {
+  inputMode = "numeric";
+  pattern = "[0-9]*";
+
+  parseValue(value) {
+    return parseInt(value, 10);
   }
-
-  <template>
-    <Input @value={{@value}} {{on "input" this.onInput}} @type="number" />
-  </template>
 }

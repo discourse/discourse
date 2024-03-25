@@ -153,7 +153,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     // On desktop the user only needs to scroll past the topic title.
     return (
       offset > this.dockAt &&
-      (!this.site.mobileView || this.mobileScrollDirection === "down")
+      (this.site.desktopView || this.mobileScrollDirection === "down")
     );
   },
 

@@ -151,16 +151,10 @@ module ApplicationHelper
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
-    if GlobalSetting.preload_link_header
-      <<~HTML.html_safe
-        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
-      HTML
-    else
-      <<~HTML.html_safe
-        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute} #{nonce_attribute}>
-        <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
-      HTML
-    end
+
+    <<~HTML.html_safe
+      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+    HTML
   end
 
   def add_resource_preload_list(resource_url, type)

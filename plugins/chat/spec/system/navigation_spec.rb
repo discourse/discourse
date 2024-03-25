@@ -18,6 +18,7 @@ RSpec.describe "Navigation", type: :system do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
+    current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => category_channel.id)
     chat_system_bootstrap(current_user, [category_channel, category_channel_2])
     current_user.user_option.update(
       chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:never],
@@ -83,13 +84,11 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_current_path(
         chat.channel_path(category_channel.slug, category_channel.id),
       )
-      expect(page).to have_css("html.has-full-page-chat")
-      expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
     end
   end
 
   context "when visiting mobile only routes on desktop" do
-    it "redirects /chat/channels to ideal first channel" do
+    it "redirects /chat/channels to browse" do
       visit("/chat/channels")
 
       expect(page).to have_current_path(
@@ -97,7 +96,7 @@ RSpec.describe "Navigation", type: :system do
       )
     end
 
-    it "redirects /chat/direct-messages to ideal first channel" do
+    it "redirects /chat/direct-messages to browse" do
       visit("/chat/direct-messages")
 
       expect(page).to have_current_path(
@@ -153,7 +152,9 @@ RSpec.describe "Navigation", type: :system do
       chat_page.open
       chat_page.minimize_full_page
 
-      expect(page).to have_current_path(latest_path)
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel.slug, category_channel.id),
+      )
     end
   end
 

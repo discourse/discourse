@@ -191,6 +191,7 @@ te:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
     bootstrap_mode: "ప్రారంభించడం"
+    back_button: "వెనుకకు"
     themes:
       default_description: "అప్రమేయ"
       broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
@@ -1438,8 +1439,7 @@ te:
         save: "సేవ్ చేయండి"
         title: "పాస్కీలు"
         short_description: "పాస్కీలు మీ గుర్తింపును బయోమెట్రికల్గా (ఉదా. టచ్, ఫేస్ఐడి) లేదా పరికర పిన్/పాస్వర్డ్ ద్వారా ధ్రువీకరించే పాస్వర్డ్ భర్తీ."
-        added_prefix: "చేర్చబడింది"
-        last_used_prefix: "చివరిగా ఉపయోగించబడింది"
+        added_date: "%{date} జోడించబడింది"
         never_used: "ఎప్పుడూ ఉపయోగించలేదు"
         not_allowed_error: "పాస్‌కీ నమోదు ప్రక్రియ గడువు ముగిసింది, రద్దు చేయబడింది లేదా అనుమతించబడదు."
         already_added_error: "మీరు ఇప్పటికే ఈ పాస్‌కీని నమోదు చేసారు. మీరు దీన్ని మళ్లీ నమోదు చేయవలసిన అవసరం లేదు."
@@ -4492,6 +4492,9 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         meta_doc: "నివేదికల యొక్క వివరణాత్మక స్థూలదృష్టి కోసం మా <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>డాక్యుమెంటేషన్</a> ని అన్వేషించండి."
+        sidebar_title: "నివేదికలు"
+        sidebar_link:
+          all: "అన్ని"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -4895,6 +4898,51 @@ te:
           timestamp: "సృష్టించిన"
           completion: "పూర్తి సమయం"
           actions: "చర్యలు"
+      home:
+        title: "మొదటి పేజీ"
+      account:
+        title: "ఖాతా"
+        sidebar_link:
+          backups: "బ్యాకప్పులు"
+      community:
+        title: "సంఘం"
+        sidebar_link:
+          badges: "బ్యాడ్జీలు"
+          notifications: "నోటిఫికేషన్‌లు"
+          permalinks: "శాశ్వత లింక్‌లు"
+          trust_levels: "నమ్మకపు స్థాయిలు"
+          users: "సభ్యులు"
+          user_fields: "సభ్య క్షేత్రాలు"
+          watched_words: "అనుసరిస్తున్న పదాలు"
+          legal: "చట్టపరమైన"
+      appearance:
+        title: "స్వరూపం"
+        sidebar_link:
+          emoji: "ఇమోజి"
+          navigation: "నావిగేషన్"
+          themes: "థీమ్స్"
+      email_settings:
+        title: "ఇమెయిల్ సెట్టింగ్‌లు"
+        sidebar_link:
+          appearance: "స్వరూపం"
+          preview_summary: "సారాంశాన్ని ప్రివ్యూ"
+      email_logs:
+        sidebar_link:
+          sent: "పంపిన"
+          skipped: "వదిలిన"
+          bounced: "బౌన్స్ అయింది"
+          received: "అందినవి"
+          rejected: "తిరస్కరించబడినవి"
+      security:
+        title: "సెక్యూరిటీ"
+        sidebar_link:
+          error_logs: "దోష లాగులు"
+          screened_emails: "స్క్రీన్ చేసిన ఈమెయిల్లు"
+          screened_ips: "స్క్రీన్ చేసిన ఐపీలు"
+          screened_urls: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
+          search_logs: "లాగ్‌లను శోధించండి"
+          security: "సెక్యూరిటీ"
+          spam: "స్పామ్"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"
@@ -4911,6 +4959,20 @@ te:
         author: " %{author} రాసిన"
         experimental_badge: "ప్రయోగాత్మకమైన"
         learn_more: "మరింత తెలుసుకోండి"
+        sidebar_link:
+          installed: "ప్రతిష్టించబడింది"
+      advanced:
+        title: "అధునాతన"
+        sidebar_link:
+          developer: "డవలపరు"
+          embedding: "పొందుపరచడం"
+          rate_limits: "రోట్ హద్దులు"
+          user_api: "సబ్యుల API"
+          web_hooks: "వెబ్‌బూక్స్"
+          onebox: "వన్బాక్స్"
+          files: "ఫైళ్లు"
+          other_options: "ఇతర"
+          search: "శోధించండి"
       navigation_menu:
         sidebar: "సైడ్‌బార్"
         header_dropdown: "హెడర్ లో డ్రాప్‌డౌన్"
@@ -4941,6 +5003,7 @@ te:
           uploading_progress: "అప్‌లోడ్ చేస్తోంది… %{progress}%"
           success: "'%{filename}' విజయవంతంగా అప్‌లోడ్ చేయబడింది. ఫైల్ ఇప్పుడు ప్రాసెస్ చేయబడుతోంది మరియు జాబితాలో చూపబడటానికి గరిష్టంగా ఒక నిమిషం పడుతుంది."
           error: "'%{filename}' ఎగుమతించుటలో దోషం: %{message}"
+        settings: "అమరికలు"
         operations:
           is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది…"
           failed: "కార్యం విఫలమైంది. దయచేసి లాగులు చూడండి."
@@ -6211,6 +6274,7 @@ te:
         image: "చిత్రం"
         alt: "అనుకూల ఎమోజి ప్రివ్యూ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
+        settings: "అమరికలు"
       embedding:
         get_started: "మీరు మరొక వెబ్సైట్లో డిస్కోర్స్ పొందుపరచాలనుకుంటే, దాని హోస్ట్ను జోడించడం ద్వారా ప్రారంభించండి."
         confirm_delete: "మీరు ఖచ్చితంగా ఆ హోస్ట్‌ని తొలగించాలనుకుంటున్నారా?"

@@ -137,6 +137,7 @@ sw:
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
+    back_button: "Iliyopita"
     themes:
       default_description: "Halisi"
     s3:
@@ -2303,6 +2304,8 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        sidebar_link:
+          all: "Vyote"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2461,6 +2464,48 @@ sw:
           timestamp: "Imetengenezwa"
           completion: "Mda wa Kumaliza"
           actions: "Vitendo"
+      home:
+        title: "Nyumbani"
+      account:
+        title: "Akaunti"
+        sidebar_link:
+          backups: "Machelezo"
+      community:
+        title: "Jumuiya"
+        sidebar_link:
+          badges: "Beji"
+          notifications: "Taarifa"
+          permalinks: "Anwani za mtandao"
+          trust_levels: "Viwango vya Uaminifu"
+          users: "Watumiaji"
+          user_fields: "Sehemu za Watumiaji"
+          watched_words: "Maneno yanayoangaliwa"
+          legal: "Halali"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Abiri"
+          themes: "Mandhari"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Kihakiki Jarida"
+      email_logs:
+        sidebar_link:
+          sent: "Imetumwa"
+          skipped: "Imerukwa"
+          bounced: "Haijafika"
+          received: "Imepokelewa"
+          rejected: "Imekataliwa"
+      security:
+        title: "Ulinzi"
+        sidebar_link:
+          error_logs: "Batli ya Hitilafu"
+          screened_emails: "barua pepe zilizochunguzwa"
+          screened_ips: "Anwani za mtandao zinazoruhusiwa au kukatazwa"
+          screened_urls: "Anwani za tovuti zinazoruhusiwa au kukatazwa"
+          search_logs: "Batli ya Utafiti"
+          security: "Ulinzi"
+          spam: "Barua Taka"
       plugins:
         title: "Programu-jalizi"
         installed: "Progamu-jalizi zilizowekwa"
@@ -2474,6 +2519,18 @@ sw:
         howto: "Ninawekaje programu-jalizi?"
         author: "Na %{author}"
         learn_more: "Jifunze zaidi"
+        sidebar_link:
+          installed: "Imesanikishwa"
+      advanced:
+        sidebar_link:
+          developer: "Mtengenezaji"
+          embedding: "Ambatanisha"
+          rate_limits: "Kikomo cha Viwango "
+          user_api: "API ya Mtumiaji"
+          onebox: "Onebox"
+          files: "Mafaili"
+          other_options: "Nyingine"
+          search: "Tafuta"
       backups:
         title: "Machelezo"
         menu:
@@ -2496,6 +2553,7 @@ sw:
           title: "Pakia chelezo kwenye mfano huu."
           success: "'%{jina la faili}' imepakiwa kwa mafanikio. Faili lipokwenye harakati na litachukua mpaka dakika kuonekana kwenye orodha."
           error: "Hitilafu imetokea wakati wa kupakia '%{jina la faili}': %{ujumbe}"
+        settings: "Mipangilio"
         operations:
           failed: "%{Operesheni} imeshindwa. Tafadhali angalia batli."
           cancel:
@@ -3261,6 +3319,7 @@ sw:
         group: "Kikundi"
         image: "Picha"
         delete_confirm: "Una uhakika unataka kufuta emoji ya :%{name}: ?"
+        settings: "Mipangilio"
       embedding:
         get_started: "Kama ungependa kuambatanisha Discourse kwenye tovuti nyingine, anza kwa kuandika taarifa zake."
         confirm_delete: "Una uhakika unataka kumfuta mwenyeji?"

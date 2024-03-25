@@ -379,7 +379,7 @@ export default Component.extend({
   },
 
   _shouldFocusLastVisited() {
-    return !this.site.mobileView && this.focusLastVisitedTopic;
+    return this.site.desktopView && this.focusLastVisitedTopic;
   },
 
   _mainLinkElement() {

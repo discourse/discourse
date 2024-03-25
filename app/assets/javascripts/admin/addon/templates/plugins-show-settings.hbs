@@ -1,1 +1,10 @@
-<div class="content-body admin-plugin-config-area__settings"></div>
+<div
+  class="content-body admin-plugin-config-area__settings admin-detail pull-left"
+>
+  <AdminPluginFilteredSiteSettings
+    @initialFilter={{@model.initialFilter}}
+    @plugin={{@model.plugin}}
+    @settings={{@model.settings}}
+    @onFilterChanged={{this.filterChanged}}
+  />
+</div>

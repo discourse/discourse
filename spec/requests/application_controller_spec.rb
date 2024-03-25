@@ -1188,8 +1188,36 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe "preload Link header" do
-    context "with GlobalSetting.preload_link_header" do
+  describe "Link header" do
+    describe "when `experimental_preconnect_link_header` site setting is enabled" do
+      before { SiteSetting.experimental_preconnect_link_header = true }
+
+      it "should include the `preconnect` and `dns-prefetch` resource hints in the Link header when `GlobalSetting.cdn_url is configured`" do
+        global_setting :cdn_url, "https://cdn.example.com/something"
+
+        get "/latest"
+
+        expect(response.status).to eq(200)
+
+        expect(response.headers["Link"]).to include(
+          "<https://cdn.example.com>; rel=preconnect, <https://cdn.example.com>; rel=dns-prefetch",
+        )
+      end
+
+      it "should include the `preconnect` and `dns-prefetch` resource hints in the Link header when `SiteSetting.s3_cdn_url is configured`" do
+        SiteSetting.s3_cdn_url = "https://s3.some-cdn.com/something"
+
+        get "/latest"
+
+        expect(response.status).to eq(200)
+
+        expect(response.headers["Link"]).to include(
+          "<https://s3.some-cdn.com>; rel=preconnect, <https://s3.some-cdn.com>; rel=dns-prefetch",
+        )
+      end
+    end
+
+    context "when `GlobalSetting.preload_link_header` is enabled" do
       before { global_setting :preload_link_header, true }
 
       it "should have the Link header with assets on full page requests" do
@@ -1203,7 +1231,7 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "without GlobalSetting.preload_link_header" do
+    context "when `GlobalSetting.preload_link_header` is disabled" do
       before { global_setting :preload_link_header, false }
 
       it "shouldn't have the Link header with assets on full page requests" do

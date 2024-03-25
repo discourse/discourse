@@ -188,6 +188,7 @@ sr:
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
       dismiss: "Одбаци"
+    back_button: "Nazad"
     themes:
       default_description: "Подразумевано"
     s3:
@@ -1861,6 +1862,9 @@ sr:
         remove_muted_tags_from_latest:
           always: "uvek"
           never: "nikada"
+      reports:
+        sidebar_link:
+          all: "sve"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
@@ -1952,6 +1956,41 @@ sr:
         events:
           timestamp: "Napravljeno"
           actions: "Akcije"
+      home:
+        title: "Home"
+      account:
+        sidebar_link:
+          backups: "Sigurnosne kopije"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obaveštenja"
+          trust_levels: "Nivo poverenja"
+          users: "Korisnici"
+          user_fields: "Korisnička polja"
+          legal: "Legalno"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Pregled sažetka"
+      email_logs:
+        sidebar_link:
+          sent: "Poslato"
+          skipped: "Preskočeno"
+          received: "Primljeno"
+      security:
+        title: "Sigurnost"
+        sidebar_link:
+          error_logs: "Logovi Grešaka"
+          screened_emails: "Provereni emailovi"
+          screened_ips: "Provereni IP-ovi"
+          screened_urls: "Provereni URL-ovi"
+          security: "Sigurnost"
+          spam: "Nepoželjno"
       plugins:
         title: "Dodatci"
         name: "Ime foruma"
@@ -1960,6 +1999,17 @@ sr:
         change_settings_short: "Podešavanje"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        sidebar_link:
+          installed: "Instalirano"
+      advanced:
+        sidebar_link:
+          developer: "Programer"
+          embedding: "Ugrađivanje"
+          rate_limits: "Granica Nivoa"
+          onebox: "Onebox"
+          files: "Datoteke"
+          other_options: "Ostalo"
+          search: "Pretraži"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -1977,6 +2027,7 @@ sr:
         upload:
           label: "Učitaj"
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
+        settings: "Podešavanja"
         operations:
           failed: "%{operation} neuspješna. Molimo proverite logove."
           cancel:
@@ -2525,6 +2576,7 @@ sr:
         group: "Grupa"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
+        settings: "Podešavanja"
       embedding:
         title: "Ugrađivanje"
         edit: "izmeni"

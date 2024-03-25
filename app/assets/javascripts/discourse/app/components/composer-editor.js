@@ -899,7 +899,7 @@ export default Component.extend(ComposerUploadUppy, {
         unshift: true,
       });
 
-      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
+      if (this.allowUpload && this.uploadIcon && this.site.desktopView) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",

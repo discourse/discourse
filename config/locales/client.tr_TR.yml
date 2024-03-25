@@ -191,6 +191,7 @@ tr_TR:
       message: "Bu siteyi güncelledik, <span>lütfen yenileyin</span> ki işler sorunsuz bir şekilde devam etsin."
       dismiss: "Kapat"
     bootstrap_mode: "Başlarken"
+    back_button: "Geri"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -1438,8 +1439,8 @@ tr_TR:
         save: "Kaydet"
         title: "Şifre Anahtarları"
         short_description: "Şifre anahtarları, kimliğinizi biyometrik olarak (ör. dokunma, faceID) veya bir cihaz PIN'i/şifresi aracılığıyla doğrulayan şifre yedekleridir."
-        added_prefix: "Eklendi"
-        last_used_prefix: "Son Kullanılan"
+        added_date: "%{date} eklendi"
+        last_used_date: "Son Kullanım %{date}"
         never_used: "Hiç Kullanılmadı"
         not_allowed_error: "Şifre anahtarı kayıt işlemi zaman aşımına uğradı, iptal edildi veya izin verilmiyor."
         already_added_error: "Bu şifre anahtarını daha önce kaydettiniz. Yeniden kaydetmenize gerek yok."
@@ -4443,6 +4444,7 @@ tr_TR:
           copy: "Kopyala..."
           paste: "Yapıştır..."
           save: "Farklı kaydet..."
+    powered_by_discourse: "Discourse tarafından desteklenmektedir"
   admin_js:
     type_to_filter: "filtrelemek için yazın…"
     admin:
@@ -4457,6 +4459,9 @@ tr_TR:
       reports:
         title: "Mevcut raporlar listesi"
         meta_doc: "Raporlara ayrıntılı bir genel bakış için <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>belgelerimizi</a> keşfedin."
+        sidebar_title: "Raporlar"
+        sidebar_link:
+          all: "Hepsi"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
@@ -4689,6 +4694,10 @@ tr_TR:
               delete: Bir gönderi silin.
               recover: Bir gönderiyi kurtarın.
               list: Son gönderileri ve özel gönderileri listeleyin. RSS de desteklenir.
+            revisions:
+              read: "En son veya belirli bir revizyonu alın."
+              modify: "Revizyonları gizleyin, gösterin veya geri alın."
+              permanently_delete: "Bir revizyonu kalıcı olarak silin."
             tags:
               list: Etiketleri listeleyin.
             tag_groups:
@@ -4860,6 +4869,61 @@ tr_TR:
           timestamp: "Oluşturuldu"
           completion: "Tamamlanma Süresi"
           actions: "Eylemler"
+      home:
+        title: "Ana Sayfa"
+      account:
+        title: "Hesap"
+        sidebar_link:
+          backups: "Yedeklemeler"
+          whats_new: "Yenilikler"
+      community:
+        title: "Topluluk"
+        sidebar_link:
+          about_your_site: "Siteniz hakkında"
+          badges: "Rozetler"
+          login_and_authentication: "Oturum Açma ve Kimlik Doğrulama"
+          notifications: "Bildirimler"
+          permalinks: "Kalıcı Bağlantılar"
+          trust_levels: "Güven Seviyeleri"
+          users: "Kullanıcılar"
+          user_fields: "Kullanıcı Alanları"
+          watched_words: "İzlenen Kelimeler"
+          legal: "Yasal"
+      appearance:
+        title: "Görünüm"
+        sidebar_link:
+          font_style: "Yazı stili"
+          site_logo: "Site logosu"
+          color_schemes: "Renk Düzenleri"
+          emoji: "Emoji"
+          navigation: "Gezinti"
+          themes: "Temalar"
+          site_texts: "Site Metinleri"
+      email_settings:
+        title: "e-posta ayarları"
+        sidebar_link:
+          appearance: "Görünüm"
+          preview_summary: "Ön İzleme Özeti"
+          server_setup: "Sunucu Kurulumu"
+      email_logs:
+        title: "E-posta Günlükleri"
+        sidebar_link:
+          sent: "Gönderilen"
+          skipped: "Atlandı"
+          bounced: "Geri Döndü"
+          received: "Alındı"
+          rejected: "Reddedildi"
+      security:
+        title: "Güvenlik"
+        sidebar_link:
+          error_logs: "Hata Kayıtları"
+          screened_emails: "Taranan E-postalar"
+          screened_ips: "Taranan IP'ler"
+          screened_urls: "Taranan URL'ler"
+          search_logs: "Arama Günlükleri"
+          security: "Güvenlik"
+          spam: "Spam"
+          staff_action_logs: "Personel Eylem Günlükleri"
       plugins:
         title: "Eklentiler"
         installed: "Yüklü Eklentiler"
@@ -4876,6 +4940,23 @@ tr_TR:
         author: "Yazan: %{author}"
         experimental_badge: "deneysel"
         learn_more: "Daha fazla bilgi edinin"
+        sidebar_link:
+          installed: "Yüklendi"
+      advanced:
+        title: "Gelişmiş"
+        sidebar_link:
+          api_keys: "API anahtarları"
+          developer: "Geliştirici"
+          embedding: "Gömme"
+          rate_limits: "Oran Limitleri"
+          user_api: "Kullanıcı API'sı"
+          web_hooks: "Web Kancaları"
+          onebox: "Onebox"
+          files: "Dosyalar"
+          other_options: "Diğer"
+          search: "Ara"
+          experimental: "Deneysel"
+          all_site_settings: "Tüm Site Ayarları"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
@@ -4906,6 +4987,7 @@ tr_TR:
           uploading_progress: "Yükleniyor… %%{progress}"
           success: "\"%{filename}\" başarıyla yüklendi. Dosya şu anda işleniyor ve listede görünmesi bir dakika kadar sürecek."
           error: "\"%{filename}\" yüklenirken bir hata oluştu: %{message}"
+        settings: "Ayarlar"
         operations:
           is_running: "Şu anda bir işlem yürütülüyor…"
           failed: "%{operation} başarısız oldu. Lütfen günlükleri kontrol edin."
@@ -6170,6 +6252,7 @@ tr_TR:
         image: "Görüntü"
         alt: "özel emoji ön izlemesi"
         delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
+        settings: "Ayarlar"
       embedding:
         get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
         confirm_delete: "Bu sunucuyu silmek istediğinizden emin misiniz?"
