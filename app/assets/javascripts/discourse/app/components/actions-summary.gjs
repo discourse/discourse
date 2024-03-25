@@ -16,7 +16,11 @@ const ActionsSummary = <template>
         title={{@data.deletedByUsername}}
         aria-hidden="true"
       >
-        {{avatar @data.deletedByAvatarTemplate "tiny"}}
+        {{avatar
+          @data.deletedByAvatarTemplate
+          "tiny"
+          title=@data.deletedByUsername
+        }}
       </a>
       {{formatDate @data.deleted_at format="tiny"}}
     </div>
