@@ -1,5 +1,5 @@
 import { warn } from "@ember/debug";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -102,7 +102,7 @@ export default class Category extends RestModel {
     if (!id) {
       return;
     }
-    return Category._idMap()[id];
+    return Category._idMap().get(id);
   }
 
   static findByIds(ids = []) {
@@ -430,6 +430,20 @@ export default class Category extends RestModel {
         })
       );
     }
+  }
+
+  @computed("parent_category_id")
+  get parentCategory() {
+    return Category.findById(this.parent_category_id);
+  }
+
+  set parentCategory(newParentCategory) {
+    this.set("parent_category_id", newParentCategory?.id);
+  }
+
+  @computed("site.categories.[]")
+  get subcategories() {
+    return this.site.categories.filterBy("parent_category_id", this.id);
   }
 
   @discourseComputed("required_tag_groups", "minimum_required_tags")
