@@ -78,12 +78,19 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
 
       expect(admin_customize_themes_page).to have_overridden_setting("objects_setting")
 
+      admin_objects_theme_setting_editor =
+        admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
+
+      expect(admin_objects_theme_setting_editor).to have_setting_field("name", "some new name")
+
+      admin_objects_theme_setting_editor.back
+
       admin_customize_themes_page.reset_overridden_setting("objects_setting")
 
       admin_objects_theme_setting_editor =
         admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
 
-      expect(admin_objects_theme_setting_editor).to have_setting_field("name", "some new name")
+      expect(admin_objects_theme_setting_editor).to have_setting_field("name", "section 1")
     end
 
     it "allows an admin to edit a theme setting of objects type via the settings editor" do

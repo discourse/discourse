@@ -35,6 +35,11 @@ module PageObjects
         self
       end
 
+      def back
+        find(".customize-themes-show-schema__back").click
+        self
+      end
+
       private
 
       def input_field(field_name)
