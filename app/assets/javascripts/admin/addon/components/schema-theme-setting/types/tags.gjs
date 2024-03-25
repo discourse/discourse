@@ -36,8 +36,8 @@ export default class SchemaThemeSettingTypeTags extends Component {
       (this.min && this.value.length < this.min) ||
       (this.required && (!this.value || this.value.length === 0))
     ) {
-      return I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
-        count: this.min,
+      return I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+        count: this.min || 1,
       });
     }
   }
