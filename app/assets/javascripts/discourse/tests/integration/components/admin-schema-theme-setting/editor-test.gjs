@@ -736,6 +736,10 @@ module(
             required_tags: {
               type: "tags",
               required: true,
+            },
+            required_tags_with_validations: {
+              type: "tags",
+              required: true,
               validations: {
                 min: 2,
                 max: 3,
@@ -745,7 +749,8 @@ module(
         },
         value: [
           {
-            required_tags: ["gazelle", "cat"],
+            required_tags: ["gazelle"],
+            required_tags_with_validations: ["gazelle", "cat"],
           },
         ],
       });
@@ -756,8 +761,8 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      const tagSelector = selectKit(
-        `${inputFields.fields.required_tags.selector} .select-kit`
+      let tagSelector = selectKit(
+        `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
       );
 
       assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
@@ -778,11 +783,13 @@ module(
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
-          count: 2,
-        })
-      );
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
@@ -791,9 +798,27 @@ module(
 
       inputFields.refresh();
 
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
+
+      tagSelector = selectKit(
+        `${inputFields.fields.required_tags.selector} .select-kit`
+      );
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.collapse();
+
+      inputFields.refresh();
+
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
-          count: 2,
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          count: 1,
         })
       );
     });
