@@ -555,7 +555,6 @@ module ApplicationHelper
   end
 
   def current_homepage
-    return "custom" if SiteSetting.experimental_custom_homepage?
     current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
 
