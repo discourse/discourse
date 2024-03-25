@@ -667,7 +667,7 @@ module(
       assert.strictEqual(enumSelector.header().value(), "nice");
     });
 
-    test("input fields of type category", async function (assert) {
+    test("input fields of type categories", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
         objects_schema: {
@@ -675,17 +675,29 @@ module(
           identifier: "id",
           properties: {
             required_category: {
-              type: "category",
+              type: "categories",
               required: true,
             },
             not_required_category: {
-              type: "category",
+              type: "categories",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
             },
           },
         },
         value: [
           {
-            required_category: 6,
+            required_category: [6],
           },
         ],
       });
@@ -706,9 +718,17 @@ module(
 
       assert.strictEqual(categorySelector.header().value(), "6");
 
-      assert
-        .dom(categorySelector.clearButton())
-        .doesNotExist("is not clearable");
+      await categorySelector.expand();
+      await categorySelector.deselectItemByValue("6");
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 1,
+        })
+      );
 
       assert
         .dom(inputFields.fields.not_required_category.labelElement)
@@ -722,8 +742,24 @@ module(
 
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
+      await categorySelector.collapse();
 
-      assert.dom(categorySelector.clearButton()).exists("is clearable");
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 2,
+        })
+      );
+
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(2);
+      await categorySelector.selectRowByIndex(3);
+      await categorySelector.selectRowByIndex(4);
+
+      assert
+        .dom(categorySelector.error())
+        .hasText("You can only select 3 items.");
     });
 
     test("input fields of type tags which is required", async function (assert) {

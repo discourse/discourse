@@ -141,40 +141,58 @@ en:
         required: "must be present"
         humanize_invalid_type: "The property at JSON Pointer '%{property_json_pointer}' must be of type %{type}."
         invalid_type: "%{type} is not a valid type"
+
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
+
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
+
         humanize_not_valid_float_value: "The property at JSON Pointer '%{property_json_pointer}' must be a float."
         not_valid_float_value: "must be a float"
+
         humanize_not_valid_boolean_value: "The property at JSON Pointer '%{property_json_pointer}' must be a boolean."
         not_valid_boolean_value: "must be a boolean"
+
         humanize_not_valid_enum_value: "The property at JSON Pointer '%{property_json_pointer}' must be one of the following %{choices}."
         not_valid_enum_value: "must be one of the following: %{choices}"
-        humanize_not_valid_category_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid category id."
-        not_valid_category_value: "must be a valid category id"
+
+        humanize_not_valid_categories_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid category ids."
+        not_valid_categories_value: "must be an array of valid category ids"
+        humanize_categories_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} category ids."
+        categories_value_not_valid_min: "must have at least %{min} category ids"
+        humanize_categories_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} category ids."
+        categories_value_not_valid_max: "must have at most %{max} category ids"
+
         humanize_not_valid_topic_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid topic id."
         not_valid_topic_value: "must be a valid topic id"
+
         humanize_not_valid_post_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid post id."
         not_valid_post_value: "must be a valid post id"
+
         humanize_not_valid_group_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid group id."
         not_valid_group_value: "must be a valid group id"
+
         humanize_not_valid_tags_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid tag names."
         not_valid_tags_value: "must be an array of valid tag names"
         humanize_tags_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} tag names."
         tags_value_not_valid_min: "must have at least %{min} tag names"
         humanize_tags_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} tag names."
         tags_value_not_valid_max: "must have at most %{max} tag names"
+
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
+
         humanize_string_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{min} characters long."
         string_value_not_valid_min: "must be at least %{min} characters long"
         humanize_string_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{max} characters long."
         string_value_not_valid_max: "must be at most %{max} characters long"
+
         humanize_number_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be larger than or equal to %{min}."
         number_value_not_valid_min: "must be larger than or equal to %{min}"
         humanize_number_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be smaller than or equal to %{max}."
         number_value_not_valid_max: "must be smaller than or equal to %{max}"
+
         humanize_string_value_not_valid_url: "The property at JSON Pointer '%{property_json_pointer}' must be a valid URL."
         string_value_not_valid_url: "must be a valid URL"
     locale_errors:

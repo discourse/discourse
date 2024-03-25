@@ -229,6 +229,10 @@ export default function selectKit(selector) {
       return filterHelper(query(selector).querySelector(".select-kit-filter"));
     },
 
+    error() {
+      return query(selector).querySelector(".select-kit-error");
+    },
+
     rows() {
       return query(selector).querySelectorAll(".select-kit-row");
     },

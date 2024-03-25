@@ -184,7 +184,7 @@ export default function schemaAndData(version = 1) {
           choices: ["nice", "awesome", "cool"]
         },
         category_field: {
-          type: "category",
+          type: "categories",
         },
         group_field: {
           type: "group",

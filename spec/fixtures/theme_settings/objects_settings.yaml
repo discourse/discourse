@@ -33,3 +33,19 @@ objects_setting:
                 max_length: 20
             url:
               type: string
+
+objects_with_categories:
+  type: objects
+  default: []
+  schema:
+    name: categories
+    properties:
+      category_ids:
+        type: categories
+      child_categories:
+        type: objects
+        schema:
+          name: child category
+          properties:
+            category_ids:
+              type: categories
