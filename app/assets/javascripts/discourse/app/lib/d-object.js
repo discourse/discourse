@@ -5,28 +5,36 @@ import { getOwner } from "@ember/owner";
 
 const ATTRS = new WeakMap();
 
+function attrsFor(klass) {
+  // TODO... cache result?
+
+  const allEntries = [];
+
+  while (klass) {
+    const attrs = ATTRS.get(klass);
+    if (attrs) {
+      allEntries.unshift(...attrs);
+    }
+    klass = Object.getPrototypeOf(klass);
+  }
+
+  return new Map(allEntries);
+}
+
 export default class DObject {
   static get attrs() {
-    const keys = [];
-    let klass = this;
-    while (klass) {
-      const attrs = ATTRS.get(klass);
-      if (attrs) {
-        keys.push(...attrs.keys());
-      }
-      klass = Object.getPrototypeOf(klass);
-    }
-    return keys;
+    return [...attrsFor(this).keys()];
   }
 
   constructor(owner, attrs) {
     if (owner && !(owner instanceof ApplicationInstance)) {
       throw new Error(
-        "First argument of BaseModel constructor must be the owning ApplicationInstance"
+        "First argument of DObject constructor must be the owning ApplicationInstance"
       );
     }
     setOwner(this, owner);
     this.setAttrs(attrs);
+    this.#sealReadonly();
   }
 
   /**
@@ -37,6 +45,16 @@ export default class DObject {
     for (const key of this.constructor.attrs) {
       if (key in attrs) {
         this[key] = attrs[key];
+      }
+    }
+  }
+
+  #sealReadonly() {
+    for (const [key, opts] of attrsFor(this.constructor)) {
+      if (opts.readOnly) {
+        // TODO: Make sure this explodes cleanly on getters/setters
+        // TODO: combine this into setAttrs so we aren't setting things twice?
+        Object.defineProperty(this, key, { value: this[key], writable: false });
       }
     }
   }
@@ -97,11 +115,7 @@ function throwIfNotDObject(klass) {
   throw new Error("This decorator can only be used on a DObject");
 }
 
-/**
- * Decorator for defining an attribute on a DObject. Attributes
- * are tracked properties which are set via arguments to the constructor.
- */
-export function attr(target, key, descriptor) {
+function attrDecorator(target, key, descriptor, opts) {
   throwIfNotDObject(target.constructor);
 
   let attrs = ATTRS.get(target.constructor);
@@ -109,10 +123,20 @@ export function attr(target, key, descriptor) {
     attrs = new Map();
     ATTRS.set(target.constructor, attrs);
   }
-  attrs.set(key, {});
+  attrs.set(key, opts);
 
   if (!descriptor.get && !descriptor.set) {
-    return tracked(...arguments);
+    return tracked(target, key, descriptor);
   }
-  // return descriptor;
+}
+
+/**
+ * Decorator for defining an attribute on a DObject. Attributes
+ * are tracked properties which are set via arguments to the constructor.
+ */
+export function attr() {
+  if (arguments.length === 1) {
+    return (t, k, d) => attrDecorator(t, k, d, arguments[0]);
+  }
+  return attrDecorator(...arguments, {});
 }

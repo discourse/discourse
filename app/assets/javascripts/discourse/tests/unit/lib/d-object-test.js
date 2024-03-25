@@ -7,6 +7,7 @@ class TestPerson extends DObject {
   @attr id;
   @attr name;
   @attr age;
+  @attr({ readOnly: true }) immutableProp;
 }
 
 class TestChild extends TestPerson {
@@ -72,5 +73,16 @@ module("Unit | DObject", function (hooks) {
       name: "bob",
       age: 30,
     });
+  });
+
+  test("it allows readonly attributes", function (assert) {
+    const person = new TestPerson(getOwner(this), {
+      immutableProp: "foo",
+    });
+
+    assert.strictEqual(person.immutableProp, "foo");
+    assert.throws(() => {
+      person.immutableProp = "bar";
+    }, /Cannot assign to read only property/);
   });
 });
