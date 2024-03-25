@@ -4,7 +4,6 @@ import { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -15,6 +14,12 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
+
+const _customActions = {};
+
+export function addBulkDropdownAction(name, customAction) {
+  _customActions[name] = customAction;
+}
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -32,7 +37,11 @@ export default class BulkTopicActions extends Component {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
-      this.setComponent(ChangeTags);
+      if (this.args.model.initialActionLabel in _customActions) {
+        _customActions[this.args.model.initialActionLabel]({
+          setComponent: this.setComponent.bind(this),
+        });
+      }
     }
   }
 
@@ -111,6 +120,11 @@ export default class BulkTopicActions extends Component {
   }
 
   @action
+  registerCustomAction(customAction) {
+    this.customAction = customAction;
+  }
+
+  @action
   performAction() {
     this.loading = true;
     switch (this.args.model.action) {
@@ -165,6 +179,14 @@ export default class BulkTopicActions extends Component {
           (t) => t.set("category_id", this.categoryId)
         );
         break;
+      default:
+        // Plugins can register their own custom actions via onRegisterAction
+        // when the activeComponent is rendered.
+        if (this.customAction) {
+          this.customAction(this.performAndRefresh.bind(this));
+        } else {
+          _customActions[this.args.model.initialActionLabel](this);
+        }
     }
   }
 
@@ -291,6 +313,13 @@ export default class BulkTopicActions extends Component {
                 @tags={{this.tags}}
                 @categoryId={{@categoryId}}
               /></p>
+          {{/if}}
+
+          {{#if this.activeComponent}}
+            {{component
+              this.activeComponent
+              onRegisterAction=this.registerCustomAction
+            }}
           {{/if}}
         </ConditionalLoadingSection>
       </:body>
