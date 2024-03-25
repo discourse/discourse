@@ -23,7 +23,7 @@ export default class PostBookmarkManager {
     this.type = "Post";
 
     this.bookmarkModel =
-      this.topicController.model.bookmarks.find(
+      this.topicController.model?.bookmarks.find(
         (bookmark) =>
           bookmark.bookmarkable_id === this.model.id &&
           bookmark.bookmarkable_type === this.type
