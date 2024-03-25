@@ -40,7 +40,7 @@ class UserDestroyer
 
         agree_with_flags(user) if opts[:delete_as_spammer]
         block_external_urls(user) if opts[:block_urls]
-        delete_posts(user, category_topic_ids, opts)
+        delete_posts(user, category_topic_ids)
       end
 
       user.post_actions.find_each { |post_action| post_action.remove_act!(Discourse.system_user) }
@@ -147,12 +147,16 @@ class UserDestroyer
       end
   end
 
-  def delete_posts(user, category_topic_ids, opts)
+  def delete_posts(user, category_topic_ids)
     user.posts.find_each do |post|
       if post.is_first_post? && category_topic_ids.include?(post.topic_id)
         post.update!(user: Discourse.system_user)
       else
-        PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+        PostDestroyer.new(
+          @actor.staff? ? @actor : Discourse.system_user,
+          post,
+          skip_bookmark_sync: true,
+        ).destroy
       end
 
       if post.topic && post.is_first_post?

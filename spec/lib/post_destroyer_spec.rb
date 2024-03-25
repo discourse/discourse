@@ -512,6 +512,12 @@ RSpec.describe PostDestroyer do
       expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
     end
 
+    it "skips the SyncTopicUserBookmarked job when the option to skip is passed in" do
+      post2 = create_post
+      PostDestroyer.new(post2.user, post2, skip_bookmark_sync: true).destroy
+      expect_not_enqueued_with(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
+    end
+
     it "skips post revise validations when post is marked for deletion by the author" do
       SiteSetting.min_first_post_length = 100
       post =
