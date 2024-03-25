@@ -64,6 +64,10 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
+      - name: Remove Chrome
+        continue-on-error: true
+        run: apt remove -y google-chrome-stable
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -130,7 +134,7 @@ jobs:
         if: matrix.target == 'themes' && matrix.build_type == 'system'
         run: bin/rake themes:clone_all_official
 
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
@@ -335,10 +339,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
         updated_ember: [true]
         include:
-          - browser: Chrome
+          - browser: Chromium
             updated_ember: false
 
     env:

@@ -127,12 +127,24 @@ class Reporter extends TapReporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
-  launch_in_ci: ["Chrome"],
+  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
   tap_failed_tests_only: false,
   parallel: -1,
   browser_start_timeout: 120,
   browser_args: {
+    Chromium: [
+      // --no-sandbox is needed when running Chromium inside a container
+      process.env.CI ? "--no-sandbox" : null,
+      "--headless=new",
+      "--disable-dev-shm-usage",
+      "--disable-software-rasterizer",
+      "--mute-audio",
+      "--remote-debugging-port=4201",
+      "--window-size=1440,900",
+      "--enable-precise-memory-info",
+      "--js-flags=--max_old_space_size=4096",
+    ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
       process.env.CI ? "--no-sandbox" : null,
