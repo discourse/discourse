@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelThreadMessagesController do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:thread) do

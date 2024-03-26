@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Api::ChannelsCurrentUserMembershipController do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }

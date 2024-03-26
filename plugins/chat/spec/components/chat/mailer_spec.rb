@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Mailer do
   fab!(:chatters_group) { Fabricate(:group) }
   fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }

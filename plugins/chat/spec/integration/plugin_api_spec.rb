@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "Plugin API for chat" do
   before { SiteSetting.chat_enabled = true }
 

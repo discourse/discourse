@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::TranscriptService do
   let(:acting_user) { Fabricate(:user) }
   let(:user1) { Fabricate(:user, username: "martinchat") }

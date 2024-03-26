@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe PostBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(PostBookmarkable) }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::AutoJoinChannelBatch do
   describe Chat::AutoJoinChannelBatch::Contract, type: :model do
     subject(:contract) { described_class.new(start_user_id: 10) }

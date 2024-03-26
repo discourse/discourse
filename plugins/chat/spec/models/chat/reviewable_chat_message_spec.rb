@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ReviewableMessage, type: :model do
   fab!(:moderator)
   fab!(:user)

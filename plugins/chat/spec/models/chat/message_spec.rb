@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
