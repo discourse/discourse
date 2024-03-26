@@ -72,6 +72,8 @@ class PostCreator
         (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
     )
 
+    puts "opts[:topic_id]: #{opts[:topic_id]}"
+    puts "opts[:reply]: #{opts[:reply_to_post_number]}"
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
 
