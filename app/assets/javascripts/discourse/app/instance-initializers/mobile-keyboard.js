@@ -66,7 +66,8 @@ export default {
     } else {
       let viewportWindowDiff =
         this.windowInnerHeight - window.visualViewport.height;
-      if (viewportWindowDiff > 0) {
+      const FLOATING_IPAD_KEYBOARD_HEIGHT = 71.5;
+      if (viewportWindowDiff > FLOATING_IPAD_KEYBOARD_HEIGHT) {
         keyboardVisible = true;
       }
 
