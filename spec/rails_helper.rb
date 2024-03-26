@@ -804,10 +804,14 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images")
+def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
+end
+
+def plugin_file_from_fixtures(plugin_directory, filename, directory = "images")
+  file_from_fixtures(filename, directory, "#{Rails.root}/plugins/#{plugin_directory}/spec/fixtures")
 end
 
 def file_from_contents(contents, filename, directory = "images")
