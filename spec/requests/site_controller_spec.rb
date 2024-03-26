@@ -68,6 +68,16 @@ RSpec.describe SiteController do
       expect(json["discourse_discover_enrolled"]).to be_nil
     end
 
+    it "skip Discourse Discover stats for non Discourse Hub requests" do
+      SiteSetting.include_in_discourse_discover = true
+      About.refresh_stats
+
+      get "/site/statistics.json"
+      json = response.parsed_body
+
+      expect(json["discourse_discover_enrolled"]).to be_nil
+    end
+
     it "returns Discourse Discover stats" do
       SiteSetting.include_in_discourse_discover = true
       About.refresh_stats
