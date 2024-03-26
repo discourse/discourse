@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/application";
 
-export default async function waitForKeyboard(context) {
+export async function waitForKeyboard(context) {
   return new Promise((resolve) => {
     if (!window.visualViewport) {
       return resolve({ visible: false });
