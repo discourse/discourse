@@ -2099,6 +2099,9 @@ sr:
             text: "Footer"
           all_filter: "sve"
           active_filter: "Aktivno"
+          schema:
+            fields:
+              required: "*potrebno"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"

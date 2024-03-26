@@ -216,10 +216,6 @@ sw:
         reply: |-
           [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
       search:
-        instructions: |-
-          _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu
-
-          Jaribu kutafuta neno "capy&#8203;bara" kwenye hii mada
         reply: |-
           Nina furaha kuwa umeiona :tada:
 

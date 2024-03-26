@@ -281,10 +281,6 @@ ko:
         not_found: |-
           이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
-        instructions: |-
-          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 선택해서 &#8599; 찾아봐.
-
-          이 토픽에서 "capy&#8203;bara"를 찾으면 돼.
         hidden_message: |-
           이 capybara를 어떻게 그리워 했습니까? :눈짓: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/> 당신이 지금 처음에 돌아 왔음을 알았습니까? `%{search_answer}` 그림 이모티콘 **을 사용하여이 가난한 배고픈 카피 바라에게 먹이를 주면 자동으로 끝납니다.
         reply: |-

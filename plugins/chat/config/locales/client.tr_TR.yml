@@ -563,6 +563,7 @@ tr_TR:
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
+        illegal: "Bu gönderi yetkililerin dikkatini çekmesi gerekiyor çünkü illegal içerikler içeriyor."
         spam: "Bu mesaj bir reklam veya vandalizm içerikli. Kullanışlı veya mevcut kanalla ilgili değil."
         notify_user: "Bu kişiyle doğrudan ve kişisel olarak mesajı hakkında konuşmak istiyorum."
         notify_moderators: "Bu mesaj, yukarıda listelenmeyen başka bir nedenden dolayı personelin dikkatini gerektiriyor."

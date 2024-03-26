@@ -3710,6 +3710,7 @@ hu:
     admin:
       title: "Discourse Admin"
       moderator: "Moderátor"
+      filter_reports: Jelentések szűrése
       tags:
         remove_muted_tags_from_latest:
           always: "mindig"
@@ -3773,7 +3774,6 @@ hu:
         exception_error: A lekérdezés végrehajtása közben hiba történt
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
-        filter_reports: Jelentések szűrése
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
           today: "Ma"
@@ -4269,6 +4269,14 @@ hu:
           all_filter: "Összes"
           active_filter: "Aktív"
           inactive_filter: "Inaktív"
+          schema:
+            fields:
+              required: "*kötelező"
+              string:
+                too_short: "nem lehet rövidebb, mint %{count} karakter"
+              number:
+                too_small: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
+                too_large: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"

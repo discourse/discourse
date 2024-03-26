@@ -3009,6 +3009,12 @@ et:
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"
           updates_available_filter: "Uuendused on saadaval"
+          schema:
+            fields:
+              required: "*nõutud"
+              number:
+                too_small: "peab olema suurem või võrdne kui %{count}"
+                too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
           edit: "Muuda värvipalette"

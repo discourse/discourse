@@ -1204,6 +1204,7 @@ uk:
           warning: "Ви впевнені, що хочете очистити свої закріплені теми?"
       use_current_timezone: "Використовувати поточний часовий пояс"
       profile_hidden: "Публічний профіль цього користувача прихований."
+      login_to_view_profile: "Ви повинні увійти, щоб переглянути профілі користувачів"
       inactive_user: "Цей користувач більше не активний."
       expand_profile: "Розгорнути"
       sr_expand_profile: "Розгорнути детальну інформацію"
@@ -1590,6 +1591,7 @@ uk:
         title: "Ключі доступу"
         short_description: "Ключі доступу – це заміна пароля, яка підтверджує вашу особу біометрично (наприклад, дотик, faceID) або через PIN-код/пароль пристрою."
         added_date: "Додано %{date}"
+        last_used_date: "Останнє використання %{date}"
         never_used: "Ніколи не використовувався"
         not_allowed_error: "Процес реєстрації ключа або закінчився, або його було скасовано, або він не дозволений."
         already_added_error: "Ви вже зареєстрували цей ключ. Вам не потрібно реєструвати його знову."
@@ -4863,12 +4865,14 @@ uk:
           copy: "Копіювання..."
           paste: "Вставити..."
           save: "Зберегти як..."
+    powered_by_discourse: "Працює на Discourse"
   admin_js:
     type_to_filter: "текст для пошуку…"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
       back_to_forum: "Повернутися до форуму"
+      filter_reports: Фільтр звітів
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -4880,6 +4884,8 @@ uk:
         sidebar_title: "Звіти"
         sidebar_link:
           all: "Все"
+      new_features:
+        title: "Що нового"
       dashboard:
         title: "Майстерня"
         last_updated: "Приладова панель оновлена:"
@@ -4939,7 +4945,6 @@ uk:
         exception_error: Вибачте, сталася помилка при виконанні запиту
         too_many_requests: Ви виконуєте цю дію занадто часто. Будь ласка, зачекайте, перш ніж намагатися знову.
         not_found_error: Вибачте, цього звіту не існує
-        filter_reports: Фільтр звітів
         custom_date_range: Вибрати дату та час
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
@@ -5120,6 +5125,10 @@ uk:
               delete: Видалити допис.
               recover: Відновити повідомлення.
               list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
+            revisions:
+              read: "Отримайте останню або певну версію."
+              modify: "Приховувати, показувати або повернути зміни."
+              permanently_delete: "Видалити редакцію назавжди."
             tags:
               list: Список тегів.
             tag_groups:
@@ -5689,7 +5698,21 @@ uk:
           inactive_filter: "Неактивно"
           updates_available_filter: "Доступні оновлення"
           schema:
+            title: "Редагувати налаштування %{name}"
             back_button: "Назад до %{name}"
+            fields:
+              required: "*обов'язкові"
+              tags:
+                at_least:
+                  one: "потрібен принаймні %{count} тег"
+                  few: "потрібен принаймні %{count} теги"
+                  many: "потрібен принаймні %{count} тегів"
+                  other: "потрібен принаймні %{count} тегів"
+              string:
+                too_short: "має бути найменше %{count} символів"
+              number:
+                too_small: "має бути більшим або рівним %{count}"
+                too_large: "має бути меншим або рівним %{count}"
         colors:
           select_base:
             title: "Виберіть базову колірну палітру"

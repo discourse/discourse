@@ -3567,6 +3567,7 @@ ko:
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
+      filter_reports: 보고서 필터링
       tags:
         remove_muted_tags_from_latest:
           always: "항상 알림 받기"
@@ -3631,7 +3632,6 @@ ko:
         exception_error: 쿼리 실행 중에 오류가 발생했습니다.
         too_many_requests: 이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 잠시 기다려 주세요.
         not_found_error: 이 리포트는 존재하지 않습니다
-        filter_reports: 리포트 필터링
         reports:
           trend_title: "%{percent} 변경. 현재 %{current}이며, 이전 기간의 %{prev}입니다."
           today: "오늘"
@@ -4197,6 +4197,14 @@ ko:
           all_filter: "전체"
           active_filter: "활성화 사용자"
           inactive_filter: "비활성화"
+          schema:
+            fields:
+              required: "*필수"
+              string:
+                too_short: "최소 %{count}자 이상이어야 합니다."
+              number:
+                too_small: "%{count}보다 크거나 같아야 함"
+                too_large: "%{count}보다 작거나 같아야 함"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"

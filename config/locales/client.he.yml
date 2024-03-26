@@ -1204,6 +1204,7 @@ he:
           warning: "למחוק את הנושאים המומלצים שלך?"
       use_current_timezone: "להשתמש באזור הזמן הנוכחי"
       profile_hidden: "הפרופיל הציבורי של משתמש זה מוסתר"
+      login_to_view_profile: "יש להיכנס כדי לצפות בפרופילי משתמש"
       inactive_user: "משתמש זה אינו פעיל עוד."
       expand_profile: "הרחב"
       sr_expand_profile: "הרחבת פרטי הפרופיל"
@@ -2565,6 +2566,8 @@ he:
       ignore: "התעלמות"
       image_alt_text:
         aria_label: כיתוב חלופי לתמונה
+        title: "הוספת תיאור תמונה"
+      image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונ
       toggle_image_grid: החלפת מצב רשת תמונות
     notifications:
@@ -4872,6 +4875,7 @@ he:
       title: "ניהול Discourse"
       moderator: "מפקח"
       back_to_forum: "חזרה לפורום"
+      filter_reports: סינון דוחות
       tags:
         remove_muted_tags_from_latest:
           always: "תמיד"
@@ -4883,6 +4887,8 @@ he:
         sidebar_title: "דוחות"
         sidebar_link:
           all: "הכול"
+      new_features:
+        title: "מה חדש"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
@@ -4942,7 +4948,6 @@ he:
         exception_error: אירעה שגיאה בעת הרצת השאילתה, עמך הסליחה
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
-        filter_reports: סינון דוחות
         custom_date_range: טווח תאריכים מותאם אישית
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
@@ -5696,6 +5701,13 @@ he:
           schema:
             title: "עריכת הגדרת %{name}"
             back_button: "חזרה אל %{name}"
+            fields:
+              required: "*נדרש"
+              string:
+                too_short: "חייבים להיות לפחות %{count} תווים"
+              number:
+                too_small: "חייב להיות גדול או שווה ל־%{count}"
+                too_large: "חייב להיות קטן או שווה ל־%{count}"
         colors:
           select_base:
             title: "בחירת לוח צבעים בסיסי"

@@ -2762,6 +2762,9 @@ th:
           all_filter: "ทั้งหมด"
           active_filter: "ใช้งานอยู่"
           inactive_filter: "ไม่ใช้งาน"
+          schema:
+            fields:
+              required: "*ต้องการ"
         colors:
           title: "สี"
           undo: "เลิกทำ"

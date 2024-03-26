@@ -4400,6 +4400,7 @@ it:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
       back_to_forum: "Torna al forum"
+      filter_reports: Filtra rapporti
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4411,6 +4412,8 @@ it:
         sidebar_title: "Rapporti"
         sidebar_link:
           all: "Tutte"
+      new_features:
+        title: "Cosa c'è di nuovo"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aggiornato:"
@@ -4468,7 +4471,6 @@ it:
         exception_error: Spiacenti, si è verificato un errore nell'esecuzione della query
         too_many_requests: Hai eseguito questa operazione troppe volte. Attendi prima di riprovare.
         not_found_error: Spiacenti, questo rapporto non esiste
-        filter_reports: Filtra rapporti
         custom_date_range: Data e ora personalizzate
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
@@ -5182,6 +5184,14 @@ it:
           active_filter: "Attivi"
           inactive_filter: "Non attivi"
           updates_available_filter: "Aggiornamenti disponibili"
+          schema:
+            fields:
+              required: "*obbligatorie"
+              string:
+                too_short: "deve essere almeno di %{count} caratteri"
+              number:
+                too_small: "deve essere maggiore o uguale a %{count}"
+                too_large: "deve essere minore o uguale a %{count}"
         colors:
           select_base:
             title: "Seleziona la tavolozza dei colori di base"

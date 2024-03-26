@@ -3365,6 +3365,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      filter_reports: Filtrar informes
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3430,7 +3431,6 @@ gl:
         exception_error: Sentímolo pero produciuse un erro ao executar a consulta
         too_many_requests: Executou esta acción demasiadas veces. Agarde antes de volvelo tentar.
         not_found_error: Sentímolo pero o informe non existe
-        filter_reports: Filtrar informes
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -3966,6 +3966,14 @@ gl:
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
+          schema:
+            fields:
+              required: "*obrigatorio"
+              string:
+                too_short: "debe ter polo menos %{count} caracteres"
+              number:
+                too_small: "debe ser igual ou maior que %{count}"
+                too_large: "debe ser igual ou menor que %{count}"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"

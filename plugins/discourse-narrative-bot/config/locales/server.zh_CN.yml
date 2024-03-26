@@ -295,10 +295,6 @@ zh_CN:
         not_found: |-
           哦不，我讨厌的帖子还没有被举报为不当言论。:worried: 你可以使用**举报** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 将其举报为不当言论吗？不要忘记使用“显示更多”按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示每个帖子的更多操作。
       search:
-        instructions: |-
-          呼…我已经在这个话题中隐藏了一个惊喜。如果你想挑战的话，点击右上角 &#8599; 的**搜索图标** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 来找到它。
-
-          试试在这个话题中搜索关键字“capy&#8203;bara”
         hidden_message: |-
           你怎么错过了这只水豚？:wink:
 
