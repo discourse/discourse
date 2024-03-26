@@ -2,16 +2,6 @@ import { getOwner } from "@ember/application";
 
 export async function waitForKeyboard(context) {
   return new Promise((resolve) => {
-    const safeguard = setTimeout(() => {
-      // eslint-disable-next-line no-console
-      console.warn("Keyboard visibility didnt change after 1s.");
-
-      resolve({
-        visible:
-          document.documentElement.classList.contains("keyboard-visible"),
-      });
-    }, 1000);
-
     if (!window.visualViewport) {
       return resolve({ visible: false });
     }
@@ -27,6 +17,16 @@ export async function waitForKeyboard(context) {
     if (!document.documentElement.classList.contains("keyboard-visible")) {
       return resolve({ visible: false });
     }
+
+    const safeguard = setTimeout(() => {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard visibility didnt change after 1s.");
+
+      resolve({
+        visible:
+          document.documentElement.classList.contains("keyboard-visible"),
+      });
+    }, 1000);
 
     const initialWindowHeight = window.innerHeight;
 
