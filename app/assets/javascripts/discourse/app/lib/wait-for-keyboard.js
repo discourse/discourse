@@ -1,9 +1,9 @@
 import { getOwner } from "@ember/application";
 
-export async function waitForKeyboard(context) {
+export async function waitForClosedKeyboard(context) {
   return new Promise((resolve) => {
     if (!window.visualViewport) {
-      return resolve({ visible: false });
+      return resolve();
     }
 
     const owner = getOwner(context);
@@ -11,21 +11,18 @@ export async function waitForKeyboard(context) {
     const capabilities = owner.lookup("service:capabilities");
 
     if (!capabilities.isIpadOS && site.desktopView) {
-      return resolve({ visible: false });
+      return resolve();
     }
 
     if (!document.documentElement.classList.contains("keyboard-visible")) {
-      return resolve({ visible: false });
+      return resolve();
     }
 
     const safeguard = setTimeout(() => {
       // eslint-disable-next-line no-console
       console.warn("Keyboard visibility didnt change after 1s.");
 
-      resolve({
-        visible:
-          document.documentElement.classList.contains("keyboard-visible"),
-      });
+      resolve();
     }, 1000);
 
     const initialWindowHeight = window.innerHeight;
@@ -35,7 +32,9 @@ export async function waitForKeyboard(context) {
 
       if ("virtualKeyboard" in navigator) {
         if (navigator.virtualKeyboard.boundingRect.height > 0) {
-          return resolve({ visible: true });
+          // eslint-disable-next-line no-console
+          console.warn("Expected virtual keyboard to be closed but it wasn't.");
+          return resolve();
         }
       } else if (capabilities.isFirefox && capabilities.isAndroid) {
         const KEYBOARD_DETECT_THRESHOLD = 150;
@@ -45,17 +44,21 @@ export async function waitForKeyboard(context) {
               Math.min(window.innerHeight, window.visualViewport.height)
           ) > KEYBOARD_DETECT_THRESHOLD
         ) {
-          return resolve({ visible: true });
+          // eslint-disable-next-line no-console
+          console.warn("Expected virtual keyboard to be closed but it wasn't.");
+          return resolve();
         }
       } else {
         let viewportWindowDiff =
           initialWindowHeight - window.visualViewport.height;
         if (viewportWindowDiff > 0) {
-          return resolve({ visible: true });
+          // eslint-disable-next-line no-console
+          console.warn("Expected virtual keyboard to be closed but it wasn't.");
+          return resolve();
         }
       }
 
-      return resolve({ visible: false });
+      return resolve();
     };
 
     window.visualViewport.addEventListener("resize", onViewportResize, {

@@ -4,7 +4,7 @@ import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { waitForKeyboard } from "discourse/lib/wait-for-keyboard";
+import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import deprecated from "discourse-common/lib/deprecated";
 
 const LEGACY_OPTS = new Set([
@@ -60,13 +60,7 @@ export default class ModalService extends Service {
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
-    const state = await waitForKeyboard(this);
-    if (state.visible) {
-      // eslint-disable-next-line no-console
-      console.info(
-        "Keyboard didn't collapse. This can cause issues when showing modals."
-      );
-    }
+    await waitForClosedKeyboard(this);
 
     let resolveShowPromise;
     const promise = new Promise((resolve) => {
