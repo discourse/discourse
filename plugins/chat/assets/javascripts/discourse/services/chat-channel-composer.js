@@ -33,7 +33,7 @@ export default class ChatChannelComposer extends Service {
 
     schedule("afterRender", () => {
       if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-        disableBodyScroll(this.scrollable);
+        disableBodyScroll(this.scrollable, { reverse: true });
       }
     });
   }
