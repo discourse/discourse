@@ -82,6 +82,26 @@ RSpec.describe Chat::SearchChatable do
 
           expect(result.users).to_not include(current_user)
         end
+
+        context "when chat_allowed_bot_user_ids modifier exists" do
+          fab!(:bot_1) { Fabricate(:user, id: -500) }
+          fab!(:bot_2) { Fabricate(:user, id: -501) }
+
+          it "alters the users returned" do
+            modifier_block = Proc.new { [bot_2.id] }
+            plugin_instance = Plugin::Instance.new
+            plugin_instance.register_modifier(:chat_allowed_bot_user_ids, &modifier_block)
+
+            expect(result.users).to_not include(bot_1)
+            expect(result.users).to include(bot_2)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(
+              plugin_instance,
+              :chat_allowed_bot_user_ids,
+              &modifier_block
+            )
+          end
+        end
       end
 
       context "when not including users" do
