@@ -2430,8 +2430,10 @@ pl_PL:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4129,6 +4131,104 @@ pl_PL:
     Edytuj pierwszy wpis w tym temacie by zmienić zawartość strony %{page_name}.
   guidelines_topic:
     title: "FAQ/Przewodnik"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Tutaj prowadzimy cywilizowane dyskusje publiczne](#civilized)
+
+      Traktuj to forum dyskusyjne tak samo, jak traktowałbyś park miejski. To również wspólna przestrzeń społeczna – miejsce do wymiany wiedzy, umiejętności i zainteresowań poprzez ciągłe rozmowy.
+
+      To nie są żelazne reguły. Są to wskazówki, które mają pomóc ludziom w naszej społeczności utrzymać to miejsce jako miłe i przyjazne dla cywilizowanych dyskusji publicznych.
+
+      <a name="improve"></a>
+
+      ## [Ulepsz dyskusję](#improve)
+
+      Pomóż nam stworzyć świetne miejsce do dyskusji, zawsze dodając coś pozytywnego, nawet drobnego. Jeśli nie jesteś pewien, czy Twój post przyczynia się do rozmowy, przemyśl, co chcesz powiedzieć i spróbuj ponownie później.
+
+      Jednym ze sposobów na ulepszenie dyskusji jest odkrywanie tych, które już się toczą. Przed odpowiedzią lub rozpoczęciem własnej dyskusji poświęć trochę czasu na przeglądanie tematów, a będziesz mieć większe szanse na spotkanie innych osób, które dzielą Twoje zainteresowania.
+
+      Tematy, które tutaj omawiamy, są dla nas ważne i chcemy, abyś również tak do nich podchodził. Szanuj tematy i osoby je omawiające, nawet jeśli nie zgadzasz się z częścią tego, co się mówi.
+
+      <a name="agreeable"></a>
+
+      ## [Bądź uprzejmy, nawet gdy się nie zgadzasz](#agreeable)
+
+      Możesz chcieć odpowiedzieć, się nie zgadzając. To dobrze. Ale pamiętaj, aby _krytykować pomysły, a nie ludzi_. Proszę unikać:
+
+      * Obraźliwych wyzwisk
+      * Ataki ad personam
+      * Odpowiadania na ton wypowiedzi, a nie jej rzeczywistą treść
+      * Automatycznego sprzeciwu
+
+      Zamiast tego przedstaw przemyślane spostrzeżenia, które poprawią konwersację.
+
+      <a name="participate"></a>
+
+      ## [Twój udział się liczy](#participate)
+
+      Prowadzone tutaj rozmowy wyznaczają ton dla każdego nowoprzybyłego. Pomóż nam wpływać na przyszłość tej społeczności, decydując się na udział w dyskusjach, które sprawiają, że to forum jest interesującym miejscem – i unikając tych, które nim nie są.
+
+      Discourse oferuje narzędzia, które umożliwiają społeczności zbiorową identyfikację najlepszych (i najgorszych) wkładów: zakładki, lajki, flagi, odpowiedzi, edycje, obserwowanie, wyciszanie itp. Używaj tych narzędzi, aby poprawić swoje własne wrażenia i doświadczenia wszystkich innych.
+
+      Stwórzmy razem społeczność lepszą niż ta, którą zastaliśmy.
+
+      <a name="flag-problems"></a>
+
+      ## [Jeśli widzisz problem, zgłoś go](#flag-problems)
+
+      Moderatorzy mają specjalne uprawnienia; są odpowiedzialni za to forum. Ale ty też. Dzięki Twojej pomocy moderatorzy mogą być animatorami społeczności, a nie tylko sprzątaczami czy policją.
+
+      Kiedy widzisz złe zachowanie, nie odpowiadaj. Odpowiadanie zachęca do złego zachowania przez jego potwierdzanie, zużywa Twoją energię i marnuje czas wszystkim. Po prostu to zgłoś. Jeśli uzbiera się wystarczająco dużo zgłoszeń, zostaną podjęte działania, automatycznie lub przez interwencję moderatora.
+
+      Aby utrzymać naszą społeczność, moderatorzy zastrzegają sobie prawo do usuwania dowolnej treści i dowolnego konta użytkownika z dowolnego powodu w dowolnym momencie. Moderatorzy nie weryfikują wcześniej nowych postów; moderatorzy i operatorzy strony nie ponoszą odpowiedzialności za żadne treści publikowane przez społeczność.
+
+      <a name="be-civil"></a>
+
+      ## [Zawsze bądź uprzejmy](#be-civil)
+
+      Nic tak nie psuje zdrowej rozmowy jak niegrzeczność:
+
+      * Bądź uprzejmy. Nie publikuj niczego, co rozsądna osoba uznałaby za obraźliwe, znieważające lub mowę nienawiści.
+      * Przestrzegaj czystości. Nie publikuj niczego obscenicznego lub seksualnie jawnego.
+      * Szanuj innych. Nie nękaj ani nie dręcz nikogo, nie podszywaj się pod innych i nie ujawniaj ich prywatnych informacji.
+      * Szanuj nasze forum. Nie publikuj spamu ani w inny sposób nie dewastuj forum.
+
+      Te terminy nie są precyzyjnie zdefiniowane – unikaj nawet _pozorów_ takich rzeczy. Jeśli nie jesteś pewien, zapytaj siebie, jak byś się czuł, gdyby Twój post został wyróżniony na pierwszej stronie
+
+      Jest to forum publiczne, a wyszukiwarki indeksują te dyskusje. Język, linki i obrazy powinny być bezpieczne dla rodziny i znajomych.
+
+      <a name="keep-tidy"></a>
+
+      ## [Porządek przede wszystkim](#keep-tidy)
+
+      Staraj się umieszczać rzeczy w odpowiednim miejscu, abyśmy mogli poświęcić więcej czasu na dyskusję, a mniej na sprzątanie. Dlatego:
+
+      * Nie zakładaj tematów w złej kategorii. Przeczytaj opisy kategorii.
+      * Nie kopiuj tego samego posta w wielu wątkach.
+      * Nie publikuj pustych odpowiedzi.
+      * Nie zmieniaj tematu w trakcie dyskusji.
+      * Nie podpisuj swoich postów. Do każdego posta dołączone są informacje o Twoim profilu.
+
+      Zamiast pisać "+1" lub "Zgadzam się", użyj przycisku "Lubię to". Zamiast zmieniać istniejący temat w zupełnie innym kierunku, użyj opcji "Odpowiedz jako temat powiązany".
+
+      <a name="stealing"></a>
+
+      ## [Publikuj tylko swoje materiały](#stealing)
+
+      Nie możesz publikować niczego cyfrowego, co należy do kogoś innego bez pozwolenia. Nie możesz umieszczać opisów, linków ani metod kradzieży czyjejś własności intelektualnej (oprogramowania, wideo, audio, obrazów) ani łamania innych praw.
+
+      <a name="power"></a>
+
+      ## [Tworzone przez Ciebie](#power)
+
+      Ta strona jest obsługiwana przez twoich [przyjaznych moderatorów](%{base_path}/about) i *Ciebie*, czyli społeczność. Jeśli masz jakiekolwiek pytania dotyczące zasad działania tego forum, otwórz nowy temat w %{feedback_category_hashtag} i zacznijmy dyskusję! W przypadku krytycznej lub pilnej kwestii, której nie można rozwiązać za pomocą tematu meta lub flagi, skontaktuj się z nami za pośrednictwem: [strony personelu](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Regulamin](#tos)
+
+      Tak, prawniczy język bywa nudny, ale musimy chronić siebie &ndash; a w konsekwencji Ciebie i Twoje dane &ndash; przed nieprzyjaznymi osobami. Mamy [regulamin](%{base_path}/tos), który opisuje Twoje (i nasze) zachowania i prawa związane z treścią, prywatnością i przepisami prawnymi. Aby korzystać z tej usługi, musisz zgodzić się przestrzegać naszego [regulaminu](%{base_path}/tos).
   tos_topic:
     title: "Warunki użytkowania"
     body: |
@@ -4862,6 +4962,7 @@ pl_PL:
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
       custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
+    json_too_long: "Wartości nie są rejestrowane, ponieważ przekraczają limity długości kolumn"
     not_found: "nie znaleziono"
     unknown: "nieznane"
     user_merged: "%{username} został scalony z tym kontem"

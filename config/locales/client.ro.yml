@@ -1895,6 +1895,11 @@ ro:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       dismiss_confirmation:
+        body:
+          default:
+            one: "Sigur faci asta? Ai o notificare importantă."
+            few: "Sigur faci asta? Ai %{count} notificări importante."
+            other: "Sigur faci asta? Ai %{count} de notificări importante."
         dismiss: "Înlătură"
         cancel: "Anulează"
       popup:
@@ -3053,14 +3058,18 @@ ro:
           all: "Toate"
       sections:
         custom:
+          add: "Adaugă secțiune personalizată"
           save: "Salvare"
           delete: "Șterge"
           links:
+            add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
             icon:
               label: "Pictogramă"
             name:
               label: "Nume"
+            value:
+              label: "Legătură"
         about:
           header_link_text: "Despre"
         messages:
@@ -3753,9 +3762,11 @@ ro:
           censor: "Cenzurează"
           require_approval: "Necesită aprobare"
           flag: "Semnalează"
+          link: "Legătură"
         action_descriptions:
           flag: "Permite articole care conțin aceste cuvinte, dar semnalează-te ca nepotrivite pentru a fi analizate de către moderatori."
         form:
+          link_label: "Legătură"
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"

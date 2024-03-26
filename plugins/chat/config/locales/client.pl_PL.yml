@@ -520,6 +520,7 @@ pl_PL:
         title: Moje wątki
         aria_label: "Przejdź do mojej listy wątków"
       direct_messages:
+        title: "PW"
         aria_label: "Przełącz na wiadomości bezpośrednie"
         new: "Utwórz osobisty czat"
         create: "Utwórz"
