@@ -8,7 +8,7 @@ import { bind } from "discourse-common/utils/decorators";
 
 const KEYBOARD_DETECT_THRESHOLD = 150;
 
-export default class DVh extends Component {
+export default class DVirtualHeight extends Component {
   @service site;
   @service capabilities;
   @service appEvents;
