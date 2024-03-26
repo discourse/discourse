@@ -22,6 +22,11 @@ export default class ChatChannelComposer extends Service {
     this.appEvents.on("discourse:focus-changed", this, this.blur);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("discourse:focus-changed", this, this.blur);
+  }
+
   @action
   focus(options = {}) {
     this.textarea?.focus(options);

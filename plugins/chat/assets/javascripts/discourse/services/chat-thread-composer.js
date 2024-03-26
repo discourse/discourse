@@ -7,9 +7,20 @@ import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
 export default class ChatThreadComposer extends Service {
   @service chat;
   @service capabilities;
+  @service appEvents;
 
   @tracked textarea;
   @tracked scrollable;
+
+  init() {
+    super.init(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, this.blur);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("discourse:focus-changed", this, this.blur);
+  }
 
   @action
   focus(options = {}) {
