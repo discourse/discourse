@@ -140,6 +140,7 @@ export default class SchemaThemeSettingEditor extends Component {
         spec,
         value: node.object[name],
         description: this.fieldDescription(name),
+        label: this.fieldLabel(name),
       });
     }
 
@@ -260,22 +261,36 @@ export default class SchemaThemeSettingEditor extends Component {
     };
   }
 
-  fieldDescription(fieldName) {
+  descriptions(fieldName, key) {
+    // The `property_descriptions` metadata is an object with keys in the following format as an example:
+    //
+    // {
+    //   some_property.description: <some description>,
+    //   some_property.label: <some label>,
+    //   some_objects_property.some_other_property.description: <some description>,
+    //   some_objects_property.some_other_property.label: <some label>,
+    // }
     const descriptions = this.args.setting.metadata?.property_descriptions;
 
     if (!descriptions) {
       return;
     }
 
-    let key;
-
     if (this.activeNode.parentTree.propertyName) {
-      key = `${this.activeNode.parentTree.propertyName}.${fieldName}`;
+      key = `${this.activeNode.parentTree.propertyName}.${fieldName}.${key}`;
     } else {
-      key = `${fieldName}`;
+      key = `${fieldName}.${key}`;
     }
 
     return descriptions[key];
+  }
+
+  fieldLabel(fieldName) {
+    return this.descriptions(fieldName, "label") || fieldName;
+  }
+
+  fieldDescription(fieldName) {
+    return this.descriptions(fieldName, "description");
   }
 
   defaultSchemaIdentifier(schemaName, index) {
@@ -439,6 +454,7 @@ export default class SchemaThemeSettingEditor extends Component {
             @onValueChange={{fn this.inputFieldChanged field}}
             @description={{field.description}}
             @setting={{@setting}}
+            @label={{field.label}}
           />
         {{/each}}
         {{#if (gt this.fields.length 0)}}
