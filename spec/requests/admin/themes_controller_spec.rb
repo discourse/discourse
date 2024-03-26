@@ -1313,4 +1313,83 @@ RSpec.describe Admin::ThemesController do
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
     end
   end
+
+  describe "#objects_setting_metadata" do
+    fab!(:theme)
+
+    let(:theme_setting) do
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+      field = theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+      theme.settings
+    end
+
+    before { SiteSetting.experimental_objects_type_for_theme_settings = true }
+
+    it "returns 404 if user is not an admin" do
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(user)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(moderator)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    context "when user is an admin" do
+      before { sign_in(admin) }
+
+      it "returns 403 if `experimental_objects_type_for_theme_settings` site setting is not enabled" do
+        SiteSetting.experimental_objects_type_for_theme_settings = false
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 400 if the `id` param is not the id of a valid theme" do
+        get "/admin/themes/some_invalid_id/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 400 if the `setting_name` param does not match a valid setting" do
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/some_invalid_setting_name.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 200 with the right `property_descriptions` attributes" do
+        theme.set_field(
+          target: :translations,
+          name: "en",
+          value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        )
+
+        theme.save!
+
+        theme_setting
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_setting.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["property_descriptions"]).to eq(
+          {
+            "links.name" => "Name of the link",
+            "links.url" => "URL of the link",
+            "name" => "Section Name",
+          },
+        )
+      end
+    end
+  end
 end

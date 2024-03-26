@@ -243,7 +243,7 @@ export default class SchemaThemeSettingEditor extends Component {
   }
 
   fieldDescription(fieldName) {
-    const descriptions = this.args.setting.objects_schema_property_descriptions;
+    const descriptions = this.args.setting.metadata?.property_descriptions;
 
     if (!descriptions) {
       return;
