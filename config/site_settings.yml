@@ -2368,9 +2368,6 @@ developer:
   experimental_objects_type_for_theme_settings:
     default: false
     hidden: true
-  experimental_preconnect_link_header:
-    default: false
-    hidden: true
 
 navigation:
   navigation_menu:

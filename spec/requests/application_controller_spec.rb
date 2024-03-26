@@ -1188,60 +1188,50 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe "Link header" do
-    describe "when `experimental_preconnect_link_header` site setting is enabled" do
-      before { SiteSetting.experimental_preconnect_link_header = true }
+  describe "Early hint header" do
+    before { global_setting :cdn_url, "https://cdn.example.com/something" }
 
-      it "should include the `preconnect` and `dns-prefetch` resource hints in the Link header when `GlobalSetting.cdn_url is configured`" do
-        global_setting :cdn_url, "https://cdn.example.com/something"
+    it "is not included by default" do
+      get "/latest"
+      expect(response.status).to eq(200)
+      expect(response.headers["Link"]).to eq(nil)
+    end
 
+    context "when in preconnect mode" do
+      before { global_setting :early_hint_header_mode, "preconnect" }
+
+      it "includes the preconnect hint" do
         get "/latest"
-
         expect(response.status).to eq(200)
-
-        expect(response.headers["Link"]).to include(
-          "<https://cdn.example.com>; rel=preconnect, <https://cdn.example.com>; rel=dns-prefetch",
-        )
+        expect(response.headers["Link"]).to include("<https://cdn.example.com>; rel=preconnect")
+        expect(response.headers["Link"]).not_to include("rel=preload")
       end
 
-      it "should include the `preconnect` and `dns-prefetch` resource hints in the Link header when `SiteSetting.s3_cdn_url is configured`" do
-        SiteSetting.s3_cdn_url = "https://s3.some-cdn.com/something"
-
+      it "can use a different header" do
+        global_setting :early_hint_header_name, "X-Discourse-Early-Hint"
         get "/latest"
-
         expect(response.status).to eq(200)
-
-        expect(response.headers["Link"]).to include(
-          "<https://s3.some-cdn.com>; rel=preconnect, <https://s3.some-cdn.com>; rel=dns-prefetch",
+        expect(response.headers["X-Discourse-Early-Hint"]).to include(
+          "<https://cdn.example.com>; rel=preconnect",
         )
+        expect(response.headers["Link"]).to eq(nil)
+      end
+
+      it "is skipped for non-app URLs" do
+        get "/latest.json"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to eq(nil)
       end
     end
 
-    context "when `GlobalSetting.preload_link_header` is enabled" do
-      before { global_setting :preload_link_header, true }
+    context "when in preload mode" do
+      before { global_setting :early_hint_header_mode, "preload" }
 
-      it "should have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).to include("Link")
-      end
-
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
-      end
-    end
-
-    context "when `GlobalSetting.preload_link_header` is disabled" do
-      before { global_setting :preload_link_header, false }
-
-      it "shouldn't have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).not_to include("Link")
-      end
-
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
+      it "includes the preload hint" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to include('.js>; rel="preload"')
+        expect(response.headers["Link"]).to include('.css?__ws=test.localhost>; rel="preload"')
       end
     end
   end
