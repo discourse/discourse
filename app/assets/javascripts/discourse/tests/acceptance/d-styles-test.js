@@ -139,7 +139,7 @@ acceptance("DStyles - category badges", function (needs) {
         id: 4,
         color: "2B81AF",
         text_color: "ffffff",
-        parentCategory: { id: 1 },
+        parent_category_id: 1,
         name: "category3",
       },
     ],
@@ -162,6 +162,7 @@ acceptance("DStyles - category badges", function (needs) {
 
     const css =
       '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n' +
+      '.badge-category[data-parent-category-id="1"] { --parent-category-badge-color: var(--category-1-color); }\n' +
       '.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n' +
       '.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }';
     assert.ok(document.querySelector("style#d-styles").innerHTML.includes(css));
