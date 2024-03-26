@@ -2295,6 +2295,10 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      linkedin:
+        name: "LinkedIn"
+        title: "Log in with LinkedIn"
+        sr_title: "Log in with LinkedIn"
       passkey:
         name: "Log in with a passkey"
       second_factor_toggle:
