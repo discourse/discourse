@@ -53,10 +53,17 @@ RSpec.describe SiteSetting do
     it "returns latest" do
       expect(SiteSetting.anonymous_homepage).to eq("latest")
     end
+  end
 
-    it "returns custom when experimental_custom_homepage is enabled" do
-      SiteSetting.experimental_custom_homepage = true
-      expect(SiteSetting.anonymous_homepage).to eq("custom")
+  describe "homepage_handler" do
+    it "returns latest by default" do
+      expect(SiteSetting.homepage_handler(nil, nil)).to eq("latest")
+    end
+
+    it "returns custom when theme has a custom homepage" do
+      ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true)
+
+      expect(SiteSetting.homepage_handler).to eq("custom")
     end
   end
 

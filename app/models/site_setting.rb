@@ -74,7 +74,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.homepage
-    SiteSetting.experimental_custom_homepage? ? "custom" : top_menu_items[0].name
+    top_menu_items[0].name
   end
 
   def self.anonymous_menu_items
@@ -82,12 +82,16 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_homepage
-    return "custom" if SiteSetting.experimental_custom_homepage?
-
     top_menu_items
       .map { |item| item.name }
       .select { |item| anonymous_menu_items.include?(item) }
       .first
+  end
+
+  def self.homepage_handler(request = nil, current_user = nil)
+    return "custom" if ThemeModifierHelper.new(request: request).custom_homepage
+
+    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
   end
 
   def self.should_download_images?(src)

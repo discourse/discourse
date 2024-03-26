@@ -9,7 +9,8 @@ class HomePageConstraint
     return @filter == "finish_installation" if SiteSetting.has_login_hint?
 
     current_user = CurrentUser.lookup_from_env(request.env)
-    homepage = current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    homepage =
+      current_user&.user_option&.homepage || SiteSetting.homepage_handler(request, current_user)
     homepage == @filter
   rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false

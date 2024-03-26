@@ -555,7 +555,7 @@ module ApplicationHelper
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || SiteSetting.homepage_handler(request, current_user)
   end
 
   def build_plugin_html(name)
