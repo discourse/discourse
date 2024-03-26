@@ -81,37 +81,24 @@ class UserSummary
 
   REPLY_ACTIONS ||= [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
 
-  # new method
-  # def most_replied_to_users
-  #   replied_users = {}
-  
-  #   post_query
-  #     .joins("JOIN posts replies ON posts.topic_id = replies.topic_id AND posts.reply_to_post_number = replies.post_number")
-  #     .joins("JOIN topics ON replies.topic_id = topics.id AND topics.archetype <> 'private_message'")
-  #     .joins("AND replies.post_type IN (#{Topic.visible_post_types(@guardian&.user, include_moderator_actions: false).join(',')})")
-  #     .where("replies.user_id <> ?", @user.id)
-  #     .group("replies.user_id")
-  #     .order("COUNT(*) DESC")
-  #     .limit(MAX_SUMMARY_RESULTS)
-  #     .pluck("replies.user_id, COUNT(*)")
-  #     .each { |r| replied_users[r[0]] = r[1] }
-  
-  #   user_counts(replied_users)
-  # end
-
-  # old method
   def most_replied_to_users
     replied_users = {}
 
     post_query
       .joins(
-        "JOIN posts replies ON posts.topic_id = replies.topic_id AND posts.reply_to_post_number = replies.post_number",
+        "JOIN posts replies ON posts.topic_id = replies.topic_id AND replies.reply_to_post_number = posts.post_number",
       )
-      .where("replies.user_id <> ?", @user.id)
-      .group("replies.user_id")
+      .joins(
+        "JOIN topics ON replies.topic_id = topics.id AND topics.archetype <> 'private_message'",
+      )
+      .joins(
+        "AND replies.post_type IN (#{Topic.visible_post_types(@guardian&.user, include_moderator_actions: false).join(",")})",
+      )
+      .where("replies.user_id <> posts.user_id")
+      .group("posts.user_id")
       .order("COUNT(*) DESC")
       .limit(MAX_SUMMARY_RESULTS)
-      .pluck("replies.user_id, COUNT(*)")
+      .pluck("posts.user_id, COUNT(*)")
       .each { |r| replied_users[r[0]] = r[1] }
 
     user_counts(replied_users)

@@ -99,8 +99,11 @@ RSpec.describe UserSummary do
     user_summary = UserSummary.new(topic.user, Guardian.new(topic.user))
     most_replied_to_users = user_summary.most_replied_to_users
 
-    expect(most_replied_to_users).to eq({
-      topic.user.id => 1,
-    })
-end
+    counts =
+      most_replied_to_users
+        .index_by { |user_with_count| user_with_count[:id] }
+        .transform_values { |c| c[:count] }
+
+    expect(counts).to eq({ topic.user.id => 1 })
+  end
 end
