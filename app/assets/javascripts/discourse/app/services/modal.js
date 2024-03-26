@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { waitForKeyboard } from "discourse/helpers/wait-for-keyboard";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
@@ -39,7 +40,7 @@ export default class ModalService extends Service {
    *
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
-  show(modal, opts) {
+  async show(modal, opts) {
     if (typeof modal === "string") {
       this.dialog.alert(
         `Error: the '${modal}' modal needs updating to work with the latest version of Discourse. See https://meta.discourse.org/t/268057.`
@@ -58,6 +59,14 @@ export default class ModalService extends Service {
     }
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
+
+    const state = await waitForKeyboard(this);
+    if (state.visible) {
+      // eslint-disable-next-line no-console
+      console.info(
+        "Keyboard didn't collapse. This can cause issues when showing modals."
+      );
+    }
 
     let resolveShowPromise;
     const promise = new Promise((resolve) => {
