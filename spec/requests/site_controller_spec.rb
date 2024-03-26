@@ -29,7 +29,7 @@ RSpec.describe SiteController do
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
       expect(json["login_required"]).to eq(true)
-      expect(json["discourse_discover"]["enrolled"]).to eq(true)
+      expect(json["discourse_discover_enrolled"]).to eq(true)
     end
 
     it "skips `discourse_discover_enrolled` if `include_in_discourse_discover` setting disabled" do
