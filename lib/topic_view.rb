@@ -167,7 +167,7 @@ class TopicView
   end
 
   def current_page_path
-    "#{relative_url}#{"?page=#{@page}" if @page > 0}"
+    "#{relative_url}#{"?page=#{@page}" if @page > 1}"
   end
 
   def contains_gaps?
