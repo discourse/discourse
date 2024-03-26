@@ -218,6 +218,7 @@ class Middleware::RequestTracker
         Error code: #{error_code}.
       TEXT
       headers = {
+        "Content-Type" => "text/plain",
         "Retry-After" => available_in.to_s,
         "Discourse-Rate-Limit-Error-Code" => error_code,
       }
