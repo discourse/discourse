@@ -8,7 +8,7 @@ RSpec.describe "topics/show.html.erb" do
 
   it "uses subfolder-safe category url" do
     set_subfolder "/subpath"
-    topic_view = OpenStruct.new(topic: topic, posts: [])
+    topic_view = OpenStruct.new(topic: topic, posts: [], crawler_posts: [])
     topic_view.stubs(:summary).returns("")
     view.stubs(:crawler_layout?).returns(false)
     assign(:topic_view, topic_view)
@@ -21,7 +21,7 @@ RSpec.describe "topics/show.html.erb" do
   end
 
   it "add nofollow to RSS alternate link for topic" do
-    topic_view = OpenStruct.new(topic: topic, posts: [])
+    topic_view = OpenStruct.new(topic: topic, posts: [], crawler_posts: [])
     topic_view.stubs(:summary).returns("")
     view.stubs(:crawler_layout?).returns(false)
     view.stubs(:url_for).returns("https://www.example.com/test.rss")

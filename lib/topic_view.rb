@@ -163,9 +163,15 @@ class TopicView
       topic_embed = topic.topic_embed
       return topic_embed.embed_url if topic_embed
     end
-    path = relative_url.dup
-    path << ((@page > 1) ? "?page=#{@page}" : "")
-    path
+    current_page_path
+  end
+
+  def current_page_path
+    if @page > 1
+      "#{relative_url}?page=#{@page}"
+    else
+      relative_url
+    end
   end
 
   def contains_gaps?
@@ -263,6 +269,18 @@ class TopicView
     @desired_post = posts.detect { |p| p.post_number == @post_number }
     @desired_post ||= posts.first
     @desired_post
+  end
+
+  def crawler_posts
+    if single_post_request?
+      [desired_post]
+    else
+      posts
+    end
+  end
+
+  def single_post_request?
+    @post_number && @post_number != 1
   end
 
   def summary(opts = {})
