@@ -32,7 +32,7 @@ export default class ChatChannelComposer extends Service {
     this.textarea?.focus(options);
 
     schedule("afterRender", () => {
-      if (!this.capabilities.isIpadOS && this.capabilities.isIOS) {
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
         disableBodyScroll(this.scrollable);
       }
     });
