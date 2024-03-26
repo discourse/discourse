@@ -80,11 +80,11 @@ class LetterAvatar
         -fill
         #FFFFFFCC
         -font
-        Helvetica
+        NimbusSans-Regular
         -gravity
         Center
         -annotate
-        -0+26
+        -0+34
         #{letter}
         -depth
         8
