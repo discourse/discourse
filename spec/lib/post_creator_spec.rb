@@ -5,7 +5,7 @@ require "topic_subtype"
 
 RSpec.describe PostCreator do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   let(:topic) { Fabricate(:topic, user: user) }

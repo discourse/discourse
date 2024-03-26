@@ -11,7 +11,7 @@ RSpec.describe UsersController do
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:moderator)
   fab!(:inactive_user)
 
