@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 const KEYBOARD_DETECT_THRESHOLD = 150;
 
