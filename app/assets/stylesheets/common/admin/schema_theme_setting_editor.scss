@@ -2,26 +2,43 @@
   --schema-space: 0.5em;
   display: grid;
   grid-template-columns: minmax(10em, 0.3fr) 1fr;
-  gap: 2em 4vw;
+  grid-template-rows: auto 1fr;
+  gap: 2em 5vw;
 
   &__navigation {
     overflow: hidden;
-    border: 1px solid var(--primary-low);
+    align-self: start;
 
     ul {
       list-style: none;
     }
 
     .schema-theme-setting-editor__tree {
-      margin: 0;
+      border: 1px solid var(--primary-low);
+      overflow: auto;
+      margin: 0 0 2em 0;
+
       ul {
-        padding: 0;
-        margin: var(--schema-space) var(--schema-space) 1em 0;
+        padding: 0 calc(var(--schema-space) * 2) 0 var(--schema-space);
+        margin: 0 0 1em;
         li:hover {
           background: var(--primary-very-low);
         }
-        &:last-child {
-          margin-bottom: calc(var(--schema-space) * 2);
+
+        &.--is-hidden {
+          display: none;
+        }
+      }
+
+      .--heading {
+        display: flex;
+        align-items: center;
+        padding: var(--schema-space) calc(var(--schema-space) * 3)
+          var(--schema-space) calc(var(--schema-space) * 2);
+        gap: 0.5em;
+        .d-icon {
+          font-size: var(--font-down-3);
+          margin-left: auto;
         }
       }
 
@@ -94,6 +111,13 @@
           }
         }
 
+        &.--heading {
+          font-weight: bold;
+          &:hover {
+            background: var(--primary-very-low);
+          }
+        }
+
         &.--child {
           margin-left: var(--schema-space);
           border-left: 1px solid var(--primary-200);
@@ -110,6 +134,7 @@
       .d-icon {
         color: currentColor;
         font-size: var(--font-down-1);
+        margin-left: -0.35em; // optical alignment
       }
 
       &:hover {
@@ -120,9 +145,5 @@
         }
       }
     }
-  }
-
-  &__fields {
-    margin-top: -0.15em; // visual alignment with top of nav
   }
 }
