@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat do
   before do
     SiteSetting.clean_up_uploads = true

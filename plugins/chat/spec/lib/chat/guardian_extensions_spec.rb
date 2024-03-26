@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }

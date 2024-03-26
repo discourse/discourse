@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageMover do
   fab!(:acting_user) { Fabricate(:admin, username: "testmovechat") }
   fab!(:source_channel) { Fabricate(:category_channel) }

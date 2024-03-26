@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe ChatSDK::Message do
   describe ".create" do
     fab!(:channel_1) { Fabricate(:chat_channel) }

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "rails/generators"
 require "generators/site_setting_move_to_groups_migration/site_setting_move_to_groups_migration_generator"
 

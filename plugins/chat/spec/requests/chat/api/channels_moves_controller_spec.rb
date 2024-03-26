@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelsMessagesMovesController do
   fab!(:channel) { Fabricate(:category_channel) }
 
