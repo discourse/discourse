@@ -20,7 +20,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
 
   beforeModel(transition) {
     const url = transition.intent.url;
-
     let matches;
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
