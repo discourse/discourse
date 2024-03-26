@@ -5142,6 +5142,7 @@ en:
     limited_to_one_tag_from_group: "The tags %{tags} cannot be used simultaneously. Please include only one of them."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
+    user_not_permitted: "You're not allowed to tag topics"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
