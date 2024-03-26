@@ -268,14 +268,14 @@ class TopicView
   end
 
   def crawler_posts
-    if crawler_only_one_post?
+    if single_post_request?
       [desired_post]
     else
       posts
     end
   end
 
-  def crawler_only_one_post?
+  def single_post_request?
     @post_number && @post_number != 1
   end
 
