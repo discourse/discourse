@@ -103,16 +103,10 @@ module Chat
         user_search = user_search.search
       end
 
-      scopes = DiscoursePluginRegistry.apply_modifier(:chat_search_users_scopes, [:real], guardian)
+      allowed_bot_user_ids =
+        DiscoursePluginRegistry.apply_modifier(:chat_allowed_bot_user_ids, [], guardian)
 
-      scopes.each do |scope, args, kwargs|
-        kwargs ||= {}
-        args ||= []
-
-        # guard so plugins do not break search
-        user_search = user_search.send(scope, *args, **kwargs) if user_search.respond_to?(scope)
-      end
-
+      user_search = user_search.real(allowed_bot_user_ids: allowed_bot_user_ids)
       user_search = user_search.includes(:user_option)
 
       if context.excluded_memberships_channel_id
