@@ -347,6 +347,7 @@ export default class SchemaThemeSettingEditor extends Component {
               {{#each node.trees as |nestedTree|}}
                 <div
                   class="schema-theme-setting-editor__tree-node --heading"
+                  role="button"
                   {{on
                     "click"
                     (fn
@@ -367,13 +368,13 @@ export default class SchemaThemeSettingEditor extends Component {
                   }}
                 </div>
                 <ul
-                  class="{{if
-                      (this.isListVisible
-                        (this.uniqueNodeId nestedTree.propertyName node.index)
-                      )
-                      '--is-hidden'
-                      '--is-visible'
-                    }}"
+                  class={{if
+                    (this.isListVisible
+                      (this.uniqueNodeId nestedTree.propertyName node.index)
+                    )
+                    "--is-hidden"
+                    "--is-visible"
+                  }}
                 >
                   {{#each nestedTree.nodes as |childNode|}}
                     <li
