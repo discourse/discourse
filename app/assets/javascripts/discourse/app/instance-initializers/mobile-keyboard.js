@@ -66,7 +66,8 @@ export default {
     } else {
       let viewportWindowDiff =
         this.windowInnerHeight - window.visualViewport.height;
-      if (viewportWindowDiff > 0) {
+      const IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT = 71.5;
+      if (viewportWindowDiff > IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT) {
         keyboardVisible = true;
       }
 
