@@ -22,6 +22,7 @@ export class MultiCache {
     this.fetchTimes = [this.fetchTimes[this.fetchTimes.length - 1], new Date()];
 
     const notFound = [];
+    ids = ids.uniq();
 
     for (const id of ids) {
       if (!this.values.has(id)) {
