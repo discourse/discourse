@@ -28,7 +28,7 @@ export default class EmbeddableHost extends Component.extend(
     const categoryId = host.category_id || this.site.uncategorized_category_id;
     const category = Category.findById(categoryId);
 
-    host.set("category", category);
+    this.set("category", category);
   }
 
   @discourseComputed("buffered.host", "host.isSaving")
@@ -60,7 +60,7 @@ export default class EmbeddableHost extends Component.extend(
     host
       .save(props)
       .then(() => {
-        host.set("category", Category.findById(this.categoryId));
+        this.set("category", Category.findById(this.categoryId));
         this.set("editToggled", false);
       })
       .catch(popupAjaxError);
