@@ -2265,6 +2265,14 @@ sq:
             text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
+          schema:
+            fields:
+              required: "*e nevojshme"
+              string:
+                too_short: "must be at least %{count} characters"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"

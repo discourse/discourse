@@ -3621,6 +3621,7 @@ ur:
     admin:
       title: "ڈِسکورس ایڈمن"
       moderator: "ماڈریٹر"
+      filter_reports: رپورٹیں فِلٹر کریں
       tags:
         remove_muted_tags_from_latest:
           always: "ہمیشہ"
@@ -3686,7 +3687,6 @@ ur:
         exception_error: معذرت، ڈیٹا کمانڈ چلاتے ہوئے ایک خرابی کا سامنا کرنا پڑا۔
         too_many_requests: آپ نے یہ کارروائی بہت زیادہ دفعہ کی ہے۔ براہ کرم دوبارہ کوشش کرنے سے قبل انتظار کریں۔
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
-        filter_reports: رپورٹیں فِلٹر کریں
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           today: "آج"
@@ -4254,6 +4254,14 @@ ur:
           all_filter: "تمام"
           active_filter: "فعال"
           inactive_filter: "غیر فعال"
+          schema:
+            fields:
+              required: "*درکار"
+              string:
+                too_short: "کم از کم %{count} حروف کا ہونا لازمی ہے"
+              number:
+                too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
+                too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"

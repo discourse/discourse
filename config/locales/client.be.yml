@@ -1708,6 +1708,11 @@ be:
             text: "цела"
           all_filter: "Усё"
           active_filter: "актыўныя"
+          schema:
+            fields:
+              required: "*абавязковыя"
+              number:
+                too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"

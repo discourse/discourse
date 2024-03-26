@@ -4408,6 +4408,7 @@ es:
       title: "Administrador de Discourse"
       moderator: "Moderador"
       back_to_forum: "Volver al Foro"
+      filter_reports: Filtrar informes
       tags:
         remove_muted_tags_from_latest:
           always: "siempre"
@@ -4419,6 +4420,8 @@ es:
         sidebar_title: "Informes"
         sidebar_link:
           all: "Todos"
+      new_features:
+        title: "Novedades"
       dashboard:
         title: "Panel de control"
         last_updated: "Última actualización del panel de control:"
@@ -4476,7 +4479,6 @@ es:
         exception_error: Lo sentimos, se produjo un error al ejecutar la consulta
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
-        filter_reports: Filtrar informes
         custom_date_range: Rango de fechas personalizado
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
@@ -5189,6 +5191,14 @@ es:
           active_filter: "Activo"
           inactive_filter: "Inactivo"
           updates_available_filter: "Actualizaciones disponibles"
+          schema:
+            fields:
+              required: "*obligatorio"
+              string:
+                too_short: "debe tener al menos %{count} caracteres"
+              number:
+                too_small: "debe ser mayor o igual que %{count}"
+                too_large: "debe ser menor o igual que %{count}"
         colors:
           select_base:
             title: "Seleccionar paleta base de color"

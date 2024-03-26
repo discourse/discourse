@@ -198,10 +198,18 @@ hr:
       enable_s3_uploads_is_required: "Ne možete omogućiti korištenje S3 inventara osim ako niste omogućili S3 prijenose."
       s3_backup_requires_s3_settings: "Ne možete koristiti S3 kao pričuvnu lokaciju osim ako niste unijeli '%{setting_name}'."
   invite:
+    not_found_template: |
+      <p>Vaša pozivnica za <a href="%{base_url}">%{site_name}</a> već je iskorištena.</p>
+
+      <p>Ako se sjećate svoje zaporke, možete se <a href="%{base_url}/login">prijaviti</a>.</p>
+
+      <p>U suprotnom molimo <a href="%{base_url}/password-reset">Ponovno postavite zaporku</a>.</p>
     disabled_errors:
       invalid_access: "Nemate dopuštenje za pregled traženog izvora."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
+  invite_link:
+    email_taken: "Ovaj email se već koristi. Ako već imate korisnički račun, prijavite se ili poništite zaporku."
   topic_invite:
     sender_does_not_allow_pm: "Nažalost, ne dopuštate tom korisniku da vam šalje privatne poruke."
     user_cannot_see_topic: "%{username} ne može vidjeti temu."
@@ -607,12 +615,12 @@ hr:
         few: "prije skoro %{count} godina"
         other: "prije skoro %{count} godina"
   password_reset:
-    no_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili lozinku, možete <a href="%{base_url}/password-reset">zatražiti vezu</a> da je poništite.'
+    no_token: 'Ups! Poveznica koju ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili zaporku, možete <a href="%{base_url}/password-reset">zatražiti poveznicu</a> da je poništite.'
     title: "Ponovo postavite zaporku"
-    success: "Uspiješno ste promijenili zaporku i sad ste prijavljeni."
-    success_unapproved: "Uspiješno ste promijenili zaporku."
+    success: "Uspješno ste promijenili zaporku i sad ste prijavljeni."
+    success_unapproved: "Uspješno ste promijenili zaporku."
   email_login:
-    invalid_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili lozinku, možete <a href="%{base_url}/password-reset">zatražiti vezu</a> da je poništite.'
+    invalid_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili zaporku, možete <a href="%{base_url}/password-reset">zatražiti poveznicu</a> da je ponovo postavite.'
     title: "Prijava emailom"
   user_auth_tokens:
     browser:
@@ -725,10 +733,15 @@ hr:
       message:
         make: "Ova tema je sada \"banner\". Pojaviti će se na vrhu svake stranice dok ju korisnik ne odbaci."
         remove: "Ova tema više nije \"banner\". Neće se više prikazivati na vrhu svake stranice."
+  unsubscribed:
+    description: "Ažurirane su postavke e-pošte za <b>%{email}</b> . Za promjenu postavki e-pošte <a href='%{url}'>posjetite svoje korisničke postavke</a>."
+    topic_description: "Za ponovno pretplatu na %{link}, upotrijebite kontrolu obavijesti pri dnu ili desno od teme."
+    private_topic_description: "Da biste se ponovno pretplatili, koristite kontrolu obavijesti pri dnu ili desno od teme."
   unsubscribe:
     title: "Odjava"
     stop_watching_topic: "Prestanite pratiti ovu temu, %{link}"
     mute_topic: "Prigušite sve obavijesti za ovu temu, %{link}"
+    unwatch_category: "Prestani pratiti sve teme u %{category}"
     mailing_list_mode: "Isključite način popisa za slanje e-pošte"
     all: "Ne šalji mi nikakvu poštu od %{sitename}"
     different_user_description: "Trenutno ste prijavljeni kao drugi korisnik od onog kojem smo poslali e-poštu. Odjavite se ili uđite u anonimni način rada i pokušajte ponovno."
@@ -1285,6 +1298,7 @@ hr:
     auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"
     reviewable_default_topics: "Prikaži sadržaj koji se može pregledati prema zadanim postavkama grupiran prema temi"
+    unsubscribe_via_email: "Omogućite korisnicima da otkažu pretplatu na e-poštu slanjem e-pošte s 'unsubscribe' u naslovu ili tijelu poruke"
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
@@ -1538,6 +1552,7 @@ hr:
     activate_email: "<p>Skoro ste gotovi! Poslali smo aktivacijski mail na <b>%{email}</b>. Slijedite upute u e-pošti da aktivirate svoj račun.</p><p>Ako ne stigne, provjerite svoju spam mapu.</p>"
     not_activated: "Još se ne možete prijaviti. Poslali smo vam aktivacijski e-mail. Slijedite upute u e-poruci kako biste aktivirali svoj račun."
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao administrator s te IP adrese."
+    reset_not_allowed_from_ip_address: "Ne možete zatražiti ponovno postavljanje zaporke s te IP adrese."
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
@@ -1668,10 +1683,10 @@ hr:
     text_body_template: |
       Hvala što ste prihvatili poziv za %{site_name} -- dobrodošli!
 
-      Pritisnite ovu poveznicu kako biste sada odabrali lozinku:
+      Pritisnite ovu poveznicu kako biste sada odabrali zaporku:
       %{base_url}/u/password-reset/%{email_token}
 
-      (Ako je gornja poveznica istekla, odaberite "Zaboravio sam lozinku" kada se prijavljujete sa svojom adresom e-pošte.)
+      (Ako je gornja poveznica istekla, odaberite "Zaboravio sam zaporku" kada se prijavljujete sa svojom e-mail adresom.)
   download_backup_mailer:
     title: "Preuzmite Backup Mailer"
     subject_template: "[%{email_prefix}] Preuzimanje sigurnosne kopije stranice"
@@ -1690,18 +1705,88 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
+  unsubscribe_link: |
+    Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
   user_notifications:
+    previous_discussion: "Prethodni odgovori"
+    in_reply_to: "Kao odgovor na"
+    reply_by_email: "[Posjetite temu] (%{base_url}%{url}) ili odgovorite na ovu e-mail poruku da biste odgovorili."
+    reply_by_email_pm: "[Posjetite poruku](%{base_url}%{url}) ili odgovorite na ovaj e-mail da biste odgovorili %{participants}."
+    only_reply_by_email: "Odgovorite na ovaj e-mail da biste odgovorili."
+    only_reply_by_email_pm: "Odgovorite na ovaj e-mail da biste odgovorili %{participants}."
+    visit_link_to_respond: "[Posjetite temu] (%{base_url}%{url}) da biste odgovorili."
     user_quoted:
       title: "Korisnik je citirao"
+    account_exists:
+      text_body_template: |
+        Upravo ste pokušali otvoriti korisnički račun na %{site_name} ili ste pokušali promijeniti e-mail adresu računa u %{email}. Međutim, račun već postoji za %{email}.
+
+        Ako ste zaboravili zaporku, [poništite je sada](%{base_url}/password-reset).
+
+        Ako niste pokušali otvoriti račun za %{email} ili promijeniti svoju e-mail adresu, ne brinite – možete slobodno zanemariti ovu poruku.
+
+        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
       unread_notifications: "Nepročitane obavijesti"
       liked_received: "Like-ova primljeno"
       new_users: "Novi korisnici"
       join_the_discussion: "Pročitaj više"
+      subject_template: "[%{email_prefix}] Sažetak"
+      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link}ili %{unsubscribe_link} da biste otkazali pretplatu."
+      preheader: "Kratak sažetak od vašeg posljednjeg posjeta %{last_seen_at}"
     forgot_password:
       title: "Zaboravljena zaporka"
+      subject_template: "[%{email_prefix}] Ponovno postavljanje zaporke"
+      text_body_template: |
+        Netko je tražio da poništi vašu zaporku na [%{site_name}](%{base_url}).
+
+        Ako to niste bili vi, slobodno zanemarite ovu poruku.
+
+        Kliknite na sljedeću poveznicu za odabir nove zaporke:
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "Postavite zaporku"
+      text_body_template: |
+        Netko je tražio dodavanje zaporke vašem računu na [%{site_name}](%{base_url}). Alternativno, možete se prijaviti pomoću bilo koje podržane online usluge (Google, Facebook, itd.) koja je povezana s ovom potvrđenom email adresom.
+
+        Ako niste podnijeli ovaj zahtjev, možete slobodno zanemariti ovu poruku.
+
+        Kliknite na sljedeću poveznicu za odabir zaporke:
+        %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      text_body_template: |
+        Netko je tražio da se prijavi na vaš račun na [%{site_name}](%{base_url}).
+
+        Ako niste podnijeli ovaj zahtjev, možete slobodno zanemariti ovu e-poruku.
+
+        Kliknite na sljedeću poveznicu za prijavu:
+        %{base_url}/session/email-login/%{email_token}
+    account_created:
+      text_body_template: |
+        Za vas je kreiran novi korisnički račun na %{site_name}
+
+        Kliknite na sljedeću poveznicu da biste odabrali zaporku za svoj novi korisnički račun:
+        %{base_url}/u/password-reset/%{email_token}
+    signup_after_approval:
+      title: "Prijava nakon odobrenja"
+      subject_template: "Odobreni ste na %{site_name}!"
+      text_body_template: |
+        Dobrodošli u %{site_name}!
+
+        Član osoblja odobrio je vaš korisnički račun na %{site_name}.
+
+        Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
+        %{base_url}
+
+        Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje zajednice](%{base_url}/guidelines) u svakom trenutku.
+
+        Uživajte u boravku!
     post_approved:
       title: "Vaš post je odobren"
   page_not_found:
@@ -1775,6 +1860,9 @@ hr:
       name: Pročitao smjernice
     reader:
       name: Čitatelj
+    first_onebox:
+      long_description: |
+        Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   tags:
     title: "Oznake"

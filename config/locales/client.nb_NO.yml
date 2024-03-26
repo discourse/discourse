@@ -3399,6 +3399,7 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
+      filter_reports: Filtrer rapporter
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -3464,7 +3465,6 @@ nb_NO:
         exception_error: Beklager, en feil oppstod under kjøringen av denne spørringen
         too_many_requests: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
         not_found_error: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
-        filter_reports: Filtrer rapporter
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -3911,6 +3911,14 @@ nb_NO:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
+          schema:
+            fields:
+              required: "*påkrevd"
+              string:
+                too_short: "må være minst %{count} tegn"
+              number:
+                too_small: "må være lik eller større enn %{count}"
+                too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"

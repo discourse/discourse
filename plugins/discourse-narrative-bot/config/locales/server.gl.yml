@@ -277,10 +277,6 @@ gl:
         not_found: |-
           Ah vaia, a miña desagradábel publicación aínda non se sinalizou como inadecuada. :worried: Pode sinalizala como improcedente usando a **alerta** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non esqueza usar o botón de amosar máis <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para ofrecer máis accións de cada publicación.
       search:
-        instructions: |-
-          _psst_ … Agochei unha sorpresa neste tema. Se está listo para o reto, **seleccione a icona de busca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> na parte superior dereita &#8599; para buscalo.
-
-          Probe a buscar o termo "capy&#8203;bara" neste tema
         hidden_message: |-
           Canto fixo de menos este capibara? :wink:
 

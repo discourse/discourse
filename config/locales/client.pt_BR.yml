@@ -4414,6 +4414,7 @@ pt_BR:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
       back_to_forum: "Voltar para o Fórum"
+      filter_reports: Filtrar relatórios
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4425,6 +4426,8 @@ pt_BR:
         sidebar_title: "Relatórios"
         sidebar_link:
           all: "Tudo"
+      new_features:
+        title: "Novidades"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
@@ -4482,7 +4485,6 @@ pt_BR:
         exception_error: Desculpe, ocorreu um erro ao executar a consulta
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
-        filter_reports: Filtrar relatórios
         custom_date_range: Intervalo de datas personalizado
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
@@ -5197,6 +5199,13 @@ pt_BR:
           active_filter: "Ativo(a)"
           inactive_filter: "Inativo(a)"
           updates_available_filter: "Atualizações disponíveis"
+          schema:
+            fields:
+              string:
+                too_short: "deve ter no mínimo %{count} caracteres"
+              number:
+                too_small: "precisa ser maior ou igual a %{count}"
+                too_large: "deve ser menor ou igual a %{count}"
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"

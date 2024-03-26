@@ -295,10 +295,6 @@ id:
         not_found: |-
           Oh tidak, postingan buruk saya belum ditandai sebagai tidak pantas. :worried: Bisakah Anda menandainya sebagai tidak pantas menggunakan **penanda** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Jangan lupa untuk menggunakan tombol lihat lebih lanjut <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> untuk menampilkan lebih banyak tindakan untuk setiap post.
       search:
-        instructions: |-
-          _psst_ … Saya menyembunyikan kejutan di topik ini. Jika Anda siap menghadapi tantangan, **pilih ikon pencarian** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> di kanan atas &#8599; untuk mencarinya.
-
-          Coba cari istilah "capy&#8203;bara" di topik ini
         hidden_message: |-
           Bagaimana Anda melewatkan kapibara ini? :wink:
 

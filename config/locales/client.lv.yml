@@ -3152,6 +3152,9 @@ lv:
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
+          schema:
+            fields:
+              required: "*nepieciešams"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"

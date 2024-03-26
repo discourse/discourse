@@ -4484,6 +4484,7 @@ te:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
       back_to_forum: "తిరిగి ఫోరమ్కి"
+      filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
           always: "ఎల్లప్పుడూ"
@@ -4495,6 +4496,8 @@ te:
         sidebar_title: "నివేదికలు"
         sidebar_link:
           all: "అన్ని"
+      new_features:
+        title: "కొత్తది ఏమిటి"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -4552,7 +4555,6 @@ te:
         exception_error: క్షమించండి, క్వరీను అమలు చేస్తున్నప్పుడు లోపం సంభవించింది
         too_many_requests: మీరు ఈ చర్యను చాలా సార్లు చేసారు. దయచేసి మళ్లీ ప్రయత్నించే ముందు వేచి ఉండండి.
         not_found_error: క్షమించండి, ఈ నివేదిక ఉనికిలో లేదు
-        filter_reports: నివేదికలను ఫిల్టర్ చేయండి
         custom_date_range: అనుకూల తేదీ పరిధి
         reports:
           trend_title: "%{percent} మార్పు. ప్రస్తుతం %{current}, మునుపటి వ్యవధిలో %{prev} ."
@@ -5278,6 +5280,10 @@ te:
           updates_available_filter: "అప్‌డేట్‌లు అందుబాటులో ఉన్నాయి"
           schema:
             back_button: "తిరిగి %{name}కి"
+            fields:
+              number:
+                too_small: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
+                too_large: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
         colors:
           select_base:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"

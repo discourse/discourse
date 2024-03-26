@@ -2925,6 +2925,7 @@ ca:
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
+      filter_reports: Filtra reports
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -2990,7 +2991,6 @@ ca:
         exception_error: Ho sentim. Hi ha hagut un error en executar la consulta.
         too_many_requests: Heu fet aquesta acció massa vegades. Espereu abans de tornar-ho a intentar.
         not_found_error: Ho sentim. Aquest report no existeix.
-        filter_reports: Filtra reports
         reports:
           trend_title: "Canvi del %{percent}. Ara %{current}, era %{prev} en el període anterior."
           today: "Avui"
@@ -3458,6 +3458,14 @@ ca:
           all_filter: "Tot"
           active_filter: "Actiu"
           inactive_filter: "Inactiu"
+          schema:
+            fields:
+              required: "*necessari"
+              string:
+                too_short: "ha de tenir almenys %{count} caràcters"
+              number:
+                too_small: "ha de ser més gran o igual que %{count}"
+                too_large: "ha de ser igual o menor que %{count}"
         colors:
           select_base:
             title: "Seleccioneu la paleta de colors base"

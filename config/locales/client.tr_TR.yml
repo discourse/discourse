@@ -1090,6 +1090,7 @@ tr_TR:
           warning: "Öne çıkarılan konunuzu silmek istediğinizden emin misiniz?"
       use_current_timezone: "Mevcut Saat Dilimini Kullan"
       profile_hidden: "Bu kullanıcının genel profili gizli."
+      login_to_view_profile: "Kullanıcı profillerini görüntülemek için giriş yapmalısınız"
       inactive_user: "Bu kullanıcı artık aktif değil."
       expand_profile: "Genişlet"
       sr_expand_profile: "Profil detaylarını genişlet"
@@ -2361,6 +2362,8 @@ tr_TR:
       ignore: "Yok say"
       image_alt_text:
         aria_label: Görüntü için alternatif metin
+        title: "Resim açıklaması ekle"
+      image_scale_button: "Görüntüyü %{percent}% olarak ölçeklendirin"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
     notifications:
@@ -4451,6 +4454,7 @@ tr_TR:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
       back_to_forum: "Foruma Geri Dön"
+      filter_reports: Raporları filtrele
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -4462,6 +4466,8 @@ tr_TR:
         sidebar_title: "Raporlar"
         sidebar_link:
           all: "Hepsi"
+      new_features:
+        title: "Yenilikler"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
@@ -4519,7 +4525,6 @@ tr_TR:
         exception_error: Üzgünüz, sorgu yürütülürken bir hata oluştu
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
-        filter_reports: Raporları filtrele
         custom_date_range: Özel tarih aralığı
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
@@ -5261,7 +5266,15 @@ tr_TR:
           inactive_filter: "Aktif Değil"
           updates_available_filter: "Güncellemeler Mevcut"
           schema:
+            title: "%{name} ayarını düzenle"
             back_button: "%{name}'e geri dön"
+            fields:
+              required: "*gerekli"
+              string:
+                too_short: "en az %{count} karakter olmalı"
+              number:
+                too_small: "%{count} değerine eşit veya bu değerden büyük olmalı"
+                too_large: "%{count} değerine eşit veya bu değerden az olmalı"
         colors:
           select_base:
             title: "Temel renk paletini seçin"

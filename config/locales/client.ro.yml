@@ -1065,6 +1065,7 @@ ro:
           title: "Șterge"
       use_current_timezone: "Utilizați fusul orar curent"
       profile_hidden: "Acest profil public al utilizatorului este ascuns."
+      login_to_view_profile: "Trebuie să te conectezi pentru a vizualiza profilurile utilizatorilor"
       expand_profile: "Extinde"
       collapse_profile: "Colaps"
       sr_collapse_profile: "Restrânge detaliile profilului"
@@ -1877,6 +1878,9 @@ ro:
           label: "Comută bump pentru subiect"
       reload: "Reîncarcă"
       ignore: "Ignoră"
+      image_alt_text:
+        title: "Adaugă descriere imagine"
+      image_scale_button: "Scalează imaginea la %{percent}%"
     notifications:
       tooltip:
         message:
@@ -1911,6 +1915,11 @@ ro:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       dismiss_confirmation:
+        body:
+          default:
+            one: "Sigur faci asta? Ai o notificare importantă."
+            few: "Sigur faci asta? Ai %{count} notificări importante."
+            other: "Sigur faci asta? Ai %{count} de notificări importante."
         dismiss: "Înlătură"
         cancel: "Anulează"
       popup:
@@ -3095,14 +3104,18 @@ ro:
           all: "Toate"
       sections:
         custom:
+          add: "Adaugă secțiune personalizată"
           save: "Salvare"
           delete: "Șterge"
           links:
+            add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
             icon:
               label: "Pictogramă"
             name:
               label: "Nume"
+            value:
+              label: "Legătură"
         about:
           header_link_text: "Despre"
         messages:
@@ -3221,6 +3234,7 @@ ro:
       title: "Admin Discourse"
       moderator: "Moderator"
       back_to_forum: "Înapoi la forum"
+      filter_reports: Filtrează rapoarte
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3230,6 +3244,8 @@ ro:
         sidebar_title: "Rapoarte"
         sidebar_link:
           all: "Toate"
+      new_features:
+        title: "Ce este nou"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
@@ -3647,6 +3663,18 @@ ro:
           schema:
             title: "Editează setarea %{name}"
             back_button: "Înapoi la %{name}"
+            fields:
+              required: "*obligatoriu"
+              tags:
+                at_least:
+                  one: "cel puțin %{count} etichetă este necesară"
+                  few: "cel puțin %{count} etichete sunt necesare"
+                  other: "cel puțin %{count} de etichete sunt necesare"
+              string:
+                too_short: "trebuie să aibă cel puțin %{count} caractere"
+              number:
+                too_small: "trebuie să fie mai mare sau egal cu %{count}"
+                too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"
@@ -3888,9 +3916,11 @@ ro:
           censor: "Cenzurează"
           require_approval: "Necesită aprobare"
           flag: "Semnalează"
+          link: "Legătură"
         action_descriptions:
           flag: "Permite articole care conțin aceste cuvinte, dar semnalează-te ca nepotrivite pentru a fi analizate de către moderatori."
         form:
+          link_label: "Legătură"
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"

@@ -2157,6 +2157,7 @@ id:
       title: "Admin Discourse"
       moderator: "Moderator"
       back_to_forum: "Kembali ke Forum"
+      filter_reports: Filter laporan
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2175,7 +2176,6 @@ id:
         general_tab: "Umum"
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
-        filter_reports: Filter laporan
         custom_date_range: Rentang tanggal tertentu
         reports:
           last_7_days: "7 terakhir"
@@ -2336,6 +2336,11 @@ id:
             text: "Konten"
           all_filter: "Semua"
           active_filter: "Aktif"
+          schema:
+            fields:
+              number:
+                too_small: "harus sama dengan atau lebih besar dari %{count}"
+                too_large: "harus sama dengan atau kurang dari %{count}"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"

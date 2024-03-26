@@ -3553,6 +3553,7 @@ pt:
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
+      filter_reports: Filtrar relatórios
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3618,7 +3619,6 @@ pt:
         exception_error: Desculpe, ocorreu um erro ao executar a consulta
         too_many_requests: Você executou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
-        filter_reports: Filtrar relatórios
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"
@@ -4101,6 +4101,14 @@ pt:
           all_filter: "Tudo"
           active_filter: "Ativo"
           inactive_filter: "Inativo"
+          schema:
+            fields:
+              required: "*necessário"
+              string:
+                too_short: "deve ter pelo menos %{count} caracteres"
+              number:
+                too_small: "tem que ser maior ou igual a %{count}"
+                too_large: "tem que ser menos ou igual a %{count}"
         colors:
           select_base:
             description: "Paleta de base:"

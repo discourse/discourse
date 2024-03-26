@@ -2689,6 +2689,14 @@ sw:
           all_filter: "Vyote"
           active_filter: "Mara kwa Mara"
           inactive_filter: "Isiyo Amilifu"
+          schema:
+            fields:
+              required: "*muhimu na Inahitajika"
+              string:
+                too_short: "lazima iwe na herufi%{count}au zaidi"
+              number:
+                too_small: "izidi au iwe sawa na %{count}"
+                too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
           title: "Rangi"
           copy_name_prefix: "Nakala ya"

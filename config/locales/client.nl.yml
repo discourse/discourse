@@ -4416,6 +4416,7 @@ nl:
       title: "Discourse-beheerder"
       moderator: "Moderator"
       back_to_forum: "Terug naar Forum"
+      filter_reports: Rapporten filteren
       tags:
         remove_muted_tags_from_latest:
           always: "altijd"
@@ -4427,6 +4428,8 @@ nl:
         sidebar_title: "Rapporten"
         sidebar_link:
           all: "Alles"
+      new_features:
+        title: "Wat is er nieuw"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
@@ -4484,7 +4487,6 @@ nl:
         exception_error: Sorry, er is een fout opgetreden bij het uitvoeren van de query.
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
-        filter_reports: Rapporten filteren
         custom_date_range: Aangepast datumbereik
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
@@ -5199,6 +5201,14 @@ nl:
           active_filter: "Actief"
           inactive_filter: "Inactief"
           updates_available_filter: "Updates beschikbaar"
+          schema:
+            fields:
+              required: "*vereist"
+              string:
+                too_short: "moet uit minstens %{count} tekens bestaan"
+              number:
+                too_small: "moet groter zijn dan of gelijk zijn aan %{count}"
+                too_large: "moet minder zijn dan of gelijk zijn aan %{count}"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"

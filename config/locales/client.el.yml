@@ -3349,6 +3349,7 @@ el:
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"
+      filter_reports: Φιλτράρισμα αναφορών
       tags:
         remove_muted_tags_from_latest:
           always: "πάντα"
@@ -3414,7 +3415,6 @@ el:
         exception_error: Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εκτέλεση του ερωτήματος
         too_many_requests: Έχετε εκτελέσει αυτήν την ενέργεια πάρα πολλές φορές. Περιμένετε πριν δοκιμάσετε ξανά.
         not_found_error: Λυπάμαι, αυτή η αναφορά δεν υπάρχει
-        filter_reports: Φιλτράρισμα αναφορών
         reports:
           trend_title: "%{percent} αλλαγή. Επί του παρόντος %{current}, ήταν %{prev} στην προηγούμενη περίοδο."
           today: "Σήμερα"
@@ -3919,6 +3919,14 @@ el:
           all_filter: "Όλα"
           active_filter: "Ενεργοί"
           inactive_filter: "Ανενεργό"
+          schema:
+            fields:
+              required: "*απαιτείται"
+              string:
+                too_short: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
+              number:
+                too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
+                too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
         colors:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"

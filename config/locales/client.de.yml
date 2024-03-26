@@ -1090,6 +1090,7 @@ de:
           warning: "Bist du sicher, dass du dein hervorgehobenes Thema löschen möchtest?"
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
+      login_to_view_profile: "Du musst dich anmelden, um Benutzerprofile zu sehen"
       inactive_user: "Dieser Benutzer ist nicht mehr aktiv."
       expand_profile: "Erweitern"
       sr_expand_profile: "Profildetails erweitern"
@@ -2361,6 +2362,8 @@ de:
       ignore: "Ignorieren"
       image_alt_text:
         aria_label: Alternativ-Text für Bild
+        title: "Bildbeschreibung hinzufügen"
+      image_scale_button: "Bild skalieren auf %{percent}%."
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
     notifications:
@@ -4451,6 +4454,7 @@ de:
       title: "Discourse-Administrator"
       moderator: "Moderator"
       back_to_forum: "Zurück zum Forum"
+      filter_reports: Berichte filtern
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -4462,6 +4466,8 @@ de:
         sidebar_title: "Berichte"
         sidebar_link:
           all: "Gesamt"
+      new_features:
+        title: "Was ist neu?"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"
@@ -4519,7 +4525,6 @@ de:
         exception_error: Entschuldige, ein Fehler ist beim Ausführen der Abfrage aufgetreten
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
-        filter_reports: Berichte filtern
         custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
@@ -5263,6 +5268,17 @@ de:
           schema:
             title: "%{name} Einstellung bearbeiten"
             back_button: "Zurück zu %{name}"
+            fields:
+              required: "*erforderlich"
+              tags:
+                at_least:
+                  one: "mindestens %{count} Schlagwort ist erforderlich"
+                  other: "mindestens %{count} Schlagwörter sind erforderlich"
+              string:
+                too_short: "muss mindestens %{count} Zeichen lang sein"
+              number:
+                too_small: "muss größer oder gleich %{count} sein"
+                too_large: "muss weniger oder gleich %{count} sein"
         colors:
           select_base:
             title: "Wähle Basis-Farbpalette"

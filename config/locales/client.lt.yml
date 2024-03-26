@@ -3595,6 +3595,7 @@ lt:
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
+      filter_reports: Filtruoti ataskaitas
       tags:
         remove_muted_tags_from_latest:
           always: "visada"
@@ -3657,7 +3658,6 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
-        filter_reports: Filtruoti ataskaitas
         reports:
           trend_title: "%{percent} pokytis. Šiuo metu %{current}, buvo %{prev} ankstesniame laikotarpyje."
           today: "Šiandien"
@@ -4159,6 +4159,14 @@ lt:
           all_filter: "Visos"
           active_filter: "Aktyvūs"
           inactive_filter: "Neaktyvus"
+          schema:
+            fields:
+              required: "*privalomi"
+              string:
+                too_short: "turi būti ne mažiau kaip %{count} simbolių"
+              number:
+                too_small: "turi būti didesnis arba lygus %{count}"
+                too_large: "turi būti mažesnis arba lygus %{count}"
         colors:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"
