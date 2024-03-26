@@ -94,6 +94,7 @@ RSpec.describe Chat::SearchChatable do
 
             expect(result.users).to_not include(bot_1)
             expect(result.users).to include(bot_2)
+            expect(result.users).to include(current_user, sam, charlie, alain)
           ensure
             DiscoursePluginRegistry.unregister_modifier(
               plugin_instance,
