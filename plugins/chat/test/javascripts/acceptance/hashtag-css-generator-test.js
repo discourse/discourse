@@ -8,7 +8,7 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
   const category3 = {
     id: 4,
     color: "2B81AF",
-    parentCategory: { id: 1 },
+    parent_category_id: 1,
     name: "category3",
   };
 
