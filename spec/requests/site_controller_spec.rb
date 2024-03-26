@@ -38,7 +38,7 @@ RSpec.describe SiteController do
       get "/site/basic-info.json"
       json = response.parsed_body
 
-      expect(json.keys).not_to include("discourse_discover")
+      expect(json.keys).not_to include("discourse_discover_enrolled")
     end
   end
 
