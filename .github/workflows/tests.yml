@@ -63,7 +63,9 @@ jobs:
 
       - name: Remove Chrome
         continue-on-error: true
-        run: apt remove -y google-chrome-stable
+        run: |
+          apt remove -y google-chrome-stable
+          cat /etc/debian_version
 
       - uses: actions/checkout@v4
         with:
