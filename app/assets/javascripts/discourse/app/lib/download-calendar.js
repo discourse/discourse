@@ -101,7 +101,13 @@ function _displayModal(title, dates, options = {}) {
   const modal = getOwnerWithFallback(this).lookup("service:modal");
   modal.show(downloadCalendarModal, {
     model: {
-      calendar: { title, dates, recurrenceRule: options.recurrenceRule },
+      calendar: {
+        title,
+        dates,
+        recurrenceRule: options.recurrenceRule,
+        location: options.location,
+        details: options.details,
+      },
     },
   });
 }
