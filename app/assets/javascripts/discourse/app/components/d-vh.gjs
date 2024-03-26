@@ -71,7 +71,8 @@ export default class DVh extends Component {
         window.visualViewport.height -
         navigator.virtualKeyboard.boundingRect.height;
     } else {
-      height = window.height || window.innerHeight;
+      const activeWindow = window.visualViewport || window;
+      height = activeWindow?.height || window.innerHeight;
     }
 
     const newVh = height * 0.01;
