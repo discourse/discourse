@@ -7,9 +7,15 @@ require "generators/site_setting_rename_migration/site_setting_rename_migration_
 RSpec.describe SiteSettingRenameMigrationGenerator, type: :generator do
   it "generates the correct migration" do
     freeze_time DateTime.parse("2010-01-01 12:00")
-    described_class.start(%w[site_description contact_email], destination_root: "#{Rails.root}/tmp")
-    file_path = "#{Rails.root}/tmp/db/migrate/20100101120000_rename_site_description_setting.rb"
 
+    silence_stdout do
+      described_class.start(
+        %w[site_description contact_email],
+        destination_root: "#{Rails.root}/tmp",
+      )
+    end
+
+    file_path = "#{Rails.root}/tmp/db/migrate/20100101120000_rename_site_description_setting.rb"
     expected_content = <<~EXPECTED_CONTENT
       # frozen_string_literal: true
 
@@ -29,10 +35,16 @@ RSpec.describe SiteSettingRenameMigrationGenerator, type: :generator do
   end
 
   it "raises an error when old name is incorrect" do
-    expect { described_class.start(%w[wrong_name contact_email]) }.to raise_error(ArgumentError)
+    silence_stdout do
+      expect { described_class.start(%w[wrong_name contact_email]) }.to raise_error(ArgumentError)
+    end
   end
 
   it "raises an error when new name is incorrect" do
-    expect { described_class.start(%w[site_description wrong_name]) }.to raise_error(ArgumentError)
+    silence_stdout do
+      expect { described_class.start(%w[site_description wrong_name]) }.to raise_error(
+        ArgumentError,
+      )
+    end
   end
 end

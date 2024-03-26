@@ -8,13 +8,15 @@ RSpec.describe SiteSettingMoveToGroupsMigrationGenerator, type: :generator do
   it "generates the correct migration for TrustLevelSetting" do
     freeze_time DateTime.parse("2010-01-01 12:00")
 
-    described_class.start(
-      %w[min_trust_level_to_allow_invite allow_invite_groups],
-      destination_root: "#{Rails.root}/tmp",
-    )
+    silence_stdout do
+      described_class.start(
+        %w[min_trust_level_to_allow_invite allow_invite_groups],
+        destination_root: "#{Rails.root}/tmp",
+      )
+    end
+
     file_path =
       "#{Rails.root}/tmp/db/migrate/20100101120000_fill_allow_invite_groups_based_on_deprecated_setting.rb"
-
     expected_content = <<~EXPECTED_CONTENT
       # frozen_string_literal: true
 
@@ -50,13 +52,15 @@ RSpec.describe SiteSettingMoveToGroupsMigrationGenerator, type: :generator do
   it "generates the correct migration for TrustLevelAndStaffSetting" do
     freeze_time DateTime.parse("2010-01-01 12:00")
 
-    described_class.start(
-      %w[min_trust_level_to_allow_invite_tl_and_staff allow_invite_groups],
-      destination_root: "#{Rails.root}/tmp",
-    )
+    silence_stdout do
+      described_class.start(
+        %w[min_trust_level_to_allow_invite_tl_and_staff allow_invite_groups],
+        destination_root: "#{Rails.root}/tmp",
+      )
+    end
+
     file_path =
       "#{Rails.root}/tmp/db/migrate/20100101120000_fill_allow_invite_groups_based_on_deprecated_setting.rb"
-
     expected_content = <<~EXPECTED_CONTENT
       # frozen_string_literal: true
 
@@ -106,18 +110,24 @@ RSpec.describe SiteSettingMoveToGroupsMigrationGenerator, type: :generator do
   end
 
   it "raises an error when old name is incorrect" do
-    expect { described_class.start(%w[wrong_name allow_invite_groups]) }.to raise_error(
-      ArgumentError,
-    )
+    silence_stdout do
+      expect { described_class.start(%w[wrong_name allow_invite_groups]) }.to raise_error(
+        ArgumentError,
+      )
+    end
   end
 
   it "raises an error when new name is incorrect" do
-    expect { described_class.start(%w[min_trust_level_to_allow_invite wrong_name]) }.to raise_error(
-      ArgumentError,
-    )
+    silence_stdout do
+      expect {
+        described_class.start(%w[min_trust_level_to_allow_invite wrong_name])
+      }.to raise_error(ArgumentError)
+    end
   end
 
   it "raises an error when old setting is incorrect type" do
-    expect { described_class.start(%w[title allow_invite_groups]) }.to raise_error(ArgumentError)
+    silence_stdout do
+      expect { described_class.start(%w[title allow_invite_groups]) }.to raise_error(ArgumentError)
+    end
   end
 end
