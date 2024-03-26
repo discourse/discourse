@@ -239,7 +239,10 @@ class TopicView
       else
         title += I18n.t("inline_oneboxer.topic_page_title_post_number", post_number: @post_number)
       end
+    elsif @page > 1
+      title += " - #{I18n.t("page_num", num: @page)}"
     end
+
     if SiteSetting.topic_page_title_includes_category
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
