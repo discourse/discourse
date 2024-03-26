@@ -66,8 +66,8 @@ export default {
     } else {
       let viewportWindowDiff =
         this.windowInnerHeight - window.visualViewport.height;
-      const FLOATING_IPAD_KEYBOARD_HEIGHT = 71.5;
-      if (viewportWindowDiff > FLOATING_IPAD_KEYBOARD_HEIGHT) {
+      const IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT = 71.5;
+      if (viewportWindowDiff > IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT) {
         keyboardVisible = true;
       }
 
