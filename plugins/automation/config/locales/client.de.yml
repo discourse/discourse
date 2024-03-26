@@ -173,8 +173,13 @@ de:
           fields:
             user_profile:
               label: Benutzerprofilfelder
+              description: Wird nur ausgelöst, wenn der Benutzer alle diese Felder ausgefüllt hat
             custom_fields:
               label: Benutzerdefinierte Felder
+              description: Wird nur ausgelöst, wenn der Benutzer alle diese Felder ausgefüllt hat
+            once_per_user:
+              label: Einmal pro Benutzer
+              description: Wird nur einmal pro Benutzer ausgelöst
         category_created_edited:
           fields:
             restricted_category:
@@ -225,6 +230,7 @@ de:
               description: Antwortet nur einmal pro Thema
             word_answer_list:
               label: Liste von Wort/Antwort-Paaren
+              description: "Definiert eine Liste von Schlüssel/Wert-Gruppen, wobei `key` der gesuchte Begriff und `value` der Text der Antwort ist. `key` kann leer gelassen werden, um unabhängig vom Inhalt auf alle Auslöser zu reagieren. Beachte, dass `value` `{{key}}` als Platzhalter akzeptiert, der in der Antwort durch den Wert von `key` ersetzt wird. Beachte weiterhin, dass `key` als Regex ausgewertet wird und Sonderzeichen wie `.` maskiert werden müssen, wenn du tatsächlich einen Punkt meinst, z. B.: `\\.`"
             answering_user:
               label: Antwortender Benutzer
               description: Standardmäßig Systembenutzer
@@ -237,6 +243,8 @@ de:
           fields:
             creator:
               label: Ersteller
+              post_creator_context: Der Ersteller des Beitrags
+              updated_user_context: Der aktualisierte Benutzer
             topic:
               label: Themen-ID
             post:
