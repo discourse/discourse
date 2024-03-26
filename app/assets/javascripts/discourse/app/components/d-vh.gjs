@@ -16,11 +16,11 @@ export default class DVh extends Component {
   constructor() {
     super(...arguments);
 
-    if (!this.capabilities.isIpadOS && this.site.desktopView) {
+    if (!window.visualViewport) {
       return;
     }
 
-    if (!window.visualViewport) {
+    if (!this.capabilities.isIpadOS && this.site.desktopView) {
       return;
     }
 
