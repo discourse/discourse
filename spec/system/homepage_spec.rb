@@ -28,9 +28,43 @@ describe "Homepage", type: :system do
     SiteSetting.global_notice = nil
   end
 
-  it "by default shows a list of topics" do
+  it "shows a list of topics by default" do
     visit "/"
     expect(discovery.topic_list).to have_topics(count: 5)
+  end
+
+  it "allows users to pick their homepage" do
+    sign_in user
+    visit "/"
+
+    expect(page).to have_css(".navigation-container .latest.active", text: "Latest")
+
+    visit "u/#{user.username}/preferences/interface"
+
+    homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
+    homepage_picker.expand
+    homepage_picker.select_row_by_name("Top")
+    page.find(".btn-primary.save-changes").click
+
+    # Wait for the save to complete
+    find(".btn-primary.save-changes:not([disabled])", wait: 5)
+
+    visit "/"
+
+    expect(page).to have_css(".navigation-container .top.active", text: "Top")
+    expect(page).to have_css(".top-lists")
+  end
+
+  it "defaults to first top_menu item as anonymous homepage" do
+    SiteSetting.top_menu = "categories|latest|new|unread"
+    visit "/"
+
+    expect(page).to have_css(".navigation-container .categories.active", text: "Categories")
+
+    sign_in user
+    visit "/"
+
+    expect(page).to have_css(".navigation-container .categories.active", text: "Categories")
   end
 
   context "when default theme uses a custom_homepage modifier" do
