@@ -129,8 +129,8 @@ class UserUpdater
       user.primary_group_id = nil
     end
 
-    if attributes[:homepage_id] && attributes[:homepage_id] == "-1"
-      user.user_option.homepage_id = nil
+    if SiteSetting.experimental_custom_homepage && attributes[:homepage_id] == "-1"
+      attributes[:homepage_id] = nil
     end
 
     if attributes[:flair_group_id] && attributes[:flair_group_id] != user.flair_group_id &&
