@@ -90,4 +90,22 @@ RSpec.describe UserSummary do
     expect(summary.top_categories.first[:topic_count]).to eq(1)
     expect(summary.top_categories.first[:post_count]).to eq(1)
   end
+
+  it "returns the most replied to users" do
+    topic = create_post(visible: true).topic
+    user = topic.user
+    reply = create_post(topic: topic, visible: true)
+    topic.posts.first.update!(post_replies: [PostReply.new(reply_post_id: reply.id)])
+    reply.update!(
+      raw: "show me what you can do",
+      reply_to_post_number: topic.posts.first.post_number,
+    )
+
+    summary = UserSummary.new(user, Guardian.new(user))
+    most_replied_to_users = summary.most_replied_to_users
+
+    expect(most_replied_to_users).to eq({
+      user.id => 1,
+    })
+  end
 end
