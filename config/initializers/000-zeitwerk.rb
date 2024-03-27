@@ -54,3 +54,12 @@ Rails.autoloaders.main.ignore(
   "lib/i18n/backend",
   "lib/unicorn_logstash_patch.rb",
 )
+
+# Always load problem checks. Problem checks are registered when their classes are
+# loaded, which means if we're not eager loading, the registry would be empty.
+#
+if !Rails.application.config.eager_load
+  Rails.application.config.to_prepare do
+    Rails.autoloaders.main.eager_load_dir("#{Rails.root}/app/services/problem_check")
+  end
+end
