@@ -85,6 +85,10 @@ class ProblemCheck
     new(data).call
   end
 
+  def self.run(data = {})
+    new(data).run
+  end
+
   def initialize(data = {})
     @data = OpenStruct.new(data)
   end
@@ -93,6 +97,20 @@ class ProblemCheck
 
   def call
     raise NotImplementedError
+  end
+
+  def run
+    problems = call
+
+    next_run_at = perform_every&.from_now
+
+    if problems.empty?
+      tracker.no_problem!(next_run_at:)
+    else
+      tracker.problem!(next_run_at:)
+    end
+
+    problems
   end
 
   private
