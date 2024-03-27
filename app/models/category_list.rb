@@ -70,7 +70,7 @@ class CategoryList
 
   private
 
-  def find_relevant_topics
+  def relevant_topics_query
     @all_topics =
       Topic
         .secured(@guardian)
@@ -104,10 +104,12 @@ class CategoryList
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
+  end
 
+  def find_relevant_topics
     featured_topics_by_category_id = Hash.new { |h, k| h[k] = [] }
 
-    @all_topics.each do |t|
+    relevant_topics_query.each do |t|
       # hint for the serializer
       t.include_last_poster = true
       t.dismissed = dismissed_topic?(t)
