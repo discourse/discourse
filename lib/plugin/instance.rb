@@ -66,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
