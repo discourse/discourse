@@ -104,6 +104,13 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           expect { result }.to change { Chat::UserChatChannelMembership.count }.by(4)
           expect(result).to be_a_success
         end
+
+        it "succeeds when target_usernames is equal to max direct users" do
+          SiteSetting.chat_max_direct_message_users = 2
+
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3) # current user + user_1 + user_2
+          expect(result).to be_a_success
+        end
       end
 
       context "when there is an existing direct message channel for the target users" do
@@ -165,9 +172,9 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     end
 
     context "when target_usernames exceeds chat_max_direct_message_users" do
-      before { SiteSetting.chat_max_direct_message_users = 2 }
+      before { SiteSetting.chat_max_direct_message_users = 1 }
 
-      it { is_expected.to fail_a_step(:validate_user_count) }
+      it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
     end
 
     context "when the current user cannot make direct messages" do
