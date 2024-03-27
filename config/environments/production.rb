@@ -31,11 +31,14 @@ Discourse::Application.configure do
       domain: GlobalSetting.smtp_domain,
       user_name: GlobalSetting.smtp_user_name,
       password: GlobalSetting.smtp_password,
-      authentication: GlobalSetting.smtp_authentication,
       enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
       open_timeout: GlobalSetting.smtp_open_timeout,
       read_timeout: GlobalSetting.smtp_read_timeout,
     }
+
+    if settings[:password] || settings[:user_name]
+      settings[:authentication] = GlobalSetting.smtp_authentication
+    end
 
     settings[
       :openssl_verify_mode
