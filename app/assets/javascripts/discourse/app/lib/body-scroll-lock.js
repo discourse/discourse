@@ -156,17 +156,40 @@ const isTargetElementTotallyScrolled = (targetElement) =>
     ? targetElement.scrollHeight - targetElement.scrollTop <=
       targetElement.clientHeight
     : false;
-const handleScroll = (event, targetElement) => {
+const handleScroll = (event, targetElement, options = {}) => {
   const clientY = event.targetTouches[0].clientY - initialClientY;
   if (allowTouchMove(event.target)) {
     return false;
   }
-  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
-    return preventDefault(event);
+
+  const { reverse } = options;
+  const atStart = targetElement.scrollTop === 0;
+  const atEnd = isTargetElementTotallyScrolled(targetElement);
+
+  // Adjust the conditions based on the 'reverse' option
+  if (reverse) {
+    // For 'column-reverse', scrolling "up" means moving towards the end of the content,
+    // and scrolling "down" means moving towards the start.
+    if (atEnd && clientY > 0) {
+      // At the end and attempting to scroll towards the start (down in a reversed setup)
+      return preventDefault(event);
+    }
+    if (atStart && clientY < 0) {
+      // At the start and attempting to scroll away from the start (up in a reversed setup)
+      return preventDefault(event);
+    }
+  } else {
+    // Normal scrolling (not reversed)
+    if (atStart && clientY > 0) {
+      // At the start and attempting to scroll towards the start (traditional setup)
+      return preventDefault(event);
+    }
+    if (atEnd && clientY < 0) {
+      // At the end and attempting to scroll away from the start (traditional setup)
+      return preventDefault(event);
+    }
   }
-  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-    return preventDefault(event);
-  }
+
   event.stopPropagation();
   return true;
 };
@@ -204,7 +227,7 @@ const disableBodyScroll = (targetElement, options) => {
     };
     targetElement.ontouchmove = (event) => {
       if (event.targetTouches.length === 1) {
-        handleScroll(event, targetElement);
+        handleScroll(event, targetElement, options);
       }
     };
     if (!documentListenerAdded) {

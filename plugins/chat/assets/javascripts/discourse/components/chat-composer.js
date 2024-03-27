@@ -141,6 +141,7 @@ export default class ChatComposer extends Component {
 
   @action
   setup() {
+    this.composer.scrollable = this.args.scrollable;
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
       "chat:open-insert-link-modal",

@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
@@ -9,12 +11,31 @@ export default class ChatChannelComposer extends Service {
   @service router;
   @service("chat-thread-composer") threadComposer;
   @service loadingSlider;
+  @service capabilities;
+  @service appEvents;
 
   @tracked textarea;
+  @tracked scrollable;
+
+  init() {
+    super.init(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, this.blur);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("discourse:focus-changed", this, this.blur);
+  }
 
   @action
   focus(options = {}) {
     this.textarea?.focus(options);
+
+    schedule("afterRender", () => {
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+        disableBodyScroll(this.scrollable, { reverse: true });
+      }
+    });
   }
 
   @action

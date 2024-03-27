@@ -27,7 +27,6 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import {
   checkMessageBottomVisibility,
@@ -184,7 +183,6 @@ export default class ChatChannel extends Component {
   onPresenceChangeCallback(present) {
     if (present) {
       this.debouncedUpdateLastReadMessage();
-      bodyScrollFix({ delayed: true });
     }
   }
 
@@ -463,7 +461,6 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      bodyScrollFix();
       DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
@@ -765,6 +762,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
+            @scrollable={{this.scrollable}}
           />
         {{/if}}
       {{/if}}
