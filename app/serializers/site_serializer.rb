@@ -66,6 +66,7 @@ class SiteSerializer < ApplicationSerializer
             name: n,
             default: id == SiteSetting.default_theme_id,
             color_scheme_id: cs,
+            has_custom_homepage: ThemeModifierHelper.new(theme_ids: id).custom_homepage,
           }
         end
         .as_json

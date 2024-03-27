@@ -11,7 +11,7 @@ import {
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
-import { defaultHomepage, setDefaultHomepage } from "discourse/lib/utilities";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -49,9 +49,13 @@ export default Controller.extend({
       USER_HOMES[8] = "hot";
     }
 
-    if (defaultHomepage() === "custom") {
+    if (this.availableThemeHasCustomHomepage()) {
       USER_HOMES[-1] = "default";
     }
+  },
+
+  availableThemeHasCustomHomepage() {
+    return this.site.user_themes.some((theme) => theme.has_custom_homepage);
   },
 
   @discourseComputed("makeThemeDefault")
@@ -205,7 +209,7 @@ export default Controller.extend({
 
     let result = [];
 
-    if (defaultHomepage() === "custom") {
+    if (this.availableThemeHasCustomHomepage()) {
       result.push({
         name: I18n.t("user.homepage.default"),
         value: -1,
