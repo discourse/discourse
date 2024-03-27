@@ -4,6 +4,7 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
   include HasSanitizableFields
+  include HasCustomFields
 
   self.ignored_columns = [
     "topic_count", # TODO(tgxworld): Remove on 1 July 2023
