@@ -42,6 +42,7 @@ export default class SchemaThemeSettingEditor extends Component {
   @tracked activeIndex = 0;
   @tracked backButtonText;
   @tracked saveButtonDisabled = false;
+  @tracked visibilityStates = [];
 
   data = cloneJSON(this.args.setting.value);
   history = [];
@@ -242,6 +243,23 @@ export default class SchemaThemeSettingEditor extends Component {
     }
   }
 
+  @action
+  toggleListVisibility(listIdentifier) {
+    if (this.visibilityStates.includes(listIdentifier)) {
+      this.visibilityStates = this.visibilityStates.filter(
+        (id) => id !== listIdentifier
+      );
+    } else {
+      this.visibilityStates = [...this.visibilityStates, listIdentifier];
+    }
+  }
+
+  get isListVisible() {
+    return (listIdentifier) => {
+      return this.visibilityStates.includes(listIdentifier);
+    };
+  }
+
   fieldDescription(fieldName) {
     const descriptions = this.args.setting.metadata?.property_descriptions;
 
@@ -288,6 +306,10 @@ export default class SchemaThemeSettingEditor extends Component {
     });
   }
 
+  uniqueNodeId(nestedTreePropertyName, nodeIndex) {
+    return `${nestedTreePropertyName}-${nodeIndex}`;
+  }
+
   <template>
     {{! template-lint-disable no-nested-interactive }}
     <div class="schema-theme-setting-editor">
@@ -323,7 +345,37 @@ export default class SchemaThemeSettingEditor extends Component {
               </div>
 
               {{#each node.trees as |nestedTree|}}
-                <ul>
+                <div
+                  class="schema-theme-setting-editor__tree-node --heading"
+                  role="button"
+                  {{on
+                    "click"
+                    (fn
+                      this.toggleListVisibility
+                      (this.uniqueNodeId nestedTree.propertyName node.index)
+                    )
+                  }}
+                >
+                  {{nestedTree.propertyName}}
+                  {{dIcon
+                    (if
+                      (this.isListVisible
+                        (this.uniqueNodeId nestedTree.propertyName node.index)
+                      )
+                      "chevron-right"
+                      "chevron-down"
+                    )
+                  }}
+                </div>
+                <ul
+                  class={{if
+                    (this.isListVisible
+                      (this.uniqueNodeId nestedTree.propertyName node.index)
+                    )
+                    "--is-hidden"
+                    "--is-visible"
+                  }}
+                >
                   {{#each nestedTree.nodes as |childNode|}}
                     <li
                       role="link"
@@ -367,6 +419,15 @@ export default class SchemaThemeSettingEditor extends Component {
             />
           </li>
         </ul>
+
+        <div class="schema-theme-setting-editor__footer">
+          <DButton
+            @disabled={{this.saveButtonDisabled}}
+            @action={{this.saveChanges}}
+            @label="save"
+            class="btn-primary"
+          />
+        </div>
       </div>
 
       <div class="schema-theme-setting-editor__fields">
@@ -387,15 +448,6 @@ export default class SchemaThemeSettingEditor extends Component {
             class="btn-danger schema-theme-setting-editor__remove-btn"
           />
         {{/if}}
-      </div>
-
-      <div class="schema-theme-setting-editor__footer">
-        <DButton
-          @disabled={{this.saveButtonDisabled}}
-          @action={{this.saveChanges}}
-          @label="save"
-          class="btn-primary"
-        />
       </div>
     </div>
   </template>
