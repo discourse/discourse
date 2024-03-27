@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 class ProblemCheck
+  class Collection
+    include Enumerable
+
+    def initialize(checks)
+      @checks = checks
+    end
+
+    def each(...)
+      checks.each(...)
+    end
+
+    def run
+      each(&:call)
+    end
+
+    private
+
+    attr_reader :checks
+  end
+
   include ActiveSupport::Configurable
 
   config_accessor :priority, default: "low", instance_writer: false
@@ -35,15 +55,15 @@ class ProblemCheck
   end
 
   def self.checks
-    descendants
+    Collection.new(descendants)
   end
 
   def self.scheduled
-    checks.select(&:scheduled?)
+    Collection.new(checks.select(&:scheduled?))
   end
 
   def self.realtime
-    checks.reject(&:scheduled?)
+    Collection.new(checks.reject(&:scheduled?))
   end
 
   def self.identifier
@@ -76,6 +96,10 @@ class ProblemCheck
   end
 
   private
+
+  def tracker
+    ProblemCheckTracker[identifier]
+  end
 
   def problem(override_key = nil, override_data = {})
     [
