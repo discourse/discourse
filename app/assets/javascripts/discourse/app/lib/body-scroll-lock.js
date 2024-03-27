@@ -45,7 +45,6 @@ let locks = [];
 let locksIndex = /* @__PURE__ */ new Map();
 let documentListenerAdded = false;
 let initialClientY = -1;
-let previousBodyOverflowSetting;
 let htmlStyle;
 let bodyStyle;
 let previousBodyPaddingRight;
@@ -89,19 +88,11 @@ const setOverflowHidden = (options) => {
       }px`;
     }
   }
-  if (previousBodyOverflowSetting === void 0) {
-    previousBodyOverflowSetting = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-  }
 };
 const restoreOverflowSetting = () => {
   if (previousBodyPaddingRight !== void 0) {
     document.body.style.paddingRight = previousBodyPaddingRight;
     previousBodyPaddingRight = void 0;
-  }
-  if (previousBodyOverflowSetting !== void 0) {
-    document.body.style.overflow = previousBodyOverflowSetting;
-    previousBodyOverflowSetting = void 0;
   }
 };
 const setPositionFixed = () =>
@@ -119,17 +110,6 @@ const setPositionFixed = () =>
       $body.style.left = `${-scrollX}px`;
       $body.style.width = "100%";
       $body.style.height = "auto";
-      $body.style.overflow = "hidden";
-      setTimeout(
-        () =>
-          window.requestAnimationFrame(() => {
-            const bottomBarHeight = innerHeight - window.innerHeight;
-            if (bottomBarHeight && scrollY >= innerHeight) {
-              $body.style.top = -(scrollY + bottomBarHeight) + "px";
-            }
-          }),
-        300
-      );
     }
   });
 const restorePositionSetting = () => {
