@@ -102,7 +102,12 @@ module PageObjects
         visit("/chat/new-message?recipients=#{recipients}")
       end
 
+      def has_preloaded_channels?
+        has_css?("body.has-preloaded-chat-channels")
+      end
+
       def has_finished_loading?
+        has_preloaded_channels?
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
