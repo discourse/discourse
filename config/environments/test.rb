@@ -63,6 +63,9 @@ Discourse::Application.configure do
     },
   ]
 
+  # Catch missing translations during test runs.
+  config.i18n.raise_on_missing_translations = true
+
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
       line =~ %r{lib/freedom_patches}

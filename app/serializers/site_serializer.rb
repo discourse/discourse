@@ -361,7 +361,7 @@ class SiteSerializer < ApplicationSerializer
     types = flags
 
     if notify_moderators_flag = types.index(notify_moderators_type)
-      types.insert(types.length, types.delete_at(notify_moderators_flag))
+      types.insert(types.length - 1, types.delete_at(notify_moderators_flag))
     end
 
     types.map { |id| PostActionType.new(id: id) }
