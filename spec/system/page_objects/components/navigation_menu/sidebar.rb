@@ -40,6 +40,10 @@ module PageObjects
         def custom_section_modal_title
           find("#discourse-modal-title")
         end
+
+        def toggle_all_sections
+          find(".sidebar-toggle-all-sections").click
+        end
       end
     end
   end

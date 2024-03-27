@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import { A } from "@ember/array";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,11 +14,14 @@ import {
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
+  @service keyValueStore;
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
+  @tracked collapsedSections = A([]);
+
   previousState = {};
 
   constructor() {
@@ -61,6 +65,22 @@ export default class SidebarState extends Service {
       mode: this.mode,
       displaySwitchPanelButtons: this.displaySwitchPanelButtons,
     };
+  }
+
+  collapseSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
+    this.collapsedSections.pushObject(collapsedSidebarSectionKey);
+  }
+
+  expandSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
+    this.collapsedSections.removeObject(collapsedSidebarSectionKey);
+  }
+
+  isCurrentPanel(panel) {
+    return this.currentPanel.key === panel;
   }
 
   restorePreviousState() {

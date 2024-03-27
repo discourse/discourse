@@ -3,6 +3,7 @@
     data-section-name={{@sectionName}}
     class="sidebar-section-wrapper sidebar-section"
     ...attributes
+    {{did-insert this.setExpandedState}}
   >
     {{#unless @hideSectionHeader}}
       <div class="sidebar-section-header-wrapper sidebar-row">

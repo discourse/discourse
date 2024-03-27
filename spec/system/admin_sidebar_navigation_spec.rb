@@ -14,15 +14,22 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
 
   it "shows the sidebar when navigating to an admin route and hides it when leaving" do
     visit("/latest")
-    expect(sidebar).to have_section("community")
+    expect(sidebar).to have_section("categories")
     sidebar.click_link_in_section("community", "admin")
     expect(page).to have_current_path("/admin")
     expect(sidebar).to be_visible
-    expect(sidebar).to have_no_section("community")
+    expect(sidebar).to have_no_section("categories")
     expect(page).to have_no_css(".admin-main-nav")
     filter.click_back_to_forum
     expect(page).to have_current_path("/latest")
-    expect(sidebar).to have_no_section("admin-nav-section-root")
+    expect(sidebar).to have_no_section("admin-root")
+  end
+
+  it "collapses sections by default" do
+    visit("/admin")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(["Dashboard", "All Site Settings"])
   end
 
   it "respects the user homepage preference for the Back to Forum link" do
@@ -47,7 +54,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       filter.click_back_to_forum
       expect(page).to have_current_path("/latest")
       sidebar_dropdown.click
-      expect(sidebar).to have_no_section("admin-nav-section-root")
+      expect(sidebar).to have_no_section("admin-root")
     end
   end
 
@@ -58,12 +65,13 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       visit("/latest")
       sidebar.click_link_in_section("community", "admin")
       expect(page).to have_current_path("/admin")
-      expect(sidebar).to have_no_section("admin-nav-section-root")
+      expect(sidebar).to have_no_section("admin-root")
     end
   end
 
   it "allows links to be filtered" do
     visit("/admin")
+    sidebar.toggle_all_sections
     all_links_count = page.all(".sidebar-section-link-content-text").count
 
     links = page.all(".sidebar-section-link-content-text")
@@ -93,6 +101,21 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
   end
 
+  it "allows sections to be expanded" do
+    visit("/admin")
+    sidebar.toggle_all_sections
+    all_links_count = page.all(".sidebar-section-link-content-text").count
+    sidebar.toggle_all_sections
+
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(["Dashboard", "All Site Settings"])
+
+    sidebar.toggle_all_sections
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(all_links_count)
+  end
+
   it "accepts hidden keywords like installed plugin names for filter" do
     Discourse.instance_variable_set(
       "@plugins",
@@ -100,6 +123,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     )
 
     visit("/admin")
+    sidebar.toggle_all_sections
     filter.filter("csp_extension")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
