@@ -70,7 +70,7 @@ class CategoryList
 
   private
 
-  def all_relevant_topics
+  def relevant_topics_query
     @all_topics =
       Topic
         .secured(@guardian)
@@ -109,7 +109,7 @@ class CategoryList
   def find_relevant_topics
     featured_topics_by_category_id = Hash.new { |h, k| h[k] = [] }
 
-    all_relevant_topics.each do |t|
+    relevant_topics_query.each do |t|
       # hint for the serializer
       t.include_last_poster = true
       t.dismissed = dismissed_topic?(t)
