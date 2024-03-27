@@ -26,6 +26,8 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def problems
+    ProblemCheck.realtime.run
+
     render_json_dump(problems: AdminDashboardData.fetch_problems(check_force_https: request.ssl?))
   end
 
