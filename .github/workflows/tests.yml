@@ -96,7 +96,7 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Get yarn cache directory
