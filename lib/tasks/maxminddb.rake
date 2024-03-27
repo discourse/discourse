@@ -15,6 +15,7 @@ def get_mmdb_time(root_path)
 
   GEOLITE_DBS.each do |name|
     path = File.join(root_path, "#{name}.mmdb")
+
     if File.exist?(path)
       mmdb_time = File.mtime(path)
     else
@@ -46,6 +47,7 @@ task "maxminddb:refresh": "environment" do
 
   if GlobalSetting.maxmind_backup_path.present?
     backup_mmdb_time = get_mmdb_time(GlobalSetting.maxmind_backup_path)
+    puts "Detected MaxMindDB backup (downloaded: #{backup_mmdb_time}) at #{GlobalSetting.maxmind_backup_path}"
     mmdb_time ||= backup_mmdb_time
   end
 
@@ -54,7 +56,10 @@ task "maxminddb:refresh": "environment" do
     mmdb_time = backup_mmdb_time
   end
 
-  next if mmdb_time && mmdb_time >= refresh_days.days.ago
+  if mmdb_time && mmdb_time >= refresh_days.days.ago
+    puts "Skip downloading MaxMindDB as it was last downloaded at #{mmdb_time}"
+    next
+  end
 
   puts "Downloading MaxMindDB..."
 
