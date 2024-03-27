@@ -1,0 +1,143 @@
+.d-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  margin-block: 2rem;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+
+    &.--inline {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 1em;
+    }
+  }
+
+  &__section-info {
+    margin: 0;
+  }
+
+  &__section-inline-btn {
+    height: 2em;
+    align-self: flex-start;
+    margin-top: 1.25em;
+  }
+}
+
+.d-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+
+  .--row & {
+    flex-direction: row;
+    gap: 1em;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+
+    .--row & {
+      flex-direction: column;
+      align-items: flex-end;
+      flex-basis: 20%;
+    }
+
+    .--inline & {
+      white-space: nowrap;
+    }
+  }
+  &__optional {
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-medium);
+    font-weight: normal;
+  }
+  &__value {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    width: min-content;
+    .--inline & {
+      width: auto;
+    }
+  }
+  &__input,
+  select {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-input-border-radius);
+    padding-inline: 0.5em;
+    height: 2em;
+    box-sizing: border-box;
+    margin: 0;
+
+    .has-error & {
+      border: 1px solid var(--danger);
+    }
+
+    .--inline & {
+      width: 100%;
+      min-width: 100px;
+    }
+
+    &:focus-visible {
+      border-color: var(--tertiary);
+      outline: var(--tertiary) auto 1px;
+
+      &[disabled] {
+        outline: none;
+        border: var(--d-input-border--disabled);
+      }
+    }
+
+    &:hover {
+      border-color: var(--tertiary);
+      &[disabled] {
+        border: var(--d-input-border--disabled);
+      }
+    }
+  }
+
+  &__info {
+    margin: 0 0 0.25em;
+    color: var(--primary-medium);
+  }
+  &__meta {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.25em;
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-high);
+
+    &.--warning {
+      color: var(--danger);
+      justify-content: flex-start;
+    }
+  }
+
+  &__meta-text {
+    display: inline-flex;
+    margin: 0;
+  }
+
+  &__character-count {
+    margin-left: auto;
+    .has-error & {
+      color: var(--danger);
+    }
+  }
+}
+
+select {
+  height: 2em;
+}

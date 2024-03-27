@@ -1,3 +1,144 @@
+{{! template-lint-disable  }}
+<form class="d-form">
+  <h2> Simple stacked form</h2>
+  <div class="d-form__section">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Standard stacked
+        input
+        <span class="d-form-field__optional">(Optional)</span></label>
+      <p class="d-form-field__info">A potential longer text explaining the use
+        cases of this input field. Can contain a link.</p>
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" id="normal-input" size="25" />
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field has-error">
+      <label class="d-form-field__label" for="normal-input">Error highlighting
+      </label>
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" id="normal-input" size="25" />
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Disabled input
+      </label>
+      <div class="d-form-field__value">
+        <input
+          class="d-form-field__input"
+          id="normal-input"
+          size="25"
+          disabled
+          value="Disabled input"
+        />
+      </div>
+    </div>
+  </div>
+
+  <h2>Horizontal form (classic)</h2>
+  <div class="d-form__section --row">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Standard stacked
+        input
+        <span class="d-form-field__optional">(Optional)</span></label>
+
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" id="normal-input" size="25" />
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field has-error">
+      <label class="d-form-field__label" for="normal-input">Error highlighting
+      </label>
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" id="normal-input" size="25" />
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Disabled input
+      </label>
+      <div class="d-form-field__value">
+        <input
+          class="d-form-field__input"
+          id="normal-input"
+          size="25"
+          disabled
+          value="Disabled input"
+        />
+      </div>
+    </div>
+  </div>
+
+  <h2>Inline form</h2>
+  <p class="d-form__section-info">A potential longer text explaining the use
+    cases of this entire section row, if needed (hopefully not).</p>
+  <div class="d-form__section --inline">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Standard stacked
+        input
+        <span class="d-form-field__optional">(Optional)</span></label>
+
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" id="normal-input" size="25" />
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Error highlighting
+      </label>
+      <div class="d-form-field__value">
+        <select />
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Disabled input
+      </label>
+      <div class="d-form-field__value">
+        <input
+          class="d-form-field__input"
+          id="normal-input"
+          size="25"
+          disabled
+          value="Disabled input"
+        />
+      </div>
+    </div>
+
+    <button type="submit" class="d-form__section-inline-btn">Submit</button>
+  </div>
+</form>
+
+//fieldset for settings //fieldset for radio buttons
 <StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
 </StyleguideExample>
