@@ -4187,7 +4187,7 @@ en:
         today: "Today"
 
     custom_homepage:
-      admin_message: 'You have enabled the "experimental_custom_homepage" site setting. This setting needs to be used in conjunction with a theme or plugin that renders a custom homepage. (This message is only shown to site admins.)'
+      admin_message: 'Your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
