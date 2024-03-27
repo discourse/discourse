@@ -158,8 +158,8 @@ module ApplicationHelper
   end
 
   def add_resource_preload_list(resource_url, type)
-    if !@links_to_preload.nil?
-      @links_to_preload << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
+    if !@asset_preload_links.nil?
+      @asset_preload_links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
     end
   end
 
