@@ -4,12 +4,9 @@ class ProblemCheckTracker < ActiveRecord::Base
   validates :identifier, presence: true, uniqueness: true
   validates :blips, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-<<<<<<< HEAD
-=======
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
 
->>>>>>> 4e09b0aa7f (AdminNotice)
   def self.[](identifier)
     find_or_create_by(identifier:)
   end
