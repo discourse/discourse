@@ -27,6 +27,12 @@ class ProblemCheckTracker < ActiveRecord::Base
   def check
     ProblemCheck[identifier]
   end
+
+  private
+
+  def sound_the_alarm?
+    blips > check.max_blips
+  end
 end
 
 # == Schema Information
