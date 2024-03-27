@@ -102,8 +102,6 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(admin) }
 
       context "when there are no problems" do
-        before { AdminDashboardData.stubs(:fetch_problems).returns([]) }
-
         it "returns an empty array" do
           get "/admin/dashboard/problems.json"
 
@@ -115,7 +113,8 @@ RSpec.describe Admin::DashboardController do
 
       context "when there are problems" do
         before do
-          AdminDashboardData.stubs(:fetch_problems).returns(["Not enough awesome", "Too much sass"])
+          Fabricate(:admin_notice, category: "problem", identifier: "foo")
+          Fabricate(:admin_notice, category: "problem", identifier: "bar")
         end
 
         it "returns an array of strings" do
@@ -132,7 +131,9 @@ RSpec.describe Admin::DashboardController do
     context "when logged in as a moderator" do
       before do
         sign_in(moderator)
-        AdminDashboardData.stubs(:fetch_problems).returns(["Not enough awesome", "Too much sass"])
+
+        Fabricate(:admin_notice, category: "problem", identifier: "foo")
+        Fabricate(:admin_notice, category: "problem", identifier: "bar")
       end
 
       it "returns a list of problems" do

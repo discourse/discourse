@@ -27,7 +27,6 @@ RSpec.describe ProblemCheck do
       end
 
     stub_const(described_class, "CORE_PROBLEM_CHECKS", [ScheduledCheck, RealtimeCheck], &example)
-  end
 
     Object.send(:remove_const, ScheduledCheck.name)
     Object.send(:remove_const, RealtimeCheck.name)
@@ -38,6 +37,7 @@ RSpec.describe ProblemCheck do
 
   let(:scheduled_check) { ScheduledCheck }
   let(:realtime_check) { RealtimeCheck }
+  let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
   let(:passing_check) { PassingCheck }
 
@@ -82,13 +82,13 @@ RSpec.describe ProblemCheck do
     context "when the plugin is enabled" do
       let(:enabled) { true }
 
-      it { expect(described_class.checks).to include(PluginCheck) }
+      it { expect(described_class.checks).to include(plugin_check) }
     end
 
     context "when the plugin is disabled" do
       let(:enabled) { false }
 
-      it { expect(described_class.checks).not_to include(PluginCheck) }
+      it { expect(described_class.checks).not_to include(plugin_check) }
     end
   end
 

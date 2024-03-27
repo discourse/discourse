@@ -13,7 +13,7 @@ class ProblemCheck
     end
 
     def run
-      each(&:call)
+      each(&:run)
     end
 
     private

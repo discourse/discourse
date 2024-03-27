@@ -1,3 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:admin_notice) { identifier { "test_notice" } }
+Fabricator(:admin_notice) do
+  priority { "low" }
+  identifier { "test_notice" }
+end
