@@ -390,6 +390,32 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
       end
 
+      it "can set custom fields with field_type confirm properly" do
+        optional_field_1 = Fabricate(:user_field, field_type: "confirm", required: false)
+        optional_field_2 = Fabricate(:user_field, field_type: "confirm", required: false)
+        optional_field_3 = Fabricate(:user_field, field_type: "confirm", required: false)
+        user_fields = {
+          optional_field_1.id.to_s => "false",
+          optional_field_2.id.to_s => "true",
+          optional_field_3.id.to_s => "",
+        }
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: user_fields,
+          ).redeem
+
+        expect(user).to be_present
+        expect(user.custom_fields["user_field_#{optional_field_1.id}"]).to eq(nil)
+        expect(user.custom_fields["user_field_#{optional_field_2.id}"]).to eq("true")
+        expect(user.custom_fields["user_field_#{optional_field_3.id}"]).to eq(nil)
+      end
+
       it "does not add user to group if inviter does not have permissions" do
         group = Fabricate(:group, grant_trust_level: 2)
         InvitedGroup.create(group_id: group.id, invite_id: invite.id)
