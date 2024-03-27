@@ -21,6 +21,13 @@ class ProblemCheck
   #
   config_accessor :retry_after, default: 30.seconds, instance_writer: false
 
+  # How many consecutive times the check can fail without notifying admins.
+  # This can be used to give some leeway for transient problems. Note that
+  # retries are not counted. So a check that ultimately fails after e.g. two
+  # retries is counted as one "blip".
+  #
+  config_accessor :max_blips, default: 0, instance_writer: false
+
   def self.[](key)
     key = key.to_sym
 
