@@ -214,9 +214,11 @@ module DiscourseTagging
         new_tag_names: topic.tags.map(&:name),
       )
 
-      return true
+      true
+    else
+      topic.errors.add(:base, I18n.t("tags.user_not_permitted"))
+      false
     end
-    false
   end
 
   def self.validate_category_tags(guardian, model, category, tags = [])
