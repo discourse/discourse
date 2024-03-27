@@ -16,4 +16,21 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   def schema
     @opts[:schema]
   end
+
+  def categories(guardian)
+    category_ids = Set.new
+
+    value.each do |theme_setting_object|
+      category_ids.merge(
+        ThemeSettingsObjectValidator.new(
+          schema:,
+          object: theme_setting_object,
+        ).property_values_of_type("categories"),
+      )
+    end
+
+    return [] if category_ids.empty?
+
+    Category.secured(guardian).where(id: category_ids)
+  end
 end

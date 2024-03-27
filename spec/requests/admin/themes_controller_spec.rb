@@ -1390,6 +1390,35 @@ RSpec.describe Admin::ThemesController do
           },
         )
       end
+
+      it "returns 200 with the right `categories` attribute for a theme setting with categories propertoes" do
+        category_1 = Fabricate(:category)
+        category_2 = Fabricate(:category)
+        category_3 = Fabricate(:category)
+
+        theme_setting[:objects_with_categories].value = [
+          {
+            "category_ids" => [category_1.id, category_2.id],
+            "child_categories" => [{ "category_ids" => [category_3.id] }],
+          },
+        ]
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(200)
+
+        categories = response.parsed_body["categories"]
+
+        expect(categories.keys.map(&:to_i)).to contain_exactly(
+          category_1.id,
+          category_2.id,
+          category_3.id,
+        )
+
+        expect(categories[category_1.id.to_s]["name"]).to eq(category_1.name)
+        expect(categories[category_2.id.to_s]["name"]).to eq(category_2.name)
+        expect(categories[category_3.id.to_s]["name"]).to eq(category_3.name)
+      end
     end
   end
 end

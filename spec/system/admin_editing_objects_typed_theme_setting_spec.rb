@@ -113,6 +113,10 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
               ]
             }
           ]
+        },
+        {
+          "setting": "objects_with_categories",
+          "value": []
         }
       ]
       SETTING

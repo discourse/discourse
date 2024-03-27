@@ -377,6 +377,7 @@ export default class SchemaThemeSettingEditor extends Component {
             @spec={{field.spec}}
             @onValueChange={{fn this.inputFieldChanged field}}
             @description={{field.description}}
+            @setting={{@setting}}
           />
         {{/each}}
         {{#if (gt this.fields.length 0)}}

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import BooleanField from "./types/boolean";
-import CategoryField from "./types/category";
+import CategoriesField from "./types/categories";
 import EnumField from "./types/enum";
 import FloatField from "./types/float";
 import GroupField from "./types/group";
@@ -25,8 +25,8 @@ export default class SchemaThemeSettingField extends Component {
         return BooleanField;
       case "enum":
         return EnumField;
-      case "category":
-        return CategoryField;
+      case "categories":
+        return CategoriesField;
       case "tags":
         return TagsField;
       case "group":
@@ -58,6 +58,7 @@ export default class SchemaThemeSettingField extends Component {
           @spec={{@spec}}
           @onChange={{@onValueChange}}
           @description={{this.description}}
+          @setting={{@setting}}
         />
       </div>
     </div>
