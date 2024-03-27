@@ -61,9 +61,10 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - name: Remove Chrome
+      - name: Remove Chromium
         continue-on-error: true
-        run: apt remove -y google-chrome-stable
+        if: matrix.build_type == 'system'
+        run: apt remove -y chromium-driver chromium
 
       - uses: actions/checkout@v4
         with:
