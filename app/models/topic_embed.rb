@@ -79,6 +79,7 @@ class TopicEmbed < ActiveRecord::Base
           embed_url: url,
           embed_content_sha1: content_sha1,
         }
+        create_args[:visible] = false if SiteSetting.import_embed_unlisted?
 
         post = PostCreator.create(user, create_args)
         post.topic.topic_embed.update!(embed_content_cache: original_contents)

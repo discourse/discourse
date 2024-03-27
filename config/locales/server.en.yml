@@ -2381,6 +2381,7 @@ en:
     embed_set_canonical_url: "Set the canonical URL for embedded topics to the embedded content's URL."
     embed_truncate: "Shorten the contents of posts that are embedded from external sources. This setting ensures that only the initial part of content is displayed when a post from an external URL is embedded on your site. If you prefer to display full content from the external posts, you can disable this setting."
     embed_unlisted: "Embedded topics will be unlisted until a user replies."
+    import_embed_unlisted: "Imported embedded topics will be unlisted until a user replies (even when the `embed unlisted` site setting is unchecked)."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
