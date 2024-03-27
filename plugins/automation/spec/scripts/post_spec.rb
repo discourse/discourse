@@ -70,6 +70,18 @@ describe "Post" do
         expect(topic_1.posts.last.raw).to eq(raw)
       }.to change { topic_1.posts.count }.by(1)
     end
+
+    it "does not create post on a closed topic" do
+      topic_1.update_status(:closed, true, topic_1.user)
+
+      expect { automation.trigger! }.not_to change { topic_1.posts.count }
+    end
+
+    it "does not create post on an archived topic" do
+      topic_1.update_status(:archived, true, topic_1.user)
+
+      expect { automation.trigger! }.not_to change { topic_1.posts.count }
+    end
   end
 
   context "when using user_updated trigger" do

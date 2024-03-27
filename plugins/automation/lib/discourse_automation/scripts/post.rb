@@ -31,6 +31,11 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
     creator = User.find_by(username: creator_username)
     topic = Topic.find_by(id: topic_id)
 
+    if !topic || topic.closed? || topic.archived?
+      Rails.logger.warn "[discourse-automation] topic with id: `#{topic_id}` was not found"
+      next
+    end
+
     if context["kind"] == DiscourseAutomation::Triggerable::USER_UPDATED
       user = context["user"]
       user_data = context["user_data"]
@@ -51,11 +56,6 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
 
     if !creator
       Rails.logger.warn "[discourse-automation] creator with username: `#{creator_username}` was not found"
-      next
-    end
-
-    if !topic
-      Rails.logger.warn "[discourse-automation] topic with id: `#{topic_id}` was not found"
       next
     end
 
