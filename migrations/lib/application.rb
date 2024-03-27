@@ -3,31 +3,45 @@
 require "bundler/inline"
 require "bundler/ui"
 
-# Redefine gemfile to handle exceptions and print colored error messages
-alias original_gemfile gemfile
-private :original_gemfile
-
-def gemfile(&gemfile)
-  # Create new UI and set level to confirm to avoid printing unnecessary messages
-  bundler_ui = Bundler::UI::Shell.new
-  bundler_ui.level = "confirm"
-
-  begin
-    original_gemfile(true, ui: bundler_ui, &gemfile) # quiet: false,
-  rescue Bundler::BundlerError => e
-    STDERR.puts "\e[31m#{e.message}\e[0m"
-    exit 1
+module Migrations
+  def self.root_path
+    @root_path ||= File.expand_path("..", __dir__)
   end
-end
 
-def configure_zeitwerk(*directories)
-  require "zeitwerk"
+  def self.load_gemfile(relative_path)
+    path = File.join(Migrations.root_path, "config/gemfiles")
+    path = File.expand_path(relative_path, path)
 
-  root_path = File.expand_path("..", __dir__)
+    unless File.exist?(path)
+      STDERR.puts "\e[31mCould not fine Gemfile at #{path}\e[0m"
+      exit 1
+    end
 
-  loader = Zeitwerk::Loader.new
-  directories.each do |dir|
-    loader.push_dir(File.expand_path(dir, root_path), namespace: Migrations)
+    # Create new UI and set level to confirm to avoid printing unnecessary messages
+    bundler_ui = Bundler::UI::Shell.new
+    bundler_ui.level = "confirm"
+
+    begin
+      gemfile(true, ui: bundler_ui) do
+        # rubocop:disable Security/Eval
+        eval(File.read(path), nil, path, 1)
+        # rubocop:enable Security/Eval
+      end
+    rescue Bundler::BundlerError => e
+      STDERR.puts "\e[31m#{e.message}\e[0m"
+      exit 1
+    end
   end
-  loader.setup
+
+  def self.configure_zeitwerk(*directories)
+    require "zeitwerk"
+
+    root_path = Migrations.root_path
+
+    loader = Zeitwerk::Loader.new
+    directories.each do |dir|
+      loader.push_dir(File.expand_path(dir, root_path), namespace: Migrations)
+    end
+    loader.setup
+  end
 end

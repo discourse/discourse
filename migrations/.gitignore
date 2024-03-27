@@ -1,2 +1,4 @@
 tmp/*
 !/common/intermediate_db_schema/*.sql
+
+.github
