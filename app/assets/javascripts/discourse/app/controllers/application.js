@@ -59,8 +59,7 @@ export default Controller.extend({
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   },
 
-  @discourseComputed
-  showPoweredBy() {
+  get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   },
 
