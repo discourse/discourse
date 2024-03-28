@@ -158,8 +158,10 @@ module ApplicationHelper
   end
 
   def add_resource_preload_list(resource_url, type)
-    @asset_preload_links ||= []
-    @asset_preload_links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
+    links =
+      controller.instance_variable_get(:@asset_preload_links) ||
+        controller.instance_variable_set(:@asset_preload_links, [])
+    links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
   end
 
   def discourse_csrf_tags
