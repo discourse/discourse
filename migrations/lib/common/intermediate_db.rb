@@ -15,9 +15,7 @@ module Migrations
       end
 
       def reset!(path)
-        [path, "#{path}-wal", "#{path}-shm"].each do |p|
-          FileUtils.rm_f(p) if File.exist?(p)
-        end
+        [path, "#{path}-wal", "#{path}-shm"].each { |p| FileUtils.rm_f(p) if File.exist?(p) }
       end
 
       def migrate(path)

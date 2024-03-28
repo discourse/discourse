@@ -29,7 +29,7 @@ def create_extralite_db(path, initialize: false)
   db.pragma(
     busy_timeout: 60_000, # 60 seconds
     journal_mode: "wal",
-    synchronous: "off"
+    synchronous: "off",
   )
   db.execute(SQL_TABLE) if initialize
   db
@@ -177,14 +177,10 @@ end
 
 with_db_path do |db_path|
   forked_same_db_writer = ForkedSameDbWriter.new(db_path, ROW_COUNT)
-  benchmark("forked writer - same DB", LABEL_WIDTH) do
-    forked_same_db_writer.write
-  end
+  benchmark("forked writer - same DB", LABEL_WIDTH) { forked_same_db_writer.write }
 end
 
 with_db_path do |db_path|
   forked_multi_db_writer = ForkedMultiDbWriter.new(db_path, ROW_COUNT)
-  benchmark("forked writer - multi DB", LABEL_WIDTH) do
-    forked_multi_db_writer.write
-  end
+  benchmark("forked writer - multi DB", LABEL_WIDTH) { forked_multi_db_writer.write }
 end

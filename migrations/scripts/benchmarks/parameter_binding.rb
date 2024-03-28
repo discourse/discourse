@@ -41,19 +41,12 @@ end
 def create_users(row_count)
   row_count.times.map do |id|
     name = SecureRandom.hex(10)
-    {
-      id: id,
-      name: name,
-      email: "#{name}@example.com",
-      created_at: Time.now.utc.iso8601
-    }
+    { id: id, name: name, email: "#{name}@example.com", created_at: Time.now.utc.iso8601 }
   end
 end
 
 def insert_extralite_regular(stmt, users)
-  users.each do |user|
-    stmt.execute(user[:id], user[:name], user[:email], user[:created_at])
-  end
+  users.each { |user| stmt.execute(user[:id], user[:name], user[:email], user[:created_at]) }
 end
 
 def insert_extralite_index(stmt, users)
@@ -65,9 +58,7 @@ def insert_extralite_named(stmt, users)
 end
 
 def insert_sqlite3_regular(stmt, users)
-  users.each do |user|
-    stmt.execute(user[:id], user[:name], user[:email], user[:created_at])
-  end
+  users.each { |user| stmt.execute(user[:id], user[:name], user[:email], user[:created_at]) }
 end
 
 def insert_sqlite3_named(stmt, users)
@@ -90,33 +81,17 @@ sqlite3_stmt_named = sqlite3_db.prepare(SQL_INSERT_NAMED)
 users = create_users(1_000)
 users_indexed =
   users.map do |user|
-    {
-      1 => user[:id],
-      2 => user[:name],
-      3 => user[:email],
-      4 => user[:created_at]
-    }
+    { 1 => user[:id], 2 => user[:name], 3 => user[:email], 4 => user[:created_at] }
   end
-users_array =
-  users.map { |user| [user[:id], user[:name], user[:email], user[:created_at]] }
+users_array = users.map { |user| [user[:id], user[:name], user[:email], user[:created_at]] }
 
 Benchmark.ips do |x|
   x.config(time: 10, warmup: 2)
-  x.report("Extralite regular") do
-    insert_extralite_regular(extralite_stmt_regular, users)
-  end
-  x.report("Extralite named") do
-    insert_extralite_named(extralite_stmt_named, users)
-  end
-  x.report("Extralite index") do
-    insert_extralite_index(extralite_stmt_regular, users_indexed)
-  end
-  x.report("Extralite array") do
-    insert_extralite_index(extralite_stmt_regular, users_array)
-  end
-  x.report("SQLite3 regular") do
-    insert_sqlite3_regular(sqlite3_stmt_regular, users)
-  end
+  x.report("Extralite regular") { insert_extralite_regular(extralite_stmt_regular, users) }
+  x.report("Extralite named") { insert_extralite_named(extralite_stmt_named, users) }
+  x.report("Extralite index") { insert_extralite_index(extralite_stmt_regular, users_indexed) }
+  x.report("Extralite array") { insert_extralite_index(extralite_stmt_regular, users_array) }
+  x.report("SQLite3 regular") { insert_sqlite3_regular(sqlite3_stmt_regular, users) }
   x.report("SQLite3 named") { insert_sqlite3_named(sqlite3_stmt_named, users) }
   x.compare!
 end

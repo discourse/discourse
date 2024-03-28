@@ -20,12 +20,7 @@ User = Data.define(:id, :name, :email, :created_at)
 USER_HASH =
   begin
     name = SecureRandom.hex(10)
-    {
-      id: 1,
-      name: name,
-      email: "#{name}@example.com",
-      created_at: Time.now.utc.iso8601
-    }
+    { id: 1, name: name, email: "#{name}@example.com", created_at: Time.now.utc.iso8601 }
   end
 
 USER_DATA =
@@ -33,7 +28,7 @@ USER_DATA =
     id: USER_HASH[:id],
     name: USER_HASH[:name],
     email: USER_HASH[:email],
-    created_at: USER_HASH[:created_at]
+    created_at: USER_HASH[:created_at],
   )
 
 SQL_TABLE = <<~SQL
@@ -98,27 +93,15 @@ sqlite3_stmt_named = sqlite3_db.prepare(SQL_INSERT_NAMED)
 
 Benchmark.ips do |x|
   x.config(time: 10, warmup: 2)
-  x.report("Extralite regular") do
-    insert_extralite_regular(extralite_stmt_regular, USER_DATA)
-  end
-  x.report("Extralite hash") do
-    insert_extralite_hash(extralite_stmt_named, USER_HASH)
-  end
-  x.report("Extralite data") do
-    insert_extralite_data(extralite_stmt_regular, USER_DATA)
-  end
+  x.report("Extralite regular") { insert_extralite_regular(extralite_stmt_regular, USER_DATA) }
+  x.report("Extralite hash") { insert_extralite_hash(extralite_stmt_named, USER_HASH) }
+  x.report("Extralite data") { insert_extralite_data(extralite_stmt_regular, USER_DATA) }
   x.report("Extralite data/array") do
     insert_extralite_data(extralite_stmt_regular, USER_DATA.deconstruct)
   end
-  x.report("SQLite3 regular") do
-    insert_sqlite3_regular(sqlite3_stmt_regular, USER_DATA)
-  end
-  x.report("SQLite3 hash") do
-    insert_sqlite3_hash(sqlite3_stmt_named, USER_HASH)
-  end
-  x.report("SQLite3 data/hash") do
-    insert_sqlite3_hash(sqlite3_stmt_named, USER_DATA.to_h)
-  end
+  x.report("SQLite3 regular") { insert_sqlite3_regular(sqlite3_stmt_regular, USER_DATA) }
+  x.report("SQLite3 hash") { insert_sqlite3_hash(sqlite3_stmt_named, USER_HASH) }
+  x.report("SQLite3 data/hash") { insert_sqlite3_hash(sqlite3_stmt_named, USER_DATA.to_h) }
   x.compare!
 end
 

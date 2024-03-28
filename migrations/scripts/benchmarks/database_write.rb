@@ -104,7 +104,7 @@ module Sqlite
         synchronous: "off",
         temp_store: "memory",
         locking_mode: "normal",
-        cache_size: -10_000 # 10_000 pages
+        cache_size: -10_000, # 10_000 pages
       )
 
       @connection.execute(CREATE_TABLE_SQL)
