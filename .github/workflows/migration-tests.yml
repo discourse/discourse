@@ -3,12 +3,14 @@ name: Migration Tests
 on:
   pull_request:
     paths:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
   push:
     branches:
       - main
       - stable
     paths:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
 
 concurrency:
