@@ -47,8 +47,4 @@ class Statistics
       count: User.real.count,
     }
   end
-
-  def self.discourse_discover
-    { enrolled: SiteSetting.include_in_discourse_discover? }
-  end
 end

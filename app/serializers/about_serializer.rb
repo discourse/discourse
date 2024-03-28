@@ -23,15 +23,16 @@ class AboutSerializer < ApplicationSerializer
              :https,
              :can_see_about_stats,
              :contact_url,
-             :contact_email,
-             :discourse_discover_enrolled
+             :contact_email
 
   def include_stats?
     can_see_about_stats
   end
 
   def stats
-    object.class.fetch_cached_stats
+    stats = object.class.fetch_cached_stats
+    stats.merge!(Stat.discourse_hub_stats) if scope.is_discourse_hub_request?
+    stats
   end
 
   def include_contact_url?
@@ -48,14 +49,6 @@ class AboutSerializer < ApplicationSerializer
 
   def contact_email
     SiteSetting.contact_email
-  end
-
-  def discourse_discover_enrolled
-    SiteSetting.include_in_discourse_discover?
-  end
-
-  def include_discourse_discover_enrolled?
-    SiteSetting.include_in_discourse_discover?
   end
 
   private

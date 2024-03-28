@@ -49,14 +49,16 @@ RSpec.describe AboutController do
     end
 
     it "adds Discourse Discover status if enabled" do
-      get "/about.json"
+      get "/about.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
 
-      expect(response.parsed_body["about"].keys).not_to include("discourse_discover_enrolled")
+      expect(response.parsed_body["about"]["stats"].keys).not_to include(
+        "discourse_discover_enrolled",
+      )
 
       SiteSetting.include_in_discourse_discover = true
-      get "/about.json"
+      get "/about.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
 
-      expect(response.parsed_body["about"]["discourse_discover_enrolled"]).to eq(true)
+      expect(response.parsed_body["about"]["stats"]["discourse_discover_enrolled"]).to eq(true)
     end
 
     it "does not serialize stats when 'Guardian#can_see_about_stats?' is false" do
