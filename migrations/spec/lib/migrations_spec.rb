@@ -5,7 +5,9 @@ require_relative "../../lib/migrations"
 RSpec.describe Migrations do
   describe ".root_path" do
     it "returns the root path" do
-      expect(described_class.root_path).to eq(File.expand_path("../..", __dir__))
+      expect(described_class.root_path).to eq(
+        File.expand_path("../..", __dir__)
+      )
     end
   end
 
@@ -15,7 +17,9 @@ RSpec.describe Migrations do
 
       expect { described_class.load_gemfile(relative_path) }.to output(
         include("Could not find Gemfile").and include(relative_path)
-      ).to_stderr.and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
+      ).to_stderr.and raise_error(SystemExit) { |error|
+                        expect(error.status).to eq(1)
+                      }
     end
 
     context "with temporary root_path" do
@@ -36,8 +40,10 @@ RSpec.describe Migrations do
           GEMFILE
 
           expect { described_class.load_gemfile("test/Gemfile") }.to output(
-            include("your Gemfile specified ~> 100.0.0"),
-          ).to_stderr.and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
+            include("your Gemfile specified ~> 100.0.0")
+          ).to_stderr.and raise_error(SystemExit) { |error|
+                            expect(error.status).to eq(1)
+                          }
         end
       end
     end
