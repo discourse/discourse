@@ -73,7 +73,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: >-
+            ${{ runner.os }}-
+            ${{ steps.container-envs.outputs.ruby_version }}-
+            ${{ steps.container-envs.outputs.debian_release }}-
+            ${{ hashFiles('**/Gemfile.lock') }}-
+            ${{ hashFiles('migrations/config/gemfiles/**/Gemfile') }}
 
       - name: Setup gems
         run: |
@@ -138,4 +143,4 @@ jobs:
 #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
 
       - name: RSpec
-        run: bin/rspec --default-path migrations/spec
+        run: GEM_HOME=vendor/bundle bin/rspec --default-path migrations/spec
