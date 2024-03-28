@@ -1,10 +1,11 @@
+import { getOwner } from "@ember/application";
 import Route from "@ember/routing/route";
 import DisableSidebar from "discourse/mixins/disable-sidebar";
 import Wizard from "discourse/static/wizard/models/wizard";
 
 export default class WizardRoute extends Route.extend(DisableSidebar) {
   model() {
-    return Wizard.load();
+    return Wizard.load(getOwner(this));
   }
 
   activate() {
