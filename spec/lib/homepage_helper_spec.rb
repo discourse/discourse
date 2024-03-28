@@ -16,11 +16,12 @@ RSpec.describe HomepageHelper do
 
     context "when first item in top menu is no valid for anons" do
       it "distinguishes between auth homepage and anon homepage" do
-        # new is not a valid route for anon users
         SiteSetting.top_menu = "new|top|latest|unread"
 
-        expect(HomepageHelper.resolve).to eq(SiteSetting.anonymous_homepage)
         expect(HomepageHelper.resolve(nil, user)).to eq("new")
+        # new is not a valid route for anon users, anon homepage is next item, top
+        expect(HomepageHelper.resolve).to eq(SiteSetting.anonymous_homepage)
+        expect(HomepageHelper.resolve).to eq("top")
       end
     end
   end
