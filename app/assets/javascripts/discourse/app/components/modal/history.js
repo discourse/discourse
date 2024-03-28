@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
@@ -171,11 +172,16 @@ export default class History extends Component {
 
   refresh(postId, postVersion) {
     this.loading = true;
-    Post.loadRevision(postId, postVersion).then((result) => {
-      this.postRevision = result;
-      this.loading = false;
-      this.initialLoad = false;
-    });
+    Post.loadRevision(postId, postVersion)
+      .then((result) => {
+        this.postRevision = result;
+        this.loading = false;
+        this.initialLoad = false;
+      })
+      .catch((error) => {
+        popupAjaxError(error);
+        this.args.closeModal();
+      });
   }
 
   hide(postId, postVersion) {

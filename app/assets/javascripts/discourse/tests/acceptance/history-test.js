@@ -101,3 +101,26 @@ acceptance("History Modal - anonymous", function (needs) {
       );
   });
 });
+
+acceptance("History Modal - when server error is raised", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/posts/419/revisions/latest.json", () => {
+      return helper.response(404, { errors: ["some error message"] });
+    });
+  });
+
+  test("shows error message in alert dialog", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='419'] .edits button");
+
+    assert
+      .dom(".dialog-body")
+      .exists("displays a dialog to show error message")
+      .containsText("some error message");
+    assert
+      .dom(".history-modal")
+      .doesNotExist("should close the history modal upon error");
+    await click(".dialog-footer .btn-primary");
+    assert.dom(".dialog-body").doesNotExist();
+  });
+});
