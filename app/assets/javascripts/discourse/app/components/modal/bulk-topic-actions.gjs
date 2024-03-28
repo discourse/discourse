@@ -262,6 +262,7 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
+      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >

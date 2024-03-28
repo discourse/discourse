@@ -2361,7 +2361,6 @@ developer:
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
     default: ""
-    hidden: true
     type: group_list
     list_type: compact
     allow_any: false
