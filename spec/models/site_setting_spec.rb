@@ -55,18 +55,6 @@ RSpec.describe SiteSetting do
     end
   end
 
-  describe "homepage_handler" do
-    it "returns latest by default" do
-      expect(SiteSetting.homepage_handler(nil, nil)).to eq("latest")
-    end
-
-    it "returns custom when theme has a custom homepage" do
-      ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true)
-
-      expect(SiteSetting.homepage_handler).to eq("custom")
-    end
-  end
-
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do

@@ -88,12 +88,6 @@ class SiteSetting < ActiveRecord::Base
       .first
   end
 
-  def self.homepage_handler(request = nil, current_user = nil)
-    return "custom" if ThemeModifierHelper.new(request: request).custom_homepage
-
-    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
-  end
-
   def self.should_download_images?(src)
     setting = disabled_image_download_domains
     return true if setting.blank?

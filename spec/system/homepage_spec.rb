@@ -86,7 +86,7 @@ describe "Homepage", type: :system do
           name: "head_tag",
           value: <<~HTML,
             <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              Hi friends!
+              <div class="new-home">Hi friends!</div>
             </script>
           HTML
         )
