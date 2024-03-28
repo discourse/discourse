@@ -158,9 +158,8 @@ module ApplicationHelper
   end
 
   def add_resource_preload_list(resource_url, type)
-    if !@asset_preload_links.nil?
-      @asset_preload_links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
-    end
+    @asset_preload_links ||= []
+    @asset_preload_links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
   end
 
   def discourse_csrf_tags
