@@ -27,6 +27,12 @@ export default class Filter extends Component {
 
   @action
   setFilter(event) {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      return this.sidebarState.filter.length > 0
+        ? (this.sidebarState.filter = "")
+        : event.target.blur();
+    }
     this.sidebarState.filter = event.target.value.toLowerCase();
   }
 
@@ -43,7 +49,7 @@ export default class Filter extends Component {
           class="sidebar-filter__input"
           placeholder={{i18n "sidebar.filter"}}
           @value={{this.sidebarState.filter}}
-          {{on "input" this.setFilter}}
+          {{on "keydown" this.setFilter}}
         />
         {{#if this.displayClearFilter}}
           <DButton @action={{this.clearFilter}} class="sidebar-filter__clear">
