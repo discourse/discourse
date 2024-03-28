@@ -727,6 +727,7 @@ users:
     client: true
   max_notifications_per_user:
     default: 10000
+    hidden: true
   gravatar_name:
     default: Gravatar
     client: true
