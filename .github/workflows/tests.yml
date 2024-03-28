@@ -3,6 +3,7 @@ name: Tests
 on:
   pull_request:
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
   push:
     branches:
@@ -10,6 +11,7 @@ on:
       - beta
       - stable
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
 
 concurrency:
