@@ -2858,6 +2858,10 @@ uncategorized:
     default: 50000
     hidden: true
 
+  skip_email_bulk_invites:
+    default: false
+    hidden: true
+
   max_api_invites:
     default: 200
     hidden: true
