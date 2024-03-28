@@ -537,6 +537,7 @@ aside.quote {
 .small-user-list {
   .small-user-list-content {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-end;
   }
