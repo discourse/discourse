@@ -143,4 +143,4 @@ jobs:
 #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
 
       - name: RSpec
-        run: GEM_HOME=vendor/bundle bin/rspec --default-path migrations/spec
+        run: bin/rspec --default-path migrations/spec
