@@ -35,6 +35,10 @@ export default Controller.extend({
     this.footer.showFooter = value;
   },
 
+  get showPoweredBy() {
+    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
+  },
+
   @discourseComputed
   canSignUp() {
     return (
@@ -57,11 +61,6 @@ export default Controller.extend({
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
-  },
-
-  @discourseComputed
-  showPoweredBy() {
-    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   },
 
   _mainOutletAnimate() {
