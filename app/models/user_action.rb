@@ -2,6 +2,8 @@
 
 class UserAction < ActiveRecord::Base
   belongs_to :user
+  belongs_to :acting_user, class_name: "User"
+  belongs_to :target_user, class_name: "User"
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
 
