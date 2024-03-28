@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheck do
-  # rubocop:disable RSpec/BeforeAfterAll
-  before(:all) do
+  around do |example|
     ScheduledCheck = Class.new(described_class) { self.perform_every = 30.minutes }
     RealtimeCheck = Class.new(described_class)
-  end
+    PluginCheck = Class.new(described_class)
 
-  after(:all) do
+    stub_const(described_class, "CORE_PROBLEM_CHECKS", [ScheduledCheck, RealtimeCheck], &example)
+
     Object.send(:remove_const, ScheduledCheck.name)
     Object.send(:remove_const, RealtimeCheck.name)
+    Object.send(:remove_const, PluginCheck.name)
   end
-  # rubocop:enable RSpec/BeforeAfterAll
 
   let(:scheduled_check) { ScheduledCheck }
   let(:realtime_check) { RealtimeCheck }
@@ -47,5 +47,23 @@ RSpec.describe ProblemCheck do
   describe ".realtime?" do
     it { expect(realtime_check).to be_realtime }
     it { expect(scheduled_check).to_not be_realtime }
+  end
+
+  describe "plugin problem check registration" do
+    before { DiscoursePluginRegistry.register_problem_check(PluginCheck, stub(enabled?: enabled)) }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    context "when the plugin is enabled" do
+      let(:enabled) { true }
+
+      it { expect(described_class.checks).to include(PluginCheck) }
+    end
+
+    context "when the plugin is disabled" do
+      let(:enabled) { false }
+
+      it { expect(described_class.checks).not_to include(PluginCheck) }
+    end
   end
 end

@@ -317,6 +317,10 @@ class Plugin::Instance
     Site.preloaded_category_custom_fields << field
   end
 
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
