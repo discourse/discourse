@@ -13,7 +13,7 @@ require "action_mailer/railtie"
 require "sprockets/railtie"
 
 if !Rails.env.production?
-  recommended = File.read(File.expand_path("../.ruby-version.sample", __dir__)).strip
+  recommended = File.read(".ruby-version.sample").strip
   if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
     STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
   end
