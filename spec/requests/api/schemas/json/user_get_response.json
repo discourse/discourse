@@ -336,6 +336,9 @@
         "display_sidebar_tags": {
           "type": "boolean"
         },
+        "can_pick_theme_with_custom_homepage": {
+          "type": "boolean"
+        },
         "user_auth_tokens": {
           "type": "array",
           "items":

@@ -653,5 +653,10 @@ RSpec.describe UserUpdater do
 
       expect(UserHistory.last.action).to eq(UserHistory.actions[:change_name])
     end
+
+    it "clears the homepage_id when the special 'custom' id is chosen" do
+      UserUpdater.new(user, user).update(homepage_id: "-1")
+      expect(user.user_option.homepage_id).to eq(nil)
+    end
   end
 end
