@@ -125,17 +125,17 @@
           <span class="normal-note">
             {{i18n "admin.dashboard.updates_available"}}
           </span>
-          {{i18n "admin.dashboard.please_upgrade"}}
+          {{i18n "admin.dashboard.please_update"}}
         {{/if}}
       </div>
     </div>
   {{/if}}
 
   <CustomHtml
-    @name="upgrade-header"
+    @name="update-header"
     @versionCheck={{this.versionCheck}}
     @tagName="div"
-    @classNames="upgrade-header"
+    @classNames="update-header"
   />
 
   <PluginOutlet
