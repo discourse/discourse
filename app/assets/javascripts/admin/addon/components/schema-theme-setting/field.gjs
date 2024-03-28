@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import htmlSafe from "discourse-common/helpers/html-safe";
-import BooleanField from "./types/boolean";
-import CategoriesField from "./types/categories";
-import EnumField from "./types/enum";
-import FloatField from "./types/float";
-import GroupField from "./types/group";
-import IntegerField from "./types/integer";
-import StringField from "./types/string";
-import TagsField from "./types/tags";
+import BooleanField from "admin/components/schema-theme-setting/types/boolean";
+import CategoriesField from "admin/components/schema-theme-setting/types/categories";
+import EnumField from "admin/components/schema-theme-setting/types/enum";
+import FloatField from "admin/components/schema-theme-setting/types/float";
+import GroupsField from "admin/components/schema-theme-setting/types/groups";
+import IntegerField from "admin/components/schema-theme-setting/types/integer";
+import StringField from "admin/components/schema-theme-setting/types/string";
+import TagsField from "admin/components/schema-theme-setting/types/tags";
 
 export default class SchemaThemeSettingField extends Component {
   get component() {
@@ -29,8 +29,8 @@ export default class SchemaThemeSettingField extends Component {
         return CategoriesField;
       case "tags":
         return TagsField;
-      case "group":
-        return GroupField;
+      case "groups":
+        return GroupsField;
       default:
         throw new Error(`unknown type ${type}`);
     }

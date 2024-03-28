@@ -124,7 +124,7 @@ class ThemeSettingsObjectValidator
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "topic", "post", "group", "upload"
+      when "integer", "topic", "post", "upload"
         value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
@@ -132,7 +132,7 @@ class ThemeSettingsObjectValidator
         [true, false].include?(value)
       when "enum"
         property_attributes[:choices].include?(value)
-      when "categories"
+      when "categories", "groups"
         value.is_a?(Array) && value.all? { |id| id.is_a?(Integer) }
       when "tags"
         value.is_a?(Array) && value.all? { |tag| tag.is_a?(String) }
@@ -157,12 +157,12 @@ class ThemeSettingsObjectValidator
     return true if value.nil?
 
     case type
-    when "topic", "upload", "post", "group"
+    when "topic", "upload", "post"
       if !valid_ids(type).include?(value)
         add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
-    when "tags", "categories"
+    when "tags", "categories", "groups"
       if !Array(value).to_set.subset?(valid_ids(type))
         add_error(property_name, :"not_valid_#{type}_value")
         return false
@@ -240,7 +240,7 @@ class ThemeSettingsObjectValidator
     "post" => {
       klass: Post,
     },
-    "group" => {
+    "groups" => {
       klass: Group,
     },
     "upload" => {

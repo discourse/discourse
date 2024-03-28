@@ -170,8 +170,12 @@ en:
         humanize_not_valid_post_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid post id."
         not_valid_post_value: "must be a valid post id"
 
-        humanize_not_valid_group_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid group id."
-        not_valid_group_value: "must be a valid group id"
+        humanize_not_valid_groups_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid group ids."
+        not_valid_groups_value: "must be an array of valid group ids"
+        humanize_groups_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} group ids."
+        groups_value_not_valid_min: "must have at least %{min} group ids"
+        humanize_groups_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} group ids."
+        groups_value_not_valid_max: "must have at most %{max} group ids"
 
         humanize_not_valid_tags_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid tag names."
         not_valid_tags_value: "must be an array of valid tag names"

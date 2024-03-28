@@ -859,25 +859,28 @@ module(
       );
     });
 
-    test("input fields of type group", async function (assert) {
+    test("input fields of type groups", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
         objects_schema: {
           name: "something",
-          identifier: "id",
           properties: {
-            required_group: {
-              type: "group",
+            required_groups: {
+              type: "groups",
               required: true,
             },
-            not_required_group: {
-              type: "group",
+            groups_with_validations: {
+              type: "groups",
+              validations: {
+                min: 2,
+                max: 3,
+              },
             },
           },
         },
         value: [
           {
-            required_group: 6,
+            required_groups: [0, 1],
           },
         ],
       });
@@ -888,29 +891,59 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      assert
-        .dom(inputFields.fields.required_group.labelElement)
-        .hasText("required_group*");
-
-      let groupSelector = selectKit(
-        `${inputFields.fields.required_group.selector} .select-kit`
+      let groupsSelector = selectKit(
+        `${inputFields.fields.required_groups.selector} .select-kit`
       );
 
-      assert.strictEqual(groupSelector.header().value(), "6");
-      assert.dom(groupSelector.clearButton()).doesNotExist("is not clearable");
+      assert.strictEqual(groupsSelector.header().value(), "0,1");
 
-      assert
-        .dom(inputFields.fields.not_required_group.labelElement)
-        .hasText("not_required_group");
+      await groupsSelector.expand();
+      await groupsSelector.deselectItemByValue("0");
+      await groupsSelector.deselectItemByValue("1");
+      await groupsSelector.collapse();
 
-      groupSelector = selectKit(
-        `${inputFields.fields.not_required_group.selector} .select-kit`
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_groups.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+          count: 1,
+        })
       );
 
-      await groupSelector.expand();
-      await groupSelector.selectRowByIndex(1);
+      assert
+        .dom(inputFields.fields.groups_with_validations.labelElement)
+        .hasText("groups_with_validations");
 
-      assert.dom(groupSelector.clearButton()).exists("is clearable");
+      groupsSelector = selectKit(
+        `${inputFields.fields.groups_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupsSelector.header().value(), null);
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(1);
+      await groupsSelector.collapse();
+
+      assert.strictEqual(groupsSelector.header().value(), "1");
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.groups_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+            count: 2,
+          })
+        );
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(2);
+      await groupsSelector.selectRowByIndex(3);
+      await groupsSelector.selectRowByIndex(4);
+
+      assert
+        .dom(groupsSelector.error())
+        .hasText("You can only select 3 items.");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {

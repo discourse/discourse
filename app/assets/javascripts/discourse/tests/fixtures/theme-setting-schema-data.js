@@ -187,7 +187,7 @@ export default function schemaAndData(version = 1) {
           type: "categories",
         },
         group_field: {
-          type: "group",
+          type: "groups",
         },
         tags_field: {
           type: "tags",
