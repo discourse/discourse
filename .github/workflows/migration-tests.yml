@@ -87,7 +87,7 @@ jobs:
           bundle config --local deployment true
           bundle config --local without development
           bundle install --jobs $(($(nproc) - 1))
-          bundle clean
+          # bundle clean # don't clean, we need the gems for the migrations
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
