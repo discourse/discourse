@@ -1384,9 +1384,12 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.parsed_body["property_descriptions"]).to eq(
           {
-            "links.name" => "Name of the link",
-            "links.url" => "URL of the link",
-            "name" => "Section Name",
+            "links.name.description" => "Name of the link",
+            "links.name.label" => "Name",
+            "links.url.description" => "URL of the link",
+            "links.url.label" => "URL",
+            "name.description" => "Section Name",
+            "name.label" => "Name",
           },
         )
       end
