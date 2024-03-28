@@ -115,14 +115,37 @@ describe "Homepage", type: :system do
         expect(page).to have_css(".new-home", text: "Hi friends!")
 
         sign_in user
-        # top page ID in UserOption::HOMEPAGES = 5
-        user.user_option.update!(homepage_id: 5)
 
-        visit "/"
+        visit "/u/#{user.username}/preferences/interface"
+
+        homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
+        homepage_picker.expand
+        # user overrides theme custom homepage
+        homepage_picker.select_row_by_name("Top")
+        page.find(".btn-primary.save-changes").click
+
+        # Wait for the save to complete
+        find(".btn-primary.save-changes:not([disabled])", wait: 5)
+
+        find("#site-logo").click
 
         expect(page).to have_css(".navigation-container .top.active", text: "Top")
         expect(page).to have_css(".top-lists")
-        expect(page).to have_no_css(".new-home", text: "Hi friends!")
+
+        visit "/u/#{user.username}/preferences/interface"
+
+        homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
+        homepage_picker.expand
+        # user selects theme custom homepage again
+        homepage_picker.select_row_by_name("(default)")
+        page.find(".btn-primary.save-changes").click
+
+        # Wait for the save to complete
+        find(".btn-primary.save-changes:not([disabled])", wait: 5)
+        find("#site-logo").click
+
+        expect(page).not_to have_css(".list-container")
+        expect(page).to have_css(".new-home", text: "Hi friends!")
       end
     end
   end

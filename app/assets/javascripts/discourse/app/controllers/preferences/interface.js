@@ -48,14 +48,6 @@ export default Controller.extend({
     if (this.siteSettings.top_menu.split("|").includes("hot")) {
       USER_HOMES[8] = "hot";
     }
-
-    if (this.availableThemeHasCustomHomepage()) {
-      USER_HOMES[-1] = "default";
-    }
-  },
-
-  availableThemeHasCustomHomepage() {
-    return this.site.user_themes.some((theme) => theme.has_custom_homepage);
   },
 
   @discourseComputed("makeThemeDefault")
@@ -194,6 +186,11 @@ export default Controller.extend({
 
   homeChanged() {
     const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
+
+    if (this.model.canPickThemeWithCustomHomepage) {
+      USER_HOMES[-1] = "custom";
+    }
+
     const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
 
     setDefaultHomepage(userHome || siteHome);
@@ -209,7 +206,7 @@ export default Controller.extend({
 
     let result = [];
 
-    if (this.availableThemeHasCustomHomepage()) {
+    if (this.model.canPickThemeWithCustomHomepage) {
       result.push({
         name: I18n.t("user.homepage.default"),
         value: -1,
