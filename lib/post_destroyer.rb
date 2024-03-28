@@ -85,7 +85,9 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
-    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id) if @topic
+    if @topic && !@opts[:skip_bookmark_sync]
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id)
+    end
 
     if is_first_post
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
