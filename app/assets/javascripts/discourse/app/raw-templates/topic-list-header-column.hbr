@@ -12,8 +12,6 @@
         {{~#if canDoBulkActions}}
           {{~#if experimentalTopicBulkActionsEnabled }}
             {{raw "topic-bulk-select-dropdown" bulkSelectHelper=bulkSelectHelper}}
-            {{! Just showing both buttons for now for development}}
-            <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
           {{else}}
             <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
           {{/if ~}}
