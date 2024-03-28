@@ -5654,6 +5654,10 @@ en:
             back_button: "Back to %{name}"
             fields:
               required: "*required"
+              groups:
+                at_least:
+                  one: "at least %{count} group is required"
+                  other: "at least %{count} groups are required"
               categories:
                 at_least:
                   one: "at least %{count} category is required"
