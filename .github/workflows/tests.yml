@@ -84,11 +84,18 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
+      - name: Container envs
+        id: container-envs
+        run: |
+          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Bundler cache
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ env.RUBY_VERSION }}-${{ env.DEBIAN_RELEASE }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -125,7 +132,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
+          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes' && matrix.build_type == 'system'
