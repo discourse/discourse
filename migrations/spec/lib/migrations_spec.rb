@@ -18,66 +18,26 @@ RSpec.describe Migrations do
       ).to_stderr.and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
     end
 
-    context "with temporary root_path" do
-      def with_temporary_root_path
-        Dir.mktmpdir do |temp_dir|
-          described_class.stubs(:root_path).returns(temp_dir)
-          yield temp_dir
-        end
+    def with_temporary_root_path
+      Dir.mktmpdir do |temp_dir|
+        described_class.stubs(:root_path).returns(temp_dir)
+        yield temp_dir
       end
+    end
 
-      it "exits with an error if the required Ruby version isn't found" do
-        with_temporary_root_path do |root_path|
-          gemfile_path = File.join(root_path, "config/gemfiles/test/Gemfile")
-          FileUtils.mkdir_p(File.dirname(gemfile_path))
-          File.write(gemfile_path, <<~GEMFILE)
+    it "exits with an error if the required Ruby version isn't found" do
+      with_temporary_root_path do |root_path|
+        gemfile_path = File.join(root_path, "config/gemfiles/test/Gemfile")
+        FileUtils.mkdir_p(File.dirname(gemfile_path))
+        File.write(gemfile_path, <<~GEMFILE)
             source "http://localhost"
             ruby "~> 100.0.0"
           GEMFILE
 
-          expect { described_class.load_gemfile("test/Gemfile") }.to output(
-            include("your Gemfile specified ~> 100.0.0"),
-          ).to_stderr.and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
-        end
+        expect { described_class.load_gemfile("test/Gemfile") }.to output(
+          include("your Gemfile specified ~> 100.0.0"),
+        ).to_stderr.and raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
       end
     end
-
-    # it "loads the gemfile" do
-    #   relative_path = "convert/Gemfile"
-    #   path = File.join(described_class.root_path, "config/gemfiles", relative_path)
-    #   allow(File).to receive(:exist?).with(path).and_return(true)
-    #
-    #   bundler_ui = instance_double(Bundler::UI::Shell)
-    #   allow(Bundler::UI::Shell).to receive(:new).and_return(bundler_ui)
-    #   allow(bundler_ui).to receive(:level=).with("confirm")
-    #
-    #   gemfile = <<~GEMFILE
-    #     source "https://rubygems.org"
-    #     gem "thor"
-    #   GEMFILE
-    #
-    #   allow(File).to receive(:read).with(path).and_return(gemfile)
-    #
-    #   expect do described_class.load_gemfile(relative_path) end.to output(
-    #     "Could not fine Gemfile at #{path}\n",
-    #   ).to_stderr
-    # end
   end
-
-  #   describe ".configure_zeitwerk" do
-  #     it "configures Zeitwerk" do
-  #       loader = instance_double(Zeitwerk::Loader)
-  #       allow(Zeitwerk::Loader).to receive(:new).and_return(loader)
-  #
-  #       root_path = described_class.root_path
-  #       directories = %w[lib/common lib/converters]
-  #       directories.each do |dir|
-  #         expanded_path = File.expand_path(dir, root_path)
-  #         expect(loader).to receive(:push_dir).with(expanded_path, namespace: described_class)
-  #       end
-  #       expect(loader).to receive(:setup)
-  #
-  #       described_class.configure_zeitwerk(*directories)
-  #     end
-  #   end
 end

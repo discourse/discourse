@@ -2,7 +2,6 @@
 
 require "bundler/inline"
 require "bundler/ui"
-require "extralite"
 
 module Migrations
   def self.root_path
@@ -32,6 +31,13 @@ module Migrations
       warn "\e[31m#{e.message}\e[0m"
       exit 1
     end
+  end
+
+  def self.load_rails_environment
+    rails_root = File.expand_path("../..", __dir__)
+    # rubocop:disable Discourse/NoChdir
+    Dir.chdir(rails_root) { require File.join(rails_root, "config/environment") }
+    # rubocop:enable Discourse/NoChdir
   end
 
   def self.configure_zeitwerk(*directories)

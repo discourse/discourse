@@ -8,7 +8,11 @@ require "bundler/ui"
 
 # this is a hack to allow us to load Gemfiles for converters
 Dir[File.expand_path("../config/gemfiles/**/Gemfile", __dir__)].each do |path|
-  gemfile(true) do
+  # Create new UI and set level to confirm to avoid printing unnecessary messages
+  bundler_ui = Bundler::UI::Shell.new
+  bundler_ui.level = "confirm"
+
+  gemfile(true, ui: bundler_ui) do
     # rubocop:disable Security/Eval
     eval(File.read(path), nil, path, 1)
     # rubocop:enable Security/Eval
