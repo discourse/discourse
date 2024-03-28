@@ -22,6 +22,7 @@ permissions:
 
 jobs:
   tests:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Ruby ${{ matrix.ruby }}
     runs-on: 'ubuntu-latest'
     container: discourse/discourse_test:slim
@@ -61,12 +62,18 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
+      - name: Container envs
+        id: container-envs
+        run: |
+          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Bundler cache
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
 
       - name: Setup gems
         run: |
@@ -74,7 +81,7 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Get yarn cache directory
@@ -87,7 +94,6 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -101,10 +107,11 @@ jobs:
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
-        run: psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
 
       - name: Restore uploads from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -114,7 +121,7 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
-          bin/rake db:migrate
+          script/silence_successful_output bin/rake db:migrate
 
       - name: Dump database for cache
         if: steps.app-cache.outputs.cache-hit != 'true'
