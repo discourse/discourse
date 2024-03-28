@@ -35,6 +35,9 @@ export const TOOLTIP = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    onClose: null,
+    onShow: null,
+    onRegisterApi: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -62,6 +65,9 @@ export const MENU = {
     autoUpdate: true,
     trapTab: true,
     extraClassName: null,
+    onClose: null,
+    onShow: null,
+    onRegisterApi: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

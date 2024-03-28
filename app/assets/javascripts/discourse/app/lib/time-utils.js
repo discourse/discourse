@@ -49,6 +49,10 @@ export function twoDays(timezone) {
   return startOfDay(now(timezone).add(2, "days"));
 }
 
+export function inNDays(timezone, num) {
+  return startOfDay(now(timezone).add(num, "days"));
+}
+
 export function laterThisWeek(timezone) {
   return twoDays(timezone);
 }

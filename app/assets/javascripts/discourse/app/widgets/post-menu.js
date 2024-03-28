@@ -387,7 +387,7 @@ registerButton(
       return;
     }
 
-    let classNames = ["bookmark", "with-reminder"];
+    let classNames = ["bookmark"];
     let title = "bookmarks.not_bookmarked";
     let titleOptions = { name: "" };
 
@@ -395,6 +395,8 @@ registerButton(
       classNames.push("bookmarked");
 
       if (attrs.bookmarkReminderAt) {
+        classNames.push("with-reminder");
+
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
           currentUser.user_option.timezone

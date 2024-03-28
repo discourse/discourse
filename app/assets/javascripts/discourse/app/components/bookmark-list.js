@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,

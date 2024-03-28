@@ -9,12 +9,17 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {
     await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
+  }
+
+  async function close() {
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
   }
 
   test("@label", async function (assert) {
@@ -38,8 +43,41 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     assert.dom(".fk-d-tooltip").hasText("content");
   });
 
+  test("@onRegisterApi", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      hbs`<DTooltip @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+    );
+
+    assert.ok(this.api instanceof DTooltipInstance);
+  });
+
+  test("@onShow", async function (assert) {
+    this.test = false;
+    this.onShow = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onShow={{this.onShow}} />`);
+
+    await hover();
+
+    assert.strictEqual(this.test, true);
+  });
+
+  test("@onClose", async function (assert) {
+    this.test = false;
+    this.onClose = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onClose={{this.onClose}} />`);
+    await hover();
+    await close();
+
+    assert.strictEqual(this.test, true);
+  });
+
   test("-expanded class", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").doesNotHaveClass("-expanded");
 
@@ -140,7 +178,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{true}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
     assert.dom(".fk-d-tooltip").doesNotExist();
 
@@ -148,7 +186,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
     assert.dom(".fk-d-tooltip").exists();
   });
