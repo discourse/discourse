@@ -27,7 +27,6 @@ class Plugin::Metadata
         discourse-characters-required
         discourse-chat-integration
         discourse-code-review
-        discourse-crowd
         discourse-data-explorer
         discourse-details
         discourse-docs
@@ -44,7 +43,6 @@ class Plugin::Metadata
         discourse-jira
         discourse-lazy-videos
         discourse-local-dates
-        discourse-login-with-amazon
         discourse-logster-rate-limit-checker
         discourse-logster-transporter
         discourse-lti
