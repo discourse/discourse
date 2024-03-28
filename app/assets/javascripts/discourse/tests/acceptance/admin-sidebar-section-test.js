@@ -86,7 +86,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       "advanced section is displayed"
     );
 
-    await triggerKeyEvent("#main-outlet", "keydown", "Escape");
+    await triggerKeyEvent(".sidebar-filter__input", "keydown", "Escape");
     assert.ok(
       exists(".sidebar-section[data-section-name='admin-plugins']"),
       "plugins section is displayed"

@@ -12,11 +12,6 @@ import { bind } from "discourse-common/utils/decorators";
 export default class Filter extends Component {
   @service sidebarState;
 
-  constructor() {
-    super(...arguments);
-    document.documentElement.addEventListener("keydown", this.handleKeydown);
-  }
-
   get shouldDisplay() {
     return this.sidebarState.currentPanel.filterable;
   }
@@ -28,19 +23,16 @@ export default class Filter extends Component {
   @bind
   teardown() {
     this.sidebarState.clearFilter();
-    document.documentElement.removeEventListener("keydown", this.handleKeydown);
-  }
-
-  @bind
-  handleKeydown(event) {
-    if (event.key === "Escape" && this.sidebarState.filter.length > 0) {
-      event.stopPropagation();
-      this.sidebarState.filter = "";
-    }
   }
 
   @action
   setFilter(event) {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      return this.sidebarState.filter.length > 0
+        ? (this.sidebarState.filter = "")
+        : event.target.blur();
+    }
     this.sidebarState.filter = event.target.value.toLowerCase();
   }
 
@@ -57,7 +49,7 @@ export default class Filter extends Component {
           class="sidebar-filter__input"
           placeholder={{i18n "sidebar.filter"}}
           @value={{this.sidebarState.filter}}
-          {{on "input" this.setFilter}}
+          {{on "keydown" this.setFilter}}
         />
         {{#if this.displayClearFilter}}
           <DButton @action={{this.clearFilter}} class="sidebar-filter__clear">
