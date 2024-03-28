@@ -2,6 +2,7 @@
 
 require "bundler/inline"
 require "bundler/ui"
+require "extralite"
 
 module Migrations
   def self.root_path
@@ -13,7 +14,7 @@ module Migrations
     path = File.expand_path(relative_path, path)
 
     unless File.exist?(path)
-      STDERR.puts "\e[31mCould not fine Gemfile at #{path}\e[0m"
+      warn "Could not find Gemfile at #{path}"
       exit 1
     end
 
@@ -28,7 +29,7 @@ module Migrations
         # rubocop:enable Security/Eval
       end
     rescue Bundler::BundlerError => e
-      STDERR.puts "\e[31m#{e.message}\e[0m"
+      warn "\e[31m#{e.message}\e[0m"
       exit 1
     end
   end

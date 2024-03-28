@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby "~> 3.2.2"
 
-gem "activesupport", "~> 7.1"
+gem "activesupport", "< 7.1" # this needs to be in sync with the Rails version of Discourse
 gem "extralite-bundle", "~> 2.8"
 gem "msgpack", "~> 1.7"
 gem "thor", "~> 1.3"

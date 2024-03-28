@@ -1,29 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "../lib/application"
+require_relative "../lib/migrations"
 
 module Migrations
   load_gemfile("convert/Gemfile")
   configure_zeitwerk("lib/common", "lib/converters")
 
   module Convert
-    class << self
-      attr_accessor :type
-
-      def root_dir
-        @root_dir ||= __dir__
-      end
-
-      def output_dir
-        @output_dir ||= File.join(root_dir, "output")
-      end
-
-      def output_database_path
-        @output_database_path ||= File.join(output_dir, "db.sqlite3")
-      end
-    end
-
     class CLI < Thor
       desc "execute", "Run the conversion"
 
