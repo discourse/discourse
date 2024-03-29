@@ -1,0 +1,4 @@
+output_file_path: "../db/schema/100-base-schema.sql"
+
+tables:
+  users: {}

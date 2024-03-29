@@ -4,7 +4,7 @@
 require_relative "../lib/migrations"
 
 module Migrations
-  load_gemfile("convert/Gemfile")
+  load_gemfiles("common")
   configure_zeitwerk("lib/common", "lib/converters")
 
   module Convert
@@ -12,12 +12,12 @@ module Migrations
       desc "execute", "Run the conversion"
 
       def execute
-        FileUtils.mkdir_p(Convert.output_dir)
+        FileUtils.mkdir_p("/tmp/converter")
 
-        Migrations::IntermediateDb.reset!(Convert.output_database_path)
-        Migrations::IntermediateDb.migrate(Convert.output_database_path)
+        Migrations::IntermediateDb.reset!("/tmp/converter/intermediate.db")
+        Migrations::IntermediateDb.migrate("/tmp/converter/intermediate.db")
 
-        require_relative "converters/pepper/main"
+        # require_relative "converters/pepper/main"
       end
 
       desc "version", "Print the version"

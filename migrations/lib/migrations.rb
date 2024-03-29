@@ -8,32 +8,39 @@ module Migrations
     @root_path ||= File.expand_path("..", __dir__)
   end
 
-  def self.load_gemfile(relative_path)
-    path = File.join(Migrations.root_path, "config/gemfiles")
-    path = File.expand_path(relative_path, path)
+  def self.load_gemfiles(*relative_paths)
+    gemfiles_root_path = File.join(Migrations.root_path, "config/gemfiles")
 
-    unless File.exist?(path)
-      warn "Could not find Gemfile at #{path}"
-      exit 1
-    end
+    relative_paths.each do |relative_path|
+      path = File.join(File.expand_path(relative_path, gemfiles_root_path), "Gemfile")
 
-    # Create new UI and set level to confirm to avoid printing unnecessary messages
-    bundler_ui = Bundler::UI::Shell.new
-    bundler_ui.level = "confirm"
-
-    begin
-      gemfile(true, ui: bundler_ui) do
-        # rubocop:disable Security/Eval
-        eval(File.read(path), nil, path, 1)
-        # rubocop:enable Security/Eval
+      unless File.exist?(path)
+        warn "Could not find Gemfile at #{path}"
+        exit 1
       end
-    rescue Bundler::BundlerError => e
-      warn "\e[31m#{e.message}\e[0m"
-      exit 1
+
+      gemfile_content = File.read(path)
+
+      # Create new UI and set level to confirm to avoid printing unnecessary messages
+      bundler_ui = Bundler::UI::Shell.new
+      bundler_ui.level = "confirm"
+
+      begin
+        gemfile(true, ui: bundler_ui) do
+          # rubocop:disable Security/Eval
+          eval(gemfile_content, nil, path, 1)
+          # rubocop:enable Security/Eval
+        end
+      rescue Bundler::BundlerError => e
+        warn "\e[31m#{e.message}\e[0m"
+        exit 1
+      end
     end
   end
 
-  def self.load_rails_environment
+  def self.load_rails_environment(quiet: false)
+    puts "Loading application..." unless quiet
+
     rails_root = File.expand_path("../..", __dir__)
     # rubocop:disable Discourse/NoChdir
     Dir.chdir(rails_root) { require File.join(rails_root, "config/environment") }

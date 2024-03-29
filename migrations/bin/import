@@ -4,10 +4,9 @@
 require_relative "../lib/migrations"
 
 module Migrations
-  puts "Loading application..."
   load_rails_environment
 
-  load_gemfile("import/Gemfile")
+  load_gemfiles("common")
   configure_zeitwerk("lib/common")
 
   module Import
