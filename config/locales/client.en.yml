@@ -3037,7 +3037,7 @@ en:
         name: "Defer Topics"
         description: "Mark topics as unread"
       update_notifications:
-        name: "Update Notifications…"
+        name: "Update Notifications"
         description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
