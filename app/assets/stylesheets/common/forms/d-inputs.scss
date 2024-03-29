@@ -7,12 +7,19 @@
   &__section {
     display: flex;
     flex-direction: column;
-    gap: 1.5em;
+    gap: 1em;
 
     &.--inline {
       flex-direction: row;
       align-items: stretch;
       gap: 1em;
+    }
+    &.--rows {
+      display: grid;
+      grid-template-columns: auto 3fr;
+      grid-template-rows: auto;
+      grid-column-gap: 1em;
+      grid-row-gap: 1em;
     }
   }
 
@@ -24,6 +31,10 @@
     height: 2em;
     align-self: flex-start;
     margin-top: 1.25em;
+
+    &.--fieldset {
+      margin-top: 0;
+    }
   }
 }
 
@@ -31,10 +42,23 @@
   display: flex;
   flex-direction: column;
   gap: 0.25em;
+  // margin-bottom: 1.25em;
 
-  .--row & {
-    flex-direction: row;
-    gap: 1em;
+  // &:has([class*="meta"]) {
+  //   margin-bottom: 0;
+  // }
+
+  .--rows & {
+    display: contents;
+  }
+
+  &.--radiobtns,
+  &.--checkbox {
+    // gap: 1em;
+
+    legend {
+      margin-bottom: 0.25em;
+    }
   }
 
   &__label {
@@ -45,10 +69,10 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
 
-    .--row & {
+    .--rows & {
       flex-direction: column;
       align-items: flex-end;
-      flex-basis: 20%;
+      text-align: right;
     }
 
     .--inline & {
@@ -64,18 +88,48 @@
     display: flex;
     flex-direction: column;
     gap: 0.25em;
-    width: min-content;
+    width: max-content;
     .--inline & {
       width: auto;
     }
+    .--radiobtns & {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5em;
+
+      label {
+        width: max-content;
+        margin: 0;
+      }
+    }
   }
-  &__input,
+  &__value-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  &__input-wrapper {
+    display: flex;
+    .--checkbox & {
+      flex-direction: row;
+      gap: 0.5em;
+      align-items: center;
+
+      label {
+        font-weight: normal;
+      }
+    }
+  }
+  &__input[type="text"],
+  &__input[type="textarea"],
   select {
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-input-border-radius);
     padding-inline: 0.5em;
     height: 2em;
+    width: auto;
     box-sizing: border-box;
     margin: 0;
 
@@ -85,7 +139,6 @@
 
     .--inline & {
       width: 100%;
-      min-width: 100px;
     }
 
     &:focus-visible {
@@ -104,6 +157,11 @@
         border: var(--d-input-border--disabled);
       }
     }
+  }
+
+  &__input[type="radio"],
+  &__input[type="checkbox"] {
+    margin: 0;
   }
 
   &__info {
@@ -138,6 +196,8 @@
   }
 }
 
-select {
-  height: 2em;
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
