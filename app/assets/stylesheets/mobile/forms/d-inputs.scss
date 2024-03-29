@@ -13,6 +13,14 @@
 .d-form {
   max-width: 100%;
   overflow: hidden;
+
+  &__footer {
+    justify-content: flex-end;
+
+    .btn-primary {
+      order: 1;
+    }
+  }
 }
 
 .d-form-field {

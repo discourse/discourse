@@ -50,6 +50,12 @@
       margin-top: 0;
     }
   }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 }
 
 .d-form-field {
@@ -124,31 +130,29 @@
     .--radiobtns & {
       display: flex;
       flex-direction: row;
-      align-items: center;
-      gap: 0.5em;
+      align-items: flex-start;
+      gap: 1em;
 
       label {
         // width: max-content;
         margin: 0;
       }
     }
+
+    .--checkbox & {
+      flex-direction: row;
+      gap: 1em;
+      align-items: start;
+    }
   }
   &__value-container {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-  }
-  &__input-wrapper {
-    display: flex;
-    .--checkbox & {
-      flex-direction: row;
-      gap: 0.5em;
-      align-items: center;
 
-      label {
-        font-weight: normal;
-        margin: 0;
-      }
+    label {
+      font-weight: normal;
+      margin: 0;
     }
   }
   &__input[type="text"],
@@ -192,7 +196,7 @@
 
   &__input[type="radio"],
   &__input[type="checkbox"] {
-    margin: 0;
+    margin: 0.25em 0 0;
   }
 
   fieldset {
