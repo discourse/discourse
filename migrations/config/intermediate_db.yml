@@ -25,7 +25,12 @@ output_file_path: "../db/schema/100-base-schema.sql"
 ##                name: Index name.
 ##                columns: List of column(s) to index.
 tables:
-  users: {}
+  users:
+    ignore:
+      - "last_seen_reviewable_id"
+      - "secure_identifier"
+      - "seen_notification_id"
+      - "username_lower"
 
 ## Schema-wide column configuration options. These options apply to all tables.
 ## See table specific column configuration options above.
