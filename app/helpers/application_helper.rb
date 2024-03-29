@@ -430,7 +430,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    (crawler_layout? || !mobile_view? || !modern_mobile_device?) && !current_user
+    if current_user
+      params.key?(:print)
+    else
+      crawler_layout? || !mobile_view? || !modern_mobile_device?
+    end
   end
 
   def modern_mobile_device?
