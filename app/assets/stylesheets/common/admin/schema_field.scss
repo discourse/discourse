@@ -1,10 +1,21 @@
 .schema-field {
   margin-bottom: 1em;
   width: 100%;
-  min-width: 200px;
   display: grid;
   grid-template-columns: 25% 1fr;
   gap: 1em;
+
+  @include breakpoint(mobile-extra-large) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    &[data-type="boolean"] {
+      grid-template-columns: auto 1fr;
+      .schema-field__input {
+        order: -1;
+      }
+    }
+  }
 
   .schema-field__label {
     word-break: break-all;
