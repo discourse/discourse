@@ -7,8 +7,8 @@ describe DiscourseAutomation::AutomationSerializer do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS,
-      trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+      script: DiscourseAutomation::Scripts::FLAG_POST_ON_WORDS,
+      trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
     )
   end
 
@@ -41,7 +41,7 @@ describe DiscourseAutomation::AutomationSerializer do
   context "when script with fields limited to a specific trigger" do
     before do
       DiscourseAutomation::Scriptable.add("foo") do
-        field :bar, component: :text, triggerable: DiscourseAutomation::Triggerable::TOPIC
+        field :bar, component: :text, triggerable: DiscourseAutomation::Triggers::TOPIC
       end
     end
 
@@ -50,7 +50,7 @@ describe DiscourseAutomation::AutomationSerializer do
         Fabricate(
           :automation,
           script: "foo",
-          trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+          trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
         )
       end
 
@@ -67,7 +67,7 @@ describe DiscourseAutomation::AutomationSerializer do
 
     context "when automation is using the specific trigger" do
       fab!(:automation) do
-        Fabricate(:automation, script: "foo", trigger: DiscourseAutomation::Triggerable::TOPIC)
+        Fabricate(:automation, script: "foo", trigger: DiscourseAutomation::Triggers::TOPIC)
       end
 
       it "doesn’t filter the field" do

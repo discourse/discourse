@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::RECURRING = "recurring"
-
 module DiscourseAutomation
   module Triggers
     module Recurring
@@ -75,7 +73,7 @@ module DiscourseAutomation
   end
 end
 
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::RECURRING) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::RECURRING) do
   field :recurrence,
         component: :period,
         extra: {

@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE =
-  "user_group_membership_through_badge"
-DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
-
 DiscourseAutomation::Scriptable.add(
-  DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE,
+  DiscourseAutomation::Scripts::USER_GROUP_MEMBERSHIP_THROUGH_BADGE,
 ) do
   version 2
 
@@ -29,7 +25,7 @@ DiscourseAutomation::Scriptable.add(
     remove_members_without_badge = fields.dig("remove_members_without_badge", "value")
     current_user = context["user"]
     bulk_modify_start_count =
-      DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT
+      DiscourseAutomation::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT
 
     badge = Badge.find_by(id: badge_id)
     unless badge

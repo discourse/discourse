@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::GROUP_CATEGORY_NOTIFICATION_DEFAULT =
-  "group_category_notification_default"
-
 DiscourseAutomation::Scriptable.add(
-  DiscourseAutomation::Scriptable::GROUP_CATEGORY_NOTIFICATION_DEFAULT,
+  DiscourseAutomation::Scripts::GROUP_CATEGORY_NOTIFICATION_DEFAULT,
 ) do
   version 1
 

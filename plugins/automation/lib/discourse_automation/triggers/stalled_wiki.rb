@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::STALLED_WIKI = "stalled_wiki"
-
 module DiscourseAutomation
   module Triggers
     module StalledWiki
@@ -19,7 +17,7 @@ module DiscourseAutomation
   end
 end
 
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::STALLED_WIKI) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::STALLED_WIKI) do
   field :restricted_category, component: :category
   field :stalled_after,
         component: :choices,

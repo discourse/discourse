@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::ZAPIER_WEBHOOK = "zapier_webhook"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::ZAPIER_WEBHOOK) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::ZAPIER_WEBHOOK) do
   field :webhook_url, component: :text, required: true
 
   version 1

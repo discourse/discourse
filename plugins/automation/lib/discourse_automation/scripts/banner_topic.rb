@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::BANNER_TOPIC = "banner_topic"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::BANNER_TOPIC) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::BANNER_TOPIC) do
   field :topic_id, component: :text, required: true
   field :banner_until, component: :date_time
   field :user, component: :user

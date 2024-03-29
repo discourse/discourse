@@ -7,7 +7,7 @@ describe "UserPromoted" do
 
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_PROMOTED)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_PROMOTED)
   end
 
   it "runs without any restrictions" do

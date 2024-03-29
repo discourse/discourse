@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS = "flag_post_on_words"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::FLAG_POST_ON_WORDS) do
   field :words, component: :text_list, required: true
 
   version 1

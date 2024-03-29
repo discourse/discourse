@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::PM_CREATED = "pm_created"
-
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::PM_CREATED) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::PM_CREATED) do
   field :restricted_user, component: :user
   field :restricted_group, component: :group
   field :ignore_staff, component: :boolean

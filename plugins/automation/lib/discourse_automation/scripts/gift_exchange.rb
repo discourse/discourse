@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::GIFT_EXCHANGE = "gift_exchange"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHANGE) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::GIFT_EXCHANGE) do
   placeholder :year
   placeholder :giftee_username
   placeholder :gifter_username

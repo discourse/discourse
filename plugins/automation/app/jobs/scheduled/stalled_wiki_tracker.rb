@@ -5,7 +5,7 @@ module Jobs
     every 10.minutes
 
     def execute(_args = nil)
-      name = DiscourseAutomation::Triggerable::STALLED_WIKI
+      name = DiscourseAutomation::Triggers::STALLED_WIKI
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -43,7 +43,7 @@ module Jobs
         ).compact.uniq
 
       automation.trigger!(
-        "kind" => DiscourseAutomation::Triggerable::STALLED_WIKI,
+        "kind" => DiscourseAutomation::Triggers::STALLED_WIKI,
         "post" => post,
         "topic" => post.topic,
         "usernames" => User.where(id: user_ids).pluck(:username),

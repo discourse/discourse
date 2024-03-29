@@ -10,7 +10,7 @@ describe Jobs::DiscourseAutomationTracker do
       Fabricate(
         :automation,
         script: "gift_exchange",
-        trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME,
+        trigger: DiscourseAutomation::Triggers::POINT_IN_TIME,
       )
     end
 
@@ -67,8 +67,8 @@ describe Jobs::DiscourseAutomationTracker do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::SEND_PMS,
-        trigger: DiscourseAutomation::Triggerable::TOPIC,
+        script: DiscourseAutomation::Scripts::SEND_PMS,
+        trigger: DiscourseAutomation::Triggers::TOPIC,
       )
     end
 

@@ -9,8 +9,8 @@ describe "TopicRequiredWords" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS,
-      trigger: DiscourseAutomation::Triggerable::TOPIC,
+      script: DiscourseAutomation::Scripts::TOPIC_REQUIRED_WORDS,
+      trigger: DiscourseAutomation::Triggers::TOPIC,
     )
   end
 

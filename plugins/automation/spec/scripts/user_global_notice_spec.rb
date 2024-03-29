@@ -9,7 +9,7 @@ describe "UserGlobalNotice" do
     fab!(:automation_1) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE,
+        script: DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE,
         trigger: "stalled_topic",
       )
     end
@@ -27,7 +27,7 @@ describe "UserGlobalNotice" do
         it "creates a notice for the topic owner" do
           expect do
             automation_1.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::STALLED_TOPIC,
+              "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
               "topic" => topic_1,
             )
           end.to change { DiscourseAutomation::UserGlobalNotice.count }.by(1)
@@ -57,7 +57,7 @@ describe "UserGlobalNotice" do
     fab!(:automation_1) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE,
+        script: DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE,
         trigger: "first_accepted_solution",
       )
     end
@@ -98,17 +98,17 @@ describe "UserGlobalNotice" do
     fab!(:topic_1) { Fabricate(:topic) }
 
     fab!(:automation_1) do
-      Fabricate(:automation, script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE)
+      Fabricate(:automation, script: DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE)
     end
 
     fab!(:automation_2) do
-      Fabricate(:automation, script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE)
+      Fabricate(:automation, script: DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE)
     end
 
     before do
       [automation_1, automation_2].each do |automation|
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::STALLED_TOPIC,
+          "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
           "topic" => topic_1,
         )
       end

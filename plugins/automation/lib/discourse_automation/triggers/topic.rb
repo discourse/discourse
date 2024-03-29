@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::TOPIC = "topic"
-
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::TOPIC) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::TOPIC) do
   field :restricted_topic, component: :text
 
   on_update do |automation, metadata, previous_metadata|

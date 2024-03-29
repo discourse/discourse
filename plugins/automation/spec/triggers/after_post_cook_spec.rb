@@ -2,7 +2,7 @@
 
 require_relative "../discourse_automation_helper"
 
-describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
+describe DiscourseAutomation::Triggers::AFTER_POST_COOK do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:post)
@@ -11,7 +11,7 @@ describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
 
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::AFTER_POST_COOK)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::AFTER_POST_COOK)
   end
 
   context "when filtered to a tag" do
@@ -40,7 +40,7 @@ describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
       list = capture_contexts { post.rebake! }
 
       expect(list.length).to eq(1)
-      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::AFTER_POST_COOK)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::AFTER_POST_COOK)
     end
   end
 
@@ -61,7 +61,7 @@ describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
         list = capture_contexts { post.rebake! }
 
         expect(list.length).to eq(1)
-        expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::AFTER_POST_COOK)
+        expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::AFTER_POST_COOK)
       end
     end
 

@@ -12,8 +12,8 @@ describe "Post" do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::POST,
-        trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME,
+        script: DiscourseAutomation::Scripts::POST,
+        trigger: DiscourseAutomation::Triggers::POINT_IN_TIME,
       )
     end
 
@@ -53,8 +53,8 @@ describe "Post" do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::POST,
-        trigger: DiscourseAutomation::Triggerable::RECURRING,
+        script: DiscourseAutomation::Scripts::POST,
+        trigger: DiscourseAutomation::Triggers::RECURRING,
       )
     end
 
@@ -102,8 +102,8 @@ describe "Post" do
       automation =
         Fabricate(
           :automation,
-          script: DiscourseAutomation::Scriptable::POST,
-          trigger: DiscourseAutomation::Triggerable::USER_UPDATED,
+          script: DiscourseAutomation::Scripts::POST,
+          trigger: DiscourseAutomation::Triggers::USER_UPDATED,
         )
       automation.upsert_field!(
         "custom_fields",

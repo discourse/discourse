@@ -21,10 +21,10 @@ en:
         confirm: "Are you sure you want to delete `%{name}`?"
       fields:
         key_value:
-          label:
-            zero: Configure
-            one: Edit Configuration (%{count})
-            other: Edit Configuration (%{count})
+          label_without_count: "Configure"
+          label_with_count:
+            one: "Edit Configuration (%{count})"
+            other: "Edit Configuration (%{count})"
         user:
           label: User
         pm:

@@ -5,9 +5,7 @@ require_relative "../discourse_automation_helper"
 describe "AutoResponder" do
   fab!(:topic)
 
-  fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::AUTO_RESPONDER)
-  end
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::AUTO_RESPONDER) }
 
   context "without word filter" do
     before do
@@ -149,7 +147,7 @@ describe "AutoResponder" do
           expect(post.topic.reload.posts_count).to eq(3)
 
           another_automation =
-            Fabricate(:automation, script: DiscourseAutomation::Scriptable::AUTO_RESPONDER)
+            Fabricate(:automation, script: DiscourseAutomation::Scripts::AUTO_RESPONDER)
           another_automation.upsert_field!("once", "boolean", { value: true }, target: "script")
           another_automation.upsert_field!(
             "word_answer_list",

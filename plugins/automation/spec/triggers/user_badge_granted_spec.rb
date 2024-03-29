@@ -6,7 +6,7 @@ describe "UserBadgeGranted" do
   fab!(:user)
   fab!(:tracked_badge) { Fabricate(:badge) }
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
   end
 
   before do
@@ -19,7 +19,7 @@ describe "UserBadgeGranted" do
       contexts = capture_contexts { BadgeGranter.grant(tracked_badge, user) }
 
       expect(contexts.length).to eq(1)
-      expect(contexts[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+      expect(contexts[0]["kind"]).to eq(DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
     end
   end
 end

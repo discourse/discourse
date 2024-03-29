@@ -7,7 +7,7 @@ describe "AppendLastCheckedBy" do
   fab!(:moderator)
 
   fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::APPEND_LAST_CHECKED_BY)
+    Fabricate(:automation, script: DiscourseAutomation::Scripts::APPEND_LAST_CHECKED_BY)
   end
 
   def trigger_automation(post)

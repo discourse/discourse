@@ -5,7 +5,7 @@ require_relative "../discourse_automation_helper"
 describe DiscourseAutomation::UserBadgeGrantedHandler do
   fab!(:user)
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
   end
   fab!(:tracked_badge) { Fabricate(:badge, multiple_grant: true) }
 
@@ -45,7 +45,7 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
           list = capture_contexts { described_class.handle(automation, tracked_badge.id, user.id) }
 
           expect(list.length).to eq(1)
-          expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+          expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
         end
       end
 
@@ -64,7 +64,7 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
 
       expect(list.length).to eq(1)
       output = list[0]
-      expect(output["kind"]).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+      expect(output["kind"]).to eq(DiscourseAutomation::Triggers::USER_BADGE_GRANTED)
       expect(output["usernames"]).to eq([user.username])
       expect(output["placeholders"]).to eq(
         "badge_name" => tracked_badge.name,

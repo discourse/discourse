@@ -4,11 +4,7 @@ require_relative "../discourse_automation_helper"
 
 describe "SendPms" do
   fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: DiscourseAutomation::Scriptable::SEND_PMS,
-      trigger: "stalled_wiki",
-    )
+    Fabricate(:automation, script: DiscourseAutomation::Scripts::SEND_PMS, trigger: "stalled_wiki")
   end
 
   before do
@@ -91,7 +87,7 @@ describe "SendPms" do
   context "when delayed" do
     fab!(:user_1) { Fabricate(:user) }
 
-    before { automation.update!(trigger: DiscourseAutomation::Triggerable::RECURRING) }
+    before { automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING) }
 
     it "correctly sets encrypt preference to false even when option is not specified" do
       automation.upsert_field!(

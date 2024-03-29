@@ -2,7 +2,7 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/discourse-automation/discourse/lib/fabricators";
+import fabricators from "discourse/plugins/automation/discourse/lib/fabricators";
 
 module("Integration | Component | da-pms-field", function (hooks) {
   setupRenderingTest(hooks);

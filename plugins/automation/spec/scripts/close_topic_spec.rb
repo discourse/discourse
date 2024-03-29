@@ -6,7 +6,7 @@ describe "CloseTopic" do
   fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scriptable::CLOSE_TOPIC) }
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::CLOSE_TOPIC) }
 
   before { automation.upsert_field!("topic", "text", { value: topic.id }, target: "script") }
 

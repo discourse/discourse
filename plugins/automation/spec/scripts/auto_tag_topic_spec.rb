@@ -9,9 +9,7 @@ describe "AutoTagTopic" do
   fab!(:tag3) { Fabricate(:tag, name: "tag3") }
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
-  fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::AUTO_TAG_TOPIC)
-  end
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::AUTO_TAG_TOPIC) }
 
   context "when tags list is empty" do
     it "exits early with no error" do

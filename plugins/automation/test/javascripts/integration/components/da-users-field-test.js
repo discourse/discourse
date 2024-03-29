@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import fabricators from "discourse/plugins/discourse-automation/discourse/lib/fabricators";
+import fabricators from "discourse/plugins/automation/discourse/lib/fabricators";
 
 module("Integration | Component | da-users-field", function (hooks) {
   setupRenderingTest(hooks);

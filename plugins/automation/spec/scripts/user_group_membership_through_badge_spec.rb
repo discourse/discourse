@@ -11,7 +11,7 @@ describe "UserGroupMembershipThroughBadge" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE,
+      script: DiscourseAutomation::Scripts::USER_GROUP_MEMBERSHIP_THROUGH_BADGE,
     )
   end
 
@@ -43,7 +43,7 @@ describe "UserGroupMembershipThroughBadge" do
       before do
         automation.upsert_field!("badge", "choices", { value: unknown_badge_id }, target: "script")
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
       end
@@ -66,7 +66,7 @@ describe "UserGroupMembershipThroughBadge" do
         target_group.destroy
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 
@@ -93,7 +93,7 @@ describe "UserGroupMembershipThroughBadge" do
 
           expect do
             automation.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+              "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
               "user" => user,
             )
           end.to change { target_group.users.count }.by(1)
@@ -111,7 +111,7 @@ describe "UserGroupMembershipThroughBadge" do
 
           expect do
             automation.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+              "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
               "user" => user,
             )
           end.not_to change { target_group.reload.users.count }
@@ -130,7 +130,7 @@ describe "UserGroupMembershipThroughBadge" do
 
           expect do
             automation.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+              "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
               "user" => user,
             )
           end.to change { target_group.reload.users.count }.by(1)
@@ -147,7 +147,7 @@ describe "UserGroupMembershipThroughBadge" do
 
           expect do
             automation.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+              "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
               "user" => user,
             )
           end.not_to change { target_group.users.count }
@@ -164,7 +164,7 @@ describe "UserGroupMembershipThroughBadge" do
 
           expect do
             automation.trigger!(
-              "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+              "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
               "user" => user,
             )
           end.not_to change { target_group.reload.users.count }
@@ -189,7 +189,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(target_group_member?(non_badge_owner_ids)).to eq(false)
 
         expect do
-          automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+          automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }.by(badge_owners.size)
 
         expect(target_group_member?(badge_owner_ids)).to eq(true)
@@ -203,7 +203,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(target_group_member?(non_badge_owner_ids)).to eq(false)
 
         expect do
-          automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+          automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.not_to change { target_group.reload.users.count }
 
         expect(target_group_member?(badge_owner_ids)).to eq(true)
@@ -226,7 +226,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(target_group_member?(other_users.map(&:id))).to eq(true)
 
         expect do
-          automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+          automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }.by(-other_users.count)
 
         expect(target_group_member?(other_users.map(&:id))).to eq(false)
@@ -242,7 +242,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(owns_badge?([user.id])).to eq(true)
 
         expect do
-          automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+          automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }
 
         expect(target_group_member?(other_users.map(&:id))).to eq(false)
@@ -269,7 +269,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(owns_badge?(other_users.map(&:id))).to eq(false)
 
         expect do
-          automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+          automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.not_to change { target_group.reload.users.count }
 
         expect(target_group_member?(other_users.map(&:id))).to eq(true)
@@ -293,7 +293,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(user.flair_group_id).to be_nil
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 
@@ -310,7 +310,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(user.flair_group_id).to eq(existing_flair_group.id)
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 
@@ -329,7 +329,7 @@ describe "UserGroupMembershipThroughBadge" do
         )
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 
@@ -358,7 +358,7 @@ describe "UserGroupMembershipThroughBadge" do
         expect(user.flair_group_id).to eq(existing_flair_group.id)
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 
@@ -377,7 +377,7 @@ describe "UserGroupMembershipThroughBadge" do
         )
 
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user,
         )
 

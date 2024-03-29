@@ -73,9 +73,15 @@ export default class KeyValueField extends BaseField {
   }
 
   get showJsonModalLabel() {
-    return I18n.t("discourse_automation.fields.key_value.label", {
-      count: this.keyCount,
-    });
+    if (this.keyCount === 0) {
+      return I18n.t(
+        "discourse_automation.fields.key_value.label_without_count"
+      );
+    } else {
+      return I18n.t("discourse_automation.fields.key_value.label_with_count", {
+        count: this.keyCount,
+      });
+    }
   }
 
   @action

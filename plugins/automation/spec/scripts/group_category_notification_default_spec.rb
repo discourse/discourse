@@ -12,8 +12,8 @@ describe "GroupCategoryNotificationDefault" do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scriptable::GROUP_CATEGORY_NOTIFICATION_DEFAULT,
-        trigger: DiscourseAutomation::Triggerable::CATEGORY_CREATED_EDITED,
+        script: DiscourseAutomation::Scripts::GROUP_CATEGORY_NOTIFICATION_DEFAULT,
+        trigger: DiscourseAutomation::Triggers::CATEGORY_CREATED_EDITED,
       )
     end
 

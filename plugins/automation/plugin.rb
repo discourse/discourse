@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# name: discourse-automation
+# name: automation
 # about: Allows admins to automate actions through scripts and triggers. Customisation is made through an automatically generated UI.
 # meta_topic_id: 195773
 # version: 0.1
 # authors: jjaffeux
-# url: https://github.com/discourse/discourse-automation
+# url: https://github.com/discourse/discourse/tree/main/plugins/automation
 
 gem "iso8601", "0.13.0"
 gem "rrule", "0.4.4"
@@ -15,11 +15,22 @@ enabled_site_setting :discourse_automation_enabled
 register_asset "stylesheets/common/discourse-automation.scss"
 
 module ::DiscourseAutomation
-  PLUGIN_NAME = "discourse-automation"
+  PLUGIN_NAME = "automation"
 
   CUSTOM_FIELD = "discourse_automation_ids"
   TOPIC_LAST_CHECKED_BY = "discourse_automation_last_checked_by"
   TOPIC_LAST_CHECKED_AT = "discourse_automation_last_checked_at"
+
+  USER_PROMOTED_TRUST_LEVEL_CHOICES = [
+    { id: "TLALL", name: "discourse_automation.triggerables.user_promoted.trust_levels.ALL" },
+    { id: "TL01", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL01" },
+    { id: "TL12", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL12" },
+    { id: "TL23", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL23" },
+    { id: "TL34", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL34" },
+  ]
+
+  AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids"
+  USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
 end
 
 require_relative "lib/discourse_automation/engine"
@@ -38,6 +49,7 @@ after_initialize do
     app/services/discourse_automation/user_badge_granted_handler
     lib/discourse_automation/event_handlers
     lib/discourse_automation/post_extension
+    lib/discourse_automation/scripts
     lib/discourse_automation/scripts/add_user_to_group_through_custom_field
     lib/discourse_automation/scripts/append_last_checked_by
     lib/discourse_automation/scripts/append_last_edited_by
@@ -56,6 +68,7 @@ after_initialize do
     lib/discourse_automation/scripts/user_global_notice
     lib/discourse_automation/scripts/user_group_membership_through_badge
     lib/discourse_automation/scripts/zapier_webhook
+    lib/discourse_automation/triggers
     lib/discourse_automation/triggers/after_post_cook
     lib/discourse_automation/triggers/api_call
     lib/discourse_automation/triggers/category_created_edited
@@ -98,7 +111,7 @@ after_initialize do
   end
 
   on(:user_first_logged_in) do |user|
-    name = DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN
+    name = DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN
 
     DiscourseAutomation::Automation
       .where(trigger: name, enabled: true)
@@ -106,7 +119,7 @@ after_initialize do
   end
 
   on(:user_added_to_group) do |user, group|
-    name = DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
+    name = DiscourseAutomation::Triggers::USER_ADDED_TO_GROUP
 
     DiscourseAutomation::Automation
       .where(trigger: name, enabled: true)
@@ -127,7 +140,7 @@ after_initialize do
   end
 
   on(:user_removed_from_group) do |user, group|
-    name = DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP
+    name = DiscourseAutomation::Triggers::USER_REMOVED_FROM_GROUP
 
     DiscourseAutomation::Automation
       .where(trigger: name, enabled: true)
@@ -135,7 +148,7 @@ after_initialize do
         left_group = automation.trigger_field("left_group")
         if left_group["value"] == group.id
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP,
+            "kind" => DiscourseAutomation::Triggers::USER_REMOVED_FROM_GROUP,
             "usernames" => [user.username],
             "user" => user,
             "group" => group,
@@ -148,7 +161,7 @@ after_initialize do
   end
 
   on(:user_badge_granted) do |badge_id, user_id|
-    name = DiscourseAutomation::Triggerable::USER_BADGE_GRANTED
+    name = DiscourseAutomation::Triggers::USER_BADGE_GRANTED
     DiscourseAutomation::Automation
       .where(trigger: name, enabled: true)
       .find_each do |automation|
@@ -194,10 +207,7 @@ after_initialize do
   on(:post_created) { |post| DiscourseAutomation::EventHandlers.handle_stalled_topic(post) }
 
   register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
-  register_topic_custom_field_type(
-    DiscourseAutomation::Scriptable::AUTO_RESPONDER_TRIGGERED_IDS,
-    [:integer],
-  )
+  register_topic_custom_field_type(DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS, [:integer])
 
   on(:user_updated) { |user| DiscourseAutomation::EventHandlers.handle_user_updated(user) }
 

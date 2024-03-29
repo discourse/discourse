@@ -15,7 +15,7 @@ module DiscourseAutomation
       user = User.find(user_id)
 
       automation.trigger!(
-        "kind" => DiscourseAutomation::Triggerable::USER_BADGE_GRANTED,
+        "kind" => DiscourseAutomation::Triggers::USER_BADGE_GRANTED,
         "usernames" => [user.username],
         "badge" => badge,
         "placeholders" => {

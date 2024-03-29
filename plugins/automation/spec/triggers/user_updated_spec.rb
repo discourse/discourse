@@ -16,7 +16,7 @@ describe "UserUpdated" do
   end
 
   fab!(:automation) do
-    automation = Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_UPDATED)
+    automation = Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_UPDATED)
     automation.upsert_field!(
       "custom_fields",
       "custom_fields",
@@ -36,7 +36,7 @@ describe "UserUpdated" do
     let(:automation) do
       Fabricate(
         :automation,
-        trigger: DiscourseAutomation::Triggerable::USER_UPDATED,
+        trigger: DiscourseAutomation::Triggers::USER_UPDATED,
       ).tap do |automation|
         automation.upsert_field!("custom_fields", "custom_fields", { value: [] }, target: "trigger")
         automation.upsert_field!("user_profile", "user_profile", { value: [] }, target: "trigger")
@@ -57,7 +57,7 @@ describe "UserUpdated" do
       capture_contexts { UserUpdater.new(user, user).update(location: "Japan", bio_raw: "fine") }
     output = output.first
 
-    expect(output["kind"]).to eq(DiscourseAutomation::Triggerable::USER_UPDATED)
+    expect(output["kind"]).to eq(DiscourseAutomation::Triggers::USER_UPDATED)
     expect(output["user"]).to eq(user)
     expect(output["user_data"].count).to eq(2)
     expect(output["user_data"][:custom_fields][user_field_1.name]).to eq(

@@ -27,11 +27,7 @@ describe DiscourseAutomation::Scriptable do
   end
 
   fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: "cats_everywhere",
-      trigger: DiscourseAutomation::Triggerable::TOPIC,
-    )
+    Fabricate(:automation, script: "cats_everywhere", trigger: DiscourseAutomation::Triggers::TOPIC)
   end
 
   describe "#fields" do

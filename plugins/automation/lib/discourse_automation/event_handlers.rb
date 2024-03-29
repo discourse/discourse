@@ -7,7 +7,7 @@ module DiscourseAutomation
       topic = post.topic
       return if topic.blank?
 
-      name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+      name = DiscourseAutomation::Triggers::POST_CREATED_EDITED
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -68,7 +68,7 @@ module DiscourseAutomation
     def self.handle_user_updated(user)
       return if user.id < 0
 
-      name = DiscourseAutomation::Triggerable::USER_UPDATED
+      name = DiscourseAutomation::Triggers::USER_UPDATED
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -119,7 +119,7 @@ module DiscourseAutomation
     end
 
     def self.handle_category_created_edited(category, action)
-      name = DiscourseAutomation::Triggerable::CATEGORY_CREATED_EDITED
+      name = DiscourseAutomation::Triggers::CATEGORY_CREATED_EDITED
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -141,7 +141,7 @@ module DiscourseAutomation
       target_group_ids = topic.allowed_groups.pluck(:id)
       return if (target_usernames.length + target_group_ids.length) > 1
 
-      name = DiscourseAutomation::Triggerable::PM_CREATED
+      name = DiscourseAutomation::Triggers::PM_CREATED
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -173,7 +173,7 @@ module DiscourseAutomation
     def self.handle_after_post_cook(post, cooked)
       return cooked if post.post_type != Post.types[:regular] || post.post_number > 1
 
-      name = DiscourseAutomation::Triggerable::AFTER_POST_COOK
+      name = DiscourseAutomation::Triggers::AFTER_POST_COOK
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -211,7 +211,7 @@ module DiscourseAutomation
     end
 
     def self.handle_user_promoted(user_id, new_trust_level, old_trust_level)
-      trigger = DiscourseAutomation::Triggerable::USER_PROMOTED
+      trigger = DiscourseAutomation::Triggers::USER_PROMOTED
       user = User.find_by(id: user_id)
       return if user.blank?
 
@@ -222,8 +222,7 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: trigger, enabled: true)
         .find_each do |automation|
-          trust_level_code_all =
-            DiscourseAutomation::Triggerable::USER_PROMOTED_TRUST_LEVEL_CHOICES.first[:id]
+          trust_level_code_all = DiscourseAutomation::USER_PROMOTED_TRUST_LEVEL_CHOICES.first[:id]
 
           restricted_group_id = automation.trigger_field("restricted_group")["value"]
           trust_level_transition = automation.trigger_field("trust_level_transition")["value"]
@@ -258,7 +257,7 @@ module DiscourseAutomation
       return if post.user_id != post.topic.user_id
 
       DiscourseAutomation::Automation
-        .where(trigger: DiscourseAutomation::Triggerable::STALLED_TOPIC)
+        .where(trigger: DiscourseAutomation::Triggers::STALLED_TOPIC)
         .where(enabled: true)
         .find_each do |automation|
           fields = automation.serialized_fields

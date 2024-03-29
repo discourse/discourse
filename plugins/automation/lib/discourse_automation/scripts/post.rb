@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::POST = "post"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::POST) do
   version 1
 
   placeholder :creator_username
@@ -36,7 +34,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
       next
     end
 
-    if context["kind"] == DiscourseAutomation::Triggerable::USER_UPDATED
+    if context["kind"] == DiscourseAutomation::Triggers::USER_UPDATED
       user = context["user"]
       user_data = context["user_data"]
       user_profile_data = user_data[:profile_data] || {}
@@ -61,7 +59,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
 
     new_post = PostCreator.new(creator, topic_id: topic_id, raw: post_raw).create!
 
-    if context["kind"] == DiscourseAutomation::Triggerable::USER_UPDATED && new_post.persisted?
+    if context["kind"] == DiscourseAutomation::Triggers::USER_UPDATED && new_post.persisted?
       user.user_custom_fields.create(name: automation.name, value: "true")
     end
   end

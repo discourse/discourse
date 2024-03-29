@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SUSPEND_USER_BY_EMAIL) do
   version 1
 
   triggerables %i[api_call]

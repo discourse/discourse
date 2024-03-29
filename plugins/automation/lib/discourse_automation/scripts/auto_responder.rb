@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::AUTO_RESPONDER = "auto_responder"
-DiscourseAutomation::Scriptable::AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPONDER) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_RESPONDER) do
   field :word_answer_list, component: :"key-value", accepts_placeholders: true
   field :answering_user, component: :user
   field :once, component: :boolean
@@ -16,7 +13,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
   placeholder :word
 
   script do |context, fields, automation|
-    key = DiscourseAutomation::Scriptable::AUTO_RESPONDER_TRIGGERED_IDS
+    key = DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS
 
     answering_username = fields.dig("answering_user", "value") || Discourse.system_user.username
     placeholders = { sender_username: answering_username }

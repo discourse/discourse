@@ -4,7 +4,7 @@ class DiscourseAutomation::Triggerable
   USER_UPDATED = "user_updated"
 end
 
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::USER_UPDATED) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::USER_UPDATED) do
   field :custom_fields, component: :custom_fields
   field :user_profile, component: :user_profile
   field :once_per_user, component: :boolean

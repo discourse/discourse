@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE = "user_global_notice"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::USER_GLOBAL_NOTICE) do
   field :notice, component: :message, required: true, accepts_placeholders: true
   field :level,
         component: :choices,
@@ -26,7 +24,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::USER_GLOBAL
   script do |context, fields, automation|
     placeholders = {}.merge(context["placeholders"] || {})
 
-    if context["kind"] == DiscourseAutomation::Triggerable::STALLED_TOPIC
+    if context["kind"] == DiscourseAutomation::Triggers::STALLED_TOPIC
       user = context["topic"].user
       placeholders["username"] = user.username
     elsif context["kind"] == "first_accepted_solution"

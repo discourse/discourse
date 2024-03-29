@@ -9,8 +9,8 @@ describe "FlagPostsOnWords" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS,
-      trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+      script: DiscourseAutomation::Scripts::FLAG_POST_ON_WORDS,
+      trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
     )
   end
 

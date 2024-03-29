@@ -6,8 +6,8 @@ describe "GiftExchange" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::GIFT_EXCHANGE,
-      trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME,
+      script: DiscourseAutomation::Scripts::GIFT_EXCHANGE,
+      trigger: DiscourseAutomation::Triggers::POINT_IN_TIME,
     )
   end
   fab!(:gift_group) { Fabricate(:group) }

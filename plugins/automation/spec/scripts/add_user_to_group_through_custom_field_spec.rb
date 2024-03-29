@@ -26,7 +26,7 @@ describe "AddUserTogroupThroughCustomField" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(false)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
-      automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
 
       expect(user_1.reload.in_any_groups?([target_group.id])).to eq(false)
       expect(user_2.reload.in_any_groups?([target_group.id])).to eq(false)
@@ -46,7 +46,7 @@ describe "AddUserTogroupThroughCustomField" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(false)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
-      automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
 
       expect(user_1.reload.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.reload.in_any_groups?([target_group.id])).to eq(false)
@@ -60,7 +60,7 @@ describe "AddUserTogroupThroughCustomField" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
-      automation.trigger!("kind" => DiscourseAutomation::Triggerable::RECURRING)
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
 
       expect(user_1.reload.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.reload.in_any_groups?([target_group.id])).to eq(false)
@@ -81,7 +81,7 @@ describe "AddUserTogroupThroughCustomField" do
 
       it "adds the user to the group" do
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
           "user" => user_1,
         )
 
@@ -93,7 +93,7 @@ describe "AddUserTogroupThroughCustomField" do
       it "does nothing" do
         expect {
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+            "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
@@ -112,7 +112,7 @@ describe "AddUserTogroupThroughCustomField" do
       it "does nothing" do
         expect {
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+            "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }

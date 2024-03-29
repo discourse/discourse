@@ -16,7 +16,6 @@ class Plugin::Metadata
         discourse-apple-auth
         discourse-assign
         discourse-auto-deactivate
-        discourse-automation
         discourse-bbcode
         discourse-bbcode-color
         discourse-bcc
@@ -91,6 +90,7 @@ class Plugin::Metadata
         discourse-yearly-review
         discourse-zendesk-plugin
         discourse-zoom
+        automation
         docker_manager
         chat
         poll

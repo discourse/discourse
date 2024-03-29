@@ -10,9 +10,7 @@ describe "PMCreated" do
   end
 
   fab!(:user)
-  fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::PM_CREATED)
-  end
+  fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::PM_CREATED) }
 
   context "when creating a PM to a user" do
     fab!(:target_user) { Fabricate(:user) }

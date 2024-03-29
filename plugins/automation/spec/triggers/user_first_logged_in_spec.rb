@@ -2,21 +2,21 @@
 
 require_relative "../discourse_automation_helper"
 
-describe DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN do
+describe DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:user)
   let(:topic) { post.topic }
 
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN)
   end
 
   context "when user logs in for first time" do
     it "triggers the automation" do
       contexts = capture_contexts { user.logged_in }
 
-      expect(contexts[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN)
+      expect(contexts[0]["kind"]).to eq(DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN)
       expect(contexts[0]["user"]).to eq(user)
     end
   end

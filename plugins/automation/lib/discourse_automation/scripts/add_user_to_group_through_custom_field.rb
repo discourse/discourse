@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD =
-  "add_user_to_group_through_custom_field"
-
 # This script takes the name of a User Custom Field containing a group name.
 # On each run, it ensures that each user belongs to the group name given by that UCF (NOTE: group full_name, not name).
 #
@@ -10,7 +7,7 @@ DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD =
 # a "pointer" to a group that the user should belong to, and adds users as needed.
 
 DiscourseAutomation::Scriptable.add(
-  DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD,
+  DiscourseAutomation::Scripts::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD,
 ) do
   field :custom_field_name, component: :custom_field, required: true
 
@@ -22,7 +19,7 @@ DiscourseAutomation::Scriptable.add(
     custom_field_name = fields.dig("custom_field_name", "value")
 
     case trigger["kind"]
-    when DiscourseAutomation::Triggerable::API_CALL, DiscourseAutomation::Triggerable::RECURRING
+    when DiscourseAutomation::Triggers::API_CALL, DiscourseAutomation::Triggers::RECURRING
       query =
         DB.query(<<-SQL, prefix: ::User::USER_FIELD_PREFIX, custom_field_name: custom_field_name)
         SELECT u.id as user_id, g.id as group_id
@@ -52,7 +49,7 @@ DiscourseAutomation::Scriptable.add(
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
-    when DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN
+    when DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN
       group_name =
         DB.query_single(
           <<-SQL,

@@ -6,7 +6,7 @@ describe "PointInTime" do
   fab!(:user)
   fab!(:topic)
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
   end
 
   context "when updating trigger" do

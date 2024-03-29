@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::APPEND_LAST_EDITED_BY = "append_last_edited_by"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::APPEND_LAST_EDITED_BY) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::APPEND_LAST_EDITED_BY) do
   version 1
 
   triggerables [:after_post_cook]

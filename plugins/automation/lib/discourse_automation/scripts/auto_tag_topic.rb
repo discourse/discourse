@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::AUTO_TAG_TOPIC = "auto_tag_topic"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_TAG_TOPIC) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_TAG_TOPIC) do
   field :tags, component: :tags, required: true
 
   version 1

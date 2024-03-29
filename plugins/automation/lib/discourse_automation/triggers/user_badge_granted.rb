@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::USER_BADGE_GRANTED = "user_badge_granted"
-
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::USER_BADGE_GRANTED) do
   field :badge,
         component: :choices,
         extra: {

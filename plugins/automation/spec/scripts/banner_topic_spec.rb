@@ -5,9 +5,7 @@ require_relative "../discourse_automation_helper"
 describe "BannerTopic" do
   before { automation.upsert_field!("topic_id", "text", { value: topic.id }) }
 
-  fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::BANNER_TOPIC)
-  end
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::BANNER_TOPIC) }
   fab!(:topic)
 
   context "when banner until is set" do

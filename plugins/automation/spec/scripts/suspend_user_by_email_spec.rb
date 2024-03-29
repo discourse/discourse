@@ -7,7 +7,7 @@ describe "SuspendUserByEmail" do
   let(:reason) { "banned for spam" }
 
   fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL)
+    Fabricate(:automation, script: DiscourseAutomation::Scripts::SUSPEND_USER_BY_EMAIL)
   end
   fab!(:user)
 

@@ -8,7 +8,7 @@ describe "Recurring" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      trigger: DiscourseAutomation::Triggerable::RECURRING,
+      trigger: DiscourseAutomation::Triggers::RECURRING,
       script: "nothing_about_us",
     )
   end

@@ -6,7 +6,7 @@ describe "UserRemovedFromGroup" do
   fab!(:user)
   fab!(:group)
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_REMOVED_FROM_GROUP)
   end
 
   before do
@@ -23,7 +23,7 @@ describe "UserRemovedFromGroup" do
       list = capture_contexts { group.remove(user) }
 
       expect(list.length).to eq(1)
-      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::USER_REMOVED_FROM_GROUP)
       expect(list[0]["user"]).to eq(user)
       expect(list[0]["group"]).to eq(group)
       expect(list[0]["usernames"]).to eq([user.username])

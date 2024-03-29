@@ -14,7 +14,7 @@ module DiscourseAutomation
 
       topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|
         automation = DiscourseAutomation::Automation.find_by(id: automation_id)
-        next if automation&.script != DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
+        next if automation&.script != DiscourseAutomation::Scripts::TOPIC_REQUIRED_WORDS
 
         words = automation.fields.find_by(name: "words")&.metadata&.[]("value")
         next if words.blank?

@@ -28,9 +28,9 @@ DiscourseAutomation::Scriptable.add("something_about_us") do
     DiscourseAutomation::CapturedContext.add(context)
     nil
   end
-  triggerables [DiscourseAutomation::Triggerable::API_CALL]
+  triggerables [DiscourseAutomation::Triggers::API_CALL]
 end
 
 DiscourseAutomation::Scriptable.add("nothing_about_us") do
-  triggerables [DiscourseAutomation::Triggerable::API_CALL]
+  triggerables [DiscourseAutomation::Triggers::API_CALL]
 end

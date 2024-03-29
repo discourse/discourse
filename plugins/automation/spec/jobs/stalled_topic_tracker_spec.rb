@@ -6,7 +6,7 @@ describe Jobs::StalledTopicTracker do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::STALLED_TOPIC)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::STALLED_TOPIC)
   end
 
   describe "find stalled topics" do
@@ -25,7 +25,7 @@ describe Jobs::StalledTopicTracker do
 
       expect(list.length).to eq(1)
 
-      expect(list.first["kind"]).to eq(DiscourseAutomation::Triggerable::STALLED_TOPIC)
+      expect(list.first["kind"]).to eq(DiscourseAutomation::Triggers::STALLED_TOPIC)
       expect(list.first["topic"]["id"]).to eq(topic_1.id)
     end
   end

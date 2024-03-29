@@ -6,7 +6,7 @@ describe "CategoryCreatedEdited" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::CATEGORY_CREATED_EDITED)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::CATEGORY_CREATED_EDITED)
   end
 
   context "when editing/creating a post" do

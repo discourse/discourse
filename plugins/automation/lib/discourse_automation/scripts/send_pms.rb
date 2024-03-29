@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::SEND_PMS = "send_pms"
-
-DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SEND_PMS) do
   version 1
 
   placeholder :sender_username

@@ -5,9 +5,7 @@ require_relative "../discourse_automation_helper"
 describe "ZapierWebhook" do
   fab!(:topic)
 
-  fab!(:automation) do
-    Fabricate(:automation, script: DiscourseAutomation::Scriptable::ZAPIER_WEBHOOK)
-  end
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::ZAPIER_WEBHOOK) }
 
   context "with valid webhook url" do
     before do

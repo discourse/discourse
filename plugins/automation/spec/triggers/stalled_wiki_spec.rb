@@ -4,9 +4,7 @@ require_relative "../discourse_automation_helper"
 
 describe "StalledWiki" do
   fab!(:topic_1) { Fabricate(:topic) }
-  fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::STALLED_WIKI)
-  end
+  fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::STALLED_WIKI) }
   fab!(:post_creator_1) { Fabricate(:user, admin: true) }
   let!(:post) do
     post_creator =
