@@ -1,4 +1,28 @@
+## Configuration options for the base intermediate schema generator
+##
+## After modifying this file, regenerate the base intermediate schema
+## by running the `generate_schema` script.
+
+# Default relative path for generated base schema file.
+# An absolute path can also be provided to the script as the first CLI argument.
+# If the CLI argument is present, it takes precedence over the value specified here.
 output_file_path: "../db/schema/100-base-schema.sql"
 
+## Tables to include in the generated base intermediate schema.
+##
+## Available table options:
+## ignore:      List of columns to ignore. Convenient if most of the table's column are needed.
+##              Usage is mutually exclusive with the `include` option. Only one should be used at a time.
+## include:     List of columns to include. Convenient if only a few columns are needed.
+##              Usage is mutually exclusive with the `include`` option. Only one should be used at a time.
+## primary_key: Literal or list of columns to use as primary key.
+## extend:      List of objects describing columns to be added/extended.
+##              The following options are available for an "extend" object:
+##                name:    Required. The name of the column being extended.
+##                is_null: Specifies if the column can be null.
+##                type:    Column type. Defaults to TEXT.
+## indexes:     List of indexes to create. The following options are available for an "index" object:
+##                name: Index name.
+##                columns: List of column(s) to index.
 tables:
   users: {}

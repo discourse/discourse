@@ -84,7 +84,7 @@ module Migrations
       NOTE
 
       @indirectly_ignored_columns.each_with_index do |(table_name, columns), index|
-        next if virtual_table?(table_name) || columns.blank?
+        next if columns.blank?
 
         @output_stream.puts "" if index.positive?
         @output_stream.puts "Table: #{table_name}"
@@ -150,7 +150,7 @@ module Migrations
             configured_primary_key.is_a?(Array) && configured_primary_key.length > 1,
           ]
         else
-          virtual_table?(name) ? [] : [@core_db_connection.primary_key(name), false]
+          [@core_db_connection.primary_key(name), false]
         end
 
       @output_stream.puts ""
@@ -227,8 +227,6 @@ module Migrations
     def columns(name)
       extensions = column_extensions(name)
 
-      return extensions if virtual_table?(name)
-
       default_columns = @core_db_connection.columns(name)
 
       return default_columns if extensions.blank?
@@ -267,11 +265,7 @@ module Migrations
     end
 
     def valid_table?(name)
-      @core_db_connection.tables.include?(name.to_s) || virtual_table?(name)
-    end
-
-    def virtual_table?(name)
-      !!@table_configs.dig(name, :virtual)
+      @core_db_connection.tables.include?(name.to_s)
     end
 
     def indexes(table_name)
