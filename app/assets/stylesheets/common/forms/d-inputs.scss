@@ -61,6 +61,11 @@
     }
   }
 
+  &__group {
+    display: flex;
+    gap: 0.5em;
+  }
+
   &__label {
     display: flex;
     align-items: center;
@@ -118,6 +123,7 @@
 
       label {
         font-weight: normal;
+        margin: 0;
       }
     }
   }

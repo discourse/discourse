@@ -62,7 +62,7 @@
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">Agree
+            <label class="checkbox-label" for="checkbox">Agree
             </label>
           </div>
           <div class="d-form-field__meta --warning">
@@ -127,21 +127,21 @@
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">I
+            <label class="checkbox-label" for="checkbox">I
             </label>
           </div>
         </div>
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">like
+            <label class="checkbox-label" for="checkbox">like
             </label>
           </div>
         </div>
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">courgette
+            <label class="checkbox-label" for="checkbox">courgette
             </label>
           </div>
         </div>
@@ -154,59 +154,40 @@
     </fieldset>
   </div>
 
-  <h2>Grouped input</h2>
+  <h2>Grouped input (stacked only)</h2>
   <div class="d-form__section">
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Standard stacked
-        input
-        <span class="d-form-field__optional">(Optional)</span></label>
-      <p class="d-form-field__info">A potential longer text explaining the use
-        cases of this input field. Can contain a link.</p>
+      <label class="d-form-field__label" for="normal-input">Streetname</label>
       <div class="d-form-field__value">
-        <input
-          type="text"
-          class="d-form-field__input"
-          id="normal-input"
-          size="25"
-        />
-        <div class="d-form-field__meta">
-          <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          <span class="d-form-field__character-count has-error">0/25</span>
-        </div>
+        <input type="text" class="d-form-field__input" size="35" />
       </div>
     </div>
 
-    <div class="d-form-field has-error">
-      <label class="d-form-field__label" for="normal-input">Error highlighting
-      </label>
-      <div class="d-form-field__value">
-        <input
-          type="text"
-          type="text"
-          class="d-form-field__input"
-          id="normal-input"
-          size="25"
-        />
-        <div class="d-form-field__meta --warning">
-          <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-          <span class="d-form-field__character-count has-error">0/25</span>
+    <div class="d-form-field__group">
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Number
+        </label>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" size="10" />
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Bus
+        </label>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" size="10" />
         </div>
       </div>
     </div>
 
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Disabled input
+      <label class="d-form-field__label" for="normal-input">Country
       </label>
       <div class="d-form-field__value">
-        <input
-          type="text"
-          class="d-form-field__input"
-          id="normal-input"
-          size="25"
-          disabled
-          value="Disabled input"
-        />
+        <select>
+          <option value="">--Country of residence--</option>
+        </select>
       </div>
     </div>
   </div>
@@ -337,21 +318,21 @@
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">I
+            <label class="checkbox-label" for="checkbox">I
             </label>
           </div>
         </div>
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">like
+            <label class="checkbox-label" for="checkbox">like
             </label>
           </div>
         </div>
         <div class="d-form-field__value">
           <div class="d-form-field__input-wrapper">
             <input class="d-form-field__input" type="checkbox" id="checkbox" />
-            <label class="d-form-field__label" for="checkbox">courgette
+            <label class="checkbox-label" for="checkbox">courgette
             </label>
           </div>
         </div>
