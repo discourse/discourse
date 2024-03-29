@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5em;
-  margin-block: 2rem;
 
   &__section {
     display: flex;
@@ -10,9 +9,20 @@
     gap: 1em;
 
     &.--inline {
-      flex-direction: row;
-      align-items: stretch;
-      gap: 1em;
+      display: grid;
+      grid-auto-flow: column;
+      column-gap: 0.5em;
+      row-gap: 0.25em;
+      grid-template-columns: auto;
+      grid-template-rows: repeat(3, 1fr);
+
+      &.--3-col {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      &.--4-col {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
     &.--rows {
       display: grid;
@@ -29,8 +39,12 @@
 
   &__section-inline-btn {
     height: 2em;
-    align-self: flex-start;
-    margin-top: 1.25em;
+    align-self: center;
+    justify-self: flex-start;
+
+    .--inline & {
+      grid-row: 2;
+    }
 
     &.--fieldset {
       margin-top: 0;
@@ -49,6 +63,14 @@
   // }
 
   .--rows & {
+    display: contents;
+
+    legend {
+      text-align: right;
+    }
+  }
+
+  .--inline & {
     display: contents;
   }
 
@@ -81,7 +103,8 @@
     }
 
     .--inline & {
-      white-space: nowrap;
+      align-items: flex-end;
+      flex-wrap: wrap;
     }
   }
   &__optional {
@@ -95,6 +118,7 @@
     gap: 0.25em;
     width: max-content;
     .--inline & {
+      display: contents;
       width: auto;
     }
     .--radiobtns & {
@@ -104,7 +128,7 @@
       gap: 0.5em;
 
       label {
-        width: max-content;
+        // width: max-content;
         margin: 0;
       }
     }
@@ -144,6 +168,7 @@
     }
 
     .--inline & {
+      align-self: center;
       width: 100%;
     }
 
@@ -170,6 +195,11 @@
     margin: 0;
   }
 
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
   &__info {
     margin: 0 0 0.25em;
     color: var(--primary-medium);
@@ -200,10 +230,4 @@
       color: var(--danger);
     }
   }
-}
-
-fieldset {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
 }

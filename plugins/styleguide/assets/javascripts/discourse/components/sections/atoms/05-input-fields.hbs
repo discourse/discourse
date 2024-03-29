@@ -349,46 +349,45 @@
   <h2>Inline form</h2>
   <p class="d-form__section-info">A potential longer text explaining the use
     cases of this entire section row, if needed (hopefully not). A form row
-    should not contain checkboxes or radiobuttons. Be reasonable.</p>
-  <div class="d-form__section --inline">
+    should not contain checkboxes or radiobuttons. Be reasonable. It can have 3
+    or 4 columns (including an action). Unlike other forms, every input *must
+    have* a meta-section, even empty, or else the layout will break. Keep labels
+    as short as possible. For now the columns will divide equally. Will adjust
+    when the need arises.</p>
+  <div class="d-form__section --inline --4-col">
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Standard stacked
-        input
+      <label class="d-form-field__label" for="normal-input">Name
         <span class="d-form-field__optional">(Optional)</span></label>
 
       <div class="d-form-field__value">
         <input type="text" class="d-form-field__input" id="normal-input" />
         <div class="d-form-field__meta">
           <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          <span class="d-form-field__character-count has-error">0/25</span>
         </div>
       </div>
     </div>
 
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Error highlighting
+      <label class="d-form-field__label" for="normal-input">url
       </label>
       <div class="d-form-field__value">
-        <select />
-        <div class="d-form-field__meta --warning">
-          <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-          <span class="d-form-field__character-count has-error">0/25</span>
+        <select>
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+        <div class="d-form-field__meta">
         </div>
       </div>
     </div>
 
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Disabled input
+      <label class="d-form-field__label" for="normal-input">Reason
       </label>
       <div class="d-form-field__value">
-        <input
-          type="text"
-          class="d-form-field__input"
-          id="normal-input"
-          disabled
-          value="Disabled input"
-        />
+        <input type="text" class="d-form-field__input" id="normal-input" />
+        <div class="d-form-field__meta">
+        </div>
       </div>
     </div>
 
@@ -491,6 +490,8 @@
     </fieldset>
   </div> }}
 </form>
+
+<h1>Bookmark modal</h1>
 
 <StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
