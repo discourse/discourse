@@ -165,18 +165,20 @@ module Migrations
         end
       end
 
-      column_records.each do |column|
-        next if @global_column_ignore_list.include?(column.name)
-        next if (mode == :ignore) && column_list.include?(column.name)
-        if !column.is_a?(CustomColumn) && (mode == :include) && column_list.exclude?(column.name)
-          @indirectly_ignored_columns[name] << column
+      column_records
+        .sort_by { |c| c.name }
+        .each do |column|
+          next if @global_column_ignore_list.include?(column.name)
+          next if (mode == :ignore) && column_list.include?(column.name)
+          if !column.is_a?(CustomColumn) && (mode == :include) && column_list.exclude?(column.name)
+            @indirectly_ignored_columns[name] << column
 
-          next
+            next
+          end
+          next if !composite_key && (column.name == primary_key)
+
+          column_definitions << generate_column_definition(column)
         end
-        next if !composite_key && (column.name == primary_key)
-
-        column_definitions << generate_column_definition(column)
-      end
 
       column_definitions << "  PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
 

@@ -26,3 +26,12 @@ output_file_path: "../db/schema/100-base-schema.sql"
 ##                columns: List of column(s) to index.
 tables:
   users: {}
+
+## Schema-wide column configuration options. These options apply to all tables.
+## See table specific column configuration options above.
+##
+## Available Options:
+## ignore:  List of core/plugin table columns to ignore and exclude from intermediate schema.
+columns:
+  ignore:
+    - updated_at
