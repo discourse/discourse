@@ -14,8 +14,8 @@ module Migrations
       def execute
         FileUtils.mkdir_p("/tmp/converter")
 
-        Migrations::IntermediateDb.reset!("/tmp/converter/intermediate.db")
-        Migrations::IntermediateDb.migrate("/tmp/converter/intermediate.db")
+        ::Migrations::IntermediateDbMigrator.reset!("/tmp/converter/intermediate.db")
+        ::Migrations::IntermediateDbMigrator.migrate("/tmp/converter/intermediate.db")
 
         # require_relative "converters/pepper/main"
       end
