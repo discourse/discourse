@@ -1,0 +1,22 @@
+.styleguide-menu {
+  display: none;
+}
+
+#main-outlet-wrapper {
+  width: 100vw;
+}
+
+.styleguide {
+  display: block !important;
+}
+
+.d-form {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.d-form-field {
+  &__value {
+    width: 100%;
+  }
+}
