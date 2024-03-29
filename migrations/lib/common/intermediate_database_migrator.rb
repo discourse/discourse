@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module Migrations
-  class IntermediateDbMigrator
+  class IntermediateDatabaseMigrator
     class << self
       def reset!(path)
         [path, "#{path}-wal", "#{path}-shm"].each { |p| FileUtils.rm_f(p) if File.exist?(p) }
       end
 
       def migrate(path)
-        connection = Migrations::IntermediateDb.create_connection(path: path)
+        connection = IntermediateDatabase.create_connection(path: path)
         performed_migrations = find_performed_migrations(connection)
 
-        path = File.join(Migrations.root_path, "db", "schema")
+        path = File.join(::Migrations.root_path, "db", "schema")
         migrate_from_path(connection, path, performed_migrations)
 
         connection.close

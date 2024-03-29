@@ -4,7 +4,7 @@ require "extralite"
 require "lru_redux"
 
 module Migrations
-  class IntermediateDb
+  class IntermediateDatabase
     DEFAULT_JOURNAL_MODE = "wal"
     TRANSACTION_BATCH_SIZE = 1000
     PREPARED_STATEMENT_CACHE_SIZE = 5
