@@ -146,12 +146,16 @@ jobs:
         run: bin/rspec --default-path migrations/spec
 
   runtime:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Runtime check (${{ matrix.os }}, Ruby ${{ matrix.ruby }})
+    timeout-minutes: 20
+
     strategy:
       fail-fast: false
 
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
-        ruby: ["3.2", "head"]
+        ruby: ["3.2", "3.3"]
 
     runs-on: ${{ matrix.os }}
 
