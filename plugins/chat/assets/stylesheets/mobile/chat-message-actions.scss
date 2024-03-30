@@ -1,18 +1,8 @@
 .chat-message-actions {
-  position: absolute;
-  bottom: -100vh;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  margin: 0 5px;
-  transition: bottom 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    visibility cubic-bezier(0.4, 0, 0.2, 1);
-  visibility: hidden;
-  box-sizing: border-box;
+  // background-color: #000;
 
   .selected-message-container {
-    padding: 0.5em 0.5em 1em 0.5em;
+    padding: 0.5em 0 1em 0;
   }
 
   .selected-message {
@@ -41,7 +31,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em 1em 1.5em 1em;
+    padding: 1em 0 1.5em 0;
+    width: 100%;
 
     .chat-message-reaction {
       background: none;
@@ -109,7 +100,6 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0.5em;
     margin: 0;
 
     .chat-message-action-item {
@@ -139,31 +129,6 @@
           color: var(--primary);
         }
       }
-    }
-  }
-}
-
-.chat-message-actions-backdrop {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  z-index: z("header") + 1;
-  transition: background-color 0.4s ease-in;
-
-  .collapse-area {
-    width: 100%;
-    height: 100%;
-  }
-
-  &.fade-in {
-    background: rgba(var(--always-black-rgb), 0.6);
-
-    .chat-message-actions {
-      bottom: 0px;
-      visibility: visible;
     }
   }
 }
