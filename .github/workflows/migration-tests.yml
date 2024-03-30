@@ -23,7 +23,7 @@ permissions:
 jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Ruby ${{ matrix.ruby }}
+    name: Tests with Ruby ${{ matrix.ruby }}
     runs-on: 'ubuntu-latest'
     container: discourse/discourse_test:slim
     timeout-minutes: 20
@@ -147,7 +147,7 @@ jobs:
 
   runtime:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Runs on (${{ matrix.os }}, Ruby ${{ matrix.ruby }})
+    name: Runs on ${{ matrix.os }}, Ruby ${{ matrix.ruby }}
     timeout-minutes: 20
 
     strategy:
