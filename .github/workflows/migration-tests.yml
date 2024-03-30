@@ -147,7 +147,7 @@ jobs:
 
   runtime:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Runtime check (${{ matrix.os }}, Ruby ${{ matrix.ruby }})
+    name: Runs on (${{ matrix.os }}, Ruby ${{ matrix.ruby }})
     timeout-minutes: 20
 
     strategy:
