@@ -173,6 +173,12 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
     stackingContextFix(this.scrollable, () => {
       this.messagesManager.addMessages([message]);
     });

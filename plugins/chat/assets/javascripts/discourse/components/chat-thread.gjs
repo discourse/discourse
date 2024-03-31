@@ -316,7 +316,15 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    this.messagesManager.addMessages([message]);
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
+    stackingContextFix(this.scrollable, () => {
+      this.messagesManager.addMessages([message]);
+    });
   }
 
   @bind
