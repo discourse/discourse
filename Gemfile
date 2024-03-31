@@ -55,8 +55,6 @@ gem "message_bus"
 
 gem "rails_multisite"
 
-gem "fast_xs", platform: :ruby
-
 gem "fastimage"
 
 gem "aws-sdk-s3", require: false
