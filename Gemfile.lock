@@ -149,7 +149,6 @@ GEM
     fastimage (2.3.0)
     ffi (1.16.3)
     fspath (3.1.2)
-    gc_tracer (1.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-protobuf (3.25.2)
@@ -566,7 +565,6 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
-  gc_tracer
   highline
   htmlentities
   http_accept_language
