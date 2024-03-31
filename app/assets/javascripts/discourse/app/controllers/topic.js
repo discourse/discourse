@@ -515,7 +515,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    // Called the the bottommost visible post on the page changes.
+    // Called the bottommost visible post on the page changes.
     bottomVisibleChanged(event) {
       const { post, refresh } = event;
 

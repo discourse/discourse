@@ -115,7 +115,7 @@ class PresenceChannel
   end
 
   # Is a user allowed to enter this channel?
-  # Currently equal to the the can_view? permission
+  # Currently equal to the can_view? permission
   def can_enter?(user_id: nil, group_ids: nil)
     return false if user_id.nil?
     can_view?(user_id: user_id, group_ids: group_ids)
