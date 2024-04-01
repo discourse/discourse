@@ -21,8 +21,7 @@ module Migrations
     end
 
     def run
-      table = generate_table("user_badges")
-      output_table(table)
+      output_tables
     end
 
     private
@@ -30,6 +29,19 @@ module Migrations
     def load_config
       path = File.expand_path("../config/intermediate_db.yml", __dir__)
       YAML.load_file(path, symbolize_names: true)
+    end
+
+    def output_tables
+      puts "Generating tables..."
+
+      table_names = @table_configs&.keys&.sort || []
+
+      table_names.each do |name|
+        raise "Core table named '#{name}' not found" unless valid_table?(name)
+
+        table = generate_table(name)
+        output_table(table)
+      end
     end
 
     def generate_table(name)
@@ -72,11 +84,11 @@ module Migrations
             definition = [
               c.name.ljust(max_column_name_length),
               c.datatype.ljust(max_datatype_length),
-              c.nullable ? nil : "NOT NULL",
-              c.primary_key && !is_composite_primary_key ? "PRIMARY KEY" : nil,
             ]
 
-            definition.compact!
+            definition << "NOT NULL" unless c.nullable
+            definition << "PRIMARY KEY" if c.primary_key && !is_composite_primary_key
+
             definition = definition.join(" ")
             definition.strip!
 
