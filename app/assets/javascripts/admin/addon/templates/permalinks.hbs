@@ -49,7 +49,9 @@
                     #{{pl.post_number}}</a>
                 {{/if}}
                 {{#if pl.category_id}}
-                  {{category-link pl.category}}
+                  <AsyncCategoryLink
+                    @categoryId={{pl.category_id}}
+                  />
                 {{/if}}
                 {{#if pl.tag_id}}
                   <a href={{pl.tag_url}}>{{pl.tag_name}}</a>

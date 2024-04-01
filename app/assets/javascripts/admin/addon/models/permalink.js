@@ -1,7 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
-import Category from "discourse/models/category";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Permalink extends EmberObject {
@@ -22,11 +21,6 @@ export default class Permalink extends EmberObject {
         permalink_type_value: this.permalink_type_value,
       },
     });
-  }
-
-  @discourseComputed("category_id")
-  category(category_id) {
-    return Category.findById(category_id);
   }
 
   @discourseComputed("external_url")
