@@ -208,7 +208,7 @@ class ThemeSettingsObjectValidator
   end
 
   def is_property_present?(property_name)
-    if @object[property_name].nil?
+    if @object[property_name].blank?
       add_error(property_name, :required)
       false
     else

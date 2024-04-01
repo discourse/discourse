@@ -1068,7 +1068,7 @@ RSpec.describe ThemeSettingsObjectValidator do
       end
     end
 
-    context "for category properties" do
+    context "for categories properties" do
       fab!(:category_1) { Fabricate(:category) }
       fab!(:category_2) { Fabricate(:category) }
 
@@ -1088,6 +1088,22 @@ RSpec.describe ThemeSettingsObjectValidator do
       it "should not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { category_property: { type: "categories" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is present but empty and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            category_property: {
+              type: "categories",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: { category_property: [] }).validate
+
+        expect(errors.keys).to eq(["/category_property"])
+        expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not present and it's required" do
