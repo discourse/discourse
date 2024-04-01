@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheckTracker do
+  before { described_class.any_instance.stubs(:check).returns(stub(max_blips: 1)) }
+
   describe "validations" do
     let(:record) { described_class.new(identifier: "twitter_login") }
 
@@ -41,6 +43,50 @@ RSpec.describe ProblemCheckTracker do
       let(:next_run_at) { 5.minutes.from_now }
 
       it { expect(problem_tracker).not_to be_ready_to_run }
+    end
+  end
+
+  describe "#failing?" do
+    before { freeze_time }
+
+    let(:problem_tracker) { described_class.new(last_problem_at:, last_run_at:, last_success_at:) }
+
+    context "when the last run passed" do
+      let(:last_run_at) { 1.minute.ago }
+      let(:last_success_at) { 1.minute.ago }
+      let(:last_problem_at) { 11.minutes.ago }
+
+      it { expect(problem_tracker).not_to be_failing }
+    end
+
+    context "when the last run had a problem" do
+      let(:last_run_at) { 1.minute.ago }
+      let(:last_success_at) { 11.minutes.ago }
+      let(:last_problem_at) { 1.minute.ago }
+
+      it { expect(problem_tracker).to be_failing }
+    end
+  end
+
+  describe "#passing?" do
+    before { freeze_time }
+
+    let(:problem_tracker) { described_class.new(last_problem_at:, last_run_at:, last_success_at:) }
+
+    context "when the last run passed" do
+      let(:last_run_at) { 1.minute.ago }
+      let(:last_success_at) { 1.minute.ago }
+      let(:last_problem_at) { 11.minutes.ago }
+
+      it { expect(problem_tracker).to be_passing }
+    end
+
+    context "when the last run had a problem" do
+      let(:last_run_at) { 1.minute.ago }
+      let(:last_success_at) { 11.minutes.ago }
+      let(:last_problem_at) { 1.minute.ago }
+
+      it { expect(problem_tracker).not_to be_passing }
     end
   end
 
