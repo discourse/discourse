@@ -53,7 +53,7 @@ export default class ChatThread extends Component {
   @service router;
   @service siteSettings;
 
-  @tracked isAtBottom = true;
+  @tracked atBottom = true;
   @tracked isScrolling = false;
   @tracked needsArrow = false;
   @tracked uploadDropZone;

@@ -74,7 +74,7 @@ export default class ChatChannel extends Component {
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked needsArrow = false;
-  @tracked atBottom = false;
+  @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
