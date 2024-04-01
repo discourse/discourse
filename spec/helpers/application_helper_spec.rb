@@ -17,6 +17,13 @@ RSpec.describe ApplicationHelper do
       expect(helper.include_crawler_content?).to eq(false)
     end
 
+    it "sends crawler content to logged on users who wants to print" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+      helper.stubs(:params).returns(print: true)
+
+      expect(helper.include_crawler_content?).to eq(true)
+    end
+
     it "sends crawler content to old mobiles" do
       controller.stubs(:use_crawler_layout?).returns(false)
 
