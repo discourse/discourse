@@ -15,10 +15,11 @@ class ProblemCheckTracker < ActiveRecord::Base
     next_run_at.blank? || next_run_at.past?
   end
 
-  def problem!(next_run_at: nil)
+  def problem!(next_run_at: nil, details: {})
+    puts "<<<", details
     now = Time.current
 
-    update!(blips: blips + 1, last_run_at: now, last_problem_at: now, next_run_at:)
+    update!(blips: blips + 1, details:, last_run_at: now, last_problem_at: now, next_run_at:)
   end
 
   def no_problem!(next_run_at: nil)
@@ -49,6 +50,7 @@ end
 #  next_run_at     :datetime
 #  last_success_at :datetime
 #  last_problem_at :datetime
+#  details         :json
 #
 # Indexes
 #

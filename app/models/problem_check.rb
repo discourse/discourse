@@ -138,7 +138,7 @@ class ProblemCheck
     if problems.empty?
       tracker.no_problem!(next_run_at:)
     else
-      tracker.problem!(next_run_at:)
+      tracker.problem!(next_run_at:, details: translation_data)
     end
 
     problems
