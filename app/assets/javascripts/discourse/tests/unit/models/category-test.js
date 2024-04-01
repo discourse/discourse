@@ -3,10 +3,34 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Category from "discourse/models/category";
+import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | category", function (hooks) {
   setupTest(hooks);
+
+  test("parentCategory and subcategories", function (assert) {
+    const foo = Site.current().updateCategory({
+      id: 12345,
+      slug: "foo",
+    });
+
+    const bar = Site.current().updateCategory({
+      id: 12346,
+      slug: "bar",
+      parent_category_id: 12345,
+    });
+
+    const baz = Site.current().updateCategory({
+      id: 12347,
+      slug: "baz",
+      parent_category_id: 12345,
+    });
+
+    assert.deepEqual(foo.subcategories, [bar, baz]);
+    assert.equal(bar.parentCategory, foo);
+    assert.equal(baz.parentCategory, foo);
+  });
 
   test("slugFor", function (assert) {
     const store = getOwner(this).lookup("service:store");
@@ -36,7 +60,7 @@ module("Unit | Model | category", function (hooks) {
       "It can be non english characters"
     );
 
-    const parentCategory = store.createRecord("category", {
+    const parentCategory = Site.current().updateCategory({
       id: 345,
       slug: "darth",
     });

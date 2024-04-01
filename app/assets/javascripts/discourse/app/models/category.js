@@ -432,9 +432,11 @@ export default class Category extends RestModel {
     }
   }
 
-  @computed("parent_category_id")
+  @computed("parent_category_id", "site.categories.[]")
   get parentCategory() {
-    return Category.findById(this.parent_category_id);
+    if (this.parent_category_id) {
+      return Category.findById(this.parent_category_id);
+    }
   }
 
   set parentCategory(newParentCategory) {
