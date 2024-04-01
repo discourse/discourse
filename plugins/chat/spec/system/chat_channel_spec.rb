@@ -164,12 +164,12 @@ RSpec.describe "Chat channel", type: :system do
       50.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
-    xit "doesn’t scroll the pane" do
+    it "doesn’t append the message when not at bottom" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
-      new_message = Fabricate(:chat_message, chat_channel: channel_1)
+      new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
-      expect(page).to have_no_content(new_message.message)
+      expect(channel_page.messages).to have_no_message(id: new_message.id)
     end
   end
 
