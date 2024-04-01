@@ -102,6 +102,13 @@ export default class Category extends RestModel {
     if (!id) {
       return;
     }
+
+    if (typeof id === "string") {
+      // eslint-disable-next-line no-console
+      console.warn("Category.findById called with a string ID");
+      id = parseInt(id, 10);
+    }
+
     return Category._idMap().get(id);
   }
 
