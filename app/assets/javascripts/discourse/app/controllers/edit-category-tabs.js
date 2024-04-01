@@ -90,10 +90,7 @@ export default Controller.extend({
         return;
       }
       const model = this.model;
-      const parentCategory = this.site.categories.findBy(
-        "id",
-        parseInt(model.parent_category_id, 10)
-      );
+      const parentCategory = Category.findById(model.parent_category_id);
 
       this.set("saving", true);
       const previousParentCategory = model.get("parentCategory");

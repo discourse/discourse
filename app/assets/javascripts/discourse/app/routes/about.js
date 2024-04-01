@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
@@ -24,7 +25,7 @@ export default DiscourseRoute.extend({
       const { category_moderators: categoryModerators } = result.about;
       if (categoryModerators && categoryModerators.length) {
         categoryModerators.forEach((obj, index) => {
-          const category = this.site.categories.findBy("id", obj.category_id);
+          const category = Category.findById(obj.category_id);
           result.about.category_moderators[index].category = category;
         });
       }
