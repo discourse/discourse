@@ -7,8 +7,6 @@ class ProblemCheckTracker < ActiveRecord::Base
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
 
-  after_commit :sound_the_alarm, if: :sound_the_alarm?
-
   def self.[](identifier)
     find_or_create_by(identifier:)
   end
@@ -29,6 +27,10 @@ class ProblemCheckTracker < ActiveRecord::Base
     now = Time.current
 
     update!(blips: blips + 1, details:, last_run_at: now, last_problem_at: now, next_run_at:)
+
+    return if !sound_the_alarm?
+
+    sound_the_alarm
   end
 
   def no_problem!(next_run_at: nil)
@@ -43,12 +45,15 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   private
 
-  def sound_the_alarm?
-    failing? && blips > check.max_blips
+  def sound_the_alarm
+    AdminNotice
+      .problem
+      .create_with(priority: check.priority, details:)
+      .create_or_find_by(identifier:)
   end
 
-  def sound_the_alarm
-    puts ">>>"
+  def sound_the_alarm?
+    failing? && blips > check.max_blips
   end
 end
 
