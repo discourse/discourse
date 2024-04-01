@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -64,6 +64,29 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       exists(".sidebar-section[data-section-name='admin-security']"),
       "security settings section is displayed"
     );
+    assert.ok(
+      exists(".sidebar-section[data-section-name='admin-plugins']"),
+      "plugins section is displayed"
+    );
+    assert.ok(
+      exists(".sidebar-section[data-section-name='admin-advanced']"),
+      "advanced section is displayed"
+    );
+  });
+
+  test("filter sections and clear filter with ESC", async function (assert) {
+    await visit("/admin");
+    await fillIn(".sidebar-filter__input", "advanced");
+    assert.notOk(
+      exists(".sidebar-section[data-section-name='admin-plugins']"),
+      "plugins section is hidden"
+    );
+    assert.ok(
+      exists(".sidebar-section[data-section-name='admin-advanced']"),
+      "advanced section is displayed"
+    );
+
+    await triggerKeyEvent(".sidebar-filter__input", "keydown", "Escape");
     assert.ok(
       exists(".sidebar-section[data-section-name='admin-plugins']"),
       "plugins section is displayed"
