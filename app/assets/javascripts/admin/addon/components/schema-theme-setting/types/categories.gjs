@@ -1,45 +1,21 @@
-import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
 import { and, not } from "truth-helpers";
-import I18n from "discourse-i18n";
 import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
+import SchemaThemeSettingTypeModels from "admin/components/schema-theme-setting/types/models";
 import CategorySelector from "select-kit/components/category-selector";
 
-export default class SchemaThemeSettingTypeCategories extends Component {
-  @tracked touched = false;
-
+export default class SchemaThemeSettingTypeCategories extends SchemaThemeSettingTypeModels {
   @tracked
   value =
     this.args.value?.map((categoryId) => {
       return this.args.setting.metadata.categories[categoryId];
     }) || [];
 
-  required = this.args.spec.required;
-  min = this.args.spec.validations?.min;
-  max = this.args.spec.validations?.max;
+  type = "categories";
 
-  @action
-  onInput(categories) {
-    this.touched = true;
-    this.value = categories;
-    this.args.onChange(categories.map((category) => category.id));
-  }
-
-  get validationErrorMessage() {
-    if (!this.touched) {
-      return;
-    }
-
-    if (
-      (this.min && this.value.length < this.min) ||
-      (this.required && (!this.value || this.value.length === 0))
-    ) {
-      return I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
-        count: this.min || 1,
-      });
-    }
+  onChange(categories) {
+    return categories.map((category) => category.id);
   }
 
   <template>
