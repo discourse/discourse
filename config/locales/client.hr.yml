@@ -72,7 +72,7 @@ hr:
         x_months:
           one: "%{count} mjesec"
           few: "%{count} mjeseci"
-          other: "%{count}mjeseci"
+          other: "%{count} mjeseci"
         about_x_years:
           one: "%{count} godina"
           few: "%{count} godina"
@@ -110,7 +110,7 @@ hr:
           other: "%{count} dana"
         x_months:
           one: "%{count} mjesec"
-          few: "%{count} mjeseci"
+          few: "%{count} mjeseca"
           other: "%{count} mjeseci"
         about_x_years:
           one: "oko %{count} godinu"
@@ -764,7 +764,7 @@ hr:
         title: "Dodaj članove u %{group_name}"
         description: "Unesite popis korisnika koje želite pozvati u grupu ili zalijepite u popis odvojen zarezima:"
         usernames_placeholder: "korisnička imena"
-        usernames_or_emails_placeholder: "korisnička imena ili e-adrese"
+        usernames_or_emails_placeholder: "korisnička imena ili e-mail adrese"
         notify_users: "Obavijesti korisnike"
         set_owner: "Postavite korisnike kao vlasnike ove grupe"
       requests:
@@ -1364,7 +1364,7 @@ hr:
         account: "Račun"
         security: "Sigurnost"
         profile: "Profil"
-        emails: "E-adrese"
+        emails: "E-mail poruke"
         notifications: "Obavijest"
         tracking: "Praćeno"
         categories: "Kategorije"
@@ -1520,7 +1520,7 @@ hr:
         add_email: "Dodaj zamjensku e-poštu"
         auth_override_instructions: "E-pošta se može ažurirati od davatelja autentičnosti."
         no_secondary: "Nema sekundarnih e-pošta"
-        instructions: "NIkada neće biti javno prikazano."
+        instructions: "Nikada neće biti javno prikazano."
         admin_note: "Napomena: Administratorski korisnik koji mijenja e-adresu drugog ne-administrativnog korisnika znači da je korisnik izgubio pristup svom izvornom računu e-pošte, pa će se e-pošta za resetiranje lozinke poslati na njegovu novu adresu. E-adresa korisnika neće se mijenjati dok ne dovrše postupak resetiranja lozinke."
         ok: "Poslati ćemo vam e-mail za potvrdu"
         required: "Unesite e-mail adresu"
@@ -1552,6 +1552,7 @@ hr:
         ok: "Vaše ime dobro izgleda"
       username:
         title: "Korisničko ime"
+        instructions: "Jedinstveno, bez razmaka, kratko."
         short_instructions: "Ljudi vas mogu spominjati kao @%{username}"
         available: "Vaše je korisničko ime slobodno"
         not_available: "Nije dostupno. Pokušajte %{suggestion}?"
@@ -2062,7 +2063,7 @@ hr:
       resend_activation_email: "Pritisnite ovjde da ponovno pošaljemo aktivacijski e-mail."
       omniauth_disallow_totp: "Na vašem je računu omogućena dvofaktorska provjera autentičnosti. Molimo prijavite se zaporkom."
       resend_title: "Ponovno pošaljite e-poštu za aktivaciju"
-      change_email: "Promijeni e mail adresu"
+      change_email: "Promijeni e-mail adresu"
       provide_new_email: "Nanesite novu adresu i ponovno ćemo vam poslati e-poštu s potvrdom."
       submit_new_email: "Ažurirajte adresu e-pošte"
       sent_activation_email_again: "Poslali smo vam drugi aktivacijski e-mail na: <b>%{currentEmail}</b>. Možda zatreba par minuta da stigne; svakako provjerite mapu nepoželjne pošte."
@@ -2764,8 +2765,8 @@ hr:
         new: "Nema više novih tema."
         unread: "Nema više nepročitanih tema."
         unseen: "Nema više nepročitanih tema."
-        category: "Nema više %{category} tema."
-        tag: "Nema više %{tag} tema."
+        category: "Nema više tema u kategoriji %{category}."
+        tag: "Nema više tema s oznakom %{tag}."
         top: "Nema više glavnih tema."
         bookmarks: "U oznakama nema više spremljenih tema."
     topic_bulk_actions:
@@ -2777,6 +2778,7 @@ hr:
         few: "%{count} objava u temi"
         other: "%{count} objave u temi"
       create: "Nova tema"
+      create_disabled_category: "Nije vam dopušteno kreirati teme u ovoj kategoriji"
       create_long: "Otvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Pokrenite poruku"
@@ -2868,7 +2870,7 @@ hr:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
-      suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
+      suggest_create_topic: Jeste li spremni <a href>započeti novi razgovor?</a>
       deleted: "Tema je obrisana."
       slow_mode_update:
         title: "Usporeni način rada"
@@ -4318,7 +4320,7 @@ hr:
         last_updated: "Nadzorna ploča ažurirana:"
         discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
-        up_to_date: "Imate trenutnu verziju!"
+        up_to_date: "Imate ažurnu verziju!"
         critical_available: "Dostupna je kritična dopuna."
         updates_available: "Dopune su dostupne."
         please_upgrade: "Molimo nadogradite!"
@@ -4329,6 +4331,7 @@ hr:
         latest_version: "Posljednje"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         new_features:
+          title: "Što je novo"
           learn_more: "Saznajte više..."
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
@@ -4979,7 +4982,7 @@ hr:
           save_error_with_reason: "Vaše promjene nisu spremljene. %{error}"
           instructions: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a."
       email:
-        title: "E-adrese"
+        title: "E-mail poruke"
         settings: "Postavke"
         templates: "Predlošci"
         preview_digest: "Sažetak pregleda"
