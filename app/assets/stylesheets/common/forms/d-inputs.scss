@@ -14,7 +14,7 @@
       column-gap: 0.5em;
       row-gap: 0.25em;
       grid-template-columns: auto;
-      grid-template-rows: repeat(3, 1fr);
+      grid-template-rows: auto 1fr auto;
 
       &.--3-col {
         grid-template-columns: repeat(2, 1fr) auto;
@@ -31,11 +31,21 @@
       grid-column-gap: 1em;
       grid-row-gap: 1em;
     }
-    &.--rows {
-      display: grid;
-      grid-auto-flow: column;
-      column-gap: 0.5em;
-      row-gap: 0.25em;
+  }
+
+  &__multi-section {
+    display: grid;
+    row-gap: 0.25em;
+
+    .--inline {
+      grid-template-rows: auto 1fr;
+      &:not(:first-child) {
+        grid-template-rows: 1fr;
+
+        .d-form__section-inline-btn {
+          grid-row: 1;
+        }
+      }
     }
   }
 
@@ -56,10 +66,6 @@
 
     .--inline & {
       grid-row: 2;
-    }
-
-    .--rows & {
-      align-self: flex-start;
     }
   }
 
@@ -230,6 +236,10 @@
   &__meta-text {
     display: inline-flex;
     margin: 0;
+
+    ol {
+      margin-block: 0;
+    }
   }
 
   &__character-count {

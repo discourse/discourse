@@ -24,13 +24,13 @@
     </div>
 
     <div class="d-form-field has-error">
-      <label class="d-form-field__label" for="normal-input">Error highlighting
+      <label class="d-form-field__label" for="error-input">Error highlighting
       </label>
       <div class="d-form-field__value">
         <input
           type="text"
           class="d-form-field__input"
-          id="normal-input"
+          id="error-input"
           size="25"
         />
         <div class="d-form-field__meta --warning">
@@ -42,13 +42,13 @@
     </div>
 
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Disabled input
+      <label class="d-form-field__label" for="disabled-input">Disabled input
       </label>
       <div class="d-form-field__value">
         <input
           type="text"
           class="d-form-field__input"
-          id="normal-input"
+          id="disabled-input"
           size="25"
           disabled
           value="Disabled input"
@@ -61,8 +61,12 @@
       </legend>
       <div class="d-form-field__value-container">
         <div class="d-form-field__value">
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">Agree
+          <input
+            class="d-form-field__input"
+            type="checkbox"
+            id="checkbox-agree"
+          />
+          <label class="checkbox-label" for="checkbox-agree">Agree
           </label>
         </div>
         <div class="d-form-field__meta --warning">
@@ -129,6 +133,7 @@
             class="d-form-field__input"
             type="checkbox"
             id="checkbox1multi"
+            name="checkboxmulti"
           />
           <label class="checkbox-label" for="checkbox1multi">I
           </label>
@@ -140,6 +145,7 @@
             class="d-form-field__input"
             type="checkbox"
             id="checkbox2multi"
+            name="checkboxmulti"
           />
           <label class="checkbox-label" for="checkbox2multi">like
           </label>
@@ -151,6 +157,7 @@
             class="d-form-field__input"
             type="checkbox"
             id="checkbox3multi"
+            name="checkboxmulti"
           />
           <label class="checkbox-label" for="checkbox3multi">courgette
           </label>
@@ -176,10 +183,15 @@
 
     <div class="d-form-field__group">
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Number
+        <label class="d-form-field__label" for="number">Number
         </label>
         <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" size="10" />
+          <input
+            type="text"
+            class="d-form-field__input"
+            size="10"
+            id="number"
+          />
         </div>
       </div>
 
@@ -281,42 +293,42 @@
         <div class="d-form-field__value">
           <input
             type="radio"
-            id="radio-1"
-            name="radio"
+            id="reminder-1"
+            name="reminder"
             class="d-form-field__input"
           />
-          <label for="radio-1" class="checkbox-label">Keep bookmark and delete
-            reminder</label>
+          <label for="reminder-1" class="checkbox-label">Keep bookmark and
+            delete reminder</label>
         </div>
 
         <div class="d-form-field__value">
           <input
             type="radio"
-            id="radio-2"
-            name="radio"
+            id="reminder-2"
+            name="reminder"
             class="d-form-field__input"
           />
-          <label for="radio-2" class="checkbox-label">Keep bookmark</label>
+          <label for="reminder-2" class="checkbox-label">Keep bookmark</label>
         </div>
 
         <div class="d-form-field__value">
           <input
             type="radio"
-            id="radio-3"
-            name="radio"
+            id="reminder-3"
+            name="reminder"
             class="d-form-field__input"
           />
-          <label for="radio-3" class="checkbox-label">Delete bookmark</label>
+          <label for="reminder-3" class="checkbox-label">Delete bookmark</label>
         </div>
 
         <div class="d-form-field__value">
           <input
             type="radio"
-            id="radio-4"
-            name="radio"
+            id="reminder-4"
+            name="reminder"
             class="d-form-field__input"
           />
-          <label for="radio-4" class="checkbox-label">Delete bookmark once I
+          <label for="reminder-4" class="checkbox-label">Delete bookmark once I
             reply</label>
         </div>
       </div>
@@ -327,19 +339,19 @@
       </legend>
       <div class="d-form-field__value-container">
         <div class="d-form-field__value">
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">I
+          <input class="d-form-field__input" type="checkbox" id="multi1" />
+          <label class="checkbox-label" for="multi1">I
           </label>
         </div>
         <div class="d-form-field__value">
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">like
+          <input class="d-form-field__input" type="checkbox" id="multi2" />
+          <label class="checkbox-label" for="multi2">like
           </label>
 
         </div>
         <div class="d-form-field__value">
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">courgette
+          <input class="d-form-field__input" type="checkbox" id="multi3" />
+          <label class="checkbox-label" for="multi3">courgette
           </label>
 
         </div>
@@ -354,13 +366,12 @@
   </div>
 
   <h2>Inline form</h2>
-  <p class="d-form__section-info">A potential longer text explaining the use
-    cases of this entire section row, if needed (hopefully not). A form row
-    should not contain checkboxes or radiobuttons. Be reasonable. It can have 3
-    or 4 columns (including an action). Unlike other forms, every input *must
-    have* a meta-section, even empty, or else the layout will break. Keep labels
-    as short as possible. For now the columns will divide equally. Will adjust
-    when the need arises.</p>
+  <p class="d-form__section-info">
+    A form row should not contain checkboxes or radiobuttons. Be reasonable. It
+    can have 3 or 4 columns (including an action). Unlike other forms, every
+    input *must have* a meta-section, even empty, or else the layout will break.
+    Keep labels as short as possible. For now the columns will divide equally.
+    Will adjust when the need arises.</p>
   <div class="d-form__section --inline --4-col">
     <div class="d-form-field">
       <label class="d-form-field__label" for="normal-input">Name
@@ -401,95 +412,49 @@
     <button type="submit" class="d-form__section-inline-btn">Submit</button>
   </div>
 
-  <h2>Radio buttons fieldset</h2>
-  <div class="d-form__section">
-    <fieldset class="d-form-field --radiobtns">
-      <legend>After reminding you, we should…</legend>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="radio"
-            id="radio-1"
-            name="radio"
-            class="d-form-field__input"
-          />
-          <label for="radio-1" class="checkbox-label">Keep bookmark and delete
-            reminder</label>
-        </div>
-
-        <div class="d-form-field__value">
-          <input
-            type="radio"
-            id="radio-2"
-            name="radio"
-            class="d-form-field__input"
-          />
-          <label for="radio-2" class="checkbox-label">Keep bookmark</label>
-        </div>
-
-        <div class="d-form-field__value">
-          <input
-            type="radio"
-            id="radio-3"
-            name="radio"
-            class="d-form-field__input"
-          />
-          <label for="radio-3" class="checkbox-label">Delete bookmark</label>
-        </div>
-
-        <div class="d-form-field__value">
-          <input
-            type="radio"
-            id="radio-4"
-            name="radio"
-            class="d-form-field__input"
-          />
-          <label for="radio-4" class="checkbox-label">Delete bookmark once I
-            reply</label>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-
   <h2>Multirow form</h2>
-  <p class="d-form__section-info">Multirow inputs can not have an error or help
-    text displayed directly under the field, due to alignment issues.
+  <p class="d-form__section-info">Multirow form is made of multiple inline
+    sections. It can not have an error or help text displayed directly under the
+    field, due to alignment issues. This format also needs empty fields meta,
+    just as the inline one, to keep its structure. It uses aria-labelledby to
+    associate the label with the input.
   </p>
-  <div class="d-form__section --rows">
+  <div class="d-form__multi-section">
     <div class="d-form__section --inline --4-col">
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Name
+        <label class="d-form-field__label" id="row-name">Name
           <span class="d-form-field__optional">(Optional)</span></label>
 
         <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          </div>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
         </div>
       </div>
 
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">url
+        <label class="d-form-field__label" id="row-url">url
         </label>
-        <div class="d-form-field__value">
+        <div class="d-form-field__value" aria-labelledby="row-url">
           <select>
             <option value="">--URL--</option>
             <option value="">Google</option>
             <option value="">DuckDuckGo</option>
           </select>
-          <div class="d-form-field__meta">
-          </div>
         </div>
       </div>
 
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Reason
+        <label class="d-form-field__label" id="row-reason">Reason
         </label>
         <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-          </div>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-reason"
+          />
         </div>
       </div>
 
@@ -497,38 +462,29 @@
     </div>
     <div class="d-form__section --inline --4-col">
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Name
-          <span class="d-form-field__optional">(Optional)</span></label>
-
         <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          </div>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
         </div>
       </div>
 
-      <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">url
-        </label>
-        <div class="d-form-field__value">
+      <div class="d-form-field has-error">
+        <div class="d-form-field__value" aria-labelledby="row-url">
           <select>
             <option value="">--URL--</option>
             <option value="">Google</option>
             <option value="">DuckDuckGo</option>
           </select>
-          <div class="d-form-field__meta">
-          </div>
         </div>
       </div>
 
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Reason
-        </label>
-        <div class="d-form-field__value">
+
+        <div class="d-form-field__value" aria-labelledby="row-reason">
           <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-          </div>
         </div>
       </div>
 
@@ -536,42 +492,45 @@
     </div>
     <div class="d-form__section --inline --4-col">
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Name
-          <span class="d-form-field__optional">(Optional)</span></label>
 
         <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          </div>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
         </div>
       </div>
 
       <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">url
-        </label>
-        <div class="d-form-field__value">
+        <div class="d-form-field__value" aria-labelledby="row-url">
           <select>
             <option value="">--URL--</option>
             <option value="">Google</option>
             <option value="">DuckDuckGo</option>
           </select>
-          <div class="d-form-field__meta">
-          </div>
         </div>
       </div>
 
-      <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Reason
-        </label>
-        <div class="d-form-field__value">
+      <div class="d-form-field has-error">
+
+        <div class="d-form-field__value" aria-labelledby="row-reason">
           <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-          </div>
         </div>
       </div>
 
       <button type="submit" class="d-form__section-inline-btn">Submit</button>
+    </div>
+    <div class="d-form-field__meta --warning">
+      <p class="d-form-field__meta-text">
+        {{d-icon "warning"}}<span>Whatever errors are in this field, they should
+          be consolidated in a numbered error summary at the bottom, like this:
+          <ol>
+            <li>urls should start with https/</li>
+            <li>the reason can't be empty/</li>
+          </ol>
+        </span>
+      </p>
     </div>
   </div>
 </form>
