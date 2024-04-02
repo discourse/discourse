@@ -1023,6 +1023,7 @@ ca:
         use: "Utilitza l'aplicació Authenticator"
         disable: "Desactiva"
         delete: "Suprimeix"
+        delete_backup_codes_confirm_title: "Eliminar codis de còpia de seguretat"
         save: "Desa"
         edit: "Edita"
         totp:

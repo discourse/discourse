@@ -2902,12 +2902,12 @@ fr:
       auto_delete_replies:
         title: "Suppression automatique des réponses"
       status_update_notice:
-        auto_open: "Ce sujet sera automatiquement ouvert dans %{timeLeft}."
-        auto_close: "Ce sujet sera automatiquement fermé dans %{timeLeft}."
+        auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
+        auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> dans %{timeLeft}."
         auto_close_after_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
-        auto_delete: "Ce sujet sera automatiquement supprimé dans %{timeLeft}."
-        auto_bump: "Ce sujet sera automatiquement remonté dans %{timeLeft}."
+        auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
+        auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous recevrez un rappel concernant ce sujet dans %{timeLeft}."
         auto_delete_replies: "Les réponses à ce sujet sont automatiquement supprimées après %{duration}."
       auto_close_title: "Paramètres de fermeture automatique"
