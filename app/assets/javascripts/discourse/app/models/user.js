@@ -209,6 +209,7 @@ export default class User extends RestModel.extend(Evented) {
   @alias("sidebar_sections") sidebarSections;
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
+  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
 
   numGroupsToDisplay = 2;
 

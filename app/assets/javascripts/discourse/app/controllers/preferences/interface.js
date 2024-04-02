@@ -186,6 +186,11 @@ export default Controller.extend({
 
   homeChanged() {
     const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
+
+    if (this.model.canPickThemeWithCustomHomepage) {
+      USER_HOMES[-1] = "custom";
+    }
+
     const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
 
     setDefaultHomepage(userHome || siteHome);
@@ -200,6 +205,14 @@ export default Controller.extend({
     });
 
     let result = [];
+
+    if (this.model.canPickThemeWithCustomHomepage) {
+      result.push({
+        name: I18n.t("user.homepage.default"),
+        value: -1,
+      });
+    }
+
     this.siteSettings.top_menu.split("|").forEach((m) => {
       let id = homeValues[m];
       if (id) {

@@ -559,7 +559,7 @@ module ApplicationHelper
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def build_plugin_html(name)
@@ -756,6 +756,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def anonymous_top_menu_items
+    Discourse.anonymous_top_menu_items.map(&:to_s)
   end
 
   def authentication_data
