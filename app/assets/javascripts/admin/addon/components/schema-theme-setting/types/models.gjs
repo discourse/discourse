@@ -29,9 +29,15 @@ export default class SchemaThemeSettingTypeModels extends Component {
       return;
     }
 
+    const isValueBlank = isBlank(this.value);
+
+    if (!this.required && isValueBlank) {
+      return;
+    }
+
     if (
       (this.min && this.value.length < this.min) ||
-      (this.required && isBlank(this.value))
+      (this.required && isValueBlank)
     ) {
       return I18n.t(
         `admin.customize.theme.schema.fields.${this.type}.at_least`,

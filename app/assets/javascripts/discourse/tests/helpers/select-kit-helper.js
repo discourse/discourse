@@ -308,6 +308,12 @@ export default function selectKit(selector) {
       await click(`${selector} .selected-content [data-name="${name}"]`);
     },
 
+    async deselectItemByIndex(index) {
+      await click(
+        queryAll(`${selector} .selected-content .selected-choice`)[index]
+      );
+    },
+
     exists() {
       return exists(selector);
     },
