@@ -667,6 +667,81 @@ module(
       assert.strictEqual(enumSelector.header().value(), "nice");
     });
 
+    test("input fields of type categories that is not required with min and max validations", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            not_required_category: {
+              type: "categories",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
+            },
+          },
+        },
+        value: [{}],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert
+        .dom(inputFields.fields.not_required_category.labelElement)
+        .hasText("not_required_category");
+
+      const categorySelector = selectKit(
+        `${inputFields.fields.not_required_category.selector} .select-kit`
+      );
+
+      assert.strictEqual(categorySelector.header().value(), null);
+
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(1);
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 2,
+        })
+      );
+
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(2);
+      await categorySelector.selectRowByIndex(3);
+      await categorySelector.selectRowByIndex(4);
+
+      assert
+        .dom(categorySelector.error())
+        .hasText("You can only select 3 items.");
+
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.not_required_category.errorElement)
+        .doesNotExist();
+    });
+
     test("input fields of type categories", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
@@ -677,13 +752,6 @@ module(
             required_category: {
               type: "categories",
               required: true,
-            },
-            not_required_category: {
-              type: "categories",
-              validations: {
-                min: 2,
-                max: 3,
-              },
             },
           },
         },
@@ -729,37 +797,6 @@ module(
           count: 1,
         })
       );
-
-      assert
-        .dom(inputFields.fields.not_required_category.labelElement)
-        .hasText("not_required_category");
-
-      categorySelector = selectKit(
-        `${inputFields.fields.not_required_category.selector} .select-kit`
-      );
-
-      assert.strictEqual(categorySelector.header().value(), null);
-
-      await categorySelector.expand();
-      await categorySelector.selectRowByIndex(1);
-      await categorySelector.collapse();
-
-      inputFields.refresh();
-
-      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
-          count: 2,
-        })
-      );
-
-      await categorySelector.expand();
-      await categorySelector.selectRowByIndex(2);
-      await categorySelector.selectRowByIndex(3);
-      await categorySelector.selectRowByIndex(4);
-
-      assert
-        .dom(categorySelector.error())
-        .hasText("You can only select 3 items.");
     });
 
     test("input fields of type tags which is required", async function (assert) {
