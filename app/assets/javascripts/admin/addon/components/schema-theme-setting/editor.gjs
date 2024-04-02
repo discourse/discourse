@@ -180,11 +180,18 @@ export default class SchemaThemeSettingNewEditor extends Component {
   @action
   addChildItem(propertyName, parentNodeIndex) {
     this.activeData[parentNodeIndex][propertyName].pushObject({});
+
+    this.onChildClick(
+      this.activeData[parentNodeIndex][propertyName].length - 1,
+      propertyName,
+      parentNodeIndex
+    );
   }
 
   @action
   addItem() {
     this.activeData.pushObject({});
+    this.activeIndex = this.activeData.length - 1;
   }
 
   @action
