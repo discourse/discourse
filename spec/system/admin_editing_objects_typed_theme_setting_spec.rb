@@ -46,7 +46,7 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
 
       expect(admin_objects_theme_setting_editor_page).to have_setting_field_label("name", "Name")
 
-      admin_objects_theme_setting_editor_page.click_link("link 1")
+      admin_objects_theme_setting_editor_page.click_child_link("link 1")
 
       expect(admin_objects_theme_setting_editor_page).to have_setting_field_description(
         "name",
@@ -97,6 +97,25 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
         admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
 
       expect(admin_objects_theme_setting_editor).to have_setting_field("name", "section 1")
+    end
+
+    it "displays the validation errors when an admin tries to save the settting with an invalid value" do
+      visit("/admin/customize/themes/#{theme.id}")
+
+      admin_objects_theme_setting_editor =
+        admin_customize_themes_page.click_edit_objects_theme_setting_button("objects_setting")
+
+      admin_objects_theme_setting_editor
+        .fill_in_field("name", "")
+        .click_link("section 2")
+        .fill_in_field("name", "")
+        .click_child_link("link 1")
+        .fill_in_field("name", "")
+        .save
+
+      expect(find(".schema-theme-setting-editor__errors")).to have_text(
+        "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
+      )
     end
 
     it "allows an admin to edit a theme setting of objects type via the settings editor" do

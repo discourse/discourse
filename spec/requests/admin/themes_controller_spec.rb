@@ -1063,6 +1063,33 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
+      it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
+        SiteSetting.experimental_objects_type_for_theme_settings = true
+
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
+
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "a" * 21, url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(422)
+
+        expect(response.parsed_body["errors"]).to eq(
+          ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
+        )
+      end
+
       it "should be able to update a theme setting of `objects` typed" do
         SiteSetting.experimental_objects_type_for_theme_settings = true
 
