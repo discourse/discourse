@@ -108,7 +108,7 @@ function defineAdminSection(
     }
 
     get name() {
-      return `admin-nav-section-${this.adminNavSectionData.name}`;
+      return `${ADMIN_PANEL}-${this.adminNavSectionData.name}`;
     }
 
     get title() {
@@ -134,6 +134,10 @@ function defineAdminSection(
 
     get displaySection() {
       return true;
+    }
+
+    get collapsedByDefault() {
+      return this.adminNavSectionData.name !== "root";
     }
   };
 

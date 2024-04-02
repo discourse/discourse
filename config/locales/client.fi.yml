@@ -4402,6 +4402,7 @@ fi:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
       back_to_forum: "Takaisin foorumille"
+      filter_reports: Suodata raportteja
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
@@ -4413,6 +4414,8 @@ fi:
         sidebar_title: "Raportit"
         sidebar_link:
           all: "Kaikki"
+      new_features:
+        title: "Uutta"
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli päivitetty:"
@@ -4470,7 +4473,6 @@ fi:
         exception_error: Virhe suoritettaessa kyselyä
         too_many_requests: Olet tehnyt tämän toiminnon liian monta kertaa. Odota, ennen kuin yrität uudelleen.
         not_found_error: Raporttia ei ole olemassa
-        filter_reports: Suodata raportteja
         custom_date_range: Mukautettu päivämääräalue
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
@@ -5183,6 +5185,14 @@ fi:
           active_filter: "Aktiivinen"
           inactive_filter: "Ei aktiivinen"
           updates_available_filter: "Päivityksiä on saatavilla"
+          schema:
+            fields:
+              required: "*pakolliset"
+              string:
+                too_short: "täytyy olla vähintään %{count} merkkiä"
+              number:
+                too_small: "täytyy olla yhtä suuri tai suurempi kuin %{count}"
+                too_large: "täytyy olla yhtä suuri tai pienempi kuin %{count}"
         colors:
           select_base:
             title: "Valitse perusväripaletti"

@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RunProblemCheck do
-  after do
-    Discourse.redis.flushdb
-
-    ProblemCheck.send(:remove_const, "TestCheck")
-  end
+  after { Discourse.redis.flushdb }
 
   context "when there are problems" do
-    before do
+    around do |example|
       ProblemCheck::TestCheck =
         Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
@@ -25,6 +21,10 @@ RSpec.describe Jobs::RunProblemCheck do
             ]
           end
         end
+
+      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
+
+      ProblemCheck.send(:remove_const, "TestCheck")
     end
 
     it "adds the messages to the Redis problems array" do
@@ -37,7 +37,7 @@ RSpec.describe Jobs::RunProblemCheck do
   end
 
   context "with multiple problems with the same identifier" do
-    before do
+    around do |example|
       ProblemCheck::TestCheck =
         Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
@@ -58,6 +58,10 @@ RSpec.describe Jobs::RunProblemCheck do
             ]
           end
         end
+
+      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
+
+      ProblemCheck.send(:remove_const, "TestCheck")
     end
 
     it "does not add the same problem twice" do
@@ -70,7 +74,7 @@ RSpec.describe Jobs::RunProblemCheck do
   end
 
   context "when there are retries remaining" do
-    before do
+    around do |example|
       ProblemCheck::TestCheck =
         Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
@@ -80,6 +84,10 @@ RSpec.describe Jobs::RunProblemCheck do
             [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
+
+      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
+
+      ProblemCheck.send(:remove_const, "TestCheck")
     end
 
     it "does not yet update the problem check tracker" do
@@ -100,7 +108,7 @@ RSpec.describe Jobs::RunProblemCheck do
   end
 
   context "when there are no retries remaining" do
-    before do
+    around do |example|
       ProblemCheck::TestCheck =
         Class.new(ProblemCheck) do
           self.perform_every = 30.minutes
@@ -110,6 +118,10 @@ RSpec.describe Jobs::RunProblemCheck do
             [ProblemCheck::Problem.new("Yuge problem")]
           end
         end
+
+      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
+
+      ProblemCheck.send(:remove_const, "TestCheck")
     end
 
     it "updates the problem check tracker" do
@@ -126,7 +138,7 @@ RSpec.describe Jobs::RunProblemCheck do
   end
 
   context "when the check unexpectedly errors out" do
-    before do
+    around do |example|
       ProblemCheck::TestCheck =
         Class.new(ProblemCheck) do
           self.max_retries = 1
@@ -135,6 +147,10 @@ RSpec.describe Jobs::RunProblemCheck do
             raise StandardError.new("Something went wrong")
           end
         end
+
+      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
+
+      ProblemCheck.send(:remove_const, "TestCheck")
     end
 
     it "does not add a problem to the Redis array" do

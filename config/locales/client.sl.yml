@@ -3644,6 +3644,7 @@ sl:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      filter_reports: Filtriraj poročila
       tags:
         remove_muted_tags_from_latest:
           always: "vedno"
@@ -3711,7 +3712,6 @@ sl:
         exception_error: Prišlo je do napake med poizvedbo.
         too_many_requests: To dejanje ste izvedli prevečkrat. Počakajte preden poskusite ponovno.
         not_found_error: To poročilo ne obstaja.
-        filter_reports: Filtriraj poročila
         reports:
           trend_title: "%{percent} sprememba. Trenutno %{current}, je bilo %{prev} v prejšnjem obdobju."
           today: "Danes"
@@ -4026,6 +4026,11 @@ sl:
           all_filter: "Vse"
           active_filter: "Aktivni"
           inactive_filter: "Nedejaven"
+          schema:
+            fields:
+              required: "*zahtevano"
+              number:
+                too_large: "mora biti manj ali enako kot %{count}"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"

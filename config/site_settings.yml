@@ -727,6 +727,7 @@ users:
     client: true
   max_notifications_per_user:
     default: 10000
+    hidden: true
   gravatar_name:
     default: Gravatar
     client: true
@@ -1104,7 +1105,8 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_unlisted: true
+  embed_unlisted: false
+  import_embed_unlisted: true
   embed_truncate: true
   embed_support_markdown: false
   allowed_embed_selectors: ""
@@ -1928,7 +1930,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -2360,15 +2362,11 @@ developer:
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
     default: ""
-    hidden: true
     type: group_list
     list_type: compact
     allow_any: false
     refresh: true
   experimental_objects_type_for_theme_settings:
-    default: false
-    hidden: true
-  experimental_preconnect_link_header:
     default: false
     hidden: true
 
@@ -2857,6 +2855,10 @@ uncategorized:
 
   max_bulk_invites:
     default: 50000
+    hidden: true
+
+  skip_email_bulk_invites:
+    default: false
     hidden: true
 
   max_api_invites:

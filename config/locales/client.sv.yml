@@ -4423,6 +4423,7 @@ sv:
       title: "Discourse-administratör"
       moderator: "Moderator"
       back_to_forum: "Tillbaka till forumet"
+      filter_reports: Filtrera rapporter
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -4434,6 +4435,8 @@ sv:
         sidebar_title: "Rapporter"
         sidebar_link:
           all: "Alla"
+      new_features:
+        title: "Vad är nytt?"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4491,7 +4494,6 @@ sv:
         exception_error: Tyvärr uppstod det ett fel vid körning av förfrågan
         too_many_requests: Du har utfört denna åtgärd för många gånger. Vänta innan du försöker igen.
         not_found_error: Tyvärr finns denna rapport inte
-        filter_reports: Filtrera rapporter
         custom_date_range: Anpassat datumintervall
         reports:
           trend_title: "%{percent} förändring. Nuvarande %{current}, var %{prev} i tidigare perioden."
@@ -5211,6 +5213,14 @@ sv:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Uppdateringar tillgängliga"
+          schema:
+            fields:
+              required: "*krävs"
+              string:
+                too_short: "måste vara minst %{count} tecken"
+              number:
+                too_small: "måste vara större eller lika med %{count}"
+                too_large: "måste vara mindre eller lika med %{count}"
         colors:
           select_base:
             title: "Välj grundfärgspalett"

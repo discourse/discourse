@@ -7,7 +7,7 @@
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
-    <%- if GlobalSetting.preload_link_header %>
+    <%- if GlobalSetting.early_hint_header_mode == "prefetch" %>
       <%= render partial: "common/discourse_preload_stylesheet" %>
     <%- end %>
     <%= render partial: "layouts/head" %>
@@ -23,13 +23,11 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
-    <%- if GlobalSetting.preload_link_header %>
-      <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
-      <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
-    <%- else %>
-      <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-      <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-    <%- end %>  
+    <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
+    <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
+    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
+    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
+    
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "vendor" %>

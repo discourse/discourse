@@ -173,10 +173,9 @@ class Admin::ThemesController < Admin::AdminController
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
-      themes: ActiveModel::ArraySerializer.new(@themes, each_serializer: ThemeSerializer),
+      themes: serialize_data(@themes, ThemeSerializer),
       extras: {
-        color_schemes:
-          ActiveModel::ArraySerializer.new(@color_schemes, each_serializer: ColorSchemeSerializer),
+        color_schemes: serialize_data(@color_schemes, ColorSchemeSerializer),
       },
     }
 
@@ -293,7 +292,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    render json: ThemeSerializer.new(@theme)
+    render_serialized(@theme, ThemeSerializer)
   end
 
   def export
@@ -350,6 +349,18 @@ class Admin::ThemesController < Admin::AdminController
 
   def schema
     raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
+  end
+
+  def objects_setting_metadata
+    raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
+
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    theme_setting = theme.settings[params[:setting_name].to_sym]
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
+
+    render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
   end
 
   private

@@ -6,7 +6,7 @@ RSpec.describe Guardian do
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group)

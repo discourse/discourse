@@ -3750,6 +3750,14 @@ bg:
             text: "Тяло"
           all_filter: "Всички"
           active_filter: "Активни"
+          schema:
+            fields:
+              required: "*задъжителни"
+              string:
+                too_short: "трябва да бъде минимум %{count} символа."
+              number:
+                too_small: "трябва да бъде по-голямо или равно на %{count}"
+                too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
           copy_name_prefix: "Копие на"

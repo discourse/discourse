@@ -534,14 +534,23 @@ aside.quote {
   }
 }
 
-.small-user-list .unknown {
-  display: inline-block;
-  background-color: var(--primary-low);
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  vertical-align: middle;
-  margin-right: 0.25em;
+.small-user-list {
+  .small-user-list-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .unknown {
+    display: inline-block;
+    background-color: var(--primary-low);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 0.25em;
+  }
 }
 
 .post-hidden {

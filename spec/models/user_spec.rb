@@ -1781,6 +1781,17 @@ RSpec.describe User do
     end
   end
 
+  describe "real users" do
+    it "should find system user if you allow it" do
+      ids =
+        User
+          .real(allowed_bot_user_ids: [Discourse.system_user.id])
+          .where(id: Discourse.system_user.id)
+          .pluck(:id)
+      expect(ids).to eq([Discourse.system_user.id])
+    end
+  end
+
   describe "#purge_unactivated" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:unactivated) { Fabricate(:user, active: false) }

@@ -3219,6 +3219,8 @@ sk:
         meta_doc: "Podrobný prehľad správ nájdete v našej dokumentácii <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> ."
         sidebar_link:
           all: "Všetky"
+      new_features:
+        title: "Čo je nové"
       dashboard:
         title: "Ovládací panel"
         version: "Verzia"
@@ -3626,6 +3628,14 @@ sk:
           all_filter: "Všetky"
           active_filter: "Aktívny"
           updates_available_filter: "Dostupné aktualizácie"
+          schema:
+            fields:
+              required: "*povinné"
+              string:
+                too_short: "musí mať minimálne %{count} znakov"
+              number:
+                too_small: "musí byť väčšie alebo rovné %{count}"
+                too_large: "musí byť menej alebo rovné %{count}"
         colors:
           title: "Farby"
           copy_name_prefix: "Kópia"

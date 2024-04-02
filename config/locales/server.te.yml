@@ -83,7 +83,6 @@ te:
         not_valid_category_value: "చెల్లుబాటు అయ్యే వర్గం ఐడి ఉండాలి"
         not_valid_post_value: "చెల్లుబాటు అయ్యే పోస్ట్ ఐడి ఉండాలి"
         not_valid_group_value: "చెల్లుబాటు అయ్యే సమూహ ఐడి ఉండాలి"
-        not_valid_tag_value: "చెల్లుబాటు అయ్యే ట్యాగ్ ఐడి ఉండాలి"
         not_valid_upload_value: "చెల్లుబాటు అయ్యే అప్లోడ్ ఐడి ఉండాలి"
         string_value_not_valid_min: "కనీసం %{min} అక్షరాల పొడవు ఉండాలి"
         string_value_not_valid_max: "అత్యధికంగా %{max} అక్షరాల పొడవు ఉండాలి"

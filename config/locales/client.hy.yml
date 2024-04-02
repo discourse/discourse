@@ -2894,6 +2894,7 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
+      filter_reports: Ֆիլտրել հաշվետվությունները
       tags:
         remove_muted_tags_from_latest:
           always: "միշտ"
@@ -2959,7 +2960,6 @@ hy:
         exception_error: Ներողություն, հարցումը կատարելիս տեղի է ունեցել սխալ
         too_many_requests: 'Դուք կատարել եք այս գործողությունը չափից շատ անգամ: Խնդրում ենք սպասել՝ մինչև կրկին փորձելը:'
         not_found_error: Ներողություն, այս հաշվետվությունը գոյություն չունի
-        filter_reports: Ֆիլտրել հաշվետվությունները
         reports:
           trend_title: "%{percent} փոփոխություն: Ներկայումս %{current}, նախորդ շրջանում եղել է %{prev}:"
           today: "Այսօրվա"
@@ -3440,6 +3440,14 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
+          schema:
+            fields:
+              required: "*պարտադիր"
+              string:
+                too_short: "պետք է ունենա առնվազն %{count} սիմվոլ"
+              number:
+                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"

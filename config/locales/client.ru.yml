@@ -4822,6 +4822,7 @@ ru:
       title: "Администратор Discourse"
       moderator: "Модератор"
       back_to_forum: "Вернуться на форум"
+      filter_reports: Фильтр отчётов
       tags:
         remove_muted_tags_from_latest:
           always: "Всегда"
@@ -4833,6 +4834,8 @@ ru:
         sidebar_title: "Отчёты"
         sidebar_link:
           all: "Все настройки"
+      new_features:
+        title: "Что нового"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
@@ -4892,7 +4895,6 @@ ru:
         exception_error: Произошла ошибка при выполнении запроса
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
-        filter_reports: Фильтр отчётов
         custom_date_range: Свой диапазон дат
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
@@ -5618,6 +5620,14 @@ ru:
           active_filter: "Активна"
           inactive_filter: "Неактивна"
           updates_available_filter: "Доступны обновления"
+          schema:
+            fields:
+              required: "*обязательное"
+              string:
+                too_short: "минимум символов: %{count}"
+              number:
+                too_small: "должно быть больше или равно %{count}"
+                too_large: "должно быть меньше или равно %{count}"
         colors:
           select_base:
             title: "Выберите базовую цветовую палитру"

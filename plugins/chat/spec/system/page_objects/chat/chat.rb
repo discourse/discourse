@@ -52,9 +52,9 @@ module PageObjects
         drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
-      def visit_channel(channel, message_id: nil)
+      def visit_channel(channel, message_id: nil, with_preloaded_channels: true)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_finished_loading?
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
       end
 
       def visit_user_threads
@@ -102,7 +102,12 @@ module PageObjects
         visit("/chat/new-message?recipients=#{recipients}")
       end
 
-      def has_finished_loading?
+      def has_preloaded_channels?
+        has_css?("body.has-preloaded-chat-channels")
+      end
+
+      def has_finished_loading?(with_preloaded_channels: true)
+        has_preloaded_channels? if with_preloaded_channels
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end

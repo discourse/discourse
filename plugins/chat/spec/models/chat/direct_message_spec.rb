@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::DirectMessage do
   fab!(:user1) { Fabricate(:user, username: "chatdmfellow1") }
   fab!(:user2) { Fabricate(:user, username: "chatdmuser") }

@@ -4402,6 +4402,7 @@ fr:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
       back_to_forum: "Retour au forum"
+      filter_reports: Filtrer les rapports
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -4413,6 +4414,8 @@ fr:
         sidebar_title: "Rapports"
         sidebar_link:
           all: "Tout"
+      new_features:
+        title: "Nouveautés"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4470,7 +4473,6 @@ fr:
         exception_error: Nous sommes désolés, une erreur s'est produite lors de l'exécution de la requête
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
-        filter_reports: Filtrer les rapports
         custom_date_range: Plage de dates personnalisée
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
@@ -5184,6 +5186,14 @@ fr:
           active_filter: "Actif"
           inactive_filter: "Inactif"
           updates_available_filter: "Mises à jour disponibles"
+          schema:
+            fields:
+              required: "*requis"
+              string:
+                too_short: "doit contenir au moins %{count} caractères"
+              number:
+                too_small: "doit être supérieur ou égal à %{count}"
+                too_large: "doit être inférieur ou égal à %{count}"
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"

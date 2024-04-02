@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::DirectMessagesController do
   fab!(:user)
   fab!(:user1) { Fabricate(:user) }

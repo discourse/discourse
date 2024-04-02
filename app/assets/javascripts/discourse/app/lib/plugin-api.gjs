@@ -141,6 +141,7 @@ import {
   replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
+import { addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -2877,9 +2878,11 @@ class PluginApi {
    * @param {string} opts.class
    * @param {buttonVisibilityCallback} opts.visible
    * @param {buttonAction} opts.action
+   * @param {string} opts.actionType - type of the action, either performanAndRefresh or setComponent
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+    addBulkDropdownButton(opts);
   }
 
   /**

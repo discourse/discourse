@@ -16,6 +16,10 @@ module PageObjects
         expect(input_field_description(field_name)).to have_text(description)
       end
 
+      def has_setting_field_label?(field_name, label)
+        expect(input_field_label(field_name)).to have_text(label)
+      end
+
       def click_link(name)
         find(
           ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node.--child",
@@ -35,10 +39,19 @@ module PageObjects
         self
       end
 
+      def back
+        find(".customize-themes-show-schema__back").click
+        self
+      end
+
       private
 
       def input_field(field_name)
         page.find(".schema-field[data-name=\"#{field_name}\"] .schema-field__input input")
+      end
+
+      def input_field_label(field_name)
+        page.find(".schema-field[data-name=\"#{field_name}\"] .schema-field__label")
       end
 
       def input_field_description(field_name)

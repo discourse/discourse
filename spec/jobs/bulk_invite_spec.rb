@@ -141,5 +141,14 @@ RSpec.describe Jobs::BulkInvite do
         expect(Jobs::ProcessBulkInviteEmails.jobs.size).to eq(1)
       end
     end
+
+    it "does not send an invite email when skip_email_bulk_invites is true" do
+      SiteSetting.skip_email_bulk_invites = true
+
+      described_class.new.execute(current_user_id: admin.id, invites: invites)
+
+      invite = Invite.last
+      expect(invite.emailed_status).to eq(Invite.emailed_status_types[:not_required])
+    end
   end
 end

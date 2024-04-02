@@ -132,6 +132,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
       cmd += ["--load-balance", "--parallel", parallel] if parallel
       cmd += ["--filter", filter] if filter
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
+      cmd << "--reporter=#{ENV["QUNIT_REPORTER_FORMAT"]}" if ENV["QUNIT_REPORTER_FORMAT"]
     end
 
     # Print out all env for debugging purposes

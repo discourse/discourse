@@ -254,6 +254,8 @@ pl_PL:
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     critical_deprecation:
       notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
@@ -1198,6 +1200,7 @@ pl_PL:
           warning: "Czy na pewno chcesz wyczyścić polecany temat?"
       use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
+      login_to_view_profile: "Aby wyświetlić profile użytkowników, musisz się zalogować"
       inactive_user: "Ten użytkownik nie jest już aktywny."
       expand_profile: "Rozwiń"
       sr_expand_profile: "Rozwiń szczegóły profilu"
@@ -2556,6 +2559,8 @@ pl_PL:
       ignore: "Ignoruj"
       image_alt_text:
         aria_label: Tekst alternatywny dla obrazu
+        title: "Dodaj opis obrazu"
+      image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
     notifications:
@@ -4294,6 +4299,7 @@ pl_PL:
         search: "%{shortcut} Wyszukaj"
         filter_sidebar: "%{shortcut} Filtruj pasek boczny"
         help: "%{shortcut} Pokaż skróty klawiszowe"
+        toggle_bulk_select: "%{shortcut} Przełącz wybór zbiorczy"
         dismiss: "%{shortcut} Odrzuć wybrane tematy"
         x: "%{shortcut} Przełącz wybór (w trybie wyboru zbiorczego)"
         log_out: "%{shortcut} Wyloguj"
@@ -4863,6 +4869,7 @@ pl_PL:
       title: "Administrator Discourse"
       moderator: "Moderator"
       back_to_forum: "Powrót do forum"
+      filter_reports: Filtruj zgłoszenia
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -4874,6 +4881,8 @@ pl_PL:
         sidebar_title: "Zgłoszenia"
         sidebar_link:
           all: "Wszystkie"
+      new_features:
+        title: "Co nowego"
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -4933,7 +4942,6 @@ pl_PL:
         exception_error: Przepraszamy, podczas wykonywania zapytania pojawił się błąd
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
-        filter_reports: Filtruj zgłoszenia
         custom_date_range: Niestandardowy zakres dat
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
@@ -5336,7 +5344,7 @@ pl_PL:
           skipped: "Pominięte"
           bounced: "Odbite"
           received: "Otrzymane"
-          rejected: "Odrzucony"
+          rejected: "Odrzucone"
       security:
         title: "Bezpieczeństwo"
         sidebar_link:
@@ -5365,7 +5373,7 @@ pl_PL:
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
         sidebar_link:
-          installed: "Zainstalowana"
+          installed: "Zainstalowane"
       advanced:
         title: "Zaawansowane"
         sidebar_link:
@@ -5687,7 +5695,21 @@ pl_PL:
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
           schema:
+            title: "Edytuj ustawienie %{name}"
             back_button: "Powrót do %{name}"
+            fields:
+              required: "*wymagane"
+              tags:
+                at_least:
+                  one: "wymagany jest co najmniej %{count} tag"
+                  few: "wymagane są co najmniej %{count} tagi"
+                  many: "wymagane jest co najmniej %{count} tagów"
+                  other: "wymagane jest co najmniej %{count} tagów"
+              string:
+                too_short: "musi zawierać co najmniej %{count} znaków"
+              number:
+                too_small: "musi być większe lub równe %{count}"
+                too_large: "musi być mniejszy lub równy %{count}"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"

@@ -172,11 +172,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
   _showRevision(postNumber, revision) {
     const post = this.model.get("postStream").postForPostNumber(postNumber);
-    if (!post) {
-      return;
-    }
 
-    schedule("afterRender", () => this.send("showHistory", post, revision));
+    if (post && post.version > 1 && post.can_view_edit_history) {
+      schedule("afterRender", () => this.send("showHistory", post, revision));
+    }
   },
 
   showCategoryChooser: not("model.isPrivateMessage"),
@@ -515,7 +514,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    // Called the the bottommost visible post on the page changes.
+    // Called the bottommost visible post on the page changes.
     bottomVisibleChanged(event) {
       const { post, refresh } = event;
 

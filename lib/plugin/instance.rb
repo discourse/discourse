@@ -66,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -310,6 +315,10 @@ class Plugin::Instance
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
     Site.preloaded_category_custom_fields << field
+  end
+
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
   def custom_avatar_column(column)

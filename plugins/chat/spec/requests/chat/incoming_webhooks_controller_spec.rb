@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::IncomingWebhooksController do
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:webhook) { Fabricate(:incoming_chat_webhook, chat_channel: chat_channel) }

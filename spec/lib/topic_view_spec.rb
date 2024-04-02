@@ -797,6 +797,18 @@ RSpec.describe TopicView do
       end
     end
 
+    context "when a page number is specified" do
+      it "does not include the page number for first page" do
+        title = TopicView.new(topic.id, admin, page: 1).page_title
+        expect(title).to eq("#{topic.title}")
+      end
+
+      it "includes page number for subsequent pages" do
+        title = TopicView.new(topic.id, admin, page: 2).page_title
+        expect(title).to eq("#{topic.title} - #{I18n.t("page_num", num: 2)}")
+      end
+    end
+
     context "with uncategorized topic" do
       context "when topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }

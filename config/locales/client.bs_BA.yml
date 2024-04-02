@@ -3073,6 +3073,7 @@ bs_BA:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      filter_reports: Filtriraj izvještaje
       tags:
         remove_muted_tags_from_latest:
           always: "uvijek"
@@ -3139,7 +3140,6 @@ bs_BA:
         exception_error: Žao nam je, došlo je do pogreške prilikom izvršavanja upita
         too_many_requests: Izveli ste ovu akciju previše puta. Pričekajte prije ponovnog pokušaja.
         not_found_error: Izvinite, ovaj izveštaj ne postoji
-        filter_reports: Filtriraj izvještaje
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"
@@ -3609,6 +3609,11 @@ bs_BA:
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
+          schema:
+            fields:
+              required: "*required"
+              string:
+                too_short: "must be at least %{count} characters"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"

@@ -5245,6 +5245,7 @@ ar:
       title: "مسؤول Discourse"
       moderator: "مشرف"
       back_to_forum: "العودة إلى المنتدى"
+      filter_reports: تصفية التقارير
       tags:
         remove_muted_tags_from_latest:
           always: "دائمًا"
@@ -5256,6 +5257,8 @@ ar:
         sidebar_title: "التقارير"
         sidebar_link:
           all: "الكل"
+      new_features:
+        title: "ما الجديد"
       dashboard:
         title: "لوحة المعلومات"
         last_updated: "تم تحديث لوحة المعلومات:"
@@ -5317,7 +5320,6 @@ ar:
         exception_error: عذرًا، حدث خطأ في أثناء تنفيذ الاستعلام
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
         not_found_error: عذرًا، هذا التقرير غير موجود
-        filter_reports: تصفية التقارير
         custom_date_range: نطاق مخصَّص للتاريخ
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
@@ -6057,6 +6059,14 @@ ar:
           active_filter: "نشطة"
           inactive_filter: "غير نشطة"
           updates_available_filter: "تتوفَّر تحديثات"
+          schema:
+            fields:
+              required: "*مطلوب"
+              string:
+                too_short: "يجب ألا يقل عدد الأحرف عن %{count}"
+              number:
+                too_small: "يجب أن تكون أكبر من أو تساوي %{count}"
+                too_large: "يجب أن تكون أقل من أو تساوي %{count}"
         colors:
           select_base:
             title: "تحديد لوحة الألوان الأساسية"

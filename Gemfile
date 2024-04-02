@@ -55,8 +55,6 @@ gem "message_bus"
 
 gem "rails_multisite"
 
-gem "fast_xs", platform: :ruby
-
 gem "fastimage"
 
 gem "aws-sdk-s3", require: false
@@ -197,8 +195,6 @@ gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
 
 gem "rbtrace", require: false, platform: :mri
-
-gem "gc_tracer", require: false, platform: :mri
 
 # required for feed importing and embedding
 gem "ruby-readability", require: false

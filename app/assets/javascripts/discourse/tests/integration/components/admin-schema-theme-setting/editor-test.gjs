@@ -667,7 +667,7 @@ module(
       assert.strictEqual(enumSelector.header().value(), "nice");
     });
 
-    test("input fields of type category", async function (assert) {
+    test("input fields of type categories", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
         objects_schema: {
@@ -675,17 +675,29 @@ module(
           identifier: "id",
           properties: {
             required_category: {
-              type: "category",
+              type: "categories",
               required: true,
             },
             not_required_category: {
-              type: "category",
+              type: "categories",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
             },
           },
         },
         value: [
           {
-            required_category: 6,
+            required_category: [6],
           },
         ],
       });
@@ -706,9 +718,17 @@ module(
 
       assert.strictEqual(categorySelector.header().value(), "6");
 
-      assert
-        .dom(categorySelector.clearButton())
-        .doesNotExist("is not clearable");
+      await categorySelector.expand();
+      await categorySelector.deselectItemByValue("6");
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 1,
+        })
+      );
 
       assert
         .dom(inputFields.fields.not_required_category.labelElement)
@@ -722,8 +742,24 @@ module(
 
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
+      await categorySelector.collapse();
 
-      assert.dom(categorySelector.clearButton()).exists("is clearable");
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 2,
+        })
+      );
+
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(2);
+      await categorySelector.selectRowByIndex(3);
+      await categorySelector.selectRowByIndex(4);
+
+      assert
+        .dom(categorySelector.error())
+        .hasText("You can only select 3 items.");
     });
 
     test("input fields of type tags which is required", async function (assert) {
@@ -736,6 +772,10 @@ module(
             required_tags: {
               type: "tags",
               required: true,
+            },
+            required_tags_with_validations: {
+              type: "tags",
+              required: true,
               validations: {
                 min: 2,
                 max: 3,
@@ -745,7 +785,8 @@ module(
         },
         value: [
           {
-            required_tags: ["gazelle", "cat"],
+            required_tags: ["gazelle"],
+            required_tags_with_validations: ["gazelle", "cat"],
           },
         ],
       });
@@ -756,8 +797,8 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      const tagSelector = selectKit(
-        `${inputFields.fields.required_tags.selector} .select-kit`
+      let tagSelector = selectKit(
+        `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
       );
 
       assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
@@ -778,11 +819,13 @@ module(
 
       inputFields.refresh();
 
-      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
-          count: 2,
-        })
-      );
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
@@ -791,32 +834,53 @@ module(
 
       inputFields.refresh();
 
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
+
+      tagSelector = selectKit(
+        `${inputFields.fields.required_tags.selector} .select-kit`
+      );
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.collapse();
+
+      inputFields.refresh();
+
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least_tag", {
-          count: 2,
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          count: 1,
         })
       );
     });
 
-    test("input fields of type group", async function (assert) {
+    test("input fields of type groups", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
         objects_schema: {
           name: "something",
-          identifier: "id",
           properties: {
-            required_group: {
-              type: "group",
+            required_groups: {
+              type: "groups",
               required: true,
             },
-            not_required_group: {
-              type: "group",
+            groups_with_validations: {
+              type: "groups",
+              validations: {
+                min: 2,
+                max: 3,
+              },
             },
           },
         },
         value: [
           {
-            required_group: 6,
+            required_groups: [0, 1],
           },
         ],
       });
@@ -827,29 +891,59 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      assert
-        .dom(inputFields.fields.required_group.labelElement)
-        .hasText("required_group*");
-
-      let groupSelector = selectKit(
-        `${inputFields.fields.required_group.selector} .select-kit`
+      let groupsSelector = selectKit(
+        `${inputFields.fields.required_groups.selector} .select-kit`
       );
 
-      assert.strictEqual(groupSelector.header().value(), "6");
-      assert.dom(groupSelector.clearButton()).doesNotExist("is not clearable");
+      assert.strictEqual(groupsSelector.header().value(), "0,1");
 
-      assert
-        .dom(inputFields.fields.not_required_group.labelElement)
-        .hasText("not_required_group");
+      await groupsSelector.expand();
+      await groupsSelector.deselectItemByValue("0");
+      await groupsSelector.deselectItemByValue("1");
+      await groupsSelector.collapse();
 
-      groupSelector = selectKit(
-        `${inputFields.fields.not_required_group.selector} .select-kit`
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_groups.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+          count: 1,
+        })
       );
 
-      await groupSelector.expand();
-      await groupSelector.selectRowByIndex(1);
+      assert
+        .dom(inputFields.fields.groups_with_validations.labelElement)
+        .hasText("groups_with_validations");
 
-      assert.dom(groupSelector.clearButton()).exists("is clearable");
+      groupsSelector = selectKit(
+        `${inputFields.fields.groups_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupsSelector.header().value(), null);
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(1);
+      await groupsSelector.collapse();
+
+      assert.strictEqual(groupsSelector.header().value(), "1");
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.groups_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+            count: 2,
+          })
+        );
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(2);
+      await groupsSelector.selectRowByIndex(3);
+      await groupsSelector.selectRowByIndex(4);
+
+      assert
+        .dom(groupsSelector.error())
+        .hasText("You can only select 3 items.");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::SyncAclsForUploads do
   let(:upload1) { Fabricate(:upload) }
   let(:upload2) { Fabricate(:upload) }

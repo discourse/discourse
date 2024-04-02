@@ -141,40 +141,62 @@ en:
         required: "must be present"
         humanize_invalid_type: "The property at JSON Pointer '%{property_json_pointer}' must be of type %{type}."
         invalid_type: "%{type} is not a valid type"
+
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
+
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
+
         humanize_not_valid_float_value: "The property at JSON Pointer '%{property_json_pointer}' must be a float."
         not_valid_float_value: "must be a float"
+
         humanize_not_valid_boolean_value: "The property at JSON Pointer '%{property_json_pointer}' must be a boolean."
         not_valid_boolean_value: "must be a boolean"
+
         humanize_not_valid_enum_value: "The property at JSON Pointer '%{property_json_pointer}' must be one of the following %{choices}."
         not_valid_enum_value: "must be one of the following: %{choices}"
-        humanize_not_valid_category_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid category id."
-        not_valid_category_value: "must be a valid category id"
+
+        humanize_not_valid_categories_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid category ids."
+        not_valid_categories_value: "must be an array of valid category ids"
+        humanize_categories_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} category ids."
+        categories_value_not_valid_min: "must have at least %{min} category ids"
+        humanize_categories_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} category ids."
+        categories_value_not_valid_max: "must have at most %{max} category ids"
+
         humanize_not_valid_topic_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid topic id."
         not_valid_topic_value: "must be a valid topic id"
+
         humanize_not_valid_post_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid post id."
         not_valid_post_value: "must be a valid post id"
-        humanize_not_valid_group_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid group id."
-        not_valid_group_value: "must be a valid group id"
+
+        humanize_not_valid_groups_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid group ids."
+        not_valid_groups_value: "must be an array of valid group ids"
+        humanize_groups_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} group ids."
+        groups_value_not_valid_min: "must have at least %{min} group ids"
+        humanize_groups_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} group ids."
+        groups_value_not_valid_max: "must have at most %{max} group ids"
+
         humanize_not_valid_tags_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid tag names."
         not_valid_tags_value: "must be an array of valid tag names"
         humanize_tags_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} tag names."
         tags_value_not_valid_min: "must have at least %{min} tag names"
         humanize_tags_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} tag names."
         tags_value_not_valid_max: "must have at most %{max} tag names"
+
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
+
         humanize_string_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{min} characters long."
         string_value_not_valid_min: "must be at least %{min} characters long"
         humanize_string_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{max} characters long."
         string_value_not_valid_max: "must be at most %{max} characters long"
+
         humanize_number_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be larger than or equal to %{min}."
         number_value_not_valid_min: "must be larger than or equal to %{min}"
         humanize_number_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be smaller than or equal to %{max}."
         number_value_not_valid_max: "must be smaller than or equal to %{max}"
+
         humanize_string_value_not_valid_url: "The property at JSON Pointer '%{property_json_pointer}' must be a valid URL."
         string_value_not_valid_url: "must be a valid URL"
     locale_errors:
@@ -480,6 +502,7 @@ en:
   is_invalid: "seems unclear, is it a complete sentence?"
   next_page: "next page →"
   prev_page: "← previous page"
+  show_post_in_topic: "show post in topic"
   page_num: "Page %{num}"
   crawler_content_hidden: "HTML content omitted because you are logged in or using a modern mobile device."
   home_title: "Home"
@@ -1684,7 +1707,7 @@ en:
     custom_summarization_allowed_groups: "Groups allowed to summarize contents using the `summarization_strategy`."
 
     enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
-    personal_message_enabled_groups: "Allow users within these groups to create messages and reply to messages. Trust level groups include all trust levels above that number, for example choosing trust_level_1 also allows trust_level_2, 3, 4 users to send PMs. Note that staff can always send messages no matter what."
+    personal_message_enabled_groups: "Allow users in these groups to create personal messages. IMPORTANT: 1) all users can reply to messages. 2) Trust level groups include higher levels; choose trust_level_1 to allow TL1, TL2, TL3, TL4 but not allow TL0. 3) Admins and mods can always send messages. 4) Group interaction settings override this setting for messaging specific groups."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -2259,7 +2282,7 @@ en:
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow_anonymous_likes`."
-    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When enabled, this setting might encourage engagement from visitors who are not currently signed in, by allowing them to interact with content. See also `allow_anonymous_posting`."
+    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -2362,6 +2385,7 @@ en:
     embed_set_canonical_url: "Set the canonical URL for embedded topics to the embedded content's URL."
     embed_truncate: "Shorten the contents of posts that are embedded from external sources. This setting ensures that only the initial part of content is displayed when a post from an external URL is embedded on your site. If you prefer to display full content from the external posts, you can disable this setting."
     embed_unlisted: "Embedded topics will be unlisted until a user replies."
+    import_embed_unlisted: "Imported embedded topics will be unlisted until a user replies (even when the `embed unlisted` site setting is unchecked)."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
@@ -2560,6 +2584,7 @@ en:
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Enable the new bulk actions dropdown."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -4578,12 +4603,6 @@ en:
 
       This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
 
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).
-
   tos_topic:
     title: "Terms of Service"
     body: |
@@ -5141,6 +5160,7 @@ en:
     limited_to_one_tag_from_group: "The tags %{tags} cannot be used simultaneously. Please include only one of them."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
+    user_not_permitted: "You're not allowed to tag topics"
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:

@@ -13,11 +13,13 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
 
   it "shows links to enabled plugin admin routes" do
     visit("/admin")
+    sidebar.toggle_all_sections
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat")
   end
 
   it "does not duplicate links to enabled plugin admin routes when showing and hiding sidebar" do
     visit("/admin")
+    sidebar.toggle_all_sections
     expect(sidebar).to have_section_link("Chat", href: "/admin/plugins/chat", count: 1)
     find(".header-sidebar-toggle").click
     find(".header-sidebar-toggle").click
@@ -68,12 +70,12 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
       admin.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => membership.chat_channel.id)
       chat_page.prefers_full_page
       visit("/admin")
-      expect(sidebar).to have_section("admin-nav-section-root")
+      expect(sidebar).to have_section("admin-root")
       chat_page.open_from_header
-      expect(sidebar).to have_no_section("admin-nav-section-root")
+      expect(sidebar).to have_no_section("admin-root")
       chat_page.minimize_full_page
       expect(chat_page).to have_drawer
-      expect(sidebar).to have_section("admin-nav-section-root")
+      expect(sidebar).to have_section("admin-root")
     end
   end
 end

@@ -259,12 +259,19 @@ class User < ActiveRecord::Base
           )
         end
 
-  scope :human_users, -> { where("users.id > 0") }
+  scope :human_users,
+        ->(allowed_bot_user_ids: nil) do
+          if allowed_bot_user_ids.present?
+            where("users.id > 0 OR users.id IN (?)", allowed_bot_user_ids)
+          else
+            where("users.id > 0")
+          end
+        end
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> do
-          human_users.where(
+        ->(allowed_bot_user_ids: nil) do
+          human_users(allowed_bot_user_ids: allowed_bot_user_ids).where(
             "NOT EXISTS(
                      SELECT 1
                      FROM anonymous_users a

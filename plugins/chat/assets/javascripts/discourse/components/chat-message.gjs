@@ -16,6 +16,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import optionalService from "discourse/lib/optional-service";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -30,7 +31,6 @@ import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/ch
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];

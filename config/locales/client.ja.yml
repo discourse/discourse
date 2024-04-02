@@ -4189,6 +4189,7 @@ ja:
       title: "Discourse の管理者"
       moderator: "モデレーター"
       back_to_forum: "フォーラムに戻る"
+      filter_reports: レポートをフィルタ
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -4200,6 +4201,8 @@ ja:
         sidebar_title: "レポート"
         sidebar_link:
           all: "すべて"
+      new_features:
+        title: "新機能"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
@@ -4256,7 +4259,6 @@ ja:
         exception_error: クエリを実行中にエラーが発生しました
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
-        filter_reports: レポートをフィルタ
         custom_date_range: カスタムの日付範囲
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
@@ -4964,6 +4966,14 @@ ja:
           active_filter: "アクティブ"
           inactive_filter: "非アクティブ"
           updates_available_filter: "アップデートあり"
+          schema:
+            fields:
+              required: "*必須"
+              string:
+                too_short: "は少なくとも %{count} 文字である必要があります"
+              number:
+                too_small: "は %{count} 以上である必要があります"
+                too_large: "は %{count} 以下の値である必要があります"
         colors:
           select_base:
             title: "基本色パレットを選択してください"

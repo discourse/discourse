@@ -3629,6 +3629,7 @@ vi:
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
+      filter_reports: Lọc báo cáo
       tags:
         remove_muted_tags_from_latest:
           always: "luôn luôn"
@@ -3693,7 +3694,6 @@ vi:
         exception_error: Xin lỗi, đã xảy ra lỗi khi thực hiện truy vấn
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
-        filter_reports: Lọc báo cáo
         reports:
           trend_title: "%{percent} thay đổi. Hiện tại là %{current}, là %{prev} trong giai đoạn trước."
           today: "Hôm nay"
@@ -4307,6 +4307,14 @@ vi:
           all_filter: "All"
           active_filter: "Kích hoạt"
           inactive_filter: "Không hoạt động"
+          schema:
+            fields:
+              required: "*bắt buộc"
+              string:
+                too_short: "phải ít nhất %{count} ký tự"
+              number:
+                too_small: "phải lớn hơn hoặc bằng %{count}"
+                too_large: "phải nhỏ hơn hoặc bằng %{count}"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"

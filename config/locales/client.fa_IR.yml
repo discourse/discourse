@@ -3499,6 +3499,7 @@ fa_IR:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
       back_to_forum: "بازگشت به انجمن"
+      filter_reports: صافی گزارشات
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
@@ -3560,7 +3561,6 @@ fa_IR:
         report_filter_any: "هر"
         disabled: غیرفعال
         not_found_error: متأسفم، چنین گزارشی وجود ندارد
-        filter_reports: صافی گزارشات
         reports:
           today: "امروز"
           yesterday: "دیروز"
@@ -4025,6 +4025,14 @@ fa_IR:
           all_filter: "همه"
           active_filter: "فعال"
           inactive_filter: "غیر‌فعال"
+          schema:
+            fields:
+              required: "*مورد نیاز"
+              string:
+                too_short: "نباید کمتر از %{count} نویسه باشد"
+              number:
+                too_small: "باید بزرگتر یا مساوی %{count} باشد"
+                too_large: "باید کمتر و یا مساوی %{count} باشد"
         colors:
           title: "رنگ‌ها"
           copy_name_prefix: "کپی از"

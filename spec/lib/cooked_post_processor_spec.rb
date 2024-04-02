@@ -185,11 +185,9 @@ RSpec.describe CookedPostProcessor do
              - #{url_with_query_param}
           RAW
 
-        let(:staff_post) do
-          Fabricate(:post, user: Fabricate(:admin, refresh_auto_groups: true), raw: <<~RAW)
+        let(:staff_post) { Fabricate(:post, user: Fabricate(:admin), raw: <<~RAW) }
           This is a #{url_with_path} topic
           RAW
-        end
 
         before do
           urls.each do |url|

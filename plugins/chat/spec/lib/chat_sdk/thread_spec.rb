@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe ChatSDK::Thread do
   describe ".update_title" do
     fab!(:thread_1) { Fabricate(:chat_thread) }

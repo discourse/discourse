@@ -100,6 +100,8 @@ module SvgSprite
         fab-github
         fab-instagram
         fab-linux
+        fab-threads
+        fab-threads-square
         fab-twitter
         fab-twitter-square
         fab-wikipedia-w

@@ -3724,6 +3724,7 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      filter_reports: Filtrer rapporter
       tags:
         remove_muted_tags_from_latest:
           always: "altid"
@@ -3789,7 +3790,6 @@ da:
         exception_error: Beklager, der opstod en fejl under udførelsen af forespørgslen
         too_many_requests: Du har udført denne handling for mange gange. Vent venligst, før du prøver igen.
         not_found_error: Beklager, denne rapport findes ikke
-        filter_reports: Filtrer rapporter
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -4362,6 +4362,14 @@ da:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
+          schema:
+            fields:
+              required: "*obligatoriske"
+              string:
+                too_short: "skal være på mindst %%{count} tegn."
+              number:
+                too_small: "skal være større eller lig med %{count}"
+                too_large: "skal være mindre end eller lig med %{count}"
         colors:
           select_base:
             title: "Vælg basisfarvepalet"

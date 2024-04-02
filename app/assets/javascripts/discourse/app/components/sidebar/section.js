@@ -2,26 +2,41 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class SidebarSection extends Component {
   @service keyValueStore;
+  @service sidebarState;
 
-  @tracked displaySectionContent;
+  @tracked collapsedSections = this.sidebarState.collapsedSections;
   sidebarSectionContentID = `sidebar-section-content-${this.args.sectionName}`;
   collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
 
-  constructor() {
-    super(...arguments);
-
-    if (this.args.collapsable) {
-      this.displaySectionContent =
-        this.keyValueStore.getItem(this.collapsedSidebarSectionKey) ===
-        undefined
-          ? true
-          : false;
-    } else {
-      this.displaySectionContent = true;
+  get isCollapsed() {
+    if (!this.args.collapsable) {
+      return false;
     }
+    if (
+      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === undefined
+    ) {
+      return this.args.collapsedByDefault;
+    }
+    return (
+      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === "true"
+    );
+  }
+
+  @bind
+  setExpandedState() {
+    if (this.isCollapsed) {
+      this.sidebarState.collapseSection(this.args.sectionName);
+    } else {
+      this.sidebarState.expandSection(this.args.sectionName);
+    }
+  }
+
+  get displaySectionContent() {
+    return !this.collapsedSections.includes(this.collapsedSidebarSectionKey);
   }
 
   willDestroy() {
@@ -31,12 +46,10 @@ export default class SidebarSection extends Component {
 
   @action
   toggleSectionDisplay() {
-    this.displaySectionContent = !this.displaySectionContent;
-
     if (this.displaySectionContent) {
-      this.keyValueStore.remove(this.collapsedSidebarSectionKey);
+      this.sidebarState.collapseSection(this.args.sectionName);
     } else {
-      this.keyValueStore.setItem(this.collapsedSidebarSectionKey, true);
+      this.sidebarState.expandSection(this.args.sectionName);
     }
 
     // remove focus from the toggle, but only on click

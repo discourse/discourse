@@ -1,10 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import PreloadStore from "discourse/lib/preload-store";
-import DisableSidebar from "discourse/mixins/disable-sidebar";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend(DisableSidebar, {
+export default DiscourseRoute.extend({
   queryParams: {
     nonce: { refreshModel: true },
   },

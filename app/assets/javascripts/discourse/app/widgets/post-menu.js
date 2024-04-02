@@ -6,11 +6,11 @@ import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
+import { userPath } from "discourse/lib/url";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
@@ -51,6 +51,16 @@ export function replaceButton(name, replaceWith) {
 
 function registerButton(name, builder) {
   _builders[name] = builder;
+}
+
+function smallUserAtts(user) {
+  return {
+    template: user.avatar_template,
+    username: user.username,
+    post_url: user.post_url,
+    url: userPath(user.username_lower),
+    unknown: user.unknown,
+  };
 }
 
 export function buildButton(name, widget) {

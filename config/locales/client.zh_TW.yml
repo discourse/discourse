@@ -886,6 +886,7 @@ zh_TW:
           warning: "您確定要清除您的精選主題？"
       use_current_timezone: "使用目前時區"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
+      login_to_view_profile: "您必須登入才能查看使用者個人資料"
       expand_profile: "展開"
       sr_expand_profile: "展開詳細個人資料"
       collapse_profile: "收合"
@@ -2977,6 +2978,7 @@ zh_TW:
     admin:
       title: "論壇管理員"
       moderator: "板主"
+      filter_reports: 過濾報告
       tags:
         remove_muted_tags_from_latest:
           always: "總是"
@@ -3038,7 +3040,6 @@ zh_TW:
         exception_error: 很抱歉，在查詢時發生了錯誤
         too_many_requests: 您已重複此動作太多次，請稍後再重試。
         not_found_error: 抱歉，這個報告不存在。
-        filter_reports: 過濾報告
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           today: "今天"
@@ -3487,6 +3488,14 @@ zh_TW:
           all_filter: "全部"
           active_filter: "啟用的"
           inactive_filter: "不活躍"
+          schema:
+            fields:
+              required: "*必要設定"
+              string:
+                too_short: "必須至少 %{count} 個字"
+              number:
+                too_small: "必須大於或等於 %{count}"
+                too_large: "必須少於或等於 %{count}"
         colors:
           select_base:
             title: "選擇調色盤"

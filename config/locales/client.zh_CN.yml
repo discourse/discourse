@@ -1033,6 +1033,7 @@ zh_CN:
           warning: "确定要清除精选话题吗？"
       use_current_timezone: "使用当前时区"
       profile_hidden: "此用户的公开个人资料已被隐藏。"
+      login_to_view_profile: "您必须登录才能查看用户个人资料"
       inactive_user: "此用户不再活跃。"
       expand_profile: "展开"
       sr_expand_profile: "展开个人资料详细信息"
@@ -4241,6 +4242,7 @@ zh_CN:
       title: "Discourse 管理员"
       moderator: "版主"
       back_to_forum: "返回论坛"
+      filter_reports: 筛选报告
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
@@ -4252,6 +4254,8 @@ zh_CN:
         sidebar_title: "报告"
         sidebar_link:
           all: "所有"
+      new_features:
+        title: "最新变化"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -4308,7 +4312,6 @@ zh_CN:
         exception_error: 抱歉，执行查询时出错
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
-        filter_reports: 筛选报告
         custom_date_range: 自定义日期范围
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
@@ -5046,6 +5049,16 @@ zh_CN:
           schema:
             title: "编辑 %{name} 设置"
             back_button: "返回 %{name}"
+            fields:
+              required: "*必选"
+              tags:
+                at_least:
+                  other: "至少需要 %{count} 个标签"
+              string:
+                too_short: "必须至少为 %{count} 个字符"
+              number:
+                too_small: "必须大于或等于 %{count}"
+                too_large: "必须小于或等于 %{count}"
         colors:
           select_base:
             title: "选择基础调色板"

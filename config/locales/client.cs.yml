@@ -4696,6 +4696,7 @@ cs:
       title: "Administrátor"
       moderator: "Moderátor"
       back_to_forum: "Zpět na fórum"
+      filter_reports: Filtrovat přehledy
       tags:
         remove_muted_tags_from_latest:
           always: "vždy"
@@ -4707,6 +4708,8 @@ cs:
         sidebar_title: "Přehledy"
         sidebar_link:
           all: "Celkem"
+      new_features:
+        title: "Co je nového"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
@@ -4761,7 +4764,6 @@ cs:
         exception_error: Omlouváme se, při provádění dotazu došlo k chybě
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tento přehled neexistuje
-        filter_reports: Filtrovat přehledy
         custom_date_range: Vlastní období
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
@@ -5372,6 +5374,12 @@ cs:
           active_filter: "Aktivní"
           inactive_filter: "Neaktivní"
           updates_available_filter: "Dostupné aktualizace"
+          schema:
+            fields:
+              required: "*nezbytnosti"
+              number:
+                too_small: "musí být větší nebo rovno %{count}"
+                too_large: "musí být menší nebo roven %{count}"
         colors:
           title: "Barvy"
           copy_name_prefix: "Kopie"

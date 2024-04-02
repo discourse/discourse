@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ChatController do
   fab!(:user)
   fab!(:other_user) { Fabricate(:user) }

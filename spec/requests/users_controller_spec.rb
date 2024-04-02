@@ -11,7 +11,7 @@ RSpec.describe UsersController do
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:moderator)
   fab!(:inactive_user)
 
@@ -6631,7 +6631,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "returns an error if the the current user does not have access" do
+    it "returns an error if the current user does not have access" do
       sign_in(user1)
       topic.update(user_id: another_user.id)
       put "/u/#{another_user.username}/clear-featured-topic.json"

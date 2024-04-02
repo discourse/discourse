@@ -60,6 +60,7 @@
     min-width: var(--d-logo-height);
     a,
     a:visited {
+      min-width: 0;
       color: var(--header_primary);
     }
 
@@ -75,6 +76,10 @@
     width: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .home-logo-wrapper-outlet {
+    overflow: hidden;
   }
 
   #site-text-logo {

@@ -3046,7 +3046,7 @@ en:
         name: "Defer Topics"
         description: "Mark topics as unread"
       update_notifications:
-        name: "Update Notifications…"
+        name: "Update Notifications"
         description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
@@ -4826,6 +4826,8 @@ en:
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
       filter_reports: Filter reports
+      expand_all_sections: "Expand all sections"
+      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
@@ -5661,8 +5663,16 @@ en:
             back_button: "Back to %{name}"
             fields:
               required: "*required"
+              groups:
+                at_least:
+                  one: "at least %{count} group is required"
+                  other: "at least %{count} groups are required"
+              categories:
+                at_least:
+                  one: "at least %{count} category is required"
+                  other: "at least %{count} categories are required"
               tags:
-                at_least_tag:
+                at_least:
                   one: "at least %{count} tag is required"
                   other: "at least %{count} tags are required"
               string:

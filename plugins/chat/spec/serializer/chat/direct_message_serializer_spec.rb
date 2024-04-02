@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::DirectMessageSerializer do
   describe "#user" do
     it "returns you when there are two of us" do

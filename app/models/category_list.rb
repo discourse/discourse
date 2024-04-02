@@ -70,7 +70,7 @@ class CategoryList
 
   private
 
-  def find_relevant_topics
+  def relevant_topics_query
     @all_topics =
       Topic
         .secured(@guardian)
@@ -104,10 +104,12 @@ class CategoryList
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
+  end
 
+  def find_relevant_topics
     featured_topics_by_category_id = Hash.new { |h, k| h[k] = [] }
 
-    @all_topics.each do |t|
+    relevant_topics_query.each do |t|
       # hint for the serializer
       t.include_last_poster = true
       t.dismissed = dismissed_topic?(t)
@@ -140,13 +142,17 @@ class CategoryList
 
     query = self.class.order_categories(query)
 
+    page = [1, @options[:page].to_i].max
     if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
-      page = [1, @options[:page].to_i].max
       query =
         query
           .where(parent_category_id: nil)
           .limit(CATEGORIES_PER_PAGE)
           .offset((page - 1) * CATEGORIES_PER_PAGE)
+    elsif page > 1
+      # Pagination is supported only when lazy load is enabled. If it is not,
+      # everything is returned on page 1.
+      query = query.none
     end
 
     query =
@@ -207,22 +213,7 @@ class CategoryList
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 
-    allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
-
-    parent_ids =
-      Category
-        .secured(@guardian)
-        .where(parent_category_id: categories_with_descendants.map(&:id))
-        .pluck("DISTINCT parent_category_id")
-        .to_set
-
-    categories_with_descendants.each do |category|
-      category.notification_level = notification_levels[category.id] || default_notification_level
-      category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(
-        category.id,
-      )
-      category.has_children = parent_ids.include?(category.id)
-    end
+    Category.preload_user_fields!(@guardian, categories_with_descendants)
   end
 
   def prune_empty

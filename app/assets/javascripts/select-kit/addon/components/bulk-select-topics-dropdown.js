@@ -1,8 +1,31 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
+import BulkTopicActions, {
+  addBulkDropdownAction,
+} from "discourse/components/modal/bulk-topic-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+
+const _customButtons = [];
+const _customOnSelection = {};
+
+export function addBulkDropdownButton(opts) {
+  _customButtons.push({
+    id: opts.label,
+    icon: opts.icon,
+    name: i18n(opts.label),
+    visible: opts.visible,
+  });
+  addBulkDropdownAction(opts.label, opts.action);
+  const actionOpts = {
+    label: opts.label,
+    setComponent: true,
+  };
+  if (opts.actionType === "performAndRefresh") {
+    actionOpts.setComponent = false;
+  }
+  _customOnSelection[opts.label] = actionOpts;
+}
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-topics-dropdown"],
@@ -26,27 +49,21 @@ export default DropdownSelectBoxComponent.extend({
         id: "update-category",
         icon: "pencil-alt",
         name: i18n("topic_bulk_actions.update_category.name"),
-        description: i18n("topic_bulk_actions.update_category.description"),
       },
       {
         id: "update-notifications",
         icon: "d-regular",
         name: i18n("topic_bulk_actions.update_notifications.name"),
-        description: i18n(
-          "topic_bulk_actions.update_notifications.description"
-        ),
       },
       {
         id: "reset-bump-dates",
         icon: "anchor",
         name: i18n("topic_bulk_actions.reset_bump_dates.name"),
-        description: i18n("topic_bulk_actions.reset_bump_dates.description"),
       },
       {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
-        description: i18n("topic_bulk_actions.defer.description"),
         visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       },
       {
@@ -104,7 +121,7 @@ export default DropdownSelectBoxComponent.extend({
       },
     ]);
 
-    return [...options].filter(({ visible }) => {
+    return [...options, ..._customButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
           topics: this.bulkSelectHelper.selected,
@@ -119,16 +136,35 @@ export default DropdownSelectBoxComponent.extend({
 
   showBulkTopicActionsModal(actionName, title, opts = {}) {
     let allowSilent = false;
+    let initialAction = null;
+    let initialActionLabel = null;
+    let description = null;
     if (opts.allowSilent === true) {
       allowSilent = true;
     }
+    if (opts.custom === true) {
+      title = i18n(_customOnSelection[actionName].label);
+      initialActionLabel = actionName;
+      if (opts.setComponent === true) {
+        initialAction = "set-component";
+      }
+    } else {
+      title = i18n(`topics.bulk.${title}`);
+    }
+    if (opts.description) {
+      description = opts.description;
+    }
+
     this.modal.show(BulkTopicActions, {
       model: {
         action: actionName,
-        title: i18n(`topics.bulk.${title}`),
+        title,
+        description,
         bulkSelectHelper: this.bulkSelectHelper,
         refreshClosure: () => this.router.refresh(),
         allowSilent,
+        initialAction,
+        initialActionLabel,
       },
     });
   },
@@ -137,10 +173,16 @@ export default DropdownSelectBoxComponent.extend({
   onSelect(id) {
     switch (id) {
       case "update-category":
-        this.showBulkTopicActionsModal(id, "change_category");
+        this.showBulkTopicActionsModal(id, "change_category", {
+          description: i18n(`topic_bulk_actions.update_category.description`),
+        });
         break;
       case "update-notifications":
-        this.showBulkTopicActionsModal(id, "notification_level");
+        this.showBulkTopicActionsModal(id, "notification_level", {
+          description: i18n(
+            `topic_bulk_actions.update_notifications.description`
+          ),
+        });
         break;
       case "close-topics":
         this.showBulkTopicActionsModal("close", "close_topics", {
@@ -169,11 +211,22 @@ export default DropdownSelectBoxComponent.extend({
         this.showBulkTopicActionsModal("delete", "delete");
         break;
       case "reset-bump-dates":
-        this.showBulkTopicActionsModal(id, "reset_bump_dates");
+        this.showBulkTopicActionsModal(id, "reset_bump_dates", {
+          description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
+        });
         break;
       case "defer":
-        this.showBulkTopicActionsModal(id, "defer");
+        this.showBulkTopicActionsModal(id, "defer", {
+          description: i18n(`topic_bulk_actions.defer.description`),
+        });
         break;
+      default:
+        if (_customOnSelection[id]) {
+          this.showBulkTopicActionsModal(id, _customOnSelection[id].label, {
+            custom: true,
+            setComponent: _customOnSelection[id].setComponent,
+          });
+        }
     }
   },
 });

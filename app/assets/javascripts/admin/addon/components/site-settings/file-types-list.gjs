@@ -146,7 +146,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button document"
     />
 
-    <SettingValidationMessage @message={{this.validationMessage}} />
-    <SiteSettingsDescription @description={{this.setting.description}} />
+    <SettingValidationMessage @message={{@validationMessage}} />
+    <SiteSettingsDescription @description={{@setting.description}} />
   </template>
 }

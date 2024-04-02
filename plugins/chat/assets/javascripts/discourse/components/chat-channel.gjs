@@ -27,7 +27,6 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import {
   checkMessageBottomVisibility,
@@ -75,7 +74,7 @@ export default class ChatChannel extends Component {
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked needsArrow = false;
-  @tracked atBottom = false;
+  @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
@@ -174,6 +173,12 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
     stackingContextFix(this.scrollable, () => {
       this.messagesManager.addMessages([message]);
     });
@@ -184,7 +189,6 @@ export default class ChatChannel extends Component {
   onPresenceChangeCallback(present) {
     if (present) {
       this.debouncedUpdateLastReadMessage();
-      bodyScrollFix({ delayed: true });
     }
   }
 
@@ -463,7 +467,6 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      bodyScrollFix();
       DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
@@ -765,6 +768,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
+            @scrollable={{this.scrollable}}
           />
         {{/if}}
       {{/if}}

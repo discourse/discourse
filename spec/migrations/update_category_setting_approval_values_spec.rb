@@ -10,9 +10,11 @@ RSpec.describe UpdateCategorySettingApprovalValues do
       end
 
       it "backfills with false (new default)" do
-        expect { described_class.new.up }.to change { category.reload.require_topic_approval }.from(
-          nil,
-        ).to(false)
+        silence_stdout do
+          expect { described_class.new.up }.to change {
+            category.reload.require_topic_approval
+          }.from(nil).to(false)
+        end
       end
     end
 
@@ -29,9 +31,11 @@ RSpec.describe UpdateCategorySettingApprovalValues do
       let(:category) { Fabricate(:category) }
 
       it "backfills with the custom field value" do
-        expect { described_class.new.up }.to change { category.reload.category_setting }.from(
-          nil,
-        ).to(have_attributes(require_topic_approval: true))
+        silence_stdout do
+          expect { described_class.new.up }.to change { category.reload.category_setting }.from(
+            nil,
+          ).to(have_attributes(require_topic_approval: true))
+        end
       end
     end
 
@@ -45,9 +49,11 @@ RSpec.describe UpdateCategorySettingApprovalValues do
       end
 
       it "backfills with the custom field value" do
-        expect { described_class.new.up }.to change {
-          category.category_setting.reload.require_topic_approval
-        }.from(false).to(true)
+        silence_stdout do
+          expect { described_class.new.up }.to change {
+            category.category_setting.reload.require_topic_approval
+          }.from(false).to(true)
+        end
       end
     end
   end

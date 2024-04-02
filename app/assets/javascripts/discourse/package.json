@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@glimmer/syntax": "^0.89.0",
+    "@glimmer/syntax": "^0.91.1",
     "@highlightjs/cdn-assets": "^11.9.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
@@ -108,7 +108,7 @@
     "select-kit": "1.0.0",
     "sinon": "^17.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.29.2",
+    "terser": "^5.30.1",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
