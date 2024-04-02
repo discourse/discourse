@@ -249,3 +249,14 @@
     }
   }
 }
+
+.d-form-multirow {
+  display: grid;
+  column-gap: 0.5em;
+  row-gap: 0.25em;
+  grid-template-columns: repeat(3, 1fr) auto;
+
+  .d-form__section-inline-btn {
+    align-self: flex-end;
+  }
+}
