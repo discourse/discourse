@@ -13,7 +13,7 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import GlimmerHeader from "./glimmer-header";
+import Header from "./header";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -438,7 +438,7 @@ export default class GlimmerSiteHeader extends Component {
       }}
       {{didInsert this.setupHeader}}
     >
-      <GlimmerHeader
+      <Header
         @canSignUp={{@canSignUp}}
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}

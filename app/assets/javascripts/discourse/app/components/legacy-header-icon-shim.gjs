@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { schedule } from "@ember/runloop";
 import { PANEL_WRAPPER_ID } from "discourse/widgets/header";
-import PanelPortal from "./glimmer-header/panel-portal";
+import PanelPortal from "./header/panel-portal";
 
 export default class LegacyHeaderIconShim extends Component {
   @tracked panelElement;
