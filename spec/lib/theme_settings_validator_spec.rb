@@ -29,7 +29,7 @@ RSpec.describe ThemeSettingsValidator do
         )
 
       expect(errors).to contain_exactly(
-        "The property at JSON Pointer '/0/name' must be at most 1 characters long.",
+        "The property at JSON Pointer '/0/name' must be at most 1 character long.",
       )
     end
   end

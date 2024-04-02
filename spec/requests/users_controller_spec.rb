@@ -1739,7 +1739,7 @@ RSpec.describe UsersController do
         body = response.parsed_body
 
         expect(body["errors"].first).to include(
-          I18n.t("user.username.short", min: User.username_length.begin),
+          I18n.t("user.username.short", count: User.username_length.begin),
         )
 
         expect(user.reload.username).to eq(old_username)
@@ -1893,7 +1893,7 @@ RSpec.describe UsersController do
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t(:"user.username.long", max: SiteSetting.max_username_length),
+          I18n.t(:"user.username.long", count: SiteSetting.max_username_length),
         )
       end
     end
