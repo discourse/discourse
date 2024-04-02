@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SetAdminSidebarEnabledGroups < ActiveRecord::Migration[7.0]
+class DisableAdminSidebarForExistingSites < ActiveRecord::Migration[7.0]
   def up
     # keep old admin menu for existing sites
     execute <<~SQL if Migration::Helpers.existing_site?
