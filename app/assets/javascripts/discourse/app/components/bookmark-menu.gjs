@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
@@ -26,12 +27,19 @@ export default class BookmarkMenu extends Component {
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
 
-  reminderAtOptions = [
-    this.timeShortcuts.twoHours(),
-    this.timeShortcuts.tomorrow(),
-    this.timeShortcuts.threeDays(),
-    this.timeShortcuts.custom(),
-  ];
+  @action
+  setReminderShortcuts() {
+    this.reminderAtOptions = [
+      this.timeShortcuts.twoHours(),
+      this.timeShortcuts.tomorrow(),
+      this.timeShortcuts.threeDays(),
+    ];
+
+    // So the label is a simple 'Custom...'
+    const custom = this.timeShortcuts.custom();
+    custom.label = "time_shortcut.custom_short";
+    this.reminderAtOptions.push(custom);
+  }
 
   get existingBookmark() {
     return this.bookmarkManager.trackedBookmark.id
@@ -95,9 +103,7 @@ export default class BookmarkMenu extends Component {
 
   @action
   onRegisterApi(api) {
-    if (!this.dMenu) {
-      this.dMenu = api;
-    }
+    this.dMenu = api;
   }
 
   @action
@@ -189,7 +195,10 @@ export default class BookmarkMenu extends Component {
         {{/if}}
       </:trigger>
       <:content>
-        <div class="bookmark-menu__body">
+        <div
+          class="bookmark-menu__body"
+          {{didInsert this.setReminderShortcuts}}
+        >
           {{#if this.showEditDeleteMenu}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">

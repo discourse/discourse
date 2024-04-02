@@ -730,6 +730,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
+      custom_short: "Custom..."
       select_timeframe: "Select a timeframe"
 
     user_action:

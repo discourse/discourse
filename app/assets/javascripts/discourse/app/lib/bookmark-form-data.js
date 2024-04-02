@@ -24,6 +24,10 @@ export class BookmarkFormData {
   }
 
   get reminderAtISO() {
+    if (this.selectedReminderType === TIME_SHORTCUT_TYPES.NONE) {
+      return null;
+    }
+
     if (!this.selectedReminderType || !this.selectedDatetime) {
       if (this.reminderAt) {
         return this.reminderAt.toISOString();

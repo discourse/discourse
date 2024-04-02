@@ -1281,14 +1281,14 @@ export default Controller.extend(bufferedProperty("model"), {
     this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(bookmark),
-        afterSave: (savedData) => {
-          this._syncBookmarks(savedData);
+        afterSave: (bookmarkFormData) => {
+          this._syncBookmarks(bookmarkFormData.saveData);
           this.model.set("bookmarking", false);
           this.model.set("bookmarked", true);
           this.model.incrementProperty("bookmarksWereChanged");
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },

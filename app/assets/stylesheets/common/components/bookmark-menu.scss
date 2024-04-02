@@ -1,28 +1,4 @@
-@keyframes slide {
-  0% {
-  }
-  100% {
-    transform: translateY(100%) translateX(-50%);
-    opacity: 0;
-  }
-}
-
 .bookmark-menu-content {
-  &__notice {
-    position: absolute;
-    top: -1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--tertiary);
-    padding: 0.25rem 0.5rem;
-    white-space: nowrap;
-    opacity: 1;
-
-    &.-slide-out {
-      animation: slide 1s cubic-bezier(0, 0, 0, 2) forwards;
-    }
-  }
-
   .bookmark-menu__body {
     background: var(--secondary);
     list-style: none;
@@ -51,16 +27,18 @@
 
       &:hover,
       &:focus {
-        background: var(--tertiary-very-low) !important;
+        background: var(--tertiary-very-low);
       }
 
-      &-title-row {
-        background: var(--primary-100) !important;
+      &-title {
+        font-size: var(--font-down-1);
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--primary-low);
       }
 
       &-btn {
-        margin: 0 !important;
-        padding: 0.75rem !important;
+        margin: 0;
+        padding: 0.75rem;
         width: 100%;
         text-align: left;
         justify-content: left;
@@ -75,7 +53,7 @@
         }
         &:hover,
         &:focus {
-          background: var(--tertiary-very-low) !important;
+          background: var(--tertiary-very-low);
         }
       }
 
@@ -92,7 +70,7 @@
 
         &:hover,
         &:focus {
-          background: var(--danger-low) !important;
+          background: var(--danger-low);
         }
       }
 
