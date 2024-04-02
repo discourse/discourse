@@ -1158,7 +1158,6 @@ tr_TR:
       allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan metin için alıntı yanıtını etkinleştir"
-      enable_defer: "Okunmamış konuları işaretlemek için ertelemeyi etkinleştir"
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
@@ -1561,6 +1560,8 @@ tr_TR:
         instructions: "Kullanıcı arayüz dili. Sayfayı yenilediğinizde değişir."
         default: "(varsayılan)"
         any: "herhangi"
+      homepage:
+        default: "(varsayılan)"
       password_confirmation:
         title: "Şifreyi Tekrarlayın"
       invite_code:
@@ -1889,7 +1890,6 @@ tr_TR:
       close: "kapat"
       dismiss_error: "Hatayı kapat"
     close: "Kapat"
-    assets_changed_confirm: "Bu site yeni bir yazılım yükseltmesi aldı. Şimdi en son sürümünü edinmek ister misiniz?"
     logout: "Çıkış yaptınız."
     refresh: "Yenile"
     home: "Ana Sayfa"
@@ -2684,7 +2684,6 @@ tr_TR:
         unlist_topics: "Konuları listeden kaldır"
         relist_topics: "Konuları yeniden listele"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
-        defer: "Ertele"
         delete: "Konuları sil"
         dismiss: "Kapat"
         dismiss_read: "Tüm okunmamışları kapat"
@@ -2793,10 +2792,9 @@ tr_TR:
         name: "Üste Sıçratma Tarihlerini Sıfırla"
         description: "Konunun öne çıkma tarihini son oluşturulan gönderi tarihine sıfırlayın; bu, konu listesindeki sıralamayı etkiler"
       defer:
-        name: "Konuları Ertele"
         description: "Konuları okunmadı olarak işaretle"
       update_notifications:
-        name: "Bildirimleri Güncelle…"
+        name: "Bildirimleri Güncelle"
         description: "Bildirim düzeyini İzleniyor, Takip Ediliyor, Normal veya Sessiz olarak değiştirin"
     topic:
       filter_to:
@@ -2813,9 +2811,6 @@ tr_TR:
       move_to_inbox:
         title: "Gelen kutusuna taşı"
         help: "Mesajı geri gelen kutusuna taşı"
-      defer:
-        help: "Okunmamış olarak işaretle"
-        title: "Ertele"
       list: "Konular"
       new: "yeni konu"
       unread: "okunmamış"
@@ -3968,7 +3963,6 @@ tr_TR:
         mark_tracking: "%{shortcut} Konuyu takip et"
         mark_watching: "%{shortcut} Konuyu izle"
         print: "%{shortcut} Konuyu yazdır"
-        defer: "%{shortcut} Konuyu ertele"
         topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
         archive_private_message: "%{shortcut} Özel mesajı arşivle seçeneğini aç/kapat"
       search_menu:
@@ -4361,12 +4355,12 @@ tr_TR:
         upload: "Yükle"
         uploading: "Yükleniyor"
       errors:
-        valueMissing:
+        value_missing:
           default: "Lütfen bu alanı doldurun."
-          select-one: "Lütfen listeden bir öge seçin."
-          select-multiple: "Lütfen listeden en az bir öge seçin."
+          select_one: "Lütfen listeden bir öge seçin."
+          select_multiple: "Lütfen listeden en az bir öge seçin."
           checkbox: "Devam etmek istiyorsanız lütfen bu kutuyu işaretleyin."
-        typeMismatch:
+        type_mismatch:
           default: "Lütfen geçerli bir değer girin."
           color: "Lütfen bir renk girin."
           date: "Lütfen bir tarih girin."
@@ -4376,20 +4370,20 @@ tr_TR:
           tel: "Lütfen geçerli bir telefon numarası girin."
           text: "Lütfen bir metin değeri girin."
           url: "Lütfen geçerli bir URL girin."
-        tooShort:
+        too_short:
           one: "Girdi %{count} karakter veya daha uzun olmalıdır."
           other: "Girdi %{count} karakter veya daha uzun olmalıdır."
-        tooLong:
+        too_long:
           one: "Girdi %{count} karakterden az olmalıdır."
           other: "Girdi %{count} karakterden az olmalıdır."
-        rangeOverflow:
+        range_overflow:
           one: "Girdi en fazla %{count} olmalıdır"
           other: "Girdi en fazla %{count} olmalıdır"
-        rangeUnderflow:
+        range_underflow:
           one: "Girdi en az %{count} olmalıdır."
           other: "Girdi en az %{count} olmalıdır."
-        patternMismatch: "Lütfen istenen formata uyun."
-        badInput: "Lütfen geçerli bir girdi girin."
+        pattern_mismatch: "Lütfen istenen formata uyun."
+        bad_input: "Lütfen geçerli bir girdi girin."
     table_builder:
       title: "Tablo Oluşturucu"
       modal:
@@ -4455,6 +4449,8 @@ tr_TR:
       moderator: "Moderatör"
       back_to_forum: "Foruma Geri Dön"
       filter_reports: Raporları filtrele
+      expand_all_sections: "Tüm bölümleri genişlet"
+      collapse_all_sections: "Tüm bölümleri daralt"
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -4476,10 +4472,8 @@ tr_TR:
         up_to_date: "Güncelsiniz!"
         critical_available: "Kritik bir güncelleme mevcut."
         updates_available: "Güncellemeler mevcut."
-        please_upgrade: "Lütfen yükseltin!"
         no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."
         stale_data: "Son zamanlarda güncelleme kontrolü yapılmadı. Sidekiq'in çalıştığından emin olun."
-        version_check_pending: "Yakın zamanda yükseltmişsiniz gibi görünüyor. Harika!"
         installed_version: "Yüklendi"
         latest_version: "En son"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
@@ -5270,6 +5264,10 @@ tr_TR:
             back_button: "%{name}'e geri dön"
             fields:
               required: "*gerekli"
+              categories:
+                at_least:
+                  one: "en az %{count} kategori gerekli"
+                  other: "en az %{count} kategori gerekli"
               string:
                 too_short: "en az %{count} karakter olmalı"
               number:

@@ -1089,7 +1089,6 @@ pt:
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
-      enable_defer: "Ativar adiamento para marcar tópicos não lidos"
       experimental_sidebar:
         options: "Opções"
         navigation_section: "Navegação"
@@ -1363,6 +1362,8 @@ pt:
         instructions: "O idioma da interface do utilizador. Este será alterado quando recarregar a página."
         default: "(predefinição)"
         any: "qualquer"
+      homepage:
+        default: "(predefinição)"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -1656,7 +1657,6 @@ pt:
       close: "fechar"
       dismiss_error: "Dispensar erro"
     close: "Fechar"
-    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
     home: "Início"
@@ -2255,7 +2255,6 @@ pt:
         clear_all: "Remover Tudo"
         unlist_topics: "Remover Tópicos da Lista"
         relist_topics: "Voltar a Listar Tópicos"
-        defer: "Diferir"
         delete: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
@@ -2351,9 +2350,6 @@ pt:
       move_to_inbox:
         title: "Mover para Caixa de Entrada"
         help: "Mover mensagem de volta para a Caixa de Entrada"
-      defer:
-        help: "Marcar como não lida"
-        title: "Diferir"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -3295,7 +3291,6 @@ pt:
         mark_tracking: "%{shortcut} Seguir tópico"
         mark_watching: "%{shortcut} Vigiar tópico"
         print: "%{shortcut} Imprimir tópico"
-        defer: "%{shortcut} Tópico adiado"
       search_menu:
         title: "Menu de Busca"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
@@ -3534,7 +3529,7 @@ pt:
         upload: "Enviar"
         uploading: "A enviar"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Por favor introduza um valor válido."
           email: "Por favor introduza um endereço de email válido."
     table_builder:
@@ -3572,10 +3567,8 @@ pt:
         up_to_date: "Está atualizado!"
         critical_available: "Uma atualização crítica está disponível."
         updates_available: "Há atualizações disponíveis."
-        please_upgrade: "Por favor, atualize!"
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
-        version_check_pending: "Parece que atualizou recentemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"

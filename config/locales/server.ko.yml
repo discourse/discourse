@@ -2186,35 +2186,9 @@ ko:
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새 Discourse 버전 업데이트 사용 가능"
-    text_body_template: |
-      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
-
-      내 현재 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      - 간편한 **[원클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**로 업그레이드
-
-      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [GitHub 체인지로그](https://github.com/discourse/discourse/commits/main)의 새 소식 확인하기
-
-      - [meta.discourse.org](https:// meta.discourse.org)에서 뉴스, 토론 및 Discourse 지원 확인
   new_version_mailer_with_notes:
     title: "노트가 있는 새 버전 메일러"
     subject_template: "[%{email_prefix}] 업데이트 사용 가능"
-    text_body_template: |
-      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
-
-      내 현재 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      - 간편한 **[원클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**로 업그레이드
-
-      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [GitHub 체인지로그](https://github.com/discourse/discourse/commits/main)의 새 소식 확인하기
-
-      - [meta.discourse.org](https:// meta.discourse.org)에서 뉴스, 토론 및 Discourse 지원 확인
-
-      ### 출시 노트
-
-      %{notes}
   flag_reasons:
     off_topic: "내 게시물이 **주제에 벗어남** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 현재 제목 및 첫 게시물로 지정된 이 주제와 맞지 않는다고 생각하는 것 같습니다. "
     spam: "내 게시물이 **스팸** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 유용하거나 주제와 관련되지 않고 생각보다 너무 프로모션 성격을 갖고 있어 광고라고 생각하는 것 같습니다."

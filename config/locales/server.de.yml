@@ -141,14 +141,22 @@ de:
         not_valid_boolean_value: "muss ein boolescher Wert sein"
         humanize_not_valid_enum_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine der folgenden sein: %{choices}."
         not_valid_enum_value: "muss einer der folgenden sein: %{choices}"
-        humanize_not_valid_category_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Kategorie-ID sein."
-        not_valid_category_value: "muss eine gültige Kategorie-ID sein"
+        humanize_not_valid_categories_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Kategorie-IDs sein."
+        not_valid_categories_value: "muss ein Array gültiger Kategorie-IDs sein"
+        humanize_categories_value_not_valid_min: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{min} Kategorie-IDs haben."
+        categories_value_not_valid_min: "muss mindestens %{min} Kategorie-IDs haben"
+        humanize_categories_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' darf höchstens %{max} Kategorie-IDs haben."
+        categories_value_not_valid_max: "muss höchstens %{max} Kategorie-IDs haben"
         humanize_not_valid_topic_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Themen-ID sein."
         not_valid_topic_value: "muss eine gültige Themen-ID sein"
         humanize_not_valid_post_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Beitrag-ID sein."
         not_valid_post_value: "muss eine gültige Beitrags-ID sein"
-        humanize_not_valid_group_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Gruppen-ID sein."
-        not_valid_group_value: "muss eine gültige Gruppen-ID sein"
+        humanize_not_valid_groups_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Gruppen-IDs sein."
+        not_valid_groups_value: "muss ein Array mit gültigen Gruppen-IDs sein"
+        humanize_groups_value_not_valid_min: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{min} -Gruppen-IDs haben."
+        groups_value_not_valid_min: "muss mindestens %{min} Gruppen-IDs haben"
+        humanize_groups_value_not_valid_max: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss höchstens %{max} -Gruppen-IDs haben."
+        groups_value_not_valid_max: "darf höchstens %{max} Gruppen-IDs haben"
         humanize_not_valid_tags_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Schlagwort-Namen sein."
         not_valid_tags_value: "muss ein Array mit gültigen Schlagwort-Namen sein"
         humanize_tags_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss mindestens %{min} Schlagwort-Namen haben."
@@ -448,6 +456,7 @@ de:
   is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
+  show_post_in_topic: "Beitrag im Thema anzeigen"
   page_num: "Seite %{num}"
   crawler_content_hidden: "HTML-Inhalte wurden ausgelassen, weil du eingeloggt bist oder ein modernes Mobilgerät verwendest."
   home_title: "Startseite"
@@ -1595,7 +1604,7 @@ de:
     summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
     custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
-    personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
+    personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu erstellen. WICHTIG: 1) Alle Benutzer können auf Nachrichten antworten. 2) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 3) Administratoren und Moderatoren können immer Nachrichten senden. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
@@ -2078,7 +2087,7 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der privaten Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow_anonymous_likes`."
-    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern, die deine Seite anonym besuchen, zu erlauben, Beiträge zu mögen. Wenn diese Einstellung aktiviert ist, kann sie das Engagement von Besuchern, die nicht angemeldet sind, fördern, da sie mit den Inhalten interagieren können. Siehe auch `allow_anonymous_posting`."
+    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -2142,6 +2151,7 @@ de:
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
     embed_truncate: "Verkürze den Inhalt von Beiträgen, die von externen Quellen eingebettet werden. Diese Einstellung sorgt dafür, dass nur der erste Teil des Inhalts angezeigt wird, wenn ein Beitrag von einer externen URL auf deiner Seite eingebettet wird. Wenn du es vorziehst, den gesamten Inhalt der externen Beiträge anzuzeigen, kannst du diese Einstellung deaktivieren."
     embed_unlisted: "Eingebettete Themen werden nicht aufgelistet, bis ein Benutzer antwortet."
+    import_embed_unlisted: "Importierte eingebettete Themen werden aus der Liste genommen, bis ein Benutzer antwortet (auch wenn die Einstellung „Nicht aufgelistete Seiten einbetten“ deaktiviert ist)."
     embed_support_markdown: "Markdown-Formatierung für eingebettete Beiträge unterstützen."
     allowed_embed_selectors: "Eine kommaseparierte Liste von CSS-Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
@@ -2304,6 +2314,7 @@ de:
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTELL: Aktiviere das neue Drop-down für Massenoperationen."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
@@ -2757,7 +2768,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -2771,7 +2782,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -4089,7 +4100,7 @@ de:
 
       Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten fördert schlechtes Verhalten, indem es bestätigt wird, es verbraucht deine Energie und verschwendet die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
+      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
 
       <a name="be-civil"></a>
 
@@ -4131,12 +4142,6 @@ de:
       ## [Betrieben von Euch](#power)
 
       Diese Seite wird von eurem [freundlichen Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Nutzungsbedingungen](#tos)
-
-      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die deines (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst nutzen zu können, musst du dich mit unseren [Nutzungsbedingungen](%{base_path}/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -4689,6 +4694,7 @@ de:
     limited_to_one_tag_from_group: "Die Schlagwörter %{tags} können nicht gleichzeitig verwendet werden. Bitte füge nur eines von ihnen ein."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
+    user_not_permitted: "Du darfst keine Themen mit Schlagwörtern versehen"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"

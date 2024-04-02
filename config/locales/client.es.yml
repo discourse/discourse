@@ -1149,7 +1149,6 @@ es:
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes personales"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
-      enable_defer: "Activar diferir para marcar temas no leídos"
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
@@ -1548,6 +1547,8 @@ es:
         instructions: "Idioma de la interfaz. Cambiará cuando recargues la página."
         default: "(por defecto)"
         any: "cualquiera"
+      homepage:
+        default: "(por defecto)"
       password_confirmation:
         title: "Vuelve a introducir la contraseña"
       invite_code:
@@ -1873,7 +1874,6 @@ es:
       close: "cerrar"
       dismiss_error: "Descartar error"
     close: "Cerrar"
-    assets_changed_confirm: "Se ha recibido una actualización de software. ¿Acualizar ahora?"
     logout: "Has cerrado sesión."
     refresh: "Volver a cargar"
     home: "Inicio"
@@ -2665,7 +2665,6 @@ es:
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
         reset_bump_dates: "Restablecer fechas de reflote"
-        defer: "Aplazar"
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
@@ -2779,9 +2778,6 @@ es:
       move_to_inbox:
         title: "Mover a la bandeja de entrada"
         help: "Restaurar mensaje a la bandeja de entrada"
-      defer:
-        help: "Marcar como no leído"
-        title: "Aplazar"
       list: "Temas"
       new: "nuevo tema"
       unread: "sin leer"
@@ -3925,7 +3921,6 @@ es:
         mark_tracking: "%{shortcut} Seguir tema"
         mark_watching: "%{shortcut} Vigilar tema"
         print: "%{shortcut} Imprimir tema"
-        defer: "%{shortcut} Aplazar el tema"
         topic_admin_actions: "%{shortcut} Abrir acciones de administrador del tema"
         archive_private_message: "%{shortcut} Archivar/desarchivar mensaje privado"
       search_menu:
@@ -4316,12 +4311,12 @@ es:
         upload: "Subir"
         uploading: "Subiendo"
       errors:
-        valueMissing:
+        value_missing:
           default: "Rellena este campo."
-          select-one: "Selecciona un elemento de la lista."
-          select-multiple: "Selecciona al menos un elemento de la lista."
+          select_one: "Selecciona un elemento de la lista."
+          select_multiple: "Selecciona al menos un elemento de la lista."
           checkbox: "Marca esta casilla si quieres continuar."
-        typeMismatch:
+        type_mismatch:
           default: "Introduce un valor válido."
           color: "Introduce un color."
           date: "Introduce una fecha."
@@ -4331,20 +4326,20 @@ es:
           tel: "Introduce un número de teléfono válido."
           text: "Introduce un valor de texto."
           url: "Introduce una URL válida."
-        tooShort:
+        too_short:
           one: "La entrada debe tener %{count} carácter o más."
           other: "La entrada debe tener %{count} caracteres o más."
-        tooLong:
+        too_long:
           one: "La entrada debe tener menos de %{count} carácter."
           other: "La entrada debe tener menos de %{count} caracteres."
-        rangeOverflow:
+        range_overflow:
           one: "La entrada debe ser menor que %{count}."
           other: "La entrada debe ser menor que %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "La entrada debe ser mayor que %{count}."
           other: "La entrada debe ser mayor que %{count}."
-        patternMismatch: "Utiliza el formato solicitado."
-        badInput: "Introduce una entrada válida."
+        pattern_mismatch: "Utiliza el formato solicitado."
+        bad_input: "Introduce una entrada válida."
     table_builder:
       title: "Creador de tablas"
       modal:
@@ -4430,10 +4425,8 @@ es:
         up_to_date: "Estás en la última versión"
         critical_available: "Actualización crítica disponible."
         updates_available: "Hay actualizaciones disponibles."
-        please_upgrade: "¡Por favor, actualiza!"
         no_check_performed: "Todavía no se ha realizado ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         stale_data: "No se ha realizado recientemente ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
-        version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
         installed_version: "Instalada"
         latest_version: "Última"
         problems_found: "Algunos consejos con base en tus ajustes actuales"

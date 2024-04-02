@@ -1746,7 +1746,6 @@ ar:
     summarization_strategy: "طرق إضافية لتلخيص المحتوى المسجَّل بواسطة المكونات الإضافية"
     custom_summarization_allowed_groups: "المجموعات المسموح لها بتلخيص المحتويات باستخدام `summarization_strategy`"
     enable_personal_messages: "تم إيقافه، استخدم إعداد 'personal message enabled groups' بدلًا من ذلك. اسمح للمستخدمين من مستوى الثقة 1 (قابل للإعداد عبر الحد الأدنى لمستوى الثقة لإرسال الرسائل) بإنشاء رسائل والرد على الرسائل. لاحظ أن فريق العمل يمكنه دائمًا إرسال الرسائل بغض النظر عن أي شيء."
-    personal_message_enabled_groups: "اسمح للمستخدمين داخل هذه المجموعات بإنشاء رسائل والرد على الرسائل. تتضمن مجموعات مستوى الثقة جميع مستويات الثقة التي تزيد عن هذا الرقم؛ على سبيل المثال، يتيح اختيار trust_level_1 أيضًا لمستخدمي trust_level_2 و3 و4 إرسال رسائل خاصة. لاحظ أن الموظفين يمكنهم دائمًا إرسال الرسائل بغض النظر عن السبب."
     enable_system_message_replies: "يسمح للمستخدمين بالرد على رسائل النظام، حتى إذا كانت الرسائل الشخصية متوقفة."
     enable_chunked_encoding: "تفعيل استجابات الترميز المقسَّمة بواسطة الخادم. تعمل هذه الميزة على معظم الإعدادات، ولكن قد يتم تخزين بعض الخوادم الوكيلة مؤقتًا، مما يتسبب في تأخير الاستجابات"
     long_polling_base_url: "عنوان URL الأساسي المُستخدَم في الاستقصاء الطويل (عندما تخدم شبكة توصيل المحتوى (CDN) محتوًى ديناميكيًا، احرص على تعيين هذا على سحب الموارد من المصدر) eg: http://origin.site.com"
@@ -2896,11 +2895,9 @@ ar:
   new_version_mailer:
     title: "رسالة الإصدار الجديد"
     subject_template: "[%{email_prefix}] إصدار جديد من Discourse، يتوفَّر تحديث"
-    text_body_template: "مرحى، يتوفَّر إصدار جديد من [Discourse](https://www.discourse.org)!\n\nإصدارك: %{installed_version}\nالإصدار الجديد: **%{new_version}** \n\n- الترقية بسهولة باستخدام **[ترقية المتصفح بنقرة واحدة](%{base_url}/admin/upgrade)**\n\n - تعرَّف على الجديد في [ملاحظات الإصدار](https://meta.discourse.org/tag/release-notes) أو اعرض [سجل تغييرات GitHub البسيط](https://github.com/discourse/discourse/commits/master)\n\n- انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات ودعم Discourse\n"
   new_version_mailer_with_notes:
     title: "رسالة الإصدار الجديد مع الملاحظات"
     subject_template: "يتوفَّر تحديث [%{email_prefix}]"
-    text_body_template: "مرحى، يتوفَّر إصدار جديد من [Discourse](https://www.discourse.org)!\n\nإصدارك: %{installed_version}\nالإصدار الجديد: **%{new_version}** \n\n- الترقية بسهولة باستخدام **[ترقية المتصفح بنقرة واحدة](%{base_url}/admin/upgrade)**\n\n - تعرَّف على الجديد في [ملاحظات الإصدار](https://meta.discourse.org/tag/release-notes) أو اعرض [سجل تغييرات GitHub البسيط](https://github.com/discourse/discourse/commits/master)\n\n- انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات ودعم \n\n### ملاحظات الإصدار\n\n%{notes}Discourse\n"
   flag_reasons:
     off_topic: "تم الإبلاغ عن منشورك على أنه **خارج الموضوع**: يشعر المجتمع بأنه غير مناسب للموضوع، كما هو محدَّد حاليًا في العنوان وأول منشور."
     inappropriate: "تم الإبلاغ عن منشورك على أنه **غير لائق**: يشعر المجتمع بأنه هجومي أو مسيء أو يتضمَّن سلوكًا ينمُّ عن كراهية أو ينتهك [إرشادات مجتمعنا](%{base_path}/guidelines)."

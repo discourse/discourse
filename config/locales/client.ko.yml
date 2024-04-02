@@ -1006,7 +1006,6 @@ ko:
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
-      enable_defer: "주제를 읽지 않은 상태로 표시하도록 연기 활성화"
       experimental_sidebar:
         enable: "사이드바 활성화"
         options: "옵션"
@@ -1302,6 +1301,8 @@ ko:
         instructions: "사용자 인터페이스 언어입니다. 페이지를 새로고침하면 반영됩니다."
         default: "(디폴트)"
         any: "모두"
+      homepage:
+        default: "(기본)"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -1576,7 +1577,6 @@ ko:
       close: "닫기"
       dismiss_error: "오류 무시"
     close: "닫기"
-    assets_changed_confirm: "이 사이트에 소프트웨어 업그레이드가 존재합니다. 지금 최신 버전을 받을까요?"
     logout: "로그아웃되었습니다."
     refresh: "새로 고침"
     home: "홈"
@@ -2211,7 +2211,6 @@ ko:
         unlist_topics: "목록에서 주제 숨기기"
         relist_topics: "목록에서 주제 다시 표시"
         reset_bump_dates: "끌어올림 날짜 초기화"
-        defer: "연기"
         delete: "글 삭제"
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 무시"
@@ -2298,9 +2297,6 @@ ko:
       move_to_inbox:
         title: "받은 편지함으로 이동"
         help: "메시지를 받은 편지함으로 다시 이동"
-      defer:
-        help: "읽지 않음으로 표시"
-        title: "연기"
       list: "글"
       new: "새 주제"
       unread: "읽지 않음"
@@ -3263,7 +3259,6 @@ ko:
         mark_tracking: "%{shortcut} 주제 추적"
         mark_watching: "%{shortcut} 주제 구독"
         print: "%{shortcut} 주제 인쇄"
-        defer: "%{shortcut} 주제 지연"
         topic_admin_actions: "%{shortcut} 주제 관리자 작업 열기"
       search_menu:
         title: "검색 메뉴"
@@ -3548,7 +3543,7 @@ ko:
         upload: "업로드"
         uploading: "업로드 중"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "유효한 값을 입력하십시오."
     table_builder:
       modal:
@@ -3586,10 +3581,8 @@ ko:
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
-        please_upgrade: "업그레이드하세요!"
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
-        version_check_pending: "최근에 업그레이드하셨네요. 잘하셨습니다!"
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"

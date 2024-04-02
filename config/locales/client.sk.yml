@@ -1217,7 +1217,6 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
-      enable_defer: "Ak chcete označiť témy ako neprečítané, povoľte odloženie"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"
@@ -1536,6 +1535,8 @@ sk:
         instructions: "Jazyk úžívateľského rozhrania. Zmení sa po obnovení stránky."
         default: "(predvolené)"
         any: "hocijaký"
+      homepage:
+        default: "(predvolené)"
       password_confirmation:
         title: "Heslo znova"
       auth_tokens:
@@ -2170,7 +2171,6 @@ sk:
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
         unlist_topics: "Dôverné témy"
-        defer: "Odložiť"
         delete: "Zmazať témy"
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
@@ -2238,8 +2238,6 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
-      defer:
-        title: "Odložiť"
       list: "Témy"
       new: "nová téma"
       unread: "neprečítané"
@@ -3131,20 +3129,20 @@ sk:
         upload: "Načítať"
         uploading: "Nahrávanie"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
-        tooLong:
+        too_long:
           one: "Vstup musí mať menej ako %{count} znakov."
           few: "Vstup musí mať menej ako %{count} znakov."
           many: "Vstup musí mať menej ako %{count} znakov."
           other: "Vstup musí mať menej ako %{count} znakov."
-        rangeOverflow:
+        range_overflow:
           one: "Vstup musí byť menší ako %{count}."
           few: "Vstup musí byť menší ako %{count}."
           many: "Vstup musí byť menší ako %{count}."
           other: "Vstup musí byť menší ako %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Vstup musí byť väčší ako %{count}."
           few: "Vstup musí byť väčší ako %{count}."
           many: "Vstup musí byť väčší ako %{count}."
@@ -3227,10 +3225,8 @@ sk:
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
         critical_available: "Je dostupná kritická aktualizácia."
         updates_available: "Aktualizácie sú k dispozícii."
-        please_upgrade: "Prosím aktualizujte!"
         no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
         stale_data: "V poslednej dobe neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
-        version_check_pending: "Zdá sa že ste nedávno aktualizovali. Fantastické!"
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
         new_features:

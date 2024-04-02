@@ -1150,7 +1150,6 @@ pt_BR:
       allow_private_messages: "Permitir que outros(as) usuários(as) me enviem mensagens pessoais"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
-      enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -1552,6 +1551,8 @@ pt_BR:
         instructions: "Idioma da interface do(a) usuário(a). Será alterado quando você atualizar a página."
         default: "(padrão)"
         any: "qualquer"
+      homepage:
+        default: "(padrão)"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -1876,7 +1877,6 @@ pt_BR:
       close: "fechar"
       dismiss_error: "Descartar erro"
     close: "Fechar"
-    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "Você foi desconectado(a)."
     refresh: "Atualizar"
     home: "Início"
@@ -2668,7 +2668,6 @@ pt_BR:
         unlist_topics: "Remover tópicos da lista"
         relist_topics: "Reinserir tópicos na lista"
         reset_bump_dates: "Redefinir datas de promoção"
-        defer: "Adiar"
         delete: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
@@ -2784,9 +2783,6 @@ pt_BR:
       move_to_inbox:
         title: "Mover para caixa de entrada"
         help: "Mover mensagem de volta para caixa de entrada"
-      defer:
-        help: "Marcar como não lido"
-        title: "Adiar"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -3931,7 +3927,6 @@ pt_BR:
         mark_tracking: "%{shortcut} Monitorar tópico"
         mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
-        defer: "%{shortcut} Adiar tópico"
         topic_admin_actions: "%{shortcut} Abrir ações de administração de tópico"
         archive_private_message: "%{shortcut} Alternar mensagem privada de arquivo"
       search_menu:
@@ -4322,12 +4317,12 @@ pt_BR:
         upload: "Enviar"
         uploading: "Enviando"
       errors:
-        valueMissing:
+        value_missing:
           default: "Preencha este campo."
-          select-one: "Selecione um item da lista."
-          select-multiple: "Selecione pelo menos um item da lista."
+          select_one: "Selecione um item da lista."
+          select_multiple: "Selecione pelo menos um item da lista."
           checkbox: "Marque esta caixa se quiser continuar."
-        typeMismatch:
+        type_mismatch:
           default: "Digite um valor válido."
           color: "Insira uma cor."
           date: "Insira uma data."
@@ -4337,20 +4332,20 @@ pt_BR:
           tel: "Insira um número de telefone válido."
           text: "Insira um valor de texto."
           url: "Insira um URL válido."
-        tooShort:
+        too_short:
           one: "A entrada deve conter %{count} caractere ou mais."
           other: "A entrada deve conter %{count} caracteres ou mais."
-        tooLong:
+        too_long:
           one: "A entrada deve ter menos de %{count} caractere."
           other: "A entrada deve ser inferior a %{count} caracteres."
-        rangeOverflow:
+        range_overflow:
           one: "A entrada deve ser menor que %{count}."
           other: "A entrada deve ser menor que %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "A entrada deve ser maior que %{count}."
           other: "A entrada deve ser maior que %{count}."
-        patternMismatch: "Corresponda ao formato solicitado."
-        badInput: "Insira uma entrada válida."
+        pattern_mismatch: "Corresponda ao formato solicitado."
+        bad_input: "Insira uma entrada válida."
     table_builder:
       title: "Construtor de tabela"
       modal:
@@ -4436,10 +4431,8 @@ pt_BR:
         up_to_date: "Você está atualizado(a)!"
         critical_available: "Uma atualização crítica está disponível."
         updates_available: "Atualizações estão disponíveis."
-        please_upgrade: "Faça a atualização!"
         no_check_performed: "Não foi realizada nenhuma verificação de atualizações. Verifique se sidekiq esta em execução."
         stale_data: "Não foi realizada nenhuma verificação de atualizações ultimamente. Verifique se sidekiq esta em execução."
-        version_check_pending: "Parece que você realizou uma atualização recentemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"

@@ -1362,22 +1362,6 @@ cs:
       %{base_url}/u/password-reset/%{email_token}
 
       (Pokud platnost výše uvedeného odkazu vypršela, zvolte při přihlašování pomocí své e-mailové adresy možnost "Zapomněl/a jsem heslo".)
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Hurá, je k dispozici nová verze [Discourse](https://www.discourse.org)!
-
-      Vaše verze: %{installed_version}
-      Nová verze: **%{new_version}**
-
-      - Upgradujte pomocí našeho snadného **[upgrade jedním kliknutím v prohlížeči](%{base_url}/admin/upgrade)**
-
-      - Podívejte se, co je nového v [poznámkách k vydání](https://meta.discourse.org/tag/release-notes) nebo si prohlédněte [protokol změn GitHubu](https://github.com/discourse/discourse/commits/main)
-
-      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu pro Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
-
-      ### Poznámky k vydání
-
-      %{notes}
   system_messages:
     queued_by_staff:
       title: "Příspěvek potřebuje schválení"

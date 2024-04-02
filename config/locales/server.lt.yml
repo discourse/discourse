@@ -1612,17 +1612,6 @@ lt:
   new_version_mailer:
     title: "Nauja versija Mailer"
     subject_template: "[%{email_prefix}] Išleista Nauja Discourse versija"
-    text_body_template: |
-      Oho, yra nauja [Discourse]versija (https://www.discourse.org)!
-
-      Jūsų versija: %{installed_version}
-      Nauja versija: **%{new_version}**
-
-      – Atnaujinkite naudodami mūsų paprastą **[naršyklės naujinimas vienu spustelėjimu](%{base_url}/admin/upgrade)**
-
-      – Sužinokite, kas naujo [leidimo pastabose]( https://meta.discourse.org/tag/release-notes) arba peržiūrėkite [neapdorotą „GitHub“ pakeitimų žurnalą](https://github.com/discourse/discourse/commits/main)
-
-      – Apsilankykite [meta.discourse.org](https:// meta.discourse.org) naujienoms, diskusijoms ir Discourse palaikymui
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] Galimas atnaujinimas"
   flag_reasons:

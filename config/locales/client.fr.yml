@@ -1149,7 +1149,6 @@ fr:
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
-      enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
       experimental_sidebar:
         enable: "Activer la barre latérale"
         options: "Options"
@@ -1548,6 +1547,8 @@ fr:
         instructions: "Langue de l'interface utilisateur. Le changement sera pris en compte après actualisation de la page."
         default: "(par défaut)"
         any: "tous"
+      homepage:
+        default: "(par défaut)"
       password_confirmation:
         title: "Confirmation du mot de passe"
       invite_code:
@@ -1872,7 +1873,6 @@ fr:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
     close: "Fermer"
-    assets_changed_confirm: "Une mise à jour est disponible pour ce site. Souhaitez-vous obtenir la dernière version ?"
     logout: "Vous avez été déconnecté(e)."
     refresh: "Actualiser"
     home: "Accueil"
@@ -2664,7 +2664,6 @@ fr:
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
         reset_bump_dates: "Réinitialiser la date d'actualisation"
-        defer: "Reporter à plus tard"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2776,9 +2775,6 @@ fr:
       move_to_inbox:
         title: "Déplacer dans la boîte de réception"
         help: "Déplacer le message dans la boîte de réception"
-      defer:
-        help: "Marquer comme non lu"
-        title: "Reporter à plus tard"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -2917,12 +2913,12 @@ fr:
       auto_delete_replies:
         title: "Suppression automatique des réponses"
       status_update_notice:
-        auto_open: "Ce sujet sera automatiquement ouvert dans %{timeLeft}."
-        auto_close: "Ce sujet sera automatiquement fermé dans %{timeLeft}."
+        auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
+        auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> dans %{timeLeft}."
         auto_close_after_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
-        auto_delete: "Ce sujet sera automatiquement supprimé dans %{timeLeft}."
-        auto_bump: "Ce sujet sera automatiquement remonté dans %{timeLeft}."
+        auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
+        auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous recevrez un rappel concernant ce sujet dans %{timeLeft}."
         auto_delete_replies: "Les réponses à ce sujet sont automatiquement supprimées après %{duration}."
       auto_close_title: "Paramètres de fermeture automatique"
@@ -3919,7 +3915,6 @@ fr:
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
-        defer: "%{shortcut} Reporter le sujet à plus tard"
         topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration du sujet"
         archive_private_message: "%{shortcut} Basculer l'archivage des messages privés"
       search_menu:
@@ -4310,12 +4305,12 @@ fr:
         upload: "Téléverser"
         uploading: "Téléversement"
       errors:
-        valueMissing:
+        value_missing:
           default: "Veuillez remplir ce champ."
-          select-one: "Veuillez sélectionner un élément dans la liste."
-          select-multiple: "Veuillez sélectionner au moins un élément dans la liste."
+          select_one: "Veuillez sélectionner un élément dans la liste."
+          select_multiple: "Veuillez sélectionner au moins un élément dans la liste."
           checkbox: "Veuillez cocher cette case si vous souhaitez continuer."
-        typeMismatch:
+        type_mismatch:
           default: "Veuillez saisir une valeur valide."
           color: "Veuillez saisir une couleur."
           date: "Veuillez saisir une date."
@@ -4325,20 +4320,20 @@ fr:
           tel: "Veuillez saisir un numéro de téléphone valide."
           text: "Veuillez saisir une valeur de texte."
           url: "Veuillez saisir une URL valide."
-        tooShort:
+        too_short:
           one: "La saisie doit comporter %{count} caractère ou plus."
           other: "La saisie doit comporter %{count} caractères ou plus."
-        tooLong:
+        too_long:
           one: "La saisie doit comporter moins de %{count} caractère."
           other: "La saisie doit comporter moins de %{count} caractères."
-        rangeOverflow:
+        range_overflow:
           one: "La saisie doit être inférieure à %{count}."
           other: "La saisie doit être inférieure à %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "La saisie doit être supérieure à %{count}."
           other: "La saisie doit être supérieure à %{count}."
-        patternMismatch: "Veuillez respecter le format demandé."
-        badInput: "Veuillez saisir une entrée valide."
+        pattern_mismatch: "Veuillez respecter le format demandé."
+        bad_input: "Veuillez saisir une entrée valide."
     table_builder:
       title: "Éditeur de tableaux"
       modal:
@@ -4424,10 +4419,8 @@ fr:
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
         updates_available: "Des mises à jour sont disponibles."
-        please_upgrade: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
-        version_check_pending: "On dirait que vous avez récemment fait une mise à jour. Super !"
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"

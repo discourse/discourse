@@ -800,6 +800,8 @@ sr:
         title: "Jezik interfejsa"
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
+      homepage:
+        default: "(zadano)"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -1174,7 +1176,6 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        defer: "Odloži"
         delete: "Obriši Teme"
         dismiss: "Одбаци"
         dismiss_new: "Odbaci Novo"
@@ -1217,8 +1218,6 @@ sr:
       create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
-      defer:
-        title: "Odloži"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitano"
@@ -1842,7 +1841,7 @@ sr:
         upload: "Upload"
         uploading: "Uploading"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
     table_builder:
@@ -1871,10 +1870,8 @@ sr:
         up_to_date: "Imate trenutnu verziju!"
         critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
-        please_upgrade: "Molimo nadogradite!"
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        version_check_pending: "Čini se da ste nedavno nadogradili. Fantastično!"
         installed_version: "Instalirano"
         latest_version: "Poslednje"
         new_features:

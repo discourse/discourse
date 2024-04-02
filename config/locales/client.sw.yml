@@ -813,6 +813,8 @@ sw:
         instructions: "Lugha ya kiolesura ya mtumiaji. Itabadilika ukirudisha tena ukurasa."
         default: "(chaguo-msingi)"
         any: "yoyote"
+      homepage:
+        default: "(chaguo-msingi)"
       password_confirmation:
         title: "nywila upya"
       auth_tokens:
@@ -2282,7 +2284,7 @@ sw:
         upload: "Ongeza"
         uploading: "Inapakia"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
     table_builder:
@@ -2312,10 +2314,8 @@ sw:
         up_to_date: "Una toleo la sasa!"
         critical_available: "Sasisho muhimu linapatikana."
         updates_available: "Masashisho yanapatikana."
-        please_upgrade: "Tafadhali boresha!"
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
-        version_check_pending: "Inaonekana umeweka toleo la sasa hivi karibuni. Vizuri!"
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
         new_features:

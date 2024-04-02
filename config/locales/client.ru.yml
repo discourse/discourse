@@ -1263,7 +1263,6 @@ ru:
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
-      enable_defer: "Включить кнопку «Отложить», чтобы помечать темы как непрочитанные"
       experimental_sidebar:
         enable: "Включить боковую панель"
         options: "Параметры"
@@ -1700,6 +1699,8 @@ ru:
         instructions: "Язык интерфейса сайта. Чтобы изменения вступили в силу, перезагрузите страницу."
         default: "(по умолчанию)"
         any: "любые"
+      homepage:
+        default: "(домашнюю страницу)"
       password_confirmation:
         title: "Пароль ещё раз"
       invite_code:
@@ -2042,7 +2043,6 @@ ru:
       close: "закрыть"
       dismiss_error: "Отклонить ошибку"
     close: "Закрыть"
-    assets_changed_confirm: "Для этого сайта есть обновление программного обеспечения. Получить последнюю версию?"
     logout: "Необходимо заново войти в систему."
     refresh: "Обновить"
     home: "Главная"
@@ -2910,7 +2910,6 @@ ru:
         unlist_topics: "Скрыть темы"
         relist_topics: "Показать темы"
         reset_bump_dates: "Сбросить даты поднятия"
-        defer: "Отложить"
         delete: "Удалить темы"
         dismiss: "Отложить"
         dismiss_read: "Отложить все непрочитанные"
@@ -3040,9 +3039,6 @@ ru:
       move_to_inbox:
         title: "Переместить во входящие"
         help: "Вернуть сообщение во входящие"
-      defer:
-        help: "Отметить как непрочитанное"
-        title: "Отложить"
       list: "Темы"
       new: "новая тема"
       unread: "не прочитано"
@@ -4297,7 +4293,6 @@ ru:
         mark_tracking: "%{shortcut} Следить за темой"
         mark_watching: "%{shortcut} Наблюдать за темой"
         print: "%{shortcut} Распечатать тему"
-        defer: "%{shortcut} Отложить тему"
         topic_admin_actions: "%{shortcut} Открыть в теме меню действий администратора"
         archive_private_message: "%{shortcut} Переключатель для архивации личных сообщений"
       search_menu:
@@ -4722,12 +4717,12 @@ ru:
         upload: "Загрузка"
         uploading: "Загрузка"
       errors:
-        valueMissing:
+        value_missing:
           default: "Заполните это поле."
-          select-one: "Выберите пункт в списке."
-          select-multiple: "Выберите как минимум один пункт в списке."
+          select_one: "Выберите пункт в списке."
+          select_multiple: "Выберите как минимум один пункт в списке."
           checkbox: "Чтобы продолжить, поставьте этот флажок."
-        typeMismatch:
+        type_mismatch:
           default: "Введите корректное значение."
           color: "Введите цвет."
           date: "Введите дату."
@@ -4737,28 +4732,28 @@ ru:
           tel: "Введите действительный номер телефона."
           text: "Введите текстовое значение."
           url: "Введите действительный URL-адрес."
-        tooShort:
+        too_short:
           one: "Минимум символов — %{count}."
           few: "Минимум символов — %{count}."
           many: "Минимум символов — %{count}."
           other: "Минимум символов — %{count}."
-        tooLong:
+        too_long:
           one: "Максимум символов — %{count}."
           few: "Максимум символов — %{count}."
           many: "Максимум символов — %{count}."
           other: "Максимум символов — %{count}."
-        rangeOverflow:
+        range_overflow:
           one: "Максимум — %{count}."
           few: "Максимум — %{count}."
           many: "Максимум — %{count}."
           other: "Максимум — %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Минимум — %{count}."
           few: "Минимум — %{count}."
           many: "Минимум — %{count}."
           other: "Минимум — %{count}."
-        patternMismatch: "Введите в указанном формате."
-        badInput: "Введите корректное значение."
+        pattern_mismatch: "Введите в указанном формате."
+        bad_input: "Введите корректное значение."
     table_builder:
       title: "Конструктор таблиц"
       modal:
@@ -4844,10 +4839,8 @@ ru:
         up_to_date: "Обновлений нет"
         critical_available: "Доступно критическое обновление."
         updates_available: "Доступны обновления."
-        please_upgrade: "Обновитесь!"
         no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."
         stale_data: "Проверка обновлений в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
-        version_check_pending: "Вы недавно обновились. Замечательно!"
         installed_version: "Установленная версия"
         latest_version: "Последняя версия"
         problems_found: "Несколько советов по текущим настройкам сайта"
