@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { isBlank } from "@ember/utils";
 import I18n from "discourse-i18n";
 
 export default class SchemaThemeSettingTypeModels extends Component {
@@ -30,7 +31,7 @@ export default class SchemaThemeSettingTypeModels extends Component {
 
     if (
       (this.min && this.value.length < this.min) ||
-      (this.required && (!this.value || this.value.length === 0))
+      (this.required && isBlank(this.value))
     ) {
       return I18n.t(
         `admin.customize.theme.schema.fields.${this.type}.at_least`,
