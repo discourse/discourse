@@ -34,6 +34,7 @@ def copy_maxmind(from_path, to_path)
     from = File.join(from_path, "#{name}.mmdb")
     to = File.join(to_path, "#{name}.mmdb")
     FileUtils.cp(from, to, preserve: true)
+    FileUtils.touch(to)
   end
 end
 
