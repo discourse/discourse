@@ -54,7 +54,7 @@ export default function renderTopicFeaturedLink(topic) {
     return "";
   }
 }
-// deprecated per components/glimmer-header/topic/featured-link.gjs
+// deprecated per components/header/topic/featured-link.gjs
 export function topicFeaturedLinkNode(topic) {
   const meta = extractLinkMeta(topic);
   if (meta) {

@@ -10,12 +10,12 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
-import AuthButtons from "./glimmer-header/auth-buttons";
-import Contents from "./glimmer-header/contents";
-import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
-import Icons from "./glimmer-header/icons";
-import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
-import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
+import AuthButtons from "./header/auth-buttons";
+import Contents from "./header/contents";
+import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
+import Icons from "./header/icons";
+import SearchMenuWrapper from "./header/search-menu-wrapper";
+import UserMenuWrapper from "./header/user-menu-wrapper";
 
 const SEARCH_BUTTON_ID = "search-button";
 

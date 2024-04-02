@@ -9,10 +9,10 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { headerButtonsDAG } from "discourse/components/glimmer-header";
-import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import { headerButtonsDAG } from "discourse/components/header";
+import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
   addWidgetCleanCallback,
