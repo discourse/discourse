@@ -2926,7 +2926,7 @@ en:
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
         reset_bump_dates: "Reset bump dates"
-        defer: "Defer"
+        defer: "Mark unread"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -3037,7 +3037,7 @@ en:
         name: "Reset Bump Dates"
         description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
       defer:
-        name: "Defer Topics"
+        name: "Mark Unread"
         description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
@@ -3059,8 +3059,8 @@ en:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
       defer:
-        help: "Mark as unread"
-        title: "Defer"
+        help: "Mark topic as unread"
+        title: "Mark unread"
 
       list: "Topics"
       new: "new topic"
@@ -4307,7 +4307,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
-        defer: "%{shortcut} Defer topic"
+        defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
         archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
