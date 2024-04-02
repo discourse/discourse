@@ -1120,12 +1120,12 @@ module(
       assert.strictEqual(tree.nodes.length, 3);
 
       await click(TOP_LEVEL_ADD_BTN);
-      await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
 
-      assert.strictEqual(tree.nodes.length, 5);
+      assert.strictEqual(tree.nodes.length, 4);
+      assert.ok(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
-      assert.dom(tree.nodes[3].textElement).hasText("level1 4");
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });
 
     test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
@@ -1178,14 +1178,7 @@ module(
 
       tree.refresh();
 
-      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
-
-      await click(tree.nodes[0].addButtons[1]);
-      tree.refresh();
-
-      assert.dom(tree.nodes[0].children[1].textElement).hasText("chair 1");
-
-      await click(tree.nodes[0].children[0].element);
+      assert.dom(tree.nodes[0].textElement).hasText("link 1");
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -1201,18 +1194,22 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
       assert.strictEqual(tree.nodes[0].children.length, 2);
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
 
       await click(tree.nodes[0].addButtons[0]);
       tree.refresh();
 
-      await click(tree.nodes[0].addButtons[0]);
+      assert.dom(tree.nodes[2].textElement).hasText("level2 3");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+
+      await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
 
-      assert.strictEqual(tree.nodes[0].children.length, 4);
-      assert.dom(tree.nodes[0].children[2].textElement).hasText("level2 3");
-      assert.dom(tree.nodes[0].children[3].textElement).hasText("level2 4");
+      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
     });
 
     test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
@@ -1255,14 +1252,10 @@ module(
       assert.strictEqual(tree.nodes[0].children.length, 2);
 
       await click(tree.nodes[0].addButtons[0]);
+
       tree.refresh();
 
-      await click(tree.nodes[0].addButtons[0]);
-      tree.refresh();
-
-      assert.strictEqual(tree.nodes[0].children.length, 4);
-      assert.dom(tree.nodes[0].children[2].textElement).hasText("level3 3");
-      assert.dom(tree.nodes[0].children[3].textElement).hasText("level3 4");
+      assert.dom(tree.nodes[2].textElement).hasText("level3 3");
     });
 
     test("removing an object from the root list of objects", async function (assert) {
