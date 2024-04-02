@@ -3037,7 +3037,7 @@ en:
         name: "Reset Bump Dates"
         description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
       defer:
-        name: "Mark Unread Topics"
+        name: "Mark Unread"
         description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
