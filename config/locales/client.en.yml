@@ -1239,7 +1239,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
-      enable_defer: "Enable defer to mark topics unread"
+      enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
