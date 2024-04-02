@@ -4718,12 +4718,12 @@ en:
         upload: "Upload"
         uploading: "Uploading"
       errors:
-        valueMissing:
+        value_missing:
           default: "Please fill out this field."
-          select-one: "Please select an item in the list."
-          select-multiple: "Please select at least one item in the list."
+          select_one: "Please select an item in the list."
+          select_multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."
-        typeMismatch:
+        type_mismatch:
           default: "Please enter a valid value."
           color: "Please enter a color."
           date: "Please enter a date."
@@ -4733,20 +4733,20 @@ en:
           tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
-        tooShort:
+        too_short:
           one: "The input must be %{count} character or longer."
           other: "The input must be %{count} characters or longer."
-        tooLong:
+        too_long:
           one: "The input must be less than %{count} character."
           other: "The input must be less than %{count} characters."
-        rangeOverflow:
+        range_overflow:
           one: "The input must be less than %{count}."
           other: "The input must be less than %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "The input must be more than %{count}."
           other: "The input must be more than %{count}."
-        patternMismatch: "Please match the requested format."
-        badInput: "Please enter a valid input."
+        pattern_mismatch: "Please match the requested format."
+        bad_input: "Please enter a valid input."
 
     table_builder:
       title: "Table Builder"
