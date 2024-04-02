@@ -1,4 +1,5 @@
-{{! template-lint-disable  }}
+{{! template-lint-disable}}
+
 <form class="d-form">
   <h2> Simple stacked form</h2>
   <div class="d-form__section">
@@ -124,22 +125,34 @@
       <div class="d-form-field__value-container">
         <div class="d-form-field__value">
 
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">I
+          <input
+            class="d-form-field__input"
+            type="checkbox"
+            id="checkbox1multi"
+          />
+          <label class="checkbox-label" for="checkbox1multi">I
           </label>
 
         </div>
         <div class="d-form-field__value">
 
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">like
+          <input
+            class="d-form-field__input"
+            type="checkbox"
+            id="checkbox2multi"
+          />
+          <label class="checkbox-label" for="checkbox2multi">like
           </label>
 
         </div>
         <div class="d-form-field__value">
 
-          <input class="d-form-field__input" type="checkbox" id="checkbox" />
-          <label class="checkbox-label" for="checkbox">courgette
+          <input
+            class="d-form-field__input"
+            type="checkbox"
+            id="checkbox3multi"
+          />
+          <label class="checkbox-label" for="checkbox3multi">courgette
           </label>
 
         </div>
@@ -191,7 +204,7 @@
   </div>
 
   <h2>Horizontal form (classic)</h2>
-  <div class="d-form__section --rows">
+  <div class="d-form__section --lfr">
     <div class="d-form-field">
       <label class="d-form-field__label" for="normal-input">Standard stacked
         input
@@ -438,51 +451,129 @@
     </fieldset>
   </div>
 
-  {{! 
   <h2>Multirow form</h2>
-  <div class="d-form__section --inline">
-    <fieldset>
-      <legend>Icon</legend>
-      <div class="d-form-field"><select /></div>
-      <div class="d-form-field"><select /></div>
-      <div class="d-form-field"><select /></div>
-      <div class="d-form-field"><select /></div>
-    </fieldset>
-    <fieldset>
-      <legend>Name</legend>
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-    </fieldset>
-    <fieldset>
-      <legend>Link</legend>
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-      <input class="d-form-field__input" />
-    </fieldset>
-    <fieldset>
-      <legend>Delete</legend>
-      <button
-        type="button"
-        class="d-form__section-inline-btn --fieldset"
-      >Del</button>
-      <button
-        type="button"
-        class="d-form__section-inline-btn --fieldset"
-      >Del</button>
-      <button
-        type="button"
-        class="d-form__section-inline-btn --fieldset"
-      >Del</button>
-      <button
-        type="button"
-        class="d-form__section-inline-btn --fieldset"
-      >Del</button>
+  <p class="d-form__section-info">Multirow inputs can not have an error or help
+    text displayed directly under the field, due to alignment issues.
+  </p>
+  <div class="d-form__section --rows">
+    <div class="d-form__section --inline --4-col">
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Name
+          <span class="d-form-field__optional">(Optional)</span></label>
 
-    </fieldset>
-  </div> }}
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">url
+        </label>
+        <div class="d-form-field__value">
+          <select>
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Reason
+        </label>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="d-form__section-inline-btn">Submit</button>
+    </div>
+    <div class="d-form__section --inline --4-col">
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Name
+          <span class="d-form-field__optional">(Optional)</span></label>
+
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">url
+        </label>
+        <div class="d-form-field__value">
+          <select>
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Reason
+        </label>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="d-form__section-inline-btn">Submit</button>
+    </div>
+    <div class="d-form__section --inline --4-col">
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Name
+          <span class="d-form-field__optional">(Optional)</span></label>
+
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">url
+        </label>
+        <div class="d-form-field__value">
+          <select>
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" for="normal-input">Reason
+        </label>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="d-form__section-inline-btn">Submit</button>
+    </div>
+  </div>
 </form>
 
 <StyleguideExample @title="text-field">
