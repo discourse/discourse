@@ -137,6 +137,8 @@ export default class BookmarkMenu extends Component {
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {
+      this.existingBookmark.selectedReminderType = option.id;
+      this.existingBookmark.selectedDatetime = option.time;
       this.existingBookmark.reminderAt = option.time;
 
       try {
