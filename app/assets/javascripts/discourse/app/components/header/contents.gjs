@@ -22,7 +22,10 @@ export default class Contents extends Component {
     <div class="contents">
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
-          <SidebarToggle @toggleHamburger={{@toggleHamburger}} />
+          <SidebarToggle
+            @toggleHamburger={{@toggleHamburger}}
+            @showSidebar={{@showSidebar}}
+          />
         {{/if}}
       {{/if}}
 
