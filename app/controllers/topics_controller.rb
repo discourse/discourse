@@ -1255,7 +1255,19 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
-    opts = params.slice(:page, :print, :filter_top_level_replies, :preview_theme_id)
+    # Allow plugins to append allowed query parameters, so they aren't scrubbed on redirect to proper topic URL
+    additional_allowed_query_parameters =
+      DiscoursePluginRegistry.apply_modifier(
+        :redirect_to_correct_topic_additional_query_parameters,
+        [],
+      )
+
+    opts =
+      params.slice(
+        *%i[page print filter_top_level_replies preview_theme_id].concat(
+          additional_allowed_query_parameters,
+        ),
+      )
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url
