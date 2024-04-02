@@ -2317,6 +2317,12 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("#{topic.relative_url}/42?page=1")
     end
 
+    it "scrubs invalid query parameters when redirecting" do
+      get "/t/#{topic.slug}", params: { silly_param: "hehe" }
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 
@@ -2384,6 +2390,28 @@ RSpec.describe TopicsController do
         end
 
       expect(second_request_queries.count).to eq(first_request_queries.count)
+    end
+
+    context "with registered redirect_to_correct_topic_additional_query_parameters" do
+      let(:modifier_block) { Proc.new { |allowed_params| allowed_params << :silly_param } }
+
+      it "retains the permitted query param when redirecting" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(
+          :redirect_to_correct_topic_additional_query_parameters,
+          &modifier_block
+        )
+
+        get "/t/#{topic.slug}", params: { silly_param: "hehe" }
+
+        expect(response).to redirect_to("#{topic.relative_url}?silly_param=hehe")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :redirect_to_correct_topic_additional_query_parameters,
+          &modifier_block
+        )
+      end
     end
 
     context "when a topic with nil slug exists" do
