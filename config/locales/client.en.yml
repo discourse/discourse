@@ -2964,6 +2964,7 @@ en:
         selected:
           one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>%{count}</b> topics."
+        selected_count: "%{count} selected"
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
