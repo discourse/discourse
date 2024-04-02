@@ -1538,7 +1538,6 @@ es:
     summarization_strategy: "Formas adicionales de resumir el contenido registrado por los plugins"
     custom_summarization_allowed_groups: "Grupos que pueden resumir contenidos utilizando la `summarization_strategy`."
     enable_personal_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». Permitir a los usuarios de nivel de confianza 1 (configurable a través de la confianza mínima para enviar mensajes) crear mensajes y responder a mensajes. Ten en cuenta que el personal siempre puede enviar mensajes, sea cual sea."
-    personal_message_enabled_groups: "Permite a los usuarios de estos grupos crear mensajes y responder a los mismos. Los grupos de nivel de confianza incluyen todos los niveles de confianza por encima de ese número, por ejemplo, elegir el nivel de confianza_1 también permite a los usuarios del nivel de confianza_2, 3, 4 enviar MP. Ten en cuenta que el personal siempre puede enviar mensajes, sea cual sea."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes personales están desactivados."
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
     long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
@@ -2615,35 +2614,9 @@ es:
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Bien! Hay una nueva versión de [Discourse](https://www.discourse.org) disponible
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en Github](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |
-      ¡Bien! Hay una nueva versión de [Discourse](https://www.discourse.org) disponible
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en Github](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
-
-      ### Notas de la versión
-
-      %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."

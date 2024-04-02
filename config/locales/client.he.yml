@@ -1272,7 +1272,6 @@ he:
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
-      enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
@@ -1713,6 +1712,8 @@ he:
         instructions: "שפת מנשק המשתמש. היא תתחלף עם רענון העמוד."
         default: "(ברירת מחדל)"
         any: "כלשהו"
+      homepage:
+        default: "(ברירת מחדל)"
       password_confirmation:
         title: "סיסמה שוב"
       invite_code:
@@ -2061,7 +2062,6 @@ he:
       close: "סגירה"
       dismiss_error: "התעלמות מהשגיאה"
     close: "סגור"
-    assets_changed_confirm: "האתר זכה לשדרוג תכנה. למשוך את הגרסה העדכנית?"
     logout: "יצאת מהמערכת."
     refresh: "רענן"
     home: "בית"
@@ -2932,7 +2932,6 @@ he:
         unlist_topics: "הסרת נושאים"
         relist_topics: "רשימה מחדש של נושאים"
         reset_bump_dates: "איפוס תאריכי ההקפצות"
-        defer: "אחר כך"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
         dismiss_read: "התעלמות מאלו שלא נקראו"
@@ -3057,10 +3056,9 @@ he:
         name: "איפוס תאריכי הקפצה"
         description: "איפוס תאריכי הקפצת הנושאים לתאריך של הפוסט האחרון שנוצר, מה שמשפיע על הסדר ברשימת הנושאים"
       defer:
-        name: "דחיית נושאים"
         description: "סימון נושאים כנקראו"
       update_notifications:
-        name: "עדכון התראות…"
+        name: "עדכון התראות"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -3078,9 +3076,6 @@ he:
       move_to_inbox:
         title: "העברה לדואר נכנס"
         help: "החזרת הודעה לדואר נכנס"
-      defer:
-        help: "סימון כלא נקראו"
-        title: "אחר כך"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -4347,7 +4342,6 @@ he:
         mark_tracking: "%{shortcut} עקבו אחר נושא"
         mark_watching: "%{shortcut} הצגת הנושא"
         print: "%{shortcut} הדפסת נושא"
-        defer: "%{shortcut} לדחות נושא לאחר כך"
         topic_admin_actions: "%{shortcut} פתיחת פעולות ניהול לנושא"
         archive_private_message: "%{shortcut} מתג העברת הודעות פרטיות לארכיון"
       search_menu:
@@ -4774,12 +4768,12 @@ he:
         upload: "העלאה"
         uploading: "בהליכי העלאה"
       errors:
-        valueMissing:
+        value_missing:
           default: "נא למלא את השדה הזה."
-          select-one: "נא לבחור פריט מהרשימה."
-          select-multiple: "נא לבחור לפחות פריט אחד מהרשימה."
+          select_one: "נא לבחור פריט מהרשימה."
+          select_multiple: "נא לבחור לפחות פריט אחד מהרשימה."
           checkbox: "נא לסמן תיבה זו כדי להמשיך."
-        typeMismatch:
+        type_mismatch:
           default: "נא למלא ערך תקין."
           color: "נא לבחור צבע."
           date: "נא למלא תאריך."
@@ -4789,28 +4783,28 @@ he:
           tel: "נא למלא מספר טלפון תקני."
           text: "נא למלא ערך טקסט."
           url: "נא למלא כתובת תקינה."
-        tooShort:
+        too_short:
           one: "הקלט חייב להיות באורך של תו ומעלה."
           two: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
           many: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
           other: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
-        tooLong:
+        too_long:
           one: "הקלט חייב להיות פחות מתו."
           two: "הקלט חייב להיות פחות מ־%{count} תווים."
           many: "הקלט חייב להיות פחות מ־%{count} תווים."
           other: "הקלט חייב להיות פחות מ־%{count} תווים."
-        rangeOverflow:
+        range_overflow:
           one: "הקלט חייב להיות פחות מ־%{count}."
           two: "הקלט חייב להיות פחות מ־%{count}."
           many: "הקלט חייב להיות פחות מ־%{count}."
           other: "הקלט חייב להיות פחות מ־%{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "הקלט חייב להיות יותר מ־%{count}."
           two: "הקלט חייב להיות יותר מ־%{count}."
           many: "הקלט חייב להיות יותר מ־%{count}."
           other: "הקלט חייב להיות יותר מ־%{count}."
-        patternMismatch: "נא לתאם מול התבנית המבוקשת."
-        badInput: "נא למלא קלט תקין."
+        pattern_mismatch: "נא לתאם מול התבנית המבוקשת."
+        bad_input: "נא למלא קלט תקין."
     table_builder:
       title: "בונה טבלאות"
       modal:
@@ -4876,6 +4870,8 @@ he:
       moderator: "מפקח"
       back_to_forum: "חזרה לפורום"
       filter_reports: סינון דוחות
+      expand_all_sections: "הרחבת כל הסעיפים"
+      collapse_all_sections: "צמצום כל הסעיפים"
       tags:
         remove_muted_tags_from_latest:
           always: "תמיד"
@@ -4897,10 +4893,8 @@ he:
         up_to_date: "הכול עדכני!"
         critical_available: "עדכון קריטי מוכן להתקנה."
         updates_available: "עדכונים מוכנים."
-        please_upgrade: "בבקשה שדרג!"
         no_check_performed: "לא בוצעה בדיקה לעדכונים. וודא ש-sidekiq פועל."
         stale_data: "לא בוצעה בדיקת עדכונים לאחרונה. וודא ש-sidekiq פועל."
-        version_check_pending: "נראה שעדכנת לאחרונה. פנטסטי!"
         installed_version: "הותקן"
         latest_version: "אחרונה"
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
@@ -5703,6 +5697,18 @@ he:
             back_button: "חזרה אל %{name}"
             fields:
               required: "*נדרש"
+              groups:
+                at_least:
+                  one: "צריך לפחות קבוצה אחת"
+                  two: "צריך לפחות שתי קבוצות"
+                  many: "צריך לפחות %{count} קבוצות"
+                  other: "צריך לפחות %{count} קבוצות"
+              tags:
+                at_least:
+                  one: "צריך לפחות תגית אחת"
+                  two: "צריך לפחות שתי תגיות"
+                  many: "צריך לפחות %{count} תגיות"
+                  other: "צריך לפחות %{count} תגיות"
               string:
                 too_short: "חייבים להיות לפחות %{count} תווים"
               number:

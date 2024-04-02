@@ -1149,7 +1149,6 @@ fi:
       allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
-      enable_defer: "Ota käyttöön lykkäystoiminto, jolla voi merkitä ketjun lukemattomaksi"
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
@@ -1548,6 +1547,8 @@ fi:
         instructions: "Käyttöliittymän kieli. Se vaihtuu, kun päivität sivun."
         default: "(oletus)"
         any: "mikä tahansa"
+      homepage:
+        default: "(oletus)"
       password_confirmation:
         title: "Salasana uudelleen"
       invite_code:
@@ -1872,7 +1873,6 @@ fi:
       close: "sulje"
       dismiss_error: "Hylkää virhe"
     close: "Sulje"
-    assets_changed_confirm: "Tämä sivusto sai juuri ohjelmistopäivityksen. Hae uusin versio nyt?"
     logout: "Sinut kirjattiin ulos."
     refresh: "Päivitä"
     home: "Aloitus"
@@ -2664,7 +2664,6 @@ fi:
         unlist_topics: "Poista ketjuja listauksista"
         relist_topics: "Palauta ketjuja listauksiin"
         reset_bump_dates: "Nollaa nostopäivät"
-        defer: "Lykkää"
         delete: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
@@ -2776,9 +2775,6 @@ fi:
       move_to_inbox:
         title: "Siirrä saapuneisiin"
         help: "Siirrä takaisin saapuneisiin."
-      defer:
-        help: "Merkitse lukemattomaksi"
-        title: "Lykkää"
       list: "Ketjut"
       new: "uusi ketju"
       unread: "lukematta"
@@ -3919,7 +3915,6 @@ fi:
         mark_tracking: "%{shortcut} Seuraa ketjua"
         mark_watching: "%{shortcut} Tarkkaile ketjua"
         print: "%{shortcut} Tulosta ketju"
-        defer: "%{shortcut} Lykkää ketjua"
         topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
         archive_private_message: "%{shortcut} Vaihda yksityisviestin arkistointi"
       search_menu:
@@ -4310,12 +4305,12 @@ fi:
         upload: "Lataa"
         uploading: "Ladataan"
       errors:
-        valueMissing:
+        value_missing:
           default: "Täytä tämä kenttä."
-          select-one: "Valitse kohde luettelosta."
-          select-multiple: "Valitse vähintään yksi kohde luettelosta."
+          select_one: "Valitse kohde luettelosta."
+          select_multiple: "Valitse vähintään yksi kohde luettelosta."
           checkbox: "Valitse tämä ruutu, jos haluat jatkaa."
-        typeMismatch:
+        type_mismatch:
           default: "Anna kelvollinen arvo."
           color: "Anna väri."
           date: "Anna päivämäärä."
@@ -4325,20 +4320,20 @@ fi:
           tel: "Anna kelvollinen puhelinnumero."
           text: "Anna tekstiarvo."
           url: "Anna kelvollinen URL."
-        tooShort:
+        too_short:
           one: "Syötteen täytyy olla ainakin %{count} merkki."
           other: "Syötteen täytyy olla ainakin %{count} merkkiä."
-        tooLong:
+        too_long:
           one: "Syötteen täytyy olla alle %{count} merkkiä."
           other: "Syötteen täytyy olla alle %{count} merkkiä."
-        rangeOverflow:
+        range_overflow:
           one: "Syötteen täytyy olla vähemmän kuin %{count}."
           other: "Syötteen täytyy olla vähemmän kuin %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Syötteen täytyy olla enemmän kuin %{count}."
           other: "Syötteen täytyy olla enemmän kuin %{count}."
-        patternMismatch: "Noudata pyydettyä muotoa."
-        badInput: "Anna kelvollinen syöte."
+        pattern_mismatch: "Noudata pyydettyä muotoa."
+        bad_input: "Anna kelvollinen syöte."
     table_builder:
       title: "Taulukkotyökalu"
       modal:
@@ -4424,10 +4419,8 @@ fi:
         up_to_date: "Sivusto on ajan tasalla!"
         critical_available: "Kriittinen päivitys on saatavilla."
         updates_available: "Päivityksiä on saatavilla."
-        please_upgrade: "Päivitä!"
         no_check_performed: "Päivityksiä ei ole tarkistettu. Varmista, että sidekiq on käynnissä."
         stale_data: "Pävityksiä ei ole tarkistettu viime aikoina. Varmista, että sidekiq on käynnissä."
-        version_check_pending: "Näyttää siltä, että olet päivittänyt lähiaikoina. Hienoa!"
         installed_version: "Asennettu"
         latest_version: "Uusin"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"

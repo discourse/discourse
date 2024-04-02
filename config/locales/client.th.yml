@@ -936,6 +936,8 @@ th:
         instructions: "ภาษา จะเปลี่ยนเมื่อคุณรีเฟรชหน้า"
         default: "(ค่าเริ่มต้น)"
         any: "ใดๆ"
+      homepage:
+        default: "(ค่าเริ่มต้น)"
       password_confirmation:
         title: "ยืนยันรหัสผ่าน"
       invite_code:
@@ -1630,8 +1632,6 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องขาเข้า"
-      defer:
-        help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       list: "กระทู้"
       new: "กระทู้ใหม่"
       unread: "ยังไม่ได้อ่าน"
@@ -2462,7 +2462,7 @@ th:
         upload: "อัปโหลด"
         uploading: "กำลังอัปโหลด"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
     table_builder:
@@ -2494,7 +2494,6 @@ th:
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
-        please_upgrade: "กรุณาอัปเกรด!"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
         new_features:

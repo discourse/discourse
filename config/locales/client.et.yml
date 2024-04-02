@@ -1011,6 +1011,8 @@ et:
         instructions: "Kasutajaliidese keel. See muutub, kui lehe uuesti laed."
         default: "(vaikimisi)"
         any: "iga"
+      homepage:
+        default: "(vaikimisi)"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -1579,7 +1581,6 @@ et:
         select_all: "Vali kõik"
         clear_all: "Puhasta kõik"
         unlist_topics: "Eemalda teemad loetelust"
-        defer: "Lükka edasi"
         delete: "Kustuta teemad"
         dismiss: "Ignoreeri"
         dismiss_read: "Ignoreeri lugemata"
@@ -1655,9 +1656,6 @@ et:
       move_to_inbox:
         title: "Liiguta Postkasti"
         help: "Liiguta sõnum tagasi Postkasti"
-      defer:
-        help: "Märgi mitteloetuks"
-        title: "Lükka edasi"
       list: "Teemad"
       new: "uus teema"
       unread: "lugemata"
@@ -2598,7 +2596,7 @@ et:
         upload: "Laadi üles"
         uploading: "Laen üles"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Palun sisesta korrektne väärtus."
           email: "Sisesta palun korrektne meiliaadress."
     table_builder:
@@ -2628,10 +2626,8 @@ et:
         up_to_date: "Oled aja tasemel!"
         critical_available: "Kriitiline uuendus on saadaval."
         updates_available: "Uuendused on saadaval."
-        please_upgrade: "Palun uuenda!"
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et sidekiq töötab."
-        version_check_pending: "Näib, et oled hiljuti uuendanud. Fantastiline!"
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
         new_features:

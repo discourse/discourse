@@ -1153,6 +1153,8 @@ zh_TW:
         instructions: "使用者介面的語言，當頁面重新整理的時候會更換成你的設定。"
         default: "(default)"
         any: "任何"
+      homepage:
+        default: "(default)"
       password_confirmation:
         title: "再次輸入密碼"
       invite_code:
@@ -1858,7 +1860,6 @@ zh_TW:
         clear_all: "清除全部"
         unlist_topics: "未在列表中的話題"
         relist_topics: "討論話題"
-        defer: "延遲"
         delete: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
@@ -1925,8 +1926,6 @@ zh_TW:
       move_to_inbox:
         title: "移動到收件匣"
         help: "把訊息移動到收件匣"
-      defer:
-        title: "延遲"
       list: "話題"
       new: "新話題"
       unread: "未讀"
@@ -2963,7 +2962,7 @@ zh_TW:
         upload: "上傳"
         uploading: "上傳中"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "請輸入一個有效的值。"
     table_builder:
       edit:
@@ -2994,10 +2993,8 @@ zh_TW:
         up_to_date: "你使用的是最新版本!"
         critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
-        please_upgrade: "請升級！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
-        version_check_pending: "看來你最近升級了，非常好！"
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"

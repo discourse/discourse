@@ -1101,7 +1101,6 @@ zh_CN:
       allow_private_messages: "允许其他用户向我发送个人消息"
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为突出显示的文字启用引用回复"
-      enable_defer: "启用延迟以将话题标记为未读"
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
@@ -1485,6 +1484,8 @@ zh_CN:
         instructions: "用户界面语言，将在您刷新页面后更改。"
         default: "（默认）"
         any: "任意"
+      homepage:
+        default: "（默认）"
       password_confirmation:
         title: "再次输入密码"
       invite_code:
@@ -1804,7 +1805,6 @@ zh_CN:
       close: "关闭"
       dismiss_error: "忽略错误"
     close: "关闭"
-    assets_changed_confirm: "此站点刚才收到了一个软件更新。是否立即获取最新版本？"
     logout: "您已退出。"
     refresh: "刷新"
     home: "首页"
@@ -2261,6 +2261,7 @@ zh_CN:
       ignore: "忽略"
       image_alt_text:
         aria_label: 图片的替换文字
+        title: "添加图片描述"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
     notifications:
@@ -2559,7 +2560,6 @@ zh_CN:
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
         reset_bump_dates: "重置顶帖日期"
-        defer: "推迟"
         delete: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
@@ -2660,10 +2660,9 @@ zh_CN:
         name: "重置顶帖日期"
         description: "将话题顶帖日期重置为最后创建的帖子日期，这会影响话题列表中的排序"
       defer:
-        name: "推迟话题"
         description: "将话题标记为未读"
       update_notifications:
-        name: "更新通知…"
+        name: "更新通知"
         description: "将通知级别更改为 关注、跟踪、常规 或 静音"
     topic:
       filter_to:
@@ -2679,9 +2678,6 @@ zh_CN:
       move_to_inbox:
         title: "移至收件箱"
         help: "将消息移回收件箱"
-      defer:
-        help: "标记为未读"
-        title: "推迟"
       list: "话题"
       new: "新话题"
       unread: "未读"
@@ -3777,7 +3773,6 @@ zh_CN:
         mark_tracking: "%{shortcut} 跟踪话题"
         mark_watching: "%{shortcut} 关注话题"
         print: "%{shortcut} 打印话题"
-        defer: "%{shortcut} 延迟话题"
         topic_admin_actions: "%{shortcut} 打开话题管理员操作"
         archive_private_message: "%{shortcut} 切换归档私信"
       search_menu:
@@ -4153,12 +4148,12 @@ zh_CN:
         upload: "上传"
         uploading: "正在上传"
       errors:
-        valueMissing:
+        value_missing:
           default: "请填写此字段。"
-          select-one: "请在列表中选择一个条目。"
-          select-multiple: "请在列表中至少选择一个条目。"
+          select_one: "请在列表中选择一个条目。"
+          select_multiple: "请在列表中至少选择一个条目。"
           checkbox: "如果您想继续，请勾选此框。"
-        typeMismatch:
+        type_mismatch:
           default: "请输入一个有效值。"
           color: "请输入一种颜色。"
           date: "请输入日期。"
@@ -4168,16 +4163,16 @@ zh_CN:
           tel: "请输入一个有效的电话号码。"
           text: "请输入一个文本值。"
           url: "请输入一个有效的 URL。"
-        tooShort:
+        too_short:
           other: "输入的内容必须至少为 %{count} 个字符。"
-        tooLong:
+        too_long:
           other: "输入的内容必须少于 %{count} 个字符。"
-        rangeOverflow:
+        range_overflow:
           other: "输入必须小于 %{count}。"
-        rangeUnderflow:
+        range_underflow:
           other: "输入必须大于 %{count}。"
-        patternMismatch: "请匹配要求的格式。"
-        badInput: "请输入有效的输入。"
+        pattern_mismatch: "请匹配要求的格式。"
+        bad_input: "请输入有效的输入。"
     table_builder:
       title: "表生成器"
       modal:
@@ -4264,10 +4259,8 @@ zh_CN:
         up_to_date: "您已经是最新版本！"
         critical_available: "有一个可用的关键更新。"
         updates_available: "有可用的更新。"
-        please_upgrade: "请升级！"
         no_check_performed: "尚未执行更新检查。确保 sidekiq 正在运行。"
         stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
-        version_check_pending: "看起来您最近升级了。太棒了！"
         installed_version: "已安装"
         latest_version: "最新"
         problems_found: "基于您当前站点设置的一些建议"

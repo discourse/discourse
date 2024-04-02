@@ -1153,7 +1153,6 @@ sv:
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
-      enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       experimental_sidebar:
         enable: "Aktivera sidofältet"
         options: "Alternativ"
@@ -1555,6 +1554,8 @@ sv:
         instructions: "Språket som används av forumsgränssnittet. Det kommer att ändras när du laddar om sidan."
         default: "(förvalt värde)"
         any: "något"
+      homepage:
+        default: "(förvalt värde)"
       password_confirmation:
         title: "Lösenord igen"
       invite_code:
@@ -1882,7 +1883,6 @@ sv:
       close: "stäng"
       dismiss_error: "Avfärda fel"
     close: "Stäng"
-    assets_changed_confirm: "Programvaran på denna webbplats uppgraderades precis. Vill du installera den senaste versionen nu?"
     logout: "Du loggades ut."
     refresh: "Uppdatera"
     home: "Hem"
@@ -2674,7 +2674,6 @@ sv:
         unlist_topics: "Avlista ämnen"
         relist_topics: "Lista om ämnen"
         reset_bump_dates: "Återställ knuffdatum"
-        defer: "Skjut upp"
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
@@ -2792,9 +2791,6 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
-      defer:
-        help: "Märk som oläst"
-        title: "Skjut upp"
       list: "Ämnen"
       new: "nytt ämne"
       unread: "oläst"
@@ -3942,7 +3938,6 @@ sv:
         mark_tracking: "%{shortcut} Följ ämne"
         mark_watching: "%{shortcut} Bevaka ämne"
         print: "%{shortcut} Skriv ut ämne"
-        defer: "%{shortcut} Skjut upp ämne"
         topic_admin_actions: "%{shortcut} Öppna administratörsåtgärder för ämne"
         archive_private_message: "%{shortcut} Växla arkivering av privat meddelande"
       search_menu:
@@ -4331,12 +4326,12 @@ sv:
         upload: "Bild"
         uploading: "Laddar upp"
       errors:
-        valueMissing:
+        value_missing:
           default: "Fyll i detta fält."
-          select-one: "Välj ett objekt i listan."
-          select-multiple: "Välj minst ett objekt i listan."
+          select_one: "Välj ett objekt i listan."
+          select_multiple: "Välj minst ett objekt i listan."
           checkbox: "Markera den här rutan om du vill fortsätta."
-        typeMismatch:
+        type_mismatch:
           default: "Ange ett giltigt värde."
           color: "Ange en färg."
           date: "Ange ett datum."
@@ -4346,20 +4341,20 @@ sv:
           tel: "Ange ett giltigt telefonnummer."
           text: "Ange ett textvärde."
           url: "Ange en giltig URL."
-        tooShort:
+        too_short:
           one: "Inmatningen måste vara %{count} tecken eller längre."
           other: "Inmatningen måste vara %{count} tecken eller längre."
-        tooLong:
+        too_long:
           one: "Inmatningen måste vara kortare än %{count} tecken."
           other: "Inmatningen måste vara kortare än %{count} tecken."
-        rangeOverflow:
+        range_overflow:
           one: "Inmatningen måste vara mindre än %{count}."
           other: "Inmatningen måste vara mindre än %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Inmatningen måste vara mer än %{count}."
           other: "Inmatningen måste vara mer än %{count}."
-        patternMismatch: "Matcha det begärda formatet."
-        badInput: "Ange en giltig inmatning."
+        pattern_mismatch: "Matcha det begärda formatet."
+        bad_input: "Ange en giltig inmatning."
     table_builder:
       title: "Tabellbyggare"
       modal:
@@ -4445,10 +4440,8 @@ sv:
         up_to_date: "Du är aktuell!"
         critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
-        please_upgrade: "Var god uppgradera!"
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."
-        version_check_pending: "Det verkar som att du har uppgraderat nyligen. Utmärkt!"
         installed_version: "Installerad"
         latest_version: "Senaste"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"

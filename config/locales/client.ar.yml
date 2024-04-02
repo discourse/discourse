@@ -1377,7 +1377,6 @@ ar:
       allow_private_messages: "السماح للمستخدمين الآخرين بإرسال رسائل خاصة إليَّ"
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
-      enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
@@ -1847,6 +1846,8 @@ ar:
         instructions: "لغة واجهة المستخدم. ستتغير عند تحديث الصفحة."
         default: "(الافتراضية)"
         any: "أي"
+      homepage:
+        default: "(الافتراضية)"
       password_confirmation:
         title: "تكرار كلمة المرور"
       invite_code:
@@ -2207,7 +2208,6 @@ ar:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
     close: "إغلاق"
-    assets_changed_confirm: "لقد تلقى هذا الموقع ترقية برمجية للتو. هل تريد الحصول على أحدث نسخة الآن؟"
     logout: "تم تسجيل خروجك."
     refresh: "تحديث"
     home: "الصفحة الرئيسية"
@@ -3151,7 +3151,6 @@ ar:
         unlist_topics: "إلغاء إدراج الموضوعات"
         relist_topics: "إعادة إدراج الموضوعات"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
-        defer: "تأجيل"
         delete: "حذف الموضوعات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
@@ -3287,7 +3286,7 @@ ar:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
       update_notifications:
-        name: "تحديث الإشعارات…"
+        name: "تحديث الإشعارات"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -3307,9 +3306,6 @@ ar:
       move_to_inbox:
         title: "النقل إلى صندوق الوارد"
         help: "نقل الرسالة مرة أخرى إلى صندوق الوارد"
-      defer:
-        help: "وضع علامة كغير مقروءة"
-        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -4678,7 +4674,6 @@ ar:
         mark_tracking: "%{shortcut} تتبُّع الموضوع"
         mark_watching: "%{shortcut} مراقبة الموضوع"
         print: "%{shortcut} طباعة الموضوع"
-        defer: "%{shortcut} تأجيل الموضوع"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
         archive_private_message: "%{shortcut} تبديل أرشفة الرسائل الخاصة"
       search_menu:
@@ -5137,12 +5132,12 @@ ar:
         upload: "تحميل"
         uploading: "جارٍ التحميل"
       errors:
-        valueMissing:
+        value_missing:
           default: "يُرجى ملء هذا الحقل."
-          select-one: "يُرجى تحديد عنصر في القائمة."
-          select-multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
+          select_one: "يُرجى تحديد عنصر في القائمة."
+          select_multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
           checkbox: "يُرجى تحديد هذا المربع إذا كنت تريد المتابعة."
-        typeMismatch:
+        type_mismatch:
           default: "يُرجى إدخال قيمة صالحة."
           color: "يُرجى إدخال لون."
           date: "يُرجى إدخال تاريخ."
@@ -5152,36 +5147,36 @@ ar:
           tel: "يُرجى إدخال رقم هاتف صالح."
           text: "يُرجى إدخال قيمة نصية."
           url: "يُرجى إدخال عنوان URL صالح."
-        tooShort:
-          zero: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
+        too_short:
+          zero: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
           one: "يجب أن يكون طول الإدخال حرفًا واحدًا (%{count}) أو أطول."
           two: "يجب أن يكون طول الإدخال حرفَين (%{count}) أو أطول."
           few: "يجب أن يكون طول الإدخال %{count} أحرف أو أطول."
           many: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
-          other: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
-        tooLong:
-          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
+          other: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
+        too_long:
+          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
           one: "يجب أن يكون طول الإدخال أقل من حرف واحد (%{count})."
           two: "يجب أن يكون طول الإدخال أقل من حرفين (%{count})."
           few: "يجب أن يكون طول الإدخال أقل من %{count} أحرف."
           many: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
-          other: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
-        rangeOverflow:
+          other: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
+        range_overflow:
           zero: "يجب أن يكون الإدخال أقصر من %{count}."
           one: "يجب أن يكون الإدخال أقصر من %{count}."
           two: "يجب أن يكون الإدخال أقصر من %{count}."
           few: "يجب أن يكون الإدخال أقصر من %{count}."
           many: "يجب أن يكون الإدخال أقصر من %{count}."
           other: "يجب أن يكون الإدخال أقصر من %{count}."
-        rangeUnderflow:
+        range_underflow:
           zero: "يجب ان يكون الإدخال أطول من %{count}."
           one: "يجب ان يكون الإدخال أطول من %{count}."
           two: "يجب ان يكون الإدخال أطول من %{count}."
           few: "يجب ان يكون الإدخال أطول من %{count}."
           many: "يجب ان يكون الإدخال أطول من %{count}."
           other: "يجب ان يكون الإدخال أطول من %{count}."
-        patternMismatch: "يُرجى مطابقة التنسيق المطلوب."
-        badInput: "يُرجى إدخال قيمة صالحة."
+        pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
+        bad_input: "يُرجى إدخال قيمة صالحة."
     table_builder:
       title: "أداة إنشاء الجداول"
       modal:
@@ -5267,10 +5262,8 @@ ar:
         up_to_date: "أنت على اطِّلاع بآخر المستجدات!"
         critical_available: "يتوفَّر تحديث مهم."
         updates_available: "تتوفَّر تحديثات."
-        please_upgrade: "يُرجى الترقية!"
         no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
-        version_check_pending: "يبدو أنك قد حدَّثت مؤخرًا. رائع!"
         installed_version: "مثبَّت"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"

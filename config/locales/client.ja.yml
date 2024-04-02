@@ -1091,7 +1091,6 @@ ja:
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
-      enable_defer: "トピックを未読にマークして延期を有効にする"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -1471,6 +1470,8 @@ ja:
         instructions: "ユーザーインターフェースの言語です。ページを更新すると変更されます。"
         default: "(デフォルト)"
         any: "すべて"
+      homepage:
+        default: "(デフォルト)"
       password_confirmation:
         title: "パスワードを再入力"
       invite_code:
@@ -1786,7 +1787,6 @@ ja:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
     close: "閉じる"
-    assets_changed_confirm: "このサイトのソフトウェアはたった今アップグレードされました。今すぐ最新バージョンを入手しますか？"
     logout: "ログアウトしました。"
     refresh: "更新"
     home: "ホーム"
@@ -2540,7 +2540,6 @@ ja:
         unlist_topics: "トピックを非表示"
         relist_topics: "トピックを表示"
         reset_bump_dates: "バンプ日をリセットする"
-        defer: "取り下げる"
         delete: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
@@ -2641,9 +2640,6 @@ ja:
       move_to_inbox:
         title: "受信トレイに移動"
         help: "受信トレイにメッセージを戻す"
-      defer:
-        help: "未読にする"
-        title: "取り下げる"
       list: "トピック"
       new: "新規トピック"
       unread: "未読"
@@ -3727,7 +3723,6 @@ ja:
         mark_tracking: "%{shortcut} トピックを追跡"
         mark_watching: "%{shortcut} トピックをウォッチ"
         print: "%{shortcut} トピックを印刷"
-        defer: "%{shortcut} トピックを未読にする"
         topic_admin_actions: "%{shortcut} トピックの管理者操作を開く"
         archive_private_message: "%{shortcut} プライベートメッセージのアーカイブ操作を切り替える"
       search_menu:
@@ -4101,12 +4096,12 @@ ja:
         upload: "アップロード"
         uploading: "アップロード中"
       errors:
-        valueMissing:
+        value_missing:
           default: "このフィールドに入力してください。"
-          select-one: "リスト内の項目を選択してください。"
-          select-multiple: "リスト内の項目を少なくとも 1 つ選択してください。"
+          select_one: "リスト内の項目を選択してください。"
+          select_multiple: "リスト内の項目を少なくとも 1 つ選択してください。"
           checkbox: "続行する場合は、このチェックボックスをオンにしてください。"
-        typeMismatch:
+        type_mismatch:
           default: "有効な値を入力してください。"
           color: "色を入力してください。"
           date: "日付を入力してください。"
@@ -4116,16 +4111,16 @@ ja:
           tel: "有効な電話番号を入力してください。"
           text: "テキスト値を入力してください。"
           url: "有効な URL を入力してください。"
-        tooShort:
+        too_short:
           other: "入力は %{count} 文字以上である必要があります。"
-        tooLong:
+        too_long:
           other: "入力は %{count} 文字未満である必要があります。"
-        rangeOverflow:
+        range_overflow:
           other: "入力は %{count} 未満である必要があります。"
-        rangeUnderflow:
+        range_underflow:
           other: "入力は %{count} 以上である必要があります。"
-        patternMismatch: "要求されたフォーマットに一致させてください。"
-        badInput: "有効な入力を入力してください。"
+        pattern_mismatch: "要求されたフォーマットに一致させてください。"
+        bad_input: "有効な入力を入力してください。"
     table_builder:
       title: "テーブル作成ツール"
       modal:
@@ -4211,10 +4206,8 @@ ja:
         up_to_date: "最新のバージョンです!"
         critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
-        please_upgrade: "アップグレードしてください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"
         stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
-        version_check_pending: "最近、アップグレードしましたね。素晴らしいです！"
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"

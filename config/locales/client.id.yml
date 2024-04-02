@@ -1224,6 +1224,8 @@ id:
         title: "Bahasa antarmuka"
         default: "(standar)"
         any: "apa saja"
+      homepage:
+        default: "(standar)"
       password_confirmation:
         title: "Kata Sandi Lagi"
       auth_tokens:
@@ -2115,12 +2117,12 @@ id:
         upload: "Unggah"
         uploading: "Mengunggah"
       errors:
-        valueMissing:
+        value_missing:
           default: "Harap isi kolom ini."
-          select-one: "Harap pilih item dalam daftar."
-          select-multiple: "Pilih setidaknya satu item dalam daftar."
+          select_one: "Harap pilih item dalam daftar."
+          select_multiple: "Pilih setidaknya satu item dalam daftar."
           checkbox: "Harap centang kotak ini jika Anda ingin melanjutkan."
-        typeMismatch:
+        type_mismatch:
           default: "Harap masukkan nilai yang valid."
           color: "Harap masukkan warna."
           date: "Harap masukkan tanggal."
@@ -2130,16 +2132,16 @@ id:
           tel: "Harap masukkan nomor telepon yang valid."
           text: "Harap masukkan nilai teks."
           url: "Harap masukkan URL yang valid."
-        tooShort:
+        too_short:
           other: "Input harus %{count} karakter atau lebih."
-        tooLong:
+        too_long:
           other: "Input harus kurang dari %{count} karakter."
-        rangeOverflow:
+        range_overflow:
           other: "Masukan harus kurang dari %{count}."
-        rangeUnderflow:
+        range_underflow:
           other: "Masukan harus lebih dari %{count}."
-        patternMismatch: "Harap sesuaikan dengan format yang diminta."
-        badInput: "Harap masukkan masukan yang valid."
+        pattern_mismatch: "Harap sesuaikan dengan format yang diminta."
+        bad_input: "Harap masukkan masukan yang valid."
     table_builder:
       modal:
         help:

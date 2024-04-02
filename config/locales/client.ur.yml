@@ -1034,7 +1034,6 @@ ur:
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
-      enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       experimental_sidebar:
         options: "اختیارات"
         navigation_section: "نیویگیشن"
@@ -1316,6 +1315,8 @@ ur:
         instructions: "صارف کیلئے انٹرفیس کی زبان۔ یہ اُس وقت تبدیل ہو گی جب آپ وِیب سائٹ رِیفریش کریں ۔"
         default: "(ڈِیفالٹ)"
         any: "کوئی بھی"
+      homepage:
+        default: "(ڈِیفالٹ)"
       password_confirmation:
         title: "پاس ورڈ دوبارہ"
       invite_code:
@@ -1596,7 +1597,6 @@ ur:
       close: "بند کریں"
       dismiss_error: "غلطی کو مسترد کریں"
     close: "بند کریں"
-    assets_changed_confirm: "اس سائٹ کو ابھی ایک سافٹ ویئر اپ گریڈ ملا ہے۔ ابھی تازہ ترین ورژن حاصل کریں؟"
     logout: "آپ لاگ آؤٹ ہو گئے تھے۔"
     refresh: "رِیفریش"
     home: "ہَوم"
@@ -2214,7 +2214,6 @@ ur:
         clear_all: "تمام کو صاف کریں"
         unlist_topics: "ٹاپکس کو فہرست سے ہٹائیں"
         relist_topics: "ٹاپک دوبارہ فہرست کریں"
-        defer: "ملتوی کریں"
         delete: "ٹاپکس مٹائیں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام نہ پڑھے گئے کو بر خاست کریں"
@@ -2305,9 +2304,6 @@ ur:
       move_to_inbox:
         title: "اِنباکس میں منتقل کریں"
         help: "پیغام واپس اِنباکس میں منتقل کریں"
-      defer:
-        help: "بغیر پڑھا نشان زد کریں"
-        title: "ملتوی کریں"
       list: "ٹاپک"
       new: "نیا ٹاپک"
       unread: "بغیر پڑھے"
@@ -3317,7 +3313,6 @@ ur:
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
-        defer: "%{shortcut} ٹاپک ملتوی کریں"
         topic_admin_actions: "%{shortcut} عنوان ایڈمن ایکشنز کھولیں"
       search_menu:
         title: "تلاش کا مینیو"
@@ -3601,7 +3596,7 @@ ur:
         upload: "اَپ لوڈ"
         uploading: "اَپ لوڈ کیا جا رہا ہے"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
           email: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں."
     table_builder:
@@ -3640,10 +3635,8 @@ ur:
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
         critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
-        please_upgrade: "براہ مہربانی اَپ گریڈ کرلیں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
         stale_data: "اَپ ڈیٹس کے لئے حال ہی میں چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
-        version_check_pending: "لگتا ہے آپ نے حال ہی میں اَپ گریڈ کیا ہے۔ بہت خوب!"
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"

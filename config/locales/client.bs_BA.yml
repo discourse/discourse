@@ -924,7 +924,6 @@ bs_BA:
       allow_private_messages: "Dozvoli drugim korisnicima da mi šalju privatne poruke"
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
       enable_quoting: "Uključi \"citiran odgovor\" za označen tekst"
-      enable_defer: "Uključi odgodu označavanja nepročitanih tema"
       experimental_sidebar:
         options: "Opcije"
         navigation_section: "Navigacija"
@@ -1167,6 +1166,8 @@ bs_BA:
         instructions: "Jezik korisničkog sučelja. Promijenit će se kad ponovo učitate stranicu."
         default: "(default)"
         any: "bilo koje"
+      homepage:
+        default: "(default)"
       password_confirmation:
         title: "Ponovite šifru"
       invite_code:
@@ -1889,7 +1890,6 @@ bs_BA:
         clear_all: "Očisti sve"
         unlist_topics: "Skini teme sa liste"
         relist_topics: "Listaj teme"
-        defer: "Defer"
         delete: "Obriši teme"
         dismiss: "Odbaci"
         dismiss_read: "Odbaci sve nepročitane"
@@ -1960,9 +1960,6 @@ bs_BA:
       move_to_inbox:
         title: "Premjesti u Sanduče"
         help: "Premjesti poruke nazad u Sanduče"
-      defer:
-        help: "Označi kao nepročitano"
-        title: "Defer"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitana"
@@ -2822,7 +2819,6 @@ bs_BA:
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Motri temu"
         print: "%{shortcut} Odštampaj temu"
-        defer: "%{shortcut} Defer temu"
         topic_admin_actions: "%{shortcut} Otvori opcije administriranja teme"
       search_menu:
         title: "Meni za pretragu"
@@ -3055,7 +3051,7 @@ bs_BA:
         upload: "Učitavanje"
         uploading: "Učitavam"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Molim unesite ispravnu vrijednost."
     table_builder:
       modal:
@@ -3092,10 +3088,8 @@ bs_BA:
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
-        version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
