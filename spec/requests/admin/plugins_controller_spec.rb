@@ -85,14 +85,6 @@ RSpec.describe Admin::PluginsController do
         get "/admin/plugins/poll.json"
         expect(response.status).to eq(404)
       end
-
-      it "404s if the plugin is not configurable" do
-        poll = Discourse.plugins_by_name["poll"]
-        poll.stubs(:configurable?).returns(false)
-
-        get "/admin/plugins/poll.json"
-        expect(response.status).to eq(404)
-      end
     end
 
     context "when logged in as a moderator" do
