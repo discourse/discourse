@@ -174,6 +174,7 @@ export default class BookmarkMenu extends Component {
 
   <template>
     <DMenu
+      {{didInsert this.setReminderShortcuts}}
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
       @arrow="true"
@@ -195,10 +196,7 @@ export default class BookmarkMenu extends Component {
         {{/if}}
       </:trigger>
       <:content>
-        <div
-          class="bookmark-menu__body"
-          {{didInsert this.setReminderShortcuts}}
-        >
+        <div class="bookmark-menu__body">
           {{#if this.showEditDeleteMenu}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
