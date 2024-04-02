@@ -3066,7 +3066,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 
@@ -3081,7 +3081,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 
