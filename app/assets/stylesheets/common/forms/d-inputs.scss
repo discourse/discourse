@@ -191,18 +191,15 @@
     &:focus-visible {
       border-color: var(--tertiary);
       outline: var(--tertiary) auto 1px;
-
-      &[disabled] {
-        outline: none;
-        border: var(--d-input-border--disabled);
-      }
     }
 
     &:hover {
       border-color: var(--tertiary);
-      &[disabled] {
-        border: var(--d-input-border--disabled);
-      }
+    }
+
+    &[disabled] {
+      outline: none;
+      border: var(--d-input-border--disabled);
     }
   }
 
