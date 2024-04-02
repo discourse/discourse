@@ -5,7 +5,6 @@ import { isBlank } from "@ember/utils";
 import I18n from "discourse-i18n";
 
 export default class SchemaThemeSettingTypeModels extends Component {
-  @tracked touched = false;
   @tracked value = this.args.value;
 
   required = this.args.spec.required;
@@ -15,7 +14,6 @@ export default class SchemaThemeSettingTypeModels extends Component {
 
   @action
   onInput(newValue) {
-    this.touched = true;
     this.value = newValue;
     this.args.onChange(this.onChange(newValue));
   }
@@ -25,10 +23,6 @@ export default class SchemaThemeSettingTypeModels extends Component {
   }
 
   get validationErrorMessage() {
-    if (!this.touched) {
-      return;
-    }
-
     const isValueBlank = isBlank(this.value);
 
     if (!this.required && isValueBlank) {
@@ -36,7 +30,7 @@ export default class SchemaThemeSettingTypeModels extends Component {
     }
 
     if (
-      (this.min && this.value.length < this.min) ||
+      (this.min && this.value && this.value.length < this.min) ||
       (this.required && isValueBlank)
     ) {
       return I18n.t(

@@ -19,6 +19,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
   @tracked activeDataPaths = [];
   @tracked activeSchemaPaths = [];
   @tracked saveButtonDisabled = false;
+  @tracked validationErrorMessage;
   inputFieldObserver = new Map();
 
   data = cloneJSON(this.args.setting.value);
@@ -230,58 +231,74 @@ export default class SchemaThemeSettingNewEditor extends Component {
           this.args.themeId
         );
       })
-      .catch(popupAjaxError)
+      .catch((e) => {
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          this.validationErrorMessage = e.jqXHR.responseJSON.errors[0];
+        } else {
+          popupAjaxError(e);
+        }
+      })
       .finally(() => (this.saveButtonDisabled = false));
   }
 
   <template>
     <div class="schema-theme-setting-editor">
-      <div class="schema-theme-setting-editor__navigation">
-        <Tree
-          @data={{this.activeData}}
-          @schema={{this.activeSchema}}
-          @onChildClick={{this.onChildClick}}
-          @clickBack={{this.clickBack}}
-          @backButtonText={{this.backButtonText}}
-          @activeIndex={{this.activeIndex}}
-          @updateIndex={{this.updateIndex}}
-          @addItem={{this.addItem}}
-          @addChildItem={{this.addChildItem}}
-          @generateSchemaTitle={{this.generateSchemaTitle}}
-          @registerInputFieldObserver={{this.registerInputFieldObserver}}
-          @unregisterInputFieldObserver={{this.unregisterInputFieldObserver}}
-        />
-
-        <div class="schema-theme-setting-editor__footer">
-          <DButton
-            @disabled={{this.saveButtonDisabled}}
-            @action={{this.saveChanges}}
-            @label="save"
-            class="btn-primary"
-          />
+      {{#if this.validationErrorMessage}}
+        <div class="schema-theme-setting-editor__errors">
+          <div class="alert alert-error">
+            {{this.validationErrorMessage}}
+          </div>
         </div>
-      </div>
+      {{/if}}
 
-      <div class="schema-theme-setting-editor__fields">
-        {{#each this.fields as |field|}}
-          <FieldInput
-            @name={{field.name}}
-            @value={{field.value}}
-            @spec={{field.spec}}
-            @onValueChange={{fn this.inputFieldChanged field}}
-            @description={{field.description}}
-            @label={{field.label}}
-            @setting={{@setting}}
+      <div class="schema-theme-setting-editor__wrapper">
+        <div class="schema-theme-setting-editor__navigation">
+          <Tree
+            @data={{this.activeData}}
+            @schema={{this.activeSchema}}
+            @onChildClick={{this.onChildClick}}
+            @clickBack={{this.clickBack}}
+            @backButtonText={{this.backButtonText}}
+            @activeIndex={{this.activeIndex}}
+            @updateIndex={{this.updateIndex}}
+            @addItem={{this.addItem}}
+            @addChildItem={{this.addChildItem}}
+            @generateSchemaTitle={{this.generateSchemaTitle}}
+            @registerInputFieldObserver={{this.registerInputFieldObserver}}
+            @unregisterInputFieldObserver={{this.unregisterInputFieldObserver}}
           />
-        {{/each}}
 
-        {{#if (gt this.fields.length 0)}}
-          <DButton
-            @action={{this.removeItem}}
-            @icon="trash-alt"
-            class="btn-danger schema-theme-setting-editor__remove-btn"
-          />
-        {{/if}}
+          <div class="schema-theme-setting-editor__footer">
+            <DButton
+              @disabled={{this.saveButtonDisabled}}
+              @action={{this.saveChanges}}
+              @label="save"
+              class="btn-primary"
+            />
+          </div>
+        </div>
+
+        <div class="schema-theme-setting-editor__fields">
+          {{#each this.fields as |field|}}
+            <FieldInput
+              @name={{field.name}}
+              @value={{field.value}}
+              @spec={{field.spec}}
+              @onValueChange={{fn this.inputFieldChanged field}}
+              @description={{field.description}}
+              @label={{field.label}}
+              @setting={{@setting}}
+            />
+          {{/each}}
+
+          {{#if (gt this.fields.length 0)}}
+            <DButton
+              @action={{this.removeItem}}
+              @icon="trash-alt"
+              class="btn-danger schema-theme-setting-editor__remove-btn"
+            />
+          {{/if}}
+        </div>
       </div>
     </div>
   </template>

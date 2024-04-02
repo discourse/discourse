@@ -338,7 +338,13 @@ class Admin::ThemesController < Admin::AdminController
     new_value = params[:value] || nil
 
     previous_value = @theme.cached_settings[setting_name]
-    @theme.update_setting(setting_name, new_value)
+
+    begin
+      @theme.update_setting(setting_name, new_value)
+    rescue Discourse::InvalidParameters => e
+      return render_json_error e.message
+    end
+
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)

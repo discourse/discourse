@@ -20,13 +20,17 @@ module PageObjects
         expect(input_field_label(field_name)).to have_text(label)
       end
 
-      def click_link(name)
+      def click_link(name, child: false)
         find(
-          ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node.--child",
+          ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node#{child ? ".--child" : ".--parent"}",
           text: name,
         ).click
 
         self
+      end
+
+      def click_child_link(name)
+        click_link(name, child: true)
       end
 
       def fill_in_field(field_name, value)
