@@ -302,9 +302,9 @@ export default class DModal extends Component {
             <div
               class={{concatClass "d-modal__header" @headerClass}}
               {{swipe
-                didStartSwipe=this.handleSwipeStarted
                 didSwipe=this.handleSwipe
                 didEndSwipe=this.handleSwipeEnded
+                enabled=this.dismissable
               }}
             >
               {{yield to="headerAboveTitle"}}
@@ -396,9 +396,9 @@ export default class DModal extends Component {
         <div
           class="d-modal__backdrop"
           {{swipe
-            didStartSwipe=this.handleSwipeStarted
             didSwipe=this.handleSwipe
             didEndSwipe=this.handleSwipeEnded
+            enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
         ></div>

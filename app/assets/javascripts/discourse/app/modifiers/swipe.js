@@ -26,10 +26,11 @@ export default class SwipeModifier extends Modifier {
    * @type {Element}
    */
   element;
+  enabled = true;
 
   constructor(owner, args) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup(instance.element));
+    registerDestructor(this, (instance) => instance.cleanup());
   }
 
   /**
@@ -41,8 +42,14 @@ export default class SwipeModifier extends Modifier {
    * @param {Function} options.didStartSwipe Callback to be executed when a swipe starts.
    * @param {Function} options.didSwipe Callback to be executed when a swipe moves.
    * @param {Function} options.didEndSwipe Callback to be executed when a swipe ends.
+   * @param {Boolean} options.enabled Enable or disable the swipe modifier.
    */
-  modify(element, _, { didStartSwipe, didSwipe, didEndSwipe }) {
+  modify(element, _, { didStartSwipe, didSwipe, didEndSwipe, enabled }) {
+    if (enabled === false) {
+      this.enabled = enabled;
+      return;
+    }
+
     this.element = element;
     this.didSwipeCallback = didSwipe;
     this.didStartSwipeCallback = didStartSwipe;
@@ -121,12 +128,14 @@ export default class SwipeModifier extends Modifier {
 
   /**
    * Cleans up the modifier by removing event listeners from the element.
-   *
-   * @param {Element} element The DOM element from which to remove event listeners.
    */
-  cleanup(element) {
-    element.removeEventListener("touchstart", this.handleTouchStart);
-    element.removeEventListener("touchmove", this.handleTouchMove);
-    element.removeEventListener("touchend", this.handleTouchEnd);
+  cleanup() {
+    if (!this.enabled) {
+      return;
+    }
+
+    this.element?.removeEventListener("touchstart", this.handleTouchStart);
+    this.element?.removeEventListener("touchmove", this.handleTouchMove);
+    this.element?.removeEventListener("touchend", this.handleTouchEnd);
   }
 }
