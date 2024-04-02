@@ -196,7 +196,7 @@
 
     &:focus-visible {
       border-color: var(--tertiary);
-      outline: var(--tertiary) auto 1px;
+      outline: 1px solid var(--tertiary);
     }
 
     &:hover {
