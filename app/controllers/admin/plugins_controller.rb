@@ -16,7 +16,7 @@ class Admin::PluginsController < Admin::StaffController
     # version of their plugin name for a route.
     plugin = Discourse.plugins_by_name["discourse-#{params[:plugin_id]}"] if !plugin
 
-    raise Discourse::NotFound if !plugin
+    raise Discourse::NotFound if !plugin&.visible?
 
     render_serialized(plugin, AdminPluginSerializer, root: nil)
   end
