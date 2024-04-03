@@ -1794,6 +1794,7 @@ RSpec.describe User do
 
   describe "#purge_unactivated" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin) { Fabricate(:user) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1803,6 +1804,12 @@ RSpec.describe User do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
     fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_admin) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_system) do
       Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
     end
 
@@ -1828,12 +1835,30 @@ RSpec.describe User do
         title: "Test topic from a user",
         raw: "This is a sample message",
       ).create
+
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: admin,
+        target_user: unactivated_by_admin,
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: Discourse.system_user,
+        target_user: unactivated_by_system,
+      )
     end
 
     it "should only remove old, unactivated users" do
       User.purge_unactivated
       expect(User.real.all).to match_array(
-        [user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post],
+        [
+          user,
+          unactivated,
+          unactivated_old_with_human_pm,
+          unactivated_old_with_post,
+          unactivated_by_admin,
+          admin,
+        ],
       )
     end
 
@@ -1848,6 +1873,9 @@ RSpec.describe User do
           unactivated_old_with_system_pm,
           unactivated_old_with_human_pm,
           unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
         ],
       )
     end
