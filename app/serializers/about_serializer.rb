@@ -30,9 +30,7 @@ class AboutSerializer < ApplicationSerializer
   end
 
   def stats
-    stats = object.class.fetch_cached_stats
-    stats.merge!(Stat.discourse_hub_stats) if scope.is_discourse_hub_request?
-    stats
+    object.class.fetch_cached_stats
   end
 
   def include_contact_url?

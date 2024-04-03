@@ -56,8 +56,6 @@ class SiteController < ApplicationController
 
   def statistics
     return redirect_to path("/") unless SiteSetting.share_anonymized_statistics?
-    stats = About.fetch_cached_stats
-    stats.merge!(Stat.discourse_hub_stats) if guardian.is_discourse_hub_request?
-    render json: stats
+    render json: About.fetch_cached_stats
   end
 end
