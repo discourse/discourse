@@ -265,13 +265,6 @@ class UserUpdater
           user_notification_schedule.destroy_scheduled_timings
         end
       end
-      if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
-        MessageBus.publish(
-          "/user-tips/#{user.id}",
-          user.user_option.seen_popups,
-          user_ids: [user.id],
-        )
-      end
       DiscourseEvent.trigger(:user_updated, user)
     end
 

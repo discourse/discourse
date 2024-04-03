@@ -11,11 +11,22 @@ export default class UserTipContainer extends Component {
     return htmlSafe(this.args.data.contentHtml);
   }
 
+  get showSkipButton() {
+    return this.args.data.showSkipButton;
+  }
+
   @action
   handleDismiss(_, event) {
     event.preventDefault();
     this.args.close();
     this.userTips.hideUserTipForever(this.args.data.id);
+  }
+
+  @action
+  handleSkip(_, event) {
+    event.preventDefault();
+    this.args.close();
+    this.userTips.skipTips();
   }
 
   <template>
@@ -28,16 +39,23 @@ export default class UserTipContainer extends Component {
           {{@data.contentText}}
         {{/if}}
       </div>
-      {{#if @data.onDismiss}}
-        <div class="user-tip__buttons">
+      <div class="user-tip__buttons">
+        <DButton
+          class="btn-primary"
+          @translatedLabel={{@data.buttonText}}
+          @action={{this.handleDismiss}}
+          @forwardEvent={{true}}
+        />
+
+        {{#if this.showSkipButton}}
           <DButton
-            class="btn-primary"
-            @translatedLabel={{@data.buttonText}}
-            @action={{this.handleDismiss}}
+            class="btn-flat btn-text"
+            @translatedLabel={{@data.buttonSkipText}}
+            @action={{this.handleSkip}}
             @forwardEvent={{true}}
           />
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     </div>
   </template>
 }
