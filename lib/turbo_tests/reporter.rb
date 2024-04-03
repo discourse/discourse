@@ -87,7 +87,7 @@ module TurboTests
     def finish
       end_time = Time.now
 
-      delegate_to_formatters(:stop, RSpec::Core::Notifications::NullNotification)
+      delegate_to_formatters(:stop, RSpec::Core::Notifications::ExamplesNotification.new(self))
 
       delegate_to_formatters(:start_dump, RSpec::Core::Notifications::NullNotification)
 
