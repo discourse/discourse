@@ -54,6 +54,7 @@ export default class Notifications extends Component {
         @placement="bottom-end"
         @titleText={{i18n "user_tips.first_notification.title"}}
         @contentText={{i18n "user_tips.first_notification.content"}}
+        @showSkipButton={{true}}
       />
     {{/if}}
 

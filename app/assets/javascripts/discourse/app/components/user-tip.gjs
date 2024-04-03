@@ -41,6 +41,8 @@ export default class UserTip extends Component {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
       }
 
+      const buttonSkipText = I18n.t("user_tips.skip");
+
       instance = new DTooltipInstance(getOwner(this), trigger || element, {
         identifier: "user-tip",
         interactive: true,
@@ -55,14 +57,19 @@ export default class UserTip extends Component {
           contentText: this.args.contentText
             ? escape(this.args.contentText)
             : null,
-          onDismiss: () => {
-            this.userTips.hideUserTipForever(this.args.id);
-          },
           buttonText,
+          buttonSkipText,
+          showSkipButton: this.args.showSkipButton,
         },
       });
 
       this.tooltip.show(instance);
+
+      if (this.shouldRenderTip) {
+        // mark tooltip directly as seen so that
+        // refreshing, clicking outside, etc. won't show it again
+        this.userTips.markAsSeen(this.args.id);
+      }
     });
 
     return () => {

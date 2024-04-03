@@ -1990,6 +1990,7 @@ en:
 
     user_tips:
       button: "Got it!"
+      skip: "Skip tips"
 
       first_notification:
         title: "Your first notification!"

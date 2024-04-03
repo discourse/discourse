@@ -621,6 +621,7 @@ export default createWidget("post-menu", {
       visibleButtons = allButtons;
     }
 
+    let hasShowMoreButton = false;
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     if (!state.collapsed || allButtons.length <= visibleButtons.length + 1) {
@@ -636,6 +637,7 @@ export default createWidget("post-menu", {
         icon: "ellipsis-h",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
+      hasShowMoreButton = true;
     }
 
     Object.values(_extraButtons).forEach((builder) => {
@@ -813,7 +815,9 @@ export default createWidget("post-menu", {
         })
       );
     }
-
+    if (hasShowMoreButton) {
+      contents.push(this.attach("post-user-tip-shim"));
+    }
     return contents;
   },
 
