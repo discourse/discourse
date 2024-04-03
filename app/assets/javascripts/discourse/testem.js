@@ -15,6 +15,10 @@ class Reporter extends TapReporter {
     if (process.env.GITHUB_ACTIONS) {
       colors.enable();
     }
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::group:: Running QUnit tests");
+    }
   }
 
   reportMetadata(tag, metadata) {
@@ -106,6 +110,10 @@ class Reporter extends TapReporter {
 
   finish() {
     super.finish();
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::endgroup::");
+    }
 
     this.reportDeprecations();
 
