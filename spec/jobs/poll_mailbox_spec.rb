@@ -47,9 +47,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.poll_pop3_auth_error"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
-          I18n.t(i18n_key, base_path: Discourse.base_path),
-        )
+        expect(ProblemCheckTracker[:poll_pop3_auth_error].blips).to eq(1)
       end
 
       it "logs an error on pop connection timeout error" do
@@ -59,9 +57,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.poll_pop3_timeout"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
-          I18n.t(i18n_key, base_path: Discourse.base_path),
-        )
+        expect(ProblemCheckTracker[:poll_pop3_timeout].blips).to eq(1)
       end
 
       it "logs an error when pop fails and continues with next message" do

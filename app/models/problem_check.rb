@@ -33,6 +33,7 @@ class ProblemCheck
   # Note: This list must come after the `config_accessor` declarations.
   #
   CORE_PROBLEM_CHECKS = [
+    ProblemCheck::BadFaviconUrl,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
@@ -45,6 +46,8 @@ class ProblemCheck
     ProblemCheck::ImageMagick,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
+    ProblemCheck::PollPop3Timeout,
+    ProblemCheck::PollPop3AuthError,
     ProblemCheck::RailsEnv,
     ProblemCheck::Ram,
     ProblemCheck::S3BackupConfig,
