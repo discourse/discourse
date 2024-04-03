@@ -290,22 +290,19 @@ const DiscourseURL = EmberObject.extend({
       return false;
     }
 
-    try {
-      const parsedUrl = new URL(url, this.origin);
-
-      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-        return false;
-      }
-
-      const baseUrl = new URL(this.origin);
-
-      return (
-        parsedUrl.hostname === baseUrl.hostname &&
-        parsedUrl.pathname.startsWith(baseUrl.pathname)
-      );
-    } catch {
-      return false;
+    if (url.startsWith("//")) {
+      url = "http:" + url;
     }
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      return true;
+    }
+
+    return (
+      url.startsWith(this.origin) ||
+      url.replace(/^http/, "https").startsWith(this.origin) ||
+      url.replace(/^https/, "http").startsWith(this.origin)
+    );
   },
 
   /**

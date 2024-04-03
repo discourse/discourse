@@ -17,10 +17,6 @@ module("Unit | Utility | url", function (hooks) {
     sinon.stub(DiscourseURL, "origin").get(() => "http://eviltrout.com");
 
     assert.false(DiscourseURL.isInternal(null), "a blank URL is not internal");
-    assert.false(
-      DiscourseURL.isInternal("ftp::/test.com"),
-      "returns false for invalid URLs"
-    );
     assert.true(DiscourseURL.isInternal("/test"), "relative URLs are internal");
     assert.true(
       DiscourseURL.isInternal("docs"),
@@ -46,10 +42,6 @@ module("Unit | Utility | url", function (hooks) {
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
     );
-    assert.false(
-      DiscourseURL.isInternal("ftp://eviltrout.com"),
-      "same host, different protocol is not internal"
-    );
   });
 
   test("isInternal with a HTTPS url", function (assert) {
@@ -57,6 +49,10 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.isInternal("http://eviltrout.com/monocle"),
       "HTTPS urls match HTTP urls"
+    );
+    assert.true(
+      DiscourseURL.isInternal("https://eviltrout.com/monocle"),
+      "HTTPS urls match HTTPS urls"
     );
   });
 
@@ -73,6 +69,11 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.isInternal("http://eviltrout.com/forum/moustache"),
       "a url on the same host and on the same folder is internal"
+    );
+    assert.true(DiscourseURL.isInternal("/test"), "relative URLs are internal");
+    assert.true(
+      DiscourseURL.isInternal("docs"),
+      "non-prefixed relative URLs are internal"
     );
   });
 
