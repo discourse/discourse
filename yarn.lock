@@ -9776,6 +9776,11 @@ morgan@^1.10.0:
     on-finished "~2.3.0"
     on-headers "~1.0.2"
 
+morphlex@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/morphlex/-/morphlex-0.0.15.tgz#651eaeec36424a980f02ed8a6dada7f2785b71b3"
+  integrity sha512-XUJykOS7kpwA8byZYp5jYPwnx/MFDESC+rL3vXyETpWNw6Lb5icQZxaoVn/qDLpbpEaawUXielFIsxCjrz+g/g==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
