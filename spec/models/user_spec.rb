@@ -1848,7 +1848,7 @@ RSpec.describe User do
       )
     end
 
-    it "should only remove old, unactivated users" do
+    it "should only remove old, unactivated users that haven't been manually deactivated" do
       User.purge_unactivated
       expect(User.real.all).to match_array(
         [
