@@ -66,6 +66,8 @@ class ProblemCheck
     ProblemCheck::ImageMagick,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
+    ProblemCheck::PollPop3Timeout,
+    ProblemCheck::PollPop3AuthError,
     ProblemCheck::RailsEnv,
     ProblemCheck::Ram,
     ProblemCheck::S3BackupConfig,
@@ -141,7 +143,10 @@ class ProblemCheck
     if problems.empty?
       tracker.no_problem!(next_run_at:)
     else
-      tracker.problem!(next_run_at:, details: translation_data)
+      tracker.problem!(
+        next_run_at:,
+        details: translation_data.merge(base_path: Discourse.base_path),
+      )
     end
 
     problems

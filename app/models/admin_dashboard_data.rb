@@ -90,20 +90,6 @@ class AdminDashboardData
     end
   end
 
-  ##
-  # We call this method in the class definition below
-  # so all of the problem checks in this class are registered on
-  # boot. These problem checks are run when the problems are loaded in
-  # the admin dashboard controller.
-  #
-  # This method also can be used in testing to reset checks between
-  # tests. It will also fire multiple times in development mode because
-  # classes are not cached.
-  def self.reset_problem_checks
-    @@problem_messages = %w[dashboard.poll_pop3_timeout dashboard.poll_pop3_auth_error]
-  end
-  reset_problem_checks
-
   def self.fetch_stats
     new.as_json
   end
