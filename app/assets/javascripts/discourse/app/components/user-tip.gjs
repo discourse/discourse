@@ -41,8 +41,6 @@ export default class UserTip extends Component {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
       }
 
-      const buttonSkipText = I18n.t("user_tips.skip");
-
       instance = new DTooltipInstance(getOwner(this), trigger || element, {
         identifier: "user-tip",
         interactive: true,

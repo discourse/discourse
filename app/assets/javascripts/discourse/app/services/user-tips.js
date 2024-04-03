@@ -39,7 +39,7 @@ export default class UserTips extends Service {
   }
 
   addAvailableTip(tip) {
-    if (this.canSeeUserTip(tip.id) && !this._findObjectInSet("id", tip.id)) {
+    if (this.canSeeUserTip(tip.id) && !this._findAvailableTipById(tip.id)) {
       this.#availableTips.add(tip);
       this.#updateRenderedId();
     }
@@ -139,12 +139,7 @@ export default class UserTips extends Service {
     await this.currentUser.save(["skip_new_user_tips"]);
   }
 
-  _findObjectInSet(key, value) {
-    for (let obj of this.#availableTips) {
-      if (obj[key] === value) {
-        return obj;
-      }
-    }
-    return null;
+  _findAvailableTipById(id) {
+    return this.#availableTips.values().find((tip) => tip.id === id);
   }
 }
