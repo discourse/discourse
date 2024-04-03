@@ -1,8 +1,25 @@
 import { concat, fn, hash } from "@ember/helper";
+import Modifier from "ember-modifier";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
+
+class ToastProgress extends Modifier {
+  start = Date.now();
+
+  modify(element, _, { duration }) {
+    const elapsed = Date.now() - this.start;
+    const progress = (elapsed / duration) * 100;
+    const countdownPercent = Math.max(100 - progress, 0);
+
+    element.style.width = `${countdownPercent}%`;
+
+    if (countdownPercent > 0) {
+      requestAnimationFrame(() => this.modify(element, _, { duration }));
+    }
+  }
+}
 
 const DDefaultToast = <template>
   <div
@@ -12,6 +29,13 @@ const DDefaultToast = <template>
     }}
     ...attributes
   >
+    {{#if @data.progressBar}}
+      <div
+        class="fk-d-default-toast__progress-bar"
+        {{(modifier ToastProgress duration=@duration)}}
+      >
+      </div>
+    {{/if}}
     {{#if @data.icon}}
       <div class="fk-d-default-toast__icon-container">
         {{icon @data.icon}}

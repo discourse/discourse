@@ -70,6 +70,18 @@
     min-height: 30px;
   }
 
+  &__progress-bar {
+    height: 5px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: var(--success);
+  }
+
+  .fk-d-default-toast:has(&__progress-bar) {
+    padding-top: 15px;
+  }
+
   &__texts {
     min-height: 30px;
     display: flex;
@@ -96,5 +108,7 @@
 
   &__message {
     display: flex;
+    margin-top: 0.5rem;
+    color: var(--primary-high);
   }
 }

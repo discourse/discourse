@@ -79,6 +79,7 @@ export default class DToasts extends Component {
         >
           <toast.options.component
             @data={{toast.options.data}}
+            @duration={{toast.options.duration}}
             @close={{toast.close}}
           />
         </output>
