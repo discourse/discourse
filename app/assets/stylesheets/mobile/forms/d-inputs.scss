@@ -21,6 +21,12 @@
       order: 1;
     }
   }
+
+  &__secondary-cta {
+    order: -1;
+    margin-right: auto;
+    margin-left: 0;
+  }
 }
 
 .d-form-field {

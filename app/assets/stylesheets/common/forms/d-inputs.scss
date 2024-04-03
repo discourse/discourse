@@ -24,7 +24,7 @@
         grid-template-columns: repeat(3, 1fr) auto;
       }
     }
-    &.--lfr {
+    &.--ltr {
       display: grid;
       grid-template-columns: auto 3fr;
       grid-template-rows: auto;
@@ -50,6 +50,10 @@
         }
       }
     }
+  }
+
+  &__secondary-cta {
+    margin-left: auto;
   }
 
   fieldset {
@@ -83,17 +87,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.25em;
-  // margin-bottom: 1.25em;
 
-  // &:has([class*="meta"]) {
-  //   margin-bottom: 0;
-  // }
-
-  .--lfr & {
+  .--ltr & {
     display: contents;
 
     legend {
       text-align: right;
+      margin: 0;
     }
   }
 
@@ -103,8 +103,6 @@
 
   &.--radiobtns,
   &.--checkbox {
-    // gap: 1em;
-
     legend {
       margin-bottom: 0.25em;
     }
@@ -123,7 +121,7 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
 
-    .--lfr & {
+    .--ltr & {
       flex-direction: column;
       align-items: flex-end;
       text-align: right;
@@ -144,34 +142,20 @@
     flex-direction: column;
     gap: 0.25em;
     width: max-content;
-    .--inline & {
-      display: contents;
-      width: auto;
-    }
-    .--radiobtns & {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 1em;
-
-      label {
-        // width: max-content;
-        margin: 0;
-      }
-    }
-
-    .--checkbox & {
-      flex-direction: row;
-      gap: 1em;
-      align-items: start;
-    }
   }
   &__value-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+  &__input-group {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
 
     label {
+      display: flex;
+      gap: 0.5em;
       font-weight: normal;
       margin: 0;
     }
@@ -217,12 +201,13 @@
 
   &__input[type="radio"],
   &__input[type="checkbox"] {
-    margin: 0.25em 0 0;
+    margin: 0.17em 0 0;
   }
 
   &__info {
     margin: 0 0 0.25em;
     color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
   }
   &__meta {
     display: flex;
@@ -261,7 +246,7 @@
   display: grid;
   column-gap: 0.5em;
   row-gap: 0.25em;
-  grid-template-columns: repeat(3, 1fr) auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
 
   .d-form__section-inline-btn {
     align-self: flex-end;
