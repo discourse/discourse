@@ -100,11 +100,7 @@ class AdminDashboardData
   # tests. It will also fire multiple times in development mode because
   # classes are not cached.
   def self.reset_problem_checks
-    @@problem_messages = %w[
-      dashboard.bad_favicon_url
-      dashboard.poll_pop3_timeout
-      dashboard.poll_pop3_auth_error
-    ]
+    @@problem_messages = %w[dashboard.poll_pop3_timeout dashboard.poll_pop3_auth_error]
   end
   reset_problem_checks
 
