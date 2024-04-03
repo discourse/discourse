@@ -48,6 +48,10 @@ module TurboTests
       end
     end
 
+    def start
+      delegate_to_formatters(:start, RSpec::Core::Notifications::NullNotification)
+    end
+
     def example_passed(example)
       delegate_to_formatters(:example_passed, example.notification)
 
@@ -82,6 +86,8 @@ module TurboTests
 
     def finish
       end_time = Time.now
+
+      delegate_to_formatters(:stop, RSpec::Core::Notifications::NullNotification)
 
       delegate_to_formatters(:start_dump, RSpec::Core::Notifications::NullNotification)
 

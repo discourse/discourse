@@ -81,6 +81,8 @@ module TurboTests
 
       @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
 
+      @reporter.start
+
       subprocess_opts = { record_runtime: @use_runtime_info }
 
       start_multisite_subprocess(@files, **subprocess_opts)
