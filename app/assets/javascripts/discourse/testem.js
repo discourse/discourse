@@ -17,7 +17,7 @@ class Reporter extends TapReporter {
     }
 
     if (process.env.GITHUB_ACTIONS) {
-      this.out.write("::group:: Running QUnit tests");
+      this.out.write("::group:: Verbose QUnit test output\n");
     }
   }
 
