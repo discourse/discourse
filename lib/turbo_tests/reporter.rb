@@ -49,7 +49,7 @@ module TurboTests
     end
 
     def start
-      delegate_to_formatters(:start, RSpec::Core::Notifications::NullNotification)
+      delegate_to_formatters(:start, RSpec::Core::Notifications::StartNotification.new)
     end
 
     def example_passed(example)

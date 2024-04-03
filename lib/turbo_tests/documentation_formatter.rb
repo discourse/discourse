@@ -13,6 +13,7 @@ module TurboTests
     )
 
     def start(*args)
+      super(*args)
       output.puts "::group:: Verbose turbo_spec output" if ENV["GITHUB_ACTIONS"]
     end
 
