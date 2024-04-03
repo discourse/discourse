@@ -220,12 +220,12 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_REPORTER_FORMAT=dot QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: QUNIT_REPORTER_FORMAT=dot DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
+        run: DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4
@@ -389,7 +389,7 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --reporter=dot --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4
