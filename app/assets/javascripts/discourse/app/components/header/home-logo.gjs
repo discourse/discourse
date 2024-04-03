@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -77,7 +78,10 @@ export default class HomeLogo extends Component {
   }
 
   <template>
-    <PluginOutlet @name="home-logo">
+    <PluginOutlet
+      @name="home-logo"
+      @outletArgs={{hash minimized=@minimized href=this.href}}
+    >
       <div class={{concatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
           {{#if @minimized}}
