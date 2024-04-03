@@ -80,7 +80,7 @@ export default class HomeLogo extends Component {
   <template>
     <PluginOutlet
       @name="home-logo"
-      @outletArgs={{hash minimized=@minimized href=this.href}}
+      @outletArgs={{hash minimized=@minimized}}
     >
       <div class={{concatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
