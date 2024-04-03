@@ -30,6 +30,7 @@ import {
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
@@ -1322,17 +1323,14 @@ export default class ComposerService extends Service {
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
-      const category = this.site.categories.findBy("id", opts.categoryId);
+      const category = Category.findById(opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
       }
     }
 
     if (opts.prioritizedCategoryId) {
-      const category = this.site.categories.findBy(
-        "id",
-        opts.prioritizedCategoryId
-      );
+      const category = Category.findById(opts.prioritizedCategoryId);
 
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);

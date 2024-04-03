@@ -2,6 +2,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { cook, emojiUnescape, excerpt } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
@@ -78,9 +79,7 @@ export default class UserDraftsStream extends RestModel {
             }
             draft.title = emojiUnescape(escapeExpression(draft.title));
             if (draft.data.categoryId) {
-              draft.category =
-                this.site.categories.findBy("id", draft.data.categoryId) ||
-                null;
+              draft.category = Category.findById(draft.data.categoryId) || null;
             }
             this.content.push(UserDraft.create(draft));
           });
