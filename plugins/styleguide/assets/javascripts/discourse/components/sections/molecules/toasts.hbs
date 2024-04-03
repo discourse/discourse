@@ -86,6 +86,12 @@
         @onChange={{fn (mut this.icon)}}
       />
     </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="[@options.progressBar]">
+      <DToggleSwitch
+        @state={{this.progressBar}}
+        {{on "click" this.toggleProgressBar}}
+      />
+    </Styleguide::Controls::Row>
     <Styleguide::Controls::Row @name="With an action">
       <DToggleSwitch @state={{this.action}} {{on "click" this.toggleAction}} />
     </Styleguide::Controls::Row>
