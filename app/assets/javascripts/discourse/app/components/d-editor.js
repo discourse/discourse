@@ -244,7 +244,7 @@ export default Component.extend(TextareaTextManipulation, {
         return this._selectedFormTemplateId;
       }
 
-      return this.formTemplateIds?.[0];
+      return this.formTemplateId || this.formTemplateIds?.[0];
     },
 
     set(key, value) {
