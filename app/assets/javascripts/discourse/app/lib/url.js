@@ -286,27 +286,26 @@ const DiscourseURL = EmberObject.extend({
 
   // Determines whether a URL is internal or not
   isInternal(url) {
-    if (url && url.length) {
-      if (url.startsWith("//")) {
-        url = "http:" + url;
-      }
-      if (url.startsWith("#")) {
-        return true;
-      }
-      if (url.startsWith("/")) {
-        return true;
-      }
-      if (url.startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^http/, "https").startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^https/, "http").startsWith(this.origin())) {
-        return true;
-      }
+    if (!url?.length) {
+      return false;
     }
-    return false;
+
+    try {
+      const parsedUrl = new URL(url, this.origin);
+
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        return false;
+      }
+
+      const baseUrl = new URL(this.origin);
+
+      return (
+        parsedUrl.hostname === baseUrl.hostname &&
+        parsedUrl.pathname.startsWith(baseUrl.pathname)
+      );
+    } catch {
+      return false;
+    }
   },
 
   /**
@@ -388,8 +387,8 @@ const DiscourseURL = EmberObject.extend({
   },
 
   // This has been extracted so it can be tested.
-  origin() {
-    let prefix = getURL("/");
+  get origin() {
+    const prefix = getURL("/");
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
