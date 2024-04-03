@@ -63,6 +63,7 @@ acceptance("Search - Anonymous", function (needs) {
       exists(".show-advanced-search"),
       "it shows full page search button"
     );
+    throw "this is an error";
   });
 
   test("random quick tips", async function (assert) {
