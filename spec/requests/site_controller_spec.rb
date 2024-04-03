@@ -15,7 +15,7 @@ RSpec.describe SiteController do
       SiteSetting.include_in_discourse_discover = true
       Theme.clear_default!
 
-      get "/site/basic-info.json"
+      get "/site/basic-info.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
       json = response.parsed_body
 
       expected_url = UrlHelper.absolute(upload.url)
@@ -65,16 +65,6 @@ RSpec.describe SiteController do
       expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
-    end
-
-    it "returns Discourse Discover stats" do
-      SiteSetting.include_in_discourse_discover = true
-      About.refresh_stats
-
-      get "/site/statistics.json"
-      json = response.parsed_body
-
-      expect(json["discourse_discover_enrolled"]).to be_truthy
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do
