@@ -12,10 +12,6 @@ class ProblemCheck::GithubConfig < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.github_config_warning"
-  end
-
   def github_credentials_present?
     SiteSetting.github_client_id.present? && SiteSetting.github_client_secret.present?
   end

@@ -9,10 +9,4 @@ class ProblemCheck::S3Cdn < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.s3_cdn_warning"
-  end
 end

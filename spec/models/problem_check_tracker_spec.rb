@@ -121,7 +121,7 @@ RSpec.describe ProblemCheckTracker do
 
       it "sounds the alarm" do
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
-          AdminNotice.problem_check.count
+          AdminNotice.problem.count
         }.by(1)
       end
     end
@@ -131,7 +131,7 @@ RSpec.describe ProblemCheckTracker do
 
       it "does not sound the alarm" do
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
-          AdminNotice.problem_check.count
+          AdminNotice.problem.count
         }
       end
     end

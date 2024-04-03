@@ -4,8 +4,8 @@ class ProblemCheck::SidekiqCheck < ProblemCheck
   self.priority = "low"
 
   def call
-    return problem("dashboard.sidekiq_warning") if jobs_in_queue? && !jobs_performed_recently?
-    return problem("dashboard.queue_size_warning", queue_size: Jobs.queued) if massive_queue?
+    return problem("dashboard.problem.sidekiq") if jobs_in_queue? && !jobs_performed_recently?
+    return problem("dashboard.problem.queue_size", queue_size: Jobs.queued) if massive_queue?
 
     no_problem
   end

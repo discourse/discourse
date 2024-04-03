@@ -20,7 +20,7 @@ RSpec.describe ProblemCheck::MaxmindDbConfiguration do
       global_setting :maxmind_license_key, "license_key"
 
       expect(check).to have_a_problem.with_priority("low").with_message(
-        I18n.t("dashboard.maxmind_db_configuration_warning"),
+        I18n.t("dashboard.problem.maxmind_db_configuration"),
       )
     end
   end

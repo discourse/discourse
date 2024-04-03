@@ -176,8 +176,7 @@ class ProblemCheck
   end
 
   def translation_key
-    # TODO: Infer a default based on class name, then move translations in locale file.
-    raise NotImplementedError
+    "dashboard.problem.#{identifier}"
   end
 
   def translation_data

@@ -52,7 +52,7 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
       message =
         I18n.t(
-          "dashboard.group_email_credentials_warning",
+          "dashboard.problem.group_email_credentials",
           {
             base_path: Discourse.base_path,
             group_name: group.name,
