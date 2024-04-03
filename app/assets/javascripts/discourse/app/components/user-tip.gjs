@@ -58,7 +58,7 @@ export default class UserTip extends Component {
             ? escape(this.args.contentText)
             : null,
           buttonText,
-          buttonSkipText,
+          buttonSkipText: I18n.t("user_tips.skip"),
           showSkipButton: this.args.showSkipButton,
         },
       });
