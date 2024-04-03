@@ -19,13 +19,7 @@ RSpec.describe AdminNotice do
     before do
       I18n.backend.store_translations(
         :en,
-        {
-          "dashboard" => {
-            "admin_notice" => {
-              "test" => "Something is wrong with the %{thing}",
-            },
-          },
-        },
+        { "dashboard" => { "problem" => { "test" => "Something is wrong with the %{thing}" } } },
       )
     end
 
