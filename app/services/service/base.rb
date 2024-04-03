@@ -61,7 +61,7 @@ module Service
       end
 
       def inspect_steps
-        Chat::StepsInspector.new(self)
+        StepsInspector.new(self)
       end
 
       private

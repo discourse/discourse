@@ -2,7 +2,7 @@
 
 module Chat
   class IncomingWebhooksController < ::ApplicationController
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     requires_plugin Chat::PLUGIN_NAME
 
