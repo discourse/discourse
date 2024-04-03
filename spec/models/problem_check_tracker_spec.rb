@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheckTracker do
-  before { described_class.any_instance.stubs(:check).returns(stub(max_blips: 1)) }
+  before { described_class.any_instance.stubs(:check).returns(stub(max_blips: 1, priority: "low")) }
 
   describe "validations" do
     let(:record) { described_class.new(identifier: "twitter_login") }
@@ -97,7 +97,7 @@ RSpec.describe ProblemCheckTracker do
 
     let(:original_attributes) do
       {
-        blips: 0,
+        blips:,
         last_problem_at: 1.week.ago,
         last_success_at: 24.hours.ago,
         last_run_at: 24.hours.ago,
@@ -105,6 +105,7 @@ RSpec.describe ProblemCheckTracker do
       }
     end
 
+    let(:blips) { 0 }
     let(:updated_attributes) { { blips: 1 } }
 
     it do
@@ -113,6 +114,26 @@ RSpec.describe ProblemCheckTracker do
       expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
         problem_tracker.attributes
       }.to(hash_including(updated_attributes))
+    end
+
+    context "when the maximum number of blips have been surpassed" do
+      let(:blips) { 1 }
+
+      it "sounds the alarm" do
+        expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
+          AdminNotice.problem.count
+        }.by(1)
+      end
+    end
+
+    context "when there are still blips to go" do
+      let(:blips) { 0 }
+
+      it "does not sound the alarm" do
+        expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
+          AdminNotice.problem.count
+        }
+      end
     end
   end
 
@@ -139,6 +160,16 @@ RSpec.describe ProblemCheckTracker do
       expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {
         problem_tracker.attributes
       }.to(hash_including(updated_attributes))
+    end
+
+    context "when there's an alarm sounding" do
+      before { Fabricate(:admin_notice, category: "problem", identifier: "twitter_login") }
+
+      it "silences the alarm" do
+        expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {
+          AdminNotice.problem.count
+        }.by(-1)
+      end
     end
   end
 end

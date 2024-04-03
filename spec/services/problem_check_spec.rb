@@ -26,7 +26,12 @@ RSpec.describe ProblemCheck do
         end
       end
 
-    stub_const(described_class, "CORE_PROBLEM_CHECKS", [ScheduledCheck, RealtimeCheck], &example)
+    stub_const(
+      described_class,
+      "CORE_PROBLEM_CHECKS",
+      [ScheduledCheck, RealtimeCheck, FailingCheck, PassingCheck],
+      &example
+    )
 
     Object.send(:remove_const, ScheduledCheck.name)
     Object.send(:remove_const, RealtimeCheck.name)

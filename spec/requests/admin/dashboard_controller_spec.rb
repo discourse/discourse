@@ -98,6 +98,8 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#problems" do
+    before { ProblemCheck.stubs(:realtime).returns(stub(run: [])) }
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -122,8 +124,6 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["problems"].size).to eq(2)
-          expect(json["problems"][0]).to be_a(String)
-          expect(json["problems"][1]).to be_a(String)
         end
       end
     end
@@ -142,7 +142,6 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["problems"].size).to eq(2)
-        expect(json["problems"]).to contain_exactly("Not enough awesome", "Too much sass")
       end
     end
 

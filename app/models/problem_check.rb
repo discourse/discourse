@@ -116,8 +116,8 @@ class ProblemCheck
     new(data).call
   end
 
-  def self.run(data = {})
-    new(data).run
+  def self.run(data = {}, &)
+    new(data).run(&)
   end
 
   def initialize(data = {})
@@ -132,6 +132,8 @@ class ProblemCheck
 
   def run
     problems = call
+
+    yield(problems) if block_given?
 
     next_run_at = perform_every&.from_now
 

@@ -57,7 +57,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def silence_the_alarm
-    AdminNotice.problem.delete_all(identifier:)
+    AdminNotice.problem.where(identifier:).delete_all
   end
 end
 

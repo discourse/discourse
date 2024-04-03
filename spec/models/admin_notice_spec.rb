@@ -22,7 +22,7 @@ RSpec.describe AdminNotice do
         {
           "dashboard" => {
             "admin_notice" => {
-              "dashboard.admin_notice.test" => "Something is wrong with the %{thing}",
+              "test" => "Something is wrong with the %{thing}",
             },
           },
         },
