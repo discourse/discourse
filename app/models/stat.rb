@@ -40,21 +40,13 @@ class Stat
   end
 
   def self.core_stats
-    result = [
+    [
       Stat.new("topics", show_in_ui: true, expose_via_api: true) { Statistics.topics },
       Stat.new("posts", show_in_ui: true, expose_via_api: true) { Statistics.posts },
       Stat.new("users", show_in_ui: true, expose_via_api: true) { Statistics.users },
       Stat.new("active_users", show_in_ui: true, expose_via_api: true) { Statistics.active_users },
       Stat.new("likes", show_in_ui: true, expose_via_api: true) { Statistics.likes },
     ]
-
-    if SiteSetting.include_in_discourse_discover?
-      result << Stat.new("discourse_discover", show_in_ui: false, expose_via_api: true) do
-        About.discourse_discover
-      end
-    end
-
-    result
   end
 
   def self._api_stats
