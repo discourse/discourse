@@ -5,14 +5,14 @@ module TurboTests
   class DocumentationFormatter < ::TurboTests::BaseFormatter
     RSpec::Core::Formatters.register(self, :example_failed, :example_passed, :example_pending)
 
-    def start
-      super
+    def start(*args)
+      super(*args)
       output.puts "::group:: Verbose turbo_spec output" if ENV["GITHUB_ACTIONS"]
     end
 
-    def dump_summary
+    def dump_summary(*args)
       output.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
-      super
+      super(*args)
     end
 
     def example_passed(notification)
