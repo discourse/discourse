@@ -28,15 +28,15 @@ class ProblemCheckTracker < ActiveRecord::Base
 
     update!(blips: blips + 1, details:, last_run_at: now, last_problem_at: now, next_run_at:)
 
-    return if !sound_the_alarm?
-
-    sound_the_alarm
+    sound_the_alarm if sound_the_alarm?
   end
 
   def no_problem!(next_run_at: nil)
     now = Time.current
 
     update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
+
+    silence_the_alarm
   end
 
   def check
@@ -45,15 +45,19 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   private
 
+  def sound_the_alarm?
+    failing? && blips > check.max_blips
+  end
+
   def sound_the_alarm
     AdminNotice
       .problem
       .create_with(priority: check.priority, details:)
-      .create_or_find_by(identifier:)
+      .find_or_create_by(identifier:)
   end
 
-  def sound_the_alarm?
-    failing? && blips > check.max_blips
+  def silence_the_alarm
+    AdminNotice.problem.delete_all(identifier:)
   end
 end
 
