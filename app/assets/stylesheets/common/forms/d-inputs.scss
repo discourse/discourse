@@ -31,6 +31,9 @@
       grid-column-gap: 1em;
       grid-row-gap: 1em;
     }
+    &.--rows {
+      gap: 0.5em;
+    }
   }
 
   &__multi-section {
@@ -196,7 +199,8 @@
 
     &:focus-visible {
       border-color: var(--tertiary);
-      outline: 1px solid var(--tertiary);
+      outline: 1px solid transparent;
+      box-shadow: 0 0 0 1px var(--tertiary);
     }
 
     &:hover {
@@ -206,6 +210,8 @@
     &[disabled] {
       outline: none;
       border: var(--d-input-border--disabled);
+      background-color: var(--d-input-bg-color--disabled);
+      cursor: not-allowed;
     }
   }
 
@@ -250,6 +256,7 @@
   }
 }
 
+//to include
 .d-form-multirow {
   display: grid;
   column-gap: 0.5em;
@@ -258,5 +265,11 @@
 
   .d-form__section-inline-btn {
     align-self: flex-end;
+  }
+}
+
+select {
+  .has-error & {
+    border: 1px solid var(--danger);
   }
 }

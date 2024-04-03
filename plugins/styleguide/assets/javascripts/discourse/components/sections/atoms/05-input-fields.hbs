@@ -279,10 +279,10 @@
             <label class="d-form-field__label" for="checkbox">Agree
             </label>
           </div>
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-          </div>
+        </div>
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
         </div>
       </div>
     </fieldset>
@@ -434,16 +434,17 @@
           aria-labelledby="row-name"
         />
       </div>
-      <div class="d-form-field" aria-labelledby="row-url">
+
+      <div class="d-form-field">
         <label class="d-form-field__label" id="row-url">url
         </label>
-        <select>
+        <select aria-labelledby="row-url">
           <option value="">--URL--</option>
           <option value="">Google</option>
           <option value="">DuckDuckGo</option>
         </select>
       </div>
-      <div class="d-form-field__value">
+      <div class="d-form-field">
         <label class="d-form-field__label" id="row-reason">Reason
         </label>
         <input
@@ -467,14 +468,15 @@
           aria-labelledby="row-name"
         />
       </div>
-      <div class="d-form-field" aria-labelledby="row-url">
-        <select>
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
           <option value="">--URL--</option>
           <option value="">Google</option>
           <option value="">DuckDuckGo</option>
         </select>
       </div>
-      <div class="d-form-field__field">
+      <div class="d-form-field">
         <input
           type="text"
           class="d-form-field__input"
@@ -497,14 +499,14 @@
           aria-labelledby="row-name"
         />
       </div>
-      <div class="d-form-field" aria-labelledby="row-url">
-        <select>
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
           <option value="">--URL--</option>
           <option value="">Google</option>
           <option value="">DuckDuckGo</option>
         </select>
       </div>
-      <div class="d-form-field__value">
+      <div class="d-form-field">
         <input
           type="text"
           class="d-form-field__input"
