@@ -140,6 +140,11 @@ export default class UserTips extends Service {
   }
 
   _findAvailableTipById(id) {
-    return this.#availableTips.values().find((tip) => tip.id === id);
+    for (let item of this.#availableTips) {
+      if (item.id === id) {
+        return item;
+      }
+    }
+    return null;
   }
 }
