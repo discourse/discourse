@@ -23,6 +23,8 @@
   @editingPost={{this.composer.editingPost}}
   @disabled={{this.disableTextarea}}
   @outletArgs={{hash composer=this.composer editorType="composer"}}
+  @topicId={{this.composer.topic.id}}
+  @categoryId={{this.composer.category.id}}
 >
   {{yield}}
 </DEditor>
