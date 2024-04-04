@@ -43,6 +43,14 @@ module("Unit | Utility | url", function (hooks) {
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
     );
+    assert.false(
+      DiscourseURL.isInternal("ftp://eviltrout.com"),
+      "a different protocol is not internal"
+    );
+    assert.false(
+      DiscourseURL.isInternal("ftp::/eviltrout.com"),
+      "an invalid URL is not internal"
+    );
   });
 
   test("isInternal with a HTTPS url", function (assert) {

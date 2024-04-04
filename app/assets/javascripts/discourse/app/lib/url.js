@@ -295,6 +295,15 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      try {
+        const parsedUrl = new URL(url, this.origin);
+        if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+          return false;
+        }
+      } catch {
+        return false;
+      }
+
       return true;
     }
 
