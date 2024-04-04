@@ -460,7 +460,11 @@ export default Component.extend(TextareaTextManipulation, {
 
       resolveCachedShortUrls(this.siteSettings, cookedElement);
 
-      (await import("morphlex")).morph(previewElement, cookedElement);
+      (await import("morphlex")).morph(
+        previewElement,
+        cookedElement,
+        this.morphingOptions
+      );
     }
 
     schedule("afterRender", () => {
@@ -479,6 +483,13 @@ export default Component.extend(TextareaTextManipulation, {
         this.previewUpdated(previewElement);
       }
     });
+  },
+
+  morphingOptions: {
+    beforeAttributeUpdated: (element, attributeName) => {
+      // Don't morph the open attribute of <details> elements
+      return !(element.tagName === "DETAILS" && attributeName === "open");
+    },
   },
 
   @observes("ready", "value", "processPreview")
