@@ -245,6 +245,46 @@ RSpec.describe TopicEmbed do
           )
         expect(imported_post.cooked).to match(/onebox|iframe/)
       end
+
+      describe "topic_embed_import_create_args modifier" do
+        after { DiscoursePluginRegistry.clear_modifiers! }
+
+        it "can alter the args used to create the topic" do
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:topic_embed_import_create_args) do |args|
+            args[:title] = "MODIFIED: #{args[:title]}"
+
+            args
+          end
+
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(
+              user,
+              "http://eviltrout.com/abcd",
+              title,
+              "some random content",
+              category_id: category.id,
+            )
+          expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
+        end
+
+        it "will revert to defaults if the modifier returns nil" do
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
+
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(
+              user,
+              "http://eviltrout.com/abcd",
+              title,
+              "some random content",
+              category_id: category.id,
+            )
+          expect(imported_post.topic.title).to eq(title)
+        end
+      end
     end
 
     context "when post creation supports markdown rendering" do
@@ -285,46 +325,6 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, no_para)
 
         expect(post.raw).to include("testing it")
-      end
-    end
-
-    describe "topic_embed_import_create_args modifier" do
-      after { DiscoursePluginRegistry.clear_modifiers! }
-
-      it "can alter the args used to create the topic" do
-        plugin = Plugin::Instance.new
-        plugin.register_modifier(:topic_embed_import_create_args) do |args|
-          args[:title] = "MODIFIED: #{args[:title]}"
-
-          args
-        end
-
-        Jobs.run_immediately!
-        imported_post =
-          TopicEmbed.import(
-            user,
-            "http://eviltrout.com/abcd",
-            title,
-            "some random content",
-            category_id: category.id,
-          )
-        expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
-      end
-
-      it "will revert to defaults if the modifier returns nil" do
-        plugin = Plugin::Instance.new
-        plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
-
-        Jobs.run_immediately!
-        imported_post =
-          TopicEmbed.import(
-            user,
-            "http://eviltrout.com/abcd",
-            title,
-            "some random content",
-            category_id: category.id,
-          )
-        expect(imported_post.topic.title).to eq(title)
       end
     end
   end
