@@ -1143,6 +1143,36 @@ module(
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
     });
 
+    test("adding an object to the root list of objects which is empty by default", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+        value: [],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("something");
+      await click(TOP_LEVEL_ADD_BTN);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].textElement).hasText("something 1");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+    });
+
     test("adding an object to the root list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
