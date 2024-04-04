@@ -24,12 +24,18 @@ export default class Types extends Component {
 
   @action
   onClick({ resultType, result }, event) {
+    logSearchLinkClick({
+      searchLogId: this.args.searchLogId,
+      searchResultId: result.id,
+      searchResultType: resultType.type,
+    });
+
     if (wantsNewWindow(event)) {
       return;
     }
 
     event.preventDefault();
-    this.routeToSearchResult(event.currentTarget.href, { resultType, result });
+    this.routeToSearchResult(event.currentTarget.href);
   }
 
   @action
@@ -41,7 +47,12 @@ export default class Types extends Component {
     } else if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      this.routeToSearchResult(event.target.href, { resultType, result });
+      logSearchLinkClick({
+        searchLogId: this.args.searchLogId,
+        searchResultId: result.id,
+        searchResultType: resultType.type,
+      });
+      this.routeToSearchResult(event.target.href);
       return false;
     }
 
@@ -50,13 +61,8 @@ export default class Types extends Component {
   }
 
   @action
-  routeToSearchResult(href, { resultType, result }) {
+  routeToSearchResult(href) {
     DiscourseURL.routeTo(href);
-    logSearchLinkClick({
-      searchLogId: this.args.searchLogId,
-      searchResultId: result.id,
-      searchResultType: resultType.type,
-    });
     this.args.closeSearchMenu();
   }
 }
