@@ -13,10 +13,12 @@ const DDefaultToast = <template>
     }}
     ...attributes
   >
-    <div
-      class="fk-d-default-toast__progress-bar"
-      {{didInsert @onRegisterProgressBar}}
-    ></div>
+    {{#if @data.progressBar}}
+      <div
+        class="fk-d-default-toast__progress-bar"
+        {{didInsert @onRegisterProgressBar}}
+      ></div>
+    {{/if}}
     {{#if @data.icon}}
       <div class="fk-d-default-toast__icon-container">
         {{icon @data.icon}}
