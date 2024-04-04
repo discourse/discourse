@@ -22,6 +22,7 @@ module("Unit | Utility | url", function (hooks) {
       DiscourseURL.isInternal("docs"),
       "non-prefixed relative URLs are internal"
     );
+    assert.true(DiscourseURL.isInternal("#foo"), "anchor URLs are internal");
     assert.true(
       DiscourseURL.isInternal("//eviltrout.com"),
       "a url on the same host is internal (protocol-less)"
@@ -75,6 +76,7 @@ module("Unit | Utility | url", function (hooks) {
       DiscourseURL.isInternal("docs"),
       "non-prefixed relative URLs are internal"
     );
+    assert.true(DiscourseURL.isInternal("#foo"), "anchor URLs are internal");
   });
 
   test("userPath", function (assert) {
