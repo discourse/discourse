@@ -383,6 +383,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-invisible",
           action: "toggleInvisible",
           icon: "far-eye-slash",
           label: "composer.toggle_unlisted",
@@ -393,6 +394,7 @@ export default class ComposerService extends Service {
       if (this.capabilities.touch) {
         options.push(
           this._setupPopupMenuOption({
+            name: "format-code",
             action: "applyFormatCode",
             icon: "code",
             label: "composer.code_title",
@@ -401,6 +403,7 @@ export default class ComposerService extends Service {
 
         options.push(
           this._setupPopupMenuOption({
+            name: "apply-unordered-list",
             action: "applyUnorderedList",
             icon: "list-ul",
             label: "composer.ulist_title",
@@ -409,6 +412,7 @@ export default class ComposerService extends Service {
 
         options.push(
           this._setupPopupMenuOption({
+            name: "apply-ordered-list",
             action: "applyOrderedList",
             icon: "list-ol",
             label: "composer.olist_title",
@@ -418,6 +422,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-whisper",
           action: "toggleWhisper",
           icon: "far-eye-slash",
           label: "composer.toggle_whisper",
@@ -427,6 +432,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-spreadsheet",
           action: "toggleSpreadsheet",
           icon: "table",
           label: "composer.insert_table",
@@ -652,13 +658,19 @@ export default class ComposerService extends Service {
   }
 
   @action
-  onPopupMenuAction(menuAction) {
-    if (typeof menuAction === "function") {
-      return menuAction(this.toolbarEvent);
+  onPopupMenuAction(menuItem) {
+    // menuItem is an object with keys name & action like so: { name: "toggle-invisible, action: "toggleInvisible" }
+    // `action` value can either be a string (to lookup action by) or a function to call
+    this.appEvents.trigger(
+      "composer:toolbar-popup-menu-button-clicked",
+      menuItem
+    );
+    if (typeof menuItem.action === "function") {
+      return menuItem.action(this.toolbarEvent);
     } else {
       return (
-        this.actions?.[menuAction]?.bind(this) || // Legacy-style contributions from themes/plugins
-        this[menuAction]
+        this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
+        this[menuItem.action]
       )();
     }
   }
@@ -1412,6 +1424,7 @@ export default class ComposerService extends Service {
       await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
+      this.appEvents.trigger("composer:open", { model: this.model });
     }
   }
 
