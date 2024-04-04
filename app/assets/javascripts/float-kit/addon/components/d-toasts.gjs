@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { registerDestructor } from "@ember/destroyable";
+import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
@@ -29,9 +30,6 @@ class AutoCloseToast extends Modifier {
     this.element = element;
     this.close = close;
     this.duration = duration;
-    this.progressBar = element.querySelector(
-      ".fk-d-default-toast__progress-bar"
-    );
     this.element.addEventListener("mouseenter", this.stopTimer, {
       passive: true,
     });
@@ -87,6 +85,11 @@ class AutoCloseToast extends Modifier {
     this.element.removeEventListener("mouseenter", this.stopTimer);
     this.element.removeEventListener("mouseleave", this.startTimer);
   }
+
+  @action
+  registerProgressBar(element) {
+    this.progressBar = element;
+  }
 }
 
 export default class DToasts extends Component {
@@ -109,6 +112,7 @@ export default class DToasts extends Component {
           <toast.options.component
             @data={{toast.options.data}}
             @close={{toast.close}}
+            @onRegisterProgressBar={{this.registerProgressBar}}
           />
         </output>
       {{/each}}
