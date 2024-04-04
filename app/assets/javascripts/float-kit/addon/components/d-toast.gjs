@@ -94,7 +94,6 @@ export default class DToasts extends Component {
 
   @action
   registerProgressBar(element) {
-    console.log(element);
     this.progressBar = element;
   }
 
