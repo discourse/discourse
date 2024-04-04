@@ -7,7 +7,6 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
-import { logSearchLinkClick } from "discourse/lib/search";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -600,24 +599,6 @@ export default createWidget("header", {
     this.state.hamburgerVisible = false;
     this.search.visible = false;
     this.toggleBodyScrolling(false);
-  },
-
-  linkClickedEvent(attrs) {
-    let searchContextEnabled = false;
-    if (attrs) {
-      searchContextEnabled = attrs.searchContextEnabled;
-
-      const { searchLogId, searchResultId, searchResultType } = attrs;
-      if (searchLogId && searchResultId && searchResultType) {
-        logSearchLinkClick({ searchLogId, searchResultId, searchResultType });
-      }
-    }
-
-    if (!searchContextEnabled) {
-      this.closeAll();
-    }
-
-    this.updateHighlight();
   },
 
   toggleSearchMenu() {
