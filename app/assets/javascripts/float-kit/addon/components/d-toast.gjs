@@ -55,7 +55,7 @@ class AutoCloseToast extends Modifier {
 
   @bind
   stopTimer() {
-    this.cancelProgressAnimation();
+    this.pauseProgressAnimation();
     cancel(this.transitionLaterHandler);
     cancel(this.closeLaterHandler);
   }
@@ -66,6 +66,11 @@ class AutoCloseToast extends Modifier {
       return;
     }
 
+    if (this.progressAnimation) {
+      this.progressAnimation.play();
+      return;
+    }
+
     this.progressAnimation = this.progressBar.animate(
       { transform: `scaleX(0)` },
       { duration: this.duration, fill: "forwards" }
@@ -73,12 +78,13 @@ class AutoCloseToast extends Modifier {
   }
 
   @bind
-  cancelProgressAnimation() {
+  pauseProgressAnimation() {
     if (!this.progressAnimation) {
       return;
     }
 
-    this.progressAnimation.cancel();
+    this.progressAnimation.pause();
+    this.duration = this.duration - this.progressAnimation.currentTime;
   }
 
   cleanup() {
