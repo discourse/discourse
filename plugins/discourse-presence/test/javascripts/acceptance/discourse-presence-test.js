@@ -83,7 +83,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     const menu = selectKit(".toolbar-popup-menu-options");
     await menu.expand();
-    await menu.selectRowByValueName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
