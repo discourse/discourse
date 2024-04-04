@@ -157,9 +157,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when a new message is created" do
-    before do
-      Fabricate.times(50, :chat_message, chat_channel: channel_1)
-    end
+    before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
     it "doesn’t append the message when not at bottom" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
