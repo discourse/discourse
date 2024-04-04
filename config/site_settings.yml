@@ -2349,7 +2349,7 @@ developer:
     allow_any: false
     refresh: true
   lazy_load_categories_groups:
-    default: ""
+    default: "0"
     type: group_list
     list_type: compact
   warn_critical_js_deprecations:
