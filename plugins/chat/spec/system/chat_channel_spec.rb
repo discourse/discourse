@@ -59,7 +59,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when first batch of messages doesnt fill page" do
-    before { 30.times { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) } }
+    before { Fabricate.times(30, :chat_message, user: current_user, chat_channel: channel_1) }
 
     it "autofills for more messages" do
       chat_page.prefers_full_page
@@ -76,7 +76,7 @@ RSpec.describe "Chat channel", type: :system do
 
   context "when sending a message" do
     context "with lots of messages" do
-      before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
+      before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -128,7 +128,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when clicking the arrow button" do
-    before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
+    before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -148,7 +148,7 @@ RSpec.describe "Chat channel", type: :system do
   context "when returning to a channel where last read is not last message" do
     it "jumps to the bottom of the channel" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
-      messages = 50.times.map { Fabricate(:chat_message, chat_channel: channel_1) }
+      messages = Fabricate.times(50, :chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
       expect(page).to have_css("[data-id='#{messages.first.id}']")
@@ -157,15 +157,14 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when a new message is created" do
-    fab!(:other_user) { Fabricate(:user) }
-
     before do
-      channel_1.add(other_user)
-      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
+      Fabricate.times(50, :chat_message, chat_channel: channel_1)
     end
 
     it "doesn’t append the message when not at bottom" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
+
+      expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
