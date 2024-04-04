@@ -30,6 +30,7 @@ class AutoCloseToast extends Modifier {
     this.element = element;
     this.close = close;
     this.duration = duration;
+    this.timeRemaining = duration;
     this.progressBar = progressBar;
     this.element.addEventListener("mouseenter", this.stopTimer, {
       passive: true,
@@ -50,7 +51,7 @@ class AutoCloseToast extends Modifier {
       this.closeLaterHandler = discourseLater(() => {
         this.close();
       }, CSS_TRANSITION_DELAY_MS);
-    }, this.duration);
+    }, this.timeRemaining);
   }
 
   @bind
@@ -84,7 +85,7 @@ class AutoCloseToast extends Modifier {
     }
 
     this.progressAnimation.pause();
-    this.duration = this.duration - this.progressAnimation.currentTime;
+    this.timeRemaining = this.duration - this.progressAnimation.currentTime;
   }
 
   cleanup() {
