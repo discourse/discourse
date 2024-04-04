@@ -63,7 +63,9 @@ class AutoCloseToast extends Modifier {
 
   @bind
   startProgressAnimation() {
-    if (!this.progressBar) return;
+    if (!this.progressBar) {
+      return;
+    }
 
     this.progressAnimation = this.progressBar.animate(
       { transform: `scaleX(0)` },
@@ -73,7 +75,10 @@ class AutoCloseToast extends Modifier {
 
   @bind
   cancelProgressAnimation() {
-    if (!this.progressAnimation) return;
+    if (!this.progressAnimation) {
+      return;
+    }
+
     this.progressAnimation.cancel();
   }
 
