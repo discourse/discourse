@@ -41,6 +41,7 @@ export default class UserTipContainer extends Component {
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
+      {{! template-lint-disable no-invalid-interactive }}
       <div class="user-tip__content" {{on "click" this.onClick}}>
         {{#if @data.contentHtml}}
           {{this.safeHtmlContent}}
