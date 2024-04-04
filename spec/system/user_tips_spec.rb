@@ -37,10 +37,16 @@ describe "Homepage", type: :system do
 
       expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Your first notification!")
 
-      # refresh the page
-      visit "/"
-      # Tip is marked as seen when it is displayed
-      expect(user.reload.user_option.seen_popups).to include(User.user_tips[:first_notification])
+      find(".d-header #current-user").click
+
+      # Clicking outside element dismisses the tip
+      expect(page).to have_no_css(
+        ".fk-d-tooltip .user-tip__title",
+        text: "Your first notification!",
+      )
+
+      page.refresh
+
       expect(page).to have_no_css(
         ".fk-d-tooltip .user-tip__title",
         text: "Your first notification!",
