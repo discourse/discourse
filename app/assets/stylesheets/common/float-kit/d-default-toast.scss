@@ -71,11 +71,13 @@
   }
 
   &__progress-bar {
+    width: 100%;
     height: 5px;
     top: 0;
     left: 0;
     position: absolute;
     background-color: var(--success);
+    transform-origin: 0 0;
   }
 
   .fk-d-default-toast:has(&__progress-bar) {
@@ -108,5 +110,7 @@
 
   &__message {
     display: flex;
+    margin-top: 0.5rem;
+    color: var(--primary-high);
   }
 }

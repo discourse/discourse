@@ -16,6 +16,8 @@ class AutoCloseToast extends Modifier {
   duration;
   transitionLaterHandler;
   closeLaterHandler;
+  progressBar;
+  progressAnimation;
 
   constructor(owner, args) {
     super(owner, args);
@@ -27,6 +29,9 @@ class AutoCloseToast extends Modifier {
     this.element = element;
     this.close = close;
     this.duration = duration;
+    this.progressBar = element.querySelector(
+      ".fk-d-default-toast__progress-bar"
+    );
     this.element.addEventListener("mouseenter", this.stopTimer, {
       passive: true,
     });
@@ -38,6 +43,8 @@ class AutoCloseToast extends Modifier {
 
   @bind
   startTimer() {
+    this.startProgressAnimation();
+
     this.transitionLaterHandler = discourseLater(() => {
       this.element.classList.add(TRANSITION_CLASS);
 
@@ -49,8 +56,25 @@ class AutoCloseToast extends Modifier {
 
   @bind
   stopTimer() {
+    this.cancelProgressAnimation();
     cancel(this.transitionLaterHandler);
     cancel(this.closeLaterHandler);
+  }
+
+  @bind
+  startProgressAnimation() {
+    if (!this.progressBar) return;
+
+    this.progressAnimation = this.progressBar.animate(
+      { transform: `scaleX(0)` },
+      { duration: this.duration, fill: "forwards" }
+    );
+  }
+
+  @bind
+  cancelProgressAnimation() {
+    if (!this.progressAnimation) return;
+    this.progressAnimation.cancel();
   }
 
   cleanup() {
@@ -79,7 +103,6 @@ export default class DToasts extends Component {
         >
           <toast.options.component
             @data={{toast.options.data}}
-            @duration={{toast.options.duration}}
             @close={{toast.close}}
           />
         </output>
