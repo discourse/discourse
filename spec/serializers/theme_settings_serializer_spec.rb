@@ -10,8 +10,6 @@ RSpec.describe ThemeSettingsSerializer do
     theme.settings
   end
 
-  before { SiteSetting.experimental_objects_type_for_theme_settings = true }
-
   describe "#objects_schema" do
     it "should include the attribute when theme setting is typed objects" do
       payload = ThemeSettingsSerializer.new(theme_setting[:objects_setting]).as_json

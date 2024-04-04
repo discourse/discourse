@@ -354,12 +354,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def schema
-    raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
   end
 
   def objects_setting_metadata
-    raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
-
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
 

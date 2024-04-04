@@ -22,7 +22,6 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
   end
 
   before do
-    SiteSetting.experimental_objects_type_for_theme_settings = true
     objects_setting
     sign_in(admin)
   end

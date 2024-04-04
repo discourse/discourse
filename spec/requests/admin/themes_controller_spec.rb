@@ -1064,8 +1064,6 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
-        SiteSetting.experimental_objects_type_for_theme_settings = true
-
         field =
           theme.set_field(
             target: :settings,
@@ -1091,8 +1089,6 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "should be able to update a theme setting of `objects` typed" do
-        SiteSetting.experimental_objects_type_for_theme_settings = true
-
         field =
           theme.set_field(
             target: :settings,
@@ -1351,8 +1347,6 @@ RSpec.describe Admin::ThemesController do
       theme.settings
     end
 
-    before { SiteSetting.experimental_objects_type_for_theme_settings = true }
-
     it "returns 404 if user is not an admin" do
       get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
 
@@ -1373,14 +1367,6 @@ RSpec.describe Admin::ThemesController do
 
     context "when user is an admin" do
       before { sign_in(admin) }
-
-      it "returns 403 if `experimental_objects_type_for_theme_settings` site setting is not enabled" do
-        SiteSetting.experimental_objects_type_for_theme_settings = false
-
-        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
-
-        expect(response.status).to eq(403)
-      end
 
       it "returns 400 if the `id` param is not the id of a valid theme" do
         get "/admin/themes/some_invalid_id/objects_setting_metadata/objects_with_categories.json"
