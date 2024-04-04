@@ -7,6 +7,7 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
+      # Use the `version_bump:*` rake tasks to update this value
       STRING = "3.3.0.beta2-dev"
 
       PARTS = STRING.split(".")
