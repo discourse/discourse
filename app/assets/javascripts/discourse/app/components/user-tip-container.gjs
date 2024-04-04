@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -29,10 +30,19 @@ export default class UserTipContainer extends Component {
     this.userTips.skipTips();
   }
 
+  @action
+  onClick(e) {
+    if (e.target.nodeName === "A") {
+      // Close tip if user clicks on a link in its description
+      this.args.close();
+    }
+  }
+
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
-      <div class="user-tip__content">
+      {{! template-lint-disable no-invalid-interactive }}
+      <div class="user-tip__content" {{on "click" this.onClick}}>
         {{#if @data.contentHtml}}
           {{this.safeHtmlContent}}
         {{else}}
