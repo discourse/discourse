@@ -294,24 +294,24 @@ const DiscourseURL = EmberObject.extend({
       url = "http:" + url;
     }
 
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      try {
-        const parsedUrl = new URL(url, this.origin);
-        if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
-          return false;
-        }
-      } catch {
-        return false;
-      }
-
-      return true;
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return (
+        url.startsWith(this.origin) ||
+        url.replace(/^http/, "https").startsWith(this.origin) ||
+        url.replace(/^https/, "http").startsWith(this.origin)
+      );
     }
 
-    return (
-      url.startsWith(this.origin) ||
-      url.replace(/^http/, "https").startsWith(this.origin) ||
-      url.replace(/^https/, "http").startsWith(this.origin)
-    );
+    try {
+      const parsedUrl = new URL(url, this.origin);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+
+    return true;
   },
 
   /**
