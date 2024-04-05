@@ -80,7 +80,10 @@ class AutoCloseToast extends Modifier {
 
   @bind
   pauseProgressAnimation() {
-    if (!this.progressAnimation) {
+    if (
+      !this.progressAnimation ||
+      this.progressAnimation.currentTime === this.duration
+    ) {
       return;
     }
 
@@ -96,7 +99,7 @@ class AutoCloseToast extends Modifier {
   }
 }
 
-export default class DToasts extends Component {
+export default class DToast extends Component {
   @tracked progressBar;
 
   @action
