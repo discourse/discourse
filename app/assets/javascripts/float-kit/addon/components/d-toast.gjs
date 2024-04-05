@@ -69,6 +69,7 @@ class AutoCloseToast extends Modifier {
 
     if (this.progressAnimation) {
       this.progressAnimation.play();
+      this.progressBar.style.opacity = 1;
       return;
     }
 
@@ -88,6 +89,7 @@ class AutoCloseToast extends Modifier {
     }
 
     this.progressAnimation.pause();
+    this.progressBar.style.opacity = 0.5;
     this.timeRemaining = this.duration - this.progressAnimation.currentTime;
   }
 
@@ -125,6 +127,7 @@ export default class DToast extends Component {
       <@toast.options.component
         @data={{@toast.options.data}}
         @close={{@toast.close}}
+        @autoClose={{@toast.options.autoClose}}
         @onRegisterProgressBar={{this.registerProgressBar}}
       />
     </output>

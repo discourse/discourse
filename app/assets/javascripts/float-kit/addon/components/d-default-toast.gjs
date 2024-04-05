@@ -13,7 +13,7 @@ const DDefaultToast = <template>
     }}
     ...attributes
   >
-    {{#if @data.progressBar}}
+    {{#if @autoClose}}
       <div
         class="fk-d-default-toast__progress-bar"
         {{didInsert @onRegisterProgressBar}}

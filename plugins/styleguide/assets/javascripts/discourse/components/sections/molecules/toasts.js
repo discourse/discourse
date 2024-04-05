@@ -15,7 +15,6 @@ export default class Toasts extends Component {
   @tracked class;
   @tracked action = true;
   @tracked icon;
-  @tracked progressBar = false;
 
   @action
   showCustomComponentToast() {
@@ -54,7 +53,6 @@ export default class Toasts extends Component {
         title: this.title,
         message: this.message,
         icon: this.icon,
-        progressBar: this.progressBar,
         actions,
       },
     });
@@ -68,10 +66,5 @@ export default class Toasts extends Component {
   @action
   toggleAutoClose() {
     this.autoClose = !this.autoClose;
-  }
-
-  @action
-  toggleProgressBar() {
-    this.progressBar = !this.progressBar;
   }
 }

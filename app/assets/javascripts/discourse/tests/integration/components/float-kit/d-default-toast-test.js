@@ -27,10 +27,10 @@ module(
 
     test("progress bar", async function (assert) {
       this.toast = new DToastInstance(this, { data: { progressBar: true } });
-      this.registerProgressBar = () => {};
+      this.noop = () => {};
 
       await render(
-        hbs`<DDefaultToast @data={{this.toast.options.data}} @onRegisterProgressBar={{ this.registerProgressBar }} />`
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @onRegisterProgressBar={{this.noop}} />`
       );
 
       assert.dom(".fk-d-default-toast__progress-bar").exists();
