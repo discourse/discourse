@@ -4,6 +4,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import Modifier from "ember-modifier";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -126,8 +127,10 @@ export default class DToast extends Component {
     >
       <@toast.options.component
         @data={{@toast.options.data}}
-        @close={{@toast.close}}
-        @autoClose={{@toast.options.autoClose}}
+        @showProgressBar={{and
+          @toast.options.showProgressBar
+          @toast.options.autoClose
+        }}
         @onRegisterProgressBar={{this.registerProgressBar}}
       />
     </output>
