@@ -2,20 +2,19 @@
   .d-modal__body {
     padding: 0;
   }
+}
 
-  .bookmark-menu {
-    &__title {
-      display: flex;
-      align-items: center;
-      gap: 0.75em;
-      background: var(--tertiary-low);
-      color: var(--tertiary);
-      padding: 0.75rem;
-      font-weight: bold;
-
-      .d-icon {
-        color: var(--tertiary);
-      }
+.bookmark-menu {
+  &__title {
+    // padding: 0.75rem;
+  }
+  &__row {
+    border-bottom: 1px solid var(--primary-low);
+    &:last-child {
+      border-bottom: none;
     }
+  }
+  &__row-title {
+    padding: 0.75rem;
   }
 }

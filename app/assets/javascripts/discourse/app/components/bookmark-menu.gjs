@@ -204,14 +204,13 @@ export default class BookmarkMenu extends Component {
       </:trigger>
       <:content>
         <div class="bookmark-menu__body">
-          {{#if this.site.mobileView}}
-            {{#unless this.showEditDeleteMenu}}
-              <div class="bookmark-menu__title">{{icon "check-circle"}}<span
-                >Bookmarked!</span>
 
-              </div>
-            {{/unless}}
-          {{/if}}
+          {{#unless this.showEditDeleteMenu}}
+            <div class="bookmark-menu__title">{{icon "check-circle"}}<span
+              >Bookmarked!</span>
+            </div>
+          {{/unless}}
+
           {{#if this.showEditDeleteMenu}}
             {{#if this.site.mobileView}}
               <div class="bookmark-menu__title">{{icon "bookmark"}}<span
@@ -224,11 +223,11 @@ export default class BookmarkMenu extends Component {
                   @icon="pencil-alt"
                   @label="edit"
                   @action={{this.onEditBookmark}}
-                  @class="bookmark-menu__row-btn btn-flat"
+                  @class="bookmark-menu__row-btn btn-transparent"
                 />
               </li>
               <li
-                class="bookmark-menu__row -remove"
+                class="bookmark-menu__row --remove"
                 role="button"
                 tabindex="0"
                 data-menu-option-id="delete"
@@ -237,7 +236,7 @@ export default class BookmarkMenu extends Component {
                   @icon="trash-alt"
                   @label="delete"
                   @action={{this.onRemoveBookmark}}
-                  @class="bookmark-menu__row-btn btn-flat"
+                  @class="bookmark-menu__row-btn btn-transparent"
                 />
               </li>
             </ul>
@@ -255,7 +254,7 @@ export default class BookmarkMenu extends Component {
                     @label={{option.label}}
                     @translatedTitle={{this.reminderShortcutTimeTitle option}}
                     @action={{fn this.onChooseReminderOption option}}
-                    @class="bookmark-menu__row-btn btn-flat"
+                    @class="bookmark-menu__row-btn btn-transparent"
                   />
                 </li>
               {{/each}}

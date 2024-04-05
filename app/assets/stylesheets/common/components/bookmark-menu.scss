@@ -1,82 +1,78 @@
-.bookmark-menu-content {
-  .bookmark-menu__body {
+.bookmark-menu {
+  &__body {
     background: var(--secondary);
-    list-style: none;
     display: flex;
     flex-direction: column;
-    color: var(--primary);
+    min-width: 200px;
+  }
+  &__actions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+    padding: 0.75rem;
+    font-weight: bold;
 
-    .bookmark-menu__actions {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+    .d-icon {
+      color: var(--tertiary);
     }
   }
 
-  .bookmark-menu {
-    &__text {
-      display: flex;
-      align-items: left;
+  &__row {
+    width: 100%;
+    display: flex;
+
+    &:hover,
+    &:focus {
+      background: var(--tertiary-very-low);
     }
 
-    &__row {
-      border-bottom: 1px solid var(--primary-low);
-      width: 100%;
-      display: flex;
-      align-items: left;
+    &.--remove {
+      color: var(--danger);
+      .d-button-label,
+      .d-icon {
+        color: var(--danger);
+      }
 
       &:hover,
       &:focus {
-        background: var(--tertiary-very-low);
-      }
-
-      &-title {
-        padding: 0.75rem;
-        border-bottom: 1px solid var(--primary-low);
-        font-weight: bold;
-      }
-
-      &-btn {
-        margin: 0;
-        padding: 0.75rem !important;
-        width: 100%;
-        text-align: left;
-        justify-content: left;
-        gap: 0.75em;
-
-        .d-icon {
-          color: inherit;
-          margin: 0;
-        }
-        &:hover,
-        &:focus {
-          background: var(--tertiary-very-low);
-        }
-      }
-
-      .d-button-label {
-        color: var(--primary);
-      }
-
-      &.-remove {
+        background: var(--danger-low);
         .d-button-label,
         .d-icon {
-          color: var(--danger);
-        }
-
-        &:hover,
-        &:focus {
-          background: var(--danger-low);
+          color: var(--primary);
         }
       }
+    }
+  }
 
-      &:last-child {
-        border-bottom: none;
-      }
+  &__row-title {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--primary-low);
+    font-weight: bold;
+  }
 
-      &.-no-reminder {
-        border-bottom: 2px solid var(--primary-low);
-      }
+  &__row-btn {
+    margin: 0;
+    padding: 0.75rem !important;
+    width: 100%;
+    text-align: left;
+    justify-content: left !important;
+    gap: 0.75em;
+    &:hover,
+    &:focus {
+      color: var(--primary) !important;
+      background: var(--tertiary-very-low);
+    }
+
+    .d-icon {
+      color: var(--primary);
+      margin: 0 !important;
     }
   }
 }
