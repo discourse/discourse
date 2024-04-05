@@ -100,13 +100,11 @@ describe "Topic bulk select", type: :system do
 
       # Fill in message
       topic_list_header.fill_in_close_note("My message")
-      sleep(10)
       topic_list_header.click_bulk_topics_confirm
 
       # Check that the topic now has the message
       visit("/t/#{topic.slug}/#{topic.id}")
       expect(topic_page).to have_content("My message")
-      sleep(10)
     end
 
     it "works with keyboard shortcuts" do
