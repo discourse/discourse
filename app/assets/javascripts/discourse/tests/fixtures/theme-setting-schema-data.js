@@ -179,10 +179,6 @@ export default function schemaAndData(version = 1) {
         boolean_field: {
           type: "boolean",
         },
-        enum_field: {
-          type: "enum",
-          choices: ["nice", "awesome", "cool"]
-        },
         category_field: {
           type: "categories",
         },
@@ -199,13 +195,11 @@ export default function schemaAndData(version = 1) {
         name: "lamb",
         integer_field: 92,
         boolean_field: true,
-        enum_field: "awesome"
       },
       {
         name: "cow",
         integer_field: 820,
         boolean_field: false,
-        enum_field: "cool"
       },
     ];
   } else {

@@ -2,6 +2,6 @@
 
 module Chat
   class ApiController < ::Chat::BaseController
-    include Chat::WithServiceHelper
+    include WithServiceHelper
   end
 end

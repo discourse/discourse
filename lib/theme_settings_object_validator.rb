@@ -169,22 +169,22 @@ class ThemeSettingsObjectValidator
       end
 
       if (min = validations&.dig(:min)) && value.length < min
-        add_error(property_name, :"#{type}_value_not_valid_min", min:)
+        add_error(property_name, :"#{type}_value_not_valid_min", count: min)
         return false
       end
 
       if (max = validations&.dig(:max)) && value.length > max
-        add_error(property_name, :"#{type}_value_not_valid_max", max:)
+        add_error(property_name, :"#{type}_value_not_valid_max", count: max)
         return false
       end
     when "string"
       if (min = validations&.dig(:min_length)) && value.length < min
-        add_error(property_name, :string_value_not_valid_min, min:)
+        add_error(property_name, :string_value_not_valid_min, count: min)
         return false
       end
 
       if (max = validations&.dig(:max_length)) && value.length > max
-        add_error(property_name, :string_value_not_valid_max, max:)
+        add_error(property_name, :string_value_not_valid_max, count: max)
         return false
       end
 

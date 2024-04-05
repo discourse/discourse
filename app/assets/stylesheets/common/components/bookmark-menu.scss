@@ -1,0 +1,91 @@
+.bookmark-menu-content {
+  .bookmark-menu__body {
+    background: var(--secondary);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    color: var(--primary);
+
+    .bookmark-menu__actions {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  .bookmark-menu {
+    &__text {
+      display: flex;
+      align-items: left;
+    }
+
+    &__row {
+      border-bottom: 1px solid var(--primary-low);
+      width: 100%;
+      display: flex;
+      align-items: left;
+
+      &:hover,
+      &:focus {
+        background: var(--tertiary-very-low);
+      }
+
+      &-title {
+        font-size: var(--font-down-1);
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--primary-low);
+      }
+
+      &-btn {
+        margin: 0;
+        padding: 0.75rem;
+        width: 100%;
+        text-align: left;
+        justify-content: left;
+
+        .d-icon {
+          color: var(--primary);
+        }
+
+        .d-button-label {
+          color: var(--primary);
+          font-size: var(--font-down-1);
+        }
+        &:hover,
+        &:focus {
+          background: var(--tertiary-very-low);
+        }
+      }
+
+      &.-edit {
+        .d-icon {
+          margin-right: 5px;
+        }
+      }
+
+      &.-remove {
+        .d-icon {
+          color: var(--danger);
+        }
+
+        &:hover,
+        &:focus {
+          background: var(--danger-low);
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.-no-reminder {
+        border-bottom: 2px solid var(--primary-low);
+      }
+    }
+  }
+
+  .bookmark-menu__row-title {
+    font-weight: 900;
+    padding: 0.75rem;
+  }
+}

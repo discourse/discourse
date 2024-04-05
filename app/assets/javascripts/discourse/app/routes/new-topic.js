@@ -10,9 +10,23 @@ export default class extends DiscourseRoute {
   @service currentUser;
   @service site;
 
-  beforeModel(transition) {
+  async beforeModel(transition) {
     if (this.currentUser) {
-      const category = this.parseCategoryFromTransition(transition);
+      let category;
+      if (this.site.lazy_load_categories) {
+        if (transition.to.queryParams.category_id) {
+          const categories = await Category.asyncFindByIds([
+            transition.to.queryParams.category_id,
+          ]);
+          category = categories[0];
+        } else if (transition.to.queryParams.category) {
+          category = await Category.asyncFindBySlugPath(
+            transition.to.queryParams.category
+          );
+        }
+      } else {
+        category = this.parseCategoryFromTransition(transition);
+      }
 
       if (category) {
         // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params

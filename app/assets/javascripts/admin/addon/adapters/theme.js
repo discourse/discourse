@@ -1,8 +1,8 @@
 import RestAdapter from "discourse/adapters/rest";
-import ThemeSettings from "admin/models/theme-settings";
 
 export default class Theme extends RestAdapter {
   jsonMode = true;
+
   basePath() {
     return "/admin/";
   }
@@ -22,13 +22,6 @@ export default class Theme extends RestAdapter {
       let mappedParents = theme.get("parent_themes") || [];
       mappedParents = mappedParents.map((t) => map[t.id]);
       theme.set("parentThemes", mappedParents);
-
-      if (theme.settings) {
-        theme.set(
-          "settings",
-          theme.settings.map((setting) => ThemeSettings.create(setting))
-        );
-      }
     });
 
     return results;

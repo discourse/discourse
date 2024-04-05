@@ -30,6 +30,7 @@ import {
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
@@ -1288,6 +1289,7 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.disableScopedCategory]
    @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
    @param {Number} [opts.prioritizedCategoryId]
+   @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipDraftCheck]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
@@ -1322,17 +1324,14 @@ export default class ComposerService extends Service {
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
-      const category = this.site.categories.findBy("id", opts.categoryId);
+      const category = Category.findById(opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
       }
     }
 
     if (opts.prioritizedCategoryId) {
-      const category = this.site.categories.findBy(
-        "id",
-        opts.prioritizedCategoryId
-      );
+      const category = Category.findById(opts.prioritizedCategoryId);
 
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
@@ -1440,6 +1439,7 @@ export default class ComposerService extends Service {
     body,
     category,
     tags,
+    formTemplate,
     preferDraft = false,
   } = {}) {
     if (preferDraft && this.currentUser.has_topic_draft) {
@@ -1448,6 +1448,7 @@ export default class ComposerService extends Service {
       return this.open({
         prioritizedCategoryId: category?.id,
         topicCategoryId: category?.id,
+        formTemplateId: formTemplate?.id,
         topicTitle: title,
         topicBody: body,
         topicTags: tags,
@@ -1532,6 +1533,15 @@ export default class ComposerService extends Service {
 
     if (opts.topicBody) {
       this.model.set("reply", opts.topicBody);
+    }
+
+    if (
+      opts.formTemplateId &&
+      this.model
+        .get("category.form_template_ids")
+        ?.includes(opts.formTemplateId)
+    ) {
+      this.model.set("formTemplateId", opts.formTemplateId);
     }
 
     if (opts.prependText && !this.model.reply?.includes(opts.prependText)) {

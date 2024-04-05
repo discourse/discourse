@@ -89,37 +89,33 @@ export default Controller.extend({
       if (this.validators.some((validator) => validator())) {
         return;
       }
-      const model = this.model;
-      const parentCategory = this.site.categories.findBy(
-        "id",
-        parseInt(model.parent_category_id, 10)
-      );
 
       this.set("saving", true);
-      const previousParentCategory = model.get("parentCategory");
-      model.set("parentCategory", parentCategory);
 
-      model
+      this.model
         .save()
         .then((result) => {
-          this.set("saving", false);
-          if (!model.id) {
-            model.setProperties({
+          if (!this.model.id) {
+            this.model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
               can_edit: result.category.can_edit,
               permission: PermissionType.FULL,
               notification_level: NotificationLevels.REGULAR,
             });
-            this.site.updateCategory(model);
-            this.router.transitionTo("editCategory", Category.slugFor(model));
+            this.site.updateCategory(this.model);
+            this.router.transitionTo(
+              "editCategory",
+              Category.slugFor(this.model)
+            );
           }
         })
         .catch((error) => {
           popupAjaxError(error);
+          this.model.set("parent_category_id", undefined);
+        })
+        .finally(() => {
           this.set("saving", false);
-          model.set("parent_category_id", undefined);
-          model.set("parentCategory", previousParentCategory);
         });
     },
 

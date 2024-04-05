@@ -89,6 +89,8 @@ module TurboTests
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
+      @reporter.start
+
       handle_messages
 
       @reporter.finish

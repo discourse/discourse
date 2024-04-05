@@ -139,43 +139,31 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "add_resource_preload_list" do
-    it "adds resources to the preload list when it's available" do
-      @asset_preload_links = []
+    it "adds resources to the preload list" do
       add_resource_preload_list("/assets/start-discourse.js", "script")
       add_resource_preload_list("/assets/discourse.css", "style")
 
-      expect(@asset_preload_links.size).to eq(2)
-    end
-
-    it "doesn't add resources to the preload list when it's not available" do
-      @asset_preload_links = nil
-      add_resource_preload_list("/assets/start-discourse.js", "script")
-      add_resource_preload_list("/assets/discourse.css", "style")
-
-      expect(@asset_preload_links).to eq(nil)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(2)
     end
 
     it "adds resources to the preload list when preload_script is called" do
-      @asset_preload_links = []
       helper.preload_script("start-discourse")
 
-      expect(@asset_preload_links.size).to eq(1)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      @asset_preload_links = []
       helper.discourse_stylesheet_link_tag(:desktop)
 
-      expect(@asset_preload_links.size).to eq(1)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      @asset_preload_links = []
       helper.discourse_stylesheet_link_tag(:desktop)
       helper.preload_script("start-discourse")
 
-      expect(@asset_preload_links[0]).to match(/as="style"/)
-      expect(@asset_preload_links[1]).to match(/as="script"/)
+      expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
+      expect(controller.instance_variable_get(:@asset_preload_links)[1]).to match(/as="script"/)
     end
   end
 

@@ -10,8 +10,6 @@ RSpec.describe ThemeSettingsManager::Objects do
     theme.settings
   end
 
-  before { SiteSetting.experimental_objects_type_for_theme_settings = true }
-
   it "can store a list of objects" do
     new_value = [
       {

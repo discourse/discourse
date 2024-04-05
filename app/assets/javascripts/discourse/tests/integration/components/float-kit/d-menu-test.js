@@ -9,12 +9,17 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
+import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);
 
   async function open() {
     await triggerEvent(".fk-d-menu__trigger", "click");
+  }
+
+  async function close() {
+    await triggerEvent(".fk-d-menu__trigger.-expanded", "click");
   }
 
   test("@label", async function (assert) {
@@ -36,6 +41,38 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu").hasText("content");
+  });
+
+  test("@onRegisterApi", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      hbs`<DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+    );
+
+    assert.ok(this.api instanceof DMenuInstance);
+  });
+
+  test("@onShow", async function (assert) {
+    this.test = false;
+    this.onShow = () => (this.test = true);
+
+    await render(hbs`<DMenu @inline={{true}} @onShow={{this.onShow}} />`);
+    await open();
+
+    assert.strictEqual(this.test, true);
+  });
+
+  test("@onClose", async function (assert) {
+    this.test = false;
+    this.onClose = () => (this.test = true);
+
+    await render(hbs`<DMenu @inline={{true}} @onClose={{this.onClose}} />`);
+    await open();
+    await close();
+
+    assert.strictEqual(this.test, true);
   });
 
   test("-expanded class", async function (assert) {

@@ -17,7 +17,7 @@ import JumpToPost from "discourse/components/modal/jump-to-post";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
@@ -1281,14 +1281,14 @@ export default Controller.extend(bufferedProperty("model"), {
     this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(bookmark),
-        afterSave: (savedData) => {
-          this._syncBookmarks(savedData);
+        afterSave: (bookmarkFormData) => {
+          this._syncBookmarks(bookmarkFormData.saveData);
           this.model.set("bookmarking", false);
           this.model.set("bookmarked", true);
           this.model.incrementProperty("bookmarksWereChanged");
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },

@@ -10,8 +10,6 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
     theme.settings
   end
 
-  before { SiteSetting.experimental_objects_type_for_theme_settings = true }
-
   describe "#property_descriptions" do
     let(:objects_setting_locale) do
       theme.set_field(

@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class AboutSerializer < ApplicationSerializer
+  class CategoryAboutSerializer < ApplicationSerializer
+    attributes :id, :name, :color, :slug, :parent_category_id
+  end
+
   class UserAboutSerializer < BasicUserSerializer
     attributes :title, :last_seen_at
   end
 
   class AboutCategoryModsSerializer < ApplicationSerializer
-    attributes :category_id
-
+    has_one :category, serializer: CategoryAboutSerializer, embed: :objects
     has_many :moderators, serializer: UserAboutSerializer, embed: :objects
   end
 
@@ -23,8 +26,7 @@ class AboutSerializer < ApplicationSerializer
              :https,
              :can_see_about_stats,
              :contact_url,
-             :contact_email,
-             :discourse_discover_enrolled
+             :contact_email
 
   def include_stats?
     can_see_about_stats
@@ -48,14 +50,6 @@ class AboutSerializer < ApplicationSerializer
 
   def contact_email
     SiteSetting.contact_email
-  end
-
-  def discourse_discover_enrolled
-    SiteSetting.include_in_discourse_discover?
-  end
-
-  def include_discourse_discover_enrolled?
-    SiteSetting.include_in_discourse_discover?
   end
 
   private
