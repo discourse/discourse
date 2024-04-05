@@ -16,6 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.91.1",
     "@highlightjs/cdn-assets": "^11.9.0",
     "discourse-hbr": "1.0.0",

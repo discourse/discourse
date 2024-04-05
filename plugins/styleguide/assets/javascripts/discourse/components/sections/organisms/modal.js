@@ -1,15 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 export default class extends Component {
+  @service styleguide;
+
   @tracked inline = true;
   @tracked hideHeader = false;
   @tracked dismissable = true;
   @tracked modalTagName = "div";
   @tracked title = I18n.t("styleguide.sections.modal.header");
-  @tracked body = this.args.dummy.shortLorem;
+  @tracked body = this.styleguide.faker.lorem.lines(5);
   @tracked subtitle = "";
   @tracked flash = "";
   @tracked flashType = "success";
