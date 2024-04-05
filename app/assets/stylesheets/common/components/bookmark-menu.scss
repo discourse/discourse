@@ -42,13 +42,11 @@
         width: 100%;
         text-align: left;
         justify-content: left;
+        gap: 0.75em;
 
         .d-icon {
-          color: var(--primary);
-        }
-
-        .d-button-label {
-          color: var(--primary);
+          color: inherit;
+          margin: 0;
         }
         &:hover,
         &:focus {
@@ -56,13 +54,12 @@
         }
       }
 
-      &.-edit {
-        .d-icon {
-          margin-right: 5px;
-        }
+      .d-button-label {
+        color: var(--primary);
       }
 
       &.-remove {
+        .d-button-label,
         .d-icon {
           color: var(--danger);
         }

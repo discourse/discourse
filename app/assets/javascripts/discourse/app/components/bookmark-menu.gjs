@@ -213,6 +213,11 @@ export default class BookmarkMenu extends Component {
             {{/unless}}
           {{/if}}
           {{#if this.showEditDeleteMenu}}
+            {{#if this.site.mobileView}}
+              <div class="bookmark-menu__title">{{icon "bookmark"}}<span
+                >Bookmark</span>
+              </div>
+            {{/if}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
                 <DButton
