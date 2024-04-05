@@ -818,7 +818,6 @@ hy:
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
-      enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
@@ -1045,6 +1044,8 @@ hy:
         instructions: "Օգտատիրոջ ինտերֆեյսի լեզուն: Այն կփոխվի, երբ Դուք թարմացնեք էջը:"
         default: "(լռելյայն)"
         any: "ցանկացած"
+      homepage:
+        default: "(լռելյայն)"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1752,7 +1753,6 @@ hy:
         clear_all: "Ջնջել Բոլորը"
         unlist_topics: "Թեմաները Ցանկից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
-        defer: "Հետաձգել"
         delete: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
@@ -1821,9 +1821,6 @@ hy:
       move_to_inbox:
         title: "Տեղափոխել Մուտքային արկղ"
         help: "Տեղափոխել հաղորդագրությունը ետ դեպի Մուտքային արկղ"
-      defer:
-        help: "նշել որպես չընթերցված "
-        title: "Հետաձգել"
       list: "Թեմաներ"
       new: "նոր թեմա"
       unread: "չկարդացած"
@@ -2669,7 +2666,6 @@ hy:
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
-        defer: "%{shortcut} Հետաձգել թեման"
         topic_admin_actions: "%{shortcut} Բացել թեմայի ադմինի գործողությունները "
       search_menu:
         title: "Որոնման արդյունքների Մենյու "
@@ -2875,7 +2871,7 @@ hy:
         upload: "Վերբեռնել"
         uploading: "Վերբեռնում"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
     table_builder:
@@ -2913,10 +2909,8 @@ hy:
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
-        please_upgrade: "Խնդրում ենք թարմացնել!"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
-        version_check_pending: "Կարծես թե Դուք վերջերս թարմացում եք կատարել: Հիանալի է!"
         installed_version: "Տեղադրված է "
         latest_version: "Վերջինը"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"

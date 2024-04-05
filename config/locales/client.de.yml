@@ -1158,7 +1158,7 @@ de:
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
-      enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
+      enable_defer: "Aktiviere Themen als ungelesen markieren"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -1561,6 +1561,8 @@ de:
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
         default: "(Standard)"
         any: "(keine Einschränkung)"
+      homepage:
+        default: "(Standard)"
       password_confirmation:
         title: "Wiederholung des Passworts"
       invite_code:
@@ -1889,7 +1891,7 @@ de:
       close: "schließen"
       dismiss_error: "Fehler ignorieren"
     close: "Schließen"
-    assets_changed_confirm: "Diese Website hat gerade ein Software-Upgrade erhalten. Jetzt die neueste Version abrufen?"
+    assets_changed_confirm: "Diese Website hat gerade ein Software-Update erhalten. Jetzt die neueste Version abrufen?"
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     home: "Startseite"
@@ -2684,7 +2686,6 @@ de:
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
-        defer: "Aufschieben"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
@@ -2793,10 +2794,9 @@ de:
         name: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         description: "Setzt das \"nach oben verschieben\"- Datum auf das vom zuletzt erstellten Beitrag zurück, was die Reihenfolge in der Themenliste beeinflusst"
       defer:
-        name: "Themen aufschieben"
         description: "Themen als ungelesen markieren"
       update_notifications:
-        name: "Update-Benachrichtigungen…"
+        name: "Update-Benachrichtigungen"
         description: "Ändere die Benachrichtigungsstufe auf Beobachten, Verfolgen, Normal oder Stumm"
     topic:
       filter_to:
@@ -2813,9 +2813,6 @@ de:
       move_to_inbox:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
-      defer:
-        help: "Als ungelesen markieren"
-        title: "Aufschieben"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -3856,6 +3853,8 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
+    custom_homepage:
+      admin_message: 'Eines deiner Themes hat den Modifikator "custom_homepage" aktiviert, aber es gibt nichts im [custom-homepage]-Connector aus. (Diese Meldung wird nur für Website-Administratoren angezeigt.)'
     browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
@@ -3968,7 +3967,6 @@ de:
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
-        defer: "%{shortcut} Thema ignorieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
         archive_private_message: "%{shortcut} Archivierung privater Nachricht umschalten"
       search_menu:
@@ -4361,12 +4359,12 @@ de:
         upload: "Hochladen"
         uploading: "Wird hochgeladen"
       errors:
-        valueMissing:
+        value_missing:
           default: "Bitte fülle dieses Feld aus."
-          select-one: "Bitte wähle ein Element aus der Liste aus."
-          select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
+          select_one: "Bitte wähle ein Element aus der Liste aus."
+          select_multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
           checkbox: "Bitte markiere dieses Kästchen, wenn du fortfahren möchtest."
-        typeMismatch:
+        type_mismatch:
           default: "Bitte gib einen gültigen Wert ein."
           color: "Bitte gib eine Farbe ein."
           date: "Bitte gib ein Datum ein."
@@ -4376,20 +4374,20 @@ de:
           tel: "Bitte gib eine gültige Telefonnummer ein."
           text: "Bitte gib einen Textwert ein."
           url: "Bitte gib eine gültige URL ein."
-        tooShort:
+        too_short:
           one: "Die Eingabe muss %{count} Zeichen oder länger sein."
           other: "Die Eingabe muss %{count} Zeichen oder länger sein."
-        tooLong:
+        too_long:
           one: "Die Eingabe muss weniger als %{count} Zeichen umfassen."
           other: "Die Eingabe muss weniger als %{count} Zeichen umfassen."
-        rangeOverflow:
+        range_overflow:
           one: "Die Eingabe muss kleiner als %{count} sein."
           other: "Die Eingabe muss kleiner als %{count} sein."
-        rangeUnderflow:
+        range_underflow:
           one: "Die Eingabe muss größer als %{count} sein."
           other: "Die Eingabe muss größer als %{count} sein."
-        patternMismatch: "Bitte beachte das erforderliche Format."
-        badInput: "Bitte stelle eine gültige Eingabe zur Verfügung."
+        pattern_mismatch: "Bitte beachte das erforderliche Format."
+        bad_input: "Bitte stelle eine gültige Eingabe zur Verfügung."
     table_builder:
       title: "Tabellenersteller"
       modal:
@@ -4455,6 +4453,8 @@ de:
       moderator: "Moderator"
       back_to_forum: "Zurück zum Forum"
       filter_reports: Berichte filtern
+      expand_all_sections: "Alle Abschnitte erweitern"
+      collapse_all_sections: "Alle Abschnitte einklappen"
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -4476,7 +4476,7 @@ de:
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
-        please_upgrade: "Bitte Upgrade durchführen!"
+        please_update: "Bitte Update durchführen!"
         no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
@@ -5270,6 +5270,14 @@ de:
             back_button: "Zurück zu %{name}"
             fields:
               required: "*erforderlich"
+              groups:
+                at_least:
+                  one: "mindestens %{count} Gruppe ist erforderlich"
+                  other: "mindestens %{count} Gruppen sind erforderlich"
+              categories:
+                at_least:
+                  one: "mindestens %{count} Kategorie ist erforderlich"
+                  other: "mindestens %{count} Kategorien sind erforderlich"
               tags:
                 at_least:
                   one: "mindestens %{count} Schlagwort ist erforderlich"

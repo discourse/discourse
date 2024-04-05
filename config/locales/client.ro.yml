@@ -1114,7 +1114,7 @@ ro:
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
-      enable_defer: "Activează afișarea subiectelor necitite"
+      enable_defer: "Activează marcarea subiectelor ca necitite"
       experimental_sidebar:
         options: "Opțiuni"
         navigation_section: "Navigare"
@@ -1357,6 +1357,8 @@ ro:
         instructions: "Limba pentru interfața forumului. Schimbarea se va produce odată ce reîmprospătați pagina."
         default: "(implicit)"
         any: "oricare"
+      homepage:
+        default: "(implicit)"
       password_confirmation:
         title: "Confirmă parola"
       invite_code:
@@ -2057,7 +2059,6 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
-        defer: "Amânare"
         delete: "Șterge subiecte"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
@@ -2123,7 +2124,7 @@ ro:
       defer:
         description: "Marchează subiecte ca necitite"
       update_notifications:
-        name: "Actualizează notificări…"
+        name: "Actualizează notificări"
     topic:
       filter_to:
         one: "O postare în subiect"
@@ -2139,8 +2140,6 @@ ro:
       move_to_inbox:
         title: "Mută în Primite"
         help: "Mută mesajul în Primite"
-      defer:
-        title: "Amânare"
       list: "Subiecte"
       new: "subiect nou"
       unread: "necitit"
@@ -3169,7 +3168,7 @@ ro:
         upload: "Încărcare"
         uploading: "Se încarcă"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Introduceţi o valoare validă."
     table_builder:
       title: "Constructor de tabel"
@@ -3235,6 +3234,8 @@ ro:
       moderator: "Moderator"
       back_to_forum: "Înapoi la forum"
       filter_reports: Filtrează rapoarte
+      expand_all_sections: "Extinde toate secțiunile"
+      collapse_all_sections: "Restrânge toate secțiunile"
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3252,10 +3253,8 @@ ro:
         up_to_date: "Ești la zi!"
         critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
-        please_upgrade: "Te rugăm actualizează!"
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
-        version_check_pending: "Se pare că ai actualizat recent. Fantastic!"
         installed_version: "Instalată"
         latest_version: "Ultima"
         new_features:
@@ -3665,6 +3664,16 @@ ro:
             back_button: "Înapoi la %{name}"
             fields:
               required: "*obligatoriu"
+              groups:
+                at_least:
+                  one: "cel puțin %{count} grup este necesar"
+                  few: "cel puțin %{count} grupuri sunt necesare"
+                  other: "cel puțin %{count} de grupuri sunt necesare"
+              categories:
+                at_least:
+                  one: "este necesară cel puțin %{count} categorie"
+                  few: "sunt necesare cel puțin %{count} categorii"
+                  other: "sunt necesare cel puțin %{count} de categorii"
               tags:
                 at_least:
                   one: "cel puțin %{count} etichetă este necesară"

@@ -23,8 +23,7 @@ class AboutSerializer < ApplicationSerializer
              :https,
              :can_see_about_stats,
              :contact_url,
-             :contact_email,
-             :discourse_discover_enrolled
+             :contact_email
 
   def include_stats?
     can_see_about_stats
@@ -48,14 +47,6 @@ class AboutSerializer < ApplicationSerializer
 
   def contact_email
     SiteSetting.contact_email
-  end
-
-  def discourse_discover_enrolled
-    SiteSetting.include_in_discourse_discover?
-  end
-
-  def include_discourse_discover_enrolled?
-    SiteSetting.include_in_discourse_discover?
   end
 
   private

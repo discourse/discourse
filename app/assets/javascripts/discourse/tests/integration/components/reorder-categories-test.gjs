@@ -136,13 +136,11 @@ module("Integration | Component | ReorderCategories", function (hooks) {
       position: 1,
       name: "foo-child",
       parent_category_id: 101,
-      subcategories: [fooChildChild],
     });
     const foo = store.createRecord("category", {
       id: 101,
       position: 0,
       name: "foo",
-      subcategories: [fooChild],
     });
     const bar = store.createRecord("category", {
       id: 102,

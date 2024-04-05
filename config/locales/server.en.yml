@@ -134,8 +134,12 @@ en:
       number_value_not_valid_min: "Value must be larger than or equal to %{min}."
       number_value_not_valid_max: "Value must be smaller than or equal to %{max}."
       string_value_not_valid_min_max: "Value must be between %{min} and %{max} characters long."
-      string_value_not_valid_min: "Value must be at least %{min} characters long."
-      string_value_not_valid_max: "Value must be at most %{max} characters long."
+      string_value_not_valid_min:
+        one: "Value must be at least %{count} character long."
+        other: "Value must be at least %{count} characters long."
+      string_value_not_valid_max:
+        one: "Value must be at most %{count} character long."
+        other: "Value must be at most %{count} characters long."
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -159,10 +163,18 @@ en:
 
         humanize_not_valid_categories_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid category ids."
         not_valid_categories_value: "must be an array of valid category ids"
-        humanize_categories_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} category ids."
-        categories_value_not_valid_min: "must have at least %{min} category ids"
-        humanize_categories_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} category ids."
-        categories_value_not_valid_max: "must have at most %{max} category ids"
+        humanize_categories_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} category id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} category ids."
+        categories_value_not_valid_min:
+          one: "must have at least %{count} category id"
+          other: "must have at least %{count} category ids"
+        humanize_categories_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} category id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} category ids."
+        categories_value_not_valid_max:
+          one: "must have at most %{count} category id"
+          other: "must have at most %{count} category ids"
 
         humanize_not_valid_topic_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid topic id."
         not_valid_topic_value: "must be a valid topic id"
@@ -172,25 +184,49 @@ en:
 
         humanize_not_valid_groups_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid group ids."
         not_valid_groups_value: "must be an array of valid group ids"
-        humanize_groups_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} group ids."
-        groups_value_not_valid_min: "must have at least %{min} group ids"
-        humanize_groups_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} group ids."
-        groups_value_not_valid_max: "must have at most %{max} group ids"
+        humanize_groups_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} group id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} group ids."
+        groups_value_not_valid_min:
+          one: "must have at least %{count} group id"
+          other: "must have at least %{count} group ids"
+        humanize_groups_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} group id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} group ids."
+        groups_value_not_valid_max:
+          one: "must have at most %{count} group id"
+          other: "must have at most %{count} group ids"
 
         humanize_not_valid_tags_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid tag names."
         not_valid_tags_value: "must be an array of valid tag names"
-        humanize_tags_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} tag names."
-        tags_value_not_valid_min: "must have at least %{min} tag names"
-        humanize_tags_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} tag names."
-        tags_value_not_valid_max: "must have at most %{max} tag names"
+        humanize_tags_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} tag name."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} tag names."
+        tags_value_not_valid_min:
+          one: "must have at least %{count} tag name"
+          other: "must have at least %{count} tag names"
+        humanize_tags_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} tag name."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} tag names."
+        tags_value_not_valid_max:
+          one: "must have at most %{count} tag name"
+          other: "must have at most %{count} tag names"
 
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
 
-        humanize_string_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{min} characters long."
-        string_value_not_valid_min: "must be at least %{min} characters long"
-        humanize_string_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{max} characters long."
-        string_value_not_valid_max: "must be at most %{max} characters long"
+        humanize_string_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} characters long."
+        string_value_not_valid_min:
+          one: "must be at least %{count} character long"
+          other: "must be at least %{count} characters long"
+        humanize_string_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{count} character long."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{count} characters long."
+        string_value_not_valid_max:
+          one: "must be at most %{count} character long"
+          other: "must be at most %{count} characters long"
 
         humanize_number_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be larger than or equal to %{min}."
         number_value_not_valid_min: "must be larger than or equal to %{min}"
@@ -240,7 +276,9 @@ en:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
+      too_long_validation:
+        one: "is limited to %{count} character; you entered %{length}."
+        other: "is limited to %{count} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
       accepted: must be accepted
@@ -2396,7 +2434,7 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable, can take up to 24 hours)"
+    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2579,8 +2617,8 @@ en:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
     experimental_glimmer_header_groups: "EXPERIMENTAL: Render the site header as glimmer components."
-
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -2604,8 +2642,12 @@ en:
       must_include_latest: "Top menu must include the 'latest' tab."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-      invalid_string_min: "Must be at least %{min} characters."
-      invalid_string_max: "Must be no more than %{max} characters."
+      invalid_string_min:
+        one: "Must be at least %{count} character."
+        other: "Must be at least %{count} characters."
+      invalid_string_max:
+        one: "Must be no more than %{count} character."
+        other: "Must be no more than %{count} characters."
       invalid_json: "Invalid JSON."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
@@ -2673,6 +2715,14 @@ en:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+        - "deactivated"
+        - "inactive"
+        - "unactivated"
+      purge_unactivated_users_grace_period_days:
+        - "deactivated"
+        - "inactive"
+        - "unactivated"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2889,8 +2939,12 @@ en:
     new_user_typed_too_fast: "New user typed too fast"
     content_matches_auto_silence_regex: "Content matches auto silence regex"
     username:
-      short: "must be at least %{min} characters"
-      long: "must be no more than %{max} characters"
+      short:
+        one: "must be at least %{count} character"
+        other: "must be at least %{count} characters"
+      long:
+        one: "must be no more than %{count} character"
+        other: "must be no more than %{count} characters"
       too_long: "is too long"
       characters: "must only include numbers, letters, dashes, dots, and underscores"
       unique: "must be unique"
@@ -3066,7 +3120,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 
@@ -3081,7 +3135,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 

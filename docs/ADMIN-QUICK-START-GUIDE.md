@@ -131,7 +131,7 @@ If you'd like to enable *replying* to topics via email, [see this howto](https:/
 
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
 
-- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click upgrade process, visit [/admin/upgrade](/admin/upgrade).
+- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click process, visit [/admin/update](/admin/update).
 
 ### Optional things you might eventually want to set up
 [] [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)

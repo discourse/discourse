@@ -1076,7 +1076,6 @@ sl:
       allow_private_messages: "Dovoli drugim uporabnikom da mi pošiljajo zasebna sporočila."
       external_links_in_new_tab: "Odpri vse zunanje povezave v novem zavihku"
       enable_quoting: "Omogoči odgovarjanje s citiranjem za poudarjen tekst"
-      enable_defer: "Omogoči preloži za označiti teme kot neprebrane"
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigacija"
@@ -1349,6 +1348,8 @@ sl:
         instructions: "Jezik uporabniškega vmesnika. Zamenjal se bo, ko boste osvežili stran."
         default: "(privzeto)"
         any: "katerokoli"
+      homepage:
+        default: "(privzeto)"
       password_confirmation:
         title: "Geslo - ponovno"
       invite_code:
@@ -2249,7 +2250,6 @@ sl:
         clear_all: "Počisti vse"
         unlist_topics: "Izloči temo iz seznamov"
         relist_topics: "Postavi temo nazaj na seznam"
-        defer: "Preloži"
         delete: "Izbriši teme"
         dismiss: "Opusti"
         dismiss_read: "Opusti vse neprebrane"
@@ -2331,9 +2331,6 @@ sl:
       move_to_inbox:
         title: "Prestavi v Prejeto"
         help: "Prestavi sporočilo nazaj v Prejeto"
-      defer:
-        help: "Označi kot neprebrano"
-        title: "Preloži"
       list: "Teme"
       new: "nova tema"
       unread: "neprebrana"
@@ -3332,7 +3329,6 @@ sl:
         mark_tracking: "%{shortcut} Sledi temi"
         mark_watching: "%{shortcut} Spremljaj temo"
         print: "%{shortcut} Natisni temo"
-        defer: "%{shortcut} Preloži temo"
         topic_admin_actions: "%{shortcut} Odpri skrbniška dejanja teme"
       search_menu:
         title: "Iskalni meni"
@@ -3593,19 +3589,19 @@ sl:
         upload: "Prenesi"
         uploading: "Nalagam"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Vnesite veljavno vsebino"
-        tooShort:
+        too_short:
           one: "Vnos mora vsebovati vsaj %{count} znakov."
           two: "Vnos mora vsebovati vsaj %{count} znakov."
           few: "Vnos mora vsebovati vsaj %{count} znakov."
           other: "Vnos mora vsebovati vsaj %{count} znakov."
-        rangeOverflow:
+        range_overflow:
           one: "Vnos mora biti manjši od %{count}."
           two: "Vnos mora biti manjši od %{count}."
           few: "Vnos mora biti manjši od %{count}."
           other: "Vnos mora biti manjši od %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Vnos mora biti večji od %{count}."
           two: "Vnos mora biti večji od %{count}."
           few: "Vnos mora biti večji od %{count}."
@@ -3663,10 +3659,8 @@ sl:
         up_to_date: "Imate zadnjo verzijo!"
         critical_available: "Nujna posodobitev je na voljo."
         updates_available: "Posodobitve so na voljo."
-        please_upgrade: "Posodobite sistem!"
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."
-        version_check_pending: "Izgleda ste nedavno posodobili sistem. Super!"
         installed_version: "Nameščeno"
         latest_version: "Najnovejše"
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"

@@ -585,6 +585,8 @@ be:
         title: "Interface language"
         default: "(Default)"
         any: "любой"
+      homepage:
+        default: "(Default)"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
@@ -1428,7 +1430,7 @@ be:
         upload: "Запампаваць"
         uploading: "загрузка"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Калі ласка, увядзіце карэктнае значэнне."
           email: "Калі ласка, увядзіце верны email."
     table_builder:
@@ -1457,10 +1459,8 @@ be:
         up_to_date: "У вас апошняя версія!"
         critical_available: "Даступнае крытычнае абнаўленне."
         updates_available: "Даступных абнаўленняў."
-        please_upgrade: "Калі ласка, абновіце!"
         no_check_performed: "Не выканана праверку на наяўнасць абнаўленняў. Праверце, працуе sidekiq."
         stale_data: "У апошні час не ажыццяўлялася праверак на наяўнасць абнаўленняў. Праверце, працуе sidekiq."
-        version_check_pending: "Здаецца, Вы нядаўна здзейснілі абнаўлення. Выдатна!"
         installed_version: "устаноўленая"
         latest_version: "апошняя"
         new_features:

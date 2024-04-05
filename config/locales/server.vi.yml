@@ -1024,7 +1024,6 @@ vi:
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
     summary_max_results: "Các bài đăng tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
     enable_personal_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Cho phép người dùng cấp độ tin cậy 1 (có thể định cấu hình thông qua độ tin cậy tối thiểu để gửi tin nhắn) tạo tin nhắn và trả lời tin nhắn. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
-    personal_message_enabled_groups: "Cho phép người dùng trong các nhóm này tạo tin nhắn và trả lời tin nhắn. Nhóm cấp độ tin cậy bao gồm tất cả các cấp độ tin cậy trên con số đó, ví dụ: việc chọn trust_level_1 cũng cho phép người dùng trust_level_2, 3, 4 gửi PM. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
     enable_system_message_replies: "Cho phép người dùng trả lời tin nhắn hệ thống, ngay cả khi tin nhắn cá nhân bị tắt"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"

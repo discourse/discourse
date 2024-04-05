@@ -1070,7 +1070,6 @@ da:
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
-      enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
       experimental_sidebar:
         options: "Indstillinger"
         navigation_section: "Navigation"
@@ -1354,6 +1353,8 @@ da:
         instructions: "Brugergrænseflade sprog. Det skifter når du genindlæser siden."
         default: "(standard)"
         any: "alle"
+      homepage:
+        default: "(standard)"
       password_confirmation:
         title: "Gentag adgangskode"
       invite_code:
@@ -1643,7 +1644,6 @@ da:
       close: "luk"
       dismiss_error: "Skjul fejl"
     close: "Luk"
-    assets_changed_confirm: "Dette websted har lige modtaget en softwareopgradering. Indlæs den nyeste version nu?"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     home: "Hjem"
@@ -2296,7 +2296,6 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
-        defer: "Udsæt"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2381,9 +2380,6 @@ da:
       move_to_inbox:
         title: "Flyt til Indbakke"
         help: "Flyt beskeder tilbage til Indbakke"
-      defer:
-        help: "Markér som ulæst"
-        title: "Udsæt"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -3400,7 +3396,6 @@ da:
         mark_tracking: "%{shortcut} Følg emne"
         mark_watching: "%{shortcut} Hold øje med emne"
         print: "%{shortcut} Print emne"
-        defer: "%{shortcut} Udsæt emne"
         topic_admin_actions: "%{shortcut} Åbn emneadministratorhandlinger"
       search_menu:
         title: "Søg Menuen"
@@ -3704,7 +3699,7 @@ da:
         upload: "Overfør"
         uploading: "Overfører billede"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Indtast venligst en gyldig værdi."
           email: "Indtast venligst en gyldig email adresse."
     table_builder:
@@ -3743,10 +3738,8 @@ da:
         up_to_date: "Du kører den seneste version af Discourse."
         critical_available: "En kritisk opdatering er tilgængelig."
         updates_available: "Opdatering er tilgængelige."
-        please_upgrade: "Opgradér venligst!"
         no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
         stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
-        version_check_pending: "Det ser ud til, at du har opgraderet for nyligt. Fantastisk!"
         installed_version: "Installeret"
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"

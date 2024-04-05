@@ -111,6 +111,7 @@ end
 #  csp_extensions           :string           is an Array
 #  svg_icons                :string           is an Array
 #  topic_thumbnail_sizes    :string           is an Array
+#  custom_homepage          :boolean
 #
 # Indexes
 #

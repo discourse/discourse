@@ -260,7 +260,7 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    I18n.t("site_settings.keywords.#{setting}", default: "")
+    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
   end
 
   def placeholder(setting)

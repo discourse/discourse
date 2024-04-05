@@ -42,9 +42,13 @@ class SiteController < ApplicationController
       results[:mobile_logo_url] = UrlHelper.absolute(mobile_logo_url)
     end
 
-    results[:discourse_discover_enrolled] = true if SiteSetting.include_in_discourse_discover?
-
-    DiscourseHub.stats_fetched_at = Time.zone.now if request.user_agent == "Discourse Hub"
+    if guardian.is_discourse_hub_request?
+      DiscourseHub.stats_fetched_at = Time.zone.now
+      discover_data = About.discourse_discover
+      discover_data.each_key do |key|
+        results["discourse_discover_#{key}".to_sym] = discover_data[key]
+      end
+    end
 
     # this info is always available cause it can be scraped from a 404 page
     render json: results

@@ -1104,7 +1104,6 @@ bg:
       allow_private_messages: "Позволете на други потребители да ми изпращат лични съобщения"
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
       enable_quoting: "Включи отговор с цитат при маркиран текст."
-      enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
       experimental_sidebar:
         enable: "Активиране на страничната лента"
         options: "Опции"
@@ -1477,6 +1476,8 @@ bg:
         instructions: "Езикът на потребителския интерфейс, ще бъде променен, след като презаредите страницата."
         default: "(по подразбиране)"
         any: "всеки"
+      homepage:
+        default: "(по подразбиране)"
       password_confirmation:
         title: "Паролата отново"
       invite_code:
@@ -1788,7 +1789,6 @@ bg:
       close: "затвори"
       dismiss_error: "Отхвърли грешката"
     close: "Затвори"
-    assets_changed_confirm: "Този сайт току-що получи надстройка на софтуера. Вземете най-новата версия сега?"
     logout: "Вие бяхте отписан."
     refresh: "Опресни"
     home: "Начало"
@@ -2397,7 +2397,6 @@ bg:
         select_all: "Селектирай всички"
         clear_all: "Изчисти всички"
         unlist_topics: "Непоказани теми"
-        defer: "Отложи "
         delete: "Изтрий темите"
         dismiss: "Отмени"
         dismiss_read: "Отхвърли всички непрочетени"
@@ -2464,8 +2463,6 @@ bg:
       move_to_inbox:
         title: "Премести във входящи"
         help: "Премести съобщението обратно във входящи"
-      defer:
-        title: "Отложи "
       list: "Теми"
       new: "нова тема"
       unread: "непрочетено"
@@ -3425,7 +3422,7 @@ bg:
         upload: "Качи"
         uploading: "Качване "
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
     table_builder:
@@ -3457,10 +3454,8 @@ bg:
         up_to_date: "Вие сте с последна версия!"
         critical_available: "Налична е важна актуализация."
         updates_available: "Налична е актуализация."
-        please_upgrade: "Моля, обновете!"
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
-        version_check_pending: "Изглежда, че скоро сте обновили версията. Това е чудесно!"
         installed_version: "Инсталирани"
         latest_version: "Последни"
         new_features:

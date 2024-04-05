@@ -17,7 +17,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import loadScript from "discourse/lib/load-script";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
 import {
@@ -244,7 +243,7 @@ export default Component.extend(TextareaTextManipulation, {
         return this._selectedFormTemplateId;
       }
 
-      return this.formTemplateIds?.[0];
+      return this.formTemplateId || this.formTemplateIds?.[0];
     },
 
     set(key, value) {
@@ -413,92 +412,95 @@ export default Component.extend(TextareaTextManipulation, {
     return toolbar;
   },
 
-  cachedCookAsync(text) {
-    if (this._cachedCookFunction) {
-      return Promise.resolve(this._cachedCookFunction(text));
-    }
-
-    const markdownOptions = this.markdownOptions || {};
-    return generateCookFunction(markdownOptions).then((cook) => {
-      this._cachedCookFunction = cook;
-      return cook(text);
-    });
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
   },
 
-  _updatePreview() {
-    if (this._state !== "inDOM" || !this.processPreview) {
+  async _updatePreview() {
+    if (
+      this._state !== "inDOM" ||
+      !this.processPreview ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
       return;
     }
 
-    const value = this.value;
+    const cooked = await this.cachedCookAsync(this.value, this.markdownOptions);
 
-    this.cachedCookAsync(value).then((cooked) => {
-      if (this.isDestroyed) {
+    if (this.preview === cooked || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.set("preview", cooked);
+
+    if (this.siteSettings.enable_diffhtml_preview) {
+      const previewElement = this.element.querySelector(".d-editor-preview");
+      const cookedElement = previewElement.cloneNode(false);
+      cookedElement.innerHTML = cooked;
+
+      // Same order of operation as in the "previewUpdated" method in "composer-editor.js"
+      linkSeenMentions(cookedElement, this.siteSettings);
+
+      linkSeenHashtagsInContext(
+        this.site.hashtag_configurations["topic-composer"],
+        cookedElement
+      );
+
+      loadOneboxes(
+        cookedElement,
+        ajax,
+        this.topicId,
+        this.categoryId,
+        this.siteSettings.max_oneboxes_per_post,
+        false,
+        true
+      );
+
+      resolveCachedShortUrls(this.siteSettings, cookedElement);
+
+      (await import("morphlex")).morph(
+        previewElement,
+        cookedElement,
+        this.morphingOptions
+      );
+    }
+
+    schedule("afterRender", () => {
+      if (
+        this._state !== "inDOM" ||
+        !this.element ||
+        this.isDestroying ||
+        this.isDestroyed
+      ) {
         return;
       }
 
-      if (this.preview === cooked) {
-        return;
+      const previewElement = this.element.querySelector(".d-editor-preview");
+
+      if (previewElement && this.previewUpdated) {
+        this.previewUpdated(previewElement);
       }
-
-      this.set("preview", cooked);
-
-      let previewPromise = Promise.resolve();
-
-      if (this.siteSettings.enable_diffhtml_preview) {
-        const cookedElement = document.createElement("div");
-        cookedElement.innerHTML = cooked;
-        linkSeenHashtagsInContext(
-          this.site.hashtag_configurations["topic-composer"],
-          cookedElement
-        );
-        linkSeenMentions(cookedElement, this.siteSettings);
-        resolveCachedShortUrls(this.siteSettings, cookedElement);
-        loadOneboxes(
-          cookedElement,
-          ajax,
-          null,
-          null,
-          this.siteSettings.max_oneboxes_per_post,
-          false,
-          true
-        );
-
-        previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
-          const previewElement =
-            this.element.querySelector(".d-editor-preview");
-          window.diff.innerHTML(previewElement, cookedElement.innerHTML);
-        });
-      }
-
-      previewPromise.then(() => {
-        schedule("afterRender", () => {
-          if (this._state !== "inDOM" || !this.element) {
-            return;
-          }
-
-          const preview = this.element.querySelector(".d-editor-preview");
-          if (!preview) {
-            return;
-          }
-
-          if (this.previewUpdated) {
-            this.previewUpdated(preview);
-          }
-        });
-      });
     });
   },
 
+  morphingOptions: {
+    beforeAttributeUpdated: (element, attributeName) => {
+      // Don't morph the open attribute of <details> elements
+      return !(element.tagName === "DETAILS" && attributeName === "open");
+    },
+  },
+
   @observes("ready", "value", "processPreview")
-  _watchForChanges() {
+  async _watchForChanges() {
     if (!this.ready) {
       return;
     }
 
     // Debouncing in test mode is complicated
     if (isTesting()) {
-      this._updatePreview();
+      await this._updatePreview();
     } else {
       discourseDebounce(this, this._updatePreview, 30);
     }

@@ -1098,7 +1098,6 @@ hu:
       allow_private_messages: "Engedélyezés a többi felhasználónak, hogy privát üzenetet küldjenek Önnek"
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
       enable_quoting: "A kijelölt szöveg idézése a válaszban"
-      enable_defer: "A témák olvasatlannak jelölésének engedélyezése"
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
@@ -1416,6 +1415,8 @@ hu:
         instructions: "A felhasználói felület nyelve. A lap frissítése után fog módosulni."
         default: "(alapértelmezett)"
         any: "bármely"
+      homepage:
+        default: "(alapértelmezett)"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -1718,7 +1719,6 @@ hu:
       close: "bezárás"
       dismiss_error: "Hiba elvetése"
     close: "Bezárás"
-    assets_changed_confirm: "Ez az oldal most kapott egy szoftverfrissítést. Beszerzi most a legújabb verziót?"
     logout: "Kijelentkezett."
     refresh: "Frissítés"
     home: "Kezdőlap"
@@ -2437,7 +2437,6 @@ hu:
         unlist_topics: "Témák listázásnak megszüntetése"
         relist_topics: "Újralistázott témák"
         reset_bump_dates: "Előrehozási dátumok alaphelyzetbe állítása"
-        defer: "Elhalasztás"
         delete: "Témák törlése"
         dismiss: "Elvetés"
         dismiss_read: "Olvasatlan üzenetek elvetése"
@@ -2530,9 +2529,6 @@ hu:
       move_to_inbox:
         title: "Áthelyezés a bejövő üzenetek közé"
         help: "Üzenet áthelyezése a Beérkezett üzenetek közé"
-      defer:
-        help: "Megjelölés olvasatlanként"
-        title: "Elhalasztás"
       list: "Témák"
       new: "új téma"
       unread: "olvasatlan"
@@ -3691,7 +3687,7 @@ hu:
         upload: "Feltöltés"
         uploading: "Feltöltés"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Adjon meg egy érvényes dátumot."
           email: "Adjon meg egy érvényes e-mail-címet."
     table_builder:
@@ -3728,10 +3724,8 @@ hu:
         up_to_date: "A rendszer naprakész!"
         critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
-        please_upgrade: "Kérünk frissíts!"
         no_check_performed: "Nem volt ellenőrizve, hogy van-e új frissítés. Győződjön meg arról hogy a Sidekiq fut."
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
-        version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
         installed_version: "Telepítve"
         latest_version: "Legfrissebb"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"

@@ -777,7 +777,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors.keys).to eq(["/tags_property"])
 
         expect(errors["/tags_property"].full_messages).to contain_exactly(
-          "must have at least 1 tag names",
+          "must have at least 1 tag name",
         )
 
         errors =
@@ -912,7 +912,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors.keys).to eq(["/group_property"])
 
         expect(errors["/group_property"].full_messages).to contain_exactly(
-          "must have at least 1 group ids",
+          "must have at least 1 group id",
         )
 
         errors =
@@ -1154,7 +1154,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors.keys).to eq(["/category_property"])
 
         expect(errors["/category_property"].full_messages).to contain_exactly(
-          "must have at least 1 category ids",
+          "must have at least 1 category id",
         )
       end
 

@@ -1,10 +1,42 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
+
+const FORM_TEMPLATES = [
+  {
+    id: 1,
+    name: "Testing",
+    template: `
+      - type: input
+        id: full-name
+        attributes:
+          label: "Full name"
+          description: "What is your full name?"
+      - type: textarea
+        id: description
+        attributes:
+          label: "Description"
+    `,
+  },
+  {
+    id: 2,
+    name: "Another Test",
+    template: `
+      - type: input
+        id: activity-date
+        attributes:
+          label: "Activity Date"
+          placeholder: "Please select activity date"
+        validations:
+          required: true
+          type: date
+    `,
+  },
+];
 
 acceptance("Composer Form Template", function (needs) {
   needs.user({
@@ -26,7 +58,7 @@ acceptance("Composer Form Template", function (needs) {
         slug: "general",
         permission: 1,
         topic_template: null,
-        form_template_ids: [1],
+        form_template_ids: [1, 2],
       },
       {
         id: 2,
@@ -40,20 +72,19 @@ acceptance("Composer Form Template", function (needs) {
   needs.pretender((server, helper) => {
     server.put("/u/kris.json", () => helper.response({ user: {} }));
 
-    server.get("/form-templates/1.json", () => {
+    server.get("/form-templates.json", () => {
       return helper.response({
-        form_template: {
-          name: "Testing",
-          template: `- type: input
-  id: full-name
-  attributes:
-    label: "Full name"
-  description: "What is your full name?"
-- type: textarea
-  id: description
-  attributes:
-    label: "Description"`,
-        },
+        form_templates: FORM_TEMPLATES,
+      });
+    });
+
+    [1, 2].forEach((id) => {
+      server.get(`/form-templates/${id}.json`, () => {
+        const index = id - 1;
+
+        return helper.response({
+          form_template: FORM_TEMPLATES[index],
+        });
       });
     });
 
@@ -82,6 +113,10 @@ acceptance("Composer Form Template", function (needs) {
     await visit("/");
     await click("#create-topic");
 
+    assert.strictEqual(
+      selectKit(".form-template-chooser").header().value(),
+      "1"
+    );
     assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
     assert.ok(
@@ -124,5 +159,23 @@ acceptance("Composer Form Template", function (needs) {
       "Community manager",
       "keeps the value of the textarea field when composer is re-opened from draft mode"
     );
+  });
+
+  test("Composer opens with the specified form template selected", async function (assert) {
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    const formTemplate = FORM_TEMPLATES[1];
+
+    await composer.openNewTopic({ formTemplate });
+    await settled();
+
+    assert.strictEqual(
+      selectKit(".form-template-chooser").header().value(),
+      "2"
+    );
+    assert
+      .dom(".form-template-field__input[name='activity-date']")
+      .exists("it renders form template field");
   });
 });

@@ -15,6 +15,10 @@ class Reporter extends TapReporter {
     if (process.env.GITHUB_ACTIONS) {
       colors.enable();
     }
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::group:: Verbose QUnit test output\n");
+    }
   }
 
   reportMetadata(tag, metadata) {
@@ -105,6 +109,10 @@ class Reporter extends TapReporter {
   }
 
   finish() {
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::endgroup::");
+    }
+
     super.finish();
 
     this.reportDeprecations();

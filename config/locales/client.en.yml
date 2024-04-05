@@ -259,7 +259,8 @@ en:
         us_west_2: "US West (Oregon)"
 
     clear_input: "Clear input"
-    edit: "edit the title and category of this topic"
+    edit: "Edit"
+    edit_topic: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -353,6 +354,10 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
+      also_set_reminder: "Also set a reminder?"
+      bookmarked_success: "Bookmarked!"
+      deleted_bookmark_success: "Bookmark deleted!"
+      reminder_set_success: "Reminder has beeen set!"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"
@@ -375,8 +380,11 @@ en:
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"
         clear_reminder: "Keep bookmark and clear reminder"
+        after_reminder_label: "After reminding you we should..."
+        after_reminder_checkbox: "Set this as default for all future bookmark reminders"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
+      bookmark: "Bookmark"
       reminders:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
@@ -700,6 +708,7 @@ en:
       in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
+      three_days: "In three days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -721,6 +730,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
+      custom_short: "Custom..."
       select_timeframe: "Select a timeframe"
 
     user_action:
@@ -1239,7 +1249,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
-      enable_defer: "Enable defer to mark topics unread"
+      enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -1672,6 +1682,9 @@ en:
         default: "(default)"
         any: "any"
 
+      homepage:
+        default: "(default)"
+
       password_confirmation:
         title: "Password Again"
 
@@ -1987,6 +2000,7 @@ en:
 
     user_tips:
       button: "Got it!"
+      skip: "Skip tips"
 
       first_notification:
         title: "Your first notification!"
@@ -1994,7 +2008,7 @@ en:
 
       topic_timeline:
         title: "Topic timeline"
-        content: "Scroll quickly through a post using the topic timeline."
+        content: "Scroll quickly through long topics using the topic timeline."
 
       post_menu:
         title: "Post menu"
@@ -2037,7 +2051,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     close: "Close"
-    assets_changed_confirm: "This site just received a software upgrade. Get the latest version now?"
+    assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
     refresh: "Refresh"
     home: "Home"
@@ -2923,7 +2937,7 @@ en:
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
         reset_bump_dates: "Reset bump dates"
-        defer: "Defer"
+        defer: "Mark unread"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -2964,6 +2978,7 @@ en:
         selected:
           one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>%{count}</b> topics."
+        selected_count: "%{count} selected"
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
@@ -3034,7 +3049,7 @@ en:
         name: "Reset Bump Dates"
         description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
       defer:
-        name: "Defer Topics"
+        name: "Mark Unread"
         description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
@@ -3056,8 +3071,8 @@ en:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
       defer:
-        help: "Mark as unread"
-        title: "Defer"
+        help: "Mark topic as unread"
+        title: "Mark unread"
 
       list: "Topics"
       new: "new topic"
@@ -4183,6 +4198,9 @@ en:
         this_week: "Week"
         today: "Today"
 
+    custom_homepage:
+      admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
+
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
@@ -4301,7 +4319,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
-        defer: "%{shortcut} Defer topic"
+        defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
         archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
@@ -4843,10 +4861,10 @@ en:
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
+        please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
-        version_check_pending: "Looks like you upgraded recently. Fantastic!"
+        version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"

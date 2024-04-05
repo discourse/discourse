@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cancel } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -22,11 +22,19 @@ export default class FloatKitInstance {
   @action
   show() {
     this.expanded = true;
+
+    next(() => {
+      this.options.onShow?.();
+    });
   }
 
   @action
   close() {
     this.expanded = false;
+
+    next(() => {
+      this.options.onClose?.();
+    });
   }
 
   @action

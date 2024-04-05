@@ -994,7 +994,6 @@ nb_NO:
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
-      enable_defer: "Aktiver utsettelse for å merke emner ulest"
       experimental_sidebar:
         options: "Alternativer"
         navigation_section: "Navigasjon"
@@ -1254,6 +1253,8 @@ nb_NO:
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
         default: "(forvalg)"
         any: "alle"
+      homepage:
+        default: "(forvalg)"
       password_confirmation:
         title: "Passord igjen"
       invite_code:
@@ -1525,7 +1526,6 @@ nb_NO:
       close: "lukk"
       dismiss_error: "Avvis feil"
     close: "Lukk"
-    assets_changed_confirm: "Dette nettstedet har nettopp mottatt en programvareoppgradering. Hent nyeste versjon nå?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
     home: "Hjem"
@@ -2073,7 +2073,6 @@ nb_NO:
         clear_all: "Fjern alle"
         unlist_topics: "Fjern emner fra lister"
         relist_topics: "Før opp igjen emner i lister"
-        defer: "Utsett"
         delete: "Slett emner"
         dismiss: "Avslå"
         dismiss_read: "Forkast alle uleste"
@@ -2154,9 +2153,6 @@ nb_NO:
       move_to_inbox:
         title: "Flytt til innboks"
         help: "Flytt melding tilbake til innboks"
-      defer:
-        help: "Merk som ulest"
-        title: "Utsett"
       list: "Emner"
       new: "nytt emne"
       unread: "ulest"
@@ -3131,7 +3127,6 @@ nb_NO:
         mark_tracking: "%{shortcut} Overvåk emne"
         mark_watching: "%{shortcut} Følg emne"
         print: "%{shortcut} Skriv ut emne"
-        defer: "%{shortcut} Utsett emnet"
         topic_admin_actions: "%{shortcut} Åpne tema admin handlinger"
       search_menu:
         title: "Søk i menyen"
@@ -3379,7 +3374,7 @@ nb_NO:
         upload: "Bilde"
         uploading: "Laster opp bilde"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Skriv inn en gyldig verdi."
           email: "Oppgi en gyldig e-postadresse."
     table_builder:
@@ -3418,10 +3413,8 @@ nb_NO:
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
         updates_available: "Oppdateringer er tilgjengelige."
-        please_upgrade: "Oppgrader!"
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
-        version_check_pending: "Ser ut som om du oppgraderte nylig. Fantastisk!"
         installed_version: "Installert"
         latest_version: "Siste"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"

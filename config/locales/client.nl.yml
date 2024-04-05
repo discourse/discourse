@@ -1150,7 +1150,6 @@ nl:
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
       enable_quoting: "Antwoorden met citaat inschakelen voor gemarkeerde tekst"
-      enable_defer: "Uitstellen door als ongelezen te markeren inschakelen"
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
@@ -1552,6 +1551,8 @@ nl:
         instructions: "Taal van de gebruikersinterface. Deze verandert wanneer de pagina wordt vernieuwd."
         default: "(standaard)"
         any: "alle"
+      homepage:
+        default: "(standaard)"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -1876,7 +1877,6 @@ nl:
       close: "sluiten"
       dismiss_error: "Fout negeren"
     close: "Sluiten"
-    assets_changed_confirm: "Deze website heeft zojuist een software-upgrade gekregen. Nieuwste versie downloaden?"
     logout: "Je bent afgemeld."
     refresh: "Vernieuwen"
     home: "Start"
@@ -2668,7 +2668,6 @@ nl:
         unlist_topics: "Topics onzichtbaar maken"
         relist_topics: "Topics opnieuw weergeven"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
-        defer: "Uitstellen"
         delete: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
@@ -2786,9 +2785,6 @@ nl:
       move_to_inbox:
         title: "Verplaatsen naar inbox"
         help: "Bericht terug naar inbox verplaatsen"
-      defer:
-        help: "Markeren als ongelezen"
-        title: "Uitstellen"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -3933,7 +3929,6 @@ nl:
         mark_tracking: "%{shortcut} Topic volgen"
         mark_watching: "%{shortcut} Topic observeren"
         print: "%{shortcut} Topic afdrukken"
-        defer: "%{shortcut} Topic negeren"
         topic_admin_actions: "%{shortcut} Beheeracties voor topic openen"
         archive_private_message: "%{shortcut} Schakelaar privébericht archiveren"
       search_menu:
@@ -4324,12 +4319,12 @@ nl:
         upload: "Uploaden"
         uploading: "Uploaden"
       errors:
-        valueMissing:
+        value_missing:
           default: "Vul dit veld in."
-          select-one: "Selecteer een item in de lijst."
-          select-multiple: "Selecteer ten minste één item in de lijst."
+          select_one: "Selecteer een item in de lijst."
+          select_multiple: "Selecteer ten minste één item in de lijst."
           checkbox: "Selecteer dit vakje als je verder wilt gaan."
-        typeMismatch:
+        type_mismatch:
           default: "Voer een geldige waarde in."
           color: "Voer een kleur in."
           date: "Voer een datum in."
@@ -4339,20 +4334,20 @@ nl:
           tel: "Voer een geldig telefoonnummer in."
           text: "Voer een tekstwaarde in."
           url: "Voer een geldige URL in."
-        tooShort:
+        too_short:
           one: "De invoer moet %{count} teken of langer zijn."
           other: "De invoer moet %{count} tekens of langer zijn."
-        tooLong:
+        too_long:
           one: "De invoer moet minder dan %{count} teken zijn."
           other: "De invoer moet minder dan %{count} tekens zijn."
-        rangeOverflow:
+        range_overflow:
           one: "De invoer moet kleiner zijn dan %{count}."
           other: "De invoer moet kleiner zijn dan %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "De invoer moet groter zijn dan %{count}."
           other: "De invoer moet groter zijn dan %{count}."
-        patternMismatch: "Zorg dat je de gevraagde notatie gebruikt."
-        badInput: "Voer een geldige invoer in."
+        pattern_mismatch: "Zorg dat je de gevraagde notatie gebruikt."
+        bad_input: "Voer een geldige invoer in."
     table_builder:
       title: "Tabelbouwer"
       modal:
@@ -4438,10 +4433,8 @@ nl:
         up_to_date: "Je bent helemaal bij!"
         critical_available: "Er is een kritieke update beschikbaar."
         updates_available: "Er zijn updates beschikbaar."
-        please_upgrade: "Voer een upgrade uit!"
         no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
         stale_data: "Er is de laatste tijd niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
-        version_check_pending: "Je hebt de software recent bijgewerkt. Fantastisch!"
         installed_version: "Geïnstalleerd"
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"

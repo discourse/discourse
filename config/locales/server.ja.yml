@@ -1477,7 +1477,6 @@ ja:
     summarization_strategy: "プラグインによって登録されたコンテンツを要約する他の方法"
     custom_summarization_allowed_groups: "`summarization_strategy` を使ってコンテンツを要約できるグループ。"
     enable_personal_messages: "非推奨。代わりに 'personal message enabled groups' 設定を使用してください。信頼レベル 1 (メッセージを送信できる最低信頼レベルで構成可能) ユーザーに、メッセージの作成とメッセージへの返信を許可します。それにも関わらず、スタッフは常にメッセージを送信できることに注意してください。"
-    personal_message_enabled_groups: "これらのグループ内のユーザーに、メッセージの作成とメッセージへの返信を許可します。信頼レベルグループには、その数値を超えるすべての信頼レベルが含まれます。たとえば、trust_level_1 を選択すると、rust_level_2、3、4 のユーザーにも、個人メッセージの送信が許可されます。それにも関わらず、スタッフは常にメッセージを送信できることに注意してください。"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
     long_polling_base_url: "ロングポーリングのベース URL (CDN が動的コンテンツを配信している場合、これを origin pull に指定してください) 例: http://origin.site.com"
@@ -2532,35 +2531,9 @@ ja:
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
   new_version_mailer_with_notes:
     title: "注意付きの新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
-
-      ### リリースノート
-
-      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
     inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"

@@ -2,7 +2,7 @@
 
 module ChatSDK
   class Message
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     # Creates a new message in a chat channel.
     #
@@ -159,7 +159,7 @@ module ChatSDK
   end
 
   class StreamHelper
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     attr_reader :message
     attr_reader :guardian

@@ -25,6 +25,7 @@ import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
@@ -61,6 +62,7 @@ export default class ChatMessage extends Component {
   @service chatChannelsManager;
   @service router;
   @service toasts;
+  @service modal;
   @optionalService adminTools;
 
   @tracked isActive = false;
@@ -401,6 +403,7 @@ export default class ChatMessage extends Component {
     document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
+    this.modal.show(ChatMessageActionsMobileModal);
   }
 
   get hasActiveState() {
