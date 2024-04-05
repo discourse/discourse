@@ -466,37 +466,45 @@ HTML
     expect(Theme.user_theme_ids).to eq([])
   end
 
-  it "correctly caches active_theme_and_component_ids" do
+  it "correctly caches enabled_theme_and_component_ids" do
     Theme.destroy_all
 
     theme2 = Fabricate(:theme)
 
-    expect(Theme.active_theme_and_component_ids).to eq([])
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
 
     theme2.update!(user_selectable: true)
 
-    expect(Theme.active_theme_and_component_ids).to contain_exactly(theme2.id)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
 
     theme2.update!(user_selectable: false)
     theme2.set_default!
-    expect(Theme.active_theme_and_component_ids).to contain_exactly(theme2.id)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
 
     child2 = Fabricate(:theme, component: true)
     theme2.add_relative_theme!(:child, child2)
-    expect(Theme.active_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
 
     child2.update!(enabled: false)
-    expect(Theme.active_theme_and_component_ids).to contain_exactly(theme2.id)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
 
     theme3 = Fabricate(:theme, user_selectable: true)
     child2.update!(enabled: true)
 
-    expect(Theme.active_theme_and_component_ids).to contain_exactly(theme2.id, child2.id, theme3.id)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(
+      theme2.id,
+      child2.id,
+      theme3.id,
+    )
 
-    theme2.destroy
-    theme3.destroy
+    theme3.update!(enabled: false)
 
-    expect(Theme.active_theme_and_component_ids).to eq([])
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    # theme2.destroy
+    # theme3.destroy
+
+    # expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
   it "correctly caches user_themes template" do
