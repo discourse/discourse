@@ -579,6 +579,7 @@ class Post < ActiveRecord::Base
     modifier_result =
       DiscoursePluginRegistry.apply_modifier(
         :post_with_secure_uploads?,
+        nil,
         self,
         topic_including_deleted,
       )
