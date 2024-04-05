@@ -99,47 +99,141 @@
 <h1>Edit sidebar section</h1>
 
 <form class="d-form">
-  <div class="d-form__section --inline --4-col">
+  <div class="d-form__section">
     <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Name
-        <span class="d-form-field__optional">(Optional)</span></label>
-
+      <label class="d-form-field__label" for="normal-input">Section title</label>
       <div class="d-form-field__value">
-        <input type="text" class="d-form-field__input" id="normal-input" />
-        <div class="d-form-field__meta">
-          <p class="d-form-field__meta-text">Format: XYZ-123</p>
-        </div>
+        <input
+          type="text"
+          class="d-form-field__input"
+          id="normal-input"
+          size="25"
+        />
       </div>
     </div>
+  </div>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">url
-      </label>
-      <div class="d-form-field__value">
-        <select>
+  <div class="d-form__section --rows">
+
+    <div class="d-form-multirow">
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-icon">Icon
+        </label>
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-name">Name
+        </label>
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-url">url
+        </label>
+        <select aria-labelledby="row-url">
           <option value="">--URL--</option>
           <option value="">Google</option>
           <option value="">DuckDuckGo</option>
         </select>
-        <div class="d-form-field__meta">
-        </div>
       </div>
+
+      <button
+        type="button"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
     </div>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Reason
-      </label>
-      <div class="d-form-field__value">
-        <input type="text" class="d-form-field__input" id="normal-input" />
-        <div class="d-form-field__meta">
-        </div>
+    <div class="d-form-multirow">
+      <div class="d-form-field">
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
       </div>
+
+      <div class="d-form-field">
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
     </div>
 
-    <button type="submit" class="d-form__section-inline-btn">Submit</button>
+    <div class="d-form-multirow">
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
+      </div>
+
+      <div class="d-form-field">
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
+    </div>
+
+    <div class="d-form-field__meta --warning">
+      <p class="d-form-field__meta-text">
+        {{d-icon "warning"}}<span>Whatever errors are in this field, they should
+          be consolidated in a numbered error summary at the bottom, like this:
+          <ol>
+            <li>urls should start with https/</li>
+            <li>the reason can't be empty/</li>
+          </ol>
+        </span>
+      </p>
+    </div>
   </div>
   <div class="d-form__footer">
-    <button class="btn btn-primary" type="submit">Save bookmark</button>
+    <button class="btn btn-primary" type="submit">Save section</button>
     <a href="#" class="">Cancel</a>
+    <button
+      class="btn btn-danger d-form__secondary-cta"
+      type="button"
+    >Delete</button>
   </div>
 </form>
