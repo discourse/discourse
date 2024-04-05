@@ -13,6 +13,7 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
@@ -50,8 +51,11 @@ export default class ChatThread extends Component {
   @service chatThreadComposer;
   @service chatThreadPane;
   @service currentUser;
+  @service modal;
   @service router;
+  @service site;
   @service siteSettings;
+  @service toasts;
 
   @tracked atBottom = true;
   @tracked isScrolling = false;
@@ -214,6 +218,7 @@ export default class ChatThread extends Component {
       return;
     }
 
+
     const [messages, meta] = this.processMessages(this.args.thread, result);
     stackingContextFix(this.scrollable, () => {
       this.messagesManager.addMessages(messages);
@@ -231,6 +236,7 @@ export default class ChatThread extends Component {
     }
 
     this.debounceFillPaneAttempt();
+    this.threadTitleToast();
   }
 
   @action
@@ -526,6 +532,54 @@ export default class ChatThread extends Component {
     const prev = this._ignoreNextScroll;
     this._ignoreNextScroll = false;
     return prev;
+  }
+
+  get canShowToast() {
+    let threadReplyCount = this.messagesManager.messages.length - 1;
+
+    if (this.site.desktopView || this.args.thread.title || threadReplyCount < 2) {
+      return false;
+    }
+
+    return (
+      this.args.thread.user_id === this.currentUser.id || this.currentUser.staff
+    );
+  }
+
+  threadTitleToast() {
+    if (!this.canShowToast) {
+      return;
+    }
+
+    this.toasts.default({
+      duration: 5000,
+      class: "thread-toast",
+      data: {
+        title: "Set a thread title",
+        message: "Help others discover this conversation.",
+        progressBar: true,
+        actions: [
+          {
+            label: "Don't show again",
+            class: "btn-link toast-hide",
+            action: (toast) => {
+              toast.close();
+            },
+          },
+          {
+            label: "Set title",
+            class: "btn-primary toast-action",
+            action: (toast) => {
+              this.modal.show(ThreadSettingsModal, {
+                model: this.args.thread,
+              });
+
+              toast.close();
+            },
+          },
+        ],
+      },
+    });
   }
 
   <template>
