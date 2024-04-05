@@ -352,7 +352,6 @@ export default class BulkTopicActions extends Component {
               <textarea
                 id="bulk-close-note"
                 {{on "input" this.updateCloseNote}}
-                {{!-- {{on "keydown" this.handleTextAreaKeydown}} --}}
                 {{autoFocus}}
               >{{this.closeNote}}</textarea>
             </div>
