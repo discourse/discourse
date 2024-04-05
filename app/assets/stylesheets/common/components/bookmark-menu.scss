@@ -31,22 +31,9 @@
     &:hover,
     &:focus {
       background: var(--tertiary-very-low);
-    }
 
-    &.--remove {
-      color: var(--danger);
-      .d-button-label,
-      .d-icon {
-        color: var(--danger);
-      }
-
-      &:hover,
-      &:focus {
+      &.--remove {
         background: var(--danger-low);
-        .d-button-label,
-        .d-icon {
-          color: var(--primary);
-        }
       }
     }
   }
@@ -64,14 +51,22 @@
     text-align: left;
     justify-content: left !important;
     gap: 0.75em;
+    color: var(--primary);
     &:hover,
     &:focus {
       color: var(--primary) !important;
       background: var(--tertiary-very-low);
     }
+    .--remove & {
+      color: var(--danger);
+    }
+
+    .d-button-label {
+      color: inherit;
+    }
 
     .d-icon {
-      color: var(--primary);
+      color: inherit;
       margin: 0 !important;
     }
   }
