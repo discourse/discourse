@@ -432,53 +432,52 @@
   </div>
 
   <h2>Inline form</h2>
+  <strong>Joff: We don't want a lot of the classes in a normal form here,
+    because this is gridded. Cleanest is to have separate HTML. _However_, if
+    you prefer to be able to drop in a full form-field component, I can use
+    `display:contents` to strip out all the wrappers so the grid still works.
+    Lmk if unclear and what you prefer.</strong>
   <p class="d-form__section-info">
     A form row should not contain checkboxes or radiobuttons. Be reasonable. It
     can have 3 or 4 columns (including an action). Unlike other forms, every
     input *must have* a meta-section, even empty, or else the layout will break.
     Keep labels as short as possible. For now the columns will divide equally.
-    Will adjust when the need arises.</p>
+    Will adjust when the need arises.
+  </p>
   <div class="d-form__section --inline --4-col">
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Name
-        <span class="d-form-field__optional">(Optional)</span></label>
 
-      <div class="d-form-field__value">
-        <input type="text" class="d-form-field__input" id="normal-input" />
-        <div class="d-form-field__meta">
-          <p class="d-form-field__meta-text">Format: XYZ-123</p>
-        </div>
-      </div>
+    <label class="d-form-field__label" for="normal-input">Name
+      <span class="d-form-field__optional">(Optional)</span>
+    </label>
+
+    <input type="text" class="d-form-field__input" id="normal-input" />
+
+    <div class="d-form-field__meta">
+      <p class="d-form-field__meta-text">Format: XYZ-123</p>
     </div>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">url
-      </label>
-      <div class="d-form-field__value">
-        <select>
-          <option value="">--URL--</option>
-          <option value="">Google</option>
-          <option value="">DuckDuckGo</option>
-        </select>
-        <div class="d-form-field__meta">
-        </div>
-      </div>
-    </div>
+    <label class="d-form-field__label" for="normal-input">url</label>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Reason
-      </label>
-      <div class="d-form-field__value">
-        <input type="text" class="d-form-field__input" id="normal-input" />
-        <div class="d-form-field__meta">
-        </div>
-      </div>
+    <select>
+      <option value="">--URL--</option>
+      <option value="">Google</option>
+      <option value="">DuckDuckGo</option>
+    </select>
+
+    <div class="d-form-field__meta"></div>
+
+    <label class="d-form-field__label" for="normal-input">Reason</label>
+
+    <input type="text" class="d-form-field__input" id="normal-input" />
+
+    <div class="d-form-field__meta">
     </div>
 
     <button
       type="submit"
       class="btn btn-primary d-form__section-inline-btn"
-    >Submit</button>
+    >Submit
+    </button>
   </div>
 
   <h2>Multirow form</h2>
