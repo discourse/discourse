@@ -31,14 +31,14 @@
       }
 
       &-title {
-        font-size: var(--font-down-1);
         padding: 0.75rem;
         border-bottom: 1px solid var(--primary-low);
+        font-weight: bold;
       }
 
       &-btn {
         margin: 0;
-        padding: 0.75rem;
+        padding: 0.75rem !important;
         width: 100%;
         text-align: left;
         justify-content: left;
@@ -49,7 +49,6 @@
 
         .d-button-label {
           color: var(--primary);
-          font-size: var(--font-down-1);
         }
         &:hover,
         &:focus {
@@ -82,10 +81,5 @@
         border-bottom: 2px solid var(--primary-low);
       }
     }
-  }
-
-  .bookmark-menu__row-title {
-    font-weight: 900;
-    padding: 0.75rem;
   }
 }

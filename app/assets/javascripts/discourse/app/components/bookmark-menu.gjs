@@ -22,6 +22,7 @@ export default class BookmarkMenu extends Component {
   @service currentUser;
   @service toasts;
   @tracked quicksaved = false;
+  @service site;
 
   bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
@@ -203,6 +204,14 @@ export default class BookmarkMenu extends Component {
       </:trigger>
       <:content>
         <div class="bookmark-menu__body">
+          {{#if this.site.mobileView}}
+            {{#unless this.showEditDeleteMenu}}
+              <div class="bookmark-menu__title">{{icon "check-circle"}}<span
+                >Bookmarked!</span>
+
+              </div>
+            {{/unless}}
+          {{/if}}
           {{#if this.showEditDeleteMenu}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">

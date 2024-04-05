@@ -1,0 +1,21 @@
+.fk-d-menu-modal {
+  .d-modal__body {
+    padding: 0;
+  }
+
+  .bookmark-menu {
+    &__title {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+      padding: 0.75rem;
+      font-weight: bold;
+
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+  }
+}
