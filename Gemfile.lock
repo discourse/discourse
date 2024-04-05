@@ -167,6 +167,7 @@ GEM
       progress (~> 3.0, >= 3.0.1)
     image_size (3.4.0)
     in_threads (1.6.0)
+    iso8601 (0.13.0)
     jmespath (1.6.2)
     json (2.7.2)
     json-schema (4.3.0)
@@ -366,6 +367,8 @@ GEM
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
     rqrcode_core (1.2.0)
+    rrule (0.6.0)
+      activesupport (>= 2.3)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -580,6 +583,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language
   image_optim
+  iso8601
   json
   json_schemer
   listen
@@ -637,6 +641,7 @@ DEPENDENCIES
   rinku
   rotp
   rqrcode
+  rrule
   rspec
   rspec-html-matchers
   rspec-rails
