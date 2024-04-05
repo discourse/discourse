@@ -24,7 +24,7 @@ module Summarization
 
       def can_see_summary?(target, user)
         return false if SiteSetting.summarization_strategy.blank?
-        return false if target.class == Topic && target.archetype == Archetype.private_message
+        return false if target.class == Topic && target.private_message?
 
         has_cached_summary = SummarySection.exists?(target: target, meta_section_id: nil)
         return has_cached_summary if user.nil?
