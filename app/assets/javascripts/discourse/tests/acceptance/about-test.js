@@ -1,9 +1,6 @@
 import { visit } from "@ember/test-helpers";
-import { faker } from "@faker-js/faker";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-
-console.log("Faker says ", faker.person.bio());
 
 acceptance("About", function () {
   test("viewing", async function (assert) {
