@@ -3028,6 +3028,8 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+        note: "Note"
+        optional: (optional)
       archive_topics:
         name: "Archive Topics"
       unlist_topics:

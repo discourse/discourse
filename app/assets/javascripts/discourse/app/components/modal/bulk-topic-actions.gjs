@@ -342,11 +342,11 @@ export default class BulkTopicActions extends Component {
           {{/if}}
 
           {{#if this.isCloseAction}}
-            <div class="control-group assign-status">
+            <div class="bulk-close-note-section">
               <label>
-                {{i18n "discourse_assign.assign_modal.note_label"}}&nbsp;<span
+                {{i18n "topic_bulk_actions.close_topics.note"}}&nbsp;<span
                   class="label-optional"
-                >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
+                >{{i18n "topic_bulk_actions.close_topics.optional"}}</span>
               </label>
 
               <textarea
