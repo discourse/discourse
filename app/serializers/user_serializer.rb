@@ -324,7 +324,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_pick_theme_with_custom_homepage
-    ThemeModifierHelper.new(theme_ids: Theme.user_theme_ids).custom_homepage
+    ThemeModifierHelper.new(theme_ids: Theme.active_theme_and_component_ids).custom_homepage
   end
 
   private
