@@ -115,7 +115,7 @@ function defaultDateConfig() {
 }
 
 function parseTagAttributes(tag) {
-  const matchString = tag.replace(/‘|’|„|“|«|»|”/g, '"');
+  const matchString = tag.replace(/[‘’„“«»”]/g, '"');
 
   return parseBBCodeTag(
     "[date date" + matchString + "]",
@@ -162,7 +162,9 @@ function addLocalRange(buffer, matches, state) {
     addSingleLocalDate(buffer, state, config);
   }
   if (config.range) {
-    closeBuffer(buffer, state, "→");
+    const token = new state.Token("text", "", 0);
+    token.content = "→";
+    buffer.push(token);
   }
   if (parsed.attrs.to) {
     [date, time] = parsed.attrs.to.split("T");
