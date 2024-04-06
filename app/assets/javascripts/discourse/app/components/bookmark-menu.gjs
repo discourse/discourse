@@ -44,7 +44,7 @@ export default class BookmarkMenu extends Component {
   }
 
   get existingBookmark() {
-    return this.bookmarkManager.trackedBookmark.id
+    return this.bookmarkManager.trackedBookmark?.id
       ? this.bookmarkManager.trackedBookmark
       : null;
   }
@@ -166,6 +166,8 @@ export default class BookmarkMenu extends Component {
   }
 
   async _openBookmarkModal() {
+    this.dMenu.close();
+
     try {
       const closeData = await this.modal.show(BookmarkModal, {
         model: {
