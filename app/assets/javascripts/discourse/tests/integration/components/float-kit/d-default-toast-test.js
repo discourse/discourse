@@ -30,7 +30,7 @@ module(
       this.noop = () => {};
 
       await render(
-        hbs`<DDefaultToast @data={{this.toast.options.data}} @autoClose={{true}} @onRegisterProgressBar={{this.noop}} />`
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{true}} @autoClose={{true}} @onRegisterProgressBar={{this.noop}} />`
       );
 
       assert.dom(".fk-d-default-toast__progress-bar").exists();

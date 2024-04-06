@@ -113,6 +113,8 @@ export default class DMenu extends Component {
               @data={{this.options.data}}
               @close={{this.menuInstance.close}}
             />
+          {{else if this.options.content}}
+            {{this.options.content}}
           {{/if}}
         </DModal>
       {{else}}
@@ -137,6 +139,8 @@ export default class DMenu extends Component {
               @data={{this.options.data}}
               @close={{this.menuInstance.close}}
             />
+          {{else if this.options.content}}
+            {{this.options.content}}
           {{/if}}
         </DFloatBody>
       {{/if}}
