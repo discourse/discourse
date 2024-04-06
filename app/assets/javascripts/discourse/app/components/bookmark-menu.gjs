@@ -207,14 +207,15 @@ export default class BookmarkMenu extends Component {
 
           {{#unless this.showEditDeleteMenu}}
             <div class="bookmark-menu__title">{{icon "check-circle"}}<span
-              >Bookmarked!</span>
+              >{{i18n "bookmarks.bookmarked_success"}}</span>
             </div>
           {{/unless}}
 
           {{#if this.showEditDeleteMenu}}
             {{#if this.site.mobileView}}
-              <div class="bookmark-menu__title">{{icon "bookmark"}}<span
-                >Bookmark</span>
+              <div class="bookmark-menu__title">{{icon "bookmark"}}<span>{{i18n
+                    "bookmarks.bookmark"
+                  }}</span>
               </div>
             {{/if}}
             <ul class="bookmark-menu__actions">
