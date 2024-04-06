@@ -38,6 +38,19 @@ acceptance("discourse-checklist | checklist", function (needs) {
     ]);
   });
 
+  test("does not check an image URL", async function (assert) {
+    const [$elem, updated] = await prepare(`
+![](upload://zLd8FtsWc2ZSg3cZKIhwvhYxTcn.jpg)
+[] first
+[] second
+    `);
+
+    $elem.find(".chcklst-box")[0].click();
+
+    const output = await updated;
+    assert.ok(output.includes("[x] first"));
+  });
+
   test("make checkboxes readonly while updating", async function (assert) {
     const [$elem, updated] = await prepare(`
 [ ] first
