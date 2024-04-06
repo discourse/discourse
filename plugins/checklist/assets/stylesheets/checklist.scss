@@ -22,7 +22,9 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
-  cursor: pointer;
+  &:not(.permanent) {
+    cursor: pointer;
+  }
 
   &:before {
     display: inline-block;
