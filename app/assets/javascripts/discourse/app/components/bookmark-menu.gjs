@@ -202,6 +202,7 @@ export default class BookmarkMenu extends Component {
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
       @modalOnMobile={{true}}
+      @arrow={{false}}
     >
       <:trigger>
         {{#if this.existingBookmark.reminderAt}}
