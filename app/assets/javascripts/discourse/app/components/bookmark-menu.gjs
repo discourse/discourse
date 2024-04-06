@@ -21,8 +21,9 @@ export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
   @service toasts;
-  @tracked quicksaved = false;
   @service site;
+
+  @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
@@ -89,6 +90,7 @@ export default class BookmarkMenu extends Component {
       this.toasts.success({
         showProgressBar: false,
         duration: 3000,
+        views: ["mobile"],
         data: { message: I18n.t("bookmarks.bookmarked_success") },
       });
     } catch (error) {
@@ -126,7 +128,10 @@ export default class BookmarkMenu extends Component {
       this.toasts.success({
         duration: 3000,
         showProgressBar: false,
-        data: { message: I18n.t("bookmarks.deleted_bookmark_success") },
+        data: {
+          icon: "trash-alt",
+          message: I18n.t("bookmarks.deleted_bookmark_success"),
+        },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -149,6 +154,7 @@ export default class BookmarkMenu extends Component {
         this.toasts.success({
           duration: 3000,
           showProgressBar: false,
+          views: ["mobile"],
           data: { message: I18n.t("bookmarks.reminder_set_success") },
         });
       } catch (error) {

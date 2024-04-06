@@ -127,6 +127,7 @@ export default class DToast extends Component {
     >
       <@toast.options.component
         @data={{@toast.options.data}}
+        @close={{@toast.close}}
         @showProgressBar={{and
           @toast.options.showProgressBar
           @toast.options.autoClose

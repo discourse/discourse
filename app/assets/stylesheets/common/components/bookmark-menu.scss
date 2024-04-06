@@ -1,16 +1,16 @@
-.bookmark-menu {
-  &__body {
+.bookmark-menu-content {
+  .bookmark-menu__body {
     background: var(--secondary);
     display: flex;
     flex-direction: column;
     min-width: 200px;
   }
-  &__actions {
+  .bookmark-menu__actions {
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  &__title {
+  .bookmark-menu__title {
     display: flex;
     align-items: center;
     gap: 0.75em;
@@ -24,7 +24,7 @@
     }
   }
 
-  &__row {
+  .bookmark-menu__row {
     width: 100%;
     display: flex;
 
@@ -38,13 +38,13 @@
     }
   }
 
-  &__row-title {
+  .bookmark-menu__row-title {
     padding: 0.75rem;
     border-bottom: 1px solid var(--primary-low);
     font-weight: bold;
   }
 
-  &__row-btn {
+  .bookmark-menu__row-btn {
     margin: 0;
     padding: 0.75rem !important;
     width: 100%;

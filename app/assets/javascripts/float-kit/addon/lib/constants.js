@@ -81,5 +81,6 @@ export const TOAST = {
     duration: 3000,
     component: DDefaultToast,
     showProgressBar: true,
+    views: ["desktop", "mobile"],
   },
 };
