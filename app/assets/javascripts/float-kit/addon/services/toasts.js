@@ -23,7 +23,10 @@ export default class Toasts extends Service {
    */
   @action
   show(options = {}) {
-    const instance = new DToastInstance(getOwner(this), options);
+    const instance = new DToastInstance(getOwner(this), {
+      component: DDefaultToast,
+      ...options,
+    });
 
     if (instance.isValidForView) {
       this.activeToasts.push(instance);
@@ -43,7 +46,7 @@ export default class Toasts extends Service {
   default(options = {}) {
     options.data.theme = "default";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -58,7 +61,7 @@ export default class Toasts extends Service {
     options.data.theme = "success";
     options.data.icon ??= "check";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -73,7 +76,7 @@ export default class Toasts extends Service {
     options.data.theme = "error";
     options.data.icon ??= "exclamation-triangle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -88,7 +91,7 @@ export default class Toasts extends Service {
     options.data.theme = "warning";
     options.data.icon ??= "exclamation-circle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -103,7 +106,7 @@ export default class Toasts extends Service {
     options.data.theme = "info";
     options.data.icon ??= "info-circle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -114,9 +117,5 @@ export default class Toasts extends Service {
     this.activeToasts = new TrackedArray(
       this.activeToasts.filter((activeToast) => activeToast.id !== toast.id)
     );
-  }
-
-  isValidPlatform() {
-    return this.site.platform === "web";
   }
 }
