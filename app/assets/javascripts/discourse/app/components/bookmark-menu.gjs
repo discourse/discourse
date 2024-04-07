@@ -191,7 +191,6 @@ export default class BookmarkMenu extends Component {
       {{didInsert this.setReminderShortcuts}}
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
-      @arrow="true"
       class={{concatClass
         "bookmark widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
         (if this.existingBookmark "bookmarked")
