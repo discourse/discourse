@@ -41,6 +41,7 @@ describe "Bookmarking posts and topics", type: :system do
 
     bookmark_menu.click_menu_option("tomorrow")
 
+    expect(page).to have_no_css(".bookmark-menu-content")
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
