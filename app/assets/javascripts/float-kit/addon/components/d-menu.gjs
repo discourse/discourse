@@ -9,6 +9,7 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
+import { isTesting } from "discourse-common/config/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
@@ -95,7 +96,9 @@ export default class DMenu extends Component {
     </DButton>
 
     {{#if this.menuInstance.expanded}}
-      {{#if (and this.site.mobileView this.options.modalOnMobile)}}
+
+      {{#if (and this.site.mobileView this.options.modalForMobile)}}
+        {{log this.options}}
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
@@ -103,6 +106,7 @@ export default class DMenu extends Component {
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
           }}
+          @inline={{(isTesting)}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

@@ -200,7 +200,7 @@ export default class BookmarkMenu extends Component {
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
-      @modalOnMobile={{true}}
+      @modalForMobile={{true}}
       @arrow={{false}}
     >
       <:trigger>

@@ -43,6 +43,17 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").hasText("content");
   });
 
+  test("@modalForMobile", async function (assert) {
+    this.site.mobileView = true;
+
+    await render(
+      hbs`<DMenu @inline={{true}} @modalForMobile={{true}} @content="content" />`
+    );
+    await open();
+
+    assert.dom(".fk-d-menu-modal").hasText("content");
+  });
+
   test("@onRegisterApi", async function (assert) {
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
