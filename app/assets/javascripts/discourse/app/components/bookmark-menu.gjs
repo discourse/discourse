@@ -245,7 +245,7 @@ export default class BookmarkMenu extends Component {
                   @icon="trash-alt"
                   @label="delete"
                   @action={{this.onRemoveBookmark}}
-                  @class="bookmark-menu__row-btn btn-transparent"
+                  @class="bookmark-menu__row-btn btn-transparent btn-danger"
                 />
               </li>
             </ul>
