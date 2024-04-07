@@ -96,9 +96,7 @@ export default class DMenu extends Component {
     </DButton>
 
     {{#if this.menuInstance.expanded}}
-
       {{#if (and this.site.mobileView this.options.modalForMobile)}}
-        {{log this.options}}
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
