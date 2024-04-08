@@ -326,7 +326,7 @@ class Post < ActiveRecord::Base
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
-    if self.with_secure_uploads?
+    if self.should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -565,7 +565,7 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
-  def with_secure_uploads?
+  def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
     topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
     return false if topic_including_deleted.blank?

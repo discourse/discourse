@@ -8,7 +8,7 @@ module Chat
     def initialize(chat_message, opts = {})
       @model = chat_message
       @previous_cooked = (chat_message.cooked || "").dup
-      @with_secure_uploads = false
+      @should_secure_uploads = false
       @size_cache = {}
       @opts = opts
 
