@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 class AboutSerializer < ApplicationSerializer
-  class CategoryAboutSerializer < ApplicationSerializer
-    attributes :id, :name, :color, :slug, :parent_category_id
-  end
-
   class UserAboutSerializer < BasicUserSerializer
     attributes :title, :last_seen_at
   end
 
   class AboutCategoryModsSerializer < ApplicationSerializer
-    has_one :category, serializer: CategoryAboutSerializer, embed: :objects
+    has_one :category, serializer: CategoryBadgeSerializer, embed: :objects
     has_many :moderators, serializer: UserAboutSerializer, embed: :objects
   end
 

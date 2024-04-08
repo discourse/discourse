@@ -28,7 +28,14 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    render_serialized(stream, UserActionSerializer, root: "user_actions")
+    categories = Category.where(id: stream.map(&:category_id).uniq).to_a
+
+    response = { user_actions: serialize_data(stream, UserActionSerializer) }
+    if guardian.can_lazy_load_categories?
+      response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
+    end
+
+    render json: response
   end
 
   def show

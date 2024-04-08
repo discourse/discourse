@@ -17,7 +17,7 @@ class DraftsController < ApplicationController
         limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
       )
 
-    render json: { drafts: stream ? serialize_data(stream, DraftSerializer) : [] }
+    render_serialized(stream, DraftSerializer, root: "drafts")
   end
 
   def show

@@ -5,6 +5,8 @@ require_relative "post_item_excerpt"
 class DraftSerializer < ApplicationSerializer
   include PostItemExcerpt
 
+  has_one :category, serializer: CategoryBadgeSerializer
+
   attributes :created_at,
              :draft_key,
              :sequence,
@@ -85,5 +87,9 @@ class DraftSerializer < ApplicationSerializer
 
   def include_category_id?
     object.topic&.category_id&.present?
+  end
+
+  def include_category?
+    scope.can_lazy_load_categories? && object.topic&.category_id&.present?
   end
 end
