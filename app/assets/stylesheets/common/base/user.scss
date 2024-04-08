@@ -377,11 +377,11 @@
       margin: 0;
     }
   }
-  $label-max-width: 300px;
+  --label-max-width: 300px;
   label.radio {
     display: flex;
     align-items: center;
-    max-width: $label-max-width;
+    max-width: var(--label-max-width);
     margin: 0 0.5em 0 0;
     padding: 0;
     .avatar {
@@ -392,7 +392,7 @@
   .error {
     color: var(--danger);
     margin: 0;
-    max-width: calc(#{$label-max-width} - 20px);
+    max-width: calc(var(--label-max-width) - 20px);
     grid-column-start: 2;
     grid-column-end: 3;
   }
@@ -947,6 +947,19 @@
       }
     }
   }
+}
+
+.user-additional-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.user-invite-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-left: auto;
 }
 
 .notification-schedule {

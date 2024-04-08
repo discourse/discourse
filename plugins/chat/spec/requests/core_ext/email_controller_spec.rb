@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe EmailController do
   describe "unsubscribing from chat email settings" do
     fab!(:user)

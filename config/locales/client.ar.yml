@@ -300,6 +300,7 @@ ar:
     software_update_prompt:
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
+    back_button: "الرجوع"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
@@ -309,7 +310,6 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     critical_deprecation:
-      notice: "<b>[إشعار المسؤول]</b> تحتاج إحدى سماتك أو مكوِّناتك الإضافية إلى التحديث للتوافق مع التغييرات الجوهرية في Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>المزيد من المعلومات</a>)."
       theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
@@ -1166,9 +1166,11 @@ ar:
       "14": "قيد الانتظار"
       "15": "المسودات"
     categories:
-      all: "كل الفئات"
-      all_subcategories: "الكل"
-      no_subcategory: "لا يوجد"
+      categories_label: "الفئات"
+      subcategories_label: "الفئات الفرعية"
+      no_subcategories: "لا توجد فئات فرعية"
+      remove_filter: "إزالة التصفية"
+      plus_more_count: "+%{count} أكثر"
       category: "الفئة"
       category_list: "عرض قائمة الفئات"
       reorder:
@@ -1375,7 +1377,6 @@ ar:
       allow_private_messages: "السماح للمستخدمين الآخرين بإرسال رسائل خاصة إليَّ"
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
-      enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
@@ -1721,8 +1722,7 @@ ar:
         save: "حفظ"
         title: "مفاتيح المرور"
         short_description: "مفاتيح المرور هي بدائل لكلمات المرور تتحقق من هويتك باستخدام القياسات الحيوية (على سبيل المثال، اللمس أو معرِّف الوجه) أو عبر رقم التعريف الشخصي/كلمة المرور للجهاز."
-        added_prefix: "تمت الإضافة"
-        last_used_prefix: "آخر استخدام"
+        added_date: "تمت إضافة %{date}"
         never_used: "لم يُستخدَم قط"
         not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح المرور أو تم إلغاؤها أو أنها غير مسموح بها."
         already_added_error: "لقد سجَّلت مفتاح المرور هذا بالفعل. ليس عليك تسجيله مرة أخرى."
@@ -1846,6 +1846,8 @@ ar:
         instructions: "لغة واجهة المستخدم. ستتغير عند تحديث الصفحة."
         default: "(الافتراضية)"
         any: "أي"
+      homepage:
+        default: "(الافتراضية)"
       password_confirmation:
         title: "تكرار كلمة المرور"
       invite_code:
@@ -2206,7 +2208,6 @@ ar:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
     close: "إغلاق"
-    assets_changed_confirm: "لقد تلقى هذا الموقع ترقية برمجية للتو. هل تريد الحصول على أحدث نسخة الآن؟"
     logout: "تم تسجيل خروجك."
     refresh: "تحديث"
     home: "الصفحة الرئيسية"
@@ -2466,6 +2467,13 @@ ar:
     conditional_loading_section:
       loading: جارٍ التحميل…
     category_row:
+      subcategory_count:
+        zero: "+ %{count} فئة فرعية"
+        one: "+ %{count} تصنيفات فرعية"
+        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        few: "+ %{count} فئات فرعية"
+        many: "+ %{count} فئة فرعية"
+        other: "+ %{count} فئة فرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -2638,7 +2646,6 @@ ar:
       reply: "الرد"
       cancel: "إلغاء"
       create_topic: "إنشاء موضوع"
-      create_pm: "رسالة"
       create_whisper: "همس"
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
@@ -3144,7 +3151,6 @@ ar:
         unlist_topics: "إلغاء إدراج الموضوعات"
         relist_topics: "إعادة إدراج الموضوعات"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
-        defer: "تأجيل"
         delete: "حذف الموضوعات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
@@ -3262,9 +3268,25 @@ ar:
     topic_bulk_actions:
       close_topics:
         name: "إغلاق الموضوعات"
+      archive_topics:
+        name: "أرشفة الموضوعات"
+      unlist_topics:
+        name: "إلغاء إدراج الموضوعات"
+      relist_topics:
+        name: "إعادة إدراج الموضوعات"
+      remove_tags:
+        name: "أزِل الوسوم"
+      append_tags:
+        name: "إضافة الوسوم"
+      replace_tags:
+        name: "استبدال الوسوم"
+      delete_topics:
+        name: "حذف الموضوعات"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
+      update_notifications:
+        name: "تحديث الإشعارات"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -3284,9 +3306,6 @@ ar:
       move_to_inbox:
         title: "النقل إلى صندوق الوارد"
         help: "نقل الرسالة مرة أخرى إلى صندوق الوارد"
-      defer:
-        help: "وضع علامة كغير مقروءة"
-        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -4616,8 +4635,6 @@ ar:
         show_incoming_updated_topics: "%{shortcut} عرض الموضوعات المحدَّثة"
         search: "%{shortcut} البحث"
         help: "%{shortcut} فتح مساعدة لوحة المفاتيح"
-        dismiss_new: "%{shortcut} تجاهل الجديد"
-        dismiss_topics: "%{shortcut} تجاهل الموضوعات"
         log_out: "%{shortcut} تسجيل الخروج"
       composing:
         title: "الإنشاء"
@@ -4657,7 +4674,6 @@ ar:
         mark_tracking: "%{shortcut} تتبُّع الموضوع"
         mark_watching: "%{shortcut} مراقبة الموضوع"
         print: "%{shortcut} طباعة الموضوع"
-        defer: "%{shortcut} تأجيل الموضوع"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
         archive_private_message: "%{shortcut} تبديل أرشفة الرسائل الخاصة"
       search_menu:
@@ -4737,8 +4753,10 @@ ar:
     tagging:
       all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
+      selector_tags: "الوسوم"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
+      selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
       choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:
@@ -5097,6 +5115,9 @@ ar:
       panels:
         forum:
           label: المنتدى
+      filter: "عامل التصفية"
+      no_results:
+        title: "لا نتائج"
     welcome_topic_banner:
       title: "إنشاء موضوعك الترحيبي"
       description: "إن موضوعك الترحيبي هو أول ما يقرأه الأعضاء الجُدد. انظر إليه على أنه \"عرض ترويجي\" أو \"بيان مهمة\". دَع الجميع يعرفون الجمهور المستهدف بهذا المجتمع، وما يتوقعون العثور عليه هنا، وما تريد منهم أن يفعلوه أولًا."
@@ -5111,12 +5132,12 @@ ar:
         upload: "تحميل"
         uploading: "جارٍ التحميل"
       errors:
-        valueMissing:
+        value_missing:
           default: "يُرجى ملء هذا الحقل."
-          select-one: "يُرجى تحديد عنصر في القائمة."
-          select-multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
+          select_one: "يُرجى تحديد عنصر في القائمة."
+          select_multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
           checkbox: "يُرجى تحديد هذا المربع إذا كنت تريد المتابعة."
-        typeMismatch:
+        type_mismatch:
           default: "يُرجى إدخال قيمة صالحة."
           color: "يُرجى إدخال لون."
           date: "يُرجى إدخال تاريخ."
@@ -5126,36 +5147,36 @@ ar:
           tel: "يُرجى إدخال رقم هاتف صالح."
           text: "يُرجى إدخال قيمة نصية."
           url: "يُرجى إدخال عنوان URL صالح."
-        tooShort:
-          zero: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
+        too_short:
+          zero: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
           one: "يجب أن يكون طول الإدخال حرفًا واحدًا (%{count}) أو أطول."
           two: "يجب أن يكون طول الإدخال حرفَين (%{count}) أو أطول."
           few: "يجب أن يكون طول الإدخال %{count} أحرف أو أطول."
           many: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
-          other: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
-        tooLong:
-          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
+          other: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
+        too_long:
+          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
           one: "يجب أن يكون طول الإدخال أقل من حرف واحد (%{count})."
           two: "يجب أن يكون طول الإدخال أقل من حرفين (%{count})."
           few: "يجب أن يكون طول الإدخال أقل من %{count} أحرف."
           many: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
-          other: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
-        rangeOverflow:
+          other: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
+        range_overflow:
           zero: "يجب أن يكون الإدخال أقصر من %{count}."
           one: "يجب أن يكون الإدخال أقصر من %{count}."
           two: "يجب أن يكون الإدخال أقصر من %{count}."
           few: "يجب أن يكون الإدخال أقصر من %{count}."
           many: "يجب أن يكون الإدخال أقصر من %{count}."
           other: "يجب أن يكون الإدخال أقصر من %{count}."
-        rangeUnderflow:
+        range_underflow:
           zero: "يجب ان يكون الإدخال أطول من %{count}."
           one: "يجب ان يكون الإدخال أطول من %{count}."
           two: "يجب ان يكون الإدخال أطول من %{count}."
           few: "يجب ان يكون الإدخال أطول من %{count}."
           many: "يجب ان يكون الإدخال أطول من %{count}."
           other: "يجب ان يكون الإدخال أطول من %{count}."
-        patternMismatch: "يُرجى مطابقة التنسيق المطلوب."
-        badInput: "يُرجى إدخال قيمة صالحة."
+        pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
+        bad_input: "يُرجى إدخال قيمة صالحة."
     table_builder:
       title: "أداة إنشاء الجداول"
       modal:
@@ -5219,6 +5240,7 @@ ar:
       title: "مسؤول Discourse"
       moderator: "مشرف"
       back_to_forum: "العودة إلى المنتدى"
+      filter_reports: تصفية التقارير
       tags:
         remove_muted_tags_from_latest:
           always: "دائمًا"
@@ -5227,6 +5249,11 @@ ar:
       reports:
         title: "قائمة التقارير المتاحة"
         meta_doc: "استكشف <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>وثائقنا</a> للحصول على نظرة عامة مفصَّلة عن التقارير."
+        sidebar_title: "التقارير"
+        sidebar_link:
+          all: "الكل"
+      new_features:
+        title: "ما الجديد"
       dashboard:
         title: "لوحة المعلومات"
         last_updated: "تم تحديث لوحة المعلومات:"
@@ -5235,10 +5262,8 @@ ar:
         up_to_date: "أنت على اطِّلاع بآخر المستجدات!"
         critical_available: "يتوفَّر تحديث مهم."
         updates_available: "تتوفَّر تحديثات."
-        please_upgrade: "يُرجى الترقية!"
         no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
-        version_check_pending: "يبدو أنك قد حدَّثت مؤخرًا. رائع!"
         installed_version: "مثبَّت"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
@@ -5288,7 +5313,6 @@ ar:
         exception_error: عذرًا، حدث خطأ في أثناء تنفيذ الاستعلام
         too_many_requests: لقد نفَّذت هذا الإجراء مرات كثيرة جدًا. يُرجى الانتظار قليلًا قبل إعادة المحاولة.
         not_found_error: عذرًا، هذا التقرير غير موجود
-        filter_reports: تصفية التقارير
         custom_date_range: نطاق مخصَّص للتاريخ
         reports:
           trend_title: "تغيير بنسبة %{percent}. الحالي %{current}، كان %{prev} في فترة سابقة."
@@ -5648,6 +5672,51 @@ ar:
           timestamp: "تاريخ الإنشاء"
           completion: "وقت الاكتمال"
           actions: "الإجراءات"
+      home:
+        title: "الصفحة الرئيسية"
+      account:
+        title: "الحساب"
+        sidebar_link:
+          backups: "النسخ الاحتياطية"
+      community:
+        title: "المجتمع"
+        sidebar_link:
+          badges: "الشارات"
+          notifications: "الإشعارات"
+          permalinks: "الروابط الثابتة"
+          trust_levels: "مستويات الثقة"
+          users: "المستخدمون"
+          user_fields: "حقول المستخدم"
+          watched_words: "الكلمات المُراقَبة"
+          legal: "المسائل القانونية"
+      appearance:
+        title: "الظهور"
+        sidebar_link:
+          emoji: "الرمز التعبيري"
+          navigation: "التنقل"
+          themes: "السمات"
+      email_settings:
+        title: "إعدادات البريد الإلكتروني"
+        sidebar_link:
+          appearance: "الظهور"
+          preview_summary: "معاينة الملخص"
+      email_logs:
+        sidebar_link:
+          sent: "المُرسَلة"
+          skipped: "المتخطاة"
+          bounced: "المرتدة"
+          received: "المتلقاة"
+          rejected: "المرفوضة"
+      security:
+        title: "الأمان"
+        sidebar_link:
+          error_logs: "سجلات الأخطاء"
+          screened_emails: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
+          screened_ips: "عناوين IP الخاضعة للمراقبة"
+          screened_urls: "عناوين URL الخاضعة للمراقبة"
+          search_logs: "سجلات البحث"
+          security: "الأمان"
+          spam: "غير مرغوب فيه"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"
@@ -5664,6 +5733,20 @@ ar:
         author: "بواسطة %{author}"
         experimental_badge: "تجريبي"
         learn_more: "معرفة المزيد"
+        sidebar_link:
+          installed: "مثبَّت"
+      advanced:
+        title: "متقدمة"
+        sidebar_link:
+          developer: "المطور"
+          embedding: "التضمين"
+          rate_limits: "حدود المعدلات"
+          user_api: "واجهة برمجة التطبيقات للمستخدم"
+          web_hooks: "خطافات الويب"
+          onebox: "لوحة المعاينة"
+          files: "الملفات"
+          other_options: "أخرى"
+          search: "البحث"
       navigation_menu:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"
@@ -5694,6 +5777,7 @@ ar:
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
           error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
+        settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"
           failed: "فشلت العملية %{operation}. يُرجى التحقُّق من السجلات."
@@ -5968,6 +6052,14 @@ ar:
           active_filter: "نشطة"
           inactive_filter: "غير نشطة"
           updates_available_filter: "تتوفَّر تحديثات"
+          schema:
+            fields:
+              required: "*مطلوب"
+              string:
+                too_short: "يجب ألا يقل عدد الأحرف عن %{count}"
+              number:
+                too_small: "يجب أن تكون أكبر من أو تساوي %{count}"
+                too_large: "يجب أن تكون أقل من أو تساوي %{count}"
         colors:
           select_base:
             title: "تحديد لوحة الألوان الأساسية"
@@ -6044,6 +6136,7 @@ ar:
           instructions: "خصِّص النموذج الذي يتم فيه عرض جميع الرسائل الإلكترونية بتنسيق HTML، والنمط باستخدام CSS."
       email:
         title: "الرسائل الإلكترونية"
+        settings: "إعدادات البريد الإلكتروني"
         templates: "القوالب"
         templates_title: "قوالب البريد الإلكتروني"
         preview_digest: "معاينة الملخص"
@@ -6988,6 +7081,7 @@ ar:
         image: "الصورة"
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
+        settings: "الإعدادات"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"

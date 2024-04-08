@@ -29,7 +29,7 @@ RSpec.describe TopicHotScore do
     end
 
     it "can correctly update like counts and post counts and account for activity" do
-      freeze_time
+      freeze_time_safe
 
       TopicHotScore.create!(topic_id: -1, score: 0.0, recent_likes: 99, recent_posters: 0)
 

@@ -46,6 +46,18 @@ module PageObjects
         find("#bulk-topics-confirm").click
       end
 
+      def click_silent
+        find("#topic-bulk-action-options__silent").click
+      end
+
+      def fill_in_close_note(message)
+        find("#bulk-close-note").set(message)
+      end
+
+      def click_dismiss_read_confirm
+        find("#dismiss-read-confirm").click
+      end
+
       private
 
       def bulk_select_dropdown_item(name)

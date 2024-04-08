@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -64,7 +64,7 @@ export default class CategoryRow extends Component {
   }
 
   get label() {
-    return this.args.item?.name;
+    return this.args.item?.name || this.args.item?.label;
   }
 
   get displayCategoryDescription() {
@@ -111,6 +111,9 @@ export default class CategoryRow extends Component {
           this.allowUncategorizedTopics || this.allowUncategorized,
         hideParent: !!this.parentCategory,
         topicCount: this.topicCount,
+        subcategoryCount: this.args.item?.categories
+          ? this.args.item.categories.length - 1
+          : 0,
       })
     );
   }

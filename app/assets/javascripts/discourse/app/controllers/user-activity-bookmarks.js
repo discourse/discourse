@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { equal, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -96,7 +96,7 @@ export default Controller.extend({
     this.set("permissionDenied", true);
   },
 
-  _processLoadResponse(searchTerm, response) {
+  async _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
       this.model.loadMoreUrl = null;
       return;
@@ -108,6 +108,7 @@ export default Controller.extend({
 
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
+      await Bookmark.applyTransformations(bookmarkModels);
       this.model.bookmarks.pushObjects(bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }

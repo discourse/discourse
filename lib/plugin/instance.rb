@@ -66,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -105,8 +110,12 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
   end
 
   def configurable?
@@ -306,6 +315,10 @@ class Plugin::Instance
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
     Site.preloaded_category_custom_fields << field
+  end
+
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
   def custom_avatar_column(column)

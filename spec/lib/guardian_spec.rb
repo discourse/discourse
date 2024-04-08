@@ -6,7 +6,7 @@ RSpec.describe Guardian do
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group)
@@ -2505,10 +2505,7 @@ RSpec.describe Guardian do
   end
 
   describe "#can_delete_post_action?" do
-    before do
-      SiteSetting.allow_anonymous_posting = true
-      Guardian.any_instance.stubs(:anonymous?).returns(true)
-    end
+    before { SiteSetting.allow_anonymous_posting = true }
 
     context "with allow_anonymous_likes enabled" do
       before { SiteSetting.allow_anonymous_likes = true }

@@ -776,7 +776,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".topic-map"));
+    assert.dom(".topic-map").doesNotExist();
   });
 
   test("topic map - few posts", async function (assert) {
@@ -787,18 +787,10 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-
-    assert.ok(
-      !exists("li.avatars a.poster"),
-      "shows no participants when collapsed"
-    );
+    assert.dom("li.avatars a.poster").doesNotExist();
 
     await click("nav.buttons button");
-    assert.strictEqual(
-      count(".topic-map-expanded a.poster"),
-      2,
-      "shows all when expanded"
-    );
+    assert.dom(".topic-map-expanded a.poster").exists({ count: 2 });
   });
 
   test("topic map - participants", async function (assert) {
@@ -815,21 +807,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-
-    assert.strictEqual(
-      count("li.avatars a.poster"),
-      3,
-      "limits to three participants"
-    );
+    assert.dom("li.avatars a.poster").exists({ count: 3 });
 
     await click("nav.buttons button");
-    assert.ok(!exists("li.avatars a.poster"));
-    assert.strictEqual(
-      count(".topic-map-expanded a.poster"),
-      4,
-      "shows all when expanded"
-    );
-    assert.strictEqual(count("a.poster.toggled"), 2, "two are toggled");
+    assert.dom("li.avatars a.poster").doesNotExist();
+    assert.dom(".topic-map-expanded a.poster").exists({ count: 4 });
+    assert.dom("a.poster.toggled").exists({ count: 2 });
   });
 
   test("topic map - links", async function (assert) {
@@ -847,26 +830,18 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".topic-map"), 1);
-    assert.strictEqual(count(".map.map-collapsed"), 1);
-    assert.ok(!exists(".topic-map-expanded"));
+    assert.dom(".topic-map").exists({ count: 1 });
+    assert.dom(".map.map-collapsed").exists({ count: 1 });
+    assert.dom(".topic-map-expanded").doesNotExist();
 
     await click("nav.buttons button");
-    assert.ok(!exists(".map.map-collapsed"));
-    assert.strictEqual(count(".topic-map .d-icon-chevron-up"), 1);
-    assert.strictEqual(count(".topic-map-expanded"), 1);
-    assert.strictEqual(
-      count(".topic-map-expanded .topic-link"),
-      5,
-      "it limits the links displayed"
-    );
+    assert.dom(".map.map-collapsed").doesNotExist();
+    assert.dom(".topic-map .d-icon-chevron-up").exists({ count: 1 });
+    assert.dom(".topic-map-expanded").exists({ count: 1 });
+    assert.dom(".topic-map-expanded .topic-link").exists({ count: 5 });
 
     await click(".link-summary button");
-    assert.strictEqual(
-      count(".topic-map-expanded .topic-link"),
-      6,
-      "all links now shown"
-    );
+    assert.dom(".topic-map-expanded .topic-link").exists({ count: 6 });
   });
 
   test("topic map - no summary", async function (assert) {
@@ -874,7 +849,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".toggle-summary"));
+    assert.dom(".toggle-summary").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
@@ -885,7 +860,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post" @args={{this.args}} @showTopReplies={{this.showTopReplies}} />`
     );
 
-    assert.strictEqual(count(".toggle-summary"), 1);
+    assert.dom(".toggle-summary").exists({ count: 1 });
 
     await click(".toggle-summary button");
     assert.ok(this.summaryToggled);
@@ -901,8 +876,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".private-message-map"), 1);
-    assert.strictEqual(count(".private-message-map .user"), 1);
+    assert.dom(".private-message-map").exists({ count: 1 });
+    assert.dom(".private-message-map .user").exists({ count: 1 });
   });
 
   test("post notice - with username", async function (assert) {

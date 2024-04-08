@@ -73,6 +73,16 @@ RSpec.describe ExportCsvController do
         expect(log_entry.acting_user_id).to eq(admin.id)
         expect(log_entry.subject).to eq("user_list")
       end
+
+      it "fails requests where the entity is too long" do
+        post "/export_csv/export_entity.json", params: { entity: "x" * 200 }
+        expect(response.status).to eq(400)
+      end
+
+      it "fails requests where the name arg is too long" do
+        post "/export_csv/export_entity.json", params: { entity: "foo", args: { name: "x" * 200 } }
+        expect(response.status).to eq(400)
+      end
     end
   end
 

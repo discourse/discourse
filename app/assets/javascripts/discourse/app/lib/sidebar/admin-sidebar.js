@@ -5,7 +5,6 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n from "discourse-i18n";
 
@@ -17,9 +16,11 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink }) {
+  constructor({ adminSidebarNavLink, adminSidebarStateManager, router }) {
     super(...arguments);
+    this.router = router;
     this.adminSidebarNavLink = adminSidebarNavLink;
+    this.adminSidebarStateManager = adminSidebarStateManager;
   }
 
   get name() {
@@ -36,6 +37,10 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get href() {
     return this.adminSidebarNavLink.href;
+  }
+
+  get query() {
+    return this.adminSidebarNavLink.query;
   }
 
   get models() {
@@ -59,14 +64,43 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   get title() {
     return this.adminSidebarNavLink.text;
   }
+
+  get currentWhen() {
+    // This is needed because the setting route is underneath /admin/plugins/:plugin_id,
+    // but is not a child route of the plugin routes themselves. E.g. discourse-ai
+    // for the plugin ID has its own nested routes defined in the plugin.
+    if (this.router.currentRoute.name === "adminPlugins.show.settings") {
+      if (
+        this.adminSidebarNavLink.route?.includes(
+          this.router.currentRoute.parent.params.plugin_id
+        )
+      ) {
+        return this.router.currentRoute.name;
+      }
+    }
+
+    return this.adminSidebarNavLink.route;
+  }
+  get keywords() {
+    return (
+      this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] || {
+        navigation: [],
+      }
+    );
+  }
 }
 
-function defineAdminSection(adminNavSectionData) {
+function defineAdminSection(
+  adminNavSectionData,
+  adminSidebarStateManager,
+  router
+) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
       this.adminNavSectionData = adminNavSectionData;
       this.hideSectionHeader = adminNavSectionData.hideSectionHeader;
+      this.adminSidebarStateManager = adminSidebarStateManager;
     }
 
     get sectionLinks() {
@@ -74,7 +108,7 @@ function defineAdminSection(adminNavSectionData) {
     }
 
     get name() {
-      return `admin-nav-section-${this.adminNavSectionData.name}`;
+      return `${ADMIN_PANEL}-${this.adminNavSectionData.name}`;
     }
 
     get title() {
@@ -92,12 +126,18 @@ function defineAdminSection(adminNavSectionData) {
         (sectionLinkData) =>
           new SidebarAdminSectionLink({
             adminSidebarNavLink: sectionLinkData,
+            adminSidebarStateManager: this.adminSidebarStateManager,
+            router,
           })
       );
     }
 
     get displaySection() {
       return true;
+    }
+
+    get collapsedByDefault() {
+      return this.adminNavSectionData.name !== "root";
     }
   };
 
@@ -112,34 +152,16 @@ export function useAdminNavConfig(navMap) {
       hideSectionHeader: true,
       links: [
         {
-          name: "back_to_forum",
-          route: `discovery.${defaultHomepage()}`,
-          label: "admin.back_to_forum",
-          icon: "arrow-left",
-        },
-        {
-          name: "admin_dashboard",
-          route: "admin.dashboard",
+          name: "admin_home",
+          route: "admin.dashboard.general",
           label: "admin.dashboard.title",
           icon: "home",
         },
         {
-          name: "admin_site_settings",
+          name: "admin_all_site_settings",
           route: "adminSiteSettings",
-          label: "admin.site_settings.title",
+          label: "admin.advanced.sidebar_link.all_site_settings",
           icon: "cog",
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.users.title",
-          icon: "users",
-        },
-        {
-          name: "admin_badges",
-          route: "adminBadges",
-          label: "admin.badges.title",
-          icon: "certificate",
         },
       ],
     },
@@ -200,16 +222,21 @@ export function addAdminSidebarSectionLink(sectionName, link) {
 }
 
 function pluginAdminRouteLinks() {
-  return (PreloadStore.get("enabledPluginAdminRoutes") || []).map(
-    (pluginAdminRoute) => {
+  return (PreloadStore.get("visiblePlugins") || [])
+    .filter((plugin) => plugin.admin_route && plugin.enabled)
+    .map((plugin) => {
       return {
-        name: `admin_plugin_${pluginAdminRoute.location}`,
-        route: `adminPlugins.${pluginAdminRoute.location}`,
-        label: pluginAdminRoute.label,
+        name: `admin_plugin_${plugin.admin_route.location}`,
+        route: plugin.admin_route.use_new_show_route
+          ? `adminPlugins.show.${plugin.admin_route.location}`
+          : `adminPlugins.${plugin.admin_route.location}`,
+        routeModels: plugin.admin_route.use_new_show_route
+          ? [plugin.admin_route.location]
+          : [],
+        label: plugin.admin_route.label,
         icon: "cog",
       };
-    }
-  );
+    });
 }
 
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
@@ -224,16 +251,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const siteSettings = getOwnerWithFallback(this).lookup(
       "service:site-settings"
     );
+    const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
     if (!currentUser.use_admin_sidebar) {
       return [];
     }
 
-    this.adminSidebarExperimentStateManager = getOwnerWithFallback(this).lookup(
-      "service:admin-sidebar-experiment-state-manager"
+    this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
+      "service:admin-sidebar-state-manager"
     );
 
-    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const savedConfig = this.adminSidebarStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
@@ -241,7 +269,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     }
 
     if (siteSettings.experimental_form_templates) {
-      navMap.findBy("name", "customize").links.push({
+      navMap.findBy("name", "appearance").links.push({
         name: "admin_customize_form_templates",
         route: "adminCustomizeFormTemplates",
         label: "admin.form_templates.nav_title",
@@ -249,10 +277,26 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       });
     }
 
+    navMap.forEach((section) =>
+      section.links.forEach((link) => {
+        if (link.keywords) {
+          this.adminSidebarStateManager.keywords[link.name] = link.keywords;
+        }
+      })
+    );
+
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      return defineAdminSection(adminNavSectionData);
+      return defineAdminSection(
+        adminNavSectionData,
+        this.adminSidebarStateManager,
+        router
+      );
     });
+  }
+
+  get filterable() {
+    return true;
   }
 }

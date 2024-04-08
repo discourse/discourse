@@ -76,6 +76,10 @@
       }
     }
   }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
 }
 
 .category-heading {
@@ -166,6 +170,20 @@
   top: var(--header-offset, 60px);
   background: var(--secondary);
   z-index: 2;
+}
+
+.bulk-select-topics-dropdown {
+  .select-kit.single-select.dropdown-select-box .select-kit-row {
+    .texts .name {
+      font-weight: normal;
+    }
+    .icons {
+      font-size: var(--font-down-2);
+      margin-right: 0.75em;
+      position: relative;
+      top: 0.15em;
+    }
+  }
 }
 
 .topic-list {
@@ -403,11 +421,8 @@
   display: flex;
   margin: 0.5em 0;
   flex-wrap: wrap;
-  font-size: var(--font-0-rem);
-
-  button {
-    margin-right: 0.5em;
-  }
+  font-size: var(--font-down-1);
+  gap: 0.5em;
 }
 
 div.education {

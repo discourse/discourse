@@ -25,16 +25,27 @@
 </div>
 
 <div class="setting-value">
-  {{component
-    this.componentName
-    setting=this.setting
-    value=this.buffered.value
-    validationMessage=this.validationMessage
-    preview=this.preview
-    isSecret=this.isSecret
-    allowAny=this.allowAny
-    changeValueCallback=this.changeValueCallback
-  }}
+  {{#if this.settingEditButton}}
+    <DButton
+      @action={{this.settingEditButton.action}}
+      @icon={{this.settingEditButton.icon}}
+      @label={{this.settingEditButton.label}}
+      class="setting-value-edit-button"
+    />
+
+    <SiteSettings::Description @description={{this.setting.description}} />
+  {{else}}
+    {{component
+      this.componentName
+      setting=this.setting
+      value=this.buffered.value
+      validationMessage=this.validationMessage
+      preview=this.preview
+      isSecret=this.isSecret
+      allowAny=this.allowAny
+      changeValueCallback=this.changeValueCallback
+    }}
+  {{/if}}
 </div>
 
 {{#if this.dirty}}
@@ -42,7 +53,7 @@
     <DButton class="ok" @action={{this.update}} @icon="check" />
     <DButton class="cancel" @action={{this.cancel}} @icon="times" />
   </div>
-{{else if this.setting.overridden}}
+{{else if this.overridden}}
   {{#if this.setting.secret}}
     <DButton @action={{this.toggleSecret}} @icon="far-eye-slash" />
   {{/if}}

@@ -647,14 +647,14 @@ RSpec.describe ApplicationController do
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to_not include("example.com")
+      expect(script_src).to_not include("'unsafe-eval'")
 
-      SiteSetting.content_security_policy_script_src = "example.com"
+      SiteSetting.content_security_policy_script_src = "'unsafe-eval'"
 
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to include("example.com")
+      expect(script_src).to include("'unsafe-eval'")
     end
 
     it "does not set CSP when responding to non-HTML" do
@@ -1188,32 +1188,50 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe "preload Link header" do
-    context "with GlobalSetting.preload_link_header" do
-      before { global_setting :preload_link_header, true }
+  describe "Early hint header" do
+    before { global_setting :cdn_url, "https://cdn.example.com/something" }
 
-      it "should have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).to include("Link")
+    it "is not included by default" do
+      get "/latest"
+      expect(response.status).to eq(200)
+      expect(response.headers["Link"]).to eq(nil)
+    end
+
+    context "when in preconnect mode" do
+      before { global_setting :early_hint_header_mode, "preconnect" }
+
+      it "includes the preconnect hint" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to include("<https://cdn.example.com>; rel=preconnect")
+        expect(response.headers["Link"]).not_to include("rel=preload")
       end
 
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
+      it "can use a different header" do
+        global_setting :early_hint_header_name, "X-Discourse-Early-Hint"
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Early-Hint"]).to include(
+          "<https://cdn.example.com>; rel=preconnect",
+        )
+        expect(response.headers["Link"]).to eq(nil)
+      end
+
+      it "is skipped for non-app URLs" do
+        get "/latest.json"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to eq(nil)
       end
     end
 
-    context "without GlobalSetting.preload_link_header" do
-      before { global_setting :preload_link_header, false }
+    context "when in preload mode" do
+      before { global_setting :early_hint_header_mode, "preload" }
 
-      it "shouldn't have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).not_to include("Link")
-      end
-
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
+      it "includes the preload hint" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to include('.js>; rel="preload"')
+        expect(response.headers["Link"]).to include('.css?__ws=test.localhost>; rel="preload"')
       end
     end
   end
@@ -1295,7 +1313,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
-            "enabledPluginAdminRoutes",
+            "visiblePlugins",
           ],
         )
       end
@@ -1309,9 +1327,9 @@ RSpec.describe ApplicationController do
         )
       end
 
-      it "has correctly loaded enabledPluginAdminRoutes" do
+      it "has correctly loaded visiblePlugins" do
         get "/latest"
-        expect(JSON.parse(preloaded_json["enabledPluginAdminRoutes"])).to eq([])
+        expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
       end
     end
   end

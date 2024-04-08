@@ -25,7 +25,7 @@ module Chat
     end
 
     def can_create_direct_message?
-      is_staff? || @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
+      is_staff? || can_direct_message?
     end
 
     def hidden_tag_names
@@ -217,7 +217,7 @@ module Chat
     end
 
     def can_edit_chat?(message)
-      (message.user_id == @user.id && !@user.silenced?)
+      (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 
     def can_react?

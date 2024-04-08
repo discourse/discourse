@@ -188,6 +188,7 @@ pt_BR:
     software_update_prompt:
       dismiss: "Descartar"
     bootstrap_mode: "Primeiros passos"
+    back_button: "Voltar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
@@ -197,7 +198,6 @@ pt_BR:
     broken_page_change_alert: "Houve um erro no identificador onPageChange. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     broken_plugin_alert: "Causado(a) pelo plugin \"%{name}\""
     critical_deprecation:
-      notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>mais informações</a>)."
       theme_source: "Tema identificado: <a target='_blank' href='%{path}'>\"%{name}\"</a>."
       plugin_source: "Plugin identificado: \"%{name}\""
     s3:
@@ -958,9 +958,12 @@ pt_BR:
       "14": "Pendentes"
       "15": "Rascunhos"
     categories:
-      all: "todas as categorias"
-      all_subcategories: "tudo"
-      no_subcategory: "nenhum"
+      categories_label: "categorias"
+      subcategories_label: "subcategorias"
+      no_subcategories: "nenhuma subcategoria"
+      remove_filter: "remover filtro"
+      plus_more_count: "mais %{count}"
+      view_all: "ver tudo"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
       reorder:
@@ -1147,7 +1150,6 @@ pt_BR:
       allow_private_messages: "Permitir que outros(as) usuários(as) me enviem mensagens pessoais"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
-      enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -1429,8 +1431,7 @@ pt_BR:
         save: "Salvar"
         title: "Passkeys"
         short_description: "Passkeys são substitutos de senhas que validam sua identidade através de biometria (ex.: toque, ID facial) ou senha/PIN."
-        added_prefix: "Adicionado"
-        last_used_prefix: "Usados(as) por último"
+        added_date: "Adicionou %{date}"
         never_used: "Nunca usou"
         not_allowed_error: "O processo de registro do passkey teve o tempo expirado ou foi cancelado, ou não obteve permissão."
         already_added_error: "Você já registrou este passkey. Não precisa registrar novamente."
@@ -1550,6 +1551,8 @@ pt_BR:
         instructions: "Idioma da interface do(a) usuário(a). Será alterado quando você atualizar a página."
         default: "(padrão)"
         any: "qualquer"
+      homepage:
+        default: "(padrão)"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -1874,7 +1877,6 @@ pt_BR:
       close: "fechar"
       dismiss_error: "Descartar erro"
     close: "Fechar"
-    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "Você foi desconectado(a)."
     refresh: "Atualizar"
     home: "Início"
@@ -2122,6 +2124,9 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando…
     category_row:
+      subcategory_count:
+        one: "+%{count} subcategoria"
+        other: "+%{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2246,7 +2251,6 @@ pt_BR:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar tópico"
-      create_pm: "Mensagem"
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
@@ -2664,7 +2668,6 @@ pt_BR:
         unlist_topics: "Remover tópicos da lista"
         relist_topics: "Reinserir tópicos na lista"
         reset_bump_dates: "Redefinir datas de promoção"
-        defer: "Adiar"
         delete: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
@@ -2750,6 +2753,18 @@ pt_BR:
     topic_bulk_actions:
       close_topics:
         name: "Fechar tópicos"
+      archive_topics:
+        name: "Arquivar tópicos"
+      unlist_topics:
+        name: "Remover tópicos da lista"
+      relist_topics:
+        name: "Reinserir tópicos na lista"
+      append_tags:
+        name: "Adicionar etiquetas"
+      replace_tags:
+        name: "Substituir etiquetas"
+      delete_topics:
+        name: "Excluir tópicos"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"
@@ -2768,9 +2783,6 @@ pt_BR:
       move_to_inbox:
         title: "Mover para caixa de entrada"
         help: "Mover mensagem de volta para caixa de entrada"
-      defer:
-        help: "Marcar como não lido"
-        title: "Adiar"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -3876,8 +3888,6 @@ pt_BR:
         show_incoming_updated_topics: "%{shortcut} Exibir tópicos atualizados"
         search: "%{shortcut} Procurar"
         help: "%{shortcut} Abrir ajuda de teclado"
-        dismiss_new: "%{shortcut} descartar novos(as)"
-        dismiss_topics: "%{shortcut} Descartar tópicos"
         log_out: "%{shortcut} Sair"
       composing:
         title: "Criação"
@@ -3917,7 +3927,6 @@ pt_BR:
         mark_tracking: "%{shortcut} Monitorar tópico"
         mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
-        defer: "%{shortcut} Adiar tópico"
         topic_admin_actions: "%{shortcut} Abrir ações de administração de tópico"
         archive_private_message: "%{shortcut} Alternar mensagem privada de arquivo"
       search_menu:
@@ -3977,8 +3986,10 @@ pt_BR:
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
+      selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       choose_for_topic_required:
@@ -4289,6 +4300,9 @@ pt_BR:
       panels:
         forum:
           label: Fórum
+      filter: "Filtro"
+      no_results:
+        title: "Nenhum resultado"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -4303,12 +4317,12 @@ pt_BR:
         upload: "Enviar"
         uploading: "Enviando"
       errors:
-        valueMissing:
+        value_missing:
           default: "Preencha este campo."
-          select-one: "Selecione um item da lista."
-          select-multiple: "Selecione pelo menos um item da lista."
+          select_one: "Selecione um item da lista."
+          select_multiple: "Selecione pelo menos um item da lista."
           checkbox: "Marque esta caixa se quiser continuar."
-        typeMismatch:
+        type_mismatch:
           default: "Digite um valor válido."
           color: "Insira uma cor."
           date: "Insira uma data."
@@ -4318,20 +4332,20 @@ pt_BR:
           tel: "Insira um número de telefone válido."
           text: "Insira um valor de texto."
           url: "Insira um URL válido."
-        tooShort:
+        too_short:
           one: "A entrada deve conter %{count} caractere ou mais."
           other: "A entrada deve conter %{count} caracteres ou mais."
-        tooLong:
+        too_long:
           one: "A entrada deve ter menos de %{count} caractere."
           other: "A entrada deve ser inferior a %{count} caracteres."
-        rangeOverflow:
+        range_overflow:
           one: "A entrada deve ser menor que %{count}."
           other: "A entrada deve ser menor que %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "A entrada deve ser maior que %{count}."
           other: "A entrada deve ser maior que %{count}."
-        patternMismatch: "Corresponda ao formato solicitado."
-        badInput: "Insira uma entrada válida."
+        pattern_mismatch: "Corresponda ao formato solicitado."
+        bad_input: "Insira uma entrada válida."
     table_builder:
       title: "Construtor de tabela"
       modal:
@@ -4395,6 +4409,7 @@ pt_BR:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
       back_to_forum: "Voltar para o Fórum"
+      filter_reports: Filtrar relatórios
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4403,6 +4418,11 @@ pt_BR:
       reports:
         title: "Lista de relatórios disponíveis"
         meta_doc: "Explore nossa <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentação</a> para uma visão detalhada dos relatórios."
+        sidebar_title: "Relatórios"
+        sidebar_link:
+          all: "Tudo"
+      new_features:
+        title: "Novidades"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
@@ -4411,10 +4431,8 @@ pt_BR:
         up_to_date: "Você está atualizado(a)!"
         critical_available: "Uma atualização crítica está disponível."
         updates_available: "Atualizações estão disponíveis."
-        please_upgrade: "Faça a atualização!"
         no_check_performed: "Não foi realizada nenhuma verificação de atualizações. Verifique se sidekiq esta em execução."
         stale_data: "Não foi realizada nenhuma verificação de atualizações ultimamente. Verifique se sidekiq esta em execução."
-        version_check_pending: "Parece que você realizou uma atualização recentemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
@@ -4460,7 +4478,6 @@ pt_BR:
         exception_error: Desculpe, ocorreu um erro ao executar a consulta
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
-        filter_reports: Filtrar relatórios
         custom_date_range: Intervalo de datas personalizado
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
@@ -4800,6 +4817,50 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+      home:
+        title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Emblemas"
+          notifications: "Notificações"
+          permalinks: "Links permanentes"
+          trust_levels: "Níveis de confiança"
+          users: "Usuários(as)"
+          user_fields: "Campos de usuário(a)"
+          watched_words: "Palavras acompanhadas"
+          legal: "Jurídico"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegação"
+          themes: "Temas"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparência"
+          preview_summary: "Visualizar resumo"
+      email_logs:
+        sidebar_link:
+          sent: "Enviado(a)"
+          skipped: "Ignorado(a)"
+          bounced: "Devolvido(a)"
+          received: "Recebido(a)"
+          rejected: "Rejeitado(a)"
+      security:
+        title: "Segurança"
+        sidebar_link:
+          error_logs: "Registro de erros"
+          screened_emails: "E-mails filtrados"
+          screened_ips: "IPs filtrados"
+          screened_urls: "URLs filtradas"
+          search_logs: "Registros de pesquisa"
+          security: "Segurança"
+          spam: "Spam"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"
@@ -4816,6 +4877,20 @@ pt_BR:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Saiba mais"
+        sidebar_link:
+          installed: "Instalado(a)"
+      advanced:
+        title: "Avançado"
+        sidebar_link:
+          developer: "Desenvolvedor"
+          embedding: "Incorporar"
+          rate_limits: "Limites de taxa"
+          user_api: "API de usuário(a)"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Arquivos"
+          other_options: "Outros(as)"
+          search: "Pesquisar"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
@@ -4846,6 +4921,7 @@ pt_BR:
           uploading_progress: "Enviando… %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
           error: "Houve um erro ao carregar \"%{filename}\": %{message}"
+        settings: "Configurações"
         operations:
           is_running: "Uma operação está sendo executada…"
           failed: "A %{operation} falhou. Confira os registros."
@@ -5116,6 +5192,13 @@ pt_BR:
           active_filter: "Ativo(a)"
           inactive_filter: "Inativo(a)"
           updates_available_filter: "Atualizações disponíveis"
+          schema:
+            fields:
+              string:
+                too_short: "deve ter no mínimo %{count} caracteres"
+              number:
+                too_small: "precisa ser maior ou igual a %{count}"
+                too_large: "deve ser menor ou igual a %{count}"
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"
@@ -6104,6 +6187,7 @@ pt_BR:
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}:?"
+        settings: "Configurações"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         confirm_delete: "Você tem certeza que deseja excluir este host?"

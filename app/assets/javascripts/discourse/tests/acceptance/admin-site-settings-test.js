@@ -212,4 +212,29 @@ acceptance("Admin - Site Settings", function (needs) {
       );
     });
   });
+
+  test("can perform fuzzy search", async function (assert) {
+    await visit("/admin/site_settings");
+
+    await fillIn("#setting-filter", "top_menu");
+    assert.dom(".row.setting").exists({ count: 1 });
+
+    await fillIn("#setting-filter", "tmenu");
+    assert.dom(".row.setting").exists({ count: 1 });
+
+    // ensures fuzzy search limiter is in place
+    await fillIn("#setting-filter", "obo");
+    assert.dom(".row.setting").exists({ count: 1 });
+    assert.dom(".row.setting").hasText(/onebox/);
+
+    // ensures fuzzy search limiter doesn't limit too much
+    await fillIn("#setting-filter", "blocked_onebox_domains");
+    assert.dom(".row.setting").exists({ count: 1 });
+    assert.dom(".row.setting").hasText(/onebox/);
+
+    // ensures keyword search is working
+    await fillIn("#setting-filter", "blah");
+    assert.dom(".row.setting").exists({ count: 1 });
+    assert.dom(".row.setting").hasText(/username/);
+  });
 });

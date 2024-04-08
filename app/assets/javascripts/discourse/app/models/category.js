@@ -1,5 +1,5 @@
 import { warn } from "@ember/debug";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -102,7 +102,14 @@ export default class Category extends RestModel {
     if (!id) {
       return;
     }
-    return Category._idMap()[id];
+
+    if (typeof id === "string") {
+      // eslint-disable-next-line no-console
+      console.warn("Category.findById called with a string ID");
+      id = parseInt(id, 10);
+    }
+
+    return Category._idMap().get(id);
   }
 
   static findByIds(ids = []) {
@@ -150,6 +157,10 @@ export default class Category extends RestModel {
     return categories;
   }
 
+  static async asyncFindById(id) {
+    return (await Category.asyncFindByIds([id]))[0];
+  }
+
   static findBySlugAndParent(slug, parentCategory) {
     if (this.slugEncoded()) {
       slug = encodeURI(slug);
@@ -174,6 +185,25 @@ export default class Category extends RestModel {
     }
 
     return category;
+  }
+
+  static async asyncFindBySlugPath(slugPath, opts = {}) {
+    const data = { slug_path: slugPath };
+    if (opts.includePermissions) {
+      data.include_permissions = true;
+    }
+
+    const result = await ajax("/categories/find", { data });
+
+    const categories = result["categories"].map((category) => {
+      category = Site.current().updateCategory(category);
+      if (opts.includePermissions) {
+        category.setupGroupsAndPermissions();
+      }
+      return category;
+    });
+
+    return categories[categories.length - 1];
   }
 
   static async asyncFindBySlugPathWithID(slugPathWithID) {
@@ -381,6 +411,7 @@ export default class Category extends RestModel {
         categories: result["categories"].map((category) =>
           Site.current().updateCategory(category)
         ),
+        categoriesCount: result["categories_count"],
       };
     } else {
       return result["categories"].map((category) =>
@@ -410,6 +441,22 @@ export default class Category extends RestModel {
         })
       );
     }
+  }
+
+  @computed("parent_category_id", "site.categories.[]")
+  get parentCategory() {
+    if (this.parent_category_id) {
+      return Category.findById(this.parent_category_id);
+    }
+  }
+
+  set parentCategory(newParentCategory) {
+    this.set("parent_category_id", newParentCategory?.id);
+  }
+
+  @computed("site.categories.[]")
+  get subcategories() {
+    return this.site.categories.filterBy("parent_category_id", this.id);
   }
 
   @discourseComputed("required_tag_groups", "minimum_required_tags")
@@ -443,6 +490,17 @@ export default class Category extends RestModel {
   @discourseComputed("parentCategory.ancestors")
   ancestors(parentAncestors) {
     return [...(parentAncestors || []), this];
+  }
+
+  @discourseComputed("subcategories")
+  descendants() {
+    const descendants = [this];
+    for (let i = 0; i < descendants.length; i++) {
+      if (descendants[i].subcategories) {
+        descendants.push(...descendants[i].subcategories);
+      }
+    }
+    return descendants;
   }
 
   @discourseComputed("parentCategory.level")

@@ -34,7 +34,6 @@ module Stylesheet
         when Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += importer.import_color_definitions
           file += importer.import_wcag_overrides
-          file += importer.category_backgrounds(options[:color_scheme_id])
           file += importer.font
         end
       end

@@ -20,7 +20,7 @@
     "@embroider/addon-shim": "^1.8.7"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },

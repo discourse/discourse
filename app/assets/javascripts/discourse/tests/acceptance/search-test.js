@@ -90,6 +90,10 @@ acceptance("Search - Anonymous", function (needs) {
       "it goes to full search page and preserves the search term"
     );
 
+    assert
+      .dom(".search-menu .search-menu-panel")
+      .doesNotExist("closes search menu after clicking advanced search button");
+
     assert.ok(
       exists(".search-advanced-options"),
       "advanced search is expanded"
@@ -491,6 +495,10 @@ acceptance("Search - Authenticated", function (needs) {
 
     server.get("/t/2179.json", () => {
       return helper.response({});
+    });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
     });
   });
 
@@ -1135,6 +1143,10 @@ acceptance("Search - assistant", function (needs) {
           },
         ],
       });
+    });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
     });
   });
 

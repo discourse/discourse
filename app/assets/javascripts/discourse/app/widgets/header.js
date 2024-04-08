@@ -2,10 +2,12 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerButtonsDAG } from "discourse/components/header";
+import { headerIconsDAG } from "discourse/components/header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
-import { logSearchLinkClick } from "discourse/lib/search";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
@@ -22,14 +24,18 @@ import I18n from "discourse-i18n";
 const SEARCH_BUTTON_ID = "search-button";
 export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
-let _extraHeaderIcons = [];
+let _extraHeaderIcons;
+clearExtraHeaderIcons();
 
-export function addToHeaderIcons(icon) {
-  _extraHeaderIcons.push(icon);
-}
+let _extraHeaderButtons;
+clearExtraHeaderButtons();
 
 export function clearExtraHeaderIcons() {
-  _extraHeaderIcons = [];
+  _extraHeaderIcons = headerIconsDAG();
+}
+
+export function clearExtraHeaderButtons() {
+  _extraHeaderButtons = headerButtonsDAG();
 }
 
 export const dropdown = {
@@ -175,16 +181,14 @@ createWidget(
 
       html(attrs) {
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
-              href: attrs.user.path,
               "aria-label": I18n.t("user.account_possessive", {
                 name: attrs.user.name || attrs.user.username,
               }),
-              "data-auto-route": true,
             },
           },
           this.attach("header-notifications", attrs)
@@ -210,13 +214,11 @@ createWidget(
         }
 
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
               "aria-haspopup": true,
-              href: attrs.href,
-              "data-auto-route": true,
               title,
               "aria-label": title,
               id: attrs.iconId,
@@ -237,7 +239,7 @@ createWidget("header-icons", {
   init() {
     registerWidgetShim(
       "extra-icon",
-      "div.wrapper",
+      "span.wrapper",
       hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
     );
   },
@@ -249,58 +251,55 @@ createWidget("header-icons", {
 
     const icons = [];
 
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach((icon) => {
-        if (typeof icon === "string") {
-          icons.push(this.attach(icon));
-        } else {
-          icons.push(this.attach("extra-icon", { component: icon }));
-        }
-      });
-    }
+    const resolvedIcons = _extraHeaderIcons.resolve();
 
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: SEARCH_BUTTON_ID,
-      action: "toggleSearchMenu",
-      active: this.search.visible,
-      href: getURL("/search"),
-      classNames: ["search-dropdown"],
+    resolvedIcons.forEach((icon) => {
+      if (icon.key === "search") {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "search.title",
+            icon: "search",
+            iconId: SEARCH_BUTTON_ID,
+            action: "toggleSearchMenu",
+            active: this.search.visible,
+            href: getURL("/search"),
+            classNames: ["search-dropdown"],
+          })
+        );
+      } else if (icon.key === "user-menu" && attrs.user) {
+        icons.push(
+          this.attach("user-dropdown", {
+            active: attrs.userVisible,
+            action: "toggleUserMenu",
+            user: attrs.user,
+          })
+        );
+      } else if (
+        icon.key === "hamburger" &&
+        (!attrs.sidebarEnabled || this.site.mobileView)
+      ) {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "hamburger_menu",
+            icon: "bars",
+            iconId: "toggle-hamburger-menu",
+            active: attrs.hamburgerVisible,
+            action: "toggleHamburger",
+            href: "",
+            classNames: ["hamburger-dropdown"],
+          })
+        );
+      } else {
+        icons.push(this.attach("extra-icon", { component: icon.value }));
+      }
     });
-
-    icons.push(search);
-
-    const hamburger = this.attach("header-dropdown", {
-      title: "hamburger_menu",
-      icon: "bars",
-      iconId: "toggle-hamburger-menu",
-      active: attrs.hamburgerVisible,
-      action: "toggleHamburger",
-      href: "",
-      classNames: ["hamburger-dropdown"],
-    });
-
-    if (!attrs.sidebarEnabled || this.site.mobileView) {
-      icons.push(hamburger);
-    }
-
-    if (attrs.user) {
-      icons.push(
-        this.attach("user-dropdown", {
-          active: attrs.userVisible,
-          action: "toggleUserMenu",
-          user: attrs.user,
-        })
-      );
-    }
 
     return icons;
   },
 });
 
 createWidget("header-buttons", {
-  tagName: "span.header-buttons",
+  tagName: "span.auth-buttons",
 
   html(attrs) {
     if (this.currentUser) {
@@ -377,10 +376,7 @@ createWidget("hamburger-dropdown-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "340px"
-          : "-340px";
+      const finishPosition = isDocumentRTL() ? "340px" : "-340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -434,10 +430,7 @@ createWidget("revamped-user-menu-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "-340px"
-          : "340px";
+      const finishPosition = isDocumentRTL() ? "-340px" : "340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -500,6 +493,14 @@ export default createWidget("header", {
   buildKey: () => `header`,
   services: ["router", "search"],
 
+  init() {
+    registerWidgetShim(
+      "extra-button",
+      "span.wrapper",
+      hbs`<@data.component />`
+    );
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,
@@ -535,7 +536,17 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [this.attach("header-buttons", attrs), headerIcons];
+      const buttons = [];
+      const resolvedButtons = _extraHeaderButtons.resolve();
+      resolvedButtons.forEach((button) => {
+        if (button.key === "auth") {
+          buttons.push(this.attach("header-buttons", attrs));
+        }
+        buttons.push(this.attach("extra-button", { component: button.value }));
+      });
+
+      const panels = [];
+      panels.push(h("span.header-buttons", buttons), headerIcons);
 
       if (this.search.visible) {
         this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;
@@ -590,24 +601,6 @@ export default createWidget("header", {
     this.toggleBodyScrolling(false);
   },
 
-  linkClickedEvent(attrs) {
-    let searchContextEnabled = false;
-    if (attrs) {
-      searchContextEnabled = attrs.searchContextEnabled;
-
-      const { searchLogId, searchResultId, searchResultType } = attrs;
-      if (searchLogId && searchResultId && searchResultType) {
-        logSearchLinkClick({ searchLogId, searchResultId, searchResultType });
-      }
-    }
-
-    if (!searchContextEnabled) {
-      this.closeAll();
-    }
-
-    this.updateHighlight();
-  },
-
   toggleSearchMenu() {
     if (this.site.mobileView) {
       const context = this.search.searchContext;
@@ -659,10 +652,9 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) {
-      return;
+    if (this.site.mobileView) {
+      scrollLock(bool);
     }
-    scrollLock(bool);
   },
 
   togglePageSearch() {

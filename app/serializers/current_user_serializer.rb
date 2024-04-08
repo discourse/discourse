@@ -3,6 +3,7 @@
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
   include UserSidebarMixin
+  include UserStatusMixin
 
   attributes :name,
              :unread_notifications,
@@ -65,7 +66,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :pending_posts_count,
-             :status,
              :grouped_unread_notifications,
              :display_sidebar_tags,
              :sidebar_tags,
@@ -73,14 +73,19 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_sections,
              :new_new_view_enabled?,
              :use_experimental_topic_bulk_actions?,
-             :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
-             :glimmer_header_enabled?
+             :glimmer_header_enabled?,
+             :can_view_raw_email
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
+  end
 
   def sidebar_sections
     SidebarSection
@@ -304,19 +309,15 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def include_status?
-    SiteSetting.enable_user_status && object.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(object.user_status, root: false)
-  end
-
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
   end
 
   def use_experimental_topic_bulk_actions?
     scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
+  end
+
+  def can_view_raw_email
+    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 end

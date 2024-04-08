@@ -17,9 +17,21 @@ require "./lib/turbo_tests/runner"
 require "./lib/turbo_tests/json_rows_formatter"
 require "./lib/turbo_tests/documentation_formatter"
 
+RSpec.configure do |config|
+  # this is an unusual config option because it is used by the formatter, not just the runner
+  config.full_cause_backtrace = true
+end
+
 module TurboTests
-  FakeException = Struct.new(:backtrace, :message, :cause)
-  class FakeException
+  class FakeException < Exception
+    attr_reader :backtrace, :message, :cause
+
+    def initialize(backtrace, message, cause)
+      @backtrace = backtrace
+      @message = message
+      @cause = cause
+    end
+
     def self.from_obj(obj)
       if obj
         obj = obj.symbolize_keys

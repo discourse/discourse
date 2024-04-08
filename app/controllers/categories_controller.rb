@@ -303,9 +303,17 @@ class CategoriesController < ApplicationController
 
   def find
     categories = []
+    serializer = params[:include_permissions] ? CategorySerializer : SiteCategorySerializer
 
     if params[:ids].present?
       categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path].present?
+      category = Category.find_by_slug_path(params[:slug_path].split("/"))
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
     elsif params[:slug_path_with_id].present?
       category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
       raise Discourse::NotFound if category.blank?
@@ -319,7 +327,7 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
-    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+    render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 
   def search
@@ -333,8 +341,12 @@ class CategoriesController < ApplicationController
           true
         end
       )
-    select_category_ids = params[:select_category_ids].presence
-    reject_category_ids = params[:reject_category_ids].presence
+    if params[:select_category_ids].is_a?(Array)
+      select_category_ids = params[:select_category_ids].map(&:presence)
+    end
+    if params[:reject_category_ids].is_a?(Array)
+      reject_category_ids = params[:reject_category_ids].map(&:presence)
+    end
     include_subcategories =
       if params[:include_subcategories].present?
         ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
@@ -380,7 +392,27 @@ class CategoriesController < ApplicationController
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
-    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+    categories_count = categories.count
+
+    categories =
+      categories
+        .includes(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .limit(limit || MAX_CATEGORIES_LIMIT)
+
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
     Category.preload_user_fields!(guardian, categories)
 
@@ -397,18 +429,17 @@ class CategoriesController < ApplicationController
         ]
       end
 
+    response = {
+      categories_count: categories_count,
+      categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+    }
+
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
-
-      render_json_dump(
-        {
-          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
-          ancestors: serialize_data(ancestors, SiteCategorySerializer, scope: guardian),
-        },
-      )
-    else
-      render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+      response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
     end
+
+    render_json_dump(response)
   end
 
   private

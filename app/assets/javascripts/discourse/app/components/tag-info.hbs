@@ -7,7 +7,7 @@
             @id="edit-name"
             @value={{readonly this.tagInfo.name}}
             @maxlength={{this.siteSettings.max_tag_length}}
-            @input={{action (mut this.newTagName) value="target.value"}}
+            @input={{with-event-value (fn (mut this.newTagName))}}
             @autofocus="true"
           />
 
@@ -16,10 +16,7 @@
             @value={{readonly this.tagInfo.descriptionWithNewLines}}
             placeholder={{i18n "tagging.description"}}
             maxlength={{1000}}
-            {{on
-              "input"
-              (action (mut this.newTagDescription) value="target.value")
-            }}
+            {{on "input" (with-event-value (fn (mut this.newTagDescription)))}}
             autofocus="true"
           />
 
@@ -52,23 +49,25 @@
             >{{d-icon "pencil-alt"}}</a>
           {{/if}}
         </div>
-        <div class="tag-description-wrapper">
-          <span>{{html-safe this.tagInfo.description}}</span>
-        </div>
+        {{#if this.tagInfo.description}}
+          <div class="tag-description-wrapper">
+            <span>{{html-safe this.tagInfo.description}}</span>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
     <div class="tag-associations">
-      {{#if this.tagInfo.tag_group_names}}
+      {{~#if this.tagInfo.tag_group_names}}
         {{this.tagGroupsInfo}}
-      {{/if}}
-      {{#if this.tagInfo.categories}}
+      {{/if~}}
+      {{~#if this.tagInfo.categories}}
         {{this.categoriesInfo}}
         <br />
         {{#each this.tagInfo.categories as |category|}}
           {{category-link category}}
         {{/each}}
-      {{/if}}
-      {{#if this.nothingToShow}}
+      {{/if~}}
+      {{~#if this.nothingToShow}}
         {{#if this.tagInfo.category_restricted}}
           {{i18n "tagging.category_restricted"}}
         {{else}}
@@ -77,7 +76,7 @@
             {{html-safe (i18n "tagging.staff_info" basePath=(base-path))}}
           {{/if}}
         {{/if}}
-      {{/if}}
+      {{/if~}}
     </div>
     {{#if this.tagInfo.synonyms}}
       <div class="synonyms-list">
@@ -115,7 +114,7 @@
     {{#if this.editSynonymsMode}}
       <section class="add-synonyms field">
         <label for="add-synonyms">{{i18n "tagging.add_synonyms_label"}}</label>
-        <div>
+        <div class="add-synonyms__controls">
           <TagChooser
             @id="add-synonyms"
             @tags={{this.newSynonyms}}
@@ -126,22 +125,24 @@
             @unlimitedTagCount={{true}}
             @allowCreate={{true}}
           />
-          <DButton
-            @action={{action "addSynonyms"}}
-            @disabled={{this.addSynonymsDisabled}}
-            @icon="check"
-            class="ok"
-          />
+          {{#if this.newSynonyms}}
+            <DButton
+              @action={{action "addSynonyms"}}
+              @disabled={{this.addSynonymsDisabled}}
+              @icon="check"
+              class="ok"
+            />
+          {{/if}}
         </div>
       </section>
     {{/if}}
     {{#if this.canAdminTag}}
-      <section>
-        <PluginOutlet
-          @name="tag-custom-settings"
-          @outletArgs={{hash tag=this.tagInfo}}
-        />
-      </section>
+      <PluginOutlet
+        @name="tag-custom-settings"
+        @outletArgs={{hash tag=this.tagInfo}}
+        @connectorTagName="section"
+      />
+
       <div class="tag-actions">
         <DButton
           @action={{action "toggleEditControls"}}

@@ -158,6 +158,7 @@ nb_NO:
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
       dismiss: "Avslå"
+    back_button: "Forrige"
     themes:
       default_description: "Forvalg"
     s3:
@@ -844,9 +845,11 @@ nb_NO:
       "14": "Venter"
       "15": "Utkast"
     categories:
-      all: "alle kategorier"
-      all_subcategories: "alle"
-      no_subcategory: "ingen"
+      categories_label: "kategorier"
+      subcategories_label: "underkategorier"
+      no_subcategories: "ingen underkategorier"
+      remove_filter: "fjern filter"
+      plus_more_count: "+%{count} mer"
       category: "Kategori"
       category_list: "Vis kategoriliste"
       reorder:
@@ -991,7 +994,6 @@ nb_NO:
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
-      enable_defer: "Aktiver utsettelse for å merke emner ulest"
       experimental_sidebar:
         options: "Alternativer"
         navigation_section: "Navigasjon"
@@ -1153,7 +1155,6 @@ nb_NO:
           name_required_error: "Du må angi et navn for sikkerhetsnøkkelen."
       passkeys:
         save: "Lagre"
-        added_prefix: "La til"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -1252,6 +1253,8 @@ nb_NO:
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
         default: "(forvalg)"
         any: "alle"
+      homepage:
+        default: "(forvalg)"
       password_confirmation:
         title: "Passord igjen"
       invite_code:
@@ -1523,7 +1526,6 @@ nb_NO:
       close: "lukk"
       dismiss_error: "Avvis feil"
     close: "Lukk"
-    assets_changed_confirm: "Dette nettstedet har nettopp mottatt en programvareoppgradering. Hent nyeste versjon nå?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
     home: "Hjem"
@@ -1704,6 +1706,9 @@ nb_NO:
       alt: "Alt"
       enter: "Angi"
     category_row:
+      subcategory_count:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"
@@ -1777,7 +1782,6 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
@@ -2069,7 +2073,6 @@ nb_NO:
         clear_all: "Fjern alle"
         unlist_topics: "Fjern emner fra lister"
         relist_topics: "Før opp igjen emner i lister"
-        defer: "Utsett"
         delete: "Slett emner"
         dismiss: "Avslå"
         dismiss_read: "Forkast alle uleste"
@@ -2124,6 +2127,18 @@ nb_NO:
     topic_bulk_actions:
       close_topics:
         name: "Lukk emner"
+      archive_topics:
+        name: "Arkiver emner"
+      unlist_topics:
+        name: "Fjern emner fra lister"
+      relist_topics:
+        name: "Før opp igjen emner i lister"
+      append_tags:
+        name: "Legg til stikkord"
+      replace_tags:
+        name: "Erstatt stikkord"
+      delete_topics:
+        name: "Slett emner"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -2138,9 +2153,6 @@ nb_NO:
       move_to_inbox:
         title: "Flytt til innboks"
         help: "Flytt melding tilbake til innboks"
-      defer:
-        help: "Merk som ulest"
-        title: "Utsett"
       list: "Emner"
       new: "nytt emne"
       unread: "ulest"
@@ -3078,8 +3090,6 @@ nb_NO:
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
         search: "%{shortcut} Søk"
         help: "%{shortcut} Åpne tastaturhjelp"
-        dismiss_new: "%{shortcut} Avvis Ny"
-        dismiss_topics: "%{shortcut} Forkast Emner"
         log_out: "%{shortcut} Logg ut"
       composing:
         title: "Skriving"
@@ -3117,7 +3127,6 @@ nb_NO:
         mark_tracking: "%{shortcut} Overvåk emne"
         mark_watching: "%{shortcut} Følg emne"
         print: "%{shortcut} Skriv ut emne"
-        defer: "%{shortcut} Utsett emnet"
         topic_admin_actions: "%{shortcut} Åpne tema admin handlinger"
       search_menu:
         title: "Søk i menyen"
@@ -3158,8 +3167,10 @@ nb_NO:
       download: "Last ned"
     tagging:
       other_tags: "Andre stikkord"
+      selector_tags: "stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
+      selector_remove_filter: "fjern filter"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
       info: "Informasjon"
@@ -3356,13 +3367,14 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
+      filter: "Filtrer"
     until: "Inntil:"
     form_templates:
       upload_field:
         upload: "Bilde"
         uploading: "Laster opp bilde"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Skriv inn en gyldig verdi."
           email: "Oppgi en gyldig e-postadresse."
     table_builder:
@@ -3382,6 +3394,7 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
+      filter_reports: Filtrer rapporter
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -3389,6 +3402,9 @@ nb_NO:
           never: "aldri"
       reports:
         title: "Liste over tilgjengelige rapporter"
+        sidebar_title: "Rapporter"
+        sidebar_link:
+          all: "Alle"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -3397,10 +3413,8 @@ nb_NO:
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
         updates_available: "Oppdateringer er tilgjengelige."
-        please_upgrade: "Oppgrader!"
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
-        version_check_pending: "Ser ut som om du oppgraderte nylig. Fantastisk!"
         installed_version: "Installert"
         latest_version: "Siste"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
@@ -3444,7 +3458,6 @@ nb_NO:
         exception_error: Beklager, en feil oppstod under kjøringen av denne spørringen
         too_many_requests: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
         not_found_error: Du har utført denne handlingen for mange ganger. Vennligst vent før du prøver igjen.
-        filter_reports: Filtrer rapporter
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -3608,6 +3621,50 @@ nb_NO:
           timestamp: "Opprettet"
           completion: "Gjennomføringstid"
           actions: "Handlinger"
+      home:
+        title: "Hjem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Sikkerhetskopier"
+      community:
+        title: "Gemenskap"
+        sidebar_link:
+          badges: "Merker"
+          notifications: "Varsler"
+          permalinks: "Permalenker"
+          trust_levels: "Tillitsnivå"
+          users: "Brukere"
+          user_fields: "Brukerfelter"
+          watched_words: "Ord som holdes oppsyn med"
+          legal: "Juridisk"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigasjon"
+          themes: "Drakter"
+      email_settings:
+        sidebar_link:
+          appearance: "Utseende"
+          preview_summary: "Forhåndsvis oppsummering"
+      email_logs:
+        sidebar_link:
+          sent: "Sendt"
+          skipped: "Hoppet over"
+          bounced: "Tilbakesendt"
+          received: "Mottatt"
+          rejected: "Avvist"
+      security:
+        title: "Sikkerhet"
+        sidebar_link:
+          error_logs: "Feillogg"
+          screened_emails: "Kontrollerte e-poster"
+          screened_ips: "Kontrollerte IP-er"
+          screened_urls: "Kontrollerte URL-er"
+          search_logs: "Søkelogger"
+          security: "Sikkerhet"
+          spam: "Spam"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"
@@ -3621,6 +3678,19 @@ nb_NO:
         howto: "Hvordan installerer jeg utvidelser?"
         author: "Av %{author}"
         learn_more: "Finn ut mer"
+        sidebar_link:
+          installed: "Installert"
+      advanced:
+        sidebar_link:
+          developer: "Utvikler"
+          embedding: "Innbygging"
+          rate_limits: "Frekvensbegresninger"
+          user_api: "Bruker-API"
+          web_hooks: "Webhooker"
+          onebox: "Onebox"
+          files: "Filer"
+          other_options: "Annet"
+          search: "Søk"
       backups:
         title: "Sikkerhetskopier"
         menu:
@@ -3643,6 +3713,7 @@ nb_NO:
           title: "Last opp en sikkerhetskopi til denne instansen"
           success: "Opplastingen av '%{filename}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
           error: "Det oppstod en feil ved opplastingen av '%{filename}': %{message}"
+        settings: "Instillinger"
         operations:
           failed: " %{operation} mislyktes. Undersøk loggene."
           cancel:
@@ -3833,6 +3904,14 @@ nb_NO:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
+          schema:
+            fields:
+              required: "*påkrevd"
+              string:
+                too_short: "må være minst %{count} tegn"
+              number:
+                too_small: "må være lik eller større enn %{count}"
+                too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
@@ -4550,6 +4629,7 @@ nb_NO:
         group: "Gruppe"
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
+        settings: "Instillinger"
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
         confirm_delete: "Er du sikker på at du vil slette den verten?"

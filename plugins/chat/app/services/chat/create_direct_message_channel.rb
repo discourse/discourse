@@ -33,7 +33,6 @@ module Chat
            class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
-    step :validate_user_count
     step :set_optional_name
     step :update_memberships
     step :recompute_users_count
@@ -53,7 +52,7 @@ module Chat
 
     private
 
-    def can_create_direct_message(guardian:, target_users:, **)
+    def can_create_direct_message(guardian:, target_users:)
       guardian.can_create_direct_message? &&
         DiscoursePluginRegistry.apply_modifier(
           :chat_can_create_direct_message_channel,
@@ -62,28 +61,22 @@ module Chat
         )
     end
 
-    def fetch_target_users(guardian:, contract:, **)
+    def fetch_target_users(guardian:, contract:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: [*contract.target_usernames, guardian.user.username],
         groups: contract.target_groups,
       )
     end
 
-    def fetch_user_comm_screener(target_users:, guardian:, **)
+    def fetch_user_comm_screener(target_users:, guardian:)
       UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
     end
 
-    def validate_user_count(target_users:, **)
-      if target_users.length > SiteSetting.chat_max_direct_message_users
-        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
-      end
-    end
-
-    def actor_allows_dms(user_comm_screener:, **)
+    def actor_allows_dms(user_comm_screener:)
       !user_comm_screener.actor_disallowing_all_pms?
     end
 
-    def fetch_or_create_direct_message(target_users:, contract:, **)
+    def fetch_or_create_direct_message(target_users:, contract:)
       ids = target_users.map(&:id)
 
       if ids.size > 2 || contract.name.present?
@@ -93,15 +86,15 @@ module Chat
       end
     end
 
-    def fetch_or_create_channel(direct_message:, **)
+    def fetch_or_create_channel(direct_message:)
       ::Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def set_optional_name(channel:, contract:, **)
+    def set_optional_name(channel:, contract:)
       channel.update!(name: contract.name) if contract.name&.length&.positive?
     end
 
-    def update_memberships(channel:, target_users:, **)
+    def update_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -124,7 +117,7 @@ module Chat
       )
     end
 
-    def recompute_users_count(channel:, **)
+    def recompute_users_count(channel:)
       channel.update!(
         user_count: ::Chat::ChannelMembershipsQuery.count(channel),
         user_count_stale: false,

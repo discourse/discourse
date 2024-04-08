@@ -1,4 +1,5 @@
 {{body-class "invite-page"}}
+{{hide-application-sidebar}}
 
 <section>
   <div class="container invites-show clearfix">
@@ -137,9 +138,10 @@
                   <div class="input password-input input-group">
                     <PasswordField
                       @value={{this.accountPassword}}
-                      @type={{if this.maskPassword "password" "text"}}
-                      @id="new-account-password"
                       @capsLockOn={{this.capsLockOn}}
+                      type={{if this.maskPassword "password" "text"}}
+                      autocomplete="new-password"
+                      id="new-account-password"
                       class={{value-entered this.accountPassword}}
                     />
                     <label class="alt-placeholder" for="new-account-password">

@@ -15,12 +15,28 @@
 #                      The key should be as the same as possible value of default_locale.
 #
 #
-# type: email    - Must be a valid email address.
-# type: username - Must match the username of an existing user.
-# type: list     - A list of values, chosen from a set of valid values defined in the choices option.
-# type: enum     - A single value, chosen from a set of valid values in the choices option.
+# type: email                 - Must be a valid email address.
+# type: username              - Must match the username of an existing user.
+# type: list                  - A list of values, chosen from a set of valid values
+#                               defined in the choices option. A type:list setting with the word 'colors' in
+#                               its name will make color values have a bold line of the corresponding color
 #
-# A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
+# type: enum                  - A single value, chosen from a set of valid values in the choices option.
+# type: json_schema           - The setting value is stored as JSON in the database. Used
+#                               in the format `json_schema: ClassName` where the class implements
+#                               a `.schema` class method and returns a hash in the JSON schema
+#                               format (c.f. https://json-schema.org/)
+# type: host_list             - A list of domain names that does not allow * or ? wildcards.
+# type: category_list         - A list of category ids, which shows a special picker in the UI.
+# type: category              - A single category ID, which shows a special picker in the UI.
+# type: uploaded_image_list   - A list of upload IDs that should be images.
+# type: upload                - A single upload ID.
+# type: group                 - A single group ID.
+# type: group_list            - A list of group IDs.
+# type: tag_list              - A list of tag names.
+# type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
+# type: tag_group_list        - A list of tag group names.
+# type: file_size_restriction - A file size restriction in bytes.
 #
 required:
   title:
@@ -338,10 +354,6 @@ basic:
     default: "14"
     allow_any: false
     refresh: true
-  enable_bookmarks_with_reminders:
-    client: true
-    default: true
-    hidden: true
   push_notifications_prompt:
     default: true
     client: true
@@ -731,6 +743,7 @@ users:
     client: true
   max_notifications_per_user:
     default: 10000
+    hidden: true
   gravatar_name:
     default: Gravatar
     client: true
@@ -1108,7 +1121,8 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_unlisted: true
+  embed_unlisted: false
+  import_embed_unlisted: true
   embed_truncate: true
   embed_support_markdown: false
   allowed_embed_selectors: ""
@@ -1423,6 +1437,12 @@ email:
     default: 10
     hidden: true
   require_change_email_confirmation: false
+  view_raw_email_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
+    allow_any: false
+    refresh: true
 
 files:
   max_image_size_kb:
@@ -1778,6 +1798,7 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
   profile_background_allowed_groups:
     default: "3|10" # auto group staff and trust_level_0
     type: group_list
@@ -1925,7 +1946,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -1989,7 +2010,7 @@ security:
     type: simple_list
     default: ""
   content_security_policy_strict_dynamic:
-    default: false
+    default: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2225,6 +2246,9 @@ rate_limits:
   max_complete_multipart_per_minute:
     default: 10
     hidden: true
+  max_uploads_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2337,7 +2361,7 @@ developer:
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
-    default: ""
+    default: "1"
     allow_any: false
     refresh: true
   lazy_load_categories_groups:
@@ -2354,14 +2378,10 @@ developer:
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
     default: ""
-    hidden: true
     type: group_list
     list_type: compact
     allow_any: false
     refresh: true
-  experimental_objects_type_for_theme_settings:
-    default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2815,6 +2835,10 @@ uncategorized:
 
   share_anonymized_statistics: true
 
+  enable_powered_by_discourse:
+    default: false
+    client: true
+
   auto_handle_queued_age:
     default: 60
     min: 0
@@ -2823,6 +2847,10 @@ uncategorized:
     default: "24|72|168|720"
     type: "list"
     list_type: "compact"
+
+  penalty_include_post_message:
+    default: false
+    client: true
 
   svg_icon_subset:
     default: ""
@@ -2840,6 +2868,10 @@ uncategorized:
 
   max_bulk_invites:
     default: 50000
+    hidden: true
+
+  skip_email_bulk_invites:
+    default: false
     hidden: true
 
   max_api_invites:

@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { i18n, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";

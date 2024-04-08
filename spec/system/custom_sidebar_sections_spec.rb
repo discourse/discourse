@@ -55,7 +55,7 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
-  it "allows the user to create custom section with `/` path which generates a link based on the first item in the `top_menu` site settings" do
+  it "allows the user to create custom section with `/` path" do
     SiteSetting.top_menu = "read|posted|latest"
 
     sign_in user
@@ -67,7 +67,10 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Home", href: "/read")
+    expect(sidebar).to have_section_link("Home", href: "/")
+
+    sidebar.click_section_link("Home")
+    expect(page).to have_css("#navigation-bar .active a[href='/read']")
   end
 
   it "allows the user to create custom section with /pub link" do
@@ -93,9 +96,6 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
     section_modal.fill_name("My section")
-
-    section_modal.fill_link("Discourse Homepage", "htt")
-    expect(section_modal).to have_disabled_save
 
     section_modal.fill_link("Discourse Homepage", "https://discourse.org")
     expect(section_modal).to have_enabled_save
@@ -124,7 +124,54 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Faq", target: "_blank")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#anchor")
+  end
+
+  it "allows the user to create custom section with query param" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Faq", "/faq?a=b")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq?a=b")
+  end
+
+  it "allows the user to create custom section with anchor link" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Faq", "/faq#someheading")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
+  end
+
+  it "accessibility - when new row is added in custom section, first new input is focused" do
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+    sidebar.click_add_link_button
+
+    is_focused =
+      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+
+    expect(is_focused).to be true
   end
 
   it "allows the user to edit custom section" do
@@ -296,7 +343,7 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_section_button
 
     section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
-    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "/wrong-url")
+    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "https:")
 
     expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
     expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")

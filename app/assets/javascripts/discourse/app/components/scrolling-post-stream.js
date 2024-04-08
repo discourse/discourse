@@ -1,5 +1,5 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
@@ -206,15 +206,18 @@ export default MountWidget.extend({
               return element.offsetTop + getOffsetTop(element.offsetParent);
             };
 
-            const top = getOffsetTop(refreshedElem) - offsetCalculator();
-            window.scrollTo({ top });
+            window.scrollTo({
+              top: getOffsetTop(refreshedElem) - offsetCalculator(),
+            });
 
             // This seems weird, but somewhat infrequently a rerender
             // will cause the browser to scroll to the top of the document
             // in Chrome. This makes sure the scroll works correctly if that
             // happens.
             schedule("afterRender", () => {
-              window.scrollTo({ top });
+              window.scrollTo({
+                top: getOffsetTop(refreshedElem) - offsetCalculator(),
+              });
             });
           });
         };

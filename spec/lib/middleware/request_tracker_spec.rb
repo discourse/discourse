@@ -260,7 +260,7 @@ RSpec.describe Middleware::RequestTracker do
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
-      freeze_time DateTime.parse("2021-01-01 01:00")
+      freeze_time_safe
     end
 
     use_redis_snapshotting
@@ -329,7 +329,7 @@ RSpec.describe Middleware::RequestTracker do
       stub_const(
         Middleware::RequestTracker,
         "STATIC_IP_SKIPPER",
-        "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) },
+        "177.33.14.73 191.209.88.192/30".split.map { |ip| IPAddr.new(ip) },
       ) do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
         global_setting :max_reqs_per_ip_mode, "block"

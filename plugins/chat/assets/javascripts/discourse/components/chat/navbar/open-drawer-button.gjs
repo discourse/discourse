@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DiscourseURL from "discourse/lib/url";
 
@@ -22,7 +22,7 @@ export default class ChatNavbarOpenDrawerButton extends Component {
       <DButton
         @icon="discourse-compress"
         @title="chat.close_full_page"
-        class="c-navbar__open-drawer-button btn-flat"
+        class="c-navbar__open-drawer-button btn-transparent"
         @action={{this.openDrawer}}
       />
     {{/if}}

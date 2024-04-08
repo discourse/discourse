@@ -210,11 +210,6 @@ export default Controller.extend({
   },
 
   @action
-  onTokenInput(event) {
-    this.set("secondFactorToken", event.target.value);
-  },
-
-  @action
   useAnotherMethod(newMethod, event) {
     event?.preventDefault();
     this.set("userSelectedMethod", newMethod);

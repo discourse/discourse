@@ -243,6 +243,7 @@ pl_PL:
       message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
+    back_button: "Poprzednia"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -252,7 +253,9 @@ pl_PL:
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     critical_deprecation:
-      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>więcej informacji</a>)."
+      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
@@ -1061,9 +1064,13 @@ pl_PL:
       "14": "Oczekujące"
       "15": "Szkice"
     categories:
-      all: "wszystkie kategorie"
-      all_subcategories: "wszystkie"
-      no_subcategory: "żadne"
+      categories_label: "kategorie"
+      subcategories_label: "podkategorie"
+      all_subcategories: "wszystkie podkategorie"
+      no_subcategories: "brak podkategorii"
+      remove_filter: "usuń filtr"
+      plus_more_count: "+%{count} więcej"
+      view_all: "pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
       reorder:
@@ -1131,6 +1138,7 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
+      account_possessive: "Konto %{name}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1192,6 +1200,7 @@ pl_PL:
           warning: "Czy na pewno chcesz wyczyścić polecany temat?"
       use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
+      login_to_view_profile: "Aby wyświetlić profile użytkowników, musisz się zalogować"
       inactive_user: "Ten użytkownik nie jest już aktywny."
       expand_profile: "Rozwiń"
       sr_expand_profile: "Rozwiń szczegóły profilu"
@@ -1259,7 +1268,6 @@ pl_PL:
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
-      enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -1576,8 +1584,8 @@ pl_PL:
         save: "Zapisz"
         title: "Passkeys"
         short_description: "Klucze to zamienniki haseł, które potwierdzają Twoją tożsamość biometrycznie (np. dotyk, FaceID) lub za pomocą kodu PIN/hasła urządzenia."
-        added_prefix: "Dodano"
-        last_used_prefix: "Ostatnio używane"
+        added_date: "Dodano %{date}"
+        last_used_date: "Ostatnio używane %{date}"
         never_used: "Nigdy nie używany"
         not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza dostępu, został anulowany lub jest niedozwolony."
         already_added_error: "Już zarejestrowałeś ten klucz dostępu. Nie musisz rejestrować go ponownie."
@@ -1699,6 +1707,8 @@ pl_PL:
         instructions: "Język interfejsu użytkownika. Zmieni się, gdy odświeżysz stronę."
         default: "(domyślny)"
         any: "każdy"
+      homepage:
+        default: "(domyślny)"
       password_confirmation:
         title: "Powtórz hasło"
       invite_code:
@@ -1792,6 +1802,7 @@ pl_PL:
         after_5_minutes: "po 5 minutach"
         after_10_minutes: "po 10 minutach"
       notification_level_when_replying: "Kiedy piszę w temacie, dołącz ten temat do"
+      topics_unread_when_closed: "Uznaj tematy za nieprzeczytane po ich zamknięciu"
       invited:
         title: "Zaproszenia"
         pending_tab: "Oczekujący"
@@ -2044,7 +2055,6 @@ pl_PL:
       close: "zamknij"
       dismiss_error: "Odrzuć błąd"
     close: "Zamknij"
-    assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
     home: "Strona główna"
@@ -2298,6 +2308,11 @@ pl_PL:
     conditional_loading_section:
       loading: Ładowanie…
     category_row:
+      subcategory_count:
+        one: "+ %{count} podkategoria"
+        few: "+ %{count} podkategorie"
+        many: "+ %{count} podkategorii"
+        other: "+ %{count} podkategorii"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -2446,7 +2461,7 @@ pl_PL:
       reply: "Odpowiedz"
       cancel: "Anuluj"
       create_topic: "Utwórz temat"
-      create_pm: "Wiadomość"
+      create_pm: "Wyślij wiadomość"
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
@@ -2544,6 +2559,8 @@ pl_PL:
       ignore: "Ignoruj"
       image_alt_text:
         aria_label: Tekst alternatywny dla obrazu
+        title: "Dodaj opis obrazu"
+      image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
     notifications:
@@ -2908,7 +2925,6 @@ pl_PL:
         unlist_topics: "Ukryj tematy"
         relist_topics: "Odśwież listę tematów"
         reset_bump_dates: "Zresetuj daty ważności"
-        defer: "Zignoruj"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
@@ -2978,6 +2994,8 @@ pl_PL:
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
         silent: "Wykonaj tę akcję po cichu."
+        performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
+        completed: "Operacje masowe zakończone pomyślnie!"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -3010,9 +3028,31 @@ pl_PL:
     topic_bulk_actions:
       close_topics:
         name: "Zamknij tematy"
+      archive_topics:
+        name: "Zarchiwizuj tematy"
+      unlist_topics:
+        name: "Ukryj tematy"
+      relist_topics:
+        name: "Odśwież listę tematów"
+      remove_tags:
+        name: "Usuń tagi"
+      append_tags:
+        name: "Dodaj tagi"
+      replace_tags:
+        name: "Zmień tagi"
+      delete_topics:
+        name: "Usuń tematy"
       update_category:
         name: "Aktualizuj kategorię"
         description: "Wybierz nową kategorię dla wybranych tematów"
+      reset_bump_dates:
+        name: "Zresetuj datę odświeżenia"
+        description: "Ustaw datę odświeżenia tematu na datę utworzenia ostatniego posta. Wpływa to na kolejność tematów na liście."
+      defer:
+        description: "Oznacz tematy jako nieprzeczytane"
+      update_notifications:
+        name: "Aktualizuj powiadomienia"
+        description: "Zmień poziom powiadomień na obserwowanie, śledzone, normalne lub wyciszone"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -3030,9 +3070,6 @@ pl_PL:
       move_to_inbox:
         title: "Przenieś do skrzynki odbiorczej"
         help: "Przenieś wiadomość z powrotem do skrzynki odbiorczej"
-      defer:
-        help: "Oznacz jako nieprzeczytane"
-        title: "Zignoruj"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -3727,7 +3764,7 @@ pl_PL:
           show: "Pokaż tę wersję"
           destroy: "Usuń wersje"
           destroy_confirm: "Czy na pewno chcesz usunąć wszystkie wersje tego posta? Ta czynność jest trwała."
-          revert: "Przywróć rewizję %{revision}"
+          revert: "Przywróć wersję %{revision}"
           edit_wiki: "Edytuj Wiki"
           edit_post: "Edytuj wpis"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -3976,6 +4013,8 @@ pl_PL:
       notify_user_textarea_label: "Wiadomość dla użytkownika"
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
       notify_moderators_textarea_label: "Wiadomość dla moderatorów"
+      custom_placeholder_illegal: "Daj nam znać, dlaczego uważasz, że te treści są nielegalne, i jeśli to możliwe, podaj odpowiednie linki i przykłady."
+      confirmation_illegal: "Informacje zawarte powyżej są dokładne i kompletne."
       custom_message:
         at_least:
           one: "wprowadź co najmniej %{count} znak"
@@ -4253,9 +4292,11 @@ pl_PL:
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
+        filter_sidebar: "%{shortcut} Filtruj pasek boczny"
         help: "%{shortcut} Pokaż skróty klawiszowe"
-        dismiss_new: "%{shortcut} Odrzuć nowe"
-        dismiss_topics: "%{shortcut} wyczyść listę tematów"
+        toggle_bulk_select: "%{shortcut} Przełącz wybór zbiorczy"
+        dismiss: "%{shortcut} Odrzuć wybrane tematy"
+        x: "%{shortcut} Przełącz wybór (w trybie wyboru zbiorczego)"
         log_out: "%{shortcut} Wyloguj"
       composing:
         title: "Komponowanie"
@@ -4295,7 +4336,6 @@ pl_PL:
         mark_tracking: "%{shortcut} śledź temat"
         mark_watching: "%{shortcut} Obserwuj temat"
         print: "%{shortcut} Drukuj temat"
-        defer: "%{shortcut} Odrocz wątek"
         topic_admin_actions: "%{shortcut} Otwórz działania administratora tematu"
         archive_private_message: "%{shortcut} Przełącz archiwizację prywatnych wiadomości"
       search_menu:
@@ -4365,8 +4405,10 @@ pl_PL:
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
+      selector_tags: "tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
+      selector_remove_filter: "usuń filtr"
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       choose_for_topic_required:
@@ -4701,6 +4743,11 @@ pl_PL:
       panels:
         forum:
           label: Forum
+      filter: "Filtr"
+      clear_filter: "Wyczyść filtr"
+      no_results:
+        title: "Brak wyników"
+        description: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -4715,12 +4762,12 @@ pl_PL:
         upload: "Prześlij"
         uploading: "Wgrywanie"
       errors:
-        valueMissing:
+        value_missing:
           default: "Proszę wypełnić to pole."
-          select-one: "Wybierz pozycję z listy."
-          select-multiple: "Wybierz co najmniej jedną pozycję z listy."
+          select_one: "Wybierz pozycję z listy."
+          select_multiple: "Wybierz co najmniej jedną pozycję z listy."
           checkbox: "Zaznacz to pole, jeśli chcesz kontynuować."
-        typeMismatch:
+        type_mismatch:
           default: "Wprowadź poprawną wartość."
           color: "Proszę wprowadzić kolor."
           date: "Proszę wprowadzić kolor."
@@ -4730,28 +4777,28 @@ pl_PL:
           tel: "Wprowadź prawidłowy numer telefonu."
           text: "Wprowadź wartość tekstową."
           url: "Wprowadź prawidłowy adres URL."
-        tooShort:
+        too_short:
           one: "Wprowadzane dane muszą zawierać %{count} znak lub więcej."
           few: "Wprowadzane dane muszą zawierać %{count} znaki lub więcej."
           many: "Wprowadzane dane muszą zawierać %{count} znaków lub więcej."
           other: "Wprowadzane dane muszą zawierać %{count} znaków lub więcej."
-        tooLong:
+        too_long:
           one: "Wprowadzane dane muszą zawierać mniej niż %{count} znak."
           few: "Wprowadzane dane muszą zawierać mniej niż %{count} znaki."
-          many: "Wprowadzane dane muszą zawierać mniej niż %{count} znaków."
-          other: "Wprowadzane dane muszą zawierać mniej niż %{count} znaków."
-        rangeOverflow:
+          many: "Wprowadzane dane muszą zawierać mniej niż %{count} znaki."
+          other: "Wprowadzane dane muszą zawierać mniej niż %{count} znaki."
+        range_overflow:
           one: "Dane wejściowe muszą być mniejsze niż %{count}."
           few: "Dane wejściowe muszą być mniejsze niż %{count}."
           many: "Dane wejściowe muszą być mniejsze niż %{count}."
           other: "Dane wejściowe muszą być mniejsze niż %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Dane wejściowe muszą być większe niż %{count}."
           few: "Dane wejściowe muszą być większe niż %{count}."
           many: "Dane wejściowe muszą być większe niż %{count}."
           other: "Dane wejściowe muszą być większe niż %{count}."
-        patternMismatch: "Proszę dopasować żądany format."
-        badInput: "Wprowadź prawidłowe dane wejściowe."
+        pattern_mismatch: "Proszę dopasować żądany format."
+        bad_input: "Wprowadź prawidłowe dane wejściowe."
     table_builder:
       title: "Konstruktor tabeli"
       modal:
@@ -4809,12 +4856,14 @@ pl_PL:
           copy: "Kopiuj..."
           paste: "Wklej..."
           save: "Zapisz jako..."
+    powered_by_discourse: "Obsługiwane przez Discourse"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
       back_to_forum: "Powrót do forum"
+      filter_reports: Filtruj zgłoszenia
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -4823,6 +4872,11 @@ pl_PL:
       reports:
         title: "Lista dostępnych zgłoszeń"
         meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
+        sidebar_title: "Zgłoszenia"
+        sidebar_link:
+          all: "Wszystkie"
+      new_features:
+        title: "Co nowego"
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -4831,10 +4885,8 @@ pl_PL:
         up_to_date: "Wersja aktualna!"
         critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
-        please_upgrade: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."
         stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź czy działa sidekiq."
-        version_check_pending: "Wygląda na to, że ostatnio była wykonana aktualizacja. Fantastycznie!"
         installed_version: "Zainstalowana"
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
@@ -4882,7 +4934,6 @@ pl_PL:
         exception_error: Przepraszamy, podczas wykonywania zapytania pojawił się błąd
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
-        filter_reports: Filtruj zgłoszenia
         custom_date_range: Niestandardowy zakres dat
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
@@ -5055,12 +5106,18 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi, status, archetyp, featured_link itp.
               delete: Usuń temat.
+              recover: Odzyskaj temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
+              recover: Odzyskaj post.
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
+            revisions:
+              read: "Pobierz najnowszą lub określoną wersję."
+              modify: "Ukryj, pokaż lub przywróć wersje."
+              permanently_delete: "Trwale usuń wersję."
             tags:
               list: Lista tagów.
             tag_groups:
@@ -5197,6 +5254,7 @@ pl_PL:
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
+          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
         group_user_event:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
@@ -5235,6 +5293,61 @@ pl_PL:
           timestamp: "Utworzono"
           completion: "Czas wykonania"
           actions: "Akcje"
+      home:
+        title: "Strona główna"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Kopie zapasowe"
+          whats_new: "Co nowego"
+      community:
+        title: "Społeczność"
+        sidebar_link:
+          about_your_site: "O Twojej witrynie"
+          badges: "Odznaki"
+          login_and_authentication: "Logowanie i uwierzytelnianie"
+          notifications: "Powiadomienia"
+          permalinks: "Permalinki"
+          trust_levels: "Poziomy zaufania"
+          users: "Użytkownicy"
+          user_fields: "Pola użytkownika"
+          watched_words: "Obserwowane słowa"
+          legal: "Prawne"
+      appearance:
+        title: "Wygląd"
+        sidebar_link:
+          font_style: "Styl czcionki"
+          site_logo: "Logo witryny"
+          color_schemes: "Schematy kolorów"
+          emoji: "Emoji"
+          navigation: "Nawigacja"
+          themes: "Motywy"
+          site_texts: "Teksty witryny"
+      email_settings:
+        title: "Ustawienia e-mail"
+        sidebar_link:
+          appearance: "Wygląd"
+          preview_summary: "Pokaż zestawienie aktywności"
+          server_setup: "Konfiguracja serwera"
+      email_logs:
+        title: "Dzienniki e-mail"
+        sidebar_link:
+          sent: "Wysłane"
+          skipped: "Pominięte"
+          bounced: "Odbite"
+          received: "Otrzymane"
+          rejected: "Odrzucone"
+      security:
+        title: "Bezpieczeństwo"
+        sidebar_link:
+          error_logs: "Logi błędów"
+          screened_emails: "Ekranowane emaile"
+          screened_ips: "Ekranowane adresy IP"
+          screened_urls: "Ekranowane URLe"
+          search_logs: "Logi wyszukiwań"
+          security: "Bezpieczeństwo"
+          spam: "Spam"
+          staff_action_logs: "Dzienniki działań personelu"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -5251,6 +5364,23 @@ pl_PL:
         author: "Przez %{author}"
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
+        sidebar_link:
+          installed: "Zainstalowane"
+      advanced:
+        title: "Zaawansowane"
+        sidebar_link:
+          api_keys: "Klucze API"
+          developer: "Deweloperskie"
+          embedding: "Osadzanie"
+          rate_limits: "Limity"
+          user_api: "API użytkownika"
+          web_hooks: "Webhooki"
+          onebox: "Onebox"
+          files: "Pliki"
+          other_options: "Inne"
+          search: "Szukaj"
+          experimental: "Eksperymentalne"
+          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5281,6 +5411,7 @@ pl_PL:
           uploading_progress: "Przesyłanie… %{progress}%"
           success: "Plik „%{filename}” został pomyślnie przesłany. Plik jest teraz przetwarzany i pojawienie się na liście może potrwać do minuty."
           error: "Podczas przesyłania pliku wystąpił błąd '%{filename}': %{message}"
+        settings: "Ustawienia"
         operations:
           is_running: "Aktualnie trwa operacja…"
           failed: "Proces %{operation} zakończył się niepowodzeniem. Sprawdź logi."
@@ -5471,6 +5602,7 @@ pl_PL:
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
+          installing_message: "Instalacja motywu może potrwać kilka minut..."
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           create_placeholder: "Utwórz symbol zastępczy"
@@ -5495,6 +5627,7 @@ pl_PL:
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
           theme_settings: "Ustawienia motywu"
+          edit_objects_theme_setting: "Edytor ustawień obiektów"
           overriden_settings_explanation: "Zastąpione ustawienia są oznaczone kropką i mają podświetlony kolor. Aby zresetować te ustawienia do wartości domyślnych, naciśnij przycisk resetowania obok nich."
           no_settings: "Ten temat nie ma żanych ustawień"
           theme_translations: "Tłumaczenia tematu"
@@ -5553,6 +5686,22 @@ pl_PL:
           active_filter: "Aktywni"
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
+          schema:
+            title: "Edytuj ustawienie %{name}"
+            back_button: "Powrót do %{name}"
+            fields:
+              required: "*wymagane"
+              tags:
+                at_least:
+                  one: "wymagany jest co najmniej %{count} tag"
+                  few: "wymagane są co najmniej %{count} tagi"
+                  many: "wymagane jest co najmniej %{count} tagów"
+                  other: "wymagane jest co najmniej %{count} tagów"
+              string:
+                too_short: "musi zawierać co najmniej %{count} znaków"
+              number:
+                too_small: "musi być większe lub równe %{count}"
+                too_large: "musi być mniejszy lub równy %{count}"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -6288,6 +6437,7 @@ pl_PL:
             other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
+          posts_read_days: "Przeczytane posty: unikalne dni"
           days: "dni"
           topics_replied_to: "Tematy w odpowiedzi do"
           topics_viewed: "Wyświetlone Tematy"
@@ -6558,6 +6708,7 @@ pl_PL:
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}:?"
+        settings: "Ustawienia"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"

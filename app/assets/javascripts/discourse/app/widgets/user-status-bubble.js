@@ -1,4 +1,4 @@
-// deprecated in favor of app/components/glimmer-header/user-dropdown/user-status-bubble.gjs
+// deprecated in favor of app/components/header/user-dropdown/user-status-bubble.gjs
 
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";

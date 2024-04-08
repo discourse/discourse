@@ -4,7 +4,7 @@ require "mini_racer"
 
 RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
-    node_modules = "#{Rails.root}/app/assets/javascripts/node_modules/"
+    node_modules = "#{Rails.root}/node_modules/"
 
     transpiler = DiscourseJsProcessor::Transpiler.new
     discourse_i18n =

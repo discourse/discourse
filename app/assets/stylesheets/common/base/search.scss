@@ -13,6 +13,10 @@
 .search-container {
   background: var(--d-content-background);
 
+  .search-cta {
+    flex: 1 1 0;
+  }
+
   .search-header {
     @include search-page-spacing();
     background: var(--primary-very-low);
@@ -42,15 +46,19 @@
     justify-content: space-between;
     align-items: stretch;
     background: var(--primary-very-low);
+    gap: 0.5em 1em;
 
     input.search-query {
-      flex: 1 0 60%;
-      margin: 0 1em 0 0;
+      width: auto;
+      flex: 1 1 60%;
+      margin: 0;
     }
 
     .select-kit {
-      margin-right: 1em;
-      flex: 1 0 20%;
+      flex: 1 1 20%;
+      .name {
+        white-space: nowrap;
+      }
     }
 
     @include breakpoint(mobile-extra-large) {
@@ -74,6 +82,10 @@
 
     .search-results {
       @include search-page-spacing();
+
+      @include breakpoint(tablet) {
+        padding: 1rem 0.5rem 1rem 0.25rem;
+      }
     }
 
     .search-info {
@@ -159,8 +171,8 @@
 
     details.advanced-filters,
     details.search-advanced-additional-options {
-      margin-top: 1em;
       > summary {
+        margin-top: 1em;
         color: var(--tertiary);
         cursor: pointer;
         padding-top: 0.25em;
@@ -198,6 +210,11 @@
 
     .search-advanced-filters {
       background: var(--primary-very-low);
+
+      .second-search-button {
+        display: flex;
+        margin-top: 1em;
+      }
 
       @include breakpoint(mobile-extra-large, min-width) {
         .search-advanced-options {
@@ -262,7 +279,7 @@
 
 .fps-result {
   display: flex;
-  padding: 0 0.5em 0 0;
+  padding: 0;
   margin-bottom: 2em;
   max-width: 100%;
   word-break: break-word;
@@ -367,7 +384,7 @@
     .topic-statuses {
       display: inline-block;
       flex-shrink: 0;
-      font-size: 1.3em;
+      font-size: 1.1em;
       line-height: var(--line-height-medium);
       color: var(--primary-medium);
       span {
@@ -385,8 +402,6 @@
 .google-search-form {
   margin-top: 1em;
 }
-
-// temporary
 
 .search-results {
   .fps-user-item {

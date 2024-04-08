@@ -1,5 +1,5 @@
 import { run } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {

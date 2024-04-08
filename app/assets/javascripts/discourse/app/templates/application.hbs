@@ -1,3 +1,6 @@
+<DStyles />
+<DVirtualHeight />
+
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
@@ -87,6 +90,10 @@
     </div>
 
     <PluginOutlet @name="after-main-outlet" />
+
+    {{#if this.showPoweredBy}}
+      <PoweredByDiscourse />
+    {{/if}}
   </div>
 
   <PluginOutlet

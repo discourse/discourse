@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 class FoundUserWithStatusSerializer < FoundUserSerializer
-  attributes :status
+  include UserStatusMixin
 
-  def include_status?
-    SiteSetting.enable_user_status && object.has_status?
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
+    deprecated
   end
 
-  def status
-    UserStatusSerializer.new(object.user_status, root: false)
+  private
+
+  def deprecated
+    message =
+      "FoundUserWithStatusSerializer is deprecated. " \
+        "Use FoundUserSerializer with the include_status option instead."
+
+    Discourse.deprecate(message, since: "3.3.0.beta1", drop_from: "3.3.0.beta2")
   end
 end

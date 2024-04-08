@@ -29,23 +29,24 @@ module Chat
 
     private
 
-    def fetch_message(contract:, **)
+    def fetch_message(contract:)
       ::Chat::Message.find_by(id: contract.message_id)
     end
 
-    def can_join_channel(guardian:, message:, **)
+    def can_join_channel(guardian:, message:)
       guardian.can_join_chat_channel?(message.chat_channel)
     end
 
-    def can_stop_streaming(guardian:, message:, **)
-      guardian.is_admin? || message.in_reply_to && message.in_reply_to.user_id == guardian.user.id
+    def can_stop_streaming(guardian:, message:)
+      guardian.is_admin? || message.user.id == guardian.user.id ||
+        message.in_reply_to && message.in_reply_to.user_id == guardian.user.id
     end
 
-    def stop_message_streaming(message:, **)
+    def stop_message_streaming(message:)
       message.update!(streaming: false)
     end
 
-    def publish_message_streaming_state(guardian:, message:, contract:, **)
+    def publish_message_streaming_state(guardian:, message:, contract:)
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
     end
   end

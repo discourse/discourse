@@ -129,6 +129,7 @@ fa_IR:
       url: "کپی و اشتراک‌گذاری نشانی وب"
     word_connector:
       comma: "، "
+      last_item: "و"
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -165,9 +166,12 @@ fa_IR:
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
       dismiss: "رد کردن"
+    back_button: "بازگشت"
     themes:
       default_description: "پیش‌فرض"
     broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
+    critical_deprecation:
+      id: "(شناسه:<em>%{id}</em>)"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -888,9 +892,11 @@ fa_IR:
       "14": "در انتظار"
       "15": "پیش‌نویس‌ها"
     categories:
-      all: "همه‌ی دسته‌بندی‌ها"
-      all_subcategories: "همه"
-      no_subcategory: "هیچی"
+      categories_label: "دسته‌بندی‌ها"
+      subcategories_label: "دسته‌‌بندی‌های فرزند"
+      remove_filter: "حذف فیلتر"
+      plus_more_count: "+%{count} مورد دیگر"
+      view_all: "مشاهده همه"
       category: "دسته‌بندی"
       category_list: "نمایش فهرست دسته‌بندی"
       reorder:
@@ -1046,7 +1052,6 @@ fa_IR:
       allow_private_messages: "به دیگر کاربران اجازه بده به من پیام شخصی بفرستند"
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
-      enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
@@ -1217,7 +1222,8 @@ fa_IR:
           default: "کلید عبور اصلی"
         save: "ذخیره"
         title: "کلیدهای عبور"
-        added_prefix: "اضافه شده"
+        added_date: "%{date} اضافه شد"
+        last_used_date: "آخرین استفاده %{date}"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -1310,6 +1316,8 @@ fa_IR:
         instructions: "زبان رابط کاربری. با تازه کردن صفحه تغییر خواهد کرد."
         default: "(پیش‌فرض)"
         any: "هر"
+      homepage:
+        default: "(پیش‌فرض)"
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
       invite_code:
@@ -1611,7 +1619,6 @@ fa_IR:
       close: "بسته"
       dismiss_error: "رد کردن خطا"
     close: "بستن"
-    assets_changed_confirm: "این سایت به تازگی یک ارتقاء نرم افزاری دریافت کرده است. مایلید همین حالا آخرین نسخه را دریافت کنید؟"
     logout: "شما از سایت خارج شده‌اید."
     refresh: "تازه کردن"
     home: "خانه"
@@ -1910,7 +1917,6 @@ fa_IR:
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"
-      create_pm: "پیام"
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
@@ -2256,7 +2262,6 @@ fa_IR:
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
         relist_topics: "ایجاد فهرست مجدد از موضوعات"
-        defer: " واگذار کردن"
         delete: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
@@ -2315,6 +2320,20 @@ fa_IR:
     topic_bulk_actions:
       close_topics:
         name: "بستن موضوعات"
+      archive_topics:
+        name: "بایگانی موضوعات"
+      unlist_topics:
+        name: "از فهرست خارج کردن مباحث"
+      relist_topics:
+        name: "ایجاد فهرست مجدد از موضوعات"
+      remove_tags:
+        name: "حذف برچسب‌ها"
+      append_tags:
+        name: "افزودن برچسب‌ها"
+      replace_tags:
+        name: "جایگزینی برچسب‌ها"
+      delete_topics:
+        name: "حذف موضوعات"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -2330,9 +2349,6 @@ fa_IR:
       move_to_inbox:
         title: "انتقال به صندوق دریافت"
         help: "بازگرداندن پیام به صندوق دریافتی"
-      defer:
-        help: "علامت به عنوان خوانده نشده"
-        title: " واگذار کردن"
       list: "موضوعات"
       new: "موضوع جدید"
       unread: "خوانده نشده"
@@ -3179,7 +3195,6 @@ fa_IR:
         show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
         search: "جستجو %{shortcut}"
         help: "%{shortcut} باز کردن کمک صفحه‌کلید"
-        dismiss_topics: "%{shortcut} بستن موضوعات"
         log_out: "%{shortcut} خروج"
       composing:
         title: "نوشتن"
@@ -3211,7 +3226,6 @@ fa_IR:
         mark_tracking: "%{shortcut} پیگیری موضوع"
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
-        defer: "تاپیک‌های به تعویق افتاده %{shortcut}"
       search_menu:
         title: "منو جستجو"
         full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
@@ -3248,8 +3262,10 @@ fa_IR:
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
+      selector_tags: "برچسب‌ها"
       selector_all_tags: "تمام برچسب‌ها"
       selector_no_tags: "بدون برچسب"
+      selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
       info: "اطلاعات"
@@ -3451,13 +3467,14 @@ fa_IR:
       panels:
         forum:
           label: انجمن
+      filter: "فیلتر"
     until: "تا وقتی که:"
     form_templates:
       upload_field:
         upload: "بار گذاری"
         uploading: "در حال بروز‌رسانی "
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "یک مقدار معتبر وارد کنید."
           email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
     table_builder:
@@ -3477,12 +3494,16 @@ fa_IR:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
       back_to_forum: "بازگشت به انجمن"
+      filter_reports: صافی گزارشات
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
           never: "هیچوقت"
       reports:
         title: "لیستی از گزارشات موجود"
+        sidebar_title: "گزارشات"
+        sidebar_link:
+          all: "همه"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"
@@ -3491,10 +3512,8 @@ fa_IR:
         up_to_date: "شما به روز هستید!"
         critical_available: "به روز رسانی مهم در دسترس است."
         updates_available: "بروز رسانی در درسترس است."
-        please_upgrade: "لطفا ارتقاء دهید!"
         no_check_performed: "بررسی برای بروزرسانی انجام نشد. از اجرای sidekiq اطمینان حاصل کنید."
         stale_data: "بررسی برای بروزرسانی اخیراً انجام نگرفته است. از اجرای sidekiq اطمینان حاصل کنید."
-        version_check_pending: "گویا به‌تازگی به‌روز کرده‌اید. عالیه!"
         installed_version: "نصب"
         latest_version: "آخرین"
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
@@ -3535,7 +3554,6 @@ fa_IR:
         report_filter_any: "هر"
         disabled: غیرفعال
         not_found_error: متأسفم، چنین گزارشی وجود ندارد
-        filter_reports: صافی گزارشات
         reports:
           today: "امروز"
           yesterday: "دیروز"
@@ -3708,6 +3726,59 @@ fa_IR:
           timestamp: "ساخته شد"
           completion: "زمان تکمیل"
           actions: "عملیات"
+      home:
+        title: "خانه"
+      account:
+        title: "حساب کاربری"
+        sidebar_link:
+          backups: "نسخه‌های پشتیبان"
+          whats_new: "چه چیزی جدید شده"
+      community:
+        title: "انجمن"
+        sidebar_link:
+          about_your_site: "درباره سایت شما"
+          badges: "نشان‌ها"
+          login_and_authentication: "ورود و احراز هویت"
+          notifications: "اعلان‌ها"
+          permalinks: " پیوند دائمی"
+          trust_levels: "سطوح اعتماد"
+          users: "کاربران"
+          user_fields: "زمینه‌های کاربر"
+          watched_words: "کلمات تماشا شده"
+          legal: "حقوقی"
+      appearance:
+        title: "ظاهر"
+        sidebar_link:
+          font_style: "نوع قلم"
+          site_logo: "آرم سایت"
+          color_schemes: "طرح‌های رنگ"
+          emoji: "شکلک"
+          navigation: "ناوبری"
+          themes: "قالب‌ها"
+          site_texts: "متن‌های سایت"
+      email_settings:
+        title: "تنظیمات ایمیل"
+        sidebar_link:
+          appearance: "ظاهر"
+          preview_summary: "پیشنمایش خلاصه"
+      email_logs:
+        title: "گزارش‌های ایمیل"
+        sidebar_link:
+          sent: "ارسال شده"
+          skipped: "رد شده"
+          bounced: "برگشته"
+          received: "دریافت شده"
+          rejected: "رد شده"
+      security:
+        title: "امنیت"
+        sidebar_link:
+          error_logs: "گزارش خطا"
+          screened_emails: "ایمیل ها نمایش داده شده"
+          screened_ips: "نمایش IP ها"
+          screened_urls: "URL های نمایش داده شده"
+          search_logs: "جستجوی گزارش‌ها"
+          security: "امنیت"
+          spam: "هرز‌نامه"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"
@@ -3721,6 +3792,23 @@ fa_IR:
         howto: "چگونه یک افزونه نصب کنیم؟"
         author: "توسط %{author}"
         learn_more: "بیشتر بدانید"
+        sidebar_link:
+          installed: "نصب"
+      advanced:
+        title: "پیشرفته"
+        sidebar_link:
+          api_keys: "کلیدهای API"
+          developer: "توسعه دهنده"
+          embedding: "جاسازی"
+          rate_limits: "میزان محدودیت‌ها "
+          user_api: "API کاربر"
+          web_hooks: "webhook ها"
+          onebox: "جعبه‌ی پیوند"
+          files: "فایل ها"
+          other_options: "دیگر"
+          search: "جستجو"
+          experimental: "آزمایشی"
+          all_site_settings: "تمام تنظیمات سایت"
       navigation_menu:
         sidebar: "نوار کناری"
       backups:
@@ -3745,6 +3833,7 @@ fa_IR:
           title: "آپلود یک نسخه پشتیبان برای نمونه"
           uploading: "در حال بارگذاری…"
           error: "هنگام آپلود خطایی رخ می دهد '%{filename}': %{message}"
+        settings: "تنظیمات"
         operations:
           failed: "%{operation} ناموفق شد. لطفا گزارشات را بررسی نمایید."
           cancel:
@@ -3897,6 +3986,7 @@ fa_IR:
           up_to_date: "قالب به روز است،‌ آخرین بررسی در:"
           add: "افزودن"
           theme_settings: "تنظیمات تم"
+          edit_objects_theme_setting: "ویرایشگر تنظیمات اشیاء"
           no_settings: "این تم تنظیماتی ندارد."
           theme_translations: "ترجمه تم"
           commits_behind:
@@ -3928,6 +4018,14 @@ fa_IR:
           all_filter: "همه"
           active_filter: "فعال"
           inactive_filter: "غیر‌فعال"
+          schema:
+            fields:
+              required: "*مورد نیاز"
+              string:
+                too_short: "نباید کمتر از %{count} نویسه باشد"
+              number:
+                too_small: "باید بزرگتر یا مساوی %{count} باشد"
+                too_large: "باید کمتر و یا مساوی %{count} باشد"
         colors:
           title: "رنگ‌ها"
           copy_name_prefix: "کپی از"
@@ -4566,6 +4664,7 @@ fa_IR:
         group: "گروه"
         image: "تصویر"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
+        settings: "تنظیمات"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"

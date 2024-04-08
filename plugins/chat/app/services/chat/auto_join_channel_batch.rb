@@ -44,16 +44,16 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::CategoryChannel.find_by(id: contract.channel_id, auto_join_users: true)
     end
 
-    def create_memberships(channel:, contract:, **)
+    def create_memberships(channel:, contract:)
       context.added_user_ids =
         ::Chat::Action::CreateMembershipsForAutoJoin.call(channel: channel, contract: contract)
     end
 
-    def recalculate_user_count(channel:, added_user_ids:, **)
+    def recalculate_user_count(channel:, added_user_ids:)
       # Only do this if we are running auto-join for a single user, if we
       # are doing it for many then we should do it after all batches are
       # complete for the channel in Jobs::AutoJoinChannelMemberships
@@ -61,7 +61,7 @@ module Chat
       ::Chat::ChannelMembershipManager.new(channel).recalculate_user_count
     end
 
-    def publish_new_channel(channel:, added_user_ids:, **)
+    def publish_new_channel(channel:, added_user_ids:)
       ::Chat::Publisher.publish_new_channel(channel, User.where(id: added_user_ids))
     end
   end

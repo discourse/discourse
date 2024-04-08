@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Migrations::Import" do
-  subject(:cli) { system "migrations/import" }
+  subject(:cli) { system("migrations/import", exception: true) }
 
   it "works" do
     expect { cli }.to output(

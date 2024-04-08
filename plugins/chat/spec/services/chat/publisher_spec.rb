@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Publisher do
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
@@ -281,6 +279,7 @@ describe Chat::Publisher do
               type: "thread",
               channel_id: channel.id,
               thread_id: thread.id,
+              force_thread: false,
               message:
                 Chat::MessageSerializer.new(
                   message_1,

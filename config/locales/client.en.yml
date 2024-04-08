@@ -213,6 +213,7 @@ en:
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
+    back_button: "Back"
 
     themes:
       default_description: "Default"
@@ -258,7 +259,8 @@ en:
         us_west_2: "US West (Oregon)"
 
     clear_input: "Clear input"
-    edit: "edit the title and category of this topic"
+    edit: "Edit"
+    edit_topic: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -352,6 +354,10 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
+      also_set_reminder: "Also set a reminder?"
+      bookmarked_success: "Bookmarked!"
+      deleted_bookmark_success: "Bookmark deleted!"
+      reminder_set_success: "Reminder set!"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"
@@ -374,8 +380,11 @@ en:
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"
         clear_reminder: "Keep bookmark and clear reminder"
+        after_reminder_label: "After reminding you we should..."
+        after_reminder_checkbox: "Set this as default for all future bookmark reminders"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
+      bookmark: "Bookmark"
       reminders:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
@@ -699,6 +708,7 @@ en:
       in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
+      three_days: "In three days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -720,6 +730,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
+      custom_short: "Custom..."
       select_timeframe: "Select a timeframe"
 
     user_action:
@@ -1034,9 +1045,13 @@ en:
       "15": "Drafts"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
+      plus_more_count: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
@@ -1159,6 +1174,7 @@ en:
           warning: "Are you sure you want to clear your featured topic?"
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
+      login_to_view_profile: "You must log in to view user profiles"
       inactive_user: "This user is no longer active."
       expand_profile: "Expand"
       sr_expand_profile: "Expand profile details"
@@ -1233,7 +1249,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
-      enable_defer: "Enable defer to mark topics unread"
+      enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -1532,8 +1548,8 @@ en:
         save: "Save"
         title: "Passkeys"
         short_description: "Passkeys are password replacements that validate your identity biometrically (e.g. touch, faceID) or via a device PIN/password."
-        added_prefix: "Added"
-        last_used_prefix: "Last Used"
+        added_date: "Added %{date}"
+        last_used_date: "Last Used %{date}"
         never_used: "Never Used"
         not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
@@ -1666,6 +1682,9 @@ en:
         default: "(default)"
         any: "any"
 
+      homepage:
+        default: "(default)"
+
       password_confirmation:
         title: "Password Again"
 
@@ -1770,6 +1789,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -1980,6 +2000,7 @@ en:
 
     user_tips:
       button: "Got it!"
+      skip: "Skip tips"
 
       first_notification:
         title: "Your first notification!"
@@ -1987,7 +2008,7 @@ en:
 
       topic_timeline:
         title: "Topic timeline"
-        content: "Scroll quickly through a post using the topic timeline."
+        content: "Scroll quickly through long topics using the topic timeline."
 
       post_menu:
         title: "Post menu"
@@ -2030,7 +2051,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     close: "Close"
-    assets_changed_confirm: "This site just received a software upgrade. Get the latest version now?"
+    assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
     refresh: "Refresh"
     home: "Home"
@@ -2340,6 +2361,9 @@ en:
       loading: Loading…
 
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -2474,7 +2498,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Message"
+      create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -2578,7 +2602,9 @@ en:
 
       image_alt_text:
         aria_label: Alt text for image
+        title: "Add image description"
 
+      image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
 
@@ -2911,7 +2937,7 @@ en:
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
         reset_bump_dates: "Reset bump dates"
-        defer: "Defer"
+        defer: "Mark unread"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -2952,6 +2978,7 @@ en:
         selected:
           one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>%{count}</b> topics."
+        selected_count: "%{count} selected"
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
@@ -2965,6 +2992,8 @@ en:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
         silent: "Perform this action silently."
+        performing: "Performing bulk operations, please wait…"
+        completed: "Bulk operations completed successfully!"
 
       none:
         unread: "You have no unread topics."
@@ -2999,6 +3028,8 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+        note: "Note"
+        optional: (optional)
       archive_topics:
         name: "Archive Topics"
       unlist_topics:
@@ -3020,10 +3051,10 @@ en:
         name: "Reset Bump Dates"
         description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
       defer:
-        name: "Defer Topics"
+        name: "Mark Unread"
         description: "Mark topics as unread"
       update_notifications:
-        name: "Update Notifications…"
+        name: "Update Notifications"
         description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
@@ -3042,8 +3073,8 @@ en:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
       defer:
-        help: "Mark as unread"
-        title: "Defer"
+        help: "Mark topic as unread"
+        title: "Mark unread"
 
       list: "Topics"
       new: "new topic"
@@ -4169,6 +4200,9 @@ en:
         this_week: "Week"
         today: "Today"
 
+    custom_homepage:
+      admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
+
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
@@ -4243,9 +4277,11 @@ en:
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
+        filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new: "%{shortcut} Dismiss New"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
+        toggle_bulk_select: "%{shortcut} Toggle bulk select"
+        dismiss: "%{shortcut} Dismiss selected topic(s)"
+        x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"
@@ -4285,7 +4321,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
-        defer: "%{shortcut} Defer topic"
+        defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
         archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
@@ -4347,8 +4383,10 @@ en:
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
+      selector_tags: "tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
+      selector_remove_filter: "remove filter"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
@@ -4677,6 +4715,11 @@ en:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description: "We couldn’t find anything matching ‘%{filter}’"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4695,12 +4738,12 @@ en:
         upload: "Upload"
         uploading: "Uploading"
       errors:
-        valueMissing:
+        value_missing:
           default: "Please fill out this field."
-          select-one: "Please select an item in the list."
-          select-multiple: "Please select at least one item in the list."
+          select_one: "Please select an item in the list."
+          select_multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."
-        typeMismatch:
+        type_mismatch:
           default: "Please enter a valid value."
           color: "Please enter a color."
           date: "Please enter a date."
@@ -4710,20 +4753,20 @@ en:
           tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
-        tooShort:
+        too_short:
           one: "The input must be %{count} character or longer."
           other: "The input must be %{count} characters or longer."
-        tooLong:
+        too_long:
           one: "The input must be less than %{count} character."
           other: "The input must be less than %{count} characters."
-        rangeOverflow:
+        range_overflow:
           one: "The input must be less than %{count}."
           other: "The input must be less than %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "The input must be more than %{count}."
           other: "The input must be more than %{count}."
-        patternMismatch: "Please match the requested format."
-        badInput: "Please enter a valid input."
+        pattern_mismatch: "Please match the requested format."
+        bad_input: "Please enter a valid input."
 
     table_builder:
       title: "Table Builder"
@@ -4782,6 +4825,7 @@ en:
           copy: "Copy..."
           paste: "Paste..."
           save: "Save as..."
+    powered_by_discourse: "Powered by Discourse"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4792,6 +4836,9 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
+      filter_reports: Filter reports
+      expand_all_sections: "Expand all sections"
+      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
@@ -4802,7 +4849,12 @@ en:
       reports:
         title: "List of available reports"
         meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        sidebar_title: "Reports"
+        sidebar_link:
+          all: "All"
 
+      new_features:
+        title: "What's new"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -4811,10 +4863,10 @@ en:
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
+        please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
-        version_check_pending: "Looks like you upgraded recently. Fantastic!"
+        version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
@@ -4860,7 +4912,6 @@ en:
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
-        filter_reports: Filter reports
         custom_date_range: Custom date range
 
         reports:
@@ -5031,12 +5082,18 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
+              recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
+            revisions:
+              read: "Get the latest or a specific revision."
+              modify: "Hide, show, or revert revisions."
+              permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
             tag_groups:
@@ -5209,6 +5266,67 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+      home:
+        title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backups"
+          whats_new: "What's New"
+
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "About Your Site"
+          badges: "Badges"
+          login_and_authentication: "Login & Authentication"
+          notifications: "Notifications"
+          permalinks: "Permalinks"
+          trust_levels: "Trust Levels"
+          users: "Users"
+          user_fields: "User Fields"
+          watched_words: "Watched Words"
+          legal: "Legal"
+
+      appearance:
+        title: "Appearance"
+        sidebar_link:
+          font_style: "Font Style"
+          site_logo: "Site Logo"
+          color_schemes: "Color Schemes"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes: "Themes"
+          site_texts: "Site Texts"
+
+      email_settings:
+        title: "Email Settings"
+        sidebar_link:
+          appearance: "Appearance"
+          preview_summary: "Preview Summary"
+          server_setup: "Server Setup"
+
+      email_logs:
+        title: "Email Logs"
+        sidebar_link:
+          sent: "Sent"
+          skipped: "Skipped"
+          bounced: "Bounced"
+          received: "Received"
+          rejected: "Rejected"
+
+      security:
+        title: "Security"
+        sidebar_link:
+          error_logs: "Error Logs"
+          screened_emails: "Screened Emails"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          search_logs: "Search Logs"
+          security: "Security"
+          spam: "Spam"
+          staff_action_logs: "Staff Action Logs"
+
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -5225,6 +5343,24 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
+        sidebar_link:
+          installed: "Installed"
+
+      advanced:
+        title: "Advanced"
+        sidebar_link:
+          api_keys: "API keys"
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Rate Limits"
+          user_api: "User API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Files"
+          other_options: "Other"
+          search: "Search"
+          experimental: "Experimental"
+          all_site_settings: "All Site Settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5257,6 +5393,7 @@ en:
           uploading_progress: "Uploading… %{progress}%"
           success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Settings"
         operations:
           is_running: "An operation is currently running…"
           failed: "The %{operation} failed. Please check the logs."
@@ -5450,6 +5587,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          installing_message: "Installing theme, this may take several minutes..."
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create Placeholder"
@@ -5474,6 +5612,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          edit_objects_theme_setting: "Objects Setting Editor"
           overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
@@ -5531,7 +5670,28 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           schema:
+            title: "Edit %{name} setting"
             back_button: "Back to %{name}"
+            fields:
+              required: "*required"
+              groups:
+                at_least:
+                  one: "at least %{count} group is required"
+                  other: "at least %{count} groups are required"
+              categories:
+                at_least:
+                  one: "at least %{count} category is required"
+                  other: "at least %{count} categories are required"
+              tags:
+                at_least:
+                  one: "at least %{count} tag is required"
+                  other: "at least %{count} tags are required"
+              string:
+                too_short: "must be at least %{count} characters"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
+
         colors:
           select_base:
             title: "Select base color palette"
@@ -6567,6 +6727,7 @@ en:
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+        settings: "Settings"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

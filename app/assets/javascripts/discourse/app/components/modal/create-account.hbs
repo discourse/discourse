@@ -1,3 +1,4 @@
+{{! template-lint-disable no-duplicate-id }}
 <DModal
   class="create-account -large"
   {{on "keydown" this.actionOnEnter}}
@@ -137,9 +138,9 @@
             {{#if this.passwordRequired}}
               <PasswordField
                 @value={{this.accountPassword}}
-                @type={{if this.maskPassword "password" "text"}}
-                @autocomplete="current-password"
                 @capsLockOn={{this.capsLockOn}}
+                type={{if this.maskPassword "password" "text"}}
+                autocomplete="current-password"
                 aria-describedby="password-validation password-validation-more-info"
                 aria-invalid={{this.passwordValidation.failed}}
                 id="new-account-password"
@@ -246,35 +247,37 @@
           />
         </form>
 
-        <div class="d-modal__footer">
-          <div class="disclaimer">
-            {{html-safe this.disclaimerHtml}}
-          </div>
-          <div class="d-modal__footer-buttons">
-            <DButton
-              @action={{this.createAccount}}
-              @disabled={{this.submitDisabled}}
-              @label="create_account.title"
-              @isLoading={{this.formSubmitted}}
-              class="btn-large btn-primary"
-            />
-
-            {{#unless this.hasAuthOptions}}
+        {{#if this.site.desktopView}}
+          <div class="d-modal__footer">
+            <div class="disclaimer">
+              {{html-safe this.disclaimerHtml}}
+            </div>
+            <div class="d-modal__footer-buttons">
               <DButton
-                @action={{route-action "showLogin"}}
-                @disabled={{this.formSubmitted}}
-                @label="log_in"
-                id="login-link"
-                class="btn-large btn-flat"
+                @action={{this.createAccount}}
+                @disabled={{this.submitDisabled}}
+                @label="create_account.title"
+                @isLoading={{this.formSubmitted}}
+                class="btn-large btn-primary"
               />
-            {{/unless}}
-          </div>
-        </div>
 
-        <PluginOutlet
-          @name="create-account-after-modal-footer"
-          @connectorTagName="div"
-        />
+              {{#unless this.hasAuthOptions}}
+                <DButton
+                  @action={{route-action "showLogin"}}
+                  @disabled={{this.formSubmitted}}
+                  @label="log_in"
+                  id="login-link"
+                  class="btn-large btn-flat"
+                />
+              {{/unless}}
+            </div>
+          </div>
+
+          <PluginOutlet
+            @name="create-account-after-modal-footer"
+            @connectorTagName="div"
+          />
+        {{/if}}
       {{/if}}
 
       {{#if this.model.skipConfirmation}}
@@ -294,4 +297,36 @@
       </div>
     {{/if}}
   </:body>
+
+  <:footer>
+    {{#if (and this.showCreateForm this.site.mobileView)}}
+      <div class="disclaimer">
+        {{html-safe this.disclaimerHtml}}
+      </div>
+      <div class="d-modal__footer-buttons">
+        <DButton
+          @action={{this.createAccount}}
+          @disabled={{this.submitDisabled}}
+          @label="create_account.title"
+          @isLoading={{this.formSubmitted}}
+          class="btn-large btn-primary"
+        />
+
+        {{#unless this.hasAuthOptions}}
+          <DButton
+            @action={{route-action "showLogin"}}
+            @disabled={{this.formSubmitted}}
+            @label="log_in"
+            id="login-link"
+            class="btn-large btn-flat"
+          />
+        {{/unless}}
+      </div>
+
+      <PluginOutlet
+        @name="create-account-after-modal-footer"
+        @connectorTagName="div"
+      />
+    {{/if}}
+  </:footer>
 </DModal>

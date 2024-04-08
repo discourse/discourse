@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
@@ -48,69 +48,68 @@ export default {
     });
 
     withPluginApi("1.3.0", (api) => {
-      const isThreadEnabledInAnyChannel =
-        this.currentUser?.chat_channels?.public_channels?.some(
-          (channel) => channel.threading_enabled === true
-        );
+      const chatChannelsManager = container.lookup(
+        "service:chat-channels-manager"
+      );
 
-      if (isThreadEnabledInAnyChannel) {
-        api.addSidebarSection(
-          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-            const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
-              route = "chat.threads";
-              text = I18n.t("chat.my_threads.title");
-              title = I18n.t("chat.my_threads.title");
-              name = "user-threads";
-              prefixType = "icon";
-              prefixValue = "discourse-threads";
-              suffixType = "icon";
-              suffixCSSClass = "unread";
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
+            route = "chat.threads";
+            text = I18n.t("chat.my_threads.title");
+            title = I18n.t("chat.my_threads.title");
+            name = "user-threads";
+            prefixType = "icon";
+            prefixValue = "discourse-threads";
+            suffixType = "icon";
+            suffixCSSClass = "unread";
 
-              constructor() {
-                super(...arguments);
+            constructor() {
+              super(...arguments);
 
-                if (container.isDestroyed) {
-                  return;
-                }
-
-                this.chatChannelsManager = container.lookup(
-                  "service:chat-channels-manager"
-                );
+              if (container.isDestroyed) {
+                return;
               }
+            }
 
-              get suffixValue() {
-                return this.chatChannelsManager.publicMessageChannels.some(
-                  (channel) => channel.unreadThreadsCount > 0
-                )
-                  ? "circle"
-                  : "";
-              }
-            };
+            get suffixValue() {
+              return chatChannelsManager.publicMessageChannels.some(
+                (channel) => channel.unreadThreadsCount > 0
+              )
+                ? "circle"
+                : "";
+            }
+          };
 
-            const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
-              // we only show `My Threads` link
-              hideSectionHeader = true;
+          const SidebarChatMyThreadsSection = class extends BaseCustomSidebarSection {
+            @service chatChannelsManager;
 
-              name = "user-threads";
+            // we only show `My Threads` link
+            hideSectionHeader = true;
 
-              // sidebar API doesn’t let you have undefined values
-              // even if you don't show the section’s header
-              title = "";
+            name = "user-threads";
 
-              get links() {
-                return [new SidebarChatMyThreadsSectionLink()];
-              }
+            // sidebar API doesn’t let you have undefined values
+            // even if you don't show the section’s header
+            title = "";
 
-              get text() {
-                return null;
-              }
-            };
+            get links() {
+              return [new SidebarChatMyThreadsSectionLink()];
+            }
 
-            return SidebarChatMyThreadsSection;
-          },
-          CHAT_PANEL
-        );
-      }
+            get text() {
+              return null;
+            }
+
+            get displaySection() {
+              return this.chatChannelsManager.hasThreadedChannels;
+            }
+          };
+
+          return SidebarChatMyThreadsSection;
+        },
+        CHAT_PANEL
+      );
 
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
@@ -199,6 +198,7 @@ export default {
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
               @service currentUser;
+              @service chatStateManager;
 
               @tracked
               currentUserCanJoinPublicChannels =
@@ -261,8 +261,9 @@ export default {
 
               get displaySection() {
                 return (
-                  this.sectionLinks.length > 0 ||
-                  this.currentUserCanJoinPublicChannels
+                  this.chatStateManager.hasPreloadedChannels &&
+                  (this.sectionLinks.length > 0 ||
+                    this.currentUserCanJoinPublicChannels)
                 );
               }
             };
@@ -417,6 +418,7 @@ export default {
             @service modal;
             @service router;
             @service currentUser;
+            @service chatStateManager;
 
             @tracked
             userCanDirectMessage = this.chatService.userCanDirectMessage;
@@ -482,7 +484,10 @@ export default {
             }
 
             get displaySection() {
-              return this.sectionLinks.length > 0 || this.userCanDirectMessage;
+              return (
+                this.chatStateManager.hasPreloadedChannels &&
+                (this.sectionLinks.length > 0 || this.userCanDirectMessage)
+              );
             }
           };
 

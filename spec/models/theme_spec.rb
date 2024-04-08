@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Theme do
-  after { Theme.clear_cache! }
-
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
-
-  fab! :user do
-    Fabricate(:user)
-  end
+  fab!(:user)
+  fab!(:theme) { Fabricate(:theme, user: user) }
 
   let(:guardian) { Guardian.new(user) }
-
-  fab!(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
+  before { ThemeJavascriptCompiler.disable_terser! }
+
+  after do
+    Theme.clear_cache!
+    ThemeJavascriptCompiler.enable_terser!
+  end
 
   it "can properly clean up color schemes" do
     scheme = ColorScheme.create!(theme_id: theme.id, name: "test")
@@ -1432,6 +1431,68 @@ HTML
       expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(en_field.value_baked)
       expect(Theme.lookup_field(theme_1.id, :translations, :es)).to eq(es_field.value_baked)
       expect(Theme.lookup_field(theme_1.id, :translations, :fr)).to eq(en_field.value_baked)
+    end
+  end
+
+  describe "#repository_url" do
+    subject(:repository_url) { theme.repository_url }
+
+    context "when theme is not a remote one" do
+      it "returns nothing" do
+        expect(repository_url).to be_blank
+      end
+    end
+
+    context "when theme is a remote one" do
+      let!(:remote_theme) { theme.create_remote_theme(remote_url: remote_url) }
+
+      context "when URL is a SSH one" do
+        let(:remote_url) { "git@github.com:discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTPS one" do
+        let(:remote_url) { "https://github.com/discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTP one" do
+        let(:remote_url) { "http://github.com/discourse/graceful" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL contains query params" do
+        let(:remote_url) { "http://github.com/discourse/graceful.git?param_id=1" }
+
+        it "keeps the query params" do
+          expect(repository_url).to eq "github.com/discourse/graceful?param_id=1"
+        end
+      end
+    end
+  end
+
+  describe "#user_selectable_count" do
+    subject(:count) { theme.user_selectable_count }
+
+    let!(:users) { Fabricate.times(5, :user) }
+    let!(:another_theme) { Fabricate(:theme) }
+
+    before do
+      users.take(3).each { _1.user_option.update!(theme_ids: [theme.id]) }
+      users.slice(3..4).each { _1.user_option.update!(theme_ids: [another_theme.id]) }
+    end
+
+    it "returns how many users are currently using the theme" do
+      expect(count).to eq 3
     end
   end
 end

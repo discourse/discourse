@@ -42,7 +42,7 @@ createWidget("topic-admin-menu-button", {
       position: state.position,
       topic: attrs.topic,
       openUpwards: attrs.openUpwards,
-      rightSide: !this.site.mobileView && attrs.rightSide,
+      rightSide: this.site.desktopView && attrs.rightSide,
       actionButtons: [],
     });
 

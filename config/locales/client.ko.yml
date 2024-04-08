@@ -153,6 +153,7 @@ ko:
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       dismiss: "무시"
+    back_button: "뒤로"
     themes:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
@@ -839,9 +840,12 @@ ko:
       "14": "보류 중"
       "15": "임시저장"
     categories:
-      all: "모든 카테고리"
-      all_subcategories: "모두"
-      no_subcategory: "없음"
+      categories_label: "카테고리"
+      subcategories_label: "하위 카테고리"
+      no_subcategories: "하위 카테고리 없음"
+      remove_filter: "필터 제거"
+      plus_more_count: "+%{count}개 더보기"
+      view_all: "모두 보기"
       category: "카테고리"
       category_list: "카테고리 목록 표시"
       reorder:
@@ -1002,7 +1006,6 @@ ko:
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
-      enable_defer: "주제를 읽지 않은 상태로 표시하도록 연기 활성화"
       experimental_sidebar:
         enable: "사이드바 활성화"
         options: "옵션"
@@ -1190,8 +1193,6 @@ ko:
           name_required_error: "보안 키의 이름을 제공해야 합니다."
       passkeys:
         save: "저장"
-        added_prefix: "추가됨"
-        last_used_prefix: "마지막 사용"
       change_about:
         title: "내 정보 변경"
         error: "이 값을 변경하는 중에 오류가 발생했습니다."
@@ -1300,6 +1301,8 @@ ko:
         instructions: "사용자 인터페이스 언어입니다. 페이지를 새로고침하면 반영됩니다."
         default: "(디폴트)"
         any: "모두"
+      homepage:
+        default: "(기본)"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -1574,7 +1577,6 @@ ko:
       close: "닫기"
       dismiss_error: "오류 무시"
     close: "닫기"
-    assets_changed_confirm: "이 사이트에 소프트웨어 업그레이드가 존재합니다. 지금 최신 버전을 받을까요?"
     logout: "로그아웃되었습니다."
     refresh: "새로 고침"
     home: "홈"
@@ -1771,6 +1773,8 @@ ko:
       alt: "Alt"
       enter: "시작"
     category_row:
+      subcategory_count:
+        other: "+ %{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
     select_kit:
@@ -1854,7 +1858,6 @@ ko:
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
-      create_pm: "메시지"
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
@@ -2208,7 +2211,6 @@ ko:
         unlist_topics: "목록에서 주제 숨기기"
         relist_topics: "목록에서 주제 다시 표시"
         reset_bump_dates: "끌어올림 날짜 초기화"
-        defer: "연기"
         delete: "글 삭제"
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 무시"
@@ -2268,6 +2270,20 @@ ko:
     topic_bulk_actions:
       close_topics:
         name: "글 닫기"
+      archive_topics:
+        name: "글 보관"
+      unlist_topics:
+        name: "목록에서 글 숨기기"
+      relist_topics:
+        name: "목록에서 글 다시 보이기"
+      remove_tags:
+        name: "태그 제거"
+      append_tags:
+        name: "태그 추가"
+      replace_tags:
+        name: "태그 바꾸기"
+      delete_topics:
+        name: "글 삭제"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
@@ -2281,9 +2297,6 @@ ko:
       move_to_inbox:
         title: "받은 편지함으로 이동"
         help: "메시지를 받은 편지함으로 다시 이동"
-      defer:
-        help: "읽지 않음으로 표시"
-        title: "연기"
       list: "글"
       new: "새 주제"
       unread: "읽지 않음"
@@ -3209,8 +3222,6 @@ ko:
         show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"
         search: "%{shortcut} 검색"
         help: "%{shortcut} 키보드 도움말 열기"
-        dismiss_new: "%{shortcut} 신규 항목 무시"
-        dismiss_topics: "%{shortcut} 주제 무시"
         log_out: "%{shortcut} 로그아웃"
       composing:
         title: "글쓰기"
@@ -3248,7 +3259,6 @@ ko:
         mark_tracking: "%{shortcut} 주제 추적"
         mark_watching: "%{shortcut} 주제 구독"
         print: "%{shortcut} 주제 인쇄"
-        defer: "%{shortcut} 주제 지연"
         topic_admin_actions: "%{shortcut} 주제 관리자 작업 열기"
       search_menu:
         title: "검색 메뉴"
@@ -3298,8 +3308,10 @@ ko:
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
+      selector_tags: "태그"
       selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
+      selector_remove_filter: "필터 제거"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
       info: "정보"
@@ -3519,6 +3531,9 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
+      filter: "필터"
+      no_results:
+        title: "결과 없음"
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
@@ -3528,7 +3543,7 @@ ko:
         upload: "업로드"
         uploading: "업로드 중"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "유효한 값을 입력하십시오."
     table_builder:
       modal:
@@ -3547,6 +3562,7 @@ ko:
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
+      filter_reports: 보고서 필터링
       tags:
         remove_muted_tags_from_latest:
           always: "항상 알림 받기"
@@ -3554,6 +3570,9 @@ ko:
           never: "거부"
       reports:
         title: "사용 가능한 리포트 목록"
+        sidebar_title: "보고서"
+        sidebar_link:
+          all: "전체"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -3562,10 +3581,8 @@ ko:
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
-        please_upgrade: "업그레이드하세요!"
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
-        version_check_pending: "최근에 업그레이드하셨네요. 잘하셨습니다!"
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
@@ -3608,7 +3625,6 @@ ko:
         exception_error: 쿼리 실행 중에 오류가 발생했습니다.
         too_many_requests: 이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 잠시 기다려 주세요.
         not_found_error: 이 리포트는 존재하지 않습니다
-        filter_reports: 리포트 필터링
         reports:
           trend_title: "%{percent} 변경. 현재 %{current}이며, 이전 기간의 %{prev}입니다."
           today: "오늘"
@@ -3842,6 +3858,50 @@ ko:
           timestamp: "생성일"
           completion: "완료 시간"
           actions: "작업"
+      home:
+        title: "홈"
+      account:
+        title: "계정"
+        sidebar_link:
+          backups: "백업"
+      community:
+        title: "커뮤니티"
+        sidebar_link:
+          badges: "배지"
+          notifications: "알림"
+          permalinks: "고유링크"
+          trust_levels: "회원등급"
+          users: "사용자들"
+          user_fields: "사용자 필드"
+          watched_words: "검열 단어"
+          legal: "법률조항"
+      appearance:
+        title: "외관"
+        sidebar_link:
+          emoji: "이모티콘"
+          navigation: "내비게이션"
+          themes: "테마"
+      email_settings:
+        sidebar_link:
+          appearance: "외관"
+          preview_summary: "요약 미리보기"
+      email_logs:
+        sidebar_link:
+          sent: "보낸 편지함"
+          skipped: "생략됨"
+          bounced: "반송됨"
+          received: "받음"
+          rejected: "거부됨"
+      security:
+        title: "보안"
+        sidebar_link:
+          error_logs: "에러 로그"
+          screened_emails: "블락된 이메일들"
+          screened_ips: "노출된 IP들"
+          screened_urls: "노출된 URL들"
+          search_logs: "검색 로그"
+          security: "보안"
+          spam: "스팸"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"
@@ -3855,6 +3915,19 @@ ko:
         howto: "플러그인은 어떻게 설치하나요?"
         author: "%{author}에 의해"
         learn_more: "더 보기"
+        sidebar_link:
+          installed: "설치됨"
+      advanced:
+        sidebar_link:
+          developer: "개발자"
+          embedding: "삽입(Embedding)"
+          rate_limits: "제한"
+          user_api: "사용자 API"
+          web_hooks: "Webhook"
+          onebox: "Onebox"
+          files: "파일"
+          other_options: "기타"
+          search: "검색"
       navigation_menu:
         sidebar: "사이드바"
       backups:
@@ -3879,6 +3952,7 @@ ko:
           title: "이 인스턴스에 백업 업로드"
           success: "'%{filename}' 파일이 업로드되었습니다. 파일이 현재 처리 중이며 목록에 표시되는 데 최대 1분이 걸립니다."
           error: "'%{filename}' 파일 업로드 중에 오류가 발생했습니다. %{message}"
+        settings: "설정"
         operations:
           failed: "%{operation} 작업을 실행하지 못했습니다. 로그를 확인하세요."
           cancel:
@@ -4116,6 +4190,14 @@ ko:
           all_filter: "전체"
           active_filter: "활성화 사용자"
           inactive_filter: "비활성화"
+          schema:
+            fields:
+              required: "*필수"
+              string:
+                too_short: "최소 %{count}자 이상이어야 합니다."
+              number:
+                too_small: "%{count}보다 크거나 같아야 함"
+                too_large: "%{count}보다 작거나 같아야 함"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"
@@ -4990,6 +5072,7 @@ ko:
         image: "이미지"
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"
+        settings: "설정"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
         confirm_delete: "호스트를 삭제할까요?"

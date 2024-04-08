@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { gt } from "truth-helpers";
 import borderColor from "discourse/helpers/border-color";
 import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import gt from "truth-helpers/helpers/gt";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
 export default class ChatChannelCard extends Component {

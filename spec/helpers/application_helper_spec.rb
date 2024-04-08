@@ -5,9 +5,23 @@ RSpec.describe ApplicationHelper do
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML
-          <link rel="preload" href="#{url}" as="script" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}">
           <script defer src="#{url}" data-discourse-entrypoint="#{entrypoint}" nonce="#{nonce}"></script>
       HTML
+    end
+
+    it "does not send crawler content to logged on users" do
+      controller.stubs(:use_crawler_layout?).returns(false)
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      helper.request.user_agent = "Firefox"
+      expect(helper.include_crawler_content?).to eq(false)
+    end
+
+    it "sends crawler content to logged on users who wants to print" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+      helper.stubs(:params).returns(print: true)
+
+      expect(helper.include_crawler_content?).to eq(true)
     end
 
     it "sends crawler content to old mobiles" do
@@ -125,43 +139,31 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "add_resource_preload_list" do
-    it "adds resources to the preload list when it's available" do
-      @links_to_preload = []
+    it "adds resources to the preload list" do
       add_resource_preload_list("/assets/start-discourse.js", "script")
       add_resource_preload_list("/assets/discourse.css", "style")
 
-      expect(@links_to_preload.size).to eq(2)
-    end
-
-    it "doesn't add resources to the preload list when it's not available" do
-      @links_to_preload = nil
-      add_resource_preload_list("/assets/start-discourse.js", "script")
-      add_resource_preload_list("/assets/discourse.css", "style")
-
-      expect(@links_to_preload).to eq(nil)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(2)
     end
 
     it "adds resources to the preload list when preload_script is called" do
-      @links_to_preload = []
       helper.preload_script("start-discourse")
 
-      expect(@links_to_preload.size).to eq(1)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      @links_to_preload = []
       helper.discourse_stylesheet_link_tag(:desktop)
 
-      expect(@links_to_preload.size).to eq(1)
+      expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      @links_to_preload = []
       helper.discourse_stylesheet_link_tag(:desktop)
       helper.preload_script("start-discourse")
 
-      expect(@links_to_preload[0]).to match(/as="style"/)
-      expect(@links_to_preload[1]).to match(/as="script"/)
+      expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
+      expect(controller.instance_variable_get(:@asset_preload_links)[1]).to match(/as="script"/)
     end
   end
 

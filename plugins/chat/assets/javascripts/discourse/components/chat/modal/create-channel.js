@@ -2,12 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "discourse-i18n";
 
@@ -67,9 +68,7 @@ export default class ChatModalCreateChannel extends Component {
 
   @action
   onCategoryChange(categoryId) {
-    const category = categoryId
-      ? this.site.categories.findBy("id", categoryId)
-      : null;
+    const category = categoryId ? Category.findById(categoryId) : null;
     this.#updatePermissionsHint(category);
 
     const name = this.name || category?.name || "";

@@ -39,22 +39,22 @@ module Chat
 
     private
 
-    def fetch_message(contract:, **)
+    def fetch_message(contract:)
       Chat::Message.includes(chat_channel: :chatable).find_by(
         id: contract.message_id,
         chat_channel_id: contract.channel_id,
       )
     end
 
-    def invalid_access(guardian:, message:, **)
+    def invalid_access(guardian:, message:)
       guardian.can_delete_chat?(message, message.chat_channel.chatable)
     end
 
-    def trash_message(message:, guardian:, **)
+    def trash_message(message:, guardian:)
       message.trash!(guardian.user)
     end
 
-    def destroy_notifications(message:, **)
+    def destroy_notifications(message:)
       Notification.where(
         id:
           Chat::Mention
@@ -64,23 +64,23 @@ module Chat
       ).destroy_all
     end
 
-    def update_tracking_state(message:, **)
+    def update_tracking_state(message:)
       ::Chat::Action::ResetUserLastReadChannelMessage.call([message.id], [message.chat_channel_id])
       if message.thread_id.present?
         ::Chat::Action::ResetUserLastReadThreadMessage.call([message.id], [message.thread_id])
       end
     end
 
-    def update_thread_reply_cache(message:, **)
+    def update_thread_reply_cache(message:)
       message.thread&.decrement_replies_count_cache
     end
 
-    def update_last_message_ids(message:, **)
+    def update_last_message_ids(message:)
       message.thread&.update_last_message_id!
       message.chat_channel.update_last_message_id!
     end
 
-    def publish_events(guardian:, message:, **)
+    def publish_events(guardian:, message:)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_delete!(message.chat_channel, message)
 

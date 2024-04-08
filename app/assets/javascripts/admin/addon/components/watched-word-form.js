@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal, not } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";

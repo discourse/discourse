@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
 /**
@@ -58,12 +58,18 @@ export default class SectionLink extends Component {
   }
 
   get target() {
-    if (this.args.fullReload) {
-      return "_self";
-    }
-    return this.currentUser?.user_option?.external_links_in_new_tab
+    return this.currentUser?.user_option?.external_links_in_new_tab &&
+      this.isExternal
       ? "_blank"
       : "_self";
+  }
+
+  get isExternal() {
+    return (
+      this.args.href &&
+      new URL(this.args.href, window.location.href).origin !==
+        window.location.origin
+    );
   }
 
   get models() {

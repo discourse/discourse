@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import Collection from "../lib/collection";
@@ -322,8 +322,14 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  leaveChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  async leaveChannel(channelId) {
+    await this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+    const channel = await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
+    if (channel) {
+      this.chatChannelsManager.remove(channel);
+    }
   }
 
   /**

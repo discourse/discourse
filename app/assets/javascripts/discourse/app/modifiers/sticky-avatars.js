@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import {
   addWidgetCleanCallback,

@@ -7,6 +7,7 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
@@ -82,7 +83,7 @@ module PageObjects
       def click_post_action_button(post, button)
         case button
         when :bookmark
-          post_by_number(post).find(".bookmark.with-reminder").click
+          post_by_number(post).find(".bookmark").click
         when :reply
           post_by_number(post).find(".post-controls .reply").click
         when :flag
@@ -205,6 +206,32 @@ module PageObjects
         @topic_map_component.is_not_visible?
       end
 
+      def has_private_message_map?
+        @private_message_map_component.is_visible?
+      end
+
+      def click_notifications_button
+        find(".topic-notifications-button .select-kit-header").click
+      end
+
+      def click_admin_menu_button
+        find("#topic-footer-buttons .topic-admin-menu-button").click
+      end
+
+      def watch_topic
+        click_notifications_button
+        find('li[data-name="watching"]').click
+      end
+
+      def close_topic
+        click_admin_menu_button
+        find(".topic-admin-popup-menu ul.topic-admin-menu-topic li.topic-admin-close").click
+      end
+
+      def has_read_post?(post)
+        post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
+      end
+
       private
 
       def topic_footer_button_id(button)
@@ -213,10 +240,7 @@ module PageObjects
 
       def is_post_bookmarked(post, bookmarked:)
         within post_by_number(post) do
-          page.public_send(
-            bookmarked ? :has_css? : :has_no_css?,
-            ".bookmark.with-reminder.bookmarked",
-          )
+          page.public_send(bookmarked ? :has_css? : :has_no_css?, ".bookmark.bookmarked")
         end
       end
     end

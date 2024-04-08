@@ -34,7 +34,11 @@ export function setup(helper) {
     "thead",
     "tr",
     "th",
+    "th[colspan]",
+    "th[rowspan]",
     "td",
+    "td[colspan]",
+    "td[rowspan]",
     "div.md-table",
   ]);
 }

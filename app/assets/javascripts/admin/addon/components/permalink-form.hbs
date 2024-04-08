@@ -14,7 +14,7 @@
     <ComboBox
       @content={{this.permalinkTypes}}
       @value={{this.permalinkType}}
-      @onChange={{action (mut this.permalinkType)}}
+      @onChange={{fn (mut this.permalinkType)}}
       class="permalink-type"
     />
 

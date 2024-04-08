@@ -6,12 +6,31 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def value=(objects)
-    # TODO: Validate the objects against the schema
-
-    record = has_record? ? db_record : create_record!
-    record.json_value = objects
-    record.save!
+    objects = JSON.parse(objects) if objects.is_a?(::String)
+    ensure_is_valid_value!(objects)
+    record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
     theme.reload
     record.json_value
+  end
+
+  def schema
+    @opts[:schema]
+  end
+
+  def categories(guardian)
+    category_ids = Set.new
+
+    value.each do |theme_setting_object|
+      category_ids.merge(
+        ThemeSettingsObjectValidator.new(
+          schema:,
+          object: theme_setting_object,
+        ).property_values_of_type("categories"),
+      )
+    end
+
+    return [] if category_ids.empty?
+
+    Category.secured(guardian).where(id: category_ids)
   end
 end

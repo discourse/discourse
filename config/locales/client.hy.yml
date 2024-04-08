@@ -152,6 +152,7 @@ hy:
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
       dismiss: "Չեղարկել"
+    back_button: "Ետ"
     themes:
       default_description: "Լռելյայն"
     s3:
@@ -698,9 +699,11 @@ hy:
       "14": "Սպասող"
       "15": "Սևագրեր"
     categories:
-      all: "բոլոր կատեգորիաները"
-      all_subcategories: "բոլորը"
-      no_subcategory: "ոչ մեկը"
+      categories_label: "կատեգորիաներ"
+      subcategories_label: "ենթակատեգորիաներ"
+      remove_filter: "հանել ֆիլտրը"
+      plus_more_count: "+%{count} ավելի"
+      view_all: "դիտել բոլոը"
       category: "Կատեգորիա"
       category_list: "Ցուցադրել կատեգորիաների ցանկը"
       reorder:
@@ -815,7 +818,6 @@ hy:
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
-      enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
@@ -960,8 +962,6 @@ hy:
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
       passkeys:
         save: "Պահպանել"
-        added_prefix: "Ավելացված"
-        last_used_prefix: "Վերջին Օգտագործվածը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
         error: "Այս արժեքը փոփոխելիս տեղի է ունեցել սխալ:"
@@ -1044,6 +1044,8 @@ hy:
         instructions: "Օգտատիրոջ ինտերֆեյսի լեզուն: Այն կփոխվի, երբ Դուք թարմացնեք էջը:"
         default: "(լռելյայն)"
         any: "ցանկացած"
+      homepage:
+        default: "(լռելյայն)"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1486,7 +1488,6 @@ hy:
       reply: "Պատասխանել"
       cancel: "Չեղարկել"
       create_topic: "Ստեղծել Թեմա"
-      create_pm: "Նոր Հաղորդագրություն"
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
@@ -1752,7 +1753,6 @@ hy:
         clear_all: "Ջնջել Բոլորը"
         unlist_topics: "Թեմաները Ցանկից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
-        defer: "Հետաձգել"
         delete: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
@@ -1795,6 +1795,18 @@ hy:
     topic_bulk_actions:
       close_topics:
         name: "Փակել Թեմաները"
+      archive_topics:
+        name: "Արխիվացնել Թեմաները"
+      unlist_topics:
+        name: "Թեմաները Ցանկից Հանել"
+      relist_topics:
+        name: "Վերացանկավորել Թեմաները"
+      append_tags:
+        name: "Ավելացնել Թեգեր"
+      replace_tags:
+        name: "Փոխարինել Թեգերը"
+      delete_topics:
+        name: "Ջնջել Թեմաները"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -1809,9 +1821,6 @@ hy:
       move_to_inbox:
         title: "Տեղափոխել Մուտքային արկղ"
         help: "Տեղափոխել հաղորդագրությունը ետ դեպի Մուտքային արկղ"
-      defer:
-        help: "նշել որպես չընթերցված "
-        title: "Հետաձգել"
       list: "Թեմաներ"
       new: "նոր թեմա"
       unread: "չկարդացած"
@@ -2620,7 +2629,6 @@ hy:
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
         search: "%{shortcut} Որոնել"
         help: "%{shortcut} Բացել ստեղնաշարի օգնականը"
-        dismiss_topics: "%{shortcut} Չեղարկել Թեմաները"
         log_out: "%{shortcut} Ելք"
       composing:
         title: "Կազմում"
@@ -2658,7 +2666,6 @@ hy:
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
-        defer: "%{shortcut} Հետաձգել թեման"
         topic_admin_actions: "%{shortcut} Բացել թեմայի ադմինի գործողությունները "
       search_menu:
         title: "Որոնման արդյունքների Մենյու "
@@ -2696,8 +2703,10 @@ hy:
       download: "Ներբեռնել"
     tagging:
       other_tags: "Այլ Թեգեր"
+      selector_tags: "թեգեր"
       selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
+      selector_remove_filter: "հանել ֆիլտրը"
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
@@ -2856,12 +2865,13 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
         uploading: "Վերբեռնում"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
     table_builder:
@@ -2880,6 +2890,7 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
+      filter_reports: Ֆիլտրել հաշվետվությունները
       tags:
         remove_muted_tags_from_latest:
           always: "միշտ"
@@ -2887,6 +2898,9 @@ hy:
           never: "երբեք"
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
+        sidebar_title: "Հաշվետվություններ"
+        sidebar_link:
+          all: "Բոլորը"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -2895,10 +2909,8 @@ hy:
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
-        please_upgrade: "Խնդրում ենք թարմացնել!"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
-        version_check_pending: "Կարծես թե Դուք վերջերս թարմացում եք կատարել: Հիանալի է!"
         installed_version: "Տեղադրված է "
         latest_version: "Վերջինը"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
@@ -2942,7 +2954,6 @@ hy:
         exception_error: Ներողություն, հարցումը կատարելիս տեղի է ունեցել սխալ
         too_many_requests: 'Դուք կատարել եք այս գործողությունը չափից շատ անգամ: Խնդրում ենք սպասել՝ մինչև կրկին փորձելը:'
         not_found_error: Ներողություն, այս հաշվետվությունը գոյություն չունի
-        filter_reports: Ֆիլտրել հաշվետվությունները
         reports:
           trend_title: "%{percent} փոփոխություն: Ներկայումս %{current}, նախորդ շրջանում եղել է %{prev}:"
           today: "Այսօրվա"
@@ -3121,6 +3132,50 @@ hy:
           timestamp: "Ստեղծված"
           completion: "Ավարտի Ժամանակը"
           actions: "Գործողություններ"
+      home:
+        title: "Գլխավոր էջ"
+      account:
+        title: "Հաշիվ"
+        sidebar_link:
+          backups: "Պահուտսներ"
+      community:
+        title: "Համայնք"
+        sidebar_link:
+          badges: "Կրծքանշաններ"
+          notifications: "Ծանուցումներ"
+          permalinks: "Մշտահղումներ"
+          trust_levels: "Վստահության Մակարդակներ"
+          users: "Օգտատերեր"
+          user_fields: "Օգտատիրոջ Դաշտերը"
+          watched_words: "Դիտված Բառեր"
+          legal: "Օրինական"
+      appearance:
+        title: "Արտաքին տեսք"
+        sidebar_link:
+          emoji: "Էմոջի"
+          navigation: "Նավիգացիա"
+          themes: "Թեմաներ"
+      email_settings:
+        sidebar_link:
+          appearance: "Արտաքին տեսք"
+          preview_summary: "Նախադիտման Ամփոփումը"
+      email_logs:
+        sidebar_link:
+          sent: "Ուղարկված"
+          skipped: "Բաց է թողնված"
+          bounced: "Վերադարձված է"
+          received: "Ստացված է"
+          rejected: "Մերժված է"
+      security:
+        title: "Անվտանգություն"
+        sidebar_link:
+          error_logs: "Սխալների Գրառումներ"
+          screened_emails: "Ցուցադրված Էլ. հասցեները"
+          screened_ips: "Ցուցադրված IP-ներ"
+          screened_urls: "Ցուցադրված URL-ները"
+          search_logs: "Որոնել Գրառումներ"
+          security: "Անվտանգություն"
+          spam: "Սպամ"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"
@@ -3134,6 +3189,19 @@ hy:
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         author: "%{author}-Ի կողմԻց"
         learn_more: "Իմանալ ավելին"
+        sidebar_link:
+          installed: "Տեղադրված"
+      advanced:
+        sidebar_link:
+          developer: "Ծրագրավորող"
+          embedding: "Զետեղում"
+          rate_limits: "Գնահատման Սահմաններ"
+          user_api: "Օգտատիրոջ API"
+          web_hooks: "Webhook-ներ"
+          onebox: "Onebox"
+          files: "Ֆայլեր"
+          other_options: "Այլ"
+          search: "Որոնում"
       backups:
         title: "Պահուստներ"
         menu:
@@ -3156,6 +3224,7 @@ hy:
           title: "Վերբեռնել պահուստ այս օրինակում"
           success: "'%{filename}' -ը հաջողությամբ վերբեռնվել է: Այս ֆայլը այժմ մշակվում է, և մինչև մեկ րոպե կպահանջվի այն ցանկում ցուցադրելու համար:"
           error: " '%{filename}' -ը վերբեռնելիս տեղի է ունեցել սխալ՝ %{message}"
+        settings: "Կարգավորումներ"
         operations:
           failed: "%{operation}-ը ձախողվեց: Խնդրում ենք ստուգել գրառումները:"
           cancel:
@@ -3365,6 +3434,14 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
+          schema:
+            fields:
+              required: "*պարտադիր"
+              string:
+                too_short: "պետք է ունենա առնվազն %{count} սիմվոլ"
+              number:
+                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -4128,6 +4205,7 @@ hy:
         image: "Նկար"
         alt: "մասնավոր էմոջիի նախնական դիտում "
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել :%{name}: էմոջին:"
+        settings: "Կարգավորումներ"
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հոսթը:"

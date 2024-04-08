@@ -2,7 +2,7 @@
 
 module ChatSDK
   class Channel
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     # Retrieves messages from a specified channel.
     #
@@ -26,10 +26,7 @@ module ChatSDK
         direction: "future",
       ) do
         on_success { result.messages }
-        on_failure do
-          p Chat::StepsInspector.new(result)
-          raise "Unexpected error"
-        end
+        on_failure { raise "Unexpected error" }
         on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }
         on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
       end

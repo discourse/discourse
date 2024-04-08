@@ -148,6 +148,7 @@ th:
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
     software_update_prompt:
       dismiss: "ซ่อน"
+    back_button: "กลับ"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -638,9 +639,12 @@ th:
       "14": "อยู่ระหว่างการพิจารณา"
       "15": "แบบร่าง"
     categories:
-      all: "ทุกหมวดหมู่"
-      all_subcategories: "ทั้งหมด"
-      no_subcategory: "ไม่มี"
+      categories_label: "หมวดหมู่"
+      subcategories_label: "หมวดหมู่ย่อย"
+      no_subcategories: "ไม่มีหมวดหมู่ย่อย"
+      remove_filter: "เอาตัวกรองออก"
+      plus_more_count: "อีก+%{count}"
+      view_all: "ดูทั้งหมด"
       category: "หมวดหมู่"
       category_list: "แสดงรายชื่อหมวดหมู่"
       reorder:
@@ -852,8 +856,6 @@ th:
           save: "บันทึก"
       passkeys:
         save: "บันทึก"
-        added_prefix: "เพิ่ม"
-        last_used_prefix: "ใช้ครั้งล่าสุด"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -934,6 +936,8 @@ th:
         instructions: "ภาษา จะเปลี่ยนเมื่อคุณรีเฟรชหน้า"
         default: "(ค่าเริ่มต้น)"
         any: "ใดๆ"
+      homepage:
+        default: "(ค่าเริ่มต้น)"
       password_confirmation:
         title: "ยืนยันรหัสผ่าน"
       invite_code:
@@ -1342,7 +1346,6 @@ th:
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
-      create_pm: "ข้อความ"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
@@ -1608,6 +1611,14 @@ th:
     topic_bulk_actions:
       close_topics:
         name: "ปิดกระทู้"
+      archive_topics:
+        name: "คลังกระทู้"
+      unlist_topics:
+        name: "กระทู้ที่ไม่ได้แสดง"
+      replace_tags:
+        name: "แทนที่แท็ก"
+      delete_topics:
+        name: "ลบกระทู้"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -1621,8 +1632,6 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องขาเข้า"
-      defer:
-        help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       list: "กระทู้"
       new: "กระทู้ใหม่"
       unread: "ยังไม่ได้อ่าน"
@@ -2261,7 +2270,6 @@ th:
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
         search: "%{shortcut}ค้นหา"
         help: "%{shortcut} เปิดความช่วยเหลือของแป้นพิมพ์"
-        dismiss_topics: "%{shortcut} ยกเลิกหัวข้อ"
         log_out: "%{shortcut} ออกจากระบบ"
       bookmarks:
         title: "บุ๊กมาร์ก"
@@ -2320,8 +2328,10 @@ th:
       download: "ดาวน์โหลด"
     tagging:
       other_tags: "แท็กอื่น"
+      selector_tags: "ป้าย"
       selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
+      selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
       info: "ข้อมูล"
@@ -2452,7 +2462,7 @@ th:
         upload: "อัปโหลด"
         uploading: "กำลังอัปโหลด"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
     table_builder:
@@ -2475,13 +2485,15 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        sidebar_link:
+          all: "ทั้งหมด"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
-        please_upgrade: "กรุณาอัปเกรด!"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
         new_features:
@@ -2605,6 +2617,38 @@ th:
           request: "ร้องขอ"
           timestamp: "สร้าง"
           actions: "การกระทำ"
+      home:
+        title: "หน้าแรก"
+      account:
+        title: "บัญชี"
+        sidebar_link:
+          backups: "สำรอง"
+      community:
+        title: "ชุมชน"
+        sidebar_link:
+          badges: "เหรียญ"
+          notifications: "การแจ้งเตือน"
+          permalinks: "ลิงค์ถาวร"
+          trust_levels: "ระดับความไว้ใจ"
+          users: "ผู้ใช้"
+          user_fields: "ช่องข้อมูลผู้ใช้"
+          legal: "กฎ"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "การนำทาง"
+          themes: "ธีม"
+      email_logs:
+        sidebar_link:
+          sent: "ส่ง"
+          skipped: "ข้าม"
+          received: "รับ"
+          rejected: "ถูกปฏิเสธ"
+      security:
+        title: "ความปลอดภัย"
+        sidebar_link:
+          security: "ความปลอดภัย"
+          spam: "ขยะ"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"
@@ -2617,6 +2661,16 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
+        sidebar_link:
+          installed: "ติดตั้งแล้ว"
+      advanced:
+        sidebar_link:
+          developer: "นักพัฒนา"
+          embedding: "ฝั่ง"
+          rate_limits: "ข้อจำกัด"
+          files: "ไฟล์"
+          other_options: "อื่นๆ"
+          search: "ค้นหา"
       backups:
         title: "สำรอง"
         menu:
@@ -2626,6 +2680,7 @@ th:
           size: "ขนาด"
         upload:
           label: "อัปโหลด"
+        settings: "การตั้งค่า"
         operations:
           cancel:
             label: "ยกเลิก"
@@ -2706,6 +2761,9 @@ th:
           all_filter: "ทั้งหมด"
           active_filter: "ใช้งานอยู่"
           inactive_filter: "ไม่ใช้งาน"
+          schema:
+            fields:
+              required: "*ต้องการ"
         colors:
           title: "สี"
           undo: "เลิกทำ"
@@ -3157,6 +3215,7 @@ th:
         group: "กลุ่ม"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
+        settings: "การตั้งค่า"
       embedding:
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"
         title: "ฝั่ง"

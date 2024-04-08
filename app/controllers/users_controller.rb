@@ -1237,7 +1237,7 @@ class UsersController < ApplicationController
       if usernames.blank?
         UserSearch.new(term, options).search
       else
-        User.where(username_lower: usernames).limit(limit)
+        User.where(username_lower: usernames).includes(:user_option).limit(limit)
       end
     to_render = serialize_found_users(results)
 
@@ -2238,9 +2238,12 @@ class UsersController < ApplicationController
   end
 
   def serialize_found_users(users)
-    each_serializer =
-      SiteSetting.enable_user_status? ? FoundUserWithStatusSerializer : FoundUserSerializer
-
-    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
+    serializer =
+      ActiveModel::ArraySerializer.new(
+        users,
+        each_serializer: FoundUserSerializer,
+        include_status: true,
+      )
+    { users: serializer.as_json }
   end
 end

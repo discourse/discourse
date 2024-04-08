@@ -7,7 +7,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
@@ -19,8 +20,6 @@ import {
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
@@ -28,7 +27,6 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import {
   checkMessageBottomVisibility,
@@ -76,7 +74,7 @@ export default class ChatChannel extends Component {
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked needsArrow = false;
-  @tracked atBottom = false;
+  @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
@@ -175,6 +173,12 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
     stackingContextFix(this.scrollable, () => {
       this.messagesManager.addMessages([message]);
     });
@@ -185,7 +189,6 @@ export default class ChatChannel extends Component {
   onPresenceChangeCallback(present) {
     if (present) {
       this.debouncedUpdateLastReadMessage();
-      bodyScrollFix({ delayed: true });
     }
   }
 
@@ -464,7 +467,6 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      bodyScrollFix();
       DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
@@ -766,6 +768,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
+            @scrollable={{this.scrollable}}
           />
         {{/if}}
       {{/if}}

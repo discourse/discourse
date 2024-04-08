@@ -176,7 +176,13 @@ module SiteSettingExtension
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden: false)
+  def all_settings(
+    include_hidden: false,
+    include_locale_setting: true,
+    only_overridden: false,
+    filter_categories: nil,
+    filter_plugin: nil
+  )
     locale_setting_hash = {
       setting: "default_locale",
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
@@ -189,12 +195,28 @@ module SiteSettingExtension
       translate_names: LocaleSiteSetting.translate_names?,
     }
 
+    include_locale_setting = false if filter_categories.present? || filter_plugin.present?
+
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
       .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
+      .select do |setting_name, _|
+        if filter_categories && filter_categories.any?
+          filter_categories.include?(categories[setting_name])
+        else
+          true
+        end
+      end
+      .select do |setting_name, _|
+        if filter_plugin
+          plugins[setting_name] == filter_plugin
+        else
+          true
+        end
+      end
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
@@ -222,7 +244,15 @@ module SiteSettingExtension
 
         opts
       end
-      .unshift(locale_setting_hash)
+      .select do |setting|
+        if only_overridden
+          setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .unshift(include_locale_setting && !only_overridden ? locale_setting_hash : nil)
+      .compact
   end
 
   def description(setting)
@@ -230,7 +260,7 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    I18n.t("site_settings.keywords.#{setting}", default: "")
+    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
   end
 
   def placeholder(setting)

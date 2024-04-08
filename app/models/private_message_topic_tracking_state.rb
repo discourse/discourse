@@ -127,6 +127,8 @@ class PrivateMessageTopicTrackingState
     scope
       .select(%i[user_id last_read_post_number notification_level])
       .each do |tu|
+        next if tu.user_id == post.user_id # skip post creator
+
         if tu.last_read_post_number.nil? &&
              topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
           next
@@ -166,6 +168,7 @@ class PrivateMessageTopicTrackingState
       .allowed_users
       .pluck(:id)
       .each do |user_id|
+        next if user_id == topic.user_id # skip topic creator
         MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
       end
 

@@ -1,11 +1,11 @@
-$discourse-tooltip-background: var(--secondary);
-$discourse-tooltip-border: var(--primary-medium);
-
 #discourse-tooltip {
-  background-color: $discourse-tooltip-background;
+  --d-tooltip-background: var(--secondary);
+  --d-tooltip-border: var(--primary-medium);
+
+  background-color: var(--d-tooltip-background);
   position: absolute;
   z-index: z("tooltip");
-  border: 1px solid $discourse-tooltip-border;
+  border: 1px solid var(--d-tooltip-border);
   max-width: 400px;
   margin-top: 25px;
   overflow-wrap: break-word;
@@ -14,12 +14,12 @@ $discourse-tooltip-border: var(--primary-medium);
   font-weight: 500;
 
   &.retina {
-    border: 0.5px solid $discourse-tooltip-border;
+    border: 0.5px solid var(--d-tooltip-border);
   }
 
   .tooltip-pointer {
     position: relative;
-    background: $discourse-tooltip-background;
+    background: var(--d-tooltip-background);
   }
 
   .tooltip-pointer:before,
@@ -34,7 +34,7 @@ $discourse-tooltip-border: var(--primary-medium);
   }
 
   .tooltip-pointer:after {
-    border-bottom-color: $discourse-tooltip-background;
+    border-bottom-color: var(--d-tooltip-background);
     border-width: 8px;
     left: 50%;
     margin-left: -8px;
@@ -42,7 +42,7 @@ $discourse-tooltip-border: var(--primary-medium);
   }
 
   .tooltip-pointer:before {
-    border-bottom-color: $discourse-tooltip-border;
+    border-bottom-color: var(--d-tooltip-border);
     border-width: 9px;
     left: 50%;
     margin-left: -9px;

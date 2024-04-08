@@ -126,7 +126,8 @@
     <link rel="next" href="<%= @list.more_topics_url -%>">
   <% end %>
 <% end %>
-
+<% else %>
+  <%= t(:crawler_content_hidden) %>
 <%- end %> <!-- include_crawler_content? -->
 
 <% if @rss %>

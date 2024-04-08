@@ -41,6 +41,8 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
+  "meta+/": { handler: "filterSidebar", anonymous: true },
+  [`${PLATFORM_KEY_MODIFIER}+/`]: { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
@@ -114,12 +116,14 @@ const DEFAULT_BINDINGS = {
   "shift+f11": { handler: "fullscreenComposer", global: true },
   "shift+u": { handler: "deferTopic" },
   "shift+a": { handler: "toggleAdminActions" },
+  "shift+b": { handler: "toggleBulkSelect" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
-  "x r": {
-    click: "#dismiss-new-bottom,#dismiss-new-top",
-  }, // dismiss new
-  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
+  x: { handler: "bulkSelectItem" },
+  "shift+d": {
+    click:
+      "#dismiss-new-bottom, #dismiss-new-top, #dismiss-topics-bottom, #dismiss-topics-top",
+  }, // dismiss new or unread
 };
 
 const animationDuration = 100;
@@ -410,6 +414,13 @@ export default {
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
   },
 
+  bulkSelectItem() {
+    const elem = document.querySelector(
+      ".selected input.bulk-select, .selected .select-post"
+    );
+    elem?.click();
+  },
+
   goBack() {
     history.back();
   },
@@ -467,6 +478,15 @@ export default {
       event.stopPropagation();
     }
     composer.focusComposer(event);
+  },
+
+  filterSidebar() {
+    const filterInput = document.querySelector(".sidebar-filter__input");
+
+    if (filterInput) {
+      this._scrollTo(0);
+      filterInput.focus();
+    }
   },
 
   fullscreenComposer() {
@@ -884,7 +904,17 @@ export default {
   },
 
   toggleAdminActions() {
-    this.appEvents.trigger("topic:toggle-actions");
+    document.querySelector(".toggle-admin-menu")?.click();
+  },
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
   },
 
   toggleArchivePM() {

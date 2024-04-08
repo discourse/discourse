@@ -3,16 +3,17 @@ import { DEBUG } from "@glimmer/env";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
 import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import GlimmerHeader from "./glimmer-header";
+import Header from "./header";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -51,7 +52,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   get leftMenuClass() {
-    if (document.querySelector("html").classList["direction"] === "rtl") {
+    if (isDocumentRTL()) {
       return "user-menu";
     } else {
       return "hamburger-panel";
@@ -355,6 +356,7 @@ export default class GlimmerSiteHeader extends Component {
     menuPanels.forEach((panel) => {
       if (this._swipeEvents.shouldCloseMenu(e, this._swipeMenuOrigin)) {
         this._animateClosing(e, panel, this._swipeMenuOrigin);
+        scrollLock(false);
       } else {
         this._animateOpening(panel, e);
       }
@@ -431,12 +433,12 @@ export default class GlimmerSiteHeader extends Component {
   <template>
     <div
       class={{concatClass
-        (unless this.site.mobileView "drop-down-mode")
+        (if this.site.desktopView "drop-down-mode")
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}
     >
-      <GlimmerHeader
+      <Header
         @canSignUp={{@canSignUp}}
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}

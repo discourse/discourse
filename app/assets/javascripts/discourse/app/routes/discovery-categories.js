@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
@@ -19,7 +19,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
 
   findCategories() {
     let style =
-      !this.site.mobileView && this.siteSettings.desktop_category_page_style;
+      this.site.desktopView && this.siteSettings.desktop_category_page_style;
 
     if (
       style === "categories_and_latest_topics" ||

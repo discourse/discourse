@@ -66,7 +66,7 @@ RSpec.describe CategoriesController do
       )
     end
 
-    it "does not returns subcatgories without permission" do
+    it "does not returns subcategories without permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
       subcategory.set_permissions(admins: :full)
       subcategory.save!
@@ -314,6 +314,31 @@ RSpec.describe CategoriesController do
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
+    it "doesn't do more queries when more categories exist" do
+      SiteSetting.lazy_load_categories_groups = true
+      Theme.cache.clear
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      before_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      Fabricate(:category, parent_category: Fabricate(:category))
+
+      Theme.cache.clear
+
+      after_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
+
+      expect(after_queries.size).to eq(before_queries.size)
+    end
+
     it "does not result in N+1 queries problem with multiple topics" do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
@@ -371,6 +396,35 @@ RSpec.describe CategoriesController do
       expect(
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
+    end
+
+    describe "with page" do
+      before { sign_in(admin) }
+
+      let!(:category2) { Fabricate(:category, user: admin) }
+      let!(:category3) { Fabricate(:category, user: admin) }
+
+      it "paginates results wihen lazy_load_categories is enabled" do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+      end
+
+      it "does not paginate results when lazy_load_categories is disabled" do
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(4)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
+      end
     end
   end
 
@@ -1115,6 +1169,26 @@ RSpec.describe CategoriesController do
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
     end
+
+    context "with a read restricted child category" do
+      before_all { subcategory.update!(read_restricted: true) }
+
+      it "indicates to an admin that the category has a child" do
+        sign_in(admin)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(true)
+      end
+
+      it "indicates to a normal user that the category has no child" do
+        sign_in(user)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(false)
+      end
+    end
   end
 
   describe "#search" do
@@ -1125,6 +1199,24 @@ RSpec.describe CategoriesController do
     before do
       SearchIndexer.enable
       [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
+    end
+
+    it "does not generate N+1 queries" do
+      # Set up custom fields
+      Site.preloaded_category_custom_fields << "bob"
+      category2.upsert_custom_fields("bob" => "marley")
+
+      # Warm up caches
+      get "/categories/search.json", params: { term: "Notfoo" }
+
+      queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
+
+      expect(queries.length).to eq(5)
+
+      expect(response.parsed_body["categories"].length).to eq(1)
+      expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
     end
 
     context "without include_ancestors" do
@@ -1217,6 +1309,12 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly("Foo")
       end
+
+      it "works with empty categories list" do
+        get "/categories/search.json", params: { select_category_ids: [""] }
+
+        expect(response.parsed_body["categories"].size).to eq(0)
+      end
     end
 
     context "with reject_category_ids" do
@@ -1228,6 +1326,18 @@ RSpec.describe CategoriesController do
           "Uncategorized",
           "Foo",
           "Foobar",
+        )
+      end
+
+      it "works with empty categories list" do
+        get "/categories/search.json", params: { reject_category_ids: [""] }
+
+        expect(response.parsed_body["categories"].size).to eq(4)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+          "Notfoo",
         )
       end
     end

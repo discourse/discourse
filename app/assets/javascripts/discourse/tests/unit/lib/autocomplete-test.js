@@ -2,261 +2,153 @@ import { setupTest } from "ember-qunit";
 import { compile } from "handlebars";
 import $ from "jquery";
 import { module, test } from "qunit";
-import autocomplete from "discourse/lib/autocomplete";
+import { setCaretPosition } from "discourse/lib/utilities";
+import {
+  simulateKey,
+  simulateKeys,
+} from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | autocomplete", function (hooks) {
   setupTest(hooks);
-  let elements = [];
 
-  function textArea(value) {
-    let element = document.createElement("TEXTAREA");
-    element.value = value;
-    document.getElementById("ember-testing").appendChild(element);
-    elements.push(element);
-    return element;
+  let _element;
+
+  const template = compile(
+    `
+  <div id='ac-testing' class='autocomplete ac-test'>
+    <ul>
+      {{#each options as |option|}}
+        <li><a href>{{option}}</a></li>
+      {{/each}}
+    </ul>
+  </div>
+  `.trim()
+  );
+
+  function textArea() {
+    _element = document.createElement("TEXTAREA");
+    document.getElementById("ember-testing").appendChild(_element);
+    return _element;
   }
 
-  function cleanup() {
-    elements.forEach((e) => {
-      e.remove();
-      autocomplete.call($(e), { cancel: true });
-      autocomplete.call($(e), "destroy");
-    });
-    elements = [];
-  }
-
-  hooks.afterEach(function () {
-    cleanup();
+  hooks.afterEach(() => {
+    if (!_element) {
+      return;
+    }
+    const $e = $(_element);
+    $e.autocomplete({ cancel: true });
+    $e.autocomplete("destroy");
+    _element.remove();
   });
 
-  function simulateKey(element, key) {
-    let keyCode = key.charCodeAt(0);
-
-    let bubbled = false;
-    let trackBubble = function () {
-      bubbled = true;
-    };
-
-    element.addEventListener("keydown", trackBubble);
-
-    let keyboardEvent = new KeyboardEvent("keydown", {
-      key,
-      keyCode,
-      which: keyCode,
-    });
-
-    element.dispatchEvent(keyboardEvent);
-
-    element.removeEventListener("keydown", trackBubble);
-
-    if (bubbled) {
-      let pos = element.selectionStart;
-      let value = element.value;
-      // backspace
-      if (key === "\b") {
-        element.value = value.slice(0, pos - 1) + value.slice(pos);
-        element.selectionStart = pos - 1;
-        element.selectionEnd = pos - 1;
-      } else {
-        element.value = value.slice(0, pos) + key + value.slice(pos);
-        element.selectionStart = pos + 1;
-        element.selectionEnd = pos + 1;
-      }
-    }
-
-    element.dispatchEvent(
-      new KeyboardEvent("keyup", { key, keyCode, which: keyCode })
-    );
-  }
-
   test("Autocomplete can complete really short terms correctly", async function (assert) {
-    let element = textArea("");
-    let $element = $(element);
+    const element = textArea();
 
-    autocomplete.call($element, {
+    $(element).autocomplete({
       key: ":",
-      transformComplete: () => "sad:",
+      template,
+      transformComplete: (e) => e.slice(1),
       dataSource: () => [":sad:"],
-      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
-  <ul>
-    {{#each options as |option|}}
-      <li>
-        <a href>
-          {{option}}
-        </a>
-      </li>
-    {{/each}}
-  </ul>
-</div>`),
     });
 
-    simulateKey(element, "a");
-    simulateKey(element, " ");
+    await simulateKeys(element, "a :)\r");
 
-    simulateKey(element, ":");
-    simulateKey(element, ")");
-    simulateKey(element, "\r");
-
-    let sleep = (millisecs) =>
-      new Promise((promise) => setTimeout(promise, millisecs));
-    // completeTerm awaits transformComplete
-    // we need to wait for it to be done
-    // Note: this is somewhat questionable given that when people
-    // press ENTER on an autocomplete they do not want to be beholden
-    // to an async function.
-    let inputEquals = async function (value) {
-      let count = 3000;
-      while (count > 0 && element.value !== value) {
-        count -= 1;
-        await sleep(1);
-      }
-    };
-
-    await inputEquals("a :sad: ");
     assert.strictEqual(element.value, "a :sad: ");
     assert.strictEqual(element.selectionStart, 8);
     assert.strictEqual(element.selectionEnd, 8);
   });
 
-  test("Autocomplete can account for cursor drift correctly", function (assert) {
-    let element = textArea("");
-    let $element = $(element);
+  test("Autocomplete can account for cursor drift correctly", async function (assert) {
+    const element = textArea();
+    const db = ["test1", "test2"];
 
-    autocomplete.call($element, {
+    $(element).autocomplete({
       key: "@",
-      dataSource: (term) =>
-        ["test1", "test2"].filter((word) => word.includes(term)),
-      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
-  <ul>
-    {{#each options as |option|}}
-      <li>
-        <a href>
-          {{option}}
-        </a>
-      </li>
-    {{/each}}
-  </ul>
-</div>`),
+      template,
+      dataSource: (term) => db.filter((word) => word.includes(term)),
     });
 
-    simulateKey(element, "@");
-    simulateKey(element, "\r");
+    await simulateKeys(element, "@\r");
 
     assert.strictEqual(element.value, "@test1 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
-    simulateKey(element, "@");
-    simulateKey(element, "2");
-    simulateKey(element, "\r");
+    await simulateKeys(element, "@2\r");
 
     assert.strictEqual(element.value, "@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 14);
     assert.strictEqual(element.selectionEnd, 14);
 
-    element.selectionStart = 6;
-    element.selectionEnd = 6;
+    await setCaretPosition(element, 6);
+    await simulateKeys(element, "\b\b");
 
-    simulateKey(element, "\b");
-    simulateKey(element, "\b");
-    simulateKey(element, "\r");
+    assert.strictEqual(element.value, "@tes @test2 ");
+
+    await simulateKey(element, "\r");
 
     assert.strictEqual(element.value, "@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
-    // lets see that deleting last space triggers autocomplete
-    element.selectionStart = element.value.length;
-    element.selectionEnd = element.value.length;
-    simulateKey(element, "\b");
-    let list = document.querySelectorAll("#ac-testing ul li");
-    assert.strictEqual(list.length, 1);
+    // ensures that deleting last space triggers autocomplete
+    await setCaretPosition(element, element.value.length);
+    await simulateKey(element, "\b");
 
-    simulateKey(element, "\b");
-    list = document.querySelectorAll("#ac-testing ul li");
-    assert.strictEqual(list.length, 2);
+    assert.dom("#ac-testing ul li").exists({ count: 1 });
+
+    await simulateKey(element, "\b");
+
+    assert.dom("#ac-testing ul li").exists({ count: 2 });
 
     // close autocomplete
-    simulateKey(element, "\r");
+    await simulateKey(element, "\r");
 
     // does not trigger by mistake at the start
     element.value = "test";
-    element.selectionStart = element.value.length;
-    element.selectionEnd = element.value.length;
 
-    simulateKey(element, "\b");
-    list = document.querySelectorAll("#ac-testing ul li");
-    assert.strictEqual(list.length, 0);
+    await setCaretPosition(element, element.value.length);
+    await simulateKey(element, "\b");
+
+    assert.dom("#ac-testing ul li").exists({ count: 0 });
   });
 
-  test("Autocomplete can handle spaces", function (assert) {
-    let element = textArea("");
-    let $element = $(element);
+  test("Autocomplete can handle spaces", async function (assert) {
+    const element = textArea();
+    const db = [
+      { username: "jd", name: "jane dale" },
+      { username: "jb", name: "jack black" },
+    ];
 
-    autocomplete.call($element, {
+    $(element).autocomplete({
       key: "@",
+      template,
       dataSource: (term) =>
-        [
-          { username: "jd", name: "jane dale" },
-          { username: "jb", name: "jack black" },
-        ]
-          .filter((user) => {
-            return user.username.includes(term) || user.name.includes(term);
-          })
+        db
+          .filter(
+            (user) => user.username.includes(term) || user.name.includes(term)
+          )
           .map((user) => user.username),
-      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
-  <ul>
-    {{#each options as |option|}}
-      <li>
-        <a href>
-          {{option}}
-        </a>
-      </li>
-    {{/each}}
-  </ul>
-</div>`),
     });
 
-    simulateKey(element, "@");
-    simulateKey(element, "j");
-    simulateKey(element, "a");
-    simulateKey(element, "n");
-    simulateKey(element, "e");
-    simulateKey(element, " ");
-    simulateKey(element, "d");
-    simulateKey(element, "\r");
+    await simulateKeys(element, "@jane d\r");
 
     assert.strictEqual(element.value, "@jd ");
   });
 
-  test("Autocomplete can render on @", function (assert) {
-    let element = textArea("@");
-    let $element = $(element);
+  test("Autocomplete can render on @", async function (assert) {
+    const element = textArea();
 
-    autocomplete.call($element, {
+    $(element).autocomplete({
       key: "@",
+      template,
       dataSource: () => ["test1", "test2"],
-      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
-  <ul>
-    {{#each options as |option|}}
-      <li>
-        <a href>
-          {{option}}
-        </a>
-      </li>
-    {{/each}}
-  </ul>
-</div>`),
     });
 
-    element.dispatchEvent(new KeyboardEvent("keydown", { key: "@" }));
-    element.dispatchEvent(new KeyboardEvent("keyup", { key: "@" }));
+    await simulateKey(element, "@");
 
-    let list = document.querySelectorAll("#ac-testing ul li");
-    assert.strictEqual(list.length, 2);
-
-    let selected = document.querySelectorAll("#ac-testing ul li a.selected");
-    assert.strictEqual(selected.length, 1);
-    assert.strictEqual(selected[0].innerText, "test1");
+    assert.dom("#ac-testing ul li").exists({ count: 2 });
+    assert.dom("#ac-testing li a.selected").exists({ count: 1 });
+    assert.dom("#ac-testing li a.selected").hasText("test1");
   });
 });

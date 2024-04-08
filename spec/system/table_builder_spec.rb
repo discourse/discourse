@@ -142,5 +142,17 @@ describe "Table Builder", type: :system do
         expect(page).to have_css(".dialog-container .dialog-content")
       end
     end
+
+    it "should not accept default Discourse keyboard shortcuts" do
+      # Some default keyboard shortcuts like Shift + S bring up a modal overriding
+      # the table builder modal and therefore should not be accepted
+
+      topic_page.visit_topic(topic)
+      topic_page.find(".btn-edit-table", visible: :all).click
+      insert_table_modal.find_cell(0, 0)
+      insert_table_modal.send_keys(:shift, "s")
+      expect(page).to have_css(".insert-table-modal")
+      expect(page).to have_no_css(".share-topic-modal")
+    end
   end
 end

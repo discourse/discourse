@@ -191,6 +191,7 @@ de:
       message: "Wir haben diese Seite aktualisiert. <span>Bitte aktualisiere</span> , damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
     bootstrap_mode: "Erste Schritte"
+    back_button: "Zurück"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -200,7 +201,9 @@ de:
     broken_page_change_alert: "Ein onPageChange-Handler hat einen Fehler ausgelöst. Überprüfe die Entwicklerwerkzeuge des Browsers für weitere Informationen."
     broken_plugin_alert: "Verursacht durch das Plug-in „%{name}“"
     critical_deprecation:
-      notice: "<b>[Administrator-Hinweis]</b> Eines deiner Themes oder Plug-ins muss aktualisiert werden, um mit den kommenden Änderungen an Discourse Core kompatibel zu sein (<a target='_blank' href='https://meta.discourse.org/t/287211'>mehr Infos</a>)."
+      notice: "<b>[Hinweis für Administratoren]</b> Eines deiner Themes oder Plugins muss aktualisiert werden, um die Kompatibilität mit den bevorstehenden Discourse-Kernänderungen zu gewährleisten."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Identifiziertes Theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identifiziertes Plug-in: „%{name}“"
     s3:
@@ -961,9 +964,13 @@ de:
       "14": "Ausstehend"
       "15": "Entwürfe"
     categories:
-      all: "alle Kategorien"
-      all_subcategories: "alle"
-      no_subcategory: "keine"
+      categories_label: "Kategorien"
+      subcategories_label: "Unterkategorien"
+      all_subcategories: "alle Unterkategorien"
+      no_subcategories: "keine Unterkategorien"
+      remove_filter: "Filter entfernen"
+      plus_more_count: "+%{count} weitere"
+      view_all: "alle ansehen"
       category: "Kategorie"
       category_list: "Kategorieliste anzeigen"
       reorder:
@@ -1083,6 +1090,7 @@ de:
           warning: "Bist du sicher, dass du dein hervorgehobenes Thema löschen möchtest?"
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
+      login_to_view_profile: "Du musst dich anmelden, um Benutzerprofile zu sehen"
       inactive_user: "Dieser Benutzer ist nicht mehr aktiv."
       expand_profile: "Erweitern"
       sr_expand_profile: "Profildetails erweitern"
@@ -1150,7 +1158,7 @@ de:
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
-      enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
+      enable_defer: "Aktiviere Themen als ungelesen markieren"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -1432,8 +1440,8 @@ de:
         save: "Speichern"
         title: "Passkeys"
         short_description: "Passkeys ersetzen Passwörter und validieren deine Identität biometrisch (z.B. durch Touch ID, Face ID) oder über eine Geräte-PIN/ein Passwort."
-        added_prefix: "Hinzugefügt"
-        last_used_prefix: "Zuletzt verwendet"
+        added_date: "%{date} hinzugefügt"
+        last_used_date: "Zuletzt verwendet %{date}"
         never_used: "Nie verwendet"
         not_allowed_error: "Bei der Registrierung des Passkeys wurde entweder das Zeitlimit überschritten, der Vorgang wurde abgebrochen oder er ist nicht zulässig."
         already_added_error: "Du hast diesen Passkey bereits registriert. Du musst ihn nicht erneut registrieren."
@@ -1553,6 +1561,8 @@ de:
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
         default: "(Standard)"
         any: "(keine Einschränkung)"
+      homepage:
+        default: "(Standard)"
       password_confirmation:
         title: "Wiederholung des Passworts"
       invite_code:
@@ -1646,6 +1656,7 @@ de:
         after_5_minutes: "nach 5 Minuten"
         after_10_minutes: "nach 10 Minuten"
       notification_level_when_replying: "Wenn ich in einem Thema antworte, setze das Thema auf"
+      topics_unread_when_closed: "Themen als ungelesen betrachten, wenn sie geschlossen sind"
       invited:
         title: "Einladungen"
         pending_tab: "Ausstehend"
@@ -1880,7 +1891,7 @@ de:
       close: "schließen"
       dismiss_error: "Fehler ignorieren"
     close: "Schließen"
-    assets_changed_confirm: "Diese Website hat gerade ein Software-Upgrade erhalten. Jetzt die neueste Version abrufen?"
+    assets_changed_confirm: "Diese Website hat gerade ein Software-Update erhalten. Jetzt die neueste Version abrufen?"
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     home: "Startseite"
@@ -2128,6 +2139,9 @@ de:
     conditional_loading_section:
       loading: Wird geladen …
     category_row:
+      subcategory_count:
+        one: "+ %{count} Unterkategorie"
+        other: "+ %{count} Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -2252,7 +2266,7 @@ de:
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
-      create_pm: "Nachricht"
+      create_pm: "Nachricht senden"
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
@@ -2350,6 +2364,8 @@ de:
       ignore: "Ignorieren"
       image_alt_text:
         aria_label: Alternativ-Text für Bild
+        title: "Bildbeschreibung hinzufügen"
+      image_scale_button: "Bild skalieren auf %{percent}%."
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
     notifications:
@@ -2670,7 +2686,6 @@ de:
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
-        defer: "Aufschieben"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
@@ -2724,6 +2739,8 @@ de:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
         silent: "Führe diese Aktion lautlos durch."
+        performing: "Massenoperationen werden durchgeführt, bitte warten…"
+        completed: "Massenoperationen erfolgreich abgeschlossen!"
       none:
         unread: "Du hast alle Themen gelesen."
         unseen: "Du hast keine ungesehenen Themen."
@@ -2756,9 +2773,31 @@ de:
     topic_bulk_actions:
       close_topics:
         name: "Themen schließen"
+      archive_topics:
+        name: "Themen archivieren"
+      unlist_topics:
+        name: "Themen unsichtbar machen"
+      relist_topics:
+        name: "Themen neu auflisten"
+      remove_tags:
+        name: "Schlagwörter entfernen"
+      append_tags:
+        name: "Schlagwörter hinzufügen"
+      replace_tags:
+        name: "Schlagwörter ersetzen"
+      delete_topics:
+        name: "Themen löschen"
       update_category:
         name: "Kategorie aktualisieren"
         description: "Wähle die neue Kategorie für die ausgewählten Themen"
+      reset_bump_dates:
+        name: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
+        description: "Setzt das \"nach oben verschieben\"- Datum auf das vom zuletzt erstellten Beitrag zurück, was die Reihenfolge in der Themenliste beeinflusst"
+      defer:
+        description: "Themen als ungelesen markieren"
+      update_notifications:
+        name: "Update-Benachrichtigungen"
+        description: "Ändere die Benachrichtigungsstufe auf Beobachten, Verfolgen, Normal oder Stumm"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -2774,9 +2813,6 @@ de:
       move_to_inbox:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
-      defer:
-        help: "Als ungelesen markieren"
-        title: "Aufschieben"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -3637,6 +3673,7 @@ de:
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       notify_moderators_textarea_label: "Nachricht für die Moderatoren"
       custom_placeholder_illegal: "Gib uns genau an, warum du glaubst, dass diese Inhalte illegal sind, und füge nach Möglichkeit relevante Links und Beispiele bei."
+      confirmation_illegal: "Was ich oben geschrieben habe, ist richtig und vollständig."
       custom_message:
         at_least:
           one: "gib mindestens %{count} Zeichen ein"
@@ -3816,6 +3853,8 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
+    custom_homepage:
+      admin_message: 'Eines deiner Themes hat den Modifikator "custom_homepage" aktiviert, aber es gibt nichts im [custom-homepage]-Connector aus. (Diese Meldung wird nur für Website-Administratoren angezeigt.)'
     browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
@@ -3884,9 +3923,11 @@ de:
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
+        filter_sidebar: "%{shortcut} Seitenleiste filtern"
         help: "%{shortcut} Tastenkombinationen anzeigen"
-        dismiss_new: "%{shortcut} Neue Themen ignorieren"
-        dismiss_topics: "%{shortcut} Themen ignorieren"
+        toggle_bulk_select: "%{shortcut} Massenauswahl umschalten"
+        dismiss: "%{shortcut} Ausgewählte Themen verwerfen"
+        x: "%{shortcut} Auswahl umschalten (im Massenauswahlmodus)"
         log_out: "%{shortcut} Abmelden"
       composing:
         title: "Schreiben"
@@ -3926,7 +3967,6 @@ de:
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
-        defer: "%{shortcut} Thema ignorieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
         archive_private_message: "%{shortcut} Archivierung privater Nachricht umschalten"
       search_menu:
@@ -3986,8 +4026,10 @@ de:
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
+      selector_tags: "Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
+      selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
@@ -4298,6 +4340,11 @@ de:
       panels:
         forum:
           label: Forum
+      filter: "Filter"
+      clear_filter: "Filter löschen"
+      no_results:
+        title: "Keine Ergebnisse"
+        description: "Wir konnten nichts finden, das zu '%{filter}' passt"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4312,12 +4359,12 @@ de:
         upload: "Hochladen"
         uploading: "Wird hochgeladen"
       errors:
-        valueMissing:
+        value_missing:
           default: "Bitte fülle dieses Feld aus."
-          select-one: "Bitte wähle ein Element aus der Liste aus."
-          select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
+          select_one: "Bitte wähle ein Element aus der Liste aus."
+          select_multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
           checkbox: "Bitte markiere dieses Kästchen, wenn du fortfahren möchtest."
-        typeMismatch:
+        type_mismatch:
           default: "Bitte gib einen gültigen Wert ein."
           color: "Bitte gib eine Farbe ein."
           date: "Bitte gib ein Datum ein."
@@ -4327,20 +4374,20 @@ de:
           tel: "Bitte gib eine gültige Telefonnummer ein."
           text: "Bitte gib einen Textwert ein."
           url: "Bitte gib eine gültige URL ein."
-        tooShort:
+        too_short:
           one: "Die Eingabe muss %{count} Zeichen oder länger sein."
           other: "Die Eingabe muss %{count} Zeichen oder länger sein."
-        tooLong:
+        too_long:
           one: "Die Eingabe muss weniger als %{count} Zeichen umfassen."
           other: "Die Eingabe muss weniger als %{count} Zeichen umfassen."
-        rangeOverflow:
+        range_overflow:
           one: "Die Eingabe muss kleiner als %{count} sein."
           other: "Die Eingabe muss kleiner als %{count} sein."
-        rangeUnderflow:
+        range_underflow:
           one: "Die Eingabe muss größer als %{count} sein."
           other: "Die Eingabe muss größer als %{count} sein."
-        patternMismatch: "Bitte beachte das erforderliche Format."
-        badInput: "Bitte stelle eine gültige Eingabe zur Verfügung."
+        pattern_mismatch: "Bitte beachte das erforderliche Format."
+        bad_input: "Bitte stelle eine gültige Eingabe zur Verfügung."
     table_builder:
       title: "Tabellenersteller"
       modal:
@@ -4398,12 +4445,16 @@ de:
           copy: "Kopieren …"
           paste: "Einfügen …"
           save: "Speichern als …"
+    powered_by_discourse: "Bereitgestellt von Discourse"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
       back_to_forum: "Zurück zum Forum"
+      filter_reports: Berichte filtern
+      expand_all_sections: "Alle Abschnitte erweitern"
+      collapse_all_sections: "Alle Abschnitte einklappen"
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -4412,6 +4463,11 @@ de:
       reports:
         title: "Verfügbare Berichte"
         meta_doc: "Schau dir unsere <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>Dokumentation</a> an, um einen detaillierten Überblick über die Berichte zu erhalten."
+        sidebar_title: "Berichte"
+        sidebar_link:
+          all: "Gesamt"
+      new_features:
+        title: "Was ist neu?"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"
@@ -4420,7 +4476,7 @@ de:
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
-        please_upgrade: "Bitte Upgrade durchführen!"
+        please_update: "Bitte Update durchführen!"
         no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
@@ -4469,7 +4525,6 @@ de:
         exception_error: Entschuldige, ein Fehler ist beim Ausführen der Abfrage aufgetreten
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
-        filter_reports: Berichte filtern
         custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
@@ -4636,12 +4691,18 @@ de:
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
               update: Ein Thema aktualisieren. Den Titel, die Kategorie, die Schlagwörter, den Status, den Archetyp, featured_link usw. ändern.
               delete: Ein Thema löschen.
+              recover: Ein Thema wiederherstellen.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               status: "Den Status eines Themas aktualisieren. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: wahr, falsch. Hier und im Anfrage-Payload eine category_id angeben, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
               delete: Einen Beitrag löschen.
+              recover: Einen Beitrag wiederherstellen.
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
+            revisions:
+              read: "Hol dir die letzte oder eine bestimmte Revision."
+              modify: "Überarbeitungen ausblenden, anzeigen oder rückgängig machen."
+              permanently_delete: "Eine Revision dauerhaft löschen."
             tags:
               list: Schlagwörter auflisten.
             tag_groups:
@@ -4813,6 +4874,61 @@ de:
           timestamp: "Erstellt"
           completion: "Fertigstellungszeit"
           actions: "Aktionen"
+      home:
+        title: "Startseite"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Backups"
+          whats_new: "Was ist neu?"
+      community:
+        title: "Gemeinschaft"
+        sidebar_link:
+          about_your_site: "Über deine Website"
+          badges: "Abzeichen"
+          login_and_authentication: "Anmeldung & Authentifizierung"
+          notifications: "Benachrichtigungen"
+          permalinks: "Permalinks"
+          trust_levels: "Vertrauensstufen"
+          users: "Benutzer"
+          user_fields: "Benutzerfelder"
+          watched_words: "Beobachtete Wörter"
+          legal: "Rechtliches"
+      appearance:
+        title: "Erscheinungsbild"
+        sidebar_link:
+          font_style: "Schriftart"
+          site_logo: "Website-Logo"
+          color_schemes: "Farbschemas"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes: "Themes"
+          site_texts: "Website-Texte"
+      email_settings:
+        title: "E-Mail-Einstellungen"
+        sidebar_link:
+          appearance: "Erscheinungsbild"
+          preview_summary: "Vorschau der Zusammenfassung"
+          server_setup: "Server Einrichtung"
+      email_logs:
+        title: "E-Mail-Protokolle"
+        sidebar_link:
+          sent: "Gesendet"
+          skipped: "Übersprungen"
+          bounced: "Unzustellbar"
+          received: "Empfangen"
+          rejected: "Abgelehnt"
+      security:
+        title: "Sicherheit"
+        sidebar_link:
+          error_logs: "Fehlerprotokolle"
+          screened_emails: "Gefilterte E-Mails"
+          screened_ips: "Gefilterte IPs"
+          screened_urls: "Gefilterte URLs"
+          search_logs: "Suchprotokolle"
+          security: "Sicherheit"
+          spam: "Spam"
+          staff_action_logs: "Team-Aktionen-Protokolle"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -4829,6 +4945,23 @@ de:
         author: "Von %{author}"
         experimental_badge: "experimentell"
         learn_more: "Mehr erfahren"
+        sidebar_link:
+          installed: "Installiert"
+      advanced:
+        title: "Erweitert "
+        sidebar_link:
+          api_keys: "API-Schlüssel"
+          developer: "Entwickler"
+          embedding: "Einbettung"
+          rate_limits: "Begrenzungen"
+          user_api: "Benutzer-API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Dateien"
+          other_options: "Sonstiges"
+          search: "Suche"
+          experimental: "Experimentell"
+          all_site_settings: "Alle Website-Einstellungen"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"
@@ -4859,6 +4992,7 @@ de:
           uploading_progress: "Wird hochgeladen … %{progress} %"
           success: "„%{filename}“ wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu eine Minute dauern, bis sie in der Liste erscheint."
           error: "Beim Hochladen der Datei „%{filename}“ ist ein Fehler aufgetreten: %{message}"
+        settings: "Einstellungen"
         operations:
           is_running: "Ein Vorgang läuft gerade …"
           failed: "Der Vorgang „%{operation}“ ist fehlgeschlagen. Bitte überprüfe die Protokolle."
@@ -5049,6 +5183,7 @@ de:
           install_upload: "Von deinem Gerät"
           install_git_repo: "Aus einem Git-Repository"
           install_create: "Neu erstellen"
+          installing_message: "Die Installation des Themes kann einige Minuten dauern..."
           duplicate_remote_theme: "Die Theme-Komponente „%{name}“ ist bereits installiert. Möchtest du wirklich eine weitere Kopie installieren?"
           force_install: "Das Theme kann nicht installiert werden, weil auf das Git-Repository nicht zugegriffen werden kann. Bist du sicher, dass du die Installation fortsetzen willst?"
           create_placeholder: "Platzhalter erstellen"
@@ -5073,6 +5208,7 @@ de:
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
           theme_settings: "Theme-Einstellungen"
+          edit_objects_theme_setting: "Editor für Objekteinstellungen"
           overriden_settings_explanation: "Überschriebene Einstellungen sind mit einem Punkt gekennzeichnet und farblich hervorgehoben. Um diese Einstellungen auf die Standardwerte zurückzusetzen, drücke auf die Schaltfläche „Zurücksetzen“ daneben."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"
@@ -5129,6 +5265,28 @@ de:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Updates verfügbar"
+          schema:
+            title: "%{name} Einstellung bearbeiten"
+            back_button: "Zurück zu %{name}"
+            fields:
+              required: "*erforderlich"
+              groups:
+                at_least:
+                  one: "mindestens %{count} Gruppe ist erforderlich"
+                  other: "mindestens %{count} Gruppen sind erforderlich"
+              categories:
+                at_least:
+                  one: "mindestens %{count} Kategorie ist erforderlich"
+                  other: "mindestens %{count} Kategorien sind erforderlich"
+              tags:
+                at_least:
+                  one: "mindestens %{count} Schlagwort ist erforderlich"
+                  other: "mindestens %{count} Schlagwörter sind erforderlich"
+              string:
+                too_short: "muss mindestens %{count} Zeichen lang sein"
+              number:
+                too_small: "muss größer oder gleich %{count} sein"
+                too_large: "muss weniger oder gleich %{count} sein"
         colors:
           select_base:
             title: "Wähle Basis-Farbpalette"
@@ -6119,6 +6277,7 @@ de:
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
+        settings: "Einstellungen"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"

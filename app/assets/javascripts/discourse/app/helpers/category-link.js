@@ -1,7 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
-import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
@@ -135,10 +134,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
-  html += `<span 
-    ${dataAttributes} 
-    data-drop-close="true" 
-    class="${classNames}" 
+  html += `<span
+    ${dataAttributes}
+    data-drop-close="true"
+    class="${classNames}"
     ${
       opts.previewColor
         ? `style="--category-badge-color: #${category.color}"`
@@ -150,7 +149,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let categoryName = escapeExpression(get(category, "name"));
 
   if (siteSettings.support_mixed_text_direction) {
-    categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
+    categoryDir = 'dir="auto"';
   }
 
   if (restricted) {
@@ -167,6 +166,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   if (opts.topicCount) {
     html += buildTopicCount(opts.topicCount);
+  }
+
+  if (opts.subcategoryCount) {
+    html += `<span class="plus-subcategories">${I18n.t(
+      "category_row.subcategory_count",
+      { count: opts.subcategoryCount }
+    )}</span>`;
   }
 
   if (href) {

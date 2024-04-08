@@ -76,6 +76,7 @@ be:
       tags_changed: "Тэгі абноўлены %{when}"
       category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
+    back_button: "Назад"
     themes:
       default_description: "Default"
     s3:
@@ -406,9 +407,9 @@ be:
       "14": "чакаецца"
       "15": "Чарнавікі"
     categories:
-      all: "усе катэгорыі"
-      all_subcategories: "усе"
-      no_subcategory: "ёсць"
+      categories_label: "катэгорыі"
+      subcategories_label: "падкатэгорыі"
+      remove_filter: "прыбраць фільтр"
       category: "катэгорыя"
       reorder:
         apply_all: "прымяніць"
@@ -584,6 +585,8 @@ be:
         title: "Interface language"
         default: "(Default)"
         any: "любой"
+      homepage:
+        default: "(Default)"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
@@ -822,7 +825,6 @@ be:
       reply: "Адказаць"
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
-      create_pm: "паведамленне"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
@@ -959,6 +961,10 @@ be:
     topic_bulk_actions:
       close_topics:
         name: "Закрыць тэму"
+      archive_topics:
+        name: "Заархіваваныя тэмы"
+      delete_topics:
+        name: "Выдаліць тэмы"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1316,6 +1322,8 @@ be:
     download_calendar:
       download: "спампаваць"
     tagging:
+      selector_tags: "тэгі"
+      selector_remove_filter: "прыбраць фільтр"
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
@@ -1416,12 +1424,13 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Запампаваць"
         uploading: "загрузка"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Калі ласка, увядзіце карэктнае значэнне."
           email: "Калі ласка, увядзіце верны email."
     table_builder:
@@ -1439,6 +1448,10 @@ be:
         remove_muted_tags_from_latest:
           always: "заўсёды"
           never: "ніколі"
+      reports:
+        sidebar_title: "Справаздачы"
+        sidebar_link:
+          all: "Усё"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1446,10 +1459,8 @@ be:
         up_to_date: "У вас апошняя версія!"
         critical_available: "Даступнае крытычнае абнаўленне."
         updates_available: "Даступных абнаўленняў."
-        please_upgrade: "Калі ласка, абновіце!"
         no_check_performed: "Не выканана праверку на наяўнасць абнаўленняў. Праверце, працуе sidekiq."
         stale_data: "У апошні час не ажыццяўлялася праверак на наяўнасць абнаўленняў. Праверце, працуе sidekiq."
-        version_check_pending: "Здаецца, Вы нядаўна здзейснілі абнаўлення. Выдатна!"
         installed_version: "устаноўленая"
         latest_version: "апошняя"
         new_features:
@@ -1554,11 +1565,57 @@ be:
           body: "цела"
           timestamp: "Створана"
           actions: "загалоўкі....................."
+      home:
+        title: "дома"
+      account:
+        title: "Аккаўнт"
+        sidebar_link:
+          backups: "Бэкапы"
+      community:
+        title: "супольнасць"
+        sidebar_link:
+          badges: "значкі"
+          notifications: "Натыфікацыі"
+          permalinks: "Сталыя спасылкі"
+          trust_levels: "ўзроўні даверу"
+          users: "карыстальнікаў"
+          legal: "Legal"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "рух"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Кароткі выклад навін"
+      email_logs:
+        sidebar_link:
+          sent: "Sent"
+          skipped: "Skipped"
+          received: "Атрымана"
+          rejected: "адхілена"
+      security:
+        title: "Бяспека"
+        sidebar_link:
+          screened_emails: "Схаваныя емейлы"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          security: "Бяспека"
+          spam: "Спам"
       plugins:
         title: "Плагіны"
         name: "Назва"
         version: "версія"
         change_settings_short: "Налады"
+        sidebar_link:
+          installed: "устаноўленая"
+      advanced:
+        sidebar_link:
+          developer: "для распрацоўшчыкаў"
+          embedding: "узаемадзеянне"
+          rate_limits: "абмежаванне хуткасці"
+          files: "файлы"
+          other_options: "іншае"
+          search: "Пошук"
       backups:
         title: "Бэкапы"
         menu:
@@ -1578,6 +1635,7 @@ be:
           size: "Size"
         upload:
           label: "Загрузіць"
+        settings: "Налады"
         operations:
           cancel:
             label: "Адмяніць"
@@ -1650,6 +1708,11 @@ be:
             text: "цела"
           all_filter: "Усё"
           active_filter: "актыўныя"
+          schema:
+            fields:
+              required: "*абавязковыя"
+              number:
+                too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
@@ -2086,6 +2149,7 @@ be:
         name: "Імя"
         group: "Група"
         image: "Выява"
+        settings: "Налады"
       embedding:
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"
         title: "узаемадзеянне"

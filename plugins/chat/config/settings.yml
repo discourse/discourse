@@ -137,3 +137,11 @@ chat:
     type: integer
     default: 40
     min: 0
+  chat_preferred_mobile_index:
+    client: true
+    type: enum
+    default: channels
+    choices:
+      - channels
+      - direct_messages
+      - my_threads

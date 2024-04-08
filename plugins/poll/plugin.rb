@@ -32,17 +32,19 @@ after_initialize do
     end
   end
 
-  require_relative "app/controllers/polls_controller.rb"
-  require_relative "app/models/poll_option.rb"
-  require_relative "app/models/poll_vote.rb"
-  require_relative "app/models/poll.rb"
-  require_relative "app/serializers/poll_option_serializer.rb"
-  require_relative "app/serializers/poll_serializer.rb"
-  require_relative "jobs/regular/close_poll.rb"
-  require_relative "lib/poll.rb"
-  require_relative "lib/polls_updater.rb"
-  require_relative "lib/polls_validator.rb"
-  require_relative "lib/post_validator.rb"
+  require_relative "app/controllers/polls_controller"
+  require_relative "app/models/poll_option"
+  require_relative "app/models/poll_vote"
+  require_relative "app/models/poll"
+  require_relative "app/serializers/poll_option_serializer"
+  require_relative "app/serializers/poll_serializer"
+  require_relative "jobs/regular/close_poll"
+  require_relative "lib/poll"
+  require_relative "lib/polls_updater"
+  require_relative "lib/polls_validator"
+  require_relative "lib/post_validator"
+  require_relative "lib/post_extension"
+  require_relative "lib/user_extension"
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
@@ -59,26 +61,8 @@ after_initialize do
   topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   reloadable_patch do
-    Post.class_eval do
-      attr_accessor :extracted_polls
-
-      has_many :polls, dependent: :destroy
-
-      after_save do
-        polls = self.extracted_polls
-        self.extracted_polls = nil
-        next if polls.blank? || !polls.is_a?(Hash)
-        post = self
-
-        Poll.transaction do
-          polls.values.each { |poll| DiscoursePoll::Poll.create!(post.id, poll) }
-          post.custom_fields[DiscoursePoll::HAS_POLLS] = true
-          post.save_custom_fields(true)
-        end
-      end
-    end
-
-    User.class_eval { has_many :poll_votes, dependent: :delete_all }
+    Post.prepend(DiscoursePoll::PostExtension)
+    User.prepend(DiscoursePoll::UserExtension)
   end
 
   validate(:post, :validate_polls) do |force = nil|

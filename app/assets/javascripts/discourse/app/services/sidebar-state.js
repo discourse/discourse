@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import { A } from "@ember/array";
+import { registerDestructor } from "@ember/destroyable";
+import Service, { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,19 +16,40 @@ import {
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
+  @service keyValueStore;
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
+  @tracked filter = "";
+  @tracked collapsedSections = A([]);
+
+  previousState = {};
+  #hiders = new TrackedSet();
 
   constructor() {
     super(...arguments);
-
     this.#reset();
   }
 
+  get sidebarHidden() {
+    return this.#hiders.size > 0;
+  }
+
+  registerHider(ref) {
+    this.#hiders.add(ref);
+
+    registerDestructor(ref, () => {
+      this.#hiders.delete(ref);
+    });
+  }
+
   setPanel(name) {
+    if (this.currentPanelKey) {
+      this.setPreviousState();
+    }
     this.currentPanelKey = name;
+    this.restorePreviousState();
   }
 
   get currentPanel() {
@@ -51,6 +75,48 @@ export default class SidebarState extends Service {
     this.displaySwitchPanelButtons = false;
   }
 
+  setPreviousState() {
+    this.previousState[this.currentPanelKey] = {
+      mode: this.mode,
+      displaySwitchPanelButtons: this.displaySwitchPanelButtons,
+    };
+  }
+
+  collapseSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
+    this.collapsedSections.pushObject(collapsedSidebarSectionKey);
+  }
+
+  expandSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
+    this.collapsedSections.removeObject(collapsedSidebarSectionKey);
+  }
+
+  isCurrentPanel(panel) {
+    return this.currentPanel.key === panel;
+  }
+
+  restorePreviousState() {
+    const state = this.previousState[this.currentPanelKey];
+    if (!state) {
+      return;
+    }
+
+    if (state.mode === SEPARATED_MODE) {
+      this.setSeparatedMode();
+    } else if (state.mode === COMBINED_MODE) {
+      this.setCombinedMode();
+    }
+
+    if (state.displaySwitchPanelButtons) {
+      this.showSwitchPanelButtons();
+    } else {
+      this.hideSwitchPanelButtons();
+    }
+  }
+
   get combinedMode() {
     return this.mode === COMBINED_MODE;
   }
@@ -63,5 +129,9 @@ export default class SidebarState extends Service {
     this.currentPanelKey = currentPanelKey;
     this.panels = panels;
     this.mode = COMBINED_MODE;
+  }
+
+  clearFilter() {
+    this.filter = "";
   }
 }

@@ -2,6 +2,8 @@
 
 class UserAction < ActiveRecord::Base
   belongs_to :user
+  belongs_to :acting_user, class_name: "User"
+  belongs_to :target_user, class_name: "User"
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
 
@@ -264,10 +266,7 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.log_action!(hash)
-    required_parameters = %i[action_type user_id acting_user_id]
-
-    required_parameters << :target_post_id
-    required_parameters << :target_topic_id
+    required_parameters = %i[action_type user_id acting_user_id target_post_id target_topic_id]
 
     require_parameters(hash, *required_parameters)
 
@@ -290,17 +289,18 @@ class UserAction < ActiveRecord::Base
 
         update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
 
+        user_ids = user_id != action.acting_user_id ? [user_id] : nil
+
         group_ids = nil
-        if topic && topic.category && topic.category.read_restricted
-          group_ids = [Group::AUTO_GROUPS[:admins]]
-          group_ids.concat(topic.category.groups.pluck("groups.id"))
+        if topic&.category&.read_restricted
+          group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
         end
 
-        if action.user
+        if action.user && (user_ids.present? || group_ids.present?)
           MessageBus.publish(
             "/u/#{action.user.username_lower}",
             action.id,
-            user_ids: [user_id],
+            user_ids: user_ids,
             group_ids: group_ids,
           )
         end

@@ -47,6 +47,7 @@ en_GB:
       flair_color: "Avatar Flair Colour"
       flair_color_placeholder: "(Optional) Hex colour value"
     categories:
+      categories_label: "categories"
       reorder:
         title_long: "Reorganise the category list"
     ip_lookup:
@@ -125,6 +126,9 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

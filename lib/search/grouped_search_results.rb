@@ -78,8 +78,10 @@ class Search
 
     def blurb(post)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
+      post_search_data_version = post&.post_search_data&.version
 
-      if post.post_search_data.version >= SearchIndexer::MIN_POST_BLURB_INDEX_VERSION &&
+      if post_search_data_version.present? &&
+           post_search_data_version >= SearchIndexer::MIN_POST_BLURB_INDEX_VERSION &&
            !Search.segment_chinese? && !Search.segment_japanese?
         if use_pg_headlines_for_excerpt
           scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')

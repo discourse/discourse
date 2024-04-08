@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
@@ -36,7 +36,7 @@ export default class ChatableGroup extends Component {
       </div>
 
       {{#if this.isDisabled}}
-        <span class="chat-message-creator__chatable -disabled-chat">
+        <span class="chat-message-creator__disabled-warning">
           {{this.group_with_too_many_members}}
         </span>
       {{/if}}

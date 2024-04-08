@@ -256,10 +256,6 @@ ca:
         reply: |-
           [El nostre equip responsable](%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat avant i de moment he eliminat la bandera.)
       search:
-        instructions: |-
-          _psst_ ... He amagat una sorpresa en aquest tema. Si us ve de gust el repte, **seleccioneu la icona de cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per a cercar-la.
-
-          Proveu de cercar el terme "capi&#8203;bara" en aquest tema.
         hidden_message: |-
           Com heu pogut oblidar aquest capibara? :wink:
 

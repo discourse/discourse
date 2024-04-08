@@ -40,7 +40,7 @@ TEXT
     end
 
     it "the plugin name the plugin site settings are still under the generic plugins: category" do
-      plugin_instance.stubs(:setting_catgory).returns("plugins")
+      plugin_instance.stubs(:setting_category).returns("plugins")
       expect(plugin_instance.humanized_name).to eq("sample-plugin")
     end
 
@@ -103,7 +103,6 @@ TEXT
         :likes_7_days,
         :likes_30_days,
         :likes_count,
-        :discourse_discover_enrolled,
       )
     end
 

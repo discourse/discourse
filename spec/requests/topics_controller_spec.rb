@@ -17,7 +17,7 @@ RSpec.describe TopicsController do
   fab!(:post_author5) { Fabricate(:user) }
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:trust_level_0)
   fab!(:trust_level_1)
   fab!(:trust_level_4)
@@ -2317,6 +2317,12 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("#{topic.relative_url}/42?page=1")
     end
 
+    it "scrubs invalid query parameters when redirecting" do
+      get "/t/#{topic.slug}", params: { silly_param: "hehe" }
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 
@@ -2384,6 +2390,28 @@ RSpec.describe TopicsController do
         end
 
       expect(second_request_queries.count).to eq(first_request_queries.count)
+    end
+
+    context "with registered redirect_to_correct_topic_additional_query_parameters" do
+      let(:modifier_block) { Proc.new { |allowed_params| allowed_params << :silly_param } }
+
+      it "retains the permitted query param when redirecting" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(
+          :redirect_to_correct_topic_additional_query_parameters,
+          &modifier_block
+        )
+
+        get "/t/#{topic.slug}", params: { silly_param: "hehe" }
+
+        expect(response).to redirect_to("#{topic.relative_url}?silly_param=hehe")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :redirect_to_correct_topic_additional_query_parameters,
+          &modifier_block
+        )
+      end
     end
 
     context "when a topic with nil slug exists" do
@@ -5174,27 +5202,44 @@ RSpec.describe TopicsController do
     end
 
     context "when a crawler" do
+      fab!(:page1_time) { 3.months.ago }
+      fab!(:page2_time) { 2.months.ago }
+      fab!(:page3_time) { 1.month.ago }
+
+      fab!(:page_1_topics) do
+        Fabricate.times(
+          20,
+          :post,
+          user: post_author2,
+          topic: topic,
+          created_at: page1_time,
+          updated_at: page1_time,
+        )
+      end
+
+      fab!(:page_2_topics) do
+        Fabricate.times(
+          20,
+          :post,
+          user: post_author3,
+          topic: topic,
+          created_at: page2_time,
+          updated_at: page2_time,
+        )
+      end
+
+      fab!(:page_3_topics) do
+        Fabricate.times(
+          2,
+          :post,
+          user: post_author3,
+          topic: topic,
+          created_at: page3_time,
+          updated_at: page3_time,
+        )
+      end
+
       it "renders with the crawler layout, and handles proper pagination" do
-        page1_time = 3.months.ago
-        page2_time = 2.months.ago
-        page3_time = 1.month.ago
-
-        freeze_time page1_time
-
-        Fabricate(:post, user: post_author2, topic: topic)
-        Fabricate(:post, user: post_author3, topic: topic)
-
-        freeze_time page2_time
-        Fabricate(:post, user: post_author4, topic: topic)
-        Fabricate(:post, user: post_author5, topic: topic)
-
-        freeze_time page3_time
-        Fabricate(:post, user: post_author6, topic: topic)
-
-        # ugly, but no interface to set this and we don't want to create
-        # 100 posts to test this thing
-        TopicView.stubs(:chunk_size).returns(2)
-
         user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 
         get topic.relative_url, env: { "HTTP_USER_AGENT" => user_agent }
@@ -5215,8 +5260,8 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page2_time.httpdate)
 
-        expect(body).to include("id='post_3'")
-        expect(body).to include("id='post_4'")
+        expect(body).to include("id='post_21'")
+        expect(body).to include("id='post_22'")
 
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
@@ -5226,6 +5271,39 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
+      end
+
+      it "only renders one post for non-canonical post-specific URLs" do
+        get "#{topic.relative_url}/24"
+        expect(response.body).to have_tag("#post_24")
+        expect(response.body).not_to have_tag("#post_23")
+        expect(response.body).not_to have_tag("#post_25")
+        expect(response.body).not_to have_tag("a", with: { rel: "next" })
+        expect(response.body).not_to have_tag("a", with: { rel: "prev" })
+        expect(response.body).to have_tag(
+          "a",
+          text: I18n.t("show_post_in_topic"),
+          with: {
+            href: "#{topic.relative_url}?page=2#post_24",
+          },
+        )
+      end
+
+      it "includes top-level author metadata when the view does not include the OP naturally" do
+        get "#{topic.relative_url}/2"
+        expect(body).to have_tag(
+          "[itemtype='http://schema.org/DiscussionForumPosting'] > [itemprop='author']",
+        )
+
+        get "#{topic.relative_url}/27"
+        expect(body).to have_tag(
+          "[itemtype='http://schema.org/DiscussionForumPosting'] > [itemprop='author']",
+        )
+
+        get "#{topic.relative_url}?page=2"
+        expect(body).to have_tag(
+          "[itemtype='http://schema.org/DiscussionForumPosting'] > [itemprop='author']",
+        )
       end
 
       context "with canonical_url" do

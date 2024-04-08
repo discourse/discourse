@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/application";
+import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -15,10 +16,11 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-import hbs from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
@@ -161,6 +163,7 @@ createWidget("reply-to-tab", {
     };
 
     if (!this.attrs.mobileView) {
+      result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
       result["aria-expanded"] = this.attrs.repliesAbove.length
         ? "true"
@@ -263,7 +266,7 @@ createWidget("post-avatar", {
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
-  template: hbs`{{d-icon "lock"}}`,
+  template: widgetHbs`{{d-icon "lock"}}`,
   title: () => I18n.t("post.locked"),
 });
 
@@ -741,10 +744,39 @@ createWidget("post-body", {
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
     if (attrs.showTopicMap) {
-      result.push(this.attach("topic-map", attrs));
+      result.push(this.buildTopicMap(attrs));
     }
 
     return result;
+  },
+
+  buildTopicMap(attrs) {
+    return new RenderGlimmer(
+      this,
+      "div.topic-map",
+      hbs`<TopicMap
+        @postAttrs={{@data.postAttrs}}
+        @cancelFilter={{@data.cancelFilter}}
+        @showTopReplies={{@data.showTopReplies}}
+        @collapseSummary={{@data.collapseSummary}}
+        @showSummary={{@data.showSummary}}
+        @showInvite={{@data.showInvite}}
+        @removeAllowedGroup={{@data.removeAllowedGroup}}
+        @removeAllowedUser={{@data.removeAllowedUser}}
+      />`,
+      {
+        postAttrs: attrs,
+        cancelFilter: () => this.sendWidgetAction("cancelFilter"),
+        showTopReplies: () => this.sendWidgetAction("showTopReplies"),
+        collapseSummary: () => this.sendWidgetAction("collapseSummary"),
+        showSummary: () => this.sendWidgetAction("showSummary"),
+        showInvite: () => this.sendWidgetAction("showInvite"),
+        removeAllowedGroup: (group) =>
+          this.sendWidgetAction("removeAllowedGroup", group),
+        removeAllowedUser: (user) =>
+          this.sendWidgetAction("removeAllowedUser", user),
+      }
+    );
   },
 });
 
@@ -977,10 +1009,7 @@ export default createWidget("post", {
       return "";
     }
 
-    return [
-      this.attach("post-user-tip-shim"),
-      this.attach("post-article", attrs),
-    ];
+    return [this.attach("post-article", attrs)];
   },
 
   toggleLike() {

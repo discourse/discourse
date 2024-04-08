@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
@@ -5,7 +6,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -130,6 +131,7 @@ let userOptionFields = [
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
   "watched_precedence_over_muted",
+  "topics_unread_when_closed",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -174,6 +176,8 @@ export default class User extends RestModel.extend(Evented) {
   @service appEvents;
   @service userTips;
 
+  @tracked do_not_disturb_until;
+
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
   @userOption("enable_quoting") enable_quoting;
@@ -205,6 +209,7 @@ export default class User extends RestModel.extend(Evented) {
   @alias("sidebar_sections") sidebarSections;
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
+  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
 
   numGroupsToDisplay = 2;
 

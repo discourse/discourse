@@ -9,7 +9,7 @@ he:
     discourse_narrative_bot_enabled: "הפעלת בוט העלילות של Discourse‏ (discobot)"
     disable_discourse_narrative_bot_welcome_post: "השבתת פוסט קבלת הפנים מאת בוט העלילות של Discourse"
     discourse_narrative_bot_ignored_usernames: "שמות משתמשים שבוט העלילות של Discourse צריך להתעלם מהם"
-    discourse_narrative_bot_disable_public_replies: "byruk תגובות ציבוריות מאת בוט העלילות של Discourse"
+    discourse_narrative_bot_disable_public_replies: "השבתת תגובות ציבוריות מבוט העלילות של Discourse"
     discourse_narrative_bot_welcome_post_type: "סוג פוסט קבלת הפנים שבוט העלילות של Discourse אמור לשלוח"
     discourse_narrative_bot_welcome_post_delay: "להמתין (n) שניות בטרם שליחת פוסט קבלת פנים של בוט העלילות של Discourse."
     discourse_narrative_bot_skip_tutorials: "מדריכים של בוט העלילות של Discourse לדילוג"
@@ -61,13 +61,13 @@ he:
         author: "אלברט איינשטיין"
       "2":
         quote: "חופש לא שווה כלום אם הוא לא כולל את החופש לטעות."
-        author: "מהטמה גנדי"
+        author: "מהאטמה גנדי"
       "3":
         quote: "אל תבכה כי זה נגמר, חייך כי זה קרה."
         author: "ד״ר סוס"
       "4":
         quote: "אם אתם רוצים שמשהו יתבצע כמו שצריך, עשו זאת בעצמכם."
-        author: "צ׳ארלס-גילאום אטין"
+        author: "שארל־גיום אטיין"
       "5":
         quote: "האמינו שאתם יכולים ואתם מחצית הדרך לשם."
         author: "תאודור רוזוולט"
@@ -121,14 +121,14 @@ he:
         "19": "תחזית לא כל כך טובה"
         "20": "מאוד בספק"
       result: |-
-        > :crystal_ball: %{result}
+        > :crystal_ball:‏ %{result}
     track_selector:
       reset_trigger: "התחלה"
       skip_trigger: "דילוג"
       help_trigger: "הצגת עזרה"
       random_mention:
         reply: |-
-          הי! כדי לגלות מה אני יכול לעשות, אימרו `@%{discobot_username} %{help_trigger}`.
+          היי! כדי לגלות מה אני יכול לעשות, יש להקליד `‎@%{discobot_username} %{help_trigger}`.
         tracks: |-
           אלו הפעולות שאני יודע לבצע נכון להיום:
 
@@ -153,7 +153,7 @@ he:
         second_response: |-
           אויש, סליחה. עדיין לא הצלחתי להבין. :anguished:
 
-          אני רק בוט, כדי לפנות למפעיל בשר ודם, כדאי לבקר ב[דף יצירת הקשר](%{base_path}/about).
+          אני רק רובוט, כדי לפנות למפעיל בשר ודם, כדאי לבקר ב[דף יצירת הקשר](%{base_path}/about).
 
           בינתיים, אשב פה בצד בשקט.
     new_user_narrative:
@@ -299,7 +299,7 @@ he:
           אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
         instructions: |-
-          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.
+          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599;, לבחור את ‚בנושא הזה’ ואז לחפש אותה.
 
           יש לנסות לחפש את הביטוי „capy&#8203;bara” בנושא הזה
         hidden_message: |-
@@ -363,7 +363,7 @@ he:
 
           כדי לשמר את המשכיות הדיון, המחיקות אינן מיידיות, לכן הפוסט יוסר לאחר זמן מה.
       recover:
-        deleted_post_raw: "מדוע הפוסט שלי נמחק על ידי @%{discobot_username}? :anguished:"
+        deleted_post_raw: "מדוע הפוסט שלי נמחק על ידי ‎@%{discobot_username}?‏ :anguished:"
         instructions: |-
           שוד ושבר! נראה שמחקתי לך בטעות פוסט חדש שהרגע יצרתי עבורך.
 
@@ -386,7 +386,7 @@ he:
           אוכל ליצור קישור לקטגוריה דרך #
           ```
         reply: |-
-          מצויין! זיכרו שזה עובד בשביל קטגוריות _וגם_ תגיות, אם תגיות מאופשרות.
+          מצוין! חשוב לזכור שזה עובד על קטגוריות _וגם_ על תגיות, אם תגיות פעילות.
       change_topic_notification_level:
         instructions: |-
           לכל נושא יש רמת התראה. החל מ־‚רגילה’, שתודיע רק כאשר מתבצעת פנייה ישירה אליך.

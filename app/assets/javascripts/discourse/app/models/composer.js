@@ -3,7 +3,7 @@ import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -12,6 +12,7 @@ import { propertyNotEqual } from "discourse/lib/computed";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -253,7 +254,7 @@ export default class Composer extends RestModel {
 
   @discourseComputed("categoryId")
   category(categoryId) {
-    return categoryId ? this.site.categories.findBy("id", categoryId) : null;
+    return categoryId ? Category.findById(categoryId) : null;
   }
 
   @discourseComputed("category.minimumRequiredTags")
@@ -410,7 +411,7 @@ export default class Composer extends RestModel {
       options.label = I18n.t(`post.${action}`);
       options.userAvatar = tinyAvatar(post.avatar_template);
 
-      if (!this.site.mobileView) {
+      if (this.site.desktopView) {
         const originalUserName = post.get("reply_to_user.username");
         const originalUserAvatar = post.get("reply_to_user.avatar_template");
         if (originalUserName && originalUserAvatar && isEdit(action)) {
@@ -760,7 +761,7 @@ export default class Composer extends RestModel {
 
     // If the user didn't change the template, clear it
     if (oldCategoryId) {
-      const oldCat = this.site.categories.findBy("id", oldCategoryId);
+      const oldCat = Category.findById(oldCategoryId);
       if (oldCat && oldCat.topic_template === reply) {
         reply = "";
       }
@@ -770,7 +771,7 @@ export default class Composer extends RestModel {
       return;
     }
 
-    const category = this.site.categories.findBy("id", categoryId);
+    const category = Category.findById(categoryId);
     if (category) {
       this.set("reply", category.topic_template || "");
     }
@@ -1184,9 +1185,7 @@ export default class Composer extends RestModel {
 
         // Update topic_count for the category
         const postCategoryId = parseInt(createdPost.category, 10) || 1;
-        const category = this.site.categories.find(
-          (x) => x.id === postCategoryId
-        );
+        const category = Category.findById(postCategoryId);
 
         category?.incrementProperty("topic_count");
       }

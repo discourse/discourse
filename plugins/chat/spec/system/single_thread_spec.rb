@@ -82,6 +82,19 @@ describe "Single thread in side panel", type: :system do
       expect(chat_drawer_page).to have_open_channel(channel)
     end
 
+    context "when thread is forced and threading disabled" do
+      before do
+        channel.update!(threading_enabled: false)
+        thread.update!(force: true)
+      end
+
+      it "doesn’t show back button " do
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_no_css(".c-routes-channel-thread .c-navbar__back-button")
+      end
+    end
+
     it "highlights the message in the channel when clicking original message link" do
       chat_page.visit_thread(thread)
 

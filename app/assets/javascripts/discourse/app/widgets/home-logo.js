@@ -1,3 +1,4 @@
+// deprecated in favor of components/header/home-logo.gjs
 import { h } from "virtual-dom";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";

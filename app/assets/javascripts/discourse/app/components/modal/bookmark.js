@@ -2,11 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
-import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
@@ -29,6 +28,7 @@ export default class BookmarkModal extends Component {
   @service dialog;
   @service currentUser;
   @service site;
+  @service bookmarkApi;
 
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;
@@ -264,31 +264,19 @@ export default class BookmarkModal extends Component {
     }
 
     if (this.editingExistingBookmark) {
-      return ajax(`/bookmarks/${this.bookmark.id}`, {
-        type: "PUT",
-        data: this.bookmark.saveData,
-      }).then(() => {
-        this.args.model.afterSave?.(this.bookmark.saveData);
+      return this.bookmarkApi.update(this.bookmark).then(() => {
+        this.args.model.afterSave?.(this.bookmark);
       });
     } else {
-      return ajax("/bookmarks", {
-        type: "POST",
-        data: this.bookmark.saveData,
-      }).then((response) => {
-        this.bookmark.id = response.id;
-        this.args.model.afterSave?.(this.bookmark.saveData);
+      return this.bookmarkApi.create(this.bookmark).then(() => {
+        this.args.model.afterSave?.(this.bookmark);
       });
     }
   }
 
   #deleteBookmark() {
-    return ajax("/bookmarks/" + this.bookmark.id, {
-      type: "DELETE",
-    }).then((response) => {
-      this.args.model.afterDelete?.(
-        response.topic_bookmarked,
-        this.bookmark.id
-      );
+    return this.bookmarkApi.delete(this.bookmark.id).then((response) => {
+      this.args.model.afterDelete?.(response, this.bookmark.id);
     });
   }
 

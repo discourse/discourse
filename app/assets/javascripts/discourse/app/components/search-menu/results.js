@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
 import PostViewComponent from "./results/type/post";
@@ -28,7 +28,7 @@ export default class Results extends Component {
   }
 
   get noTopicResults() {
-    return this.args.searchTopics && this.args.noResults;
+    return this.args.searchTopics && this.search.noResults;
   }
 
   get termTooShort() {
@@ -44,6 +44,10 @@ export default class Results extends Component {
       });
     });
     return content;
+  }
+
+  get searchLogId() {
+    return this.search.results.grouped_search_result?.search_log_id;
   }
 
   @action

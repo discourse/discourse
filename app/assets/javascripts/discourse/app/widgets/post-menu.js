@@ -6,11 +6,11 @@ import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
+import { userPath } from "discourse/lib/url";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
@@ -51,6 +51,16 @@ export function replaceButton(name, replaceWith) {
 
 function registerButton(name, builder) {
   _builders[name] = builder;
+}
+
+function smallUserAtts(user) {
+  return {
+    template: user.avatar_template,
+    username: user.username,
+    post_url: user.post_url,
+    url: userPath(user.username_lower),
+    unknown: user.unknown,
+  };
 }
 
 export function buildButton(name, widget) {
@@ -377,7 +387,7 @@ registerButton(
       return;
     }
 
-    let classNames = ["bookmark", "with-reminder"];
+    let classNames = ["bookmark"];
     let title = "bookmarks.not_bookmarked";
     let titleOptions = { name: "" };
 
@@ -385,6 +395,8 @@ registerButton(
       classNames.push("bookmarked");
 
       if (attrs.bookmarkReminderAt) {
+        classNames.push("with-reminder");
+
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
           currentUser.user_option.timezone
@@ -611,6 +623,7 @@ export default createWidget("post-menu", {
       visibleButtons = allButtons;
     }
 
+    let hasShowMoreButton = false;
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     if (!state.collapsed || allButtons.length <= visibleButtons.length + 1) {
@@ -626,6 +639,7 @@ export default createWidget("post-menu", {
         icon: "ellipsis-h",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
+      hasShowMoreButton = true;
     }
 
     Object.values(_extraButtons).forEach((builder) => {
@@ -803,7 +817,9 @@ export default createWidget("post-menu", {
         })
       );
     }
-
+    if (hasShowMoreButton) {
+      contents.push(this.attach("post-user-tip-shim"));
+    }
     return contents;
   },
 

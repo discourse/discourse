@@ -1,8 +1,7 @@
 import Route from "@ember/routing/route";
-import DisableSidebar from "discourse/mixins/disable-sidebar";
 import Wizard from "discourse/static/wizard/models/wizard";
 
-export default class WizardRoute extends Route.extend(DisableSidebar) {
+export default class WizardRoute extends Route {
   model() {
     return Wizard.load();
   }

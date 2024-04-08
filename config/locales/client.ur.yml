@@ -161,6 +161,7 @@ ur:
     emails_are_disabled_non_staff: "باہر جانے والی ای میل غیر عملہ صارفین کے لیے غیر فعال کر دی گئی ہیں"
     software_update_prompt:
       dismiss: "بر خاست کریں"
+    back_button: "واپس"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -865,9 +866,12 @@ ur:
       "14": "زیرِاِلتوَاء"
       "15": "ڈرافٹس"
     categories:
-      all: "تمام زُمرَہ جات"
-      all_subcategories: "تمام"
-      no_subcategory: "کوئی نہیں"
+      categories_label: "اقسام"
+      subcategories_label: "ذیلی زمرے"
+      no_subcategories: "کوئی ذیلی زمرہ جات نہیں"
+      remove_filter: "فِلٹر ہٹائیں"
+      plus_more_count: "+%{count} مزید"
+      view_all: "سب دیکھیں"
       category: "زمرہ"
       category_list: "زمرہ جات کی فہرست ظاہر کریں"
       reorder:
@@ -1030,7 +1034,6 @@ ur:
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
-      enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       experimental_sidebar:
         options: "اختیارات"
         navigation_section: "نیویگیشن"
@@ -1204,8 +1207,6 @@ ur:
           name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
       passkeys:
         save: "محفوظ کریں"
-        added_prefix: "شامل کر دیا گیا"
-        last_used_prefix: "آخری بار استعمال"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -1314,6 +1315,8 @@ ur:
         instructions: "صارف کیلئے انٹرفیس کی زبان۔ یہ اُس وقت تبدیل ہو گی جب آپ وِیب سائٹ رِیفریش کریں ۔"
         default: "(ڈِیفالٹ)"
         any: "کوئی بھی"
+      homepage:
+        default: "(ڈِیفالٹ)"
       password_confirmation:
         title: "پاس ورڈ دوبارہ"
       invite_code:
@@ -1594,7 +1597,6 @@ ur:
       close: "بند کریں"
       dismiss_error: "غلطی کو مسترد کریں"
     close: "بند کریں"
-    assets_changed_confirm: "اس سائٹ کو ابھی ایک سافٹ ویئر اپ گریڈ ملا ہے۔ ابھی تازہ ترین ورژن حاصل کریں؟"
     logout: "آپ لاگ آؤٹ ہو گئے تھے۔"
     refresh: "رِیفریش"
     home: "ہَوم"
@@ -1773,6 +1775,9 @@ ur:
       alt: "Alt"
       enter: "اَینٹر"
     category_row:
+      subcategory_count:
+        one: "+ %{count} ذیلی زمرہ"
+        other: "+ %{count} ذیلی زمرہ جات"
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
@@ -1872,7 +1877,6 @@ ur:
       reply: "جواب"
       cancel: "منسوخ"
       create_topic: "ٹاپک بنائیں"
-      create_pm: "پیغام"
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
@@ -2210,7 +2214,6 @@ ur:
         clear_all: "تمام کو صاف کریں"
         unlist_topics: "ٹاپکس کو فہرست سے ہٹائیں"
         relist_topics: "ٹاپک دوبارہ فہرست کریں"
-        defer: "ملتوی کریں"
         delete: "ٹاپکس مٹائیں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام نہ پڑھے گئے کو بر خاست کریں"
@@ -2275,6 +2278,18 @@ ur:
     topic_bulk_actions:
       close_topics:
         name: "ٹاپکس بند کریں"
+      archive_topics:
+        name: "ٹاپکس آر کائیو کریں"
+      unlist_topics:
+        name: "ٹاپکس کو فہرست سے ہٹائیں"
+      relist_topics:
+        name: "ٹاپک دوبارہ فہرست کریں"
+      append_tags:
+        name: "ٹیگز میں اضافہ کریں"
+      replace_tags:
+        name: "ٹیگز بدلیں"
+      delete_topics:
+        name: "ٹاپکس مٹائیں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"
@@ -2289,9 +2304,6 @@ ur:
       move_to_inbox:
         title: "اِنباکس میں منتقل کریں"
         help: "پیغام واپس اِنباکس میں منتقل کریں"
-      defer:
-        help: "بغیر پڑھا نشان زد کریں"
-        title: "ملتوی کریں"
       list: "ٹاپک"
       new: "نیا ٹاپک"
       unread: "بغیر پڑھے"
@@ -3264,8 +3276,6 @@ ur:
         show_incoming_updated_topics: "%{shortcut} اپ ڈیٹ کردہ عنوانات دکھائیں"
         search: "%{shortcut} سرچ"
         help: "%{shortcut} کیبورڈ مدد کھولیں"
-        dismiss_new: "%{shortcut} نئے کو برخاست"
-        dismiss_topics: "%{shortcut} ٹاپک برخاست کریں"
         log_out: "%{shortcut} لاگ آوٹ"
       composing:
         title: "کمپوز کرنا"
@@ -3303,7 +3313,6 @@ ur:
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
-        defer: "%{shortcut} ٹاپک ملتوی کریں"
         topic_admin_actions: "%{shortcut} عنوان ایڈمن ایکشنز کھولیں"
       search_menu:
         title: "تلاش کا مینیو"
@@ -3355,8 +3364,10 @@ ur:
       ics: "ICS"
     tagging:
       other_tags: "دیگر ٹیگز"
+      selector_tags: "ٹیگز"
       selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
+      selector_remove_filter: "فِلٹر ہٹائیں"
       tags: "ٹیگز"
       choose_for_topic: "اختیاری ٹیگز"
       info: "معلومات"
@@ -3578,13 +3589,14 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
+      filter: "فِلٹر"
     until: "جب تک:"
     form_templates:
       upload_field:
         upload: "اَپ لوڈ"
         uploading: "اَپ لوڈ کیا جا رہا ہے"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
           email: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں."
     table_builder:
@@ -3604,6 +3616,7 @@ ur:
     admin:
       title: "ڈِسکورس ایڈمن"
       moderator: "ماڈریٹر"
+      filter_reports: رپورٹیں فِلٹر کریں
       tags:
         remove_muted_tags_from_latest:
           always: "ہمیشہ"
@@ -3611,6 +3624,9 @@ ur:
           never: "کبھی نہیں"
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
+        sidebar_title: "رپورٹیں"
+        sidebar_link:
+          all: "تمام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -3619,10 +3635,8 @@ ur:
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
         critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
-        please_upgrade: "براہ مہربانی اَپ گریڈ کرلیں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
         stale_data: "اَپ ڈیٹس کے لئے حال ہی میں چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
-        version_check_pending: "لگتا ہے آپ نے حال ہی میں اَپ گریڈ کیا ہے۔ بہت خوب!"
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
@@ -3666,7 +3680,6 @@ ur:
         exception_error: معذرت، ڈیٹا کمانڈ چلاتے ہوئے ایک خرابی کا سامنا کرنا پڑا۔
         too_many_requests: آپ نے یہ کارروائی بہت زیادہ دفعہ کی ہے۔ براہ کرم دوبارہ کوشش کرنے سے قبل انتظار کریں۔
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
-        filter_reports: رپورٹیں فِلٹر کریں
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           today: "آج"
@@ -3904,6 +3917,50 @@ ur:
           timestamp: "بنایا گیا"
           completion: "مدتِ تکمیل"
           actions: "عوامل"
+      home:
+        title: "ہَوم"
+      account:
+        title: "اکاؤنٹ"
+        sidebar_link:
+          backups: "بیک اَپس"
+      community:
+        title: "کمیونٹی"
+        sidebar_link:
+          badges: "بَیج"
+          notifications: "اطلاعات"
+          permalinks: "دائمی لِنکس"
+          trust_levels: "ٹرسٹ لَیول"
+          users: "صارفین"
+          user_fields: "صارف کے لیے دیئے گئے خانے"
+          watched_words: "نظر رکھے ہوئے الفاظ"
+          legal: "قانونی"
+      appearance:
+        title: "ظاہری شکل"
+        sidebar_link:
+          emoji: "اِیمَوجی"
+          navigation: "نیویگیشن"
+          themes: "تِھیمز"
+      email_settings:
+        sidebar_link:
+          appearance: "ظاہری شکل"
+          preview_summary: "ڈائجسٹ کا مشاہدہ کریں"
+      email_logs:
+        sidebar_link:
+          sent: "بھیجا جا چکا"
+          skipped: "چھوڑا گیا"
+          bounced: "لوٹا دی گئی"
+          received: "موصول ہو گئی"
+          rejected: "مسترد کر دی گئی"
+      security:
+        title: "سیکورٹی"
+        sidebar_link:
+          error_logs: "خرابیوں کے لاگز"
+          screened_emails: "سکرین کی گئی اِیمیلز"
+          screened_ips: "سکرین کیے گئے IP"
+          screened_urls: "سکرین کیے گئے یو.آر.ایل."
+          search_logs: "لاگز سرچ کریں"
+          security: "سیکورٹی"
+          spam: "سپَیم"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"
@@ -3917,6 +3974,19 @@ ur:
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         author: "%{author} کی طرف سے"
         learn_more: "مزید جانیں"
+        sidebar_link:
+          installed: "انسٹال کیا ہوا"
+      advanced:
+        sidebar_link:
+          developer: "ڈیولپر"
+          embedding: "اَیمبَیڈ کرنا"
+          rate_limits: "رَیٹ لِمِٹس"
+          user_api: "یُوزَر API"
+          web_hooks: "وَیب ھُوک٘س٘"
+          onebox: "وَن باکس"
+          files: "فائلیں"
+          other_options: "دیگر"
+          search: "تلاش کریں"
       backups:
         title: "بیک اَپس"
         menu:
@@ -3939,6 +4009,7 @@ ur:
           title: "اِس صورتحال کیلئے ایک بیک اَپ اَپ لوڈ کریں"
           success: "'%{filename}' کامیابی سے اَپ لوڈ کردی گئی ہے۔ فائل پر اب کام جا ری ہے اور فہرست میں ظاہر ہونے کیلئے ایک منٹ تک لگ سکتا ہے۔"
           error: "اَپ لوڈ کرتے وقت ایک خرابی کا سامنا کرنا پڑا '%{filename}': %{message}"
+        settings: "ترتیبات"
         operations:
           failed: "%{operation} ناکام رہا۔ براہ مہربانی لاگز چیک کریں۔"
           cancel:
@@ -4176,6 +4247,14 @@ ur:
           all_filter: "تمام"
           active_filter: "فعال"
           inactive_filter: "غیر فعال"
+          schema:
+            fields:
+              required: "*درکار"
+              string:
+                too_short: "کم از کم %{count} حروف کا ہونا لازمی ہے"
+              number:
+                too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
+                too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
@@ -5040,6 +5119,7 @@ ur:
         image: "تصویر"
         alt: "حسب ضرورت ایموجی پیش نظارہ"
         delete_confirm: "کیا آپ واقعی :%{name}: اِیمَوجی حذف کرنا چاہتے ہیں؟"
+        settings: "ترتیبات"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"

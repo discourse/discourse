@@ -12,7 +12,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  z-index: z("header");
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
@@ -61,6 +60,7 @@
     min-width: var(--d-logo-height);
     a,
     a:visited {
+      min-width: 0;
       color: var(--header_primary);
     }
 
@@ -76,6 +76,10 @@
     width: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .home-logo-wrapper-outlet {
+    overflow: hidden;
   }
 
   #site-text-logo {
@@ -106,6 +110,10 @@
     align-items: center;
     margin-top: 0.2em;
     white-space: nowrap;
+
+    .auth-buttons {
+      display: flex;
+    }
   }
 
   .login-button,

@@ -12,7 +12,8 @@ class FillEmbeddedMediaPostAllowedGroupsBasedOnDeprecatedSetting < ActiveRecord:
 
       DB.exec(
         "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
-        VALUES('embedded_media_post_allowed_groups', :setting, '20', NOW(), NOW())",
+        VALUES('embedded_media_post_allowed_groups', :setting, '20', NOW(), NOW())
+        ON CONFLICT (name) DO NOTHING",
         setting: allowed_groups,
       )
     end

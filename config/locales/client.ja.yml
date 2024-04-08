@@ -160,6 +160,7 @@ ja:
     software_update_prompt:
       dismiss: "閉じる"
     bootstrap_mode: "はじめに"
+    back_button: "戻る"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
@@ -169,7 +170,6 @@ ja:
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     critical_deprecation:
-      notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります (<a target='_blank' href='https://meta.discourse.org/t/287211'>詳細</a>)。"
       theme_source: "検出されたテーマ: <a target='_blank' href='%{path}'>'%{name}'</a>。"
       plugin_source: "検出されたプラグイン: '%{name}'"
     s3:
@@ -906,9 +906,11 @@ ja:
       "14": "保留中"
       "15": "下書き"
     categories:
-      all: "すべてのカテゴリ"
-      all_subcategories: "すべて"
-      no_subcategory: "なし"
+      categories_label: "カテゴリ"
+      subcategories_label: "サブカテゴリ"
+      no_subcategories: "サブカテゴリなし"
+      remove_filter: "フィルタを削除"
+      plus_more_count: "他 %{count}"
       category: "カテゴリ"
       category_list: "カテゴリリストを表示"
       reorder:
@@ -1089,7 +1091,6 @@ ja:
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
-      enable_defer: "トピックを未読にマークして延期を有効にする"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -1353,8 +1354,7 @@ ja:
         save: "保存"
         title: "パスキー"
         short_description: "パスキーは、パスワードに代わって整体認証 (タッチ、FaceID など) やデバイスの PIN/パスワードによって ID を検証するものです。"
-        added_prefix: "追加済み"
-        last_used_prefix: "最後の使用"
+        added_date: "%{date} を追加しました"
         never_used: "未使用"
         not_allowed_error: "パスキーの登録プロセスはタイムアウトしたか、キャンセルされたか、許可されていません。"
         already_added_error: "このパスキーはすでに登録されています。再度登録する必要はありません。"
@@ -1470,6 +1470,8 @@ ja:
         instructions: "ユーザーインターフェースの言語です。ページを更新すると変更されます。"
         default: "(デフォルト)"
         any: "すべて"
+      homepage:
+        default: "(デフォルト)"
       password_confirmation:
         title: "パスワードを再入力"
       invite_code:
@@ -1785,7 +1787,6 @@ ja:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
     close: "閉じる"
-    assets_changed_confirm: "このサイトのソフトウェアはたった今アップグレードされました。今すぐ最新バージョンを入手しますか？"
     logout: "ログアウトしました。"
     refresh: "更新"
     home: "ホーム"
@@ -2030,6 +2031,8 @@ ja:
     conditional_loading_section:
       loading: 読み込み中…
     category_row:
+      subcategory_count:
+        other: "+ %{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
     select_kit:
@@ -2142,7 +2145,6 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "メッセージ"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
@@ -2538,7 +2540,6 @@ ja:
         unlist_topics: "トピックを非表示"
         relist_topics: "トピックを表示"
         reset_bump_dates: "バンプ日をリセットする"
-        defer: "取り下げる"
         delete: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
@@ -2613,6 +2614,18 @@ ja:
     topic_bulk_actions:
       close_topics:
         name: "トピックをクローズ"
+      archive_topics:
+        name: "トピックをアーカイブ"
+      unlist_topics:
+        name: "トピックを非表示"
+      relist_topics:
+        name: "トピックを表示"
+      append_tags:
+        name: "タグを追加"
+      replace_tags:
+        name: "タグを置換"
+      delete_topics:
+        name: "トピックを削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -2627,9 +2640,6 @@ ja:
       move_to_inbox:
         title: "受信トレイに移動"
         help: "受信トレイにメッセージを戻す"
-      defer:
-        help: "未読にする"
-        title: "取り下げる"
       list: "トピック"
       new: "新規トピック"
       unread: "未読"
@@ -3674,8 +3684,6 @@ ja:
         show_incoming_updated_topics: "%{shortcut} 更新されたトピックを表示する"
         search: "%{shortcut} 検索"
         help: "%{shortcut} キーボードヘルプを表示する"
-        dismiss_new: "%{shortcut} 新規を閉じる"
-        dismiss_topics: "%{shortcut} トピックを閉じる"
         log_out: "%{shortcut} ログアウト"
       composing:
         title: "作成"
@@ -3715,7 +3723,6 @@ ja:
         mark_tracking: "%{shortcut} トピックを追跡"
         mark_watching: "%{shortcut} トピックをウォッチ"
         print: "%{shortcut} トピックを印刷"
-        defer: "%{shortcut} トピックを未読にする"
         topic_admin_actions: "%{shortcut} トピックの管理者操作を開く"
         archive_private_message: "%{shortcut} プライベートメッセージのアーカイブ操作を切り替える"
       search_menu:
@@ -3770,8 +3777,10 @@ ja:
     tagging:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
+      selector_tags: "タグ"
       selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
+      selector_remove_filter: "フィルタを削除"
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
       choose_for_topic_required:
@@ -4070,6 +4079,9 @@ ja:
       panels:
         forum:
           label: フォーラム
+      filter: "フィルタ"
+      no_results:
+        title: "結果がありません"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
@@ -4084,12 +4096,12 @@ ja:
         upload: "アップロード"
         uploading: "アップロード中"
       errors:
-        valueMissing:
+        value_missing:
           default: "このフィールドに入力してください。"
-          select-one: "リスト内の項目を選択してください。"
-          select-multiple: "リスト内の項目を少なくとも 1 つ選択してください。"
+          select_one: "リスト内の項目を選択してください。"
+          select_multiple: "リスト内の項目を少なくとも 1 つ選択してください。"
           checkbox: "続行する場合は、このチェックボックスをオンにしてください。"
-        typeMismatch:
+        type_mismatch:
           default: "有効な値を入力してください。"
           color: "色を入力してください。"
           date: "日付を入力してください。"
@@ -4099,16 +4111,16 @@ ja:
           tel: "有効な電話番号を入力してください。"
           text: "テキスト値を入力してください。"
           url: "有効な URL を入力してください。"
-        tooShort:
+        too_short:
           other: "入力は %{count} 文字以上である必要があります。"
-        tooLong:
+        too_long:
           other: "入力は %{count} 文字未満である必要があります。"
-        rangeOverflow:
+        range_overflow:
           other: "入力は %{count} 未満である必要があります。"
-        rangeUnderflow:
+        range_underflow:
           other: "入力は %{count} 以上である必要があります。"
-        patternMismatch: "要求されたフォーマットに一致させてください。"
-        badInput: "有効な入力を入力してください。"
+        pattern_mismatch: "要求されたフォーマットに一致させてください。"
+        bad_input: "有効な入力を入力してください。"
     table_builder:
       title: "テーブル作成ツール"
       modal:
@@ -4172,6 +4184,7 @@ ja:
       title: "Discourse の管理者"
       moderator: "モデレーター"
       back_to_forum: "フォーラムに戻る"
+      filter_reports: レポートをフィルタ
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -4180,6 +4193,11 @@ ja:
       reports:
         title: "使用可能なレポートのリスト"
         meta_doc: "レポートの詳細な概要については、<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>ドキュメント</a>をご覧ください。"
+        sidebar_title: "レポート"
+        sidebar_link:
+          all: "すべて"
+      new_features:
+        title: "新機能"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
@@ -4188,10 +4206,8 @@ ja:
         up_to_date: "最新のバージョンです!"
         critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
-        please_upgrade: "アップグレードしてください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"
         stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
-        version_check_pending: "最近、アップグレードしましたね。素晴らしいです！"
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
@@ -4236,7 +4252,6 @@ ja:
         exception_error: クエリを実行中にエラーが発生しました
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
-        filter_reports: レポートをフィルタ
         custom_date_range: カスタムの日付範囲
         reports:
           trend_title: "%{percent} 変更。現在 %{current}、前の期間中 %{prev}。"
@@ -4570,6 +4585,50 @@ ja:
           timestamp: "作成"
           completion: "完了時間"
           actions: "操作"
+      home:
+        title: "ホーム"
+      account:
+        title: "アカウント"
+        sidebar_link:
+          backups: "バックアップ"
+      community:
+        title: "コミュニティー"
+        sidebar_link:
+          badges: "バッジ"
+          notifications: "通知"
+          permalinks: "パーマリンク"
+          trust_levels: "信頼レベル"
+          users: "ユーザー"
+          user_fields: "ユーザーフィールド"
+          watched_words: "ウォッチ中の言葉"
+          legal: "法関連"
+      appearance:
+        title: "外観"
+        sidebar_link:
+          emoji: "絵文字"
+          navigation: "ナビゲーション"
+          themes: "テーマ"
+      email_settings:
+        sidebar_link:
+          appearance: "外観"
+          preview_summary: "要約をプレビュー"
+      email_logs:
+        sidebar_link:
+          sent: "送信"
+          skipped: "スキップ"
+          bounced: "バウンス"
+          received: "受け取った"
+          rejected: "拒否"
+      security:
+        title: "セキュリティ"
+        sidebar_link:
+          error_logs: "エラーログ"
+          screened_emails: "スクリーン対象メール"
+          screened_ips: "スクリーン対象 IP"
+          screened_urls: "スクリーン対象 URL"
+          search_logs: "検索ログ"
+          security: "セキュリティ"
+          spam: "迷惑"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -4586,6 +4645,20 @@ ja:
         author: "作成者: %{author}"
         experimental_badge: "実験的"
         learn_more: "もっと詳しく"
+        sidebar_link:
+          installed: "インストール済み"
+      advanced:
+        title: "高度"
+        sidebar_link:
+          developer: "開発者"
+          embedding: "埋め込み"
+          rate_limits: "投稿制限"
+          user_api: "ユーザー API"
+          web_hooks: "Webhook"
+          onebox: "Onebox"
+          files: "ファイル"
+          other_options: "その他"
+          search: "検索"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -4616,6 +4689,7 @@ ja:
           uploading_progress: "アップロード中… %{progress}%"
           success: "'%{filename}' のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに数分程度かかることがあります。"
           error: "ファイル '%{filename}' のアップロード中にエラーが発生しました: %{message}"
+        settings: "設定"
         operations:
           is_running: "バックアップ作業を実行中…"
           failed: "%{operation}に失敗しました。ログを確認してください。"
@@ -4885,6 +4959,14 @@ ja:
           active_filter: "アクティブ"
           inactive_filter: "非アクティブ"
           updates_available_filter: "アップデートあり"
+          schema:
+            fields:
+              required: "*必須"
+              string:
+                too_short: "は少なくとも %{count} 文字である必要があります"
+              number:
+                too_small: "は %{count} 以上である必要があります"
+                too_large: "は %{count} 以下の値である必要があります"
         colors:
           select_base:
             title: "基本色パレットを選択してください"
@@ -5865,6 +5947,7 @@ ja:
         image: "画像"
         alt: "カスタム絵文字のプレビュー"
         delete_confirm: ":%{name}: 絵文字を削除してもよろしいですか？"
+        settings: "設定"
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         confirm_delete: "このホストを削除してもよろしいですか？"

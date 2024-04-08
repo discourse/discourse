@@ -5,12 +5,13 @@ describe "Admin Customize Themes", type: :system do
   fab!(:theme)
   fab!(:admin)
 
+  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+
   before { sign_in(admin) }
 
   describe "when visiting the page to customize themes" do
     fab!(:theme_2) { Fabricate(:theme) }
     fab!(:theme_3) { Fabricate(:theme) }
-    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
     let(:delete_themes_confirm_modal) { PageObjects::Modals::DeleteThemesConfirm.new }
 
     it "should allow admin to bulk delete inactive themes" do
@@ -68,8 +69,6 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).not_to have_css(".submit-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-edit")
-
-      expect(theme.reload.color_scheme_id).to eq(color_scheme.id)
     end
   end
 
@@ -82,6 +81,58 @@ describe "Admin Customize Themes", type: :system do
 
       ace_content = find(".ace_content")
       expect(ace_content.text).to eq("console.log('test')")
+    end
+  end
+
+  describe "when editing theme translations" do
+    it "should allow admin to edit and save the theme translations" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+
+      theme_translations_settings_editor.fill_in("Hello World")
+      theme_translations_settings_editor.save
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
+    end
+
+    it "should allow admin to edit and save the theme translations from other languages" do
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.set_field(
+        target: :translations,
+        name: "fr",
+        value: { fr: { group: { hello: "Bonjour!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+
+      theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
+      theme_translations_picker.select_row_by_value("fr")
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
+
+      theme_translations_settings_editor.fill_in("Hello World in French")
+      theme_translations_settings_editor.save
     end
   end
 end

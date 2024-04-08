@@ -1,24 +1,38 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
+import autoFocus from "discourse/modifiers/auto-focus";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
 
+const _customActions = {};
+
+export function addBulkDropdownAction(name, customAction) {
+  _customActions[name] = customAction;
+}
+
 export default class BulkTopicActions extends Component {
   @service router;
+  @service toasts;
   @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
+  @tracked loading;
+  @tracked errors;
+  @tracked isSilent = false;
+  @tracked closeNote = null;
 
   notificationLevelId = null;
 
@@ -26,23 +40,25 @@ export default class BulkTopicActions extends Component {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
-      this.setComponent(ChangeTags);
+      if (this.args.model.initialActionLabel in _customActions) {
+        _customActions[this.args.model.initialActionLabel]({
+          setComponent: this.setComponent.bind(this),
+        });
+      }
     }
   }
 
   async perform(operation) {
-    this.loading = true;
-
     if (this.args.model.bulkSelectHelper.selected.length > 20) {
       this.showProgress = true;
     }
 
     try {
-      return this._processChunks(operation);
+      return await this._processChunks(operation);
     } catch {
-      this.dialog.alert(i18n("generic_error"));
+      this.errors = true;
+      this.showToast();
     } finally {
-      this.loading = false;
       this.processedTopicCount = 0;
       this.showProgress = false;
     }
@@ -67,8 +83,12 @@ export default class BulkTopicActions extends Component {
     const topicIds = [];
     const options = {};
 
-    if (this.args.model.allowSilent === true) {
-      options.silent = true;
+    if (this.isSilent) {
+      operation = { type: "silent_close" };
+    }
+
+    if (this.isCloseAction && this.closeNote) {
+      operation["message"] = this.closeNote;
     }
 
     const tasks = topicChunks.map((topics) => async () => {
@@ -107,7 +127,13 @@ export default class BulkTopicActions extends Component {
   }
 
   @action
+  registerCustomAction(customAction) {
+    this.customAction = customAction;
+  }
+
+  @action
   performAction() {
+    this.loading = true;
     switch (this.args.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -160,6 +186,29 @@ export default class BulkTopicActions extends Component {
           (t) => t.set("category_id", this.categoryId)
         );
         break;
+      default:
+        // Plugins can register their own custom actions via onRegisterAction
+        // when the activeComponent is rendered.
+        if (this.customAction) {
+          this.customAction(this.performAndRefresh.bind(this));
+        } else {
+          _customActions[this.args.model.initialActionLabel](this);
+        }
+    }
+  }
+
+  showToast() {
+    this.loading = false;
+    if (this.errors) {
+      this.toasts.error({
+        duration: 3000,
+        data: { message: i18n("generic_error") },
+      });
+    } else {
+      this.toasts.success({
+        duration: 3000,
+        data: { message: i18n("topics.bulk.completed") },
+      });
     }
   }
 
@@ -172,6 +221,7 @@ export default class BulkTopicActions extends Component {
       this.args.model.refreshClosure?.();
       this.args.closeModal();
       this.args.model.bulkSelectHelper.toggleBulkSelect();
+      this.showToast();
     }
   }
 
@@ -182,6 +232,7 @@ export default class BulkTopicActions extends Component {
     this.args.model.refreshClosure?.();
     this.args.closeModal();
     this.args.model.bulkSelectHelper.toggleBulkSelect();
+    this.showToast();
   }
 
   @computed("action")
@@ -202,6 +253,17 @@ export default class BulkTopicActions extends Component {
     return this.args.model.action === "update-category";
   }
 
+  @computed("action")
+  get isCloseAction() {
+    return this.args.model.action === "close";
+  }
+
+  @action
+  updateCloseNote(event) {
+    event.preventDefault();
+    this.closeNote = event.target.value;
+  }
+
   get notificationLevels() {
     return topicLevels.map((level) => ({
       id: level.id.toString(),
@@ -218,49 +280,83 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
+      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >
       <:body>
-        <div>
-          {{htmlSafe
-            (i18n
-              "topics.bulk.selected"
-              count=@model.bulkSelectHelper.selected.length
-            )
-          }}
-        </div>
-
-        {{#if this.isCategoryAction}}
-          <p>
-            <CategoryChooser
-              @value={{this.categoryId}}
-              @onChange={{this.onCategoryChange}}
-            />
-          </p>
-        {{/if}}
-
-        {{#if this.isNotificationAction}}
-          <div class="bulk-notification-list">
-            {{#each this.notificationLevels as |level|}}
-              <div class="controls">
-                <label class="radio notification-level-radio checkbox-label">
-                  <RadioButton
-                    @value={{level.id}}
-                    @name="notification_level"
-                    @selection={{this.notificationLevelId}}
-                  />
-                  <strong>{{level.name}}</strong>
-                  <div class="description">{{htmlSafe level.description}}</div>
-                </label>
-              </div>
-            {{/each}}
+        <ConditionalLoadingSection
+          @isLoading={{this.loading}}
+          @title={{i18n "topics.bulk.performing"}}
+        >
+          <div>
+            {{htmlSafe
+              (i18n
+                "topics.bulk.selected"
+                count=@model.bulkSelectHelper.selected.length
+              )
+            }}
           </div>
-        {{/if}}
 
-        {{#if this.isTagAction}}
-          <p><TagChooser @tags={{this.tags}} @categoryId={{@categoryId}} /></p>
-        {{/if}}
+          {{#if this.isCategoryAction}}
+            <p>
+              <CategoryChooser
+                @value={{this.categoryId}}
+                @onChange={{this.onCategoryChange}}
+              />
+            </p>
+          {{/if}}
+
+          {{#if this.isNotificationAction}}
+            <div class="bulk-notification-list">
+              {{#each this.notificationLevels as |level|}}
+                <div class="controls">
+                  <label class="radio notification-level-radio checkbox-label">
+                    <RadioButton
+                      @value={{level.id}}
+                      @name="notification_level"
+                      @selection={{this.notificationLevelId}}
+                    />
+                    <strong>{{level.name}}</strong>
+                    <div class="description">{{htmlSafe
+                        level.description
+                      }}</div>
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{#if this.isTagAction}}
+            <p><TagChooser
+                @tags={{this.tags}}
+                @categoryId={{@categoryId}}
+              /></p>
+          {{/if}}
+
+          {{#if this.activeComponent}}
+            {{component
+              this.activeComponent
+              onRegisterAction=this.registerCustomAction
+            }}
+          {{/if}}
+
+          {{#if this.isCloseAction}}
+            <div class="bulk-close-note-section">
+              <label>
+                {{i18n "topic_bulk_actions.close_topics.note"}}&nbsp;<span
+                  class="label-optional"
+                >{{i18n "topic_bulk_actions.close_topics.optional"}}</span>
+              </label>
+
+              <textarea
+                id="bulk-close-note"
+                {{on "input" this.updateCloseNote}}
+                {{autoFocus}}
+              >{{this.closeNote}}</textarea>
+            </div>
+          {{/if}}
+        </ConditionalLoadingSection>
       </:body>
 
       <:footer>
@@ -270,15 +366,23 @@ export default class BulkTopicActions extends Component {
               for="topic-bulk-action-options__silent"
               class="checkbox-label"
             >
-              <input
-                class=""
+              <Input
                 id="topic-bulk-action-options__silent"
-                type="checkbox"
+                @type="checkbox"
+                @checked={{this.isSilent}}
               />{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
+
+        <DButton
+          @action={{@closeModal}}
+          @label="cancel"
+          class="btn-transparent d-modal-cancel"
+          id="bulk-topics-cancel"
+        />
         <DButton
           @action={{this.performAction}}
+          @disabled={{this.loading}}
           @icon="check"
           @label="topics.bulk.confirm"
           id="bulk-topics-confirm"

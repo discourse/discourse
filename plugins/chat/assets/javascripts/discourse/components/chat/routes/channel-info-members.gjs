@@ -4,7 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DiscourseURL, { userPath } from "discourse/lib/url";
@@ -176,6 +176,8 @@ export default class ChatRouteChannelInfoMembers extends Component {
                 @user={{membership.user}}
                 @avatarSize="tiny"
                 @interactive={{false}}
+                @showStatus={{true}}
+                @showStatusDescription={{true}}
               />
             </li>
           {{else}}

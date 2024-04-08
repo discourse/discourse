@@ -2,7 +2,7 @@
 
 module ChatSDK
   class Thread
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     # Updates the title of a specified chat thread.
     #
@@ -48,10 +48,7 @@ module ChatSDK
         on_failed_policy(:ensure_thread_enabled) do
           raise "Threading is not enabled for this channel"
         end
-        on_failure do
-          p Chat::StepsInspector.new(result)
-          raise "Unexpected error"
-        end
+        on_failure { raise "Unexpected error" }
       end
     end
 
@@ -70,10 +67,7 @@ module ChatSDK
         end
         on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
         on_success { result.thread_instance }
-        on_failure do
-          p Chat::StepsInspector.new(result)
-          raise "Unexpected error"
-        end
+        on_failure { raise "Unexpected error" }
       end
     end
   end

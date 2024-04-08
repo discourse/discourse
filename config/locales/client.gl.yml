@@ -156,6 +156,7 @@ gl:
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
+    back_button: "Volver"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -810,9 +811,12 @@ gl:
       "14": "Pendente"
       "15": "Borradores"
     categories:
-      all: "todas as categorías"
-      all_subcategories: "todo"
-      no_subcategory: "ningunha"
+      categories_label: "categorías"
+      subcategories_label: "subcategorías"
+      no_subcategories: "sen subcategorías"
+      remove_filter: "eliminar filtro"
+      plus_more_count: "+%{count} máis"
+      view_all: "ver todos"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
       reorder:
@@ -960,7 +964,6 @@ gl:
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
-      enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
       experimental_sidebar:
         options: "Opcións"
         navigation_section: "Navegación"
@@ -1129,8 +1132,6 @@ gl:
           name_required_error: "Debe escribir un nome para a clave de seguranza."
       passkeys:
         save: "Gardar"
-        added_prefix: "Engadido"
-        last_used_prefix: "Último utilizado"
       change_about:
         title: "Cambiar «Verbo de min»"
         error: "Produciuse un erro ao cambiar este valor."
@@ -1235,6 +1236,8 @@ gl:
         instructions: "Idioma da interface do usuario. Cambiará cando actualice a páxina."
         default: "(predeterminado)"
         any: "calquera"
+      homepage:
+        default: "(predeterminado)"
       password_confirmation:
         title: "O contrasinal outra vez"
       invite_code:
@@ -1501,7 +1504,6 @@ gl:
       close: "pechar"
       dismiss_error: "Desbotar erro"
     close: "Pechar"
-    assets_changed_confirm: "O sitio acaba de recibir unha anovación de software. Obter a última versión agora?"
     logout: "Pechouselle a sesión."
     refresh: "Actualizar"
     home: "Inicio"
@@ -1682,6 +1684,9 @@ gl:
       alt: "Alt"
       enter: "Intro"
     category_row:
+      subcategory_count:
+        one: "+ %{count} subcategoría"
+        other: "+ %{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -1770,7 +1775,6 @@ gl:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
-      create_pm: "Mensaxe"
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
@@ -2062,7 +2066,6 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2116,6 +2119,20 @@ gl:
     topic_bulk_actions:
       close_topics:
         name: "Pechar temas"
+      archive_topics:
+        name: "Arquivar temas"
+      unlist_topics:
+        name: "Retirar temas da listaxe"
+      relist_topics:
+        name: "Refacer a listaxe de temas"
+      remove_tags:
+        name: "Retirar etiquetas"
+      append_tags:
+        name: "Anexar etiquetas"
+      replace_tags:
+        name: "Substituír etiquetas"
+      delete_topics:
+        name: "Eliminar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -2130,9 +2147,6 @@ gl:
       move_to_inbox:
         title: "Mover á caixa de entrada"
         help: "Mover mensaxes á caixa de entrada"
-      defer:
-        help: "Marcar como non lido"
-        title: "Adiar"
       list: "Temas"
       new: "novo tema"
       unread: "pendente"
@@ -3057,7 +3071,6 @@ gl:
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
         help: "%{shortcut} Abrir a axuda do teclado"
-        dismiss_topics: "%{shortcut} Desbotar temas"
         log_out: "%{shortcut} Saír da sesión"
       composing:
         title: "Escribindo"
@@ -3095,7 +3108,6 @@ gl:
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
-        defer: "%{shortcut} Adiar o tema"
         topic_admin_actions: "%{shortcut} Abrir intervencións do admin no tema"
       search_menu:
         title: "Menú de busca"
@@ -3133,8 +3145,10 @@ gl:
       download: "Descargar"
     tagging:
       other_tags: "Outras etiquetas"
+      selector_tags: "etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
+      selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
@@ -3320,13 +3334,14 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+      filter: "Filtro"
     until: "Ata:"
     form_templates:
       upload_field:
         upload: "Cargar"
         uploading: "Cargando"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
     table_builder:
@@ -3345,6 +3360,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      filter_reports: Filtrar informes
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3352,6 +3368,9 @@ gl:
           never: "nunca"
       reports:
         title: "Listaxe dos informes dispoñíbeis"
+        sidebar_title: "Informes"
+        sidebar_link:
+          all: "Todas"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3360,10 +3379,8 @@ gl:
         up_to_date: "Está actualizado/a!"
         critical_available: "Está dispoñíbel unha actualización crítica."
         updates_available: "Hai actualizacións dispoñíbeis."
-        please_upgrade: "Por favor, actualice!"
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
-        version_check_pending: "Parece que actualizou recentemente. Caralludo!"
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
@@ -3407,7 +3424,6 @@ gl:
         exception_error: Sentímolo pero produciuse un erro ao executar a consulta
         too_many_requests: Executou esta acción demasiadas veces. Agarde antes de volvelo tentar.
         not_found_error: Sentímolo pero o informe non existe
-        filter_reports: Filtrar informes
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -3617,6 +3633,50 @@ gl:
           timestamp: "Creado"
           completion: "Tempo para completar"
           actions: "Accións"
+      home:
+        title: "Inicio"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Copias de seguranza"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Insignias"
+          notifications: "Notificacións"
+          permalinks: "Ligazóns permanentes"
+          trust_levels: "Niveis de confianza"
+          users: "Usuarios"
+          user_fields: "Campos do usuario"
+          watched_words: "Palabras observadas"
+          legal: "Legal"
+      appearance:
+        title: "Aparencia"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes: "Temas"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparencia"
+          preview_summary: "Visualización do compendio"
+      email_logs:
+        sidebar_link:
+          sent: "Enviada"
+          skipped: "Saltada"
+          bounced: "Rebotada"
+          received: "Recibidas"
+          rejected: "Rexeitada"
+      security:
+        title: "Seguranza"
+        sidebar_link:
+          error_logs: "Rexistros de erros"
+          screened_emails: "Correos controlados"
+          screened_ips: "IP controlados"
+          screened_urls: "URL controlados"
+          search_logs: "Buscar rexistros"
+          security: "Seguranza"
+          spam: "Lixo"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"
@@ -3630,6 +3690,19 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        sidebar_link:
+          installed: "Instalado"
+      advanced:
+        sidebar_link:
+          developer: "Desenvolvedor"
+          embedding: "Incorporando"
+          rate_limits: "Límites de frecuencia"
+          user_api: "API de usuario"
+          web_hooks: "Enganches de web (webhooks)"
+          onebox: "Onebox"
+          files: "Ficheiros"
+          other_options: "Outro"
+          search: "Buscar"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3652,6 +3725,7 @@ gl:
           title: "Cargar unha copia de seguranza a esta instancia"
           success: "Cargouse correctamente «%{filename}». O ficheiro está agora sendo procesado e tardará ata un minuto en aparecer na lista."
           error: "Produciuse un erro durante a carga de «%{filename}»: %{message}"
+        settings: "Configuración"
         operations:
           failed: "Produciuse un fallo %{operation} . Revisa os rexistros."
           cancel:
@@ -3885,6 +3959,14 @@ gl:
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
+          schema:
+            fields:
+              required: "*obrigatorio"
+              string:
+                too_short: "debe ter polo menos %{count} caracteres"
+              number:
+                too_small: "debe ser igual ou maior que %{count}"
+                too_large: "debe ser igual ou menor que %{count}"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -4716,6 +4798,7 @@ gl:
         image: "Imaxe"
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"
+        settings: "Configuración"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         confirm_delete: "Confirma a eliminación deste servidor?"
