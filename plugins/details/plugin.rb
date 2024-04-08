@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# name: discourse-details
+# name: details
 # about: HTML5.1 Details polyfill for Discourse
 # version: 0.4
 # authors: Régis Hanol
-# url: https://github.com/discourse/discourse/tree/main/plugins/discourse-details
+# url: https://github.com/discourse/discourse/tree/main/plugins/details
 
 enabled_site_setting :details_enabled
 hide_plugin

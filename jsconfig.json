@@ -41,9 +41,9 @@
         "./plugins/checklist/assets/javascripts/*",
         "./plugins/checklist/test/javascripts/*"
       ],
-      "discourse/plugins/discourse-details/*": [
-        "./plugins/discourse-details/assets/javascripts/*",
-        "./plugins/discourse-details/test/javascripts/*"
+      "discourse/plugins/details/*": [
+        "./plugins/details/assets/javascripts/*",
+        "./plugins/details/test/javascripts/*"
       ],
       "discourse/plugins/discourse-lazy-videos/*": [
         "./plugins/discourse-lazy-videos/assets/javascripts/*",
@@ -85,8 +85,8 @@
     "./plugins/chat/test/javascripts",
     "./plugins/checklist/assets/javascripts",
     "./plugins/checklist/test/javascripts",
-    "./plugins/discourse-details/assets/javascripts",
-    "./plugins/discourse-details/test/javascripts",
+    "./plugins/details/assets/javascripts",
+    "./plugins/details/test/javascripts",
     "./plugins/discourse-lazy-videos/assets/javascripts",
     "./plugins/discourse-lazy-videos/test/javascripts",
     "./plugins/discourse-local-dates/assets/javascripts",

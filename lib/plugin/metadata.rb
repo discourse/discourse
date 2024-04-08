@@ -28,7 +28,6 @@ class Plugin::Metadata
         discourse-code-review
         discourse-crowd
         discourse-data-explorer
-        discourse-details
         discourse-docs
         discourse-encrypt
         discourse-follow
@@ -42,12 +41,14 @@ class Plugin::Metadata
         discourse-invite-tokens
         discourse-jira
         discourse-lazy-videos
+        discourse-linkedin-auth
         discourse-local-dates
         discourse-login-with-amazon
         discourse-logster-rate-limit-checker
         discourse-logster-transporter
         discourse-lti
         discourse-math
+        discourse-microsoft-auth
         discourse-moderator-attention
         discourse-narrative-bot
         discourse-newsletter-integration
@@ -56,8 +57,6 @@ class Plugin::Metadata
         discourse-openid-connect
         discourse-patreon
         discourse-perspective-api
-        discourse-linkedin-auth
-        discourse-microsoft-auth
         discourse-policy
         discourse-post-voting
         discourse-presence
@@ -91,13 +90,14 @@ class Plugin::Metadata
         discourse-zendesk-plugin
         discourse-zoom
         automation
-        docker_manager
         chat
-        poll
-        styleguide
         checklist
+        details
+        docker_manager
         footnote
+        poll
         spoiler-alert
+        styleguide
       ],
     )
 

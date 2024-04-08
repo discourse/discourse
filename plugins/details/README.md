@@ -1,4 +1,4 @@
-### discourse-details
+### details
 
 HTML 5.1 `<details>` polyfill for [Discourse](https://www.discourse.org).
 
@@ -12,11 +12,6 @@ For example:
 ``` text
    I watched the murder mystery on TV last night. [details=Who did it?]The butler did it[/details].
 ```
-
-## Installation
-
-Follow our [Install a Plugin](https://meta.discourse.org/t/install-a-plugin/19157) howto, using
-`git clone https://github.com/discourse/discourse-details.git` as the plugin command.
 
 ## Issues
 
