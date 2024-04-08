@@ -309,6 +309,23 @@ export default class SidebarSectionForm extends Component {
   }
 
   update() {
+    this.model?.section?.public || this.transformedModel.public
+      ? this.#updateWithConfirm()
+      : this.#updateCall();
+  }
+
+  #updateWithConfirm() {
+    return this.dialog.yesNoConfirm({
+      message: this.transformedModel.public
+        ? I18n.t("sidebar.sections.custom.update_public_confirm")
+        : I18n.t("sidebar.sections.custom.mark_as_private_confirm"),
+      didConfirm: () => {
+        return this.#updateCall();
+      },
+    });
+  }
+
+  #updateCall() {
     return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
       type: "PUT",
       contentType: "application/json",
@@ -471,6 +488,9 @@ export default class SidebarSectionForm extends Component {
             this.flashType = "error";
           });
       },
+      didCancel: () => {
+        this.closeModal();
+      },
     });
   }
 
@@ -482,7 +502,9 @@ export default class SidebarSectionForm extends Component {
   @action
   delete() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("sidebar.sections.custom.delete_confirm"),
+      message: this.model.section.public
+        ? I18n.t("sidebar.sections.custom.delete_public_confirm")
+        : I18n.t("sidebar.sections.custom.delete_confirm"),
       didConfirm: () => {
         return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
           type: "DELETE",

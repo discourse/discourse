@@ -31,6 +31,10 @@ module PageObjects
         find(".dialog-container .btn-primary").click
       end
 
+      def confirm_update
+        find(".dialog-container .btn-primary").click
+      end
+
       def reset
         find(".reset-link").click
         find(".dialog-footer .btn-primary").click
@@ -40,7 +44,6 @@ module PageObjects
 
       def save
         find("#save-section").click
-        closed?
         self
       end
 
