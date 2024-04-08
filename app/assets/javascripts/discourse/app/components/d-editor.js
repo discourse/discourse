@@ -6,7 +6,7 @@ import ItsATrap from "@discourse/itsatrap";
 import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
-import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
@@ -450,7 +450,6 @@ export default Component.extend(TextareaTextManipulation, {
       const cookedElement = previewElement.cloneNode(false);
       cookedElement.innerHTML = cooked;
 
-      // Same order of operation as in the "previewUpdated" method in "composer-editor.js"
       linkSeenMentions(cookedElement, this.siteSettings);
 
       linkSeenHashtagsInContext(
@@ -464,11 +463,17 @@ export default Component.extend(TextareaTextManipulation, {
         this.topicId,
         this.categoryId,
         this.siteSettings.max_oneboxes_per_post,
-        false,
-        true
+        /* refresh */ false,
+        /* offline */ true
       );
 
-      resolveCachedShortUrls(this.siteSettings, cookedElement);
+      resolveAllShortUrls(ajax, this.siteSettings, cookedElement);
+
+      // trigger all the "api.decorateCookedElement"
+      this.appEvents.trigger(
+        "decorate-non-stream-cooked-element",
+        cookedElement
+      );
 
       (await import("morphlex")).morph(
         previewElement,
