@@ -63,6 +63,9 @@ en:
       post:
         title: Create a post
         description: Create a post on a specified topic
+      topic:
+        title: Create a topic
+        description: Create a topic as a specific user
       flag_post_on_words:
         title: Flag post on words
         description: Flags a post if it contains specified words
