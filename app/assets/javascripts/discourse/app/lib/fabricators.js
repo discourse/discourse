@@ -22,7 +22,7 @@ export default class CoreFabricators {
   constructor(owner) {
     if (owner && !(owner instanceof ApplicationInstance)) {
       throw new Error(
-        "First argument of DObject constructor must be the owning ApplicationInstance"
+        "First argument of CoreFabricators constructor must be the owning ApplicationInstance"
       );
     }
 

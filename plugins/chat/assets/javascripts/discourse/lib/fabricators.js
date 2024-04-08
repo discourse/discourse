@@ -22,7 +22,7 @@ export default class ChatFabricators {
   constructor(owner) {
     if (owner && !(owner instanceof ApplicationInstance)) {
       throw new Error(
-        "First argument of DObject constructor must be the owning ApplicationInstance"
+        "First argument of ChatFabricators constructor must be the owning ApplicationInstance"
       );
     }
     setOwner(this, owner);

@@ -15,7 +15,7 @@ export default class AutomationFabricators {
   constructor(owner) {
     if (owner && !(owner instanceof ApplicationInstance)) {
       throw new Error(
-        "First argument of DObject constructor must be the owning ApplicationInstance"
+        "First argument of AutomationFabricators constructor must be the owning ApplicationInstance"
       );
     }
     setOwner(this, owner);
