@@ -4,7 +4,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import AutomationFabricators from "discourse/plugins/automation/discourse/lib/fabricators";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-text-list-field", function (hooks) {
   setupRenderingTest(hooks);

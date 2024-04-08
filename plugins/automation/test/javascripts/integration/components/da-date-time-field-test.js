@@ -3,7 +3,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AutomationFabricators from "discourse/plugins/automation/discourse/lib/fabricators";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-date-time-field", function (hooks) {
   setupRenderingTest(hooks);
