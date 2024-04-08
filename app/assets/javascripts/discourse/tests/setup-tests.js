@@ -48,7 +48,8 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
 import { loadSprites } from "../lib/svg-sprite-loader";
-import loadFaker from "discourse/lib/load-faker";
+import * as FakerModule from "@faker-js/faker";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -228,7 +229,7 @@ function writeSummaryLine(message) {
   }
 }
 
-export default async function setupTests(config) {
+export default function setupTests(config) {
   disableCloaking();
 
   setupDeprecationCounter(QUnit);
@@ -434,7 +435,7 @@ export default async function setupTests(config) {
     );
   }
 
-  await loadFaker(); // so that we can use it synchronously in tests
+  setLoadedFaker(FakerModule);
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
