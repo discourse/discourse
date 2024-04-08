@@ -113,7 +113,7 @@ RSpec.describe "Move message to channel", type: :system do
         chat_page.visit_thread(channel_2.threads.first)
         chat_page.find(".chat-message .chat-message-thread-indicator").click
         thread.replies.each do |reply|
-          expect(thread_page.messages).to have_message(text: reply.message)
+          expect(thread_page.messages).to have_message(id: reply.id)
         end
 
         chat_page.visit_channel(channel_1)
