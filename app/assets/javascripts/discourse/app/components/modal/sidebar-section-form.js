@@ -166,17 +166,6 @@ class SectionLink {
     return this.value === undefined || this.validValue ? "" : "warning";
   }
 
-  get external() {
-    return (
-      this.value &&
-      !(
-        this.value.startsWith(this.httpHost) ||
-        this.value.startsWith(this.httpsHost) ||
-        this.value.startsWith("/")
-      )
-    );
-  }
-
   get isPrimary() {
     return this.segment === "primary";
   }
