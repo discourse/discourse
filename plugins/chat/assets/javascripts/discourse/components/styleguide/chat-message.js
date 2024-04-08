@@ -32,7 +32,7 @@ export default class ChatStyleguideChatMessage extends Component {
     if (this.message.bookmark) {
       this.message.bookmark = null;
     } else {
-      this.message.bookmark = fabricators.bookmark();
+      this.message.bookmark = new ChatFabricators(getOwner(this)).bookmark();
     }
   }
 
@@ -57,7 +57,7 @@ export default class ChatStyleguideChatMessage extends Component {
       this.message.channel.threadingEnabled = false;
       this.message.thread = null;
     } else {
-      this.message.thread = fabricators.thread({
+      this.message.thread = new ChatFabricators(getOwner(this)).thread({
         channel: this.message.channel,
       });
       this.message.thread.preview.replyCount = 1;
@@ -77,8 +77,11 @@ export default class ChatStyleguideChatMessage extends Component {
       this.message.reactions = [];
     } else {
       this.message.reactions = [
-        fabricators.reaction({ emoji: "heart" }),
-        fabricators.reaction({ emoji: "rocket", reacted: true }),
+        new ChatFabricators(getOwner(this)).reaction({ emoji: "heart" }),
+        new ChatFabricators(getOwner(this)).reaction({
+          emoji: "rocket",
+          reacted: true,
+        }),
       ];
     }
   }
@@ -88,7 +91,10 @@ export default class ChatStyleguideChatMessage extends Component {
     if (this.message.uploads?.length) {
       this.message.uploads = [];
     } else {
-      this.message.uploads = [fabricators.upload(), fabricators.upload()];
+      this.message.uploads = [
+        new ChatFabricators(getOwner(this)).upload(),
+        new ChatFabricators(getOwner(this)).upload(),
+      ];
     }
   }
 }
