@@ -154,7 +154,8 @@ module Migrations
         end
 
       @output_stream.puts ""
-      @output_stream.puts "CREATE TABLE #{name} ("
+      @output_stream.puts "CREATE TABLE #{name}"
+      @output_stream.puts "("
 
       if !composite_key && primary_key.present?
         primary_key_column = column_records.find { |c| c.name == primary_key }
@@ -178,7 +179,9 @@ module Migrations
         column_definitions << generate_column_definition(column)
       end
 
-      column_definitions << "  PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
+      format_columns!(column_definitions)
+
+      column_definitions << "    PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
 
       @output_stream.puts column_definitions.join(",\n")
       @output_stream.puts ");"
@@ -197,6 +200,24 @@ module Migrations
       end
     ensure
       db.close if db
+    end
+
+    def format_columns!(column_definitions)
+      column_definitions.map! do |c|
+        c.match(
+          /^\s*(?<name>\w+)\s(?<datatype>\w+)\s?(?<nullable>NOT NULL)?\s?(?<primary_key>PRIMARY KEY)?/,
+        ).named_captures
+      end
+
+      max_name_length = column_definitions.map { |c| c["name"].length }.max
+      max_datatype_length = column_definitions.map { |c| c["datatype"].length }.max
+
+      column_definitions.sort_by! do |c|
+        [c["primary_key"] ? 0 : 1, c["nullable"] ? 0 : 1, c["name"]]
+      end
+      column_definitions.map! do |c|
+        "    #{c["name"].ljust(max_name_length)} #{c["datatype"].ljust(max_datatype_length)} #{c["nullable"]} #{c["primary_key"]}".rstrip
+      end
     end
 
     class CustomColumn
