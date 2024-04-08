@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;
@@ -12,7 +13,9 @@ export default class ChatStyleguideChatMessage extends Component {
 
   constructor() {
     super(...arguments);
-    this.message = fabricators.message({ user: this.currentUser });
+    this.message = new ChatFabricators(getOwner(this)).message({
+      user: this.currentUser,
+    });
     this.message.cook();
   }
 

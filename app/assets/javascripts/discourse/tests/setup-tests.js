@@ -48,6 +48,7 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
 import { loadSprites } from "../lib/svg-sprite-loader";
+import loadFaker from "discourse/lib/load-faker";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -227,7 +228,7 @@ function writeSummaryLine(message) {
   }
 }
 
-export default function setupTests(config) {
+export default async function setupTests(config) {
   disableCloaking();
 
   setupDeprecationCounter(QUnit);
@@ -432,6 +433,8 @@ export default function setupTests(config) {
       "fontawesome"
     );
   }
+
+  await loadFaker();
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();

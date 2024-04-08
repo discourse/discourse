@@ -1,16 +1,17 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import fabricators from "discourse/plugins/automation/discourse/lib/fabricators";
+import AutomationFabricators from "discourse/plugins/automation/discourse/lib/fabricators";
 
 module("Integration | Component | da-custom-field", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.automation = fabricators.automation();
+    this.automation = new AutomationFabricators(getOwner(this)).automation();
 
     pretender.get("/admin/customize/user_fields", () => {
       return response({
@@ -33,7 +34,9 @@ module("Integration | Component | da-custom-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    this.field = fabricators.field({ component: "custom_field" });
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "custom_field",
+    });
 
     await render(
       hbs`<AutomationField @automation={{this.automation}} @field={{this.field}} />`

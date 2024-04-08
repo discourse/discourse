@@ -4,11 +4,10 @@ The following fabricators are available in lib folder to allow
 styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
-
-import Bookmark from "discourse/models/bookmark";
+import { setOwner } from "@ember/application";
+import ApplicationInstance from "@ember/application/instance";
+import CoreFabricators, { incrementSequence } from "discourse/lib/fabricators";
 import Category from "discourse/models/category";
-import Group from "discourse/models/group";
-import User from "discourse/models/user";
 import ChatChannel, {
   CHANNEL_STATUSES,
   CHATABLE_TYPES,
@@ -19,184 +18,134 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-me
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 
-let sequence = 0;
-
-function messageFabricator(args = {}) {
-  const channel = args.channel || channelFabricator();
-
-  const message = ChatMessage.create(
-    channel,
-    Object.assign(
-      {
-        id: args.id || sequence++,
-        user: args.user || userFabricator(),
-        message:
-          args.message ||
-          "@discobot **abc**defghijklmnopqrstuvwxyz [discourse](discourse.org) :rocket: ",
-        created_at: args.created_at || moment(),
-      },
-      args
-    )
-  );
-
-  const excerptLength = 50;
-  const text = message.message.toString();
-  if (text.length <= excerptLength) {
-    message.excerpt = text;
-  } else {
-    message.excerpt = text.slice(0, excerptLength) + "...";
+export default class ChatFabricators {
+  constructor(owner) {
+    if (owner && !(owner instanceof ApplicationInstance)) {
+      throw new Error(
+        "First argument of DObject constructor must be the owning ApplicationInstance"
+      );
+    }
+    setOwner(this, owner);
+    this.coreFabricators = new CoreFabricators(owner);
   }
 
-  return message;
-}
+  message(args = {}) {
+    const channel = args.channel || this.channel();
 
-function channelFabricator(args = {}) {
-  const id = args.id || sequence++;
-  const chatable = args.chatable || categoryFabricator();
+    const message = ChatMessage.create(
+      channel,
+      Object.assign(
+        {
+          id: args.id || incrementSequence(),
+          user: args.user || this.coreFabricators.user(),
+          message:
+            args.message ||
+            "@discobot **abc**defghijklmnopqrstuvwxyz [discourse](discourse.org) :rocket: ",
+          created_at: args.created_at || moment(),
+        },
+        args
+      )
+    );
 
-  const channel = ChatChannel.create({
-    id,
-    chatable_type:
-      (chatable instanceof Category
-        ? CHATABLE_TYPES.categoryChannel
-        : CHATABLE_TYPES.directMessageChannel) ||
-      chatable?.type ||
-      args.chatable_type,
-    chatable_id: chatable?.id || args.chatable_id,
-    title: args.title
-      ? args.title
-      : chatable instanceof Category
-      ? "General"
-      : null,
-    description: args.description,
-    chatable,
-    status: args.status || CHANNEL_STATUSES.open,
-    slug: chatable?.slug || chatable instanceof Category ? "general" : null,
-    meta: Object.assign({ can_delete_self: true }, args.meta || {}),
-    archive_failed: args.archive_failed ?? false,
-    memberships_count: args.memberships_count ?? 0,
-  });
+    const excerptLength = 50;
+    const text = message.message.toString();
+    if (text.length <= excerptLength) {
+      message.excerpt = text;
+    } else {
+      message.excerpt = text.slice(0, excerptLength) + "...";
+    }
 
-  channel.lastMessage = messageFabricator({ channel });
+    return message;
+  }
 
-  return channel;
-}
+  channel(args = {}) {
+    const id = args.id || incrementSequence();
+    const chatable = args.chatable || this.coreFabricators.category();
 
-function categoryFabricator(args = {}) {
-  return Category.create({
-    id: args.id || sequence++,
-    color: args.color || "D56353",
-    read_restricted: args.read_restricted ?? false,
-    name: args.name || "General",
-    slug: args.slug || "general",
-  });
-}
-
-function directMessageFabricator(args = {}) {
-  return ChatDirectMessage.create({
-    group: args.group ?? false,
-    users: args.users ?? [userFabricator(), userFabricator()],
-  });
-}
-
-function directMessageChannelFabricator(args = {}) {
-  const directMessage =
-    args.chatable ||
-    directMessageFabricator({
-      id: args.chatable_id || sequence++,
-      group: args.group ?? false,
-      users: args.users,
+    const channel = ChatChannel.create({
+      id,
+      chatable_type:
+        (chatable instanceof Category
+          ? CHATABLE_TYPES.categoryChannel
+          : CHATABLE_TYPES.directMessageChannel) ||
+        chatable?.type ||
+        args.chatable_type,
+      chatable_id: chatable?.id || args.chatable_id,
+      title: args.title
+        ? args.title
+        : chatable instanceof Category
+        ? chatable.name
+        : null,
+      description: args.description,
+      chatable,
+      status: args.status || CHANNEL_STATUSES.open,
+      slug:
+        chatable?.slug || chatable instanceof Category ? chatable.slugt : null,
+      meta: Object.assign({ can_delete_self: true }, args.meta || {}),
+      archive_failed: args.archive_failed ?? false,
+      memberships_count: args.memberships_count ?? 0,
     });
 
-  return channelFabricator(
-    Object.assign(args, {
-      chatable_type: CHATABLE_TYPES.directMessageChannel,
-      chatable_id: directMessage.id,
-      chatable: directMessage,
-      memberships_count: directMessage.users.length,
-    })
-  );
-}
+    channel.lastMessage = this.message({ channel });
 
-function userFabricator(args = {}) {
-  return User.create({
-    id: args.id || sequence++,
-    username: args.username || "hawk",
-    name: args.name,
-    avatar_template: "/letter_avatar_proxy/v3/letter/t/41988e/{size}.png",
-    suspended_till: args.suspended_till,
-  });
-}
+    return channel;
+  }
 
-function bookmarkFabricator(args = {}) {
-  return Bookmark.create({
-    id: args.id || sequence++,
-  });
-}
+  directMessage(args = {}) {
+    return ChatDirectMessage.create({
+      group: args.group ?? false,
+      users: args.users ?? [
+        this.coreFabricators.user(),
+        this.coreFabricators.user(),
+      ],
+    });
+  }
 
-function threadFabricator(args = {}) {
-  const channel = args.channel || channelFabricator();
-  return ChatThread.create(channel, {
-    id: args.id || sequence++,
-    title: args.title,
-    original_message: args.original_message || messageFabricator({ channel }),
-    preview: args.preview || threadPreviewFabricator({ channel }),
-  });
-}
-function threadPreviewFabricator(args = {}) {
-  return ChatThreadPreview.create({
-    last_reply_id: args.last_reply_id || sequence++,
-    last_reply_created_at: args.last_reply_created_at || Date.now(),
-    last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
-    participant_count: args.participant_count ?? 0,
-    participant_users: args.participant_users ?? [],
-  });
-}
+  directMessageChannel(args = {}) {
+    const directMessage =
+      args.chatable ||
+      this.directMessage({
+        id: args.chatable_id || incrementSequence(),
+        group: args.group ?? false,
+        users: args.users,
+      });
 
-function reactionFabricator(args = {}) {
-  return ChatMessageReaction.create({
-    count: args.count ?? 1,
-    users: args.users || [userFabricator()],
-    emoji: args.emoji || "heart",
-    reacted: args.reacted ?? false,
-  });
-}
+    return this.channel(
+      Object.assign(args, {
+        chatable_type: CHATABLE_TYPES.directMessageChannel,
+        chatable_id: directMessage.id,
+        chatable: directMessage,
+        memberships_count: directMessage.users.length,
+      })
+    );
+  }
 
-function groupFabricator(args = {}) {
-  return Group.create({
-    name: args.name || "Engineers",
-  });
-}
+  thread(args = {}) {
+    const channel = args.channel || this.channel();
+    return ChatThread.create(channel, {
+      id: args.id || incrementSequence(),
+      title: args.title,
+      original_message: args.original_message || this.message({ channel }),
+      preview: args.preview || this.threadPreview({ channel }),
+    });
+  }
 
-function uploadFabricator() {
-  return {
-    extension: "jpeg",
-    filesize: 126177,
-    height: 800,
-    human_filesize: "123 KB",
-    id: 202,
-    original_filename: "avatar.PNG.jpg",
-    retain_hours: null,
-    short_path: "/images/avatar.png",
-    short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-    thumbnail_height: 320,
-    thumbnail_width: 690,
-    url: "/images/avatar.png",
-    width: 1920,
-  };
-}
+  threadPreview(args = {}) {
+    return ChatThreadPreview.create({
+      last_reply_id: args.last_reply_id || incrementSequence(),
+      last_reply_created_at: args.last_reply_created_at || Date.now(),
+      last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
+      participant_count: args.participant_count ?? 0,
+      participant_users: args.participant_users ?? [],
+    });
+  }
 
-export default {
-  bookmark: bookmarkFabricator,
-  user: userFabricator,
-  channel: channelFabricator,
-  directMessageChannel: directMessageChannelFabricator,
-  message: messageFabricator,
-  thread: threadFabricator,
-  threadPreview: threadPreviewFabricator,
-  reaction: reactionFabricator,
-  upload: uploadFabricator,
-  category: categoryFabricator,
-  directMessage: directMessageFabricator,
-  group: groupFabricator,
-};
+  reaction(args = {}) {
+    return ChatMessageReaction.create({
+      count: args.count ?? 1,
+      users: args.users || [this.coreFabricators.user()],
+      emoji: args.emoji || "heart",
+      reacted: args.reacted ?? false,
+    });
+  }
+}

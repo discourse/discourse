@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatStyleguideChatComposer extends Component {
   @service chatChannelComposer;
   @service chatChannelPane;
 
-  channel = fabricators.channel({ id: -999 });
+  channel = new ChatFabricators(getOwner(this)).channel({ id: -999 });
 
   @action
   toggleDisabled() {
