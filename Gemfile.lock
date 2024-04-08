@@ -106,7 +106,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    css_parser (1.16.0)
+    css_parser (1.17.1)
       addressable
     date (3.3.4)
     debug_inspector (1.2.0)
