@@ -1,11 +1,13 @@
 import DiscourseURL from "discourse/lib/url";
 
+const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
+
 export function wantsNewWindow(e) {
   return (
     e.defaultPrevented ||
     e.isDefaultPrevented?.() ||
     e.shiftKey ||
-    e.metaKey ||
+    e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID ||
     e.ctrlKey ||
     e.button ||
     e.currentTarget?.target === "_blank"
