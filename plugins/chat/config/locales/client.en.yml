@@ -634,6 +634,11 @@ en:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title:
+        input_placeholder: "Tell others what this conversation is about..."
+        discourse_ai:
+          title: "Generate thread titles automatically"
+          description: "Check out %{url} to learn more about this and other enhancements to your Discourse experience."
       threads:
         open: "Open Thread"
         list: "Threads"
