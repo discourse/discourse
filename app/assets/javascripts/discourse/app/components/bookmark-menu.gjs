@@ -21,6 +21,8 @@ export default class BookmarkMenu extends Component {
   @service modal;
   @service currentUser;
   @service toasts;
+  @service site;
+
   @tracked quicksaved = false;
 
   bookmarkManager = this.args.bookmarkManager;
@@ -42,7 +44,7 @@ export default class BookmarkMenu extends Component {
   }
 
   get existingBookmark() {
-    return this.bookmarkManager.trackedBookmark.id
+    return this.bookmarkManager.trackedBookmark?.id
       ? this.bookmarkManager.trackedBookmark
       : null;
   }
@@ -86,7 +88,9 @@ export default class BookmarkMenu extends Component {
       // a bookmark, it switches to the other Edit/Delete menu.
       this.quicksaved = true;
       this.toasts.success({
+        showProgressBar: false,
         duration: 3000,
+        views: ["mobile"],
         data: { message: I18n.t("bookmarks.bookmarked_success") },
       });
     } catch (error) {
@@ -123,7 +127,11 @@ export default class BookmarkMenu extends Component {
       this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.toasts.success({
         duration: 3000,
-        data: { message: I18n.t("bookmarks.deleted_bookmark_success") },
+        showProgressBar: false,
+        data: {
+          icon: "trash-alt",
+          message: I18n.t("bookmarks.deleted_bookmark_success"),
+        },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -145,6 +153,8 @@ export default class BookmarkMenu extends Component {
         await this.bookmarkManager.save();
         this.toasts.success({
           duration: 3000,
+          showProgressBar: false,
+          views: ["mobile"],
           data: { message: I18n.t("bookmarks.reminder_set_success") },
         });
       } catch (error) {
@@ -156,6 +166,8 @@ export default class BookmarkMenu extends Component {
   }
 
   async _openBookmarkModal() {
+    this.dMenu.close();
+
     try {
       const closeData = await this.modal.show(BookmarkModal, {
         model: {
@@ -179,7 +191,6 @@ export default class BookmarkMenu extends Component {
       {{didInsert this.setReminderShortcuts}}
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
-      @arrow="true"
       class={{concatClass
         "bookmark widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
         (if this.existingBookmark "bookmarked")
@@ -189,6 +200,8 @@ export default class BookmarkMenu extends Component {
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
+      @modalForMobile={{true}}
+      @arrow={{false}}
     >
       <:trigger>
         {{#if this.existingBookmark.reminderAt}}
@@ -199,18 +212,31 @@ export default class BookmarkMenu extends Component {
       </:trigger>
       <:content>
         <div class="bookmark-menu__body">
+
+          {{#unless this.showEditDeleteMenu}}
+            <div class="bookmark-menu__title">{{icon "check-circle"}}<span
+              >{{i18n "bookmarks.bookmarked_success"}}</span>
+            </div>
+          {{/unless}}
+
           {{#if this.showEditDeleteMenu}}
+            {{#if this.site.mobileView}}
+              <div class="bookmark-menu__title">{{icon "bookmark"}}<span>{{i18n
+                    "bookmarks.bookmark"
+                  }}</span>
+              </div>
+            {{/if}}
             <ul class="bookmark-menu__actions">
               <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
                 <DButton
                   @icon="pencil-alt"
                   @label="edit"
                   @action={{this.onEditBookmark}}
-                  @class="bookmark-menu__row-btn btn-flat"
+                  @class="bookmark-menu__row-btn btn-transparent"
                 />
               </li>
               <li
-                class="bookmark-menu__row -remove"
+                class="bookmark-menu__row --remove"
                 role="button"
                 tabindex="0"
                 data-menu-option-id="delete"
@@ -219,7 +245,7 @@ export default class BookmarkMenu extends Component {
                   @icon="trash-alt"
                   @label="delete"
                   @action={{this.onRemoveBookmark}}
-                  @class="bookmark-menu__row-btn btn-flat"
+                  @class="bookmark-menu__row-btn btn-transparent btn-danger"
                 />
               </li>
             </ul>
@@ -237,7 +263,7 @@ export default class BookmarkMenu extends Component {
                     @label={{option.label}}
                     @translatedTitle={{this.reminderShortcutTimeTitle option}}
                     @action={{fn this.onChooseReminderOption option}}
-                    @class="bookmark-menu__row-btn btn-flat"
+                    @class="bookmark-menu__row-btn btn-transparent"
                   />
                 </li>
               {{/each}}

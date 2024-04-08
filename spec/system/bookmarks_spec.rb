@@ -40,7 +40,8 @@ describe "Bookmarking posts and topics", type: :system do
     expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
 
     bookmark_menu.click_menu_option("tomorrow")
-    expect(page).to have_content(I18n.t("js.bookmarks.reminder_set_success"))
+
+    expect(page).to have_no_css(".bookmark-menu-content")
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 

@@ -68,6 +68,7 @@ export const MENU = {
     onClose: null,
     onShow: null,
     onRegisterApi: null,
+    modalForMobile: false,
   },
   portalOutletId: "d-menu-portal-outlet",
 };
@@ -79,5 +80,7 @@ export const TOAST = {
     autoClose: true,
     duration: 3000,
     component: DDefaultToast,
+    showProgressBar: true,
+    views: ["desktop", "mobile"],
   },
 };
