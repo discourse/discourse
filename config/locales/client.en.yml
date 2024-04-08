@@ -1243,7 +1243,7 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
+      color_scheme_default_on_all_devices: "Set default color scheme on all my devices"
       color_scheme: "Color Scheme"
       color_schemes:
         default_description: "Theme default"
@@ -2850,7 +2850,7 @@ en:
           seen: I read
           unseen: I've not read
           wiki: are wiki
-          images: include image(s)
+          images: include images
           all_tags: All the above tags
         statuses:
           label: Where topics
@@ -4296,7 +4296,7 @@ en:
         filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
         toggle_bulk_select: "%{shortcut} Toggle bulk select"
-        dismiss: "%{shortcut} Dismiss selected topic(s)"
+        dismiss: "%{shortcut} Dismiss selected topics"
         x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
@@ -6606,7 +6606,7 @@ en:
           empty: "There are no pictures yet. Please upload one."
           upload:
             label: "Upload"
-            title: "Upload image(s)"
+            title: "Upload images"
         selectable_avatars:
           title: "List of avatars users can choose from"
         categories:
