@@ -40,6 +40,8 @@ import Message from "./chat-message";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
+const THREAD_TITLE_REPLIES_THRESHOLD = 5;
+
 export default class ChatThread extends Component {
   @service appEvents;
   @service capabilities;
@@ -217,7 +219,6 @@ export default class ChatThread extends Component {
     if (!result) {
       return;
     }
-
 
     const [messages, meta] = this.processMessages(this.args.thread, result);
     stackingContextFix(this.scrollable, () => {
@@ -537,7 +538,11 @@ export default class ChatThread extends Component {
   get canShowToast() {
     let threadReplyCount = this.messagesManager.messages.length - 1;
 
-    if (this.site.desktopView || this.args.thread.title || threadReplyCount < 2) {
+    if (
+      this.site.desktopView ||
+      this.args.thread.title ||
+      threadReplyCount < THREAD_TITLE_REPLIES_THRESHOLD
+    ) {
       return false;
     }
 
