@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
@@ -5,7 +6,7 @@ import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
@@ -16,7 +17,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   `;
 
   test("chat_webhook_event", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       chat_webhook_event: { username: "discobot" },
     });
 
@@ -33,7 +34,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("user", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
     });
 
@@ -46,7 +47,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("date", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       created_at: moment(),
     });
@@ -57,7 +58,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (with reminder)", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       bookmark: Bookmark.create({
         reminder_at: moment(),
@@ -73,12 +74,15 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (no reminder)", async function (assert) {
-    this.message = ChatMessage.create(fabricators.channel(), {
-      user: { username: "discobot" },
-      bookmark: Bookmark.create({
-        name: "some name",
-      }),
-    });
+    this.message = ChatMessage.create(
+      new ChatFabricators(getOwner(this)).channel(),
+      {
+        user: { username: "discobot" },
+        bookmark: Bookmark.create({
+          name: "some name",
+        }),
+      }
+    );
 
     await render(template);
 
@@ -87,7 +91,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
   test("user status", async function (assert) {
     const status = { description: "off to dentist", emoji: "tooth" };
-    this.message = fabricators.message({ user: { status } });
+    this.message = new ChatFabricators(getOwner(this)).message({
+      user: { status },
+    });
 
     await render(template);
 
@@ -95,7 +101,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("flag status", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       user_flag_status: 0,
     });
@@ -108,7 +114,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("reviewable", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       user_flag_status: 0,
     });
@@ -121,7 +127,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("with username classes", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: {
         username: "discobot",
         admin: true,
@@ -141,7 +147,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("without username classes", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
     });
 

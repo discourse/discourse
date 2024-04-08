@@ -1,5 +1,5 @@
 import { warn } from "@ember/debug";
-import { get } from "@ember/object";
+import { computed, get } from "@ember/object";
 import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -102,7 +102,14 @@ export default class Category extends RestModel {
     if (!id) {
       return;
     }
-    return Category._idMap()[id];
+
+    if (typeof id === "string") {
+      // eslint-disable-next-line no-console
+      console.warn("Category.findById called with a string ID");
+      id = parseInt(id, 10);
+    }
+
+    return Category._idMap().get(id);
   }
 
   static findByIds(ids = []) {
@@ -148,6 +155,10 @@ export default class Category extends RestModel {
     Site.current().set("loadedCategoryIds", loadedCategoryIds);
 
     return categories;
+  }
+
+  static async asyncFindById(id) {
+    return (await Category.asyncFindByIds([id]))[0];
   }
 
   static findBySlugAndParent(slug, parentCategory) {
@@ -430,6 +441,22 @@ export default class Category extends RestModel {
         })
       );
     }
+  }
+
+  @computed("parent_category_id", "site.categories.[]")
+  get parentCategory() {
+    if (this.parent_category_id) {
+      return Category.findById(this.parent_category_id);
+    }
+  }
+
+  set parentCategory(newParentCategory) {
+    this.set("parent_category_id", newParentCategory?.id);
+  }
+
+  @computed("site.categories.[]")
+  get subcategories() {
+    return this.site.categories.filterBy("parent_category_id", this.id);
   }
 
   @discourseComputed("required_tag_groups", "minimum_required_tags")

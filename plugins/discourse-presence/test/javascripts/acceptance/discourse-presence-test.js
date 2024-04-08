@@ -13,6 +13,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 acceptance("Discourse Presence Plugin", function (needs) {
   needs.user({ whisperer: true });
@@ -82,7 +83,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     const menu = selectKit(".toolbar-popup-menu-options");
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),

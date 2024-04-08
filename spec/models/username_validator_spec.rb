@@ -47,7 +47,7 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         *usernames,
-        error_message: I18n.t(:"user.username.short", min: min_username_length),
+        error_message: I18n.t(:"user.username.short", count: min_username_length),
       )
     end
 
@@ -62,7 +62,7 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "a" * (max_username_length + 1),
-        error_message: I18n.t(:"user.username.long", max: max_username_length),
+        error_message: I18n.t(:"user.username.long", count: max_username_length),
         failure_reason: "Should be invalid as username length > #{max_username_length}",
       )
     end
@@ -154,7 +154,7 @@ RSpec.describe UsernameValidator do
 
         expect_invalid(
           *usernames,
-          error_message: I18n.t(:"user.username.short", min: min_username_length),
+          error_message: I18n.t(:"user.username.short", count: min_username_length),
         )
       end
 
@@ -170,7 +170,7 @@ RSpec.describe UsernameValidator do
         expect_invalid(
           "ם" * (max_username_length + 1),
           "äl" * (max_username_length + 1),
-          error_message: I18n.t(:"user.username.long", max: max_username_length),
+          error_message: I18n.t(:"user.username.long", count: max_username_length),
           failure_reason: "Should be invalid as username length are > #{max_username_length}",
         )
       end

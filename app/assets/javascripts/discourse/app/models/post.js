@@ -74,9 +74,10 @@ export default class Post extends RestModel {
   }
 
   static loadRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) =>
-      EmberObject.create(result)
-    );
+    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) => {
+      result.categories?.forEach((c) => Site.current().updateCategory(c));
+      return EmberObject.create(result);
+    });
   }
 
   static hideRevision(postId, version) {

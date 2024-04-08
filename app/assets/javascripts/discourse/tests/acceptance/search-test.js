@@ -496,6 +496,10 @@ acceptance("Search - Authenticated", function (needs) {
     server.get("/t/2179.json", () => {
       return helper.response({});
     });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
+    });
   });
 
   test("full page search - the right filters are shown", async function (assert) {
@@ -1139,6 +1143,10 @@ acceptance("Search - assistant", function (needs) {
           },
         ],
       });
+    });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
     });
   });
 

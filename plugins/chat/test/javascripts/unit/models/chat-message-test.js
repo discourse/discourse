@@ -1,10 +1,14 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
-module("Discourse Chat | Unit |  Models | chat-message", function () {
+module("Discourse Chat | Unit |  Models | chat-message", function (hooks) {
+  setupTest(hooks);
+
   test(".persisted", function (assert) {
-    const channel = fabricators.channel();
+    const channel = new ChatFabricators(getOwner(this)).channel();
     let message = ChatMessage.create(channel, { id: null });
     assert.strictEqual(message.persisted, false);
 

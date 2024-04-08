@@ -7,10 +7,10 @@ class About
 
   class CategoryMods
     include ActiveModel::Serialization
-    attr_reader :category_id, :moderators
+    attr_reader :category, :moderators
 
-    def initialize(category_id, moderators)
-      @category_id = category_id
+    def initialize(category, moderators)
+      @category = category
       @moderators = moderators
     end
   end
@@ -85,9 +85,10 @@ class About
       ORDER BY c.position
     SQL
 
+    cats = Category.where(id: results.map(&:category_id)).index_by(&:id)
     mods = User.where(id: results.map(&:user_ids).flatten.uniq).index_by(&:id)
 
-    results.map { |row| CategoryMods.new(row.category_id, mods.values_at(*row.user_ids)) }
+    results.map { |row| CategoryMods.new(cats[row.category_id], mods.values_at(*row.user_ids)) }
   end
 
   def category_mods_limit
@@ -96,5 +97,13 @@ class About
 
   def category_mods_limit=(number)
     @category_mods_limit = number
+  end
+
+  def self.discourse_discover
+    @discourse_discover ||= {
+      enrolled: SiteSetting.include_in_discourse_discover?,
+      logo_url: UrlHelper.absolute(SiteSetting.site_logo_url),
+      locale: SiteSetting.default_locale,
+    }
   end
 end

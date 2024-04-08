@@ -7,7 +7,6 @@ RSpec.describe ThemeField do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     ThemeJavascriptCompiler.disable_terser!
-    SiteSetting.experimental_objects_type_for_theme_settings = true
   end
 
   after { ThemeJavascriptCompiler.enable_terser! }

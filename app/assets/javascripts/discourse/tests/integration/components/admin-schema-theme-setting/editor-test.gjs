@@ -641,20 +641,43 @@ module(
     });
 
     test("input fields of type enum", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            enum_field: {
+              type: "enum",
+              default: "awesome",
+              choices: ["nice", "cool", "awesome"],
+            },
+          },
+        },
+        value: [
+          {
+            enum_field: "awesome",
+          },
+          {
+            enum_field: "cool",
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
       const enumSelector = selectKit(
         `${inputFields.fields.enum_field.selector} .select-kit`
       );
+
       assert.strictEqual(enumSelector.header().value(), "awesome");
 
       await enumSelector.expand();
       await enumSelector.selectRowByValue("nice");
+
       assert.strictEqual(enumSelector.header().value(), "nice");
 
       const tree = new TreeFromDOM();
@@ -665,6 +688,10 @@ module(
 
       await click(tree.nodes[0].element);
       assert.strictEqual(enumSelector.header().value(), "nice");
+
+      await click(TOP_LEVEL_ADD_BTN);
+
+      assert.strictEqual(enumSelector.header().value(), "awesome");
     });
 
     test("input fields of type categories that is not required with min and max validations", async function (assert) {
@@ -1141,6 +1168,36 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
+    });
+
+    test("adding an object to the root list of objects which is empty by default", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+        value: [],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("something");
+      await click(TOP_LEVEL_ADD_BTN);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].textElement).hasText("something 1");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
     });
 
     test("adding an object to the root list of objects", async function (assert) {

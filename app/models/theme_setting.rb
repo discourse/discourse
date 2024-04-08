@@ -11,7 +11,6 @@ class ThemeSetting < ActiveRecord::Base
   MAXIMUM_JSON_VALUE_SIZE_BYTES = 0.5 * 1024 * 1024 # 0.5 MB
 
   validates_presence_of :name, :theme
-  before_validation :objects_type_enabled
   validates :data_type, inclusion: { in: TYPES_ENUM.values }
   validate :json_value_size, if: -> { self.data_type == TYPES_ENUM[:objects] }
   validates :name, length: { maximum: 255 }
@@ -48,13 +47,6 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   private
-
-  def objects_type_enabled
-    if self.data_type == ThemeSetting.types[:objects] &&
-         !SiteSetting.experimental_objects_type_for_theme_settings
-      self.data_type = nil
-    end
-  end
 
   def json_value_size
     if json_value.to_json.size > MAXIMUM_JSON_VALUE_SIZE_BYTES

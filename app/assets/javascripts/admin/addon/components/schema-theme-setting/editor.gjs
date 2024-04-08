@@ -144,8 +144,9 @@ export default class SchemaThemeSettingNewEditor extends Component {
 
   get fields() {
     const list = [];
+    const activeObject = this.activeData[this.activeIndex];
 
-    if (this.activeData.length !== 0) {
+    if (activeObject) {
       for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
         if (spec.type === "objects") {
           continue;
@@ -154,7 +155,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
         list.push({
           name,
           spec,
-          value: this.activeData[this.activeIndex][name],
+          value: activeObject[name],
           description: this.fieldDescription(name),
           label: this.fieldLabel(name),
         });

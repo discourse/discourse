@@ -384,6 +384,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-invisible",
           action: "toggleInvisible",
           icon: "far-eye-slash",
           label: "composer.toggle_unlisted",
@@ -394,6 +395,7 @@ export default class ComposerService extends Service {
       if (this.capabilities.touch) {
         options.push(
           this._setupPopupMenuOption({
+            name: "format-code",
             action: "applyFormatCode",
             icon: "code",
             label: "composer.code_title",
@@ -402,6 +404,7 @@ export default class ComposerService extends Service {
 
         options.push(
           this._setupPopupMenuOption({
+            name: "apply-unordered-list",
             action: "applyUnorderedList",
             icon: "list-ul",
             label: "composer.ulist_title",
@@ -410,6 +413,7 @@ export default class ComposerService extends Service {
 
         options.push(
           this._setupPopupMenuOption({
+            name: "apply-ordered-list",
             action: "applyOrderedList",
             icon: "list-ol",
             label: "composer.olist_title",
@@ -419,6 +423,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-whisper",
           action: "toggleWhisper",
           icon: "far-eye-slash",
           label: "composer.toggle_whisper",
@@ -428,6 +433,7 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "toggle-spreadsheet",
           action: "toggleSpreadsheet",
           icon: "table",
           label: "composer.insert_table",
@@ -653,13 +659,19 @@ export default class ComposerService extends Service {
   }
 
   @action
-  onPopupMenuAction(menuAction) {
-    if (typeof menuAction === "function") {
-      return menuAction(this.toolbarEvent);
+  onPopupMenuAction(menuItem) {
+    // menuItem is an object with keys name & action like so: { name: "toggle-invisible, action: "toggleInvisible" }
+    // `action` value can either be a string (to lookup action by) or a function to call
+    this.appEvents.trigger(
+      "composer:toolbar-popup-menu-button-clicked",
+      menuItem
+    );
+    if (typeof menuItem.action === "function") {
+      return menuItem.action(this.toolbarEvent);
     } else {
       return (
-        this.actions?.[menuAction]?.bind(this) || // Legacy-style contributions from themes/plugins
-        this[menuAction]
+        this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
+        this[menuItem.action]
       )();
     }
   }
@@ -1289,6 +1301,7 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.disableScopedCategory]
    @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
    @param {Number} [opts.prioritizedCategoryId]
+   @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipDraftCheck]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
@@ -1410,6 +1423,7 @@ export default class ComposerService extends Service {
       await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
+      this.appEvents.trigger("composer:open", { model: this.model });
     }
   }
 
@@ -1438,6 +1452,7 @@ export default class ComposerService extends Service {
     body,
     category,
     tags,
+    formTemplate,
     preferDraft = false,
   } = {}) {
     if (preferDraft && this.currentUser.has_topic_draft) {
@@ -1446,6 +1461,7 @@ export default class ComposerService extends Service {
       return this.open({
         prioritizedCategoryId: category?.id,
         topicCategoryId: category?.id,
+        formTemplateId: formTemplate?.id,
         topicTitle: title,
         topicBody: body,
         topicTags: tags,
@@ -1530,6 +1546,15 @@ export default class ComposerService extends Service {
 
     if (opts.topicBody) {
       this.model.set("reply", opts.topicBody);
+    }
+
+    if (
+      opts.formTemplateId &&
+      this.model
+        .get("category.form_template_ids")
+        ?.includes(opts.formTemplateId)
+    ) {
+      this.model.set("formTemplateId", opts.formTemplateId);
     }
 
     if (opts.prependText && !this.model.reply?.includes(opts.prependText)) {

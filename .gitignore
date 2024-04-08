@@ -40,6 +40,8 @@
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/discourse-lazy-videos/
+!/plugins/automation/
+/plugins/automation/gems
 !/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide

@@ -286,27 +286,32 @@ const DiscourseURL = EmberObject.extend({
 
   // Determines whether a URL is internal or not
   isInternal(url) {
-    if (url && url.length) {
-      if (url.startsWith("//")) {
-        url = "http:" + url;
-      }
-      if (url.startsWith("#")) {
-        return true;
-      }
-      if (url.startsWith("/")) {
-        return true;
-      }
-      if (url.startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^http/, "https").startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^https/, "http").startsWith(this.origin())) {
-        return true;
-      }
+    if (!url?.length) {
+      return false;
     }
-    return false;
+
+    if (url.startsWith("//")) {
+      url = "http:" + url;
+    }
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return (
+        url.startsWith(this.origin) ||
+        url.replace(/^http/, "https").startsWith(this.origin) ||
+        url.replace(/^https/, "http").startsWith(this.origin)
+      );
+    }
+
+    try {
+      const parsedUrl = new URL(url, this.origin);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+
+    return true;
   },
 
   /**
@@ -388,8 +393,8 @@ const DiscourseURL = EmberObject.extend({
   },
 
   // This has been extracted so it can be tested.
-  origin() {
-    let prefix = getURL("/");
+  get origin() {
+    const prefix = getURL("/");
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 

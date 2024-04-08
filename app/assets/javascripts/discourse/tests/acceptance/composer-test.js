@@ -616,7 +616,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
@@ -625,7 +625,7 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -633,14 +633,14 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     await click(".toggle-fullscreen");
 
     await menu.expand();
 
     assert.ok(
-      menu.rowByValue("toggleWhisper").exists(),
+      menu.rowByName(I18n.t("composer.toggle_whisper")).exists(),
       "whisper toggling is still present when going fullscreen"
     );
   });
@@ -728,8 +728,9 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await selectKit(".toolbar-popup-menu-options").expand();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-      "toggleWhisper"
+
+    await selectKit(".toolbar-popup-menu-options").selectRowByName(
+      I18n.t("composer.toggle_whisper")
     );
 
     assert.strictEqual(
@@ -748,8 +749,8 @@ acceptance("Composer", function (needs) {
     );
 
     await selectKit(".toolbar-popup-menu-options").expand();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-      "toggleInvisible"
+    await selectKit(".toolbar-popup-menu-options").selectRowByName(
+      I18n.t("composer.toggle_unlisted")
     );
 
     assert.ok(

@@ -73,7 +73,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_sections,
              :new_new_view_enabled?,
              :use_experimental_topic_bulk_actions?,
-             :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :glimmer_header_enabled?,
              :can_view_raw_email
