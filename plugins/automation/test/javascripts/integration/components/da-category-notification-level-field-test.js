@@ -1,9 +1,10 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import fabricators from "discourse/plugins/automation/discourse/lib/fabricators";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module(
   "Integration | Component | da-category-notification-level-field",
@@ -11,11 +12,11 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.automation = fabricators.automation();
+      this.automation = new AutomationFabricators(getOwner(this)).automation();
     });
 
     test("set value", async function (assert) {
-      this.field = fabricators.field({
+      this.field = new AutomationFabricators(getOwner(this)).field({
         component: "category_notification_level",
       });
 

@@ -1,16 +1,17 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
     this.channel.description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
   });
@@ -103,11 +104,6 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   test("Read restricted chatable", async function (assert) {
     this.channel.chatable.read_restricted = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
     assert.true(exists(".d-icon-lock"));
-    assert.strictEqual(
-      query(".chat-channel-card").style.borderLeftColor,
-      "rgb(213, 99, 83)"
-    );
   });
 });

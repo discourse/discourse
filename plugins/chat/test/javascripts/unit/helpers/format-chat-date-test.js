@@ -1,16 +1,17 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Unit | Helpers | format-chat-date", function (hooks) {
   setupRenderingTest(hooks);
 
   test("link to chat message", async function (assert) {
-    const channel = fabricators.channel();
-    this.message = fabricators.message({ channel });
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    this.message = new ChatFabricators(getOwner(this)).message({ channel });
 
     await render(hbs`{{format-chat-date this.message}}`);
 
@@ -21,9 +22,12 @@ module("Discourse Chat | Unit | Helpers | format-chat-date", function (hooks) {
   });
 
   test("link to chat message thread", async function (assert) {
-    const channel = fabricators.channel();
-    const thread = fabricators.thread();
-    this.message = fabricators.message({ channel, thread });
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    const thread = new ChatFabricators(getOwner(this)).thread();
+    this.message = new ChatFabricators(getOwner(this)).message({
+      channel,
+      thread,
+    });
 
     await render(
       hbs`{{format-chat-date this.message (hash threadContext=true)}}`

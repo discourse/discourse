@@ -1,9 +1,10 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | <Chat::DirectMessageButton />",
@@ -14,7 +15,7 @@ module(
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
-      this.user = fabricators.user();
+      this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
         hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
@@ -27,7 +28,7 @@ module(
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(false);
-      this.user = fabricators.user();
+      this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
         hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
@@ -43,7 +44,7 @@ module(
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
 
-      this.user = fabricators.user({
+      this.user = new CoreFabricators(getOwner(this)).user({
         suspended_till: moment().add(1, "year").toDate(),
       });
 
