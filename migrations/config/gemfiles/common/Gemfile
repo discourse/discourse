@@ -9,7 +9,10 @@ ruby ">= 3.2.2"
 gem "activesupport", "< 7.1", require: "active_support"
 
 # for SQLite
-gem "extralite-bundle", "~> 2.8", require: "extralite"
+gem "extralite-bundle",
+    "~> 2.8",
+    require: "extralite",
+    github: "digital-fabric/extralite"
 gem "lru_redux", "~> 1.1", require: false
 
 # for communication between process forks
