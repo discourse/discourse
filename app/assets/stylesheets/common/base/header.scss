@@ -16,6 +16,9 @@
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+
   > .wrap {
     box-sizing: border-box;
     width: 100%;
@@ -46,7 +49,7 @@
   }
 
   .title {
-    --d-logo-height: 2.667em;
+    --d-logo-height: 2em;
     display: flex;
     align-items: center;
     height: 100%;
@@ -425,6 +428,8 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode {
+  display: none;
+
   .bootstrap-mode {
     color: var(--primary-medium);
     font-size: var(--font-down-1);

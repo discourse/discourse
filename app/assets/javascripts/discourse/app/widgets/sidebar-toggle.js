@@ -2,7 +2,7 @@
 import { createWidget } from "discourse/widgets/widget";
 
 export default createWidget("sidebar-toggle", {
-  tagName: "span.header-sidebar-toggle",
+  tagName: "span.header-sidebar-toggle.hidden",
 
   html() {
     const attrs = this.attrs;

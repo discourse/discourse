@@ -15,9 +15,9 @@
   This causes the topic-post-badge to be considered the same word as "text"
   at the end of the link, preventing it from line wrapping onto its own line.
 --}}
-<td class='main-link clearfix topic-list-data' colspan="1">
+<td class='main-link clearfix topic-list-data' colspan="1" data-url="/t/{{topic.id}}">
   {{~raw-plugin-outlet name="topic-list-before-link"}}
-  <span class='link-top-line'>
+  <span class='link-top-line hidden'>
     {{~raw-plugin-outlet name="topic-list-before-status"}}
     {{~raw "topic-status" topic=topic}}
     {{~topic-link topic class="raw-link raw-topic-link"}}
@@ -32,7 +32,8 @@
       {{~raw "topic-post-badges" unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
   </span>
-  <div class="link-bottom-line">
+  <div style='height: .5em;'></div>
+  <div class="link-bottom-line hidden">
     {{#unless hideCategory}}
       {{#unless topic.isPinnedUncategorized}}
         {{~raw-plugin-outlet name="topic-list-before-category"}}
@@ -47,6 +48,10 @@
   </div>
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
+    {{!--
+      This doesn't work - figure
+      {{mount-widget "post-menu" args=topic}}
+     --}}
   {{/if}}
 
   {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
