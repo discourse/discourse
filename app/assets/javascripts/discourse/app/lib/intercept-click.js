@@ -9,7 +9,7 @@ export function wantsNewWindow(e) {
     e.shiftKey ||
     e.metaKey ||
     e.ctrlKey ||
-    e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID ||
+    (e.button && e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID) ||
     e.currentTarget?.target === "_blank"
   );
 }
