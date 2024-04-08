@@ -434,7 +434,7 @@ export default async function setupTests(config) {
     );
   }
 
-  await loadFaker();
+  await loadFaker(); // so that we can use it synchronously in tests
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
