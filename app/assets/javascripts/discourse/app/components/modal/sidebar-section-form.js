@@ -309,14 +309,14 @@ export default class SidebarSectionForm extends Component {
   }
 
   update() {
-    this.model?.section?.public || this.transformedModel.public
+    this.wasPublic || this.isPublic
       ? this.#updateWithConfirm()
       : this.#updateCall();
   }
 
   #updateWithConfirm() {
     return this.dialog.yesNoConfirm({
-      message: this.transformedModel.public
+      message: this.isPublic
         ? I18n.t("sidebar.sections.custom.update_public_confirm")
         : I18n.t("sidebar.sections.custom.mark_as_private_confirm"),
       didConfirm: () => {
@@ -379,6 +379,14 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
+  }
+
+  get isPublic() {
+    return this.transformedModel.public;
+  }
+
+  get wasPublic() {
+    return this.model?.section?.public;
   }
 
   @afterRender
