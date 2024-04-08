@@ -8,8 +8,8 @@ in a placeholder component. It should not be used for any other case.
 import { setOwner } from "@ember/application";
 import ApplicationInstance from "@ember/application/instance";
 import { incrementSequence } from "discourse/lib/fabricators";
-import Automation from "../admin/models/discourse-automation-automation";
-import Field from "../admin/models/discourse-automation-field";
+import Automation from "../models/discourse-automation-automation";
+import Field from "../models/discourse-automation-field";
 
 export default class AutomationFabricators {
   constructor(owner) {

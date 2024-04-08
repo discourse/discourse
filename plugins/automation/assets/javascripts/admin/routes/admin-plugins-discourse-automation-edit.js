@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import Field from "../admin/models/discourse-automation-field";
+import Field from "../models/discourse-automation-field";
 
 export default class AutomationEdit extends DiscourseRoute {
   controllerName = "admin-plugins-discourse-automation-edit";
