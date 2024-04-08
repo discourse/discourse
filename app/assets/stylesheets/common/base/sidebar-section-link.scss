@@ -62,6 +62,9 @@
     }
 
     .sidebar-section-link-content-text {
+      align-items: center;
+      display: inline-flex;
+
       @include ellipsis;
 
       .emoji {
