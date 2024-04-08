@@ -51,14 +51,22 @@ export default class ChatModalThreadSettings extends Component {
       @closeModal={{@closeModal}}
       class="chat-modal-thread-settings"
       @inline={{@inline}}
-      @title={{i18n "chat.thread_title.title"}}
+      @title={{i18n "chat.thread_title_modal.title"}}
     >
+      <:headerPrimaryAction>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.saveThread}}
+          @label="chat.save"
+          class="btn-transparent btn-primary"
+        />
+      </:headerPrimaryAction>
       <:body>
         <Input
           name="thread-title"
           class="chat-modal-thread-settings__title-input"
           maxlength="50"
-          placeholder={{i18n "chat.thread_title.input_placeholder"}}
+          placeholder={{i18n "chat.thread_title_modal.input_placeholder"}}
           @type="text"
           @value={{this.editedTitle}}
         />
@@ -68,24 +76,16 @@ export default class ChatModalThreadSettings extends Component {
 
         <div class="discourse-ai-cta">
           <p class="discourse-ai-cta__title">{{icon "info-circle"}}
-            {{i18n "chat.thread_title.discourse_ai.title"}}</p>
+            {{i18n "chat.thread_title_modal.discourse_ai.title"}}</p>
           <p class="discourse-ai-cta__description">{{htmlSafe
               (i18n
-                "chat.thread_title.discourse_ai.description"
+                "chat.thread_title_modal.discourse_ai.description"
                 url="<a href='https://www.discourse.org/ai' target='_blank'>Discourse AI</a>"
               )
             }}
           </p>
         </div>
       </:body>
-      <:headerPrimaryAction>
-        <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.saveThread}}
-          @label="chat.save"
-          class="btn-transparent btn-primary"
-        />
-      </:headerPrimaryAction>
     </DModal>
   </template>
 }

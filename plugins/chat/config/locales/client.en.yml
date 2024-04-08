@@ -634,7 +634,12 @@ en:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
-      thread_title:
+      thread_title_toast:
+        title: "Set a thread title"
+        message: "Help others discover this conversation."
+        dismiss_action: "Don't show again"
+        primary_action: "Set title"
+      thread_title_modal:
         title: "Set thread title"
         input_placeholder: "Tell others what this conversation is about..."
         discourse_ai:

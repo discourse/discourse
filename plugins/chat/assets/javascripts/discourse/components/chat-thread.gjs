@@ -13,6 +13,7 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
@@ -65,6 +66,13 @@ export default class ChatThread extends Component {
   @tracked uploadDropZone;
 
   scrollable = null;
+
+  toastText = {
+    title: I18n.t("chat.thread_title_toast.title"),
+    message: I18n.t("chat.thread_title_toast.message"),
+    dismissLabel: I18n.t("chat.thread_title_toast.dismiss_action"),
+    primaryLabel: I18n.t("chat.thread_title_toast.primary_action"),
+  };
 
   @action
   resetIdle() {
@@ -560,19 +568,18 @@ export default class ChatThread extends Component {
       duration: 5000,
       class: "thread-toast",
       data: {
-        title: "Set a thread title",
-        message: "Help others discover this conversation.",
-        progressBar: true,
+        title: this.toastText.title,
+        message: this.toastText.message,
         actions: [
           {
-            label: "Don't show again",
+            label: this.toastText.dismissLabel,
             class: "btn-link toast-hide",
             action: (toast) => {
               toast.close();
             },
           },
           {
-            label: "Set title",
+            label: this.toastText.primaryLabel,
             class: "btn-primary toast-action",
             action: (toast) => {
               this.modal.show(ThreadSettingsModal, {
