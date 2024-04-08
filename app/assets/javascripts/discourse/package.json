@@ -65,7 +65,7 @@
     "babel-import-util": "^2.0.1",
     "babel-plugin-ember-template-compilation": "^2.2.1",
     "bootstrap": "3.4.1",
-    "bootstrap-json": "1.0.0",
+    "custom-proxy": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "1.0.0",

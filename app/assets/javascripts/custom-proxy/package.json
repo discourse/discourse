@@ -1,5 +1,5 @@
 {
-  "name": "bootstrap-json",
+  "name": "custom-proxy",
   "version": "1.0.0",
   "description": "Express.js middleware which injects ember-cli asset URLs into Discourse's HTML",
   "author": "Discourse",

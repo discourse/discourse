@@ -59,7 +59,7 @@
   },
   "workspaces": [
     "app/assets/javascripts/admin",
-    "app/assets/javascripts/bootstrap-json",
+    "app/assets/javascripts/custom-proxy",
     "app/assets/javascripts/deprecation-silencer",
     "app/assets/javascripts/dialog-holder",
     "app/assets/javascripts/discourse",
