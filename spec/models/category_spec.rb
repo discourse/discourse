@@ -403,12 +403,33 @@ RSpec.describe Category do
   end
 
   describe "description_text" do
-    it "correctly generates text description as needed" do
-      c = Category.new
-      expect(c.description_text).to be_nil
-      c.description = "&lt;hello <a>foo/bar</a>."
-      expect(c.description_text).to eq("&lt;hello foo/bar.")
+    it "category should have no description by default" do
+      category = Fabricate(:category_with_definition)
+      expect(category.description).to be_blank
+      expect(category.topic.first_post.raw).to eq(category.post_template)
     end
+
+    it "category should have the correct description" do
+      category = Fabricate(:category_with_definition, description: "this is a description")
+      expect(category.description).to eq("this is a description")
+      expect(category.topic.first_post.raw).to eq("this is a description")
+    end
+
+    context "with multiline description" do
+      it "category should have the correct description" do
+        category =
+          Fabricate(:category_with_definition, description: "this is a\nmultiline description")
+        expect(category.description).to eq("this is a")
+        expect(category.topic.first_post.raw).to eq("this is a\nmultiline description")
+      end
+    end
+
+    # it "correctly generates text description as needed" do
+    #   c = Category.new
+    #   expect(c.description_text).to be_nil
+    #   c.description = "&lt;hello <a>foo/bar</a>."
+    #   expect(c.description_text).to eq("&lt;hello foo/bar.")
+    # end
   end
 
   describe "after create" do

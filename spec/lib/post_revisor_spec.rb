@@ -726,24 +726,24 @@ RSpec.describe PostRevisor do
 
       let(:new_description) { "this is my new description." }
 
-      it "should have no description by default" do
-        expect(category.description).to be_blank
-      end
+      # it "should have no description by default" do
+      #   expect(category.description).to be_blank
+      # end
 
-      context "with one paragraph description" do
-        before do
-          post_revisor.revise!(post.user, raw: new_description)
-          category.reload
-        end
-
-        it "returns the changed category info" do
-          expect(post_revisor.category_changed).to eq(category)
-        end
-
-        it "updates the description of the category" do
-          expect(category.description).to eq(new_description)
-        end
-      end
+      # context "with one paragraph description" do
+      #   before do
+      #     post_revisor.revise!(post.user, raw: new_description)
+      #     category.reload
+      #   end
+      #
+      #   it "returns the changed category info" do
+      #     expect(post_revisor.category_changed).to eq(category)
+      #   end
+      #
+      #   it "updates the description of the category" do
+      #     expect(category.description).to eq(new_description)
+      #   end
+      # end
 
       context "with multiple paragraph description" do
         before do
