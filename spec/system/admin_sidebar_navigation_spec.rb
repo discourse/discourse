@@ -132,8 +132,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
 
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
     visit("/")
-    expect(page).to have_css(".sidebar-footer-actions-button.add-section")
+    expect(sidebar).to have_add_section_button
     visit("/admin")
-    expect(page).to have_no_css(".sidebar-footer-actions-button.add-section")
+    expect(sidebar).to have_no_add_section_button
   end
 end

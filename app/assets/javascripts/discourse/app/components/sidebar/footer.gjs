@@ -16,7 +16,7 @@ export default class SidebarFooter extends Component {
   @service sidebarState;
 
   get showManageSectionsButton() {
-    return !this.sidebarState.isCurrentPanel(ADMIN_PANEL);
+    return this.currentUser && !this.sidebarState.isCurrentPanel(ADMIN_PANEL);
   }
 
   get showToggleMobileButton() {
