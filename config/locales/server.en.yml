@@ -2384,6 +2384,8 @@ en:
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
 
+    linked_notification_consolidation_window_mins: "Duration in minutes where linked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
+
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
