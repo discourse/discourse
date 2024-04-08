@@ -22,7 +22,6 @@ export default class DToastInstance {
   }
 
   get isValidForView() {
-    const view = this.site.desktopView ? "desktop" : "mobile";
-    return this.options.views.includes(view);
+    return this.options.views.includes(this.site.desktopView ? "desktop" : "mobile");
   }
 }
