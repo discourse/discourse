@@ -691,7 +691,9 @@ en:
 
     dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
-    get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
+    get_a_room:
+      one: You’ve replied to @%{reply_username} once, did you know you could send them a personal message instead?
+      other: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
     dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
 
@@ -2680,7 +2682,9 @@ en:
         regex_invalid: "The regular expression is invalid: %{error}"
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
-      list_value_count: "The list must contain exactly %{count} values."
+      list_value_count:
+        one: "The list must contain exactly %{count} value."
+        other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
@@ -4926,7 +4930,9 @@ en:
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
-        too_many_csv_entries: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries.
+        too_many_csv_entries:
+          one: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entry.
+          other: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries.
         badge_disabled: Please enable the %{badge_name} badge first.
         cant_grant_multiple_times: Can't grant the %{badge_name} badge multiple times to a single user.
     editor:
