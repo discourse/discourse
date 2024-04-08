@@ -29,10 +29,12 @@ module PageObjects
 
       def confirm_delete
         find(".dialog-container .btn-primary").click
+        closed?
       end
 
       def confirm_update
         find(".dialog-container .btn-primary").click
+        closed?
       end
 
       def reset
