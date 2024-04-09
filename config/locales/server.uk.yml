@@ -126,8 +126,6 @@ uk:
       number_value_not_valid_min: "Значення має бути більше або дорівнювати %{min}."
       number_value_not_valid_max: "Значення має бути менше або дорівнювати %{max}."
       string_value_not_valid_min_max: "Довжина значення має бути від %{min} до %{max} символів."
-      string_value_not_valid_min: "Значення має містити принаймні %{min} символів."
-      string_value_not_valid_max: "Значення має містити щонайбільше %{max} символів."
       objects:
         humanize_required: "Має бути присутня властивість JSON Pointer '%{property_json_pointer}'."
         required: "має бути присутнім"
@@ -145,32 +143,16 @@ uk:
         not_valid_enum_value: "має бути одним із таких: %{choices}"
         humanize_not_valid_categories_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути масивом дійсних ідентифікаторів категорії."
         not_valid_categories_value: "має бути масивом дійсних ідентифікаторів категорії"
-        humanize_categories_value_not_valid_min: "Властивість у вказівнику JSON '%{property_json_pointer}' повинна мати принаймні %{min} ідентифікатори категорій."
-        categories_value_not_valid_min: "повинні мати принаймні %{min} ідентифікатори категорії"
-        humanize_categories_value_not_valid_max: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{max} ідентифікаторів категорій."
-        categories_value_not_valid_max: "має мати не більше %{max} ідентифікаторів категорії"
         humanize_not_valid_topic_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором теми."
         not_valid_topic_value: "має бути дійсним ідентифікатором теми"
         humanize_not_valid_post_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором публікації."
         not_valid_post_value: "має бути дійсний ідентифікатор публікації"
         humanize_not_valid_groups_value: "Властивість у форматі JSON Pointer '%{property_json_pointer}' повинна бути масивом дійсних ідентифікаторів груп."
         not_valid_groups_value: "має бути масивом дійсних ідентифікаторів груп"
-        humanize_groups_value_not_valid_min: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{min} ідентифікатори груп."
-        groups_value_not_valid_min: "повинні мати принаймні %{min} ідентифікатори груп"
-        humanize_groups_value_not_valid_max: "Властивість JSON Pointer '%{property_json_pointer}' має мати щонайбільше %{max} ідентифікаторів груп."
-        groups_value_not_valid_max: "повинні мати не більше %{max} ідентифікаторів груп"
         humanize_not_valid_tags_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути масивом дійсних імен тегів."
         not_valid_tags_value: "має бути масив дійсних імен тегів"
-        humanize_tags_value_not_valid_min: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати принаймні %{min} імен тегів."
-        tags_value_not_valid_min: "має мати принаймні %{min} імен тегів"
-        humanize_tags_value_not_valid_max: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{max} імен тегів."
-        tags_value_not_valid_max: "повинні мати не більше %{max} імен тегів"
         humanize_not_valid_upload_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором завантаження."
         not_valid_upload_value: "має бути дійсним ідентифікатором завантаження"
-        humanize_string_value_not_valid_min: "Властивість JSON Pointer '%{property_json_pointer}' має містити принаймні %{min} символів."
-        string_value_not_valid_min: "має містити принаймні %{min} символів"
-        humanize_string_value_not_valid_max: "Властивість JSON Pointer '%{property_json_pointer}' має містити щонайбільше %{max} символів."
-        string_value_not_valid_max: "має містити щонайбільше %{max} символів"
         humanize_number_value_not_valid_min: "Властивість у JSON вказівника '%{property_json_pointer}' має бути більшою або рівною %{min}."
         number_value_not_valid_min: "має бути більше або дорівнювати %{min}"
         humanize_number_value_not_valid_max: "Властивість у JSON вказівника '%{property_json_pointer}' має бути меншою або рівною %{max}."
@@ -219,7 +201,6 @@ uk:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "обмежено %{max} символами; ви ввели %{length}."
       invalid_boolean: "Неправильне логічне значення."
       taken: "вже прийнято"
       accepted: має бути прийнятий
@@ -349,7 +330,6 @@ uk:
       many: "Ви вже надіслали %{count} запрошень за останні 24 години, будь ласка, зачекайте %{time_left}, перш ніж повторити спробу."
       other: "Ви вже надіслали %{count} запрошень за останні 24 години, будь ласка, зачекайте %{time_left}, перш ніж повторити спробу."
     confirm_email: "<p>Ви майже закінчили! Ми надіслали лист для активації на вашу електронну адресу. Будь ласка, дотримуйтесь інструкцій в листі, щоб активувати свій обліковий запис.</p><p>Якщо лист не надійшов, перевірте теку зі спамом.</p>"
-    cant_invite_to_group: "Вам не дозволено запрошувати користувачів до вказаних груп. Переконайтеся, що ви є власником групи (груп), до якої ви намагаєтеся запросити інших."
     disabled_errors:
       discourse_connect_enabled: "Функціонал надсилання запрошень вимкнено, оскільки увімкнено функцію DiscourseConnect."
       invalid_access: "Вам не дозволено переглядати запитаний ресурс."
@@ -488,7 +468,6 @@ uk:
   pm_reached_recipients_limit: "Вибачте, ви не можете мати більше, ніж %{recipients_limit} одержувачів у повідомленні."
   removed_direct_reply_full_quotes: "Автоматично видаляти цитату з усього попереднього допису."
   watched_words_auto_tag: "Тема з автоматичними теґами"
-  secure_upload_not_allowed_in_public_topic: "На жаль, такі захищені завантаження не можна використовувати в загальнодоступній темі: %{upload_filenames}."
   create_pm_on_existing_topic: "На жаль, Ви не можете створювати ПП в існуючій темі."
   slow_mode_enabled: "Ця тема знаходиться в сповільненому режимі."
   just_posted_that: "занадто схоже на те, що ви нещодавно опублікували"
@@ -645,7 +624,6 @@ uk:
 
       Усім легше читати теми, у яких є детальні докладні відповіді, ніж багато маленьких окремих відповідей.
     dominating_topic: Ви багато писали в цій темі! Подумайте про те, щоб дати іншим можливість відповідати тут і обговорювати речі один з одним.
-    get_a_room: Ви відповіли @%{reply_username} %{count} разів, чи знаєте ви, що замість цього можете надіслати особисте повідомлення?
     dont_feed_the_trolls: Це повідомлення вже було позначено як таке, що потребує уваги модератора. Ви впевнені, що хочете відповісти на нього? Відповіді на негативний контент, як правило, заохочують до ще більш негативної поведінки.
     too_many_replies: |
       ### Ви досягли ліміту відповідей для цієї теми
@@ -2268,7 +2246,7 @@ uk:
     notify_about_reviewable_item_after: "Якщо є питання, які не були розглянуті через стільки годин, буде надіслано особисте повідомлення модераторам. Встановіть 0, щоб вимкнути."
     delete_drafts_older_than_n_days: "Видалити чернетки, які не змінювалися більше (n) днів."
     delete_merged_stub_topics_after_days: "Кількість днів очікування до автоматичного видалення тем, з яких переміщено всі повідомлення. Встановіть 0, щоб ніколи не видаляти теми-заглушки."
-    bootstrap_mode_min_users: "Мінімальна кількість користувачів, необхідна для вимкнення режиму завантаження (встановіть 0, щоб вимкнути, може зайняти до 24 годин)"
+    bootstrap_mode_min_users: "Мінімальна кількість користувачів, необхідна для вимкнення режиму початкового завантаження та видалення кнопки «Початок роботи» (встановіть 0, щоб вимкнути, може тривати до 24 годин)"
     prevent_anons_from_downloading_files: "Заборонити анонімним користувачам завантажувати вкладення."
     secure_uploads: 'Обмежити доступ до УСІХ завантажень (зображень, відео, аудіо, тексту, PDF-файлів, архівів та інших). Якщо ввімкнено параметр «Потрібний вхід», доступ до завантажень мають лише користувачі, які ввійшли в систему. В іншому випадку доступ буде обмежено лише для медіа-завантажень у приватних повідомленнях та приватних категоріях. ПОПЕРЕДЖЕННЯ. Цей параметр є складним і вимагає глибокого адміністративного розуміння. Дивіться тему <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> для отримання детальної інформації.'
     secure_uploads_allow_embed_images_in_emails: "Дозволяти вбудовувати зображення з обмеженим доступом до листів, якщо їх розмір не перевищує значення, вказаного у параметрі 'secure uploads max email embed image size kb'."
@@ -2371,7 +2349,6 @@ uk:
     tags_sort_alphabetically: "Показувати теґи в алфавітному порядку. Стандартно – в порядку популярності."
     tags_listed_by_group: "Показувати теґи за групою теґів на сторінці <a href='%{base_path}/tags' target='_blank'>Теґи</a>."
     tag_style: "Визначте візуальний вигляд значків тегів на сайті. Цей параметр дозволяє налаштувати теги, які візуально представлені в усіх областях сайту, підвищуючи послідовність макета та доступність для користувачів."
-    pm_tags_allowed_for_groups: "Дозволити учасникам груп(и) позначати теґом будь-які персональні повідомлення"
     min_trust_level_to_tag_topics: "Мінімальний рівень довіри, необхідний для позначення тем теґами"
     tag_topic_allowed_groups: "Групи, яким дозволено позначати теми."
     suppress_overlapping_tags_in_list: "Якщо теґи відповідають точним словам у заголовках тем, не показувати теґ"
@@ -2440,8 +2417,6 @@ uk:
       must_include_latest: "Верхнє меню повинно містити вкладку 'останні'."
       invalid_string: "Некоректне значення."
       invalid_string_min_max: "Має бути між %{min} та %{max} символів."
-      invalid_string_min: "Має бути не менше %{max} символів."
-      invalid_string_max: "Має бути не більше ніж %{max} символів."
       invalid_json: "Некоректний JSON."
       invalid_reply_by_email_address: "Значення повинно містити '%{reply_key}' і відрізнятися від електронного листа зі сповіщеннями."
       invalid_alternative_reply_by_email_addresses: "Усі значення повинні містити '%{reply_key}' та відрізнятися від електронного листа зі сповіщеннями."
@@ -2474,7 +2449,6 @@ uk:
         regex_invalid: "Регулярний вираз недійсний: %{error}"
         leading_trailing_slash: "Регулярний вираз не повинен починатися і закінчуватися косою рискою."
       unicode_usernames_avatars: "Внутрішні аватари системи не підтримують імен користувачів Unicode."
-      list_value_count: "Список має містити рівно %{count} значень."
       markdown_linkify_tlds: "Не можна включати значення \"*\"."
       google_oauth2_hd_groups: "Ви повинні налаштувати всі параметри «google oauth2 hd», перш ніж увімкнути цей параметр."
       search_tokenize_chinese_enabled: "Ви повинні вимкнути 'search_tokenize_chinese' перед увімкненням цього параметра."
@@ -2508,6 +2482,14 @@ uk:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - "деактивовано"
+      - "неактивно"
+      - "неактивовано"
+      purge_unactivated_users_grace_period_days:
+      - "деактивовано"
+      - "неактивно"
+      - "неактивовано"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2749,8 +2731,6 @@ uk:
     new_user_typed_too_fast: "Новий користувач набирає текст занадто швидко"
     content_matches_auto_silence_regex: "Вміст відповідає автоматичному блокуванню за regex (регулярним виразом)"
     username:
-      short: "має бути найменше %{min} символів"
-      long: "має містити не більше %{max} символів"
       too_long: "занадто довге"
       characters: "має містити лише цифри, літери, тире, крапки та підкреслення"
       unique: "має бути унікальним"
@@ -2897,9 +2877,35 @@ uk:
   new_version_mailer:
     title: "Нова версія Mailer"
     subject_template: "[%{email_prefix}] Нова версія Discourse, доступно оновлення"
+    text_body_template: |
+      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
+
+      Ваша версія: %{installed_version}
+      Нова версія: **%{new_version}**
+
+      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
+
+      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
   new_version_mailer_with_notes:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
+    text_body_template: |
+      Ура, нова версія [Дискурсу](https://www.discourse.org) доступна!
+
+      Ваша версія: %{installed_version}
+      Нова версія: **%{new_version}**
+
+      - Оновлення за допомогою нашого простого **[оновлення браузера в один клік](%{base_url}/admin/update)**
+
+      - Дізнайтеся, що нового у [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [сирий журнал змін на GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для отримання новин, обговорення та підтримки Discourse
+
+      ### Примітки до випуску
+
+      %{notes}
   flag_reasons:
     off_topic: "Ваш допис було відмічено спам-прапорцем **Цей допис не по темі**: учасники спільноти вважають, що допис не дуже добре підходить до цієї дискусії (відповідно до її назви та першого повідомлення)."
     inappropriate: "Ваш допис було позначено як **невідповідний**: спільнота вважає його образливим, таким, що розпалює ненависть, або таким, що порушує [наші правила спільноти] (%{base_path}/guidelines)."
@@ -4501,7 +4507,6 @@ uk:
     mass_award:
       errors:
         invalid_csv: У нас виникла помилка в рядку %{line_number}. Будь ласка, підтвердить що CSV має кожен рядок містить один email.
-        too_many_csv_entries: Забагато записів у файлі CSV. Будь ласка, надайте файл CSV з не більше ніж %{count} записами.
         badge_disabled: Будь ласка, спочатку увімкніть нагороду %{badge_name}.
         cant_grant_multiple_times: Неможливо надати нагороду %{badge_name} кілька разів одному користувачеві.
     editor:

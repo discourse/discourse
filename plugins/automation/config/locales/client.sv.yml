@@ -26,22 +26,24 @@ sv:
       destroy_automation:
         confirm: "Är du säker på att du vill ta bort `%{name}`?"
       fields:
+        key_value:
+          label_without_count: "Konfigurera"
         user:
           label: Användare
         pm:
           title:
-            label: Titel
+            label: Rubrik
           raw:
-            label: Kropp
+            label: Huvuddel
         pms:
           confirm_remove_pm: "Är du säker på att du vill ta bort detta PM?"
           placeholder_title: PM-titel
           add_pm: Lägg till PM
           no_pm_created: Du har inte skapat någon PM än. PM kommer att skickas när din automatisering utlöses.
           title:
-            label: Titel
+            label: Rubrik
           raw:
-            label: Kropp
+            label: Huvuddel
           delay:
             label: Fördröjning (minuter)
           prefers_encrypt:
@@ -55,7 +57,7 @@ sv:
         user_badge_granted:
           fields:
             badge:
-              label: Märke
+              label: Utmärkelse
             only_first_grant:
               label: Endast vid första beviljan
         stalled_topic:
@@ -139,17 +141,21 @@ sv:
           fields:
             valid_trust_levels:
               label: Giltiga förtroendenivåer
-              description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
+              description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_category:
               label: Kategori
             restricted_group:
               label: Grupp
+          created: Skapade
         category_created_edited:
           fields:
             restricted_category:
+              label: Överordnad kategori
               description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
         pm_created:
           fields:
+            restricted_user:
+              label: Användare
             restricted_group:
               label: Grupp
             ignore_staff:
@@ -162,7 +168,7 @@ sv:
           fields:
             valid_trust_levels:
               label: Giltiga förtroendenivåer
-              description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
+              description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_category:
               label: Kategori
             restricted_tags:
@@ -202,15 +208,15 @@ sv:
               description: Accepterar HTML, fyll inte detta med opålitlig inmatning!
           levels:
             warning: Varning
-            info: Information
-            success: Framgång
+            info: Info
+            success: Lyckades
             error: Fel
         user_group_membership_through_badge:
           fields:
             group:
               label: Grupp
             badge:
-              label: Märke
+              label: Utmärkelse
         suspend_user_by_email:
           fields:
             suspend_until:
@@ -281,12 +287,12 @@ sv:
             label: Skript
         trigger:
           name:
-            label: Utlösare
+            label: Trigger
         automation:
           name:
             label: Namn
           trigger:
-            label: Utlösare
+            label: Trigger
           script:
             label: Skript
           version:

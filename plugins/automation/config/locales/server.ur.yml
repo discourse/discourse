@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 ur:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: ٹاپک
+    scriptables:
+      pin_topic:
+        title: ٹاپک پِن کریں
+      close_topic:
+        title: ٹاپک بند کریں
+      append_last_checked_by:
+        button_text: مکمل

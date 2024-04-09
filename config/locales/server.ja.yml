@@ -157,7 +157,8 @@ ja:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "は、最大 %{max} 文字に制限されていますが、%{length} 文字が入力されました。"
+      too_long_validation:
+        other: "は、最大 %{count} 文字に制限されていますが、%{length} 文字が入力されました。"
       invalid_boolean: "無効なブール値。"
       taken: "はすでに使用されています"
       accepted: に同意する必要があります
@@ -263,7 +264,6 @@ ja:
     rate_limit:
       other: "過去 24 時間以内に %{count} 通の招待を送信済みです。%{time_left} 待ってからもう一度お試しください。"
     confirm_email: "<p>ほぼ完了です！メールアドレスにアクティベーションメールを送信しました。メールに記載の手順に従って、アカウントを確認してください。</p><p>まだ届いていない場合は、迷惑フォルダを確認してください。</p>"
-    cant_invite_to_group: "指定したグループにユーザーを招待することはできません。招待しようとしているグループのオーナーであることを確認してください。"
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
@@ -371,7 +371,6 @@ ja:
   pm_reached_recipients_limit: "メッセージにつき %{recipients_limit} 人の受信者しか含めることはできません。"
   removed_direct_reply_full_quotes: "以前の投稿全体の引用を自動的に削除しました。"
   watched_words_auto_tag: "自動的にタグ付けされたトピック"
-  secure_upload_not_allowed_in_public_topic: "次のセキュアアップロードを公開トピックで使用することはできません: %{upload_filenames}"
   create_pm_on_existing_topic: "既存のトピックで PM を作成することはできません。"
   slow_mode_enabled: "このトピックは低速モードです。"
   just_posted_that: "は最近の投稿に非常に似ています"
@@ -508,7 +507,8 @@ ja:
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
     dominating_topic: このトピックにたくさん投稿されましたね！ここに返信して互いに話し合うチャンスを他の人にも与えることを検討してください。
-    get_a_room: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
+    get_a_room:
+      other: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
     dont_feed_the_trolls: この投稿は、モデレーターの注意が必要としてすでに通報されています。返信してもよろしいですか？否定的なコンテンツへの返信は、さらに否定的な行動を助長する傾向があります。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
@@ -1994,7 +1994,6 @@ ja:
     embed_username_required: "トピック作成用のユーザー名が必要です。"
     notify_about_reviewable_item_after: "この時間の経過後に未処理のレビュー待ち項目がある場合、モデレーターに個人メッセージを送信します。無効にするには 0 に設定します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
-    bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
@@ -2079,7 +2078,6 @@ ja:
     max_tags_in_filter_list: "フィルタのドロップダウンに表示するタグの最大数。最も使用されているタグが表示されます。"
     tags_sort_alphabetically: "タグをアルファベット順に表示する。デフォルトでは人気順に表示されます。"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
-    pm_tags_allowed_for_groups: "グループ内のメンバーが任意の個人メッセージにタグ付けすることを許可する"
     min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2135,8 +2133,10 @@ ja:
       must_include_latest: "トップメニューに [最新] タブを含む必要があります。"
       invalid_string: "無効な値です。"
       invalid_string_min_max: "文字数は %{min} から %{max} の間である必要があります。"
-      invalid_string_min: "少なくとも %{min} 文字である必要があります。"
-      invalid_string_max: "%{max} 文字以下である必要があります。"
+      invalid_string_min:
+        other: "は少なくとも %{count} 文字である必要があります."
+      invalid_string_max:
+        other: "は %{count} 文字以下である必要があります."
       invalid_json: "無効な JSON。"
       invalid_reply_by_email_address: "値に '%{reply_key}' を含める必要があり、通知メールとは異なる必要があります。"
       invalid_alternative_reply_by_email_addresses: "すべての値には '%{reply_key}' が含まれている必要があり、通知メールとは異なるものである必要があります。"
@@ -2169,7 +2169,8 @@ ja:
         regex_invalid: "正規表現は無効です: %{error}"
         leading_trailing_slash: "正規表現の開始と終了にスラッシュを使用してはいけません。"
       unicode_usernames_avatars: "内部システムのアバターは Unicode のユーザー名をサポートしていません。"
-      list_value_count: "リストには正確に %{count} この値が含まれている必要があります。"
+      list_value_count:
+        other: "リストには正確に %{count} この値が含まれている必要があります。"
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
@@ -2198,6 +2199,14 @@ ja:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "非アクティブ"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "非アクティブ"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2377,8 +2386,10 @@ ja:
     new_user_typed_too_fast: "新規ユーザーは入力が速すぎます"
     content_matches_auto_silence_regex: "コンテンツは自動投稿禁止の正規表現に一致します"
     username:
-      short: "は少なくとも %{min} 文字である必要があります"
-      long: "は %{max} 文字以下である必要があります"
+      short:
+        other: "は少なくとも %{count} 文字である必要があります"
+      long:
+        other: "は %{count} 文字以下である必要があります"
       too_long: "は長すぎます"
       characters: "には数字、文字、ダッシュ、ドット、およびアンダースコアのみを含める必要があります"
       unique: "は一意である必要があります"
@@ -4041,7 +4052,8 @@ ja:
     mass_award:
       errors:
         invalid_csv: '%{line_number} 行目でエラーが発生しました。メールが 1 行ごとに 1 件あることを CSV で確認してください。'
-        too_many_csv_entries: CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。
+        too_many_csv_entries:
+          other: CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。
         badge_disabled: 先に %{badge_name} バッジを有効にしてください。
         cant_grant_multiple_times: 1 人のユーザーに %{badge_name} バッジを何度も付与することはできません。
     editor:

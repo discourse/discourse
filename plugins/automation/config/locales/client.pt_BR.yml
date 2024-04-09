@@ -27,11 +27,12 @@ pt_BR:
         confirm: "Tem certeza de que deseja excluir `%{name}`?"
       fields:
         key_value:
-          label:
-            one: Editar configuração (%{count})
-            other: Editar configurações (%{count})
+          label_without_count: "Configurar"
+          label_with_count:
+            one: "Editar configurações (%{count})"
+            other: "Editar configurações (%{count})"
         user:
-          label: Usuário
+          label: Usuário(a)
         pm:
           title:
             label: Título
@@ -148,7 +149,7 @@ pt_BR:
               description: "Opcional, acionamento de limite apenas para eventos criados ou editados"
             valid_trust_levels:
               label: Níveis de confiança válidos
-              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+              description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
               description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
@@ -157,7 +158,7 @@ pt_BR:
               description: Opcional, será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
             ignore_group_members:
               label: Ignorar membros de grupo
-              description: Ignorar o gatilho se o remetente for um membro do Grupo especificado acima
+              description: Ignorar o gatilho se o remetente for um mebro do Grupo especificado acima
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a postagens criadas por e-mail.
@@ -172,7 +173,7 @@ pt_BR:
         category_created_edited:
           fields:
             restricted_category:
-              label: Categoria pai
+              label: Categoria principal
               description: Opcional, permite limitar a execução do acionador a esta categoria
         pm_created:
           fields:
@@ -187,7 +188,7 @@ pt_BR:
               description: Ignore o acionador se o remetente for um usuário da equipe
             ignore_group_members:
               label: Ignorar membros de grupo
-              description: Ignorar o gatilho se o remetente for um membro do Grupo especificado acima
+              description: Ignorar o gatilho se o remetente for um mebro do Grupo especificado acima
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a MPs criadas por e-mail.
@@ -198,12 +199,12 @@ pt_BR:
           fields:
             valid_trust_levels:
               label: Níveis de confiança válidos
-              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+              description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
               description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
             restricted_tags:
-              label: Tags
+              label: Etiquetas
               description: Opcional, ativa apenas se a postagem tiver alguma destas etiquetas
       scriptables:
         not_found: Não foi possível encontrar o script `%{script}` para automação `%{automation}`, verifique se o plugin associado está instalado
@@ -225,7 +226,7 @@ pt_BR:
         auto_tag_topic:
           fields:
             tags:
-              label: Tags
+              label: Etiquetas
               description: Lista de tags para adicionar ao tópico.
         post:
           fields:
@@ -279,7 +280,7 @@ pt_BR:
             reason:
               label: Motivo (padrão)
             actor:
-              label: Usuário
+              label: Usuário(a)
               description: "O usuário responsável pela suspensão (padrão: sistema)"
         pin_topic:
           fields:
@@ -296,7 +297,7 @@ pt_BR:
             banner_until:
               label: Criar banner até
             user:
-              label: Usuário
+              label: Usuário(a)
               description: "O usuário que cria o banner (padrão: sistema)"
         flag_post_on_words:
           fields:
@@ -330,7 +331,7 @@ pt_BR:
               label: Mensagem de encerramento
               description: "Mensagem opcional para ser exibida no registro Tópico Fechado"
             user:
-              label: Usuário
+              label: Usuário(a)
               description: "O usuário que fecha o tópico (padrão: sistema)"
         add_user_to_group_through_custom_field:
           fields:
@@ -342,20 +343,20 @@ pt_BR:
             label: Script
         trigger:
           name:
-            label: Acionador
+            label: Gatilho
         automation:
           name:
             label: Nome
           trigger:
-            label: Acionador
+            label: Gatilho
           script:
             label: Script
           version:
             label: Versão
           enabled:
-            label: Habilitado
+            label: Ativada
           disabled:
-            label: Desabilitado
+            label: Desativada
           placeholders:
             label: Espaços reservados
           last_updated_at:

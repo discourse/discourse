@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 th:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: หัวข้อ
+    scriptables:
+      pin_topic:
+        title: ปักหมุดกระทู้
+      close_topic:
+        title: ปิดกระทู้
+      append_last_checked_by:
+        button_text: เสร็จ

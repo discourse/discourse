@@ -44,7 +44,7 @@ ru:
       user_promoted:
         title: Пользователь повышен
         description: При повышении уровня доверия пользователя
-        transition_placeholder: "с %{from_level_name} до %{to_level_name}"
+        transition_placeholder: "было «%{from_level_name}», стало «%{to_level_name}»"
       stalled_wiki:
         title: Неактивная вики-запись
         description: Автоматизация будет запущена, если вики-запись не редактировалась в течение указанного периода
@@ -64,6 +64,8 @@ ru:
       post:
         title: Создать запись
         description: Создать запись на указанную тему
+      topic:
+        title: Создать тему
       flag_post_on_words:
         title: Пожаловаться на запись по словам
         description: Пожаловаться на запись, если она содержит указанные слова

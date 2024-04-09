@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  site_settings:
+    lazy_videos_enabled: "Lazy Videos eklentisini etkinleştirin"
+    lazy_youtube_enabled: "YouTube yerleştirmeleri için lazy load'ı etkinleştirin"
+    lazy_vimeo_enabled: "Vimeo yerleştirmeleri için lazy load'ı etkinleştirin"
+    lazy_tiktok_enabled: "TikTok yerleştirmeleri için lazy load'ı etkinleştir (deneysel)"

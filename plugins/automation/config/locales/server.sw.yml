@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 sw:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Mada
+    scriptables:
+      pin_topic:
+        title: Bandika Mada
+      close_topic:
+        title: Funga Mada
+      append_last_checked_by:
+        button_text: Imekwisha

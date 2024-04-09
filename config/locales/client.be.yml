@@ -90,7 +90,8 @@ be:
         eu_central_1: "ЕС (Франкфурт)"
         eu_west_1: "ЕС (Ірландыя)"
         us_west_2: "ЗША Захад (Арэгон)"
-    edit: "рэдагаваць назву і катэгорыю гэтай тэмы"
+    edit: "рэдагаваць"
+    edit_topic: "рэдагаваць назву і катэгорыю гэтай тэмы"
     not_implemented: "Гэты функцыянал яшчэ не рэалізаваны, прабачце!"
     no_value: "Не"
     yes_value: "Так"
@@ -131,7 +132,11 @@ be:
     weekly: "штотыдзень"
     every_month: "кожны месяц"
     every_six_months: "кожныя паўгады"
-    max_of_count: "Не больш за %{count}"
+    max_of_count:
+      one: "Не больш за %{count}"
+      few: "Не больш за %{count}"
+      many: "Не больш за %{count}"
+      other: "Не больш за %{count}"
     character_count:
       one: "%{Count} сімвал"
       few: "%{Count} сімвалы"
@@ -164,6 +169,7 @@ be:
       save: "Захаваць"
       no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       search: "Пошук"
+      bookmark: "закладка"
     drafts:
       label: "Чарнавікі"
       remove: "выдаліць"
@@ -429,7 +435,11 @@ be:
       organisation: арганізацыя
       phone: тэлефон
       other_accounts: "Іншыя ўліковыя запісы з гэтым IP адрасам"
-      delete_other_accounts: "Выдаліць %{count}"
+      delete_other_accounts:
+        one: "Выдаліць %{count}"
+        few: "Выдаліць %{count}"
+        many: "Выдаліць %{count}"
+        other: "Выдаліць %{count}"
       username: "імя карыстальніка"
       read_time: "пры чытанні"
       topics_entered: "створана тым"
@@ -1383,7 +1393,6 @@ be:
               label: "Спасылка"
               validation:
                 blank: "Спасылка не можа быць пустой"
-                maximum: "Спасылка павінна быць карацейшай за %{count} сімвалаў"
           title:
             validation:
               blank: "Загаловак ня можа быць пустым"

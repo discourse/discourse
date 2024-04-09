@@ -27,9 +27,10 @@ de:
         confirm: "Bist du sicher, dass du `%{name}` löschen willst?"
       fields:
         key_value:
-          label:
-            one: Konfiguration bearbeiten (%{count})
-            other: Konfiguration bearbeiten (%{count})
+          label_without_count: "Konfigurieren"
+          label_with_count:
+            one: "Konfiguration bearbeiten (%{count})"
+            other: "Konfiguration bearbeiten (%{count})"
         user:
           label: Benutzer
         pm:
@@ -214,7 +215,7 @@ de:
               label: Kategorie
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
             restricted_tags:
-              label: Tags
+              label: Schlagwörter
               description: Optional. Wird nur ausgelöst, wenn der Beitrag eines dieser Schlagwörter enthält
       scriptables:
         not_found: Konnte das Skript `%{script}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
@@ -249,6 +250,19 @@ de:
               label: Themen-ID
             post:
               label: Beitragsinhalt
+        topic:
+          fields:
+            creator:
+              label: Verfasser
+              updated_user_context: Der aktualisierte Benutzer
+            body:
+              label: Hauptteil des Themas
+            title:
+              label: Titel des Themas
+            category:
+              label: Kategorie des Themas
+            tags:
+              label: Schlagwörter des Themas
         group_category_notification_default:
           fields:
             group:
@@ -261,7 +275,7 @@ de:
         user_global_notice:
           fields:
             level:
-              label: Level
+              label: Stufe
             notice:
               label: Hinweis
               description: Akzeptiert HTML. Gib nur vertrauenswürdige Inhalte ein!

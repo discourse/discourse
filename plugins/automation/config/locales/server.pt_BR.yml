@@ -44,7 +44,7 @@ pt_BR:
       user_promoted:
         title: Usuário promovido
         description: Quando um usuário é promovido de um nível de confiança para outro
-        transition_placeholder: "de %{from_level_name} a %{to_level_name}"
+        transition_placeholder: "de %{from_level_name} para %{to_level_name}"
       stalled_wiki:
         title: Wiki parada
         description: Quando uma wiki não for editada por um período maior que o definido, a automação será acionada
@@ -64,6 +64,8 @@ pt_BR:
       post:
         title: Criar uma postagem
         description: Criar uma postagem em um tópico específico
+      topic:
+        title: Criar um tópico
       flag_post_on_words:
         title: Sinalizar postagem em palavras
         description: Sinaliza uma postagem se ela contiver palavras especificadas
@@ -79,7 +81,7 @@ pt_BR:
         title: Marcar tópico automaticamente
         description: Adiciona automaticamente tags a um tópico
       pin_topic:
-        title: Fixar Tópico
+        title: Fixar tópico
         description: Fixa um tópico especificado em uma determinada data
       banner_topic:
         title: Criar tópico de banner
@@ -115,7 +117,7 @@ pt_BR:
         errors:
           must_include_word: "A postagem deve incluir pelo menos uma destas palavras: %{words}"
       close_topic:
-        title: Fechar Tópico
+        title: Fechar tópico
         description: Fecha um tópico com uma mensagem de fechamento opcional
       append_last_edited_by:
         title: Anexar última edição por
@@ -127,7 +129,7 @@ pt_BR:
         text: "Última verificação por @%{username} %{date_time}"
         summary: Verificar documento
         details: "Realizar verificação no documento: "
-        button_text: Concluído
+        button_text: Concluído(a)
       add_user_to_group_through_custom_field:
         title: "Adicionar usuário ao grupo por meio do campo personalizado do usuário"
       group_category_notification_default:

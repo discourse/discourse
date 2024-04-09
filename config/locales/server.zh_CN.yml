@@ -123,8 +123,10 @@ zh_CN:
       number_value_not_valid_min: "值必须大于或等于 %{min}。"
       number_value_not_valid_max: "值必须小于或等于 %{max}。"
       string_value_not_valid_min_max: "值必须介于 %{min} 和 %{max} 个字符之间。"
-      string_value_not_valid_min: "值必须至少为 %{min} 个字符。"
-      string_value_not_valid_max: "值必须最多为 %{max} 个字符。"
+      string_value_not_valid_min:
+        other: "值必须至少为 %{count} 个字符。"
+      string_value_not_valid_max:
+        other: "值必须最多为 %{count} 个字符。"
       objects:
         humanize_required: "JSON 指针 '%{property_json_pointer}' 处的属性必须存在。"
         required: "必须存在"
@@ -146,16 +148,24 @@ zh_CN:
         not_valid_post_value: "必须是有效的帖子 id"
         humanize_not_valid_tags_value: "JSON 指针 \"%{property_json_pointer}\"的属性必须是一个包含有效标签名的数组。"
         not_valid_tags_value: "必须是一个包含有效标签名的数组"
-        humanize_tags_value_not_valid_min: "JSON 指针 \"%{property_json_pointer}\"的属性必须至少有 %{min} 标记名称。"
-        tags_value_not_valid_min: "必须至少有 %{min} 标签名称"
-        humanize_tags_value_not_valid_max: "JSON 指针 \"%{property_json_pointer}\"的属性必须最多包含 %{max} 个标记名。"
-        tags_value_not_valid_max: "最多必须有 %{max} 标签名称"
+        humanize_tags_value_not_valid_min:
+          other: "JSON 指针 \"%{property_json_pointer}\"的属性必须至少有 %{count} 标记名称。"
+        tags_value_not_valid_min:
+          other: "必须至少有 %{count} 标签名称"
+        humanize_tags_value_not_valid_max:
+          other: "JSON 指针 \"%{property_json_pointer}\"的属性必须最多包含 %{count} 个标记名。"
+        tags_value_not_valid_max:
+          other: "最多必须有 %{count} 标签名称"
         humanize_not_valid_upload_value: "JSON 指针 \"%{property_json_pointer}' 中的属性必须是有效的上传 id。"
         not_valid_upload_value: "必须是有效的上传 id"
-        humanize_string_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须至少为 %{min} 个字符长。"
-        string_value_not_valid_min: "长度必须至少为 %{min} 个字符"
-        humanize_string_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性最多只能有 %{max} 个字符。"
-        string_value_not_valid_max: "长度最多为 %{max} 个字符"
+        humanize_string_value_not_valid_min:
+          other: "JSON 指针 '%{property_json_pointer}' 处的属性必须至少为 %{count} 个字符长。"
+        string_value_not_valid_min:
+          other: "长度必须至少为 %{count} 个字符"
+        humanize_string_value_not_valid_max:
+          other: "JSON 指针 '%{property_json_pointer}' 处的属性最多只能有 %{count} 个字符。"
+        string_value_not_valid_max:
+          other: "长度最多为 %{count} 个字符"
         humanize_number_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须大于或等于 %{min}。"
         number_value_not_valid_min: "必须大于或等于 %{min}"
         humanize_number_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性必须小于或等于 %{max}。"
@@ -201,7 +211,8 @@ zh_CN:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
-      too_long_validation: "最多只能有 %{max} 个字符；您输入了 %{length} 个字符。"
+      too_long_validation:
+        other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
       accepted: 必须被接受
@@ -307,7 +318,6 @@ zh_CN:
     rate_limit:
       other: "您在过去 24 小时内发出了 %{count} 个邀请，请等待 %{time_left}，然后重试。"
     confirm_email: "<p>快完成了！我们向您的电子邮件地址发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
-    cant_invite_to_group: "您无权邀请用户加入指定群组。请确保您是邀请其他人加入的群组的所有者。"
     disabled_errors:
       discourse_connect_enabled: "邀请已被禁用，因为 DiscourseConnect 已启用。"
       invalid_access: "您没有权限查看请求的资源。"
@@ -416,7 +426,6 @@ zh_CN:
   pm_reached_recipients_limit: "抱歉，消息中的收件人不能超过 %{recipients_limit} 个。"
   removed_direct_reply_full_quotes: "已自动移除对整个上一个帖子的引用。"
   watched_words_auto_tag: "已自动为话题添加标签"
-  secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开话题中使用以下安全上传：%{upload_filenames}。"
   create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建私信。"
   slow_mode_enabled: "此话题处于慢速模式。"
   just_posted_that: "与您最近发布的内容过于相似"
@@ -554,7 +563,8 @@ zh_CN:
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
-    get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
+    get_a_room:
+      other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     dont_feed_the_trolls: 此帖子已被标记为需要版主关注。确定要回复它吗？对负面内容的回复往往会鼓励更多的负面行为。
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -2068,7 +2078,6 @@ zh_CN:
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
-    bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
@@ -2162,7 +2171,6 @@ zh_CN:
     max_tags_in_filter_list: "要在筛选器下拉列表中显示的最大标签数。将显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
-    pm_tags_allowed_for_groups: "允许所包含群组的成员标记任何个人消息"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     tag_topic_allowed_groups: "允许为主题添加标签的群组。"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
@@ -2222,8 +2230,10 @@ zh_CN:
       must_include_latest: "顶部菜单必须包含“最新”标签页。"
       invalid_string: "无效值。"
       invalid_string_min_max: "必须介于 %{min} 和 %{max} 个字符之间。"
-      invalid_string_min: "必须至少为 %{min} 个字符。"
-      invalid_string_max: "不得超过 %{max} 个字符。"
+      invalid_string_min:
+        other: "必须至少为 %{count} 个字符."
+      invalid_string_max:
+        other: "不得超过 %{count} 个字符."
       invalid_json: "无效的 JSON。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
@@ -2256,7 +2266,8 @@ zh_CN:
         regex_invalid: "正则表达式无效：%{error}"
         leading_trailing_slash: "正则表达式不得以斜杠作开头或结尾。"
       unicode_usernames_avatars: "内部系统头像不支持 Unicode 用户名。"
-      list_value_count: "该列表必须恰好包含 %{count} 个值。"
+      list_value_count:
+        other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
@@ -2290,6 +2301,14 @@ zh_CN:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "允许配置个人资料背景的最小信任等级"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "停用"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "停用"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2471,8 +2490,10 @@ zh_CN:
     new_user_typed_too_fast: "新用户输入过快"
     content_matches_auto_silence_regex: "内容符合自动禁言的正则表达式"
     username:
-      short: "必须至少为 %{min} 个字符"
-      long: "不得超过 %{max} 个字符"
+      short:
+        other: "必须至少为 %{count} 个字符"
+      long:
+        other: "不得超过 %{count} 个字符"
       too_long: "过长"
       characters: "只得包含数字、字母、破折号、点和下划线"
       unique: "必须唯一"
@@ -4150,7 +4171,8 @@ zh_CN:
     mass_award:
       errors:
         invalid_csv: 我们在第 %{line_number} 行遇到错误。请确认 CSV 每行有一个电子邮件。
-        too_many_csv_entries: CSV 文件中的条目过多。请提供包含不超过 %{count} 个条目的 CSV 文件。
+        too_many_csv_entries:
+          other: CSV 文件中的条目过多。请提供包含不超过 %{count} 个条目的 CSV 文件。
         badge_disabled: 请先启用%{badge_name}徽章。
         cant_grant_multiple_times: 无法多次向单个用户授予%{badge_name}徽章。
     editor:

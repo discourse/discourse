@@ -27,9 +27,10 @@ es:
         confirm: "¿Seguro que quieres eliminar «%{name}»?"
       fields:
         key_value:
-          label:
-            one: Editar configuración (%{count})
-            other: Editar configuración (%{count})
+          label_without_count: "Configurar"
+          label_with_count:
+            one: "Editar configuración (%{count})"
+            other: "Editar configuración (%{count})"
         user:
           label: Usuario
         pm:
@@ -91,7 +92,7 @@ es:
             year: año
           fields:
             recurrence:
-              label: Frecuencia
+              label: Recurrencia
             start_date:
               label: Fecha de inicio
         stalled_wiki:
@@ -253,7 +254,7 @@ es:
               description: Acepta HTML, ¡no incluyas contenido inseguro o de terceros!
           levels:
             warning: Advertencia
-            info: Información
+            info: Info
             success: Éxito
             error: Error
         user_group_membership_through_badge:

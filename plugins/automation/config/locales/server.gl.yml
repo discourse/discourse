@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 gl:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tema
+    scriptables:
+      pin_topic:
+        title: Fixar o tema
+      close_topic:
+        title: Pechar tema
+      append_last_checked_by:
+        button_text: Feito

@@ -8,7 +8,7 @@ fi:
   js:
     discourse_automation:
       title: Automaatio
-      create: Luo
+      create: Aloitus
       update: Päivitä
       select_script: Valitse skripti
       select_trigger: Valitse triggeri
@@ -27,16 +27,17 @@ fi:
         confirm: "Haluatko varmasti poistaa kohteen \"%{name}\"?"
       fields:
         key_value:
-          label:
-            one: Muokkaa määritystä (%{count})
-            other: Muokkaa määritystä (%{count})
+          label_without_count: "Määritä"
+          label_with_count:
+            one: "Muokkaa määritystä (%{count})"
+            other: "Muokkaa määritystä (%{count})"
         user:
           label: Käyttäjä
         pm:
           title:
             label: Otsikko
           raw:
-            label: Teksti
+            label: Leipäteksti
         pms:
           confirm_remove_pm: "Haluatko varmasti poistaa tämän yksityisviestin?"
           placeholder_title: Yksityisviestin otsikko
@@ -45,7 +46,7 @@ fi:
           title:
             label: Otsikko
           raw:
-            label: Teksti
+            label: Leipäteksti
           delay:
             label: Viive (minuutteina)
           prefers_encrypt:
@@ -91,7 +92,7 @@ fi:
             year: vuosi
           fields:
             recurrence:
-              label: Toistuminen
+              label: Toistuvuus
             start_date:
               label: Alkamispäivä
         stalled_wiki:
@@ -148,9 +149,9 @@ fi:
               description: "Valinnainen, rajaa käynnistyksen vain luomis- tai muokkaustapahtumiin"
             valid_trust_levels:
               label: Kelvolliset luottamustasot
-              description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä, oletusarvo on mikä tahansa luottamustaso
+              description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
-              label: Alue
+              label: Kategoria
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
@@ -177,7 +178,7 @@ fi:
         pm_created:
           fields:
             restricted_user:
-              label: Käyttäjät
+              label: Käyttäjiä
               description: Käynnistyy vain tälle käyttäjälle lähetetyille yksityisviesteille
             restricted_group:
               label: Ryhmä
@@ -200,7 +201,7 @@ fi:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
-              label: Alue
+              label: Kategoria
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_tags:
               label: Tunnisteet
@@ -253,8 +254,8 @@ fi:
               description: Hyväksyy HTML:n, älä täytä tätä epäluotettavalla syötteellä!
           levels:
             warning: Varoitus
-            info: Info
-            success: Onnistuminen
+            info: Tietoa
+            success: Onnistui
             error: Virhe
         user_group_membership_through_badge:
           fields:
@@ -342,12 +343,12 @@ fi:
             label: Skripti
         trigger:
           name:
-            label: Triggeri
+            label: Laukaisija
         automation:
           name:
             label: Nimi
           trigger:
-            label: Triggeri
+            label: Laukaisija
           script:
             label: Skripti
           version:
@@ -355,7 +356,7 @@ fi:
           enabled:
             label: Käytössä
           disabled:
-            label: Ei käytössä
+            label: Pois käytöstä
           placeholders:
             label: Paikkamerkit
           last_updated_at:

@@ -159,7 +159,6 @@ hr:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "je ograničeno na %{max} znakova; vi ste unjeli %{length}."
       invalid_boolean: "Nevažeća boolean vrijednost."
       taken: "je već zauzeto"
       accepted: mora biti prihvaćena
@@ -335,7 +334,6 @@ hr:
   pm_reached_recipients_limit: "Žao nam je, ne možete imati više od %{recipients_limit} primatelja u poruci."
   removed_direct_reply_full_quotes: "Automatski uklonjen citat cijelog prethodnog posta."
   watched_words_auto_tag: "Automatski označena tema"
-  secure_upload_not_allowed_in_public_topic: "Nažalost, sljedeći sigurni prijenosi ne mogu se koristiti u javnoj temi: %{upload_filenames}."
   create_pm_on_existing_topic: "Nažalost, ne možete stvoriti PM na postojeću temu."
   slow_mode_enabled: "Ova je tema u usporenom načinu rada."
   just_posted_that: "je pre slično nečemu što ste nedavno objavili"
@@ -1409,7 +1407,6 @@ hr:
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
     default_other_skip_new_user_tips: "Preskoči savjete i značke novog korisnika."
-    pm_tags_allowed_for_groups: "Dopustite članovima uključenih grupa da označe bilo koju osobnu poruku"
     min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
@@ -1448,8 +1445,15 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
-      invalid_string_min: "Mora imati najmanje %{min} znakova."
-      invalid_string_max: "Ne smije imati više od %{max} znakova."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivan"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivan"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1597,8 +1601,6 @@ hr:
       sent_test: "poslano!"
   user:
     username:
-      short: "mora imati najmanje %{min} znakova"
-      long: "ne smije imati više od %{max} znakova"
       too_long: "je predug"
       characters: "smije sadržavati samo brojeve, slova, crtice, točke i podvlake"
       unique: "mora biti jedinstven"
@@ -2055,7 +2057,7 @@ hr:
       popular_posts: "Popularne objave"
       more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Sažetak"
-      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link}ili %{unsubscribe_link} da biste otkazali pretplatu."
+      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link} ili %{unsubscribe_link} da biste otkazali pretplatu."
       your_email_settings: "vaše e-mail postavke"
       click_here: "kliknite ovdje"
       from: "%{site_name}"

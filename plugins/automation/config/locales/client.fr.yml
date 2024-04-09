@@ -9,7 +9,7 @@ fr:
     discourse_automation:
       title: Automatisation
       create: Créer
-      update: Actualiser
+      update: Mettre à jour
       select_script: Sélectionner un script
       select_trigger: Sélectionner un déclencheur
       confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré, voulez-vous continuer ?
@@ -27,9 +27,10 @@ fr:
         confirm: "Voulez-vous vraiment supprimer « %{name} » ?"
       fields:
         key_value:
-          label:
-            one: Modifier la configuration (%{count})
-            other: Modifier la configuration (%{count})
+          label_without_count: "Configurer"
+          label_with_count:
+            one: "Modifier la configuration (%{count})"
+            other: "Modifier la configuration (%{count})"
         user:
           label: Utilisateur
         pm:
@@ -67,11 +68,11 @@ fr:
             PT1H: "Une heure"
             P1D: "Un jour"
             P1W: "Une semaine"
-            P2W: "Deux semaines"
+            P2W: "Dans deux semaines"
             P1M: "Un mois"
-            P3M: "Trois mois"
-            P6M: "Six mois"
-            P1Y: "Un an"
+            P3M: "Dans trois mois"
+            P6M: "Dans six mois"
+            P1Y: "Dans un an"
           fields:
             categories:
               label: Limité aux catégories
@@ -91,7 +92,7 @@ fr:
             year: année
           fields:
             recurrence:
-              label: Récurrence
+              label: Périodicité
             start_date:
               label: Date de début
         stalled_wiki:
@@ -99,11 +100,11 @@ fr:
             PT1H: "Une heure"
             P1D: "Un jour"
             P1W: "Une semaine"
-            P2W: "Deux semaines"
+            P2W: "Dans deux semaines"
             P1M: "Un mois"
-            P3M: "Trois mois"
-            P6M: "Six mois"
-            P1Y: "Un an"
+            P3M: "Dans trois mois"
+            P6M: "Dans six mois"
+            P1Y: "Dans un an"
           fields:
             restricted_category:
               label: Limité à la catégorie
@@ -140,7 +141,7 @@ fr:
         topic:
           fields:
             restricted_topic:
-              label: ID de sujet
+              label: ID du sujet
         post_created_edited:
           fields:
             action_type:
@@ -232,7 +233,7 @@ fr:
             creator:
               label: Créateur
             topic:
-              label: ID de sujet
+              label: ID du sujet
             post:
               label: Contenu du message
         group_category_notification_default:
@@ -253,7 +254,7 @@ fr:
               description: Accepte le HTML, ne le remplissez pas avec une entrée non fiable !
           levels:
             warning: Avertissement
-            info: Informations
+            info: Détails
             success: Succès
             error: Erreur
         user_group_membership_through_badge:
@@ -284,7 +285,7 @@ fr:
         pin_topic:
           fields:
             pinnable_topic:
-              label: ID de sujet
+              label: ID du sujet
             pinned_globally:
               label: Épinglé globalement
             pinned_until:
@@ -292,7 +293,7 @@ fr:
         banner_topic:
           fields:
             topic_id:
-              label: ID de sujet
+              label: ID du sujet
             banner_until:
               label: Faire une bannière jusqu'au
             user:
@@ -325,7 +326,7 @@ fr:
         close_topic:
           fields:
             topic:
-              label: ID de sujet
+              label: ID du sujet
             message:
               label: Message de fermeture
               description: "Message facultatif à afficher dans l'enregistrement Sujet fermé"
@@ -355,7 +356,7 @@ fr:
           enabled:
             label: Activé
           disabled:
-            label: Désactivé
+            label: Désactivée
           placeholders:
             label: Espaces réservés
           last_updated_at:

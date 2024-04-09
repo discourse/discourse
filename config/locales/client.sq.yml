@@ -151,7 +151,8 @@ sq:
         us_east_1: "US East (N. Virginia)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    edit: "redakto titullin dhe kategorinë e kësaj teme"
+    edit: "Redakto"
+    edit_topic: "redakto titullin dhe kategorinë e kësaj teme"
     expand: "Shpalos"
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -190,7 +191,9 @@ sq:
     every_hour: "çdo orë"
     daily: "çdo ditë"
     weekly: "çdo javë"
-    max_of_count: "max i %{count}"
+    max_of_count:
+      one: "max i %{count}"
+      other: "max i %{count}"
     character_count:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
@@ -216,6 +219,7 @@ sq:
       not_bookmarked: "shto postimin tek të preferuarat"
       save: "Ruaj"
       search: "Kërko"
+      bookmark: "Shto tek të preferuarat"
     drafts:
       remove: "Hiq"
     preview: "shiko"
@@ -457,7 +461,9 @@ sq:
       categories_label: "categories"
       subcategories_label: "nënkategori"
       remove_filter: "hiq filtrin"
-      plus_more_count: "+%{count} tjetër"
+      plus_more_count:
+        one: "+%{count} tjetër"
+        other: "+%{count} të tjera"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
       reorder:
@@ -484,7 +490,9 @@ sq:
       organisation: Organizata
       phone: Telefoni
       other_accounts: "Llogari të tjera me këtë adresë IP:"
-      delete_other_accounts: "Fshi %{count}"
+      delete_other_accounts:
+        one: "Fshi %{count}"
+        other: "Fshi %{count}"
       username: "emri i përdoruesit"
       trust_level: "TL"
       read_time: "koha e leximit"
@@ -793,7 +801,6 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "Të pakTën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -2265,8 +2272,6 @@ sq:
           schema:
             fields:
               required: "*e nevojshme"
-              string:
-                too_short: "must be at least %{count} characters"
               number:
                 too_small: "must be greater than or equal to %{count}"
                 too_large: "must be less than or equal to %{count}"
