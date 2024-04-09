@@ -16,14 +16,15 @@ class DraftsController < ApplicationController
         offset: params[:offset],
         limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
       )
-    categories =
-      Category.where(
-        "id IN (:ids) OR id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))",
-        ids: stream.map { |draft| draft.topic.category_id }.uniq,
-      ).to_a
 
     response = { drafts: serialize_data(stream, DraftSerializer) }
+
     if guardian.can_lazy_load_categories?
+      categories =
+        Category.where(
+          "id IN (:ids) OR id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))",
+          ids: stream.map { |draft| draft.topic.category_id }.uniq,
+        ).to_a
       response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
     end
 
