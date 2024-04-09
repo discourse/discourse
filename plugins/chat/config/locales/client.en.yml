@@ -238,6 +238,9 @@ en:
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
         description: "Do not send notifications for channel-wide mentions (@here and @all)"
+      show_thread_title_prompts:
+        title: "Show thread title prompts"
+        description: "Show prompts to set a title for new threads"
       open: "Open chat"
       open_full_page: "Open full-screen chat"
       close_full_page: "Close full-screen chat"

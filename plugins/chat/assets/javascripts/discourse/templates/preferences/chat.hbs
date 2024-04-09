@@ -46,6 +46,23 @@
 </div>
 
 <div
+  class="control-group chat-setting"
+  data-setting-name="user_chat_show_thread_title_prompts"
+>
+  <label class="controls">
+    <Input
+      id="user_chat_show_thread_title_prompts"
+      @type="checkbox"
+      @checked={{this.model.user_option.show_thread_title_prompts}}
+    />
+    {{i18n "chat.show_thread_title_prompts.title"}}
+  </label>
+  <span class="control-instructions">
+    {{i18n "chat.show_thread_title_prompts.description"}}
+  </span>
+</div>
+
+<div
   class="control-group chat-setting controls-dropdown"
   data-setting-name="user_chat_sounds"
 >

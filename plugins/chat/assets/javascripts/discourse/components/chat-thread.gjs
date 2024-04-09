@@ -580,13 +580,23 @@ export default class ChatThread extends Component {
     }
   }
 
+  @action
+  disableFutureThreadTitlePrompts() {
+    this.currentUser.set("user_option.show_thread_title_prompts", false);
+    this.currentUser.save();
+  }
+
   get canShowToast() {
-    let threadReplyCount = this.messagesManager.messages.length - 1;
+    const threadReplyCount = this.messagesManager.messages.length - 1;
+    const ignoreThreadTitlePrompts =
+      !this.currentUser.user_option.show_thread_title_prompts;
+    const hasSeenThreadTitlePrompt = this.membership?.threadTitlePrompt;
 
     if (
       this.site.desktopView ||
       this.args.thread.title ||
-      this.membership?.threadTitlePrompt ||
+      ignoreThreadTitlePrompts ||
+      hasSeenThreadTitlePrompt ||
       threadReplyCount < THREAD_TITLE_REPLIES_THRESHOLD
     ) {
       return false;
@@ -613,6 +623,7 @@ export default class ChatThread extends Component {
             label: this.toastText.dismissLabel,
             class: "btn-link toast-hide",
             action: (toast) => {
+              this.disableFutureThreadTitlePrompts();
               toast.close();
             },
           },
