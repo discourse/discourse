@@ -250,7 +250,7 @@ class Theme < ActiveRecord::Base
           .joins(:child_theme)
           .where(themes: { enabled: true })
           .pluck(:child_theme_id)
-      (theme_ids + component_ids).uniq
+      (theme_ids | component_ids)
     end
   end
 
