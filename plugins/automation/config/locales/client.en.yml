@@ -244,6 +244,19 @@ en:
               label: Topic ID
             post:
               label: Post content
+        topic:
+          fields:
+            creator:
+              label: Creator
+              updated_user_context: The updated user
+            body:
+              label: Topic body
+            title:
+              label: Topic title
+            category:
+              label: Topic category
+            tags:
+              label: Topic tags
         group_category_notification_default:
           fields:
             group:
