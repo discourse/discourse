@@ -181,10 +181,6 @@ class Draft < ActiveRecord::Base
     @topic = topic
   end
 
-  def category
-    topic&.category
-  end
-
   def post_id
     parsed_data["postId"]
   end

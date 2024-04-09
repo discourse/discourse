@@ -28,7 +28,11 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    categories = Category.where(id: stream.map(&:category_id).uniq).to_a
+    categories =
+      Category.where(
+        "id IN (:ids) OR id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))",
+        ids: stream.map(&:category_id).uniq,
+      ).to_a
 
     response = { user_actions: serialize_data(stream, UserActionSerializer) }
     if guardian.can_lazy_load_categories?

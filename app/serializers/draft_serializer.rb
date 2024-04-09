@@ -5,8 +5,6 @@ require_relative "post_item_excerpt"
 class DraftSerializer < ApplicationSerializer
   include PostItemExcerpt
 
-  has_one :category, serializer: CategoryBadgeSerializer
-
   attributes :created_at,
              :draft_key,
              :sequence,
