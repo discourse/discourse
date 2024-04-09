@@ -20,11 +20,8 @@ class DraftsController < ApplicationController
     response = { drafts: serialize_data(stream, DraftSerializer) }
 
     if guardian.can_lazy_load_categories?
-      categories =
-        Category.where(
-          "id IN (:ids) OR id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))",
-          ids: stream.map { |draft| draft.topic.category_id }.uniq,
-        ).to_a
+      category_ids = stream.map { |draft| draft.topic&.category_id }.compact.uniq
+      categories = Category.secured(guardian).with_parents(category_ids)
       response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
     end
 
