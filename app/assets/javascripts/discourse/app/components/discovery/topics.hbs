@@ -74,6 +74,22 @@
     />
   </span>
 
+  <h2 style="margin-bottom: 1em; margin-top: 0; font-size: 24px;">
+    Welcome
+    {{#if this.currentUser.name}}
+      {{this.currentUser.name}}!
+    {{else}}
+      {{this.currentUser.username}}!
+    {{/if}}
+  </h2>
+
+  <TagDrop
+    @currentCategory={{@category}}
+    @noSubcategories={{this.noSubcategories}}
+    @tagId={{@tag.id}}
+    style="margin-bottom: 1em;"
+  />
+
   {{#if this.hasTopics}}
     <TopicList
       @highlightLastVisited={{true}}
