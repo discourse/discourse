@@ -3,11 +3,13 @@
 
 require "discourse_api"
 
+key = ENV["META_DOCS_API_KEY"]
+
+raise "No API key provided" if key.nil? || key.size < 1
+
 client = DiscourseApi::Client.new("https://meta.discourse.org")
 client.api_key = ENV["META_DOCS_API_KEY"]
 client.api_username = "system"
-
-puts "Using key ending ...#{ENV["META_DOCS_API_KEY"][-4..-1]}"
 
 # Add your doc files here!
 # Make sure the post_id has been added to the Meta API key scope first.

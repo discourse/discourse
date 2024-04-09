@@ -24,6 +24,6 @@ jobs:
 
       - name: Publish docs to Meta
         env: # Or as an environment variable
-          meta_docs_api_key: ${{ secrets.meta_docs_api_key }}
+          META_DOCS_API_KEY: ${{ secrets.META_DOCS_API_KEY }}
         run: script/publish_docs.rb
 
