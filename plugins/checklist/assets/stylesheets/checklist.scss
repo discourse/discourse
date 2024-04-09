@@ -22,14 +22,9 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
-  &:not(.permanent) {
-    cursor: pointer;
-  }
-
-  &:before {
-    display: inline-block;
-    vertical-align: middle;
-  }
+  cursor: pointer;
+  display: inline-flex;
+  vertical-align: text-bottom;
 
   &:not(.checked) {
     &.fa-square-o {
@@ -68,20 +63,18 @@ span.chcklst-box {
 ul li.has-checkbox {
   list-style-type: none;
   position: relative;
+}
 
-  .list-item-checkbox {
-    position: absolute;
-    left: -1.2em;
-  }
+ul:has(li.has-checkbox) {
+  padding-left: 0;
 }
 
 .fa-spin {
-  display: inline-block;
-  vertical-align: middle;
-  margin-bottom: 0.25em;
+  display: inline-flex;
+  vertical-align: text-bottom;
   animation: fa-spin 2s infinite linear;
-  width: 14px;
-  height: 17px;
+  width: 1em;
+  height: 1em;
 }
 
 @keyframes fa-spin {
