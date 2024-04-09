@@ -241,6 +241,19 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def self.enabled_theme_and_component_ids
+    get_set_cache "enabled_theme_and_component_ids" do
+      theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
+      component_ids =
+        ChildTheme
+          .where(parent_theme_id: theme_ids)
+          .joins(:child_theme)
+          .where(themes: { enabled: true })
+          .pluck(:child_theme_id)
+      (theme_ids | component_ids)
+    end
+  end
+
   def self.allowed_remote_theme_ids
     return nil if GlobalSetting.allowed_theme_repos.blank?
 
