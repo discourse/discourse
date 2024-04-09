@@ -8,10 +8,12 @@ export default class UserChatThreadMembership {
 
   @tracked lastReadMessageId = null;
   @tracked notificationLevel = null;
+  @tracked threadTitlePrompt = null;
 
   constructor(args = {}) {
     this.lastReadMessageId = args.last_read_message_id;
     this.notificationLevel = args.notification_level;
+    this.threadTitlePrompt = args.thread_title_prompt;
   }
 
   get isQuiet() {

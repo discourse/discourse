@@ -374,6 +374,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Update thread title prompt of current user for a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.thread_title_prompt] - (true) to prevent showing user the prompt for this thread in the future.
+   * @returns {Promise}
+   */
+  updateCurrentUserThreadTitlePrompt(channelId, threadId, data) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/thread-title-prompt/me`,
+      { thread_title_prompt: data.thread_title_prompt }
+    );
+  }
+
+  /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.

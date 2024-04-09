@@ -21,6 +21,7 @@ end
 #  thread_id            :bigint           not null
 #  last_read_message_id :bigint
 #  notification_level   :integer          default("tracking"), not null
+#  thread_title_prompt  :boolean          default(false), not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #

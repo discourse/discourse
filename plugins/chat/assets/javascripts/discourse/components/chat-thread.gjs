@@ -113,6 +113,7 @@ export default class ChatThread extends Component {
         thread: this.args.thread,
       });
     this.chatThreadComposer.focus();
+    this.createThreadMembership();
     this.loadMessages();
   }
 
@@ -543,19 +544,56 @@ export default class ChatThread extends Component {
     return prev;
   }
 
+  get membership() {
+    return this.args.thread.currentUserMembership;
+  }
+
+  @action
+  createThreadMembership() {
+    if (this.membership || !this.currentUser.admin) {
+      return;
+    }
+
+    this.args.thread.currentUserMembership = UserChatThreadMembership.create({
+      notification_level: NotificationLevels.TRACKING,
+      last_read_message_id: this.args.thread.lastMessageId,
+      thread_title_prompt: false,
+    });
+  }
+
+  @action
+  async updateThreadTitlePrompt() {
+    if (!this.membership) {
+      return;
+    }
+
+    try {
+      await this.chatApi.updateCurrentUserThreadTitlePrompt(
+        this.args.thread.channel.id,
+        this.args.thread.id,
+        { thread_title_prompt: true }
+      );
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log("Couldn't save thread title prompt status", e);
+      this.membership.threadTitlePrompt = false;
+    }
+  }
+
   get canShowToast() {
     let threadReplyCount = this.messagesManager.messages.length - 1;
 
     if (
       this.site.desktopView ||
       this.args.thread.title ||
+      this.membership?.threadTitlePrompt ||
       threadReplyCount < THREAD_TITLE_REPLIES_THRESHOLD
     ) {
       return false;
     }
 
     return (
-      this.args.thread.user_id === this.currentUser.id || this.currentUser.staff
+      this.args.thread.user_id === this.currentUser.id || this.currentUser.admin
     );
   }
 
@@ -592,6 +630,8 @@ export default class ChatThread extends Component {
         ],
       },
     });
+
+    this.updateThreadTitlePrompt();
   }
 
   <template>
