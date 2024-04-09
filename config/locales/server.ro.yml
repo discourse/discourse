@@ -1123,7 +1123,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
-    default_other_skip_new_user_tips: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi."
+    default_other_skip_new_user_tips: "Omite sfaturi și insigne de înscriere pentru utilizatori noi."
     default_other_like_notification_frequency: "Implicit, notifică utilizatorul la primirea de aprecieri."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
     default_categories_watching: "Implicit, listează categoriile care sunt urmărite în mod activ."

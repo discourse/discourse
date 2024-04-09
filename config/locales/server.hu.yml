@@ -52,12 +52,18 @@ hu:
   remove_posts_deleted_by_author: "Szerző által törölve"
   redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
   on_another_topic: "Egy másik témában"
+  topic_category_changed: "%{from} -től %{to}-ig"
+  topic_tag_changed:
+    added_and_removed: "Hozzáadva %{added} és eltávolítva %{removed}"
+    added: "Hozzáadva %{added}"
+    removed: "Eltávolítva %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
   components:
     enabled_filter: "Engedélyezed"
     disabled_filter: "Kikapcsolt"
+    updates_available_filter: "Frissítések érhetők el"
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
@@ -65,15 +71,26 @@ hu:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
       about_json: "Importálási hiba: az about.json nem létezik, vagy érvénytelen. Biztos, hogy ez egy Discourse téma?"
+      about_json_too_big: "Importálási hiba: az about.json nagyobb, mint a %{limit} korlát."
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
+      asset_too_big: "A %{filename} nagyobb, mint a %{limit} korlát"
+      theme_too_big: "A téma nagyobb, mint a %{limit} korlát"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
       git_ref_not_found: "Nem sikerült a git-hivatkozást ellenőrizni: %{ref}"
       git_unsupported_scheme: "Nem sikerült klónozni a git repót: nem támogatott séma"
       unpack_failed: "A fájl kibontása sikertelen"
       file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
+      not_allowed_theme: "A `%{repo}` nem szerepel a megengedett témák listáján (ellenőrizze az `allowed_theme_repos` globális beállítást)."
       ssh_key_gone: "Túl sokáig várt a téma telepítésével, és az SSH-kulcs lejárt. Kérjük, próbálja meg újra."
+      too_many_files: "A fájlok száma (%{count}) a témában meghaladta a maximálisan megengedett fájlszámot (%{limit})."
+      migrations:
+        invalid_filename: "Érvénytelen fájlnév a migrációs fájlhoz: %{filename}. A fájlneveknek 4 számjeggyel kell kezdődniük, amelyet egy kötőjel követ, majd egy név, amely csak alfanumerikus karaktereket és kötőjeleket tartalmaz."
+        name_too_long:
+          one: "A migrációs név túl hosszú. Nem haladhatja meg a %{count} karaktert."
+          other: "A migrációs név túl hosszú. Nem haladhatja meg a %{count} karaktert."
+        too_many_pending_migrations: "Túl sok függőben lévő migráció van ebben a témában. A témák nem vezethetnek be 100-nál több migrációt egyetlen frissítésben"
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
       component_no_default: "A témaösszetevő nem lehet alapértelmezett téma"
@@ -703,6 +720,7 @@ hu:
     trust_level_growth:
       yaxis: "Nap"
     consolidated_page_views:
+      title: "Összevont oldalmegtekintések"
       xaxis:
         page_view_anon: "Névtelen felhasználók"
         page_view_logged_in: "Bejelentkezett felhasználók"
@@ -927,12 +945,17 @@ hu:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
+    watched_word_regexp_error: "A '%{action}' figyelt szavakra vonatkozó reguláris kifejezés érvénytelen. ELlenőrizd a <a href='%{base_path}/admin/customize/watched_words'>figyelt szavak beállításait</a>, vagy tiltsd le a 'figyelt szavak' webhelybeállítást."
     v3_analytics_deprecated: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
+    ember_version_warning: "A webhelyed a nem támogatott EMBER_VERSION=3 konfigurációval fut. Ez váratlan problémákhoz vezethet a témákkal/pluginokkal. Távolítsd el az EMBER_VERSION konfigurációt az app.yml fájlból és építsd újra.. További információért <a href='https://meta.discourse.org/t/287211'>lásd a https://meta.discourse.org/t/287211 oldalon</a>."
   site_settings:
     disabled: "kikapcsolva"
+    default_locale: "A Discourse alapértelmezett nyelve. A rendszer által generált kategóriák és témák szövegét lecserélheted a <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Személyre szabás / Szöveg</a>oldalon."
+    topic_featured_link_enabled: "Engedélyezze a témákhoz kapcsolódó link közzétételét."
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
     search_tokenize_chinese: "A keresés kényszerítése, hogy tokenizálja a kínait, még a nem kínai oldalakon is"
     search_tokenize_japanese: "A keresés kényszerítése, hogy tokenizálja a japánt, még a nem japán oldalakon is"
+    search_ignore_accents: "Az ékezetek figyelmen kívül hagyása a szöveg keresésekor."
     title: "Az oldal neve. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     site_description: "Írja le ezt a helyszínt egy mondatban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     short_site_description: "Rövid leírás néhány szóban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
@@ -944,46 +967,72 @@ hu:
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
+    block_onebox_on_redirect: "Az átirányító URL-címek onebox blokkolása."
+    max_oneboxes_per_post: "Maximális számú onebox egy posztban."
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
+    personal_message_enabled_groups: "Engedélyezze, hogy a felhasználók ezeken a csoportokon belül üzeneteket hozzanak létre és üzenetekre válaszoljanak. A bizalmi szintű csoportok magukban foglalják az adott szám feletti összes bizalmi szintet, például a bizalmi_szint_1 kiválasztása lehetővé teszi a bizalmi_szint_2, 3, 4 felhasználók számára is, hogy PM-eket küldjenek. Ne feledd, hogy a munkatársak mindig küldhetnek üzeneteket, függetlenül attól, hogy milyenek."
+    enable_markdown_typographer: "Használja a tipográfiai szabályokat a szöveg olvashatóságának javítása érdekében: helyettesítse az egyenes idézőjeleket ' görbe idézőjelekkel ', a (c) (tm) szimbólumokkal, -- emdash -vel, stb."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
+    content_security_policy: "Tartalom-biztonsági házirend (CSP) engedélyezése"
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
+    content_security_policy_script_src: "További engedélyezett szkriptforrások. Az aktuális állomás és a CDN alapértelmezés szerint szerepel. Lásd: <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-támadások mérséklése tartalombiztonsági házirenddel</a>. (CSP)"
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
+    moderators_view_emails: "Engedélyezze a moderátoroknak a felhasználói e-mailek megtekintését"
     email_token_valid_hours: "Elfelejtett jelszó / fiókaktiválási tokenek (n) óráig érvényesek."
     enable_badges: "A jelvény rendszer engedélyezése"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail cím megkövetelése az „elfelejtett jelszó” kérésekhez."
+    include_in_discourse_discover: "Hagyja, hogy a CDCK, Inc. („Discuss”) megjelenítse ezt a közösséget a <a href='https://www.discourse.org/discover'>Discover oldalon</a> és a Discuss marketing anyagokban. Ezzel megoszthatja a közösségi metaadatokat és a névtelen használati statisztikákat a Discus-szal. Felhívjuk figyelmed, hogy a közösségek népszerűsítése a Discourse belátása szerint történik."
     min_password_length: "Minimum jelszóhossz."
+    min_admin_password_length: "Minimális jelszóhossz az adminisztrátor számára."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     discourse_connect_url: "A DiscourseConnect végpont URL-je (tartalmaznia kell a http:// vagy https:// karaktereket, és nem tartalmazhat a végén perjelet)"
+    google_oauth2_client_id: "A Google-alkalmazás ügyfél-azonosítója."
     discord_secret: "Discord titkos kulcs"
     maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
+    backup_frequency: "A biztonsági mentések közötti napok száma."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
     suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több mint n naposak."
+    external_system_avatars_enabled: "Külső rendszer avatar szolgáltatás használata."
     external_emoji_url: "Az emodzsi képek külső szolgáltatásának URL-je. A letiltáshoz hagyja üresen."
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     strip_image_metadata: "A kép metaadatainak eltávolítása."
+    post_links_allowed_groups: "Csoportok, amelyeknek engedélyezett a linkek bejegyzése a hozzászólásokban."
+    enable_mentions: "Engedélyezze a felhasználóknak, hogy megemlítsenek más felhasználókat."
     max_here_mentioned: "Az @itt által megemlített személyek maximális száma."
     min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
+    desktop_category_page_style: "Vízuális stílus a /kategóriák oldalhoz."
     dark_mode_none: "Egyik sem"
     cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
     log_anonymizer_details: "Anonimizálás után meg kell-e őrizni a felhasználó adatait a naplóban."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
+    short_email_length: "Rövid e-mail hossza bájtokban"
     block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
     sendgrid_verification_key: "Sendgrid ellenőrző kulcs, amelyet a webhook üzenetek ellenőrzésére használnak."
     mailjet_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook 't' lekérdezési paramétereként kell átadni, például: https://example.com/webhook/mailjet?t=supersecret"
     mandrill_authentication_key: "Mandrill hitelesítési kulcs a webhook üzenetek ellenőrzésére."
     postmark_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook „t” lekérdezési paramétereként kell átadni, például: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook 't' lekérdezési paramétereként kell átadni, például: https://example.com/webhook/sparkpost?t=supersecret"
+    pop3_polling_enabled: "Szavazás a POP3-on keresztül e-mailes válaszokhoz."
+    pop3_polling_period_mins: "A POP3-fiók e-mail-ellenőrzése közötti időtartam percekben. MEGJEGYZÉS: újraindítást igényel."
+    pop3_polling_port: "A POP3-fiók lekérdezéséhez használt port."
+    pop3_polling_host: "A POP3-on keresztül történő e-mail lekérdezéshez szükséges host."
+    email_in_spam_header: "E-mail fejléc a spamek felismeréséhez."
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
     suppress_digest_email_after_days: "Letiltja az összefoglaló e-maileket azon felhasználók számára, akik nem láttak a webhelyen (n) napnál hosszabb ideig."
     digest_suppress_categories: "Letiltom ezeket a kategóriákat az összefoglaló e-mailekből."
+    disable_digest_emails: "Összefoglaló e-mailek letiltása minden felhasználó számára."
+    allow_anonymous_posting: "Lehetővé teszi a felhasználók számára, hogy névtelen üzemmódba váltsanak"
+    allow_anonymous_likes: "Anonim felhasználók számára engedélyezi a hozzászólások lájkolását"
     dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
+    share_anonymized_statistics: "Anonimizált használati statisztikák megosztása."
+    embed_topics_list: "Témalisták HTML beágyazásának támogatása"
     embed_truncate: "Beágyazott bejegyzések rövidítése."
     embed_post_limit: "A bejegyzések maximális száma a beágyazásban."
     delete_drafts_older_than_n_days: "Törölje az (n) napnál régebbi piszkozatokat."
@@ -993,9 +1042,22 @@ hu:
     emoji_set: "Hogy szeretné az emodzsiját?"
     emoji_deny_list: "Ezek a hangulatjelek nem használhatók menükben vagy rövid kódokban."
     auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
+    watched_words_regular_expressions: "A megfigyelt szavak szabályos kifejezések."
+    old_post_notice_days: "Értesítés a bejegyzés elévülése előtt"
     default_email_digest_frequency: "Alapértelmezés szerint a felhasználók milyen gyakran kapnak összefoglaló e-maileket."
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
+    default_text_size: "Alapértelmezés szerint kiválasztott szövegméret"
+    default_title_count_mode: "Az oldalcím-számláló alapértelmezett módja"
+    tagging_enabled: "Címkék engedélyezése a témákban?"
+    tag_style: "Címkék vizuális stílusa."
+    governing_law: "Irányadó jog"
+    city_for_disputes: "Város a vitákért"
+    push_notifications_prompt: "Felhasználói hozzájárulást kérő megjelenítése."
+    enable_desktop_push_notifications: "Asztali push értesítések engedélyezése"
+    gravatar_name: "A Gravatar szolgáltató neve"
+    gravatar_base_url: "A Gravatar szolgáltató API bázisának URL-je"
+    gravatar_login_url: "A gravatar_base_url-hez viszonyított url, amely a felhasználó számára a Gravatar szolgáltatásba való bejelentkezést biztosítja."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
     experimental_new_new_view_groups: 'Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő "Minden" linket kapcsolja rá.'
     enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
@@ -1137,6 +1199,32 @@ hu:
 
       [0]: %{base_url}
       [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
+  new_version_mailer:
+    text_body_template: |
+      Hurrá, elérhető a [Discourse](https://www.discourse.org) új verziója!
+
+      A te verziód: %{installed_version}
+      Új verzió: **%{new_version}**
+
+      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/upgrade)**
+
+      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsdmeg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
+
+      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
+  new_version_mailer_with_notes:
+    text_body_template: |
+      A te verziód: %{installed_version}
+      Új verzió: **%{new_version}**
+
+      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/upgrade)**
+
+      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsd meg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
+
+      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
+
+      ### Kiadási jegyzet
+
+      %{notes}
   flag_reasons:
     responder:
       off_topic: "Ezt a bejegyzést **nem témába vágóként** jelentették: a közösség úgy érzi, hogy a cím és az első bejegyzés alapján nem felel meg a témának."
@@ -1812,6 +1900,7 @@ hu:
     unauthorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
     size_zero_failure: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
     images:
+      larger_than_x_megapixels: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret: %{max_image_megapixels}-megapixel), módosítsd a méretét és próbáld meg újra."
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
   skipped_email_log:
     user_email_anonymous_user: "A felhasználó anonim"
@@ -1858,6 +1947,104 @@ hu:
     rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Kérünk, próbáld újra holnap."
   guidelines_topic:
     title: "GYIK/Irányelvek"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Ez egy civilizált nyilvános vitahely](#civilizált)
+
+      Kérlek, kezeld ezt a vitafórumot ugyanolyan tisztelettel, mint egy nyilvános parkot. Mi is egy közös közösségi erőforrás vagyunk &mdash; egy hely, ahol folyamatos beszélgetésen keresztül megoszthatók a készségek, a tudás és az érdeklődés.
+
+      Ezek nem kemény és szigorú szabályok. Ezek olyan irányelvek, amelyek segítik közösségünk emberi megítélését, és segítik, hogy ez egy kedves, barátságos hely maradjon a civilizált nyilvános viták számára.
+
+      <a name="improve"></a>
+
+      ## [Javítsd a vitát](#javítsd)
+
+      Segíts nekünk, hogy ez egy nagyszerű hely legyen a viták számára, azzal, hogy mindig hozzáadsz valami pozitívumot a vitához, bármilyen kicsi is legyen az. Ha nem vagy biztos benne, hogy a hozzászólásod hozzájárul a beszélgetéshez, gondold át, mit akarsz mondani, és próbáld meg később újra.
+
+      A vita javításának egyik módja, ha felfedezed azokat, amelyek már zajlanak. Tölts időt az itteni témák böngészésével, mielőtt válaszol vagy sajátot indít, és így nagyobb eséllyel találkozhat olyanokkal, akik osztják az érdeklődési körét.
+
+      Az itt megvitatott témák fontosak számunkra, és azt szeretnénk, ha úgy viselkednél, mintha neked is fontosak lennének. Légy tisztelettudó a témákkal és a beszélgetőpartnerekkel szemben, még akkor is, ha nem értesz egyet egyes véleményekkel.
+
+      <a name="agreeable"></a>
+
+      ## [Légy egyetértő, még akkor is, ha nem értesz egyet](#egyetértő)
+
+      Lehet, hogy nem értesz egyet. Ez rendben van. De ne feledd, hogy _a gondolatokat kritizáld, ne az embereket_. Kérjük, kerüld:
+
+      * Névmásolás
+      * Ad hominem támadások
+      * A hozzászólás hangnemére való reagálás a tényleges tartalom helyett
+      * Térdből jövő ellentmondás
+
+      Ehelyett adj átgondolt meglátásokat, amelyek javítják a beszélgetést.
+
+      <a name="participate"></a>
+
+      ## [A részvételed számít](#részvétel)
+
+      Az itt folytatott beszélgetések adják meg az alaphangot minden újonnan érkezőnek. Segíts nekünk befolyásolni ennek a közösségnek a jövőjét azzal, hogy olyan vitákban veszel részt, amelyek érdekessé teszik ezt a fórumot &mdash; és elkerülöd azokat, amelyek nem teszik ezt.
+
+      A Discourse olyan eszközöket biztosít, amelyek segítségével a közösség közösen azonosíthatja a legjobb (és legrosszabb) hozzászólásokat: könyvjelzők, kedvelések, megjelölések, válaszok, szerkesztések, figyelés, némítás stb. Használd ezeket az eszközöket, hogy javítsd a saját és mindenki más élményét is.
+
+      Hagyjuk a közösségünket jobban, mint ahogyan találtuk.
+
+      <a name="flag-problems"></a>
+
+      ## [Ha problémát látsz, jelöld meg](#flag-problems)
+
+      A moderátorok különleges hatáskörrel rendelkeznek; ők felelősek ezért a fórumért. De te is az vagy. A te segítségeddel a moderátorok a közösség segítői lehetnek, nem csak gondnokok vagy rendőrök.
+
+      Ha rossz viselkedést láttok, ne válaszoljatok. A válaszadás a rossz viselkedés elismerésével bátorítja azt, felemészti az energiádat, és mindenki idejét pazarolja. Csak jelezd meg. Ha elég sok jelző gyűlik össze, intézkedni fogunk, akár automatikusan, akár moderátori beavatkozással.
+
+      Közösségünk fenntartása érdekében a moderátorok fenntartják a jogot, hogy bármikor, bármilyen okból bármilyen tartalmat és felhasználói fiókot eltávolítsanak. A moderátorok nem nézik meg előzetesen az új hozzászólásokat; a moderátorok és az oldal üzemeltetői nem vállalnak felelősséget a közösség által közzétett tartalmakért.
+
+      <a name="be-civil"></a>
+
+      ## [Mindig légy civil](#be-civil)
+
+      Semmi sem szabotálja úgy az egészséges beszélgetést, mint a durvaság:
+
+      * Légy udvarias. Ne posztolj semmi olyat, amit egy értelmes ember sértőnek, gyalázkodónak vagy gyűlöletbeszédnek tartana.
+      * Tartsd tisztán. Ne posztolj semmi obszcén vagy szexuálisan egyértelmű dolgot.
+      * Tiszteljük egymást. Ne zaklass vagy bántalmazz senkit, ne add ki magad másoknak, és ne fedd fel a személyes adataikat.
+      * Tiszteld a fórumunkat. Ne írjatok spamet vagy más módon rongáljátok a fórumot.
+
+      Ezek nem konkrét fogalmak, pontos definíciókkal &mdash; kerüld el még a _jelenlétét_ is ezeknek a dolgoknak. Ha bizonytalan vagy, kérdezd meg magadtól, hogyan éreznéd magad, ha a hozzászólásod egy nagy hírportál címlapján szerepelne.
+
+      Ez egy nyilvános fórum, és a keresőmotorok indexelik ezeket a vitákat. Tartsa a nyelvezetet, a linkeket és a képeket biztonságban a család és a barátok számára.
+
+      <a name="keep-tidy"></a>
+
+      ## [Keep It Tidy](#keep-tidy)
+
+      Igyekezz a dolgokat a megfelelő helyre tenni, hogy több időt tölthessünk vitával és kevesebbet takarítással. Szóval:
+
+      * Ne indíts témát rossz kategóriában; kérlek olvasd el a kategóriák definícióit.
+      * Ne tegyétek ugyanazt a dolgot több topikba.
+      * Ne írj tartalmatlan válaszokat.
+      * Ne tereld el a témát azzal, hogy menet közben megváltoztatod.
+      * Ne írd alá a hozzászólásaidat &mdash; minden hozzászólásodhoz a profilod adatai tartoznak.
+
+      A "+1" vagy "Egyetértek" helyett használd a Tetszik gombot. Ahelyett, hogy egy meglévő témát gyökeresen más irányba terelnél, használd a Válaszolj mint Kapcsolódó téma funkciót.
+
+      <a name="stealing"></a>
+
+      ## [Csak a saját dolgaidat posztold](#stealing)
+
+      Nem posztolhatsz engedély nélkül semmi olyan digitális dolgot, ami másé. Nem posztolhatsz leírásokat, linkeket vagy módszereket más szellemi tulajdonának (szoftver, videó, hang, kép) ellopására, vagy bármilyen más törvény megszegésére.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Ezt az oldalt a [barátságos helyi személyzet](%{base_path}/about) és *Te*, a közösség működteti. Ha további kérdésed van azzal kapcsolatban, hogy hogyan kellene itt működniük a dolgoknak, nyiss egy új témát a %{feedback_category_hashtag} oldalon, és beszéljük meg! Ha olyan kritikus vagy sürgős kérdés merül fel, amelyet nem lehet egy metatémával vagy zászlóval kezelni, lépj velünk kapcsolatba a [staff oldalon](%{base_path}/about) keresztül.
+
+      <a name="tos"></a>
+
+      ## [Felhasználási feltételek](#tos)
+
+      Igen, a jogi nyelvezet unalmas, de meg kell védenünk magunkat &ndash; és ezáltal téged és az adataidat &ndash; a barátságtalan emberekkel szemben. Van egy [Felhasználási feltételek](%{base_path}/tos), amely leírja a TE (és a mi) viselkedés jogait a tartalommal, az adatvédelemmel és a törvényekkel kapcsolatban. A szolgáltatás használatához bele kell egyeznd a [TOS](%{base_path}/tos) betartásába.
   tos_topic:
     title: "Szolgáltatási feltételek"
   privacy_topic:

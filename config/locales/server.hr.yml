@@ -2079,7 +2079,7 @@ hr:
       popular_posts: "Popularne objave"
       more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Sažetak"
-      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link}ili %{unsubscribe_link} da biste otkazali pretplatu."
+      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link} ili %{unsubscribe_link} da biste otkazali pretplatu."
       your_email_settings: "vaše e-mail postavke"
       click_here: "kliknite ovdje"
       from: "%{site_name}"
