@@ -13,6 +13,7 @@ export default class ChatChannelComposer extends Service {
   @service loadingSlider;
   @service capabilities;
   @service appEvents;
+  @service site;
 
   @tracked textarea;
   @tracked scrollable;
@@ -48,7 +49,10 @@ export default class ChatChannelComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     message.channel.draft = message;
-    this.focus({ refreshHeight: true, ensureAtEnd: true });
+
+    if (this.site.desktopView) {
+      this.focus({ refreshHeight: true, ensureAtEnd: true });
+    }
   }
 
   @action

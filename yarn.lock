@@ -1688,10 +1688,10 @@
   dependencies:
     "@simple-dom/interface" "^1.4.0"
 
-"@glimmer/interfaces@^0.91.2":
-  version "0.91.2"
-  resolved "https://registry.yarnpkg.com/@glimmer/interfaces/-/interfaces-0.91.2.tgz#14e18b83e2908a72d8748cde2139902b56695b25"
-  integrity sha512-AVmS2zgT+ndlAiPrdMYNkSKOqZvz+IKLvTXJpWZC/SINXKI2fiHMBGrZKP0dKNqyFeugKdEf2N81Y45sMM06PQ==
+"@glimmer/interfaces@^0.92.0":
+  version "0.92.0"
+  resolved "https://registry.yarnpkg.com/@glimmer/interfaces/-/interfaces-0.92.0.tgz#2b4071b11245284b330cb1d221bccc31dbccfec7"
+  integrity sha512-SKZvIs+ZPN8F3EH8kEzs7rGIUa+wuV+/3oWYyEiBrqd+VrZlmAxIELM6qZ6oxXT2tx6q1rh2EmA5rWezi6bmYQ==
   dependencies:
     "@simple-dom/interface" "^1.4.0"
 
@@ -1807,14 +1807,14 @@
     "@handlebars/parser" "~2.0.0"
     simple-html-tokenizer "^0.5.11"
 
-"@glimmer/syntax@^0.91.2":
-  version "0.91.2"
-  resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.91.2.tgz#bfee06f1d0118beff3308a99c1f684f27da96b1f"
-  integrity sha512-+DOnlECVkbIvHme3faCqmgZJ6bSnIkVz5ZEK+NoorgG76l4XEkcQzSG+pg4acC/+UhlZEEOOBB0UX+fGJUX03w==
+"@glimmer/syntax@^0.92.0":
+  version "0.92.0"
+  resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.92.0.tgz#f681367d2f84a18f7fdbb1e31093af59617ff790"
+  integrity sha512-h8pYBC2cCnEyjbZBip2Yw4qi8S8sjNCYAb57iHek3AIhyFKMM13aTN+/aajFOM4FUTMCVE2B/iAAmO41WRCX4A==
   dependencies:
-    "@glimmer/interfaces" "^0.91.2"
-    "@glimmer/util" "^0.91.2"
-    "@glimmer/wire-format" "^0.91.2"
+    "@glimmer/interfaces" "^0.92.0"
+    "@glimmer/util" "^0.92.0"
+    "@glimmer/wire-format" "^0.92.0"
     "@handlebars/parser" "~2.0.0"
     simple-html-tokenizer "^0.5.11"
 
@@ -1848,13 +1848,13 @@
     "@glimmer/env" "0.1.7"
     "@glimmer/interfaces" "^0.88.1"
 
-"@glimmer/util@^0.91.2":
-  version "0.91.2"
-  resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.91.2.tgz#73813199f34880a94d894d8e551deee3f3cc0ddb"
-  integrity sha512-pCasBL49fX23S0ZH3FZqpoO+8sZfYtNa8Lc4d/JMXDf5RyVAYG8DN4oad08tNPUKDX+Jt+ZS8MDaQvX07McvTA==
+"@glimmer/util@^0.92.0":
+  version "0.92.0"
+  resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.92.0.tgz#cf97dca6bb926453bd194532410d2cdd8d71961b"
+  integrity sha512-Fap52smLp8RkCgvozrZG7RysNJ2T6mk1SPoknMzmukbabFVBAzxl5iyY4OXUbmR09j6t2pupjF6sPabnLtL4vw==
   dependencies:
     "@glimmer/env" "0.1.7"
-    "@glimmer/interfaces" "^0.91.2"
+    "@glimmer/interfaces" "^0.92.0"
 
 "@glimmer/validator@0.84.3", "@glimmer/validator@^0.84.3":
   version "0.84.3"
@@ -1900,13 +1900,13 @@
     "@glimmer/interfaces" "^0.88.1"
     "@glimmer/util" "^0.88.1"
 
-"@glimmer/wire-format@^0.91.2":
-  version "0.91.2"
-  resolved "https://registry.yarnpkg.com/@glimmer/wire-format/-/wire-format-0.91.2.tgz#4eca507be4b2acdc170fe773d9d21d65fb66c1e3"
-  integrity sha512-ZBtea8p4f/ECagChjHFh8s0NrX+lM1nCWCiP1Z0HaGomQuH05rLS4meTJHKiLXvc9K7yuK1NDt5QNrZGfRXI6g==
+"@glimmer/wire-format@^0.92.0":
+  version "0.92.0"
+  resolved "https://registry.yarnpkg.com/@glimmer/wire-format/-/wire-format-0.92.0.tgz#b485c91b1a49e77c67c16e9c9392e8727727433c"
+  integrity sha512-yKhfU7b3PN86iqbfKksB+F9PB/RqbVkZlcRpZWRpEL3HnZ0bJUKC9bsOJynOg77PDXuYQXkbDMfL8ngTuxk+rg==
   dependencies:
-    "@glimmer/interfaces" "^0.91.2"
-    "@glimmer/util" "^0.91.2"
+    "@glimmer/interfaces" "^0.92.0"
+    "@glimmer/util" "^0.92.0"
 
 "@glint/core@^1.4.0":
   version "1.4.0"
@@ -10803,10 +10803,10 @@ quick-temp@^0.1.2, quick-temp@^0.1.3, quick-temp@^0.1.5, quick-temp@^0.1.8:
     rimraf "^2.5.4"
     underscore.string "~3.3.4"
 
-qunit-dom@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-3.0.0.tgz#326e83e4ce8d492bdff91a8cb4d5b54a20917fcc"
-  integrity sha512-rqGZ9ZgOvtOY+Ph2ElCJ4pRIHouMZmI3DWK35Xr3x3c17/gIwOHHyKAQk6XetqhqepS6p+oXvK6Bx1uZu5jJuw==
+qunit-dom@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-3.1.0.tgz#4b8a4a9c5853e51ec8ecf0e4550b9577286a4a62"
+  integrity sha512-gpek3SkGM4uCX7tV466fbkrtCXkxGyHNeBPqwXO2QvcAr36TbmbvfpVW77KNbw1N5xm2KNNzVOQHItxH/3pLVA==
 
 qunit@^2.20.1:
   version "2.20.1"
