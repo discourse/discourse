@@ -1091,7 +1091,7 @@ ro:
       no_notifications_page_title: "Încă nu ai nicio notificare"
       dynamic_favicon: "Afișează contoare pe pictograma browser"
       skip_new_user_tips:
-        description: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi"
+        description: "Omite sfaturi și insigne de înscriere pentru utilizatori noi"
       theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
       color_scheme_default_on_all_devices: "Setează schema (schemele) de culori implicite pe toate dispozitivele mele"
       color_scheme: "Schema de culori"
@@ -2934,7 +2934,7 @@ ro:
       none: "(nimic)"
       badge_grouping:
         getting_started:
-          name: Cum începem
+          name: Începe
         community:
           name: Comunitate
         trust_level:

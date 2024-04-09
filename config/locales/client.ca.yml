@@ -123,6 +123,7 @@ ca:
       to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
       twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
@@ -130,8 +131,10 @@ ca:
       url: "Copiar i compartir URL"
     word_connector:
       comma: ", "
+      last_item: "i"
     action_codes:
       public_topic: "Tema fet públic %{when}"
+      open_topic: "S'ha convertit això en un tema el %{when}"
       private_topic: "S'ha convertit el tema en un miSSatge perSonal %{when}"
       split_topic: "S'ha dividit el tema %{when}"
       invited_user: "S'ha convidat %{who} %{when}"
@@ -140,6 +143,8 @@ ca:
       removed_user: "Ha suprimit %{who} %{when}"
       removed_group: "Ha suprimit %{who} %{when}"
       autobumped: "Elevat automàticament %{when}"
+      tags_changed: "Etiquetes actualitzades el %{when}"
+      category_changed: "Categoria actualitzada el %{when}"
       autoclosed:
         enabled: "Tancat %{when}"
         disabled: "Obert %{when}"

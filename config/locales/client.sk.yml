@@ -4072,6 +4072,7 @@ sk:
           dashboard: "Ovládací panel"
           navigation: "Navigácia"
         default_categories:
+          modal_description: "Chcete túto zmenu uplatniť historicky? Týmto sa zmenia preferencie pre %{count} existujúcich používateľov."
           modal_yes: "Áno"
         simple_list:
           add_item: "Pridať položku…"

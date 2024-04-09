@@ -2294,6 +2294,7 @@ id:
           save: "Simpan"
           edit: "Ubah"
           settings: "Pengaturan"
+          selected: "%{count} dipilih"
           cancel: "Batal"
           collapse: Persempit
           upload: "Unggah"
