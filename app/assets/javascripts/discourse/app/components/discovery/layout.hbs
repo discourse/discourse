@@ -74,9 +74,26 @@
 </div>
 
 <span>
-  <PluginOutlet
+  <div style="max-width: 100%; padding: .5rem 1rem; background: #F0F4FD; border-radius: 8px">
+    <p style="margin-bottom: .5rem">John Doe</p>
+    <p style="font-size: 12px; color: #939393; margin-bottom: 1.5rem;">
+      Enrolling in Laxmi Chit Fund'25
+    </p>
+    <div >
+      <h2 stlye="font-weight: bold;">
+        7
+        <span style="font-size: 14px; font-weight: normal;">Profile Views</span>
+      </h2>
+    </div>
+    <div class="user-card-avatar">
+      <span class="card-huge-avatar">
+        {{bound-avatar this.user "huge"}}
+      </span>
+    </div>
+  </div>
+  {{!-- <PluginOutlet
     @name="discovery-below"
     @connectorTagName="div"
     @outletArgs={{hash category=@model.category tag=@model.tag}}
-  />
+  /> --}}
 </span>
