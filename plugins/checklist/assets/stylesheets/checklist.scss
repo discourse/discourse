@@ -62,11 +62,10 @@ span.chcklst-box {
 
 ul li.has-checkbox {
   list-style-type: none;
-  position: relative;
-}
 
-ul:has(li.has-checkbox) {
-  padding-left: 0;
+  .list-item-checkbox {
+    margin-left: -1.33em;
+  }
 }
 
 .fa-spin {
