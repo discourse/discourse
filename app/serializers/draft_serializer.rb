@@ -86,8 +86,4 @@ class DraftSerializer < ApplicationSerializer
   def include_category_id?
     object.topic&.category_id&.present?
   end
-
-  def include_category?
-    scope.can_lazy_load_categories? && object.topic&.category_id&.present?
-  end
 end
