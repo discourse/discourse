@@ -118,7 +118,7 @@ class ThemeSettingsObjectValidator
     value = @object[property_name]
     type = property_attributes[:type]
 
-    return true if (value.nil? && type != "enum")
+    return true if value.nil?
 
     is_value_valid =
       case type
