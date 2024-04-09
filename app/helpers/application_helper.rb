@@ -647,14 +647,6 @@ module ApplicationHelper
       self.method(:add_resource_preload_list),
     )
 
-    if dark_scheme_id != -1
-      result << stylesheet_manager.color_scheme_stylesheet_link_tag(
-        dark_scheme_id,
-        "(prefers-color-scheme: dark)",
-        self.method(:add_resource_preload_list),
-      )
-    end
-
     result.html_safe
   end
 
