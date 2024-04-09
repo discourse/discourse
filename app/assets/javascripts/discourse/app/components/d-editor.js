@@ -6,7 +6,7 @@ import ItsATrap from "@discourse/itsatrap";
 import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
@@ -445,14 +445,16 @@ export default Component.extend(TextareaTextManipulation, {
 
     this.set("preview", cooked);
 
+    let unseenMentions, unseenHashtags;
+
     if (this.siteSettings.enable_diffhtml_preview) {
       const previewElement = this.element.querySelector(".d-editor-preview");
       const cookedElement = previewElement.cloneNode(false);
       cookedElement.innerHTML = cooked;
 
-      linkSeenMentions(cookedElement, this.siteSettings);
+      unseenMentions = linkSeenMentions(cookedElement, this.siteSettings);
 
-      linkSeenHashtagsInContext(
+      unseenHashtags = linkSeenHashtagsInContext(
         this.site.hashtag_configurations["topic-composer"],
         cookedElement
       );
@@ -467,7 +469,7 @@ export default Component.extend(TextareaTextManipulation, {
         /* offline */ true
       );
 
-      resolveAllShortUrls(ajax, this.siteSettings, cookedElement);
+      resolveCachedShortUrls(this.siteSettings, cookedElement);
 
       // trigger all the "api.decorateCookedElement"
       this.appEvents.trigger(
@@ -495,7 +497,7 @@ export default Component.extend(TextareaTextManipulation, {
       const previewElement = this.element.querySelector(".d-editor-preview");
 
       if (previewElement && this.previewUpdated) {
-        this.previewUpdated(previewElement);
+        this.previewUpdated(previewElement, unseenMentions, unseenHashtags);
       }
     });
   },
