@@ -738,6 +738,7 @@ export default class ChatChannel extends Component {
             @channel.canModerate
           }}
           @pane={{this.pane}}
+          @messagesManager={{this.messagesManager}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
