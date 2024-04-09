@@ -44,7 +44,7 @@ fi:
       user_promoted:
         title: Käyttäjä ylennetty
         description: Kun käyttäjä ylennetään luottamustasolta toiselle
-        transition_placeholder: "tasolta %{from_level_name} tasolle %{to_level_name}"
+        transition_placeholder: "alueelta %{from_level_name} alueelle %{to_level_name}"
       stalled_wiki:
         title: Pysähtynyt wiki
         description: Kun wikiä ei ole muokattu määritettyä ajanjaksoa pidempään, automaatio käynnistyy
@@ -64,6 +64,8 @@ fi:
       post:
         title: Luo viesti
         description: Luo viesti tietyssä ketjussa
+      topic:
+        title: Aloita aihe
       flag_post_on_words:
         title: Liputa viesti sanojen perusteella
         description: Liputtaa viestin, jos se sisältää tiettyjä sanoja
@@ -79,7 +81,7 @@ fi:
         title: Ketjun automaattinen merkintä
         description: Lisää tunnisteita ketjuun automaattisesti
       pin_topic:
-        title: Kiinnitä aihe
+        title: Kiinnitä ketju
         description: Kiinnittää tietyn aiheen tiettynä päivänä
       banner_topic:
         title: Aseta banneriketjuksi

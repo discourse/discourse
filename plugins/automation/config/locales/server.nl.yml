@@ -44,7 +44,7 @@ nl:
       user_promoted:
         title: Gebruiker gepromoveerd
         description: Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere
-        transition_placeholder: "van %{from_level_name} naar %{to_level_name}"
+        transition_placeholder: "van %{from_level_name} tot %{to_level_name}"
       stalled_wiki:
         title: Stilgevallen wiki
         description: Wanneer een wiki langer dan de gedefinieerde periode niet is bewerkt, wordt de automatisering getriggerd
@@ -64,6 +64,8 @@ nl:
       post:
         title: Een bericht maken
         description: Maak een bericht over een bepaald topic
+      topic:
+        title: Maak een topic
       flag_post_on_words:
         title: Bericht markeren bij woorden
         description: Markeert een bericht als het bepaalde woorden bevat

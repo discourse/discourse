@@ -64,6 +64,8 @@ it:
       post:
         title: Crea un messaggio
         description: Crea un messaggio su un argomento specificato
+      topic:
+        title: Crea un argomento
       flag_post_on_words:
         title: Contrassegna messaggio in base alle parole
         description: Contrassegna un messaggio se contiene parole specificate
@@ -79,7 +81,7 @@ it:
         title: Etichetta automaticamente argomenti
         description: Aggiungi automaticamente etichette a un argomento
       pin_topic:
-        title: Fissa argomento
+        title: Appunta Argomento
         description: Fissa un argomento specificato in una determinata data
       banner_topic:
         title: Crea argomento banner
@@ -115,7 +117,7 @@ it:
         errors:
           must_include_word: "Il messaggio deve includere almeno una di queste parole: %{words}"
       close_topic:
-        title: Chiudi argomento
+        title: Chiudi Argomento
         description: Chiude un argomento con un messaggio di chiusura facoltativo
       append_last_edited_by:
         title: Aggiungi info ultima modifica di

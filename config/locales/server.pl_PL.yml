@@ -126,8 +126,6 @@ pl_PL:
       number_value_not_valid_min: "Wartość musi być większa lub równa %{min}."
       number_value_not_valid_max: "Wartość musi być mniejsza lub równa %{max}."
       string_value_not_valid_min_max: "Wartość musi mieć długość od %{min} do %{max} znaków."
-      string_value_not_valid_min: "Wartość musi mieć co najmniej %{min} znaków."
-      string_value_not_valid_max: "Wartość musi być co najwyżej %{max} znaków."
       objects:
         humanize_required: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być obecny."
         required: "musi zostać podana"
@@ -149,16 +147,8 @@ pl_PL:
         not_valid_post_value: "musi być prawidłowym identyfikatorem posta"
         humanize_not_valid_tags_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłową tablicą nazw tagów."
         not_valid_tags_value: "musi być tablicą prawidłowych nazw tagów"
-        humanize_tags_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najmniej %{min} nazw tagów."
-        tags_value_not_valid_min: "musi mieć co najmniej %{min} nazw tagów"
-        humanize_tags_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najwyżej %{max} nazw tagów."
-        tags_value_not_valid_max: "musi mieć co najwyżej %{max} nazw tagów"
         humanize_not_valid_upload_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem przesyłania."
         not_valid_upload_value: "musi być prawidłowym identyfikatorem przesyłania"
-        humanize_string_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć długość co najmniej %{min} znaków."
-        string_value_not_valid_min: "musi mieć co najmniej %{min} znaków"
-        humanize_string_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najwyżej %{max} znaków."
-        string_value_not_valid_max: "musi mieć co najwyżej %{max} znaków"
         humanize_number_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być większa lub równa %{min}."
         number_value_not_valid_min: "musi być większa lub równa %{min}"
         humanize_number_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być mniejsza lub równa %{max}."
@@ -207,7 +197,6 @@ pl_PL:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
-      too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
       taken: "jest już w użyciu"
       accepted: musi zostać zaakceptowane
@@ -337,7 +326,6 @@ pl_PL:
       many: "Wysłałeś już %{count} zaproszeń w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
       other: "Wysłałeś już %{count} zaproszeń w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
-    cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
     disabled_errors:
       discourse_connect_enabled: "Zaproszenia są wyłączone, ponieważ DiscourseConnect jest włączony."
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
@@ -476,7 +464,6 @@ pl_PL:
   pm_reached_recipients_limit: "Przepraszamy, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   removed_direct_reply_full_quotes: "Automatycznie usunięto cytowanie całości poprzedzającego wpisu."
   watched_words_auto_tag: "Automatycznie otagowany wątek"
-  secure_upload_not_allowed_in_public_topic: "Niestety, następujące bezpieczne przesyłanie nie może być użyte w publicznym temacie: %{upload_filenames}."
   create_pm_on_existing_topic: "Przepraszamy, nie możesz utworzyć PM na istniejący temat."
   slow_mode_enabled: "Ten temat jest w trybie zwolnionym."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś/łaś niedawno"
@@ -633,7 +620,6 @@ pl_PL:
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
-    get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     dont_feed_the_trolls: Ten post został już oznaczony jako wymagający uwagi moderatora. Czy na pewno chcesz na niego odpowiedzieć? Odpowiedzi na negatywne treści zachęcają do jeszcze bardziej negatywnych zachowań.
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
@@ -2253,7 +2239,6 @@ pl_PL:
     notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
     delete_drafts_older_than_n_days: "Usuń wersje robocze, które nie zostały zmienione w ciągu więcej niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
-    bootstrap_mode_min_users: "Minimalna liczba użytkowników wymagana do wyłączenia trybu bootstrap (ustaw 0, aby wyłączyć, może to potrwać do 24 godzin)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_uploads: 'Ograniczenie dostępu do WSZYSTKICH przesyłanych plików (obrazów, filmów, audio, tekstów, plików pdf, zipów i innych). Jeśli włączona jest opcja "Wymagane logowanie", tylko zalogowani użytkownicy będą mieli dostęp do przesyłanych materiałów. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłania mediów w prywatnych wiadomościach i prywatnych kategoriach. UWAGA: To ustawienie jest skomplikowane i wymaga głębokiej wiedzy administracyjnej. Szczegóły znajdziesz na stronie <a target="_blank" href="https://meta.discourse.org/t/-/140017">w temacie bezpieczne przesyłanie plików na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
@@ -2356,7 +2341,6 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Zdefiniuj wygląd znaczników tagów w witrynie. To ustawienie pozwala dostosować sposób wizualnej reprezentacji tagów we wszystkich obszarach witryny, zwiększając spójność układu i dostępność dla użytkownika."
-    pm_tags_allowed_for_groups: "Zezwalaj członkom uwzględnionych grup na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     tag_topic_allowed_groups: "Grupy, które mogą tagować tematy."
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
@@ -2424,8 +2408,6 @@ pl_PL:
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
       invalid_string: "Nieprawidłowa wartość."
       invalid_string_min_max: "Musi być między %{min} i %{max} znaków."
-      invalid_string_min: "Musi być co najmniej %{min} znaków."
-      invalid_string_max: "Musi być nie więcej niż %{max} znaków."
       invalid_json: "Nieprawidłowy JSON."
       invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż e-mail z powiadomieniem."
       invalid_alternative_reply_by_email_addresses: "Wszystkie wartości muszą zawierać '%{reply_key}' i być inne niż w emailu powiadamiającym."
@@ -2458,7 +2440,6 @@ pl_PL:
         regex_invalid: "Wyrażenie regularne jest nieprawidłowe: %{error}"
         leading_trailing_slash: "Wyrażenie regularne nie może zaczynać się ani kończyć ukośnikiem."
       unicode_usernames_avatars: "Wewnętrzne awatary systemowe nie obsługują nazw użytkowników zawierających unicode."
-      list_value_count: "Lista musi zawierać dokładnie %{count} wartości."
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
@@ -2492,6 +2473,14 @@ pl_PL:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "nieaktywny"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "nieaktywny"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2733,8 +2722,6 @@ pl_PL:
     new_user_typed_too_fast: "Nowy użytkownik wpisany zbyt szybko"
     content_matches_auto_silence_regex: "Treść pasuje do wyrażenia regularnego automatycznego wyciszenia"
     username:
-      short: "musi zawierać co najmniej %{min} znaków"
-      long: "nie może zawierać więcej niż %{max} znaków"
       too_long: "jest za długa"
       characters: "musi zawierać tylko cyfry, litery, myślniki, kropki i podkreślenia"
       unique: "musi być unikalna"
@@ -4433,7 +4420,6 @@ pl_PL:
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.
-        too_many_csv_entries: Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpisów.
         badge_disabled: Najpierw włącz odznakę %{badge_name}.
         cant_grant_multiple_times: Nie można wielokrotnie przyznać odznaki %{badge_name} pojedynczemu użytkownikowi.
     editor:

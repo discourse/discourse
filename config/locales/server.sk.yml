@@ -106,7 +106,6 @@ sk:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
       taken: "je už použité"
       accepted: sa musí akceptovať
@@ -1117,8 +1116,6 @@ sk:
       must_include_latest: "Horné menu musí obsahovať záložku 'posledné'."
       invalid_string: "Nesprávna hodnota."
       invalid_string_min_max: "Musí byť medzi %{min} a %{max} znakmi."
-      invalid_string_min: "Musí byť minimálne %{min} znakov."
-      invalid_string_max: "Nesmie byť viac ako %{max} znakov."
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
@@ -1213,8 +1210,6 @@ sk:
       sent_test: "odoslané!"
   user:
     username:
-      short: "musí mať minimálne %{min} znakov"
-      long: "nesmie byť dlhší než %{max} znakov"
       unique: "musí byť jedinečné"
       blank: "musí existovať"
       must_not_contain_two_special_chars_in_seq: "nesmie obsahovať reťazec 2 alebo viac špeciálnych znakov po sebe (.-_)"

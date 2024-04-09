@@ -79,7 +79,6 @@ et:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
       invalid_boolean: "Vigane tõeväärtus."
       taken: "on juba võetud"
       accepted: vajab aktsepteerimist
@@ -751,6 +750,15 @@ et:
       invalid_integer: "Väärtuseks peab olema täisarv."
       min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
       max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "mitteaktiivne"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "mitteaktiivne"
+      - ""
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:

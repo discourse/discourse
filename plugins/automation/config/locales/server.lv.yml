@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 lv:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tēmas
+    scriptables:
+      pin_topic:
+        title: Piespraust tēmu
+      close_topic:
+        title: Slēgt tēmu
+      append_last_checked_by:
+        button_text: Pabeigt

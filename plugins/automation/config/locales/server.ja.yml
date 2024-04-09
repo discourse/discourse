@@ -64,6 +64,8 @@ ja:
       post:
         title: 投稿を作成する
         description: 指定されたトピックで投稿を作成します
+      topic:
+        title: トピックの作成
       flag_post_on_words:
         title: 単語で投稿を通報する
         description: 投稿に指定された単語が含まれる場合に通報します
@@ -115,7 +117,7 @@ ja:
         errors:
           must_include_word: "投稿には、次の単語の少なくとも 1 つを含める必要があります: %{words}"
       close_topic:
-        title: トピックを閉鎖
+        title: トピックをクローズ
         description: オプションの閉鎖メッセージを添えてトピックを閉鎖します
       append_last_edited_by:
         title: 最終編集者を追加する

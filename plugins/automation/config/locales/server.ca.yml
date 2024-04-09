@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 ca:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tema
+    scriptables:
+      pin_topic:
+        title: Afixa tema
+      close_topic:
+        title: Tanca tema
+      append_last_checked_by:
+        button_text: Fet

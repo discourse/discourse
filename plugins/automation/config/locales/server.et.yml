@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 et:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Teema
+    scriptables:
+      pin_topic:
+        title: Tõsta teema esile
+      close_topic:
+        title: Sulge teema
+      append_last_checked_by:
+        button_text: Tehtud

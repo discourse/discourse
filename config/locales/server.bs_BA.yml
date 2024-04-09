@@ -106,7 +106,6 @@ bs_BA:
         screened_email_error: "Dešava se kada je adresa e-pošte pošiljaoca već prikazana."
   errors: &errors
     messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
       exclusion: je rezvisan
@@ -749,8 +748,15 @@ bs_BA:
       regex_mismatch: "Value doesn't match the required format."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-      invalid_string_min: "Must be at least %{min} characters."
-      invalid_string_max: "Must be no more than %{max} characters."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivan"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivan"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -801,8 +807,6 @@ bs_BA:
       sent_test: "sent!"
   user:
     username:
-      short: "must be at least %{min} characters"
-      long: "must be no more than %{max} characters"
       unique: "must be unique"
       blank: "must be present"
     email:

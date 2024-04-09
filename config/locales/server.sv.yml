@@ -124,8 +124,6 @@ sv:
         not_valid_float_value: "måste vara ett flyttal"
         not_valid_boolean_value: "måste vara booleskt"
         not_valid_enum_value: "måste vara något av följande: %{choices}"
-        string_value_not_valid_min: "måste vara minst %{min} tecken långt"
-        string_value_not_valid_max: "måste vara högst %{max} tecken långt"
         number_value_not_valid_min: "måste vara större än eller lika med %{min}"
         number_value_not_valid_max: "måste vara mindre än eller lika med %{max}"
         string_value_not_valid_url: "måste vara en giltig URL"
@@ -169,7 +167,6 @@ sv:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "är begränsad till %{max} tecken; du skrev in %{length}. "
       invalid_boolean: "Ogiltig booleansk."
       taken: "används redan"
       accepted: måste godkännas
@@ -283,7 +280,6 @@ sv:
       one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
       other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
-    cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
@@ -401,7 +397,6 @@ sv:
   pm_reached_recipients_limit: "Tyvärr kan du inte ha fler än %{recipients_limit} mottagare för ett meddelande."
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
   watched_words_auto_tag: "Automatiskt taggat ämne"
-  secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
   create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett befintligt ämne."
   slow_mode_enabled: "Detta ämne är i långsamt läge."
   just_posted_that: "är för likt det du nyligen publicerade"
@@ -544,7 +539,6 @@ sv:
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
-    get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     dont_feed_the_trolls: Det här inlägget har redan flaggats för moderatorns uppmärksamhet. Är du säker på att du vill svara på det? Svar på negativt innehåll tenderar att uppmuntra till mer negativt beteende.
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
@@ -2069,7 +2063,6 @@ sv:
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
-    bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ställ in på 0 för att inaktivera, kan ta upp till 24 timmar)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
@@ -2163,7 +2156,6 @@ sv:
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinmenyn. De taggar som används mest kommer att visas."
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tags_listed_by_group: "Lista taggar per tagg-grupp från <a href='%{base_path}/tags' target='_blank'>tagg-sidan</a>."
-    pm_tags_allowed_for_groups: "Tillåt medlemmar i inkluderad(e) grupp(er) att tagga alla personliga meddelanden"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     tag_topic_allowed_groups: "Grupper som får tagga ämnen."
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
@@ -2222,8 +2214,6 @@ sv:
       must_include_latest: "Toppmenyn måste omfatta 'senaste'-fliken."
       invalid_string: "Ogiltigt värde."
       invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
-      invalid_string_min: "Måste vara minst %{min} tecken."
-      invalid_string_max: "Måste vara högst %{max} tecken."
       invalid_json: "Ogiltig JSON."
       invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
       invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
@@ -2256,7 +2246,6 @@ sv:
         regex_invalid: "Det reguljära uttrycket är ogiltigt: %{error}"
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
-      list_value_count: "Listan måste innehålla exakt %{count} värden."
       markdown_linkify_tlds: "Du kan inte inkludera ett värde av '*'."
       google_oauth2_hd_groups: "Du måste konfigurera alla 'google oauth2 hd'-inställningar innan du aktiverar den här inställningen."
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
@@ -2290,6 +2279,14 @@ sv:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inaktiv"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inaktiv"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2489,8 +2486,6 @@ sv:
     new_user_typed_too_fast: "Ny användare skrev för fort"
     content_matches_auto_silence_regex: "Innehållet matchar regelbundet uttryck för automatiskt tystande"
     username:
-      short: "måste vara minst %{min} tecken"
-      long: "får högst vara %{max} tecken"
       too_long: "är för långt"
       characters: "får enbart omfatta nummer, bokstäver, streck, punkter eller understreck"
       unique: "måste vara unikt"
@@ -4003,7 +3998,6 @@ sv:
     mass_award:
       errors:
         invalid_csv: Vi stötte på ett fel på rad %{line_number}. Bekräfta att CSV har en e-postadress per rad.
-        too_many_csv_entries: För många poster i CSV-filen. Ange en CSV-fil med högst %{count} poster.
         badge_disabled: Aktivera först utmärkelsen %{badge_name}.
         cant_grant_multiple_times: Det går inte att utfärda utmärkelsen %{badge_name} flera gånger till en enda användare.
     editor:

@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: 話題
+    scriptables:
+      pin_topic:
+        title: 置頂話題
+      close_topic:
+        title: 關閉話題
+      append_last_checked_by:
+        button_text: 完成

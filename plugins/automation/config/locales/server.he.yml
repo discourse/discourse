@@ -8,6 +8,9 @@ he:
   site_settings:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
+    models:
+      fields:
+        required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
     triggerables:
       errors:
         custom_fields_or_user_profile_required: "יש לציין לפחות אחת מבין האפשרויות ‚custom_fields’ (שדות מותאמים אישית) או ‚user_profile’ (פרופיל משתמש)."
@@ -37,7 +40,7 @@ he:
       user_promoted:
         title: משתמש קיבל קידום
         description: כאשר משתמש מקודם מדרגת אמון אחת לאחרת
-        transition_placeholder: "מדרגה %{from_level_name} אל %{to_level_name}"
+        transition_placeholder: "מ־%{from_level_name} עד %{to_level_name}"
       post_created_edited:
         title: פוסט נוצר/נערך
       pm_created:
@@ -55,6 +58,8 @@ he:
       post:
         title: יצירת פוסט
         description: יצירת פוסט בנושא מסוים
+      topic:
+        title: יצירת נושא
       flag_post_on_words:
         title: סימון פוסט בדגל על המילים
         description: מסמן פוסט בדגל אם מופיעות בו מילים מסוימות
@@ -67,7 +72,7 @@ he:
         title: תיוג נושא אוטומטית
         description: להוסיף תגיות לנושא אוטומטית
       pin_topic:
-        title: נעיצת נושא
+        title: נעץ נושא
       banner_topic:
         title: להציב ככרזה לנושא
         description: הפיכת נושא לכרזה
@@ -87,7 +92,7 @@ he:
         errors:
           must_include_word: "הפוסט חייב לכלול לפחות אחת מהמילים האלו: %{words}"
       close_topic:
-        title: סגירת נושא
+        title: סגור נושא
         description: סגירת הנושא עם הודעת סגירה כרשות
       append_last_edited_by:
         title: הוספת נערך לאחרונה על ידי
@@ -99,7 +104,7 @@ he:
         text: "נבדק לאחרונה על ידי ‎@%{username} ב־%{date_time}"
         summary: בדיקת מסמך
         details: "ביצוע בדיקה על המסמך: "
-        button_text: בוצע
+        button_text: סיום
       add_user_to_group_through_custom_field:
         title: "הוספת משתמש לקבוצה באמצעות שדה מותאם אישית של משתמש"
       group_category_notification_default:

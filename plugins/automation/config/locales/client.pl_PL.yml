@@ -26,17 +26,23 @@ pl_PL:
       destroy_automation:
         confirm: "Czy na pewno chcesz usunąć `%{name}`?"
       fields:
+        key_value:
+          label_without_count: "Skonfiguruj"
         user:
           label: Użytkownik
         pm:
           title:
             label: Tytuł
+          raw:
+            label: Treść
         pms:
           confirm_remove_pm: "Czy na pewno chcesz usunąć tę wiadomość prywatną?"
           placeholder_title: Tytuł PW
           add_pm: Dodaj PW
           title:
             label: Tytuł
+          raw:
+            label: Treść
         group:
           label: Grupa
         text:
@@ -55,7 +61,7 @@ pl_PL:
             P1M: "Jeden miesiąc"
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
-            P1Y: "Jeden rok"
+            P1Y: "Rok"
         recurring:
           every: Co
           frequencies:
@@ -67,6 +73,8 @@ pl_PL:
             month: miesiąc
             year: rok
           fields:
+            recurrence:
+              label: Powtarzanie
             start_date:
               label: Data rozpoczęcia
         stalled_wiki:
@@ -78,7 +86,7 @@ pl_PL:
             P1M: "Jeden miesiąc"
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
-            P1Y: "Jeden rok"
+            P1Y: "Rok"
         user_added_to_group:
           fields:
             joined_group:
@@ -115,14 +123,16 @@ pl_PL:
               label: Kategoria
             restricted_group:
               label: Grupa
-          created: Utworzony
+          created: Utworzono
           edited: Edytowany
         category_created_edited:
           fields:
             restricted_category:
-              label: Kategoria nadrzędna
+              label: Kategoria rodzica
         pm_created:
           fields:
+            restricted_user:
+              label: Użytkownicy
             restricted_group:
               label: Grupa
             ignore_staff:
@@ -174,7 +184,7 @@ pl_PL:
               label: Poziom
           levels:
             warning: Ostrzeżenie
-            info: Informacja
+            info: Informacje
             success: Sukces
             error: Błąd
         user_group_membership_through_badge:
@@ -219,20 +229,20 @@ pl_PL:
             label: Skrypt
         trigger:
           name:
-            label: Wyzwalacz
+            label: Aktywacja
         automation:
           name:
             label: Nazwa
           trigger:
-            label: Wyzwalacz
+            label: Aktywacja
           script:
             label: Skrypt
           version:
             label: Wersja
           enabled:
-            label: Włączony
+            label: Włączona
           disabled:
-            label: Wyłączony
+            label: Wyłączone
           last_updated_at:
             label: Ostatnia aktualizacja
           last_updated_by:

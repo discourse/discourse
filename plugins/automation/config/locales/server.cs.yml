@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 cs:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        description: Když je uživatel povýšen z jedné úrovně důvěry na jinou
+        transition_placeholder: "z %{from_level_name} na %{to_level_name}"
+      topic:
+        title: Témata
+    scriptables:
+      pin_topic:
+        title: Připevnit téma
+      close_topic:
+        title: Zavřít téma
+      append_last_checked_by:
+        button_text: Hotovo

@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 ro:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Subiect
+    scriptables:
+      topic:
+        title: Creează un subiect
+        description: Creează un subiect în numele unui anumit utilizator
+      pin_topic:
+        title: Fixează subiectul
+      close_topic:
+        title: Închide subiect
+      append_last_checked_by:
+        button_text: Terminat

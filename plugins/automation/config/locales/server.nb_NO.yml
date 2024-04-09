@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Emne
+    scriptables:
+      pin_topic:
+        title: Fest emne
+      close_topic:
+        title: Lukk emne
+      append_last_checked_by:
+        button_text: Ferdig

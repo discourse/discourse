@@ -114,7 +114,6 @@ el:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "επιτρέπονται μέχρι %{max} χαρακτήρες, έχεις εισάγει %{length}."
       invalid_boolean: "Λανθασμένη τιμή boolean."
       taken: "έχει ήδη χρησιμοποιηθεί"
       accepted: πρέπει να γίνει δεκτό
@@ -176,7 +175,6 @@ el:
     not_found: "Το τεκμήριο πρόσκλησης δεν είναι έγκυρο. Παρακαλώ <a href='%{base_url}/about'>επικοινωνήστε με το προσωπικό</a>."
     not_found_json: "Το τεκμήριο πρόσκλησης δεν είναι έγκυρο. Παρακαλώ επικοινωνήστε με το προσωπικό."
     confirm_email: "<p>Έχετε σχεδόν τελειώσει! Στείλαμε ένα email ενεργοποίησης στη διεύθυνση email σας. Παρακαλούμε ακολουθήστε τις οδηγίες στο μήνυμα για να ενεργοποιήσετε τον λογαριασμό σας.</p><p>Εάν δε φτάσει, ελέγξτε τον φάκελο ανεπιθύμητων μηνυμάτων.</p>"
-    cant_invite_to_group: "Δεν επιτρέπεται να προσκαλέσετε χρήστες σε συγκεκριμένες ομάδες. Βεβαιωθείτε ότι είστε ιδιοκτήτης των ομάδων στις οποίες προσπαθείτε να προσκαλέσετε."
     disabled_errors:
       invalid_access: "Δεν έχεις δικαίωμα να δεις τους πόρους που ζήτησες."
   bulk_invite:
@@ -1207,8 +1205,6 @@ el:
       must_include_latest: "Το κορυφαίο μενού πρέπει να περιέχει την καρτέλα 'νεώτερα'."
       invalid_string: "Μη έγκυρη τιμή."
       invalid_string_min_max: "Πρέπει να είναι μεταξύ %{min} και %{max} χαρακτήρες."
-      invalid_string_min: "Πρέπει να είναι τουλάχιστον %{min} χαρακτήρες."
-      invalid_string_max: "Δεν πρέπει να είναι περισσότεροι από %{max} χαρακτήρες."
       invalid_reply_by_email_address: "Η αξία πρέπει να περιέχει '%{reply_key}' και να είναι διαφορετική από την ειδοποίηση μέσω email."
       invalid_alternative_reply_by_email_addresses: "Όλες οι αξίες πρέπει να περιέχουν '%{reply_key}' και να είναι διαφορετικές από την ειδοποίηση μέσω email."
       pop3_polling_host_is_empty: "Πρέπει να ρυθμίσετε εναν 'pop3 polling host' πρίν ενεργοποιήσετε το POP3 polling."
@@ -1223,6 +1219,15 @@ el:
       reply_by_email_disabled: "Θα πρέπει να ενεργοποιήσετε την απάντηση μέσω email πριν ενεργοποιήσετε αυτή τη ρύθμιση."
       min_username_length_range: "Δεν μπορείς να θέσεις το ελάχιστο πιο πάνω από το μέγιστο"
       max_username_length_range: "Δεν μπορείς να θέσεις το μέγιστο πιο κάτω από το ελάχιστο."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "ανενεργό"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "ανενεργό"
+      - ""
   search:
     within_post: "#%{post_number} από %{username}"
     types:
@@ -1342,8 +1347,6 @@ el:
     activated_by_staff: "Ενεργοποιήθηκε από τους συνεργάτες"
     new_user_typed_too_fast: "Ο νέος χρήστης πληκτρολογούσε πολύ γρήγορα"
     username:
-      short: "πρέπει να είναι τουλάχιστον %{min} χαρακτήρες"
-      long: "δεν πρέπει να είναι περισσότερο από %{max} χαρακτήρες"
       unique: "πρέπει να είναι μοναδικό"
       blank: "πρέπει να υπάρχει"
       must_begin_with_alphanumeric_or_underscore: "πρέπει να αρχίζει με ένα γράμμα, έναν αριθμό ή μια κάτω παύλα"

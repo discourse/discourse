@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 lt:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tema
+    scriptables:
+      pin_topic:
+        title: Prisegti Temą
+      close_topic:
+        title: Uždaryti temą
+      append_last_checked_by:
+        button_text: Baigta

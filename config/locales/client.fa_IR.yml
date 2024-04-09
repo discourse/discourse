@@ -197,7 +197,8 @@ fa_IR:
         us_west_1: "غرب ایالات متحده (کالیفرنیا شمالی)"
         us_west_2: "غرب ایالات متحده (اورگان)"
     clear_input: "پاک کردن ورودی"
-    edit: "ویرایش عنوان و دسته‌‌بندی این موضوع"
+    edit: "ویرایش"
+    edit_topic: "ویرایش عنوان و دسته‌‌بندی این موضوع"
     expand: "باز کردن"
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "خیر"
@@ -242,7 +243,9 @@ fa_IR:
     weekly: "هفتگی"
     every_month: "هر ماه"
     every_six_months: "هر شش ماه"
-    max_of_count: "حداکثر %{count}"
+    max_of_count:
+      one: "حداکثر %{count}"
+      other: "حداکثر %{count}"
     character_count:
       one: "%{count} نویسه"
       other: "%{count} نویسه"
@@ -284,6 +287,7 @@ fa_IR:
         unbookmark: "کلیک کنید تا همهٔ نشانک‌های این موضوع را حذف کنید"
         unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید"
     bookmarks:
+      bookmarked_success: "نشانک گذاری شده!"
       created: "شما این نوشته را نشانک کردید. %{name}"
       created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
       create: "ایجاد نشانک"
@@ -304,6 +308,7 @@ fa_IR:
         when_reminder_sent: "حذف نشانک"
       search_placeholder: "جستجو در نشانک‌ها بر اساس نام، عنوان موضوع یا محتوای نوشته"
       search: "جستجو"
+      bookmark: "نشانک"
       reminders:
         today_with_time: "امروز در %{time}"
         tomorrow_with_time: "فردا در %{time}"
@@ -613,6 +618,7 @@ fa_IR:
       never: "هرگز"
       last_custom: "آخرین تاریخ سفارشی"
       custom: "تاریخ و زمان سفارشی"
+      custom_short: "سفارشی..."
       select_timeframe: "انتخاب یک دوره‌زمانی"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
@@ -895,7 +901,9 @@ fa_IR:
       categories_label: "دسته‌بندی‌ها"
       subcategories_label: "دسته‌‌بندی‌های فرزند"
       remove_filter: "حذف فیلتر"
-      plus_more_count: "+%{count} مورد دیگر"
+      plus_more_count:
+        one: "+%{count} مورد دیگر"
+        other: "+%{count} مورد دیگر"
       view_all: "مشاهده همه"
       category: "دسته‌بندی"
       category_list: "نمایش فهرست دسته‌بندی"
@@ -924,7 +932,9 @@ fa_IR:
       topic_stat_sentence_month:
         one: "%{count} مبحث جدید در ماه گذشته"
         other: "%{count} مبحث جدید در ماه گذشته"
-      n_more: "دسته‌بندی‌ها (%{count} مورد بیشتر)…"
+      n_more:
+        one: "دسته‌بندی‌ها (%{count} مورد بیشتر)…"
+        other: "دسته‌بندی‌ها (%{count} مورد بیشتر)…"
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -933,7 +943,9 @@ fa_IR:
       organisation: سازمان
       phone: تلفن
       other_accounts: "سایر حساب‌های کاربری با این ای پی:"
-      delete_other_accounts: "حذف %{count}"
+      delete_other_accounts:
+        one: "حذف %{count}"
+        other: "حذف %{count}"
       username: "نام کاربری"
       trust_level: "سطح اعتماد"
       read_time: " زمان خواندن"
@@ -1039,7 +1051,6 @@ fa_IR:
       no_notifications_page_title: "شما هنوز هیچ آگاه‌سازی ندارید"
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
-      color_scheme_default_on_all_devices: "طرح(های) رنگ پیش‌فرض را روی همه دستگاه‌های من تنظیم کن"
       color_scheme: "طرح رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
@@ -1495,7 +1506,6 @@ fa_IR:
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "رمز عبور خوبی است."
-        instructions: "حداقل %{count} نویسه."
         required: "لطفاً یک کلمه عبور وارد کنید"
         confirm: "تایید"
       summary:
@@ -1587,7 +1597,6 @@ fa_IR:
         content: "آگاه‌سازی‌ها برای این است که هر آنچه در انجمن اتفاق می‌افتد را به شما اطلاع بدهد، مورد استفاده قرار می‌گیرد."
       topic_timeline:
         title: "جدول زمانی موضوع"
-        content: "با استفاده از جدول زمانی موضوع، به سرعت در یک نوشته پیمایش کنید."
       post_menu:
         title: "منوی نوشته"
         content: "ببینید چگونه می‌توانید با کلیک روی سه نقطه با نوشته‌ ارتباط برقرار کنید!"
@@ -2180,7 +2189,6 @@ fa_IR:
           seen: خواندم
           unseen: نخوانده‌ام
           wiki: دانشنامه هستند
-          images: تصویر دارند
           all_tags: تمام برچسب‌های بالا
         statuses:
           label: که موضوع‌ها
@@ -2320,6 +2328,8 @@ fa_IR:
     topic_bulk_actions:
       close_topics:
         name: "بستن موضوعات"
+        note: "یادداشت"
+        optional: (اختیاری)
       archive_topics:
         name: "بایگانی موضوعات"
       unlist_topics:
@@ -3463,7 +3473,9 @@ fa_IR:
                 other: "%{count} پیش‌نویس"
             review:
               content: "بازنگری"
-              pending_count: "%{count} در انتظار"
+              pending_count:
+                one: "%{count} در انتظار"
+                other: "%{count} در انتظار"
       panels:
         forum:
           label: انجمن
@@ -3952,7 +3964,9 @@ fa_IR:
           disabled_component_tooltip: "این کامپوننت غیر فعال شده"
           default_theme_tooltip: "این تم، تم پیش‌فرض انجمن است"
           updates_available_tooltip: "بروزرسانی برای این تم موجود است"
-          and_x_more: "و %{count} مورد دیگر"
+          and_x_more:
+            one: "و %{count} مورد دیگر"
+            other: "و %{count} مورد دیگر"
           collapse: جمع کردن
           uploads: "بارگذاری‌ها"
           no_uploads: "می‌توانید فایل‌های ثابت همراه با قالب خود مثل فونت و تصویر بارگذاری کنید"
@@ -4021,8 +4035,6 @@ fa_IR:
           schema:
             fields:
               required: "*مورد نیاز"
-              string:
-                too_short: "نباید کمتر از %{count} نویسه باشد"
               number:
                 too_small: "باید بزرگتر یا مساوی %{count} باشد"
                 too_large: "باید کمتر و یا مساوی %{count} باشد"
@@ -4552,7 +4564,6 @@ fa_IR:
           label: "ویرایش فهرست"
           upload:
             label: "بارگذاری"
-            title: "بارگذاری تصویر(ها)"
         categories:
           all_results: "همه"
           required: "مورد نیاز"
