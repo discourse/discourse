@@ -177,6 +177,7 @@ export default class BookmarkModal extends Component {
   onTimeSelected(type, time) {
     this.bookmark.selectedReminderType = type;
     this.bookmark.selectedDatetime = time;
+    this.bookmark.reminderAt = time;
 
     // If the type is custom, we need to wait for the user to click save, as
     // they could still be adjusting the date and time

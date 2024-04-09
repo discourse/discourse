@@ -29,7 +29,7 @@ describe "Bookmarking posts and topics", type: :system do
 
     expect(bookmark_menu).to be_open
     expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
-    expect(topic_page).to have_post_bookmarked(post)
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
     expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
   end
 
@@ -41,6 +41,7 @@ describe "Bookmarking posts and topics", type: :system do
 
     bookmark_menu.click_menu_option("tomorrow")
 
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(page).to have_no_css(".bookmark-menu-content")
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
@@ -49,7 +50,7 @@ describe "Bookmarking posts and topics", type: :system do
     visit_topic_and_open_bookmark_menu(post)
     bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
-    expect(topic_page).to have_post_bookmarked(post)
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
@@ -70,7 +71,7 @@ describe "Bookmarking posts and topics", type: :system do
     )
     bookmark_modal.select_auto_delete_preference(Bookmark.auto_delete_preferences[:clear_reminder])
     bookmark_modal.save
-    expect(topic_page).to have_post_bookmarked(post_2)
+    expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
     topic_page.click_post_action_button(post_2, :bookmark)
     bookmark_menu.click_menu_option("edit")
     expect(bookmark_modal).to have_open_options_panel
