@@ -78,9 +78,6 @@
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}
             <div class="empty-state">
-              <span class="empty-state-title">
-                {{i18n "directory.no_results.title"}}
-              </span>
               <div class="empty-state-body">
                 {{i18n "directory.no_results.body"}}
                 {{#if this.currentUser.staff}}
