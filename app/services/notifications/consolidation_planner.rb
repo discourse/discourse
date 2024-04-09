@@ -106,16 +106,7 @@ module Notifications
           to: Notification.types[:linked_consolidated],
           threshold: -> { SiteSetting.notification_consolidation_threshold },
           consolidation_window: SiteSetting.linked_notification_consolidation_window_mins.minutes,
-          unconsolidated_query_blk:
-            Proc.new do |notifications, data|
-              key = "display_username"
-              value = data[key.to_sym]
-              filtered = notifications.where("data::json ->> 'username2' IS NULL")
-
-              filtered = filtered.where("data::json ->> '#{key}' = ?", value) if value
-
-              filtered
-            end,
+          unconsolidated_query_blk: filtered_by_data_attribute("display_username"),
           consolidated_query_blk: filtered_by_data_attribute("display_username"),
         )
         .set_mutations(

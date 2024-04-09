@@ -11,7 +11,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
 
     before { SiteSetting.notification_consolidation_threshold = threshold }
 
-    it "does nothing it hasn't passed the consolidation threshold yet for likes" do
+    it "does nothing when it hasn't passed the consolidation threshold yet for likes" do
       notification = build_notification(:liked, { display_username: like_user })
 
       saved_like = planner.consolidate_or_save!(notification)
@@ -20,7 +20,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
       expect(saved_like.notification_type).to eq(Notification.types[:liked])
     end
 
-    it "does nothing it hasn't passed the consolidation threshold yet for links" do
+    it "does nothing when it hasn't passed the consolidation threshold yet for links" do
       notification = build_notification(:linked, { display_username: link_user })
 
       saved_link = planner.consolidate_or_save!(notification)
