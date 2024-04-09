@@ -12,7 +12,7 @@ class ProblemCheck
       checks.each(...)
     end
 
-    def run
+    def run_all
       each(&:run)
     end
 

@@ -26,7 +26,7 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def problems
-    ProblemCheck.realtime.run
+    ProblemCheck.realtime.run_all
 
     render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
   end

@@ -98,7 +98,7 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#problems" do
-    before { ProblemCheck.stubs(:realtime).returns(stub(run: [])) }
+    before { ProblemCheck.stubs(:realtime).returns(stub(run_all: [])) }
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
