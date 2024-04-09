@@ -16,6 +16,7 @@ export class UserStatusMessage {
     this.html = this.#statusHtml(status, opts);
     this.content = this.#tooltipHtml(status);
     this.tooltipInstance = this.tooltip.register(this.html, {
+      identifier: "user-status-message-tooltip",
       content: this.content,
     });
   }
