@@ -243,12 +243,13 @@ class Theme < ActiveRecord::Base
 
   def self.enabled_theme_and_component_ids
     get_set_cache "enabled_theme_and_component_ids" do
-      component_ids = []
       theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
-      theme_ids.each do |id|
-        component_ids += Theme.find(id).child_themes.where(enabled: true).pluck(:id)
-      end
-
+      component_ids =
+        ChildTheme
+          .where(parent_theme_id: theme_ids)
+          .joins(:child_theme)
+          .where(themes: { enabled: true })
+          .pluck(:child_theme_id)
       (theme_ids + component_ids).uniq
     end
   end

@@ -501,10 +501,10 @@ HTML
 
     expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
 
-    # theme2.destroy
-    # theme3.destroy
+    theme2.destroy
+    theme3.destroy
 
-    # expect(Theme.enabled_theme_and_component_ids).to eq([])
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
   it "correctly caches user_themes template" do
