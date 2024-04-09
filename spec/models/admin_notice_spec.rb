@@ -8,7 +8,7 @@ RSpec.describe AdminNotice do
       Fabricate(
         :admin_notice,
         identifier: "test",
-        category: "problem",
+        subject: "problem",
         priority: "high",
         details: {
           thing: "world",

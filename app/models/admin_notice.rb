@@ -4,11 +4,11 @@ class AdminNotice < ActiveRecord::Base
   validates :identifier, presence: true
 
   enum :priority, %i[low high].freeze
-  enum :category, %i[problem].freeze
+  enum :subject, %i[problem].freeze
 
   def message
     I18n.t(
-      "dashboard.#{category}.#{identifier}",
+      "dashboard.#{subject}.#{identifier}",
       **details.symbolize_keys.merge(base_path: Discourse.base_path),
     )
   end
@@ -19,7 +19,7 @@ end
 # Table name: admin_notices
 #
 #  id         :bigint           not null, primary key
-#  category   :integer          not null
+#  subject    :integer          not null
 #  priority   :integer          not null
 #  identifier :string           not null
 #  details    :json             not null
@@ -28,6 +28,6 @@ end
 #
 # Indexes
 #
-#  index_admin_notices_on_category    (category)
+#  index_admin_notices_on_subject     (subject)
 #  index_admin_notices_on_identifier  (identifier)
 #

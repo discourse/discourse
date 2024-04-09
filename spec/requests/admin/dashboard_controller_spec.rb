@@ -115,8 +115,8 @@ RSpec.describe Admin::DashboardController do
 
       context "when there are problems" do
         before do
-          Fabricate(:admin_notice, category: "problem", identifier: "foo")
-          Fabricate(:admin_notice, category: "problem", identifier: "bar")
+          Fabricate(:admin_notice, subject: "problem", identifier: "foo")
+          Fabricate(:admin_notice, subject: "problem", identifier: "bar")
         end
 
         it "returns an array of strings" do
@@ -132,8 +132,8 @@ RSpec.describe Admin::DashboardController do
       before do
         sign_in(moderator)
 
-        Fabricate(:admin_notice, category: "problem", identifier: "foo")
-        Fabricate(:admin_notice, category: "problem", identifier: "bar")
+        Fabricate(:admin_notice, subject: "problem", identifier: "foo")
+        Fabricate(:admin_notice, subject: "problem", identifier: "bar")
       end
 
       it "returns a list of problems" do
