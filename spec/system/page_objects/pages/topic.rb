@@ -68,12 +68,12 @@ module PageObjects
         end
       end
 
-      def has_post_bookmarked?(post)
-        is_post_bookmarked(post, bookmarked: true)
+      def has_post_bookmarked?(post, with_reminder: false)
+        is_post_bookmarked(post, bookmarked: true, with_reminder: with_reminder)
       end
 
-      def has_no_post_bookmarked?(post)
-        is_post_bookmarked(post, bookmarked: false)
+      def has_no_post_bookmarked?(post, with_reminder: false)
+        is_post_bookmarked(post, bookmarked: false, with_reminder: with_reminder)
       end
 
       def expand_post_actions(post)
@@ -238,9 +238,10 @@ module PageObjects
         "#topic-footer-button-#{button}"
       end
 
-      def is_post_bookmarked(post, bookmarked:)
+      def is_post_bookmarked(post, bookmarked:, with_reminder: false)
         within post_by_number(post) do
-          page.public_send(bookmarked ? :has_css? : :has_no_css?, ".bookmark.bookmarked")
+          css_class = ".bookmark.bookmarked#{with_reminder ? ".with-reminder" : ""}"
+          page.public_send(bookmarked ? :has_css? : :has_no_css?, css_class)
         end
       end
     end
