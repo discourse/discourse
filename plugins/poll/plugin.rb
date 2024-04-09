@@ -70,6 +70,7 @@ after_initialize do
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
+    return if polls.blank? && self.id.blank?
 
     if polls.present?
       validator = DiscoursePoll::PostValidator.new(self)
@@ -78,6 +79,8 @@ after_initialize do
 
     # are we updating a post?
     if self.id.present?
+      return if polls.blank? && ::Poll.where(post: self).empty?
+
       DiscoursePoll::PollsUpdater.update(self, polls)
     else
       self.extracted_polls = polls
