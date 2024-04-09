@@ -5,7 +5,9 @@ import FieldInputDescription from "admin/components/schema-theme-setting/field-i
 import ComboBox from "select-kit/components/combo-box";
 
 export default class SchemaThemeSettingTypeEnum extends Component {
-  @tracked value = this.args.value || this.args.spec.default;
+  @tracked
+  value =
+    this.args.value || (this.args.spec.required && this.args.spec.default);
 
   get content() {
     return this.args.spec.choices.map((choice) => {
