@@ -1,0 +1,31 @@
+name: Meta Documentation Sync
+
+on:
+  push:
+    branches:
+      - main
+      - docs-publishing-mvp # todo: remove
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: publish
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install discourse_api
+        run: gem install discourse_api
+
+      - name: Publish docs to Meta
+        env: # Or as an environment variable
+          meta_docs_api_key: ${{ secrets.meta_docs_api_key }}
+        run: script/publish_docs.rb
+

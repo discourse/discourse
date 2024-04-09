@@ -1,23 +1,12 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example
-is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
-walkthrough will go through these in detail:
+<!-- begin-docs-skip -->
+> 💁 Read this document and ask questions about it [on Discourse Meta](https://meta.discourse.org/t/303016)
+<!-- end-docs-skip -->
 
-**[Before you start](#before-you-start)**
 
-1. [Preparing your domain name](#1-preparing-your-domain-name)
-2. [Setting up email](#2-setting-up-email)
 
-**[Installation](#installation)**
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This walkthrough will go through these in detail.
 
-3. [Create new cloud server](#3-create-new-cloud-server)
-4. [Access new cloud server](#4-access-your-cloud-server)
-5. [Install Prerequisites for Docker](#5-install-prerequisites-for-docker-debianubuntu-based-distro-example)
-6. [Install Discourse](#6-install-discourse)
-7. [Edit Discourse configuration](#7-edit-discourse-configuration)
-8. [Start Discourse](#8-start-discourse)
-9. [Register new account and become admin](#9-register-new-account-and-become-admin)
-10. [Post-install maintenance](#10-post-install-maintenance)
-11. [(Optional) Add more Discourse features](#11-optional-add-more-discourse-features)
+<div data-theme-toc="true"> </div>
 
 > 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
@@ -209,7 +198,7 @@ Do you want...
 
 - To embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)?
 
-Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request.
+Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request [on Github](https://github.com/discourse/discourse/blob/main/docs/INSTALL-cloud.md).
 
    [dd]: https://github.com/discourse/discourse_docker
   [ssh]: https://help.github.com/articles/generating-ssh-keys
