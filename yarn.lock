@@ -10803,10 +10803,10 @@ quick-temp@^0.1.2, quick-temp@^0.1.3, quick-temp@^0.1.5, quick-temp@^0.1.8:
     rimraf "^2.5.4"
     underscore.string "~3.3.4"
 
-qunit-dom@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-3.1.0.tgz#4b8a4a9c5853e51ec8ecf0e4550b9577286a4a62"
-  integrity sha512-gpek3SkGM4uCX7tV466fbkrtCXkxGyHNeBPqwXO2QvcAr36TbmbvfpVW77KNbw1N5xm2KNNzVOQHItxH/3pLVA==
+qunit-dom@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-3.1.1.tgz#7ea0ec76eade1a897f70f2ac13b75ce75c5aa792"
+  integrity sha512-Ja2NK+LsQM4iDU5QFtkwbLEbETgr6+7wTf7t6DXW3hWhB6GmAtKA2r3eLnmXpSdncMnoBsedXSKfjM0iMTOUGQ==
 
 qunit@^2.20.1:
   version "2.20.1"
