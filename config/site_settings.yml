@@ -2749,6 +2749,10 @@ uncategorized:
     default: 120
     min: 1
 
+  linked_notification_consolidation_window_mins:
+    default: 120
+    min: 1
+
   delete_drafts_older_than_n_days:
     default: 180
     max: 36500

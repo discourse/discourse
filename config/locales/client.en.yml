@@ -2667,6 +2667,10 @@ en:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "linked %{count} of your posts"
+        other: "linked %{count} of your posts"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2740,6 +2744,7 @@ en:
         watching_first_post: "new topic"
         topic_reminder: "topic reminder"
         liked_consolidated: "new likes"
+        linked_consolidated: "new links"
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
