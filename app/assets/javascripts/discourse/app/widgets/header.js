@@ -575,10 +575,23 @@ export default createWidget("header", {
       minimized: !!attrs.topic,
     };
 
-    return h(
-      "div.wrap",
-      this.attach("header-contents", { ...attrs, ...contentsAttrs })
-    );
+    return [
+      h(
+        "div.wrap",
+        this.attach("header-contents", { ...attrs, ...contentsAttrs })
+      ),
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`
+          <PluginOutlet
+            @name="after-header"
+            @outletArgs={{hash minimized=@data.minimized}}
+          />
+        `,
+        { minimized: !!attrs.topic }
+      ),
+    ];
   },
 
   updateHighlight() {

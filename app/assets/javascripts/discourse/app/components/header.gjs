@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
@@ -218,6 +220,10 @@ export default class GlimmerHeader extends Component {
           {{/if}}
         </Contents>
       </div>
+      <PluginOutlet
+        @name="after-header"
+        @outletArgs={{hash minimized=this.header.topic}}
+      />
     </header>
   </template>
 }
