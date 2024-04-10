@@ -34,7 +34,7 @@ export default class DeleteMessagesConfirm extends Component {
         {{#if this.multipleMessages}}
           {{i18n
             "chat.delete_messages.confirm.other"
-            count=this.args.model.selectedMessageIds.length
+            count=@model.selectedMessageIds.length
           }}
         {{else}}
           {{i18n "chat.delete_messages.confirm.one"}}
