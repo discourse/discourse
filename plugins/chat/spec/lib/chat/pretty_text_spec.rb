@@ -6,10 +6,10 @@ RSpec.describe PrettyText do
     [chat quote="jan;101;2023-12-01T21:10:53Z" channel="Tech Talks" channelId="5" multiQuote="true" chained="true"]
     message 1
     [/chat]
-    
+
     [chat quote="Kai;102;2023-12-01T21:10:53Z" chained="true"]
     message 2
-    
+
     message 3
     [/chat]
     MD
@@ -24,10 +24,10 @@ RSpec.describe PrettyText do
     [chat quote="jan;101;2023-12-01T21:10:53Z" channel="Tech Talks" channelId="5"]
     message 1
     [/chat]
-    
+
     [chat quote="Kai;102;2023-12-01T21:10:53Z"]
     message 2
-    
+
     message 3
     [/chat]
     MD
@@ -69,15 +69,15 @@ RSpec.describe PrettyText do
     cooked = PrettyText.cook <<~MD
     [chat quote="jan;274;2023-12-06T04:15:00Z" channelId="2" threadId="140"]
     original message
-    
+
     [chat quote="kai;274;2023-12-06T04:30:04Z" chained="true"]
     thread reply 1
     [/chat]
-    
+
     [chat quote="jan;274;2023-12-06T05:00:00Z" chained="true"]
     thread reply 2
     [/chat]
-    
+
     [/chat]
     MD
     expect(cooked).to include('class="chat-transcript-thread"')
@@ -96,5 +96,29 @@ RSpec.describe PrettyText do
     expect(cooked).to include(
       "<div class=\"chat-transcript-messages\">\n<p>original message</p></div>",
     )
+  end
+
+  it "renders kbd inline tag" do
+    cooked = PrettyText.cook <<~MD
+    <kbd>Esc</kbd> is pressed
+    MD
+
+    expect(cooked).to include("<p><kbd>Esc</kbd> is pressed</p>")
+  end
+
+  it "renders details block tag" do
+    cooked = PrettyText.cook <<~MD
+    <details>
+      <summary>Dog</summary>
+      Cat
+    </details>
+    MD
+
+    expect(cooked).to include(<<~HTML.strip)
+    <details>
+      <summary>Dog</summary>
+      Cat
+    </details>
+    HTML
   end
 end
