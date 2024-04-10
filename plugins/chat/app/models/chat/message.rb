@@ -186,6 +186,7 @@ module Chat
       censored
       chat-transcript
       discourse-local-dates
+      details
       emoji
       emojiShortcuts
       inlineEmoji
@@ -201,7 +202,6 @@ module Chat
       upload-protocol
       watched-words
       chat-html-inline
-      chat-html-block
     ]
 
     MARKDOWN_IT_RULES = %w[

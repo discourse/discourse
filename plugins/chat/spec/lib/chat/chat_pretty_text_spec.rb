@@ -20,11 +20,11 @@ RSpec.describe Chat::Message do
     MD
 
       expect(cooked).to include(<<~HTML.strip)
-    <details>
-      <summary>Dog</summary>
-      Cat
-    </details>
-    HTML
+        <details><br>
+        <summary>Dog</summary><br>
+        Cat<br>
+        </details>
+      HTML
     end
   end
 end
