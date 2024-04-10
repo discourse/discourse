@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
@@ -16,6 +17,7 @@ import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
 import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
+import PluginOutlet from "discourse/components/plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
 
@@ -229,6 +231,10 @@ export default class GlimmerHeader extends Component {
           {{/if}}
         </Contents>
       </div>
+      <PluginOutlet
+        @name="after-header"
+        @outletArgs={{hash minimized=this.header.topic}}
+      />
     </header>
   </template>
 }
