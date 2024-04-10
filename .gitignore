@@ -48,6 +48,9 @@
 !/plugins/footnote/
 /plugins/*/auto_generated/
 
+# Mine!
+!/plugins/profile-views-sidebar
+
 /spec/fixtures/plugins/my_plugin/auto_generated
 
 /vendor/bundle/*
