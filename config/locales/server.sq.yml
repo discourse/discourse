@@ -71,7 +71,6 @@ sq:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
       taken: "është i marrë"
       accepted: duhet të pranohet
@@ -799,8 +798,6 @@ sq:
       must_include_latest: "Top menu must include the 'latest' tab."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-      invalid_string_min: "Must be at least %{min} characters."
-      invalid_string_max: "Must be no more than %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
   search:
     within_post: "#%{post_number} nga %{username}"
@@ -868,8 +865,6 @@ sq:
       sent_test: "u dërgua!"
   user:
     username:
-      short: "must be at least %{min} characters"
-      long: "must be no more than %{max} characters"
       unique: "must be unique"
       blank: "must be present"
     email:

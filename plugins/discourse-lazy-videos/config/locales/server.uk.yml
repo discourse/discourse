@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    lazy_videos_enabled: "Увімкнути плагін Lazy Videos"
+    lazy_youtube_enabled: "Увімкніть відкладене завантаження для вставок YouTube"
+    lazy_vimeo_enabled: "Увімкнути відкладене завантаження для вставок Vimeo"
+    lazy_tiktok_enabled: "Увімкнути відкладене завантаження для вставок TikTok (експериментально)"

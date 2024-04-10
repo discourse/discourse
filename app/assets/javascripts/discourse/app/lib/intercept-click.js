@@ -1,14 +1,16 @@
 import DiscourseURL from "discourse/lib/url";
 
+const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
+
 export function wantsNewWindow(e) {
   return (
     e.defaultPrevented ||
-    (e.isDefaultPrevented && e.isDefaultPrevented()) ||
+    e.isDefaultPrevented?.() ||
     e.shiftKey ||
     e.metaKey ||
     e.ctrlKey ||
-    (e.button && e.button !== 0) ||
-    (e.currentTarget && e.currentTarget.target === "_blank")
+    (e.button && e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID) ||
+    e.currentTarget?.target === "_blank"
   );
 }
 
@@ -18,29 +20,33 @@ export function wantsNewWindow(e) {
   This jQuery code intercepts clicks on those links and routes them properly.
 **/
 export default function interceptClick(e) {
-  if (wantsNewWindow(e)) {
+  const target = e.target.closest("a");
+
+  if (!target) {
     return;
   }
 
-  const currentTarget = e.currentTarget;
-  const href = currentTarget.getAttribute("href");
-  const linkTarget = currentTarget.getAttribute("target");
-  const targettingOtherFrame = linkTarget && linkTarget !== "_self";
+  if (wantsNewWindow(e, target) || target.target === "_blank") {
+    return;
+  }
+
+  const href = target.getAttribute("href");
+  const linkTarget = target.getAttribute("target");
+  const targetingOtherFrame = linkTarget && linkTarget !== "_self";
 
   if (
     !href ||
     href.startsWith("#") ||
-    targettingOtherFrame ||
-    currentTarget.dataset.emberAction ||
-    currentTarget.dataset.autoRoute ||
-    currentTarget.dataset.shareUrl ||
-    currentTarget.classList.contains("widget-link") ||
-    currentTarget.classList.contains("raw-link") ||
-    currentTarget.classList.contains("mention") ||
-    (!currentTarget.classList.contains("d-link") &&
-      !currentTarget.dataset.userCard &&
-      currentTarget.classList.contains("ember-view")) ||
-    currentTarget.classList.contains("lightbox") ||
+    targetingOtherFrame ||
+    target.dataset.autoRoute ||
+    target.dataset.shareUrl ||
+    target.classList.contains("widget-link") ||
+    target.classList.contains("raw-link") ||
+    target.classList.contains("mention") ||
+    (!target.classList.contains("d-link") &&
+      !target.dataset.userCard &&
+      target.classList.contains("ember-view")) ||
+    target.classList.contains("lightbox") ||
     href.startsWith("mailto:") ||
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))
@@ -50,5 +56,4 @@ export default function interceptClick(e) {
 
   e.preventDefault();
   DiscourseURL.routeTo(href);
-  return false;
 }

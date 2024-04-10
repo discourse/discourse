@@ -124,8 +124,12 @@ de:
       number_value_not_valid_min: "Der Wert muss größer oder gleich %{min} sein."
       number_value_not_valid_max: "Der Wert muss kleiner oder gleich %{max} sein."
       string_value_not_valid_min_max: "Der Wert muss zwischen %{min} und %{max} Zeichen lang sein."
-      string_value_not_valid_min: "Der Wert muss mindestens %{min} Zeichen lang sein."
-      string_value_not_valid_max: "Der Wert darf höchstens %{max} Zeichen lang sein."
+      string_value_not_valid_min:
+        one: "Der Wert muss mindestens %{count} Zeichen lang sein."
+        other: "Der Wert muss mindestens %{count} Zeichen lang sein."
+      string_value_not_valid_max:
+        one: "Der Wert darf höchstens %{count} Zeichen lang sein."
+        other: "Der Wert darf höchstens %{count} Zeichen lang sein."
       objects:
         humanize_required: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss vorhanden sein."
         required: "muss angegeben werden"
@@ -141,22 +145,66 @@ de:
         not_valid_boolean_value: "muss ein boolescher Wert sein"
         humanize_not_valid_enum_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine der folgenden sein: %{choices}."
         not_valid_enum_value: "muss einer der folgenden sein: %{choices}"
-        humanize_not_valid_category_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Kategorie-ID sein."
-        not_valid_category_value: "muss eine gültige Kategorie-ID sein"
+        humanize_not_valid_categories_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Kategorie-IDs sein."
+        not_valid_categories_value: "muss ein Array gültiger Kategorie-IDs sein"
+        humanize_categories_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Kategorie-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Kategorie-IDs haben."
+        categories_value_not_valid_min:
+          one: "muss mindestens %{count} Kategorie-ID haben"
+          other: "muss mindestens %{count} Kategorie-IDs haben"
+        humanize_categories_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Kategorie-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Kategorie-IDs haben."
+        categories_value_not_valid_max:
+          one: "darf höchstens %{count} Kategorie-ID haben"
+          other: "darf höchstens %{count} Kategorie-IDs haben"
         humanize_not_valid_topic_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Themen-ID sein."
         not_valid_topic_value: "muss eine gültige Themen-ID sein"
         humanize_not_valid_post_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Beitrag-ID sein."
         not_valid_post_value: "muss eine gültige Beitrags-ID sein"
-        humanize_not_valid_group_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Gruppen-ID sein."
-        not_valid_group_value: "muss eine gültige Gruppen-ID sein"
-        humanize_not_valid_tag_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Schlagwort-ID sein."
-        not_valid_tag_value: "muss eine gültige Schlagwort-ID sein"
+        humanize_not_valid_groups_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Gruppen-IDs sein."
+        not_valid_groups_value: "muss ein Array mit gültigen Gruppen-IDs sein"
+        humanize_groups_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Gruppen-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Gruppen-IDs haben."
+        groups_value_not_valid_min:
+          one: "muss mindestens %{count} Gruppen-ID haben"
+          other: "muss mindestens %{count} Gruppen-IDs haben"
+        humanize_groups_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Gruppen-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Gruppen-IDs haben."
+        groups_value_not_valid_max:
+          one: "darf höchstens %{count} Gruppen-ID haben"
+          other: "darf höchstens %{count} Gruppen-IDs haben"
+        humanize_not_valid_tags_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Schlagwort-Namen sein."
+        not_valid_tags_value: "muss ein Array mit gültigen Schlagwort-Namen sein"
+        humanize_tags_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Point '%{property_json_pointer}' muss mindestens %{count} Schlagwort-Namen haben."
+          other: "Die Eigenschaft am JSON-Point '%{property_json_pointer}' muss mindestens %{count} Schlagwort-Namen haben."
+        tags_value_not_valid_min:
+          one: "muss mindestens %{count} Schlagwort-Namen haben"
+          other: "muss mindestens %{count} Schlagwort-Namen haben"
+        humanize_tags_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Schlagwort-Namen haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Schlagwort-Namen haben."
+        tags_value_not_valid_max:
+          one: "darf höchstens %{count} Schlagwort-Namen haben"
+          other: "darf höchstens %{count} Schlagwort-Namen haben"
         humanize_not_valid_upload_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Upload-ID sein."
         not_valid_upload_value: "muss eine gültige Upload-ID sein"
-        humanize_string_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss mindestens %{min} Zeichen lang sein."
-        string_value_not_valid_min: "muss mindestens %{min} Zeichen lang sein"
-        humanize_string_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' darf höchstens %{max} Zeichen lang sein."
-        string_value_not_valid_max: "darf höchstens %{max} Zeichen lang sein"
+        humanize_string_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Zeichen lang sein."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Zeichen lang sein."
+        string_value_not_valid_min:
+          one: "muss mindestens %{count} Zeichen lang sein"
+          other: "muss mindestens %{count} Zeichen lang sein"
+        humanize_string_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Zeichen lang sein."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Zeichen lang sein."
+        string_value_not_valid_max:
+          one: "darf höchstens %{count} Zeichen lang sein"
+          other: "darf höchstens %{count} Zeichen lang sein"
         humanize_number_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss größer oder gleich %{min}sein."
         number_value_not_valid_min: "muss größer als oder gleich %{min} sein."
         humanize_number_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss kleiner oder gleich %{max}sein."
@@ -203,7 +251,9 @@ de:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "darf höchstens %{max} Zeichen lang sein; du hast %{length} eingegeben."
+      too_long_validation:
+        one: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
+        other: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger boolescher Wert."
       taken: "wird bereits verwendet"
       accepted: muss akzeptiert werden
@@ -317,7 +367,6 @@ de:
       one: "Du hast in den letzten 24 Stunden bereits %{count} Einladung verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
       other: "Du hast in den letzten 24 Stunden bereits %{count} Einladungen verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungs-E-Mail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
-    cant_invite_to_group: "Du darfst keine Benutzer in die angegebene(n) Gruppe(n) einladen. Vergewissere dich, dass du der Eigentümer der Gruppe(n) bist, in die du einladen möchtest."
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
@@ -436,7 +485,6 @@ de:
   pm_reached_recipients_limit: "Entschuldige, du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   watched_words_auto_tag: "Thema automatisch mit Schlagwort versehen"
-  secure_upload_not_allowed_in_public_topic: "Entschuldige, die folgenden sicheren Uploads können nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldige, du kannst keine private Nachricht zu einem bestehenden Thema erstellen."
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
   just_posted_that: "ist einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
@@ -444,7 +492,9 @@ de:
   is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
+  show_post_in_topic: "Beitrag im Thema anzeigen"
   page_num: "Seite %{num}"
+  crawler_content_hidden: "HTML-Inhalte wurden ausgelassen, weil du eingeloggt bist oder ein modernes Mobilgerät verwendest."
   home_title: "Startseite"
   topics_in_category: "Themen in der Kategorie „%{category}“"
   rss_posts_in_topic: "RSS-Feed von „%{topic}“"
@@ -579,7 +629,9 @@ de:
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
-    get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+    get_a_room:
+      one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+      other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation markiert. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
@@ -1590,7 +1642,7 @@ de:
     summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
     custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
-    personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
+    personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu erstellen. WICHTIG: 1) Alle Benutzer können auf Nachrichten antworten. 2) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 3) Administratoren und Moderatoren können immer Nachrichten senden. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
@@ -1971,7 +2023,7 @@ de:
     high_trust_flaggers_auto_hide_posts: "Beiträge von neuen Benutzern werden automatisch ausgeblendet, nachdem sie von einem Benutzer mit VS3+ als Spam gemeldet wurden"
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
     slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach editing_grace_period?"
-    reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du unter <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>im Leitfaden auf Meta</a> ."
+    reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>im Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Verwende HTML statt Text für eingehende E-Mails."
@@ -2073,7 +2125,7 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der privaten Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow_anonymous_likes`."
-    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern, die deine Seite anonym besuchen, zu erlauben, Beiträge zu mögen. Wenn diese Einstellung aktiviert ist, kann sie das Engagement von Besuchern, die nicht angemeldet sind, fördern, da sie mit den Inhalten interagieren können. Siehe auch `allow_anonymous_posting`."
+    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -2137,6 +2189,7 @@ de:
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
     embed_truncate: "Verkürze den Inhalt von Beiträgen, die von externen Quellen eingebettet werden. Diese Einstellung sorgt dafür, dass nur der erste Teil des Inhalts angezeigt wird, wenn ein Beitrag von einer externen URL auf deiner Seite eingebettet wird. Wenn du es vorziehst, den gesamten Inhalt der externen Beiträge anzuzeigen, kannst du diese Einstellung deaktivieren."
     embed_unlisted: "Eingebettete Themen werden nicht aufgelistet, bis ein Benutzer antwortet."
+    import_embed_unlisted: "Importierte eingebettete Themen werden aus der Liste genommen, bis ein Benutzer antwortet (auch wenn die Einstellung „Nicht aufgelistete Seiten einbetten“ deaktiviert ist)."
     embed_support_markdown: "Markdown-Formatierung für eingebettete Beiträge unterstützen."
     allowed_embed_selectors: "Eine kommaseparierte Liste von CSS-Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
@@ -2145,7 +2198,7 @@ de:
     notify_about_reviewable_item_after: "Falls es Elemente zur Überprüfung gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, eine persönliche Nachricht an die Moderatoren senden. Zum Deaktivieren auf 0 setzen."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die seit mehr als (n) Tagen nicht mehr geändert wurden."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
-    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
+    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren und die Schaltfläche \"Erste Schritte\" zu entfernen (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
@@ -2248,7 +2301,7 @@ de:
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Lege das visuelle Erscheinungsbild der Schlagwort-Abzeichen auf der Website fest. Mit dieser Einstellung kannst du die visuelle Darstellung der Tags in allen Bereichen der Website anpassen und so die Konsistenz des Layouts und die Zugänglichkeit für die Benutzer verbessern."
-    pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppe(n) erlauben, jede persönliche Nachricht zu markieren"
+    pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppen erlauben, jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     tag_topic_allowed_groups: "Gruppen, die Themen mit Schlüsselwörtern versehen dürfen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
@@ -2295,10 +2348,12 @@ de:
     enable_custom_sidebar_sections: "EXPERIMENTELL: Benutzerdefinierte Seitenleistenabschnitte aktivieren"
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
+    enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
     experimental_glimmer_header_groups: "EXPERIMENTELL: Rendere die Kopfzeile der Seite als Glimmer-Komponenten."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTELL: Aktiviere das neue Drop-down für Massenoperationen."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
@@ -2316,8 +2371,12 @@ de:
       must_include_latest: "Das Menü oben muss die Registerkarte „Aktuell“ enthalten."
       invalid_string: "Ungültiger Wert."
       invalid_string_min_max: "Anzahl der Zeichen muss zwischen %{min} und %{max} liegen."
-      invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
-      invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
+      invalid_string_min:
+        one: "Muss mindestens %{count} Zeichen lang sein."
+        other: "Muss mindestens %{count} Zeichen lang sein."
+      invalid_string_max:
+        one: "Darf nicht länger als %{count} Zeichen sein."
+        other: "Darf nicht länger als %{count} Zeichen sein."
       invalid_json: "Ungültiges JSON."
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
@@ -2350,7 +2409,9 @@ de:
         regex_invalid: "Der reguläre Ausdruck ist ungültig: %{error}"
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
-      list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      list_value_count:
+        one: "Die Liste muss genau %{count} Wert enthalten."
+        other: "Die Liste muss genau %{count} Werte enthalten."
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -2384,6 +2445,14 @@ de:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - "deaktiviert"
+      - "inaktiv"
+      - "nicht aktiviert"
+      purge_unactivated_users_grace_period_days:
+      - "deaktiviert"
+      - "inaktiv"
+      - "nicht aktiviert"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2585,8 +2654,12 @@ de:
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
     content_matches_auto_silence_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Stummschaltung überein"
     username:
-      short: "muss mindestens %{min} Zeichen lang sein"
-      long: "darf nicht länger als %{max} Zeichen sein"
+      short:
+        one: "muss mindestens %{count} Zeichen lang sein"
+        other: "muss mindestens %{count} Zeichen lang sein"
+      long:
+        one: "darf nicht länger als %{count} Zeichen sein"
+        other: "darf nicht länger als %{count} Zeichen sein"
       too_long: "ist zu lang"
       characters: "darf nur Zahlen, Buchstaben, Bindestriche, Punkte und Unterstriche enthalten"
       unique: "muss eindeutig sein"
@@ -2752,7 +2825,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -2766,7 +2839,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -4038,99 +4111,94 @@ de:
 
       ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit demselben Respekt, den du einem öffentlichen Park entgegenbringen würdest. Auch wir sind eine gemeinschaftliche Ressource &mdash; ein Ort, an dem du deine Fähigkeiten, dein Wissen und deine Interessen in Gesprächen mit anderen teilen kannst.
+      Bitte behandle dieses Diskussionsforum mit demselben Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinschaftliche Community-Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
 
-      Dies sind keine harten und festen Regeln. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft fördern und dafür sorgen sollen, dass dies ein freundlicher Ort für einen zivilisierten öffentlichen Diskurs bleibt.
+      Dies sind keine harten oder festen Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft fördern und dafür sorgen sollen, dass dies ein freundlicher Ort für einen zivilisierten, öffentlichen Diskurs bleibt.
+
 
       <a name="improve"></a>
 
-      ## [Improve the Discussion](#improve)
+      ## [Verbessere die Diskussion](#improve)
 
-      Hilf uns, dies zu einem großartigen Ort für Diskussionen zu machen, indem du immer etwas Positives zur Diskussion beiträgst, egal wie klein. Wenn du dir nicht sicher bist, ob dein Beitrag zur Diskussion beiträgt, überlege dir, was du sagen willst und versuche es später noch einmal.
+      Hilf uns, dies zu einem großartigen Ort für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner Art zu verbessern, egal wie geringfügig. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, überlege dir, was du sagen möchtest und probiere es später noch einmal.
 
-      Eine Möglichkeit, die Diskussion zu verbessern, ist, die Themen zu entdecken, die bereits im Gange sind. Wenn du dir die Zeit nimmst, die Themen hier zu durchstöbern, bevor du antwortest oder ein eigenes Thema beginnst, hast du eine bessere Chance, andere zu treffen, die deine Interessen teilen.
+      Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Wenn du dir die Zeit nimmst, die Themen hier zu durchstöbern, bevor du antwortest oder deine eigenen startest, hast du eine bessere Chance andere zu treffen, die deine Interessen teilen.
 
-      Die Themen, die hier diskutiert werden, sind uns wichtig, und wir möchten, dass du dich so verhältst, als ob sie dir auch wichtig wären. Sei respektvoll gegenüber den Themen und den Menschen, die sie diskutieren, auch wenn du mit einigen Aussagen nicht einverstanden bist.
+      Die hier diskutierten Themen sind uns wichtig und wir möchten, dass du dich so verhältst, als wären sie dir genauso wichtig. Sei respektvoll gegenüber den Themen und den Personen, die diese diskutieren, auch wenn du einigen Aussagen nicht einverstanden bist.
 
       <a name="agreeable"></a>
 
-      ## [Be Agreeable, Even When You Disagreeable](#agreeable)
+      ## [Sei nett, auch wenn du anderer Meinung bist](#agreeable)
 
-      Vielleicht möchtest du mit einer Gegenstimme antworten. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Menschen_. Bitte vermeide:
+      Du magst antworten möchten, indem du widersprichst. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
 
       * Beschimpfungen
-      * Ad-hominem-Angriffe
-      * Reagiere auf den Tonfall eines Beitrags, anstatt auf den Inhalt
-      * Kniescheiben-Widersprüche
+      * Persönliche Angriffe
+      * Antworten auf den Tonfall eines Beitrags statt auf dessen Inhalt
+      * Reflexartiges Widersprechen
 
-      Stattdessen solltest du durchdachte Einsichten liefern, die das Gespräch verbessern.
+      Biete stattdessen durchdachte Einblicke, die den Dialog verbessern.
 
       <a name="participate"></a>
 
-      ## [Deine Teilnahme zählt](#participate)
+      ## [Deine Beteiligung zählt](#participate)
 
-      Die Unterhaltungen, die wir hier führen, geben den Ton für jeden Neuankömmling an. Hilf uns, die Zukunft dieser Gemeinschaft zu beeinflussen, indem du dich an Diskussionen beteiligst, die dieses Forum zu einem interessanten Ort machen &mdash; und solche meidest, die das nicht tun.
+      Die hier geführten Dialoge geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Ort machen &mdash; und jene vermeiden, die das nicht tun.
 
-      Discourse bietet Werkzeuge, mit denen die Gemeinschaft gemeinsam die besten (und schlechtesten) Beiträge identifizieren kann: Lesezeichen, Likes, Flaggen, Antworten, Bearbeitungen, Beobachten, Stummschalten und so weiter. Nutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern und die aller anderen auch.
+      Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, Beobachten, Stummschalten und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
 
-      Lasst uns unsere Gemeinschaft besser verlassen, als wir sie vorgefunden haben.
+      Lass uns versuchen, die Community besser zu verlassen, als wir sie vorgefunden haben.
 
       <a name="flag-problems"></a>
 
-      ## [Wenn du ein Problem siehst, markiere es](#flag-problems)
+      ## [Wenn du ein Problem siehst, melde es](#flag-problems)
 
-      Moderatoren haben besondere Befugnisse; sie sind für dieses Forum verantwortlich. Aber das bist du auch. Mit deiner Hilfe können die Moderatoren die Gemeinschaft fördern und sind nicht nur Hausmeister oder Polizisten.
+      Moderatoren haben besondere Befugnisse; sie sind verantwortlich für dieses Forum. Aber das gilt auch für dich. Mit deiner Hilfe können Moderatoren die Vermittler der Community sein, nicht nur die Hausmeister oder die Polizei.
 
-      Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten ermutigt schlechtes Verhalten, indem es bestätigt wird, verbraucht deine Energie und verschwendet die Zeit aller. _Markiere es einfach_. Wenn sich genug Markierungen ansammeln, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
+      Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten fördert schlechtes Verhalten, indem es bestätigt wird, es verbraucht deine Energie und verschwendet die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Gemeinschaft aufrechtzuerhalten, behalten sich die Moderatoren das Recht vor, jederzeit Inhalte und Benutzerkonten zu löschen, egal aus welchem Grund. Die Moderatoren prüfen keine neuen Beiträge; die Moderatoren und Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
+      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
 
       <a name="be-civil"></a>
 
-      ## [Always Be Civil](#be-civil)
+      ## [Immer höflich bleiben](#be-civil)
 
-      Nichts sabotiert eine gesunde Unterhaltung so sehr wie Unhöflichkeit:
+      Nichts sabotiert einen gesunden Dialog so sehr wie Unhöflichkeit:
 
-      * Sei höflich. Poste nichts, was eine vernünftige Person als beleidigend, ausfallend oder als Hassrede ansehen würde.
-      * Bleib sauber. Poste nichts Obszönes oder sexuell Explizites.
-      * Respektiert euch gegenseitig. Belästige oder betröste niemanden, gib dich nicht als jemand anderes aus oder gib private Informationen preis.
-      * Respektiert unser Forum. Poste keinen Spam und verschandle das Forum nicht.
+      * Sei höflich. Poste nichts, was eine vernünftige Person als anstößig, beleidigend oder als Hassrede ansehen würde.
+      * Halte den Ort sauber. Poste nichts, was obszön oder sexuell explizit ist.
+      * Respektiert euch gegenseitig. Belästige niemanden, füge niemandem Kummer zu, gib dich nicht als jemand anderes aus und veröffentliche niemandes persönliche Informationen.
+      * Respektiere unser Forum. Poste keinen Spam und verschandle das Forum nicht.
 
-      Dies sind keine konkreten Begriffe mit genauen Definitionen &mdash; vermeide auch nur den _Anschein_ einer dieser Dinge. Wenn du dir unsicher bist, frage dich, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
+      Dies sind keine konkreten Bedingungen mit präzisen Definitionen &mdash; vermeide sogar den _Anschein_ von jedem dieser Dinge. Wenn du dir nicht sicher bist, frage dich selbst, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
 
-      Dies ist ein öffentliches Forum, und Suchmaschinen indexieren diese Diskussionen. Achte darauf, dass die Sprache, Links und Bilder für deine Familie und Freunde sicher sind.
+      Dies ist ein öffentliches Forum und Suchmaschinen indexieren diese Diskussionen. Achte darauf, dass die Sprache, Links und Bilder für deine Familie und Freunde sicher sind.
 
       <a name="keep-tidy"></a>
 
-      ## [Keep It Tidy](#keep-tidy)
+      ## [Halte den Ort sauber](#keep-tidy)
 
-      Bemühe dich, die Dinge an den richtigen Platz zu stellen, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen können. Also:
+      Bemühe dich, die Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen können. Daher:
 
-      * Eröffne kein Thema in der falschen Kategorie; lies bitte die Definitionen der Kategorien.
-      * Poste nicht das Gleiche in mehreren Themen.
-      * Poste keine inhaltslosen Antworten.
-      * Lenke nicht von einem Thema ab, indem du es mittendrin änderst.
-      * Unterschreibe deine Beiträge nicht &mdash; Jeder Beitrag ist mit deinen Profilinformationen versehen.
+      * Erstelle keine Themen in der falschen Kategorie; lies die Kategoriebeschreibungen.
+      * Poste Beiträge nicht gleichzeitig in mehreren Themen.
+      * Poste keine leeren Antworten.
+      * Lenke nicht vom Thema ab, indem du es mitten drin änderst.
+      * Signiere deine Beiträge nicht &mdash; Jeder Beitrag ist mit deinen Profilinformationen versehen.
 
-      Anstatt "+1" oder "Zustimmung" zu posten, benutze den Like-Button. Anstatt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende "Antworten" als verlinktes Thema.
+      Verwende die „Gefällt mir“-Schaltfläche statt „+1“ oder „Einverstanden“ zu schreiben. Statt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende die Funktion „Mit verknüpftem Thema antworten“.
 
       <a name="stealing"></a>
 
-      ## [Post Only Your Own Stuff](#stealing)
+      ## [Poste nur deine eigenen Sachen](#stealing)
 
-      Du darfst ohne Erlaubnis keine digitalen Inhalte posten, die jemand anderem gehören. Du darfst keine Beschreibungen, Links oder Methoden posten, um das geistige Eigentum (Software, Video, Audio, Bilder) anderer zu stehlen oder gegen andere Gesetze zu verstoßen.
+      Du darfst ohne Erlaubnis nichts posten, was jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden posten, um das geistige Eigentum (Software, Video, Audio, Bilder) anderer zu stehlen oder gegen andere Gesetze zu verstoßen.
 
       <a name="power"></a>
 
-      ## [Powered by You](#power)
+      ## [Betrieben von Euch](#power)
 
-      Diese Seite wird von deinem [freundlichen lokalen Personal](%{base_path}/about) und *dir*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht durch ein Meta-Thema oder eine Flagge gelöst werden kann, kontaktiere uns über die [Personalseite](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die dein (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst nutzen zu können, musst du unseren [TOS](%{base_path}/tos) zustimmen.
+      Diese Seite wird von eurem [freundlichen Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](%{base_path}/about).
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -4398,7 +4466,9 @@ de:
     mass_award:
       errors:
         invalid_csv: Wir haben einen Fehler in Zeile %{line_number} festgestellt. Bitte stelle sicher, dass die CSV-Datei eine E-Mail-Adresse pro Zeile enthält.
-        too_many_csv_entries: Zu viele Einträge in der CSV-Datei. Bitte gib eine CSV-Datei mit nicht mehr als %{count} Einträgen an.
+        too_many_csv_entries:
+          one: Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Eintrag bereit.
+          other: Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Einträgen bereit.
         badge_disabled: Bitte aktiviere zunächst das Abzeichen „%{badge_name}“.
         cant_grant_multiple_times: Das %{badge_name}-Abzeichen kann einem einzelnen Benutzer nicht mehrfach verliehen werden.
     editor:
@@ -4683,6 +4753,7 @@ de:
     limited_to_one_tag_from_group: "Die Schlagwörter %{tags} können nicht gleichzeitig verwendet werden. Bitte füge nur eines von ihnen ein."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
+    user_not_permitted: "Du darfst keine Themen mit Schlagwörtern versehen"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"

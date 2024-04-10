@@ -16,6 +16,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import optionalService from "discourse/lib/optional-service";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -24,13 +25,13 @@ import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];
@@ -61,6 +62,7 @@ export default class ChatMessage extends Component {
   @service chatChannelsManager;
   @service router;
   @service toasts;
+  @service modal;
   @optionalService adminTools;
 
   @tracked isActive = false;
@@ -401,6 +403,7 @@ export default class ChatMessage extends Component {
     document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
+    this.modal.show(ChatMessageActionsMobileModal);
   }
 
   get hasActiveState() {

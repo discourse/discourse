@@ -2,7 +2,7 @@
 
 module ChatSDK
   class Channel
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     # Retrieves messages from a specified channel.
     #

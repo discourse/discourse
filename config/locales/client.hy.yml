@@ -177,7 +177,8 @@ hy:
         us_gov_west_1: "AWS GovCloud (ԱՄՆ-Արևմուտք)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    edit: "խմբագրել այս թեմայի վերնագիրը և կատեգորիան"
+    edit: "Խմբագրել"
+    edit_topic: "խմբագրել այս թեմայի վերնագիրը և կատեգորիան"
     expand: "Ընդլայնել"
     not_implemented: "Այդ հատկանիշը դեռևս չի իրագործվել, ներողություն!"
     no_value: "Ոչ"
@@ -221,7 +222,9 @@ hy:
     weekly: "շաբաթական"
     every_month: "ամիսը մեկ"
     every_six_months: "վեց ամիսը մեկ"
-    max_of_count: "առավելագույնը %{count}"
+    max_of_count:
+      one: "առավելագույնը %{count}"
+      other: "առավելագույնը %{count}"
     character_count:
       one: "%{count} սիմվոլ"
       other: "%{count} սիմվոլ"
@@ -261,6 +264,7 @@ hy:
       auto_delete_preference:
         when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
+      bookmark: "Էջանշել"
       reminders:
         today_with_time: "այսօր %{time}"
         tomorrow_with_time: "Վաղը %{time}"
@@ -681,7 +685,6 @@ hy:
       flair_preview_icon: "Նախադիտման Պատկերակ"
       flair_preview_image: "Նախադիտման Նկար"
       default_notifications:
-        modal_description: "Ցանկանաու՞մ եք այս փոփոխությունը կիրառել պատմականորեն: Սա կփոխի կարգավորումը %{count} համար՝ առկա օգտատերերի:"
         modal_yes: "Այո"
         modal_no: "Ոչ, կիրառել փոփոխություններ միայն՝ ապագայում "
     user_action_groups:
@@ -702,7 +705,9 @@ hy:
       categories_label: "կատեգորիաներ"
       subcategories_label: "ենթակատեգորիաներ"
       remove_filter: "հանել ֆիլտրը"
-      plus_more_count: "+%{count} ավելի"
+      plus_more_count:
+        one: "+%{count} ավելի"
+        other: "+%{count} ավելի"
       view_all: "դիտել բոլոը"
       category: "Կատեգորիա"
       category_list: "Ցուցադրել կատեգորիաների ցանկը"
@@ -736,7 +741,9 @@ hy:
       organisation: Կազմակերպություն
       phone: Հեռախոս
       other_accounts: "Այլ հաշիվներ այս IP հասցեով՝"
-      delete_other_accounts: "Ջնջել %{count}"
+      delete_other_accounts:
+        one: "Ջնջել %{count}"
+        other: "Ջնջել %{count}"
       username: "օգտանուն"
       trust_level: "ՎՄ"
       read_time: "կարդացած ժամանակը"
@@ -818,7 +825,6 @@ hy:
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
-      enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
@@ -1045,6 +1051,8 @@ hy:
         instructions: "Օգտատիրոջ ինտերֆեյսի լեզուն: Այն կփոխվի, երբ Դուք թարմացնեք էջը:"
         default: "(լռելյայն)"
         any: "ցանկացած"
+      homepage:
+        default: "(լռելյայն)"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1171,7 +1179,6 @@ hy:
         same_as_username: "Ձեր գաղտնաբառը համընկնում է Ձեր օգտանվան հետ:"
         same_as_email: "Ձեր գաղտնաբառը համընկնում է Ձեր էլ. հասցեի հետ:"
         ok: "Ձեր գաղտնաբառն ընդունված է:"
-        instructions: "Առնվազն %{count} սիմվոլ."
       summary:
         title: "Ամփոփում"
         stats: "Վիճակագրություն"
@@ -1715,7 +1722,6 @@ hy:
           seen: Ես կարդացել եմ
           unseen: Ես չեմ կարդացել
           wiki: wiki են
-          images: ներառում են նկար(ներ)
           all_tags: Բոլոր վերոնշյալ թեգերը
         statuses:
           label: Որտեղ թեմաները
@@ -1752,7 +1758,6 @@ hy:
         clear_all: "Ջնջել Բոլորը"
         unlist_topics: "Թեմաները Ցանկից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
-        defer: "Հետաձգել"
         delete: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
@@ -1795,6 +1800,7 @@ hy:
     topic_bulk_actions:
       close_topics:
         name: "Փակել Թեմաները"
+        optional: (ընտրովի)
       archive_topics:
         name: "Արխիվացնել Թեմաները"
       unlist_topics:
@@ -1821,9 +1827,6 @@ hy:
       move_to_inbox:
         title: "Տեղափոխել Մուտքային արկղ"
         help: "Տեղափոխել հաղորդագրությունը ետ դեպի Մուտքային արկղ"
-      defer:
-        help: "նշել որպես չընթերցված "
-        title: "Հետաձգել"
       list: "Թեմաներ"
       new: "նոր թեմա"
       unread: "չկարդացած"
@@ -2669,7 +2672,6 @@ hy:
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
-        defer: "%{shortcut} Հետաձգել թեման"
         topic_admin_actions: "%{shortcut} Բացել թեմայի ադմինի գործողությունները "
       search_menu:
         title: "Որոնման արդյունքների Մենյու "
@@ -2875,7 +2877,7 @@ hy:
         upload: "Վերբեռնել"
         uploading: "Վերբեռնում"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
     table_builder:
@@ -2894,6 +2896,7 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
+      filter_reports: Ֆիլտրել հաշվետվությունները
       tags:
         remove_muted_tags_from_latest:
           always: "միշտ"
@@ -2912,10 +2915,8 @@ hy:
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
-        please_upgrade: "Խնդրում ենք թարմացնել!"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
-        version_check_pending: "Կարծես թե Դուք վերջերս թարմացում եք կատարել: Հիանալի է!"
         installed_version: "Տեղադրված է "
         latest_version: "Վերջինը"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
@@ -2959,7 +2960,6 @@ hy:
         exception_error: Ներողություն, հարցումը կատարելիս տեղի է ունեցել սխալ
         too_many_requests: 'Դուք կատարել եք այս գործողությունը չափից շատ անգամ: Խնդրում ենք սպասել՝ մինչև կրկին փորձելը:'
         not_found_error: Ներողություն, այս հաշվետվությունը գոյություն չունի
-        filter_reports: Ֆիլտրել հաշվետվությունները
         reports:
           trend_title: "%{percent} փոփոխություն: Ներկայումս %{current}, նախորդ շրջանում եղել է %{prev}:"
           today: "Այսօրվա"
@@ -3355,7 +3355,9 @@ hy:
           disabled_component_tooltip: "Այս բաղադրիչը անջատված է"
           default_theme_tooltip: "Այս թեման կայքի լռելյայն թեման է"
           updates_available_tooltip: "Այս թեմայի համար հասանելի են թարմացումներ"
-          and_x_more: "և ևս %{count} հատ:"
+          and_x_more:
+            one: "և ևս %{count} հատ:"
+            other: "և ևս %{count} հատ:"
           collapse: Կրճատել
           uploads: "Վերբեռնումներ"
           no_uploads: "Դուք կարող եք վերբեռնել Ձեր թեմայի հետ կապված ակտիվներ, օրինակ՝ տառատեսակներ կամ նկարներ:"
@@ -3440,6 +3442,12 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
+          schema:
+            fields:
+              required: "*պարտադիր"
+              number:
+                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -4075,7 +4083,6 @@ hy:
           empty: "Նկարներ դեռևս չկան: Խնդրում ենք վերբեռնել:"
           upload:
             label: "Վերբեռնել"
-            title: "Վերնեռնել նկար(ներ)"
         selectable_avatars:
           title: "Անձնապատկերների ցանկը, որոնցից օգտատերերը կարող են ընտրություն կատարել"
         categories:
@@ -4111,7 +4118,6 @@ hy:
         secret_list:
           invalid_input: "Ներմուծման դաշտերը չեն կարող լինել դատարկ կամ պարունակել ուղղահայաց գիծ ( | ) սիմվոլ:"
         default_categories:
-          modal_description: "Ցանկանաու՞մ եք այս փոփոխությունը կիրառել պատմականորեն: Սա կփոխի կարգավորումը %{count} համար՝ առկա օգտատերերի:"
           modal_yes: "Այո"
           modal_no: "Ոչ, կիրառել փոփոխություններ միայն՝ ապագայում "
         file_types_list:

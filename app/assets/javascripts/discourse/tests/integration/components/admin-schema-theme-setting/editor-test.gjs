@@ -2,7 +2,6 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
@@ -642,130 +641,385 @@ module(
     });
 
     test("input fields of type enum", async function (assert) {
-      const setting = schemaAndData(3);
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            enum_field: {
+              type: "enum",
+              default: "awesome",
+              choices: ["nice", "cool", "awesome"],
+            },
+            required_enum_field: {
+              type: "enum",
+              default: "awesome",
+              required: true,
+              choices: ["nice", "cool", "awesome"],
+            },
+          },
+        },
+        value: [
+          {
+            required_enum_field: "awesome",
+          },
+          {
+            required_enum_field: "cool",
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
       const enumSelector = selectKit(
         `${inputFields.fields.enum_field.selector} .select-kit`
       );
-      assert.strictEqual(enumSelector.header().value(), "awesome");
 
-      await enumSelector.expand();
-      await enumSelector.selectRowByValue("nice");
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(enumSelector.header().value(), null);
+
+      const requiredEnumSelector = selectKit(
+        `${inputFields.fields.required_enum_field.selector} .select-kit`
+      );
+
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
+
+      await requiredEnumSelector.expand();
+      await requiredEnumSelector.selectRowByValue("nice");
+
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
-      assert.strictEqual(enumSelector.header().value(), "cool");
+      assert.strictEqual(requiredEnumSelector.header().value(), "cool");
 
       tree.refresh();
 
       await click(tree.nodes[0].element);
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
+
+      await click(TOP_LEVEL_ADD_BTN);
+
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
     });
 
-    test("input fields of type category", async function (assert) {
-      const setting = schemaAndData(3);
+    test("input fields of type categories that is not required with min and max validations", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            not_required_category: {
+              type: "categories",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
+            },
+          },
+        },
+        value: [{}],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
+
+      assert
+        .dom(inputFields.fields.not_required_category.labelElement)
+        .hasText("not_required_category");
+
       const categorySelector = selectKit(
-        `${inputFields.fields.category_field.selector} .select-kit`
+        `${inputFields.fields.not_required_category.selector} .select-kit`
       );
 
       assert.strictEqual(categorySelector.header().value(), null);
 
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
+      await categorySelector.collapse();
 
-      const selectedCategoryId = categorySelector.header().value();
-      assert.ok(selectedCategoryId);
+      inputFields.refresh();
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(categorySelector.header().value(), null);
+      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 2,
+        })
+      );
 
-      tree.refresh();
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(2);
+      await categorySelector.selectRowByIndex(3);
+      await categorySelector.selectRowByIndex(4);
 
-      await click(tree.nodes[0].element);
-      assert.strictEqual(categorySelector.header().value(), selectedCategoryId);
+      assert
+        .dom(categorySelector.error())
+        .hasText("You can only select 3 items.");
+
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.not_required_category.errorElement)
+        .doesNotExist();
     });
 
-    test("input fields of type tag", async function (assert) {
-      const setting = schemaAndData(3);
+    test("input fields of type categories", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_category: {
+              type: "categories",
+              required: true,
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
+            },
+          },
+        },
+        value: [
+          {
+            required_category: [6],
+          },
+        ],
+      });
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const tagSelector = selectKit(
-        `${inputFields.fields.tag_field.selector} .select-kit`
+
+      assert
+        .dom(inputFields.fields.required_category.labelElement)
+        .hasText("required_category*");
+
+      let categorySelector = selectKit(
+        `${inputFields.fields.required_category.selector} .select-kit`
       );
 
+      assert.strictEqual(categorySelector.header().value(), "6");
+
+      await categorySelector.expand();
+      await categorySelector.deselectItemByValue("6");
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_category.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+          count: 1,
+        })
+      );
+    });
+
+    test("input fields of type tags which is required", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          identifier: "id",
+          properties: {
+            required_tags: {
+              type: "tags",
+              required: true,
+            },
+            required_tags_with_validations: {
+              type: "tags",
+              required: true,
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_tags: ["gazelle"],
+            required_tags_with_validations: ["gazelle", "cat"],
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const inputFields = new InputFieldsFromDOM();
+
+      let tagSelector = selectKit(
+        `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(2);
+      await tagSelector.collapse();
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.deselectItemByName("cat");
+      await tagSelector.deselectItemByName("dog");
+      await tagSelector.collapse();
+
       assert.strictEqual(tagSelector.header().value(), null);
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
-      await tagSelector.selectRowByIndex(3);
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.strictEqual(tagSelector.header().value(), "gazelle");
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-      assert.strictEqual(tagSelector.header().value(), null);
+      inputFields.refresh();
 
-      tree.refresh();
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
 
-      await click(tree.nodes[0].element);
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      tagSelector = selectKit(
+        `${inputFields.fields.required_tags.selector} .select-kit`
+      );
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          count: 1,
+        })
+      );
     });
 
-    test("input fields of type group", async function (assert) {
-      pretender.get("/groups/search.json", () => {
-        return response(200, [
-          { id: 23, name: "testers" },
-          { id: 74, name: "devs" },
-          { id: 89, name: "customers" },
-        ]);
+    test("input fields of type groups", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            required_groups: {
+              type: "groups",
+              required: true,
+            },
+            groups_with_validations: {
+              type: "groups",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_groups: [0, 1],
+          },
+        ],
       });
-
-      const setting = schemaAndData(3);
 
       await render(<template>
         <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
       </template>);
 
       const inputFields = new InputFieldsFromDOM();
-      const groupSelector = selectKit(
-        `${inputFields.fields.group_field.selector} .select-kit`
+
+      let groupsSelector = selectKit(
+        `${inputFields.fields.required_groups.selector} .select-kit`
       );
 
-      assert.strictEqual(groupSelector.header().value(), null);
+      assert.strictEqual(groupsSelector.header().value(), "0,1");
 
-      await groupSelector.expand();
-      await groupSelector.selectRowByValue(74);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      await groupsSelector.expand();
+      await groupsSelector.deselectItemByValue("0");
+      await groupsSelector.deselectItemByValue("1");
+      await groupsSelector.collapse();
 
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
+      inputFields.refresh();
 
-      assert.strictEqual(groupSelector.header().value(), null);
-      await groupSelector.expand();
-      await groupSelector.selectRowByValue(23);
-      assert.strictEqual(groupSelector.header().value(), "23");
+      assert.dom(inputFields.fields.required_groups.errorElement).hasText(
+        I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+          count: 1,
+        })
+      );
 
-      tree.refresh();
+      assert
+        .dom(inputFields.fields.groups_with_validations.labelElement)
+        .hasText("groups_with_validations");
 
-      await click(tree.nodes[0].element);
-      assert.strictEqual(groupSelector.header().value(), "74");
+      groupsSelector = selectKit(
+        `${inputFields.fields.groups_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupsSelector.header().value(), null);
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(1);
+      await groupsSelector.collapse();
+
+      assert.strictEqual(groupsSelector.header().value(), "1");
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.groups_with_validations.errorElement)
+        .hasText(
+          I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+            count: 2,
+          })
+        );
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(2);
+      await groupsSelector.selectRowByIndex(3);
+      await groupsSelector.selectRowByIndex(4);
+
+      assert
+        .dom(groupsSelector.error())
+        .hasText("You can only select 3 items.");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
@@ -928,6 +1182,36 @@ module(
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
     });
 
+    test("adding an object to the root list of objects which is empty by default", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+        value: [],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("something");
+      await click(TOP_LEVEL_ADD_BTN);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].textElement).hasText("something 1");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+    });
+
     test("adding an object to the root list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
@@ -942,12 +1226,12 @@ module(
       assert.strictEqual(tree.nodes.length, 3);
 
       await click(TOP_LEVEL_ADD_BTN);
-      await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
 
-      assert.strictEqual(tree.nodes.length, 5);
+      assert.strictEqual(tree.nodes.length, 4);
+      assert.ok(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
-      assert.dom(tree.nodes[3].textElement).hasText("level1 4");
+      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });
 
     test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
@@ -1000,14 +1284,7 @@ module(
 
       tree.refresh();
 
-      assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
-
-      await click(tree.nodes[0].addButtons[1]);
-      tree.refresh();
-
-      assert.dom(tree.nodes[0].children[1].textElement).hasText("chair 1");
-
-      await click(tree.nodes[0].children[0].element);
+      assert.dom(tree.nodes[0].textElement).hasText("link 1");
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -1023,18 +1300,22 @@ module(
 
       const tree = new TreeFromDOM();
 
-      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
       assert.strictEqual(tree.nodes[0].children.length, 2);
+      assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
 
       await click(tree.nodes[0].addButtons[0]);
       tree.refresh();
 
-      await click(tree.nodes[0].addButtons[0]);
+      assert.dom(tree.nodes[2].textElement).hasText("level2 3");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+
+      await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
 
-      assert.strictEqual(tree.nodes[0].children.length, 4);
-      assert.dom(tree.nodes[0].children[2].textElement).hasText("level2 3");
-      assert.dom(tree.nodes[0].children[3].textElement).hasText("level2 4");
+      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
     });
 
     test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
@@ -1077,14 +1358,10 @@ module(
       assert.strictEqual(tree.nodes[0].children.length, 2);
 
       await click(tree.nodes[0].addButtons[0]);
+
       tree.refresh();
 
-      await click(tree.nodes[0].addButtons[0]);
-      tree.refresh();
-
-      assert.strictEqual(tree.nodes[0].children.length, 4);
-      assert.dom(tree.nodes[0].children[2].textElement).hasText("level3 3");
-      assert.dom(tree.nodes[0].children[3].textElement).hasText("level3 4");
+      assert.dom(tree.nodes[2].textElement).hasText("level3 3");
     });
 
     test("removing an object from the root list of objects", async function (assert) {

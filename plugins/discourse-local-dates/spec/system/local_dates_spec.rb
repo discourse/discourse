@@ -6,6 +6,7 @@ describe "Local dates", type: :system do
   let(:year) { Time.zone.now.year + 1 }
   let(:month) { Time.zone.now.month }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
+  let(:bookmark_menu) { PageObjects::Components::BookmarkMenu.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_datetime_modal) { PageObjects::Modals::InsertDateTime.new }
 
@@ -163,6 +164,7 @@ describe "Local dates", type: :system do
       topic_page.visit_topic(topic)
       topic_page.expand_post_actions(topic.first_post)
       topic_page.click_post_action_button(topic.first_post, :bookmark)
+      bookmark_menu.click_menu_option("custom")
       bookmark_modal.select_preset_reminder(:post_local_date)
       expect(topic_page).to have_post_bookmarked(topic.first_post)
       bookmark = Bookmark.find_by(bookmarkable: topic.first_post, user: current_user)
@@ -177,6 +179,7 @@ describe "Local dates", type: :system do
       topic_page.visit_topic(topic)
       topic_page.expand_post_actions(topic.first_post)
       topic_page.click_post_action_button(topic.first_post, :bookmark)
+      bookmark_menu.click_menu_option("custom")
       expect(bookmark_modal).to be_open
       expect(bookmark_modal).to have_no_preset(:post_local_date)
     end

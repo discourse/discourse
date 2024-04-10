@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ThreadOriginalMessageSerializer do
   describe "#user" do
     fab!(:user_status) { Fabricate(:user_status) }

@@ -183,7 +183,8 @@ gl:
         us_west_1: "EUA Oeste (N. California)"
         us_west_2: "EUA Oeste (Oregón)"
     clear_input: "Despexar entrada"
-    edit: "editar o título e a categoría deste tema"
+    edit: "Editar"
+    edit_topic: "editar o título e a categoría deste tema"
     expand: "Expandir"
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda!"
     no_value: "Non"
@@ -227,7 +228,9 @@ gl:
     weekly: "semanalmente"
     every_month: "cada mes"
     every_six_months: "cada seis meses"
-    max_of_count: "máx. de %{count}"
+    max_of_count:
+      one: "máx. de %{count}"
+      other: "máx. de %{count}"
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"
@@ -272,6 +275,7 @@ gl:
         when_reminder_sent: "Eliminar marcador"
       search_placeholder: "Buscar marcadores por nome, título do tema ou contido da publicación"
       search: "Buscar"
+      bookmark: "Marcador"
       reminders:
         today_with_time: "hoxe á(s) %{time}"
         tomorrow_with_time: "mañá á(s) %{time}"
@@ -539,6 +543,7 @@ gl:
       none: "Non se necesita"
       never: "Nunca"
       custom: "Personalizar data e hora"
+      custom_short: "Personalizar..."
       select_timeframe: "Seleccione un marco temporal"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -793,7 +798,6 @@ gl:
         icon: "Seleccionar unha icona"
         image: "Cargar unha imaxe"
       default_notifications:
-        modal_description: "Quere aplicar este cambio con efectos retroactivos? Isto afectará as preferencias de %{count} usuarios existentes."
         modal_yes: "Si"
         modal_no: "Non, aplicar só o cambio a partir de agora"
     user_action_groups:
@@ -815,7 +819,9 @@ gl:
       subcategories_label: "subcategorías"
       no_subcategories: "sen subcategorías"
       remove_filter: "eliminar filtro"
-      plus_more_count: "+%{count} máis"
+      plus_more_count:
+        one: "+%{count} máis"
+        other: "+%{count} máis"
       view_all: "ver todos"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
@@ -856,7 +862,9 @@ gl:
       organisation: Organización
       phone: Teléfono
       other_accounts: "Outras contas co mesmo enderezo IP:"
-      delete_other_accounts: "Eliminar %{count}"
+      delete_other_accounts:
+        one: "Eliminar %{count}"
+        other: "Eliminar %{count}"
       username: "nome de usuario"
       trust_level: "NdeC"
       read_time: "tempo de lectura"
@@ -948,7 +956,6 @@ gl:
       skip_new_user_tips:
         description: "Saltar consellos e insignias na entrada dos novos usuarios"
       theme_default_on_all_devices: "Facer que este sexa o tema predeterminado en todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Estabelecer esquema(s) de cores predeterminados en todos os dispositivos"
       color_scheme: "Esquema de cor"
       color_schemes:
         default_description: "Predeterminado"
@@ -964,7 +971,6 @@ gl:
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
-      enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
       experimental_sidebar:
         options: "Opcións"
         navigation_section: "Navegación"
@@ -1237,6 +1243,8 @@ gl:
         instructions: "Idioma da interface do usuario. Cambiará cando actualice a páxina."
         default: "(predeterminado)"
         any: "calquera"
+      homepage:
+        default: "(predeterminado)"
       password_confirmation:
         title: "O contrasinal outra vez"
       invite_code:
@@ -1404,7 +1412,6 @@ gl:
         same_as_username: "O contrasinal é igual ao nome de usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
         ok: "O contrasinal semella bo."
-        instructions: "Como mínimo %{count} caracteres."
         required: "Escriba un contrasinal"
         confirm: "Confirmar"
       summary:
@@ -1503,7 +1510,6 @@ gl:
       close: "pechar"
       dismiss_error: "Desbotar erro"
     close: "Pechar"
-    assets_changed_confirm: "O sitio acaba de recibir unha anovación de software. Obter a última versión agora?"
     logout: "Pechouselle a sesión."
     refresh: "Actualizar"
     home: "Inicio"
@@ -2019,7 +2025,6 @@ gl:
           seen: Lin
           unseen: Non lin
           wiki: son wiki
-          images: incluír imaxe(s)
           all_tags: Todas as etiquetas anteriores
         statuses:
           label: Onde os temas
@@ -2066,7 +2071,6 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2120,6 +2124,7 @@ gl:
     topic_bulk_actions:
       close_topics:
         name: "Pechar temas"
+        optional: (opcional)
       archive_topics:
         name: "Arquivar temas"
       unlist_topics:
@@ -2148,9 +2153,6 @@ gl:
       move_to_inbox:
         title: "Mover á caixa de entrada"
         help: "Mover mensaxes á caixa de entrada"
-      defer:
-        help: "Marcar como non lido"
-        title: "Adiar"
       list: "Temas"
       new: "novo tema"
       unread: "pendente"
@@ -3112,7 +3114,6 @@ gl:
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
-        defer: "%{shortcut} Adiar o tema"
         topic_admin_actions: "%{shortcut} Abrir intervencións do admin no tema"
       search_menu:
         title: "Menú de busca"
@@ -3346,7 +3347,7 @@ gl:
         upload: "Cargar"
         uploading: "Cargando"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
     table_builder:
@@ -3365,6 +3366,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
+      filter_reports: Filtrar informes
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3383,10 +3385,8 @@ gl:
         up_to_date: "Está actualizado/a!"
         critical_available: "Está dispoñíbel unha actualización crítica."
         updates_available: "Hai actualizacións dispoñíbeis."
-        please_upgrade: "Por favor, actualice!"
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
-        version_check_pending: "Parece que actualizou recentemente. Caralludo!"
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
@@ -3430,7 +3430,6 @@ gl:
         exception_error: Sentímolo pero produciuse un erro ao executar a consulta
         too_many_requests: Executou esta acción demasiadas veces. Agarde antes de volvelo tentar.
         not_found_error: Sentímolo pero o informe non existe
-        filter_reports: Filtrar informes
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -3863,7 +3862,9 @@ gl:
           disabled_component_tooltip: "Este compoñente foi desactivado"
           default_theme_tooltip: "Este tema é o predeterminado do sitio"
           updates_available_tooltip: "Hai actualizacións dispoñíbeis para este tema"
-          and_x_more: "e %{count} máis."
+          and_x_more:
+            one: "e %{count} máis."
+            other: "e %{count} máis."
           collapse: Reducir
           uploads: "Cargas"
           no_uploads: "Pode cargar recursos asociados co seu tema como tipos de letra e imaxes"
@@ -3966,6 +3967,12 @@ gl:
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
+          schema:
+            fields:
+              required: "*obrigatorio"
+              number:
+                too_small: "debe ser igual ou maior que %{count}"
+                too_large: "debe ser igual ou menor que %{count}"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -4659,7 +4666,6 @@ gl:
           empty: "Aínda non hai imaxes. Cargue unha."
           upload:
             label: "Cargar"
-            title: "Cargar imaxe(s)"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
         categories:
@@ -4695,7 +4701,6 @@ gl:
         secret_list:
           invalid_input: "Os campos de entrada de datos non poden quedar baleiros nin conter a barra vertical."
         default_categories:
-          modal_description: "Quere aplicar este cambio con efectos retroactivos? Isto afectará as preferencias de %{count} usuarios existentes."
           modal_yes: "Si"
           modal_no: "Non, aplicar só o cambio a partir de agora"
         json_schema:

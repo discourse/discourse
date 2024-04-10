@@ -130,8 +130,8 @@ end
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
   config.include ChatSpecHelpers
-  config.include Chat::WithServiceHelper
-  config.include Chat::ServiceMatchers
+  config.include WithServiceHelper
+  config.include ServiceMatchers
 
   config.expect_with :rspec do |c|
     # Or a very large value, if you do want to truncate at some point

@@ -425,23 +425,6 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    Capybara.register_driver :selenium_firefox_headless do |app|
-      options =
-        Selenium::WebDriver::Firefox::Options.new(
-          args: %w[--window-size=1400,1400 --headless],
-          prefs: {
-            "browser.download.dir": Downloads::FOLDER,
-          },
-          log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn,
-        )
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :firefox,
-        timeout: BROWSER_READ_TIMEOUT,
-        options: options,
-      )
-    end
-
     if ENV["ELEVATED_UPLOADS_ID"]
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -821,10 +804,38 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images")
+def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
+end
+
+def plugin_file_from_fixtures(filename, directory = "images")
+  # We [1] here instead of [0] because the first caller is the current method.
+  #
+  # /home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb:17:in `block (2 levels) in <main>'
+  first_non_gem_caller = caller_locations.select { |loc| !loc.to_s.match?(/gems/) }[1]&.path
+  raise StandardError.new("Could not find caller for fixture #{filename}") if !first_non_gem_caller
+
+  # This is the full path of the plugin spec file that needs a fixture.
+  # realpath makes sure we follow symlinks.
+  #
+  # #<Pathname:/home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb>
+  plugin_caller_path = Pathname.new(first_non_gem_caller).realpath
+
+  plugin_match =
+    Discourse.plugins.find do |plugin|
+      # realpath makes sure we follow symlinks
+      plugin_caller_path.to_s.starts_with?(Pathname.new(plugin.root_dir).realpath.to_s)
+    end
+
+  if !plugin_match
+    raise StandardError.new(
+            "Could not find matching plugin for #{plugin_caller_path} and fixture #{filename}",
+          )
+  end
+
+  file_from_fixtures(filename, directory, "#{plugin_match.root_dir}/spec/fixtures")
 end
 
 def file_from_contents(contents, filename, directory = "images")
@@ -945,22 +956,6 @@ def apply_base_chrome_options(options)
 
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
-  end
-
-  if ENV["DISCOURSE_SYSTEM_TEST_CHROMIUM"] == "1"
-    options.binary =
-      case RUBY_PLATFORM
-      when /linux/
-        "/usr/bin/chromium"
-      when /darwin/
-        "/Applications/Chromium.app/Contents/MacOS/Chromium"
-      else
-        "Running Discourse system test with Chromium on #{RUBY_PLATFORM} is not supported"
-      end
-  end
-
-  if (chromedriver_path = ENV["DISCOURSE_SYSTEM_TEST_CHROMEDRIVER_PATH"]).present?
-    Selenium::WebDriver::Chrome::Service.driver_path = chromedriver_path
   end
 end
 

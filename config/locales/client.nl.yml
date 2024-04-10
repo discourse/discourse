@@ -225,7 +225,8 @@ nl:
         us_west_1: "VS West (N. Californië)"
         us_west_2: "VS West (Oregon)"
     clear_input: "Invoer wissen"
-    edit: "de titel en categorie van dit topic bewerken"
+    edit: "Bewerken"
+    edit_topic: "de titel en categorie van dit topic bewerken"
     expand: "Uitvouwen"
     not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
@@ -270,7 +271,9 @@ nl:
     weekly: "wekelijks"
     every_month: "maandelijks"
     every_six_months: "elke zes maanden"
-    max_of_count: "max. %{count}"
+    max_of_count:
+      one: "max. %{count}"
+      other: "max. %{count}"
     character_count:
       one: "%{count} teken"
       other: "%{count} tekens"
@@ -338,6 +341,7 @@ nl:
         clear_reminder: "Bladwijzer behouden en herinnering verwijderen"
       search_placeholder: "Zoek bladwijzers op naam, topictitel of berichtinhoud"
       search: "Zoeken"
+      bookmark: "Bladwijzer"
       reminders:
         today_with_time: "vandaag om %{time}"
         tomorrow_with_time: "morgen om %{time}"
@@ -652,6 +656,7 @@ nl:
       never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
+      custom_short: "Aangepast..."
       select_timeframe: "Selecteer een tijdsbestek"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> heeft <a href='%{topicUrl}'>het topic</a> geplaatst"
@@ -940,7 +945,6 @@ nl:
         image: "Upload een afbeelding"
       default_notifications:
         modal_title: "Standaard gebruikersmeldingen"
-        modal_description: "Wil je deze wijziging met terugwerkende kracht toepassen? Hierdoor worden voorkeuren gewijzigd voor %{count} bestaande gebruikers."
         modal_yes: "Ja"
         modal_no: "Nee, wijziging alleen vanaf nu toepassen"
     user_action_groups:
@@ -962,7 +966,9 @@ nl:
       subcategories_label: "subcategorieën"
       no_subcategories: "geen subcategorieën"
       remove_filter: "filter verwijderen"
-      plus_more_count: "+Nog %{count}"
+      plus_more_count:
+        one: "+Nog %{count}"
+        other: "+Nog %{count}"
       view_all: "alle bekijken"
       category: "Categorie"
       category_list: "Categorieënlijst weergeven"
@@ -995,7 +1001,9 @@ nl:
       topic_stat_sentence_month:
         one: "%{count} nieuw topic de afgelopen maand."
         other: "%{count} nieuwe topics de afgelopen maand."
-      n_more: "Categorieën (nog %{count})…"
+      n_more:
+        one: "Categorieën (nog %{count})…"
+        other: "Categorieën (nog %{count})…"
     ip_lookup:
       title: IP-adres zoeken
       hostname: Hostnaam
@@ -1004,7 +1012,9 @@ nl:
       organisation: Organisatie
       phone: Telefoonnummer
       other_accounts: "Andere accounts met dit IP-adres:"
-      delete_other_accounts: "%{count} verwijderen"
+      delete_other_accounts:
+        one: "%{count} verwijderen"
+        other: "%{count} verwijderen"
       username: "gebruikersnaam"
       trust_level: "TL"
       read_time: "leestijd"
@@ -1134,7 +1144,6 @@ nl:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
-      color_scheme_default_on_all_devices: "Standaard kleurenschema(’s) instellen op al mijn apparaten"
       color_scheme: "Kleurenschema"
       color_schemes:
         default_description: "Standaard voor thema"
@@ -1150,7 +1159,6 @@ nl:
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
       enable_quoting: "Antwoorden met citaat inschakelen voor gemarkeerde tekst"
-      enable_defer: "Uitstellen door als ongelezen te markeren inschakelen"
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
@@ -1552,6 +1560,8 @@ nl:
         instructions: "Taal van de gebruikersinterface. Deze verandert wanneer de pagina wordt vernieuwd."
         default: "(standaard)"
         any: "alle"
+      homepage:
+        default: "(standaard)"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -1742,7 +1752,6 @@ nl:
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
         ok: "Je wachtwoord ziet er goed uit."
-        instructions: "Minimaal %{count} tekens."
         required: "Voer een wachtwoord in"
         confirm: "Bevestigen"
         incorrect_password: "Het ingevoerde wachtwoord is onjuist."
@@ -1838,7 +1847,6 @@ nl:
         content: "Meldingen worden gebruikt om je op de hoogte te houden van wat er gaande is in de community."
       topic_timeline:
         title: "Topictijdlijn"
-        content: "Blader snel door een bericht met behulp van de topictijdlijn."
       post_menu:
         title: "Berichtmenu"
         content: "Bekijk welke acties je nog meer kunt uitvoeren op het bericht door op de drie stippen te klikken!"
@@ -1876,7 +1884,6 @@ nl:
       close: "sluiten"
       dismiss_error: "Fout negeren"
     close: "Sluiten"
-    assets_changed_confirm: "Deze website heeft zojuist een software-upgrade gekregen. Nieuwste versie downloaden?"
     logout: "Je bent afgemeld."
     refresh: "Vernieuwen"
     home: "Start"
@@ -2210,7 +2217,6 @@ nl:
       group_mentioned:
         one: "Bij vermelding van %{group} wordt <a href='%{group_link}'>%{count} persoon</a> geïnformeerd."
         other: "Bij vermelding van %{group} worden <a href='%{group_link}'>%{count} personen</a> geïnformeerd."
-      larger_group_mentioned: "Bij vermelding van %{group} worden <a href='%{group_link}'>%{count} personen</a> geïnformeerd. Weet je het zeker?"
       cannot_see_mention:
         category: "Je hebt @%{username} genoemd, maar de gebruiker ontvangt geen melding, omdat deze geen toegang heeft tot deze categorie. Je moet de gebruiker toevoegen aan een groep die toegang heeft tot deze categorie."
         private: "Je hebt @%{username} genoemd, maar de gebruiker ontvangt geen melding, omdat deze dit persoonlijke bericht niet kan zien. Je moet de gebruiker uitnodigen voor dit persoonlijke bericht."
@@ -2569,7 +2575,6 @@ nl:
           seen: die ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn
-          images: die afbeelding(en) bevatten
           all_tags: Alle bovenstaande tags
         statuses:
           label: Waarin topics
@@ -2668,7 +2673,6 @@ nl:
         unlist_topics: "Topics onzichtbaar maken"
         relist_topics: "Topics opnieuw weergeven"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
-        defer: "Uitstellen"
         delete: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
@@ -2709,6 +2713,9 @@ nl:
         selected:
           one: "Je hebt <b>%{count}</b> topic geselecteerd."
           other: "Je hebt <b>%{count}</b> topics geselecteerd."
+        selected_count:
+          one: "%{count} geselecteerd"
+          other: "%{count} geselecteerd"
         change_tags: "Tags vervangen"
         append_tags: "Tags toevoegen"
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
@@ -2754,6 +2761,7 @@ nl:
     topic_bulk_actions:
       close_topics:
         name: "Topics sluiten"
+        optional: (optioneel)
       archive_topics:
         name: "Topics archiveren"
       unlist_topics:
@@ -2786,9 +2794,6 @@ nl:
       move_to_inbox:
         title: "Verplaatsen naar inbox"
         help: "Bericht terug naar inbox verplaatsen"
-      defer:
-        help: "Markeren als ongelezen"
-        title: "Uitstellen"
       list: "Topics"
       new: "nieuw topic"
       unread: "ongelezen"
@@ -3933,7 +3938,6 @@ nl:
         mark_tracking: "%{shortcut} Topic volgen"
         mark_watching: "%{shortcut} Topic observeren"
         print: "%{shortcut} Topic afdrukken"
-        defer: "%{shortcut} Topic negeren"
         topic_admin_actions: "%{shortcut} Beheeracties voor topic openen"
         archive_private_message: "%{shortcut} Schakelaar privébericht archiveren"
       search_menu:
@@ -4223,23 +4227,19 @@ nl:
               label: "Pictogram"
               validation:
                 blank: "Pictogram mag niet leeg zijn"
-                maximum: "Pictogram moet korter zijn dan %{count} tekens"
             name:
               label: "Naam"
               validation:
                 blank: "Naam mag niet leeg zijn"
-                maximum: "Naam moet korter zijn dan %{count} tekens"
             value:
               label: "Link"
               validation:
                 blank: "Link mag niet leeg zijn"
-                maximum: "Link moet korter zijn dan %{count} tekens"
                 invalid: "Notatie is ongeldig"
           title:
             label: "Sectietitel"
             validation:
               blank: "Titel mag niet leeg zijn"
-              maximum: "Titel moet korter zijn dan %{count} tekens"
         about:
           header_link_text: "Over"
         messages:
@@ -4302,7 +4302,9 @@ nl:
             review:
               content: "Beoordelen"
               title: "Gemarkeerde berichten en andere items in de wachtrij"
-              pending_count: "%{count} wachtend"
+              pending_count:
+                one: "%{count} wachtend"
+                other: "%{count} wachtend"
         global_section: "Algemene sectie, voor iedereen zichtbaar"
       panels:
         forum:
@@ -4324,12 +4326,12 @@ nl:
         upload: "Uploaden"
         uploading: "Uploaden"
       errors:
-        valueMissing:
+        value_missing:
           default: "Vul dit veld in."
-          select-one: "Selecteer een item in de lijst."
-          select-multiple: "Selecteer ten minste één item in de lijst."
+          select_one: "Selecteer een item in de lijst."
+          select_multiple: "Selecteer ten minste één item in de lijst."
           checkbox: "Selecteer dit vakje als je verder wilt gaan."
-        typeMismatch:
+        type_mismatch:
           default: "Voer een geldige waarde in."
           color: "Voer een kleur in."
           date: "Voer een datum in."
@@ -4339,20 +4341,20 @@ nl:
           tel: "Voer een geldig telefoonnummer in."
           text: "Voer een tekstwaarde in."
           url: "Voer een geldige URL in."
-        tooShort:
+        too_short:
           one: "De invoer moet %{count} teken of langer zijn."
           other: "De invoer moet %{count} tekens of langer zijn."
-        tooLong:
+        too_long:
           one: "De invoer moet minder dan %{count} teken zijn."
           other: "De invoer moet minder dan %{count} tekens zijn."
-        rangeOverflow:
+        range_overflow:
           one: "De invoer moet kleiner zijn dan %{count}."
           other: "De invoer moet kleiner zijn dan %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "De invoer moet groter zijn dan %{count}."
           other: "De invoer moet groter zijn dan %{count}."
-        patternMismatch: "Zorg dat je de gevraagde notatie gebruikt."
-        badInput: "Voer een geldige invoer in."
+        pattern_mismatch: "Zorg dat je de gevraagde notatie gebruikt."
+        bad_input: "Voer een geldige invoer in."
     table_builder:
       title: "Tabelbouwer"
       modal:
@@ -4416,6 +4418,7 @@ nl:
       title: "Discourse-beheerder"
       moderator: "Moderator"
       back_to_forum: "Terug naar Forum"
+      filter_reports: Rapporten filteren
       tags:
         remove_muted_tags_from_latest:
           always: "altijd"
@@ -4427,6 +4430,8 @@ nl:
         sidebar_title: "Rapporten"
         sidebar_link:
           all: "Alles"
+      new_features:
+        title: "Wat is er nieuw"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
@@ -4435,10 +4440,8 @@ nl:
         up_to_date: "Je bent helemaal bij!"
         critical_available: "Er is een kritieke update beschikbaar."
         updates_available: "Er zijn updates beschikbaar."
-        please_upgrade: "Voer een upgrade uit!"
         no_check_performed: "Er is niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
         stale_data: "Er is de laatste tijd niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
-        version_check_pending: "Je hebt de software recent bijgewerkt. Fantastisch!"
         installed_version: "Geïnstalleerd"
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"
@@ -4484,7 +4487,6 @@ nl:
         exception_error: Sorry, er is een fout opgetreden bij het uitvoeren van de query.
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
-        filter_reports: Rapporten filteren
         custom_date_range: Aangepast datumbereik
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
@@ -5073,13 +5075,17 @@ nl:
           convert_theme_tooltip: "Dit thema naar een onderdeel converteren"
           inactive_themes: "Inactieve thema's:"
           inactive_components: "Ongebruikte onderdelen:"
-          selected: "%{count} geselecteerd"
+          selected:
+            one: "%{count} geselecteerd"
+            other: "%{count} geselecteerd"
           cancel: "Annuleren"
           broken_theme_tooltip: "Dit thema bevat fouten in de CSS, HTML of YAML ervan"
           disabled_component_tooltip: "Dit onderdeel is uitgeschakeld"
           default_theme_tooltip: "Dit thema is het standaardthema van de website"
           updates_available_tooltip: "Er zijn updates voor dit thema beschikbaar"
-          and_x_more: "en nog %{count}."
+          and_x_more:
+            one: "en nog %{count}."
+            other: "en nog %{count}."
           collapse: Samenvouwen
           uploads: "Uploads"
           no_uploads: "Je kunt assets behorende bij je thema uploaden, zoals lettertypen en afbeeldingen"
@@ -5199,6 +5205,12 @@ nl:
           active_filter: "Actief"
           inactive_filter: "Inactief"
           updates_available_filter: "Updates beschikbaar"
+          schema:
+            fields:
+              required: "*vereist"
+              number:
+                too_small: "moet groter zijn dan of gelijk zijn aan %{count}"
+                too_large: "moet minder zijn dan of gelijk zijn aan %{count}"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"
@@ -6036,7 +6048,6 @@ nl:
           empty: "Er zijn nog geen afbeeldingen. Upload er een."
           upload:
             label: "Uploaden"
-            title: "Afbeelding(en) uploaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
         categories:
@@ -6072,7 +6083,6 @@ nl:
         secret_list:
           invalid_input: "Invoervelden mogen niet leeg zijn of verticale-streeptekens bevatten."
         default_categories:
-          modal_description: "Wil je deze wijziging met terugwerkende kracht toepassen? Hierdoor worden voorkeuren gewijzigd voor %{count} bestaande gebruikers."
           modal_yes: "Ja"
           modal_no: "Nee, wijziging alleen vanaf nu toepassen"
         simple_list:
@@ -6171,9 +6181,7 @@ nl:
           perform: "Badge aan gebruikers toekennen"
           upload_csv: Een CSV met e-mailadressen of gebruikersnamen uploaden
           aborted: Upload een CSV dat e-mailadressen of gebruikersnamen bevat
-          success: Je CSV-bestand is ontvangen en %{count} gebruikers krijgen over enkele ogenblikken hun badge.
           csv_has_unmatched_users: "De volgende vermeldingen komen voor in het CSV-bestand, maar ze kunnen niet worden gekoppeld aan bestaande gebruikers en krijgen daarom de badge niet:"
-          csv_has_unmatched_users_truncated_list: "Er waren %{count} vermeldingen in het CSV-bestand die niet konden worden gekoppeld aan bestaande gebruikers en daarom de badge niet zullen ontvangen. Vanwege het grote aantal niet-overeenkomende vermeldingen worden alleen de eerste 100 weergegeven:"
           replace_owners: De badge van vorige eigenaren verwijderen
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:

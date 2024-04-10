@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
 
-export default class downloadCalendar extends Component {
+export default class DownloadCalendar extends Component {
   @service currentUser;
 
   @tracked selectedCalendar = "ics";
@@ -23,13 +23,19 @@ export default class downloadCalendar extends Component {
       downloadIcs(
         this.args.model.calendar.title,
         this.args.model.calendar.dates,
-        this.args.model.calendar.recurrenceRule
+        {
+          recurrenceRule: this.args.model.calendar.recurrenceRule,
+        }
       );
     } else {
       downloadGoogle(
         this.args.model.calendar.title,
         this.args.model.calendar.dates,
-        this.args.model.calendar.recurrenceRule
+        {
+          recurrenceRule: this.args.model.calendar.recurrenceRule,
+          location: this.args.model.calendar.location,
+          details: this.args.model.calendar.details,
+        }
       );
     }
     this.args.closeModal();

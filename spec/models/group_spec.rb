@@ -507,7 +507,7 @@ RSpec.describe Group do
 
     g = Group[:trust_level_2]
     expect(g.human_users.count).to eq(g.user_count)
-    expect(g.human_users).to contain_exactly(user)
+    expect(g.human_users).to contain_exactly(admin, user)
   end
 
   it "can set members via usernames helper" do

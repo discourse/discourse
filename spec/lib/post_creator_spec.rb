@@ -5,7 +5,7 @@ require "topic_subtype"
 
 RSpec.describe PostCreator do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   let(:topic) { Fabricate(:topic, user: user) }
@@ -1486,6 +1486,23 @@ RSpec.describe PostCreator do
       creator.create
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
+    end
+
+    context "when embed_unlisted is true" do
+      before { SiteSetting.embed_unlisted = true }
+
+      it "unlists the topic" do
+        creator =
+          PostCreator.new(
+            user,
+            embed_url: embed_url,
+            title: "Reviews of Science Ovens",
+            raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+          )
+        post = creator.create
+        expect(creator.errors).to be_blank
+        expect(post.topic).not_to be_visible
+      end
     end
   end
 

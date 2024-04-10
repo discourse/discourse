@@ -123,8 +123,10 @@ zh_CN:
       number_value_not_valid_min: "值必须大于或等于 %{min}。"
       number_value_not_valid_max: "值必须小于或等于 %{max}。"
       string_value_not_valid_min_max: "值必须介于 %{min} 和 %{max} 个字符之间。"
-      string_value_not_valid_min: "值必须至少为 %{min} 个字符。"
-      string_value_not_valid_max: "值必须最多为 %{max} 个字符。"
+      string_value_not_valid_min:
+        other: "值必须至少为 %{count} 个字符。"
+      string_value_not_valid_max:
+        other: "值必须最多为 %{count} 个字符。"
       objects:
         humanize_required: "JSON 指针 '%{property_json_pointer}' 处的属性必须存在。"
         required: "必须存在"
@@ -140,22 +142,30 @@ zh_CN:
         not_valid_boolean_value: "必须是布尔值"
         humanize_not_valid_enum_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是以下 %{choices} 之一。"
         not_valid_enum_value: "必须是以下之一：%{choices}"
-        humanize_not_valid_category_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的类别 id。"
-        not_valid_category_value: "必须是有效的类别 id"
         humanize_not_valid_topic_value: "JSON 指针 '%{property_json_pointer}' 中的属性必须是有效的话题 id。"
         not_valid_topic_value: "必须是有效的话题 id"
         humanize_not_valid_post_value: "JSON 指针 '%{property_json_pointer}' 中的属性必须是有效的帖子 id。"
         not_valid_post_value: "必须是有效的帖子 id"
-        humanize_not_valid_group_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的群组 id。"
-        not_valid_group_value: "必须是有效的群组 id"
-        humanize_not_valid_tag_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的标签 id。"
-        not_valid_tag_value: "必须是有效的标签 id"
+        humanize_not_valid_tags_value: "JSON 指针 \"%{property_json_pointer}\"的属性必须是一个包含有效标签名的数组。"
+        not_valid_tags_value: "必须是一个包含有效标签名的数组"
+        humanize_tags_value_not_valid_min:
+          other: "JSON 指针 \"%{property_json_pointer}\"的属性必须至少有 %{count} 标记名称。"
+        tags_value_not_valid_min:
+          other: "必须至少有 %{count} 标签名称"
+        humanize_tags_value_not_valid_max:
+          other: "JSON 指针 \"%{property_json_pointer}\"的属性必须最多包含 %{count} 个标记名。"
+        tags_value_not_valid_max:
+          other: "最多必须有 %{count} 标签名称"
         humanize_not_valid_upload_value: "JSON 指针 \"%{property_json_pointer}' 中的属性必须是有效的上传 id。"
         not_valid_upload_value: "必须是有效的上传 id"
-        humanize_string_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须至少为 %{min} 个字符长。"
-        string_value_not_valid_min: "长度必须至少为 %{min} 个字符"
-        humanize_string_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性最多只能有 %{max} 个字符。"
-        string_value_not_valid_max: "长度最多为 %{max} 个字符"
+        humanize_string_value_not_valid_min:
+          other: "JSON 指针 '%{property_json_pointer}' 处的属性必须至少为 %{count} 个字符长。"
+        string_value_not_valid_min:
+          other: "长度必须至少为 %{count} 个字符"
+        humanize_string_value_not_valid_max:
+          other: "JSON 指针 '%{property_json_pointer}' 处的属性最多只能有 %{count} 个字符。"
+        string_value_not_valid_max:
+          other: "长度最多为 %{count} 个字符"
         humanize_number_value_not_valid_min: "JSON 指针 '%{property_json_pointer}' 处的属性必须大于或等于 %{min}。"
         number_value_not_valid_min: "必须大于或等于 %{min}"
         humanize_number_value_not_valid_max: "JSON 指针 '%{property_json_pointer}' 处的属性必须小于或等于 %{max}。"
@@ -201,7 +211,8 @@ zh_CN:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
-      too_long_validation: "最多只能有 %{max} 个字符；您输入了 %{length} 个字符。"
+      too_long_validation:
+        other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
       accepted: 必须被接受
@@ -307,7 +318,6 @@ zh_CN:
     rate_limit:
       other: "您在过去 24 小时内发出了 %{count} 个邀请，请等待 %{time_left}，然后重试。"
     confirm_email: "<p>快完成了！我们向您的电子邮件地址发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
-    cant_invite_to_group: "您无权邀请用户加入指定群组。请确保您是邀请其他人加入的群组的所有者。"
     disabled_errors:
       discourse_connect_enabled: "邀请已被禁用，因为 DiscourseConnect 已启用。"
       invalid_access: "您没有权限查看请求的资源。"
@@ -416,7 +426,6 @@ zh_CN:
   pm_reached_recipients_limit: "抱歉，消息中的收件人不能超过 %{recipients_limit} 个。"
   removed_direct_reply_full_quotes: "已自动移除对整个上一个帖子的引用。"
   watched_words_auto_tag: "已自动为话题添加标签"
-  secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开话题中使用以下安全上传：%{upload_filenames}。"
   create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建私信。"
   slow_mode_enabled: "此话题处于慢速模式。"
   just_posted_that: "与您最近发布的内容过于相似"
@@ -424,6 +433,7 @@ zh_CN:
   is_invalid: "似乎不清楚，这是一个完整的句子？"
   next_page: "下一页 →"
   prev_page: "← 上一页"
+  show_post_in_topic: "在话题中显示帖子"
   page_num: "第 %{num} 页"
   home_title: "首页"
   topics_in_category: "'%{category}' 类别中的话题"
@@ -553,7 +563,8 @@ zh_CN:
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
-    get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
+    get_a_room:
+      other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     dont_feed_the_trolls: 此帖子已被标记为需要版主关注。确定要回复它吗？对负面内容的回复往往会鼓励更多的负面行为。
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -1536,7 +1547,6 @@ zh_CN:
     summarization_strategy: "总结插件注册的内容的其他方法"
     custom_summarization_allowed_groups: "允许使用 `summarization_strategy` 总结内容的群组。"
     enable_personal_messages: "已弃用，请改用 'personal message enabled groups' 设置。允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。请注意，管理人员不受限制。"
-    personal_message_enabled_groups: "允许这些组中的用户创建消息和回复消息。信任级别组包括高于该数字的所有信任级别，例如选择 trust_level_1 还允许 trust_level_2、3、4 用户发送私信。请注意，管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_chunked_encoding: "启用服务器的分块编码响应。此功能适用于大多数设置，但某些代理可能会缓冲，导致响应延迟"
     long_polling_base_url: "用于长轮询的基础 URL（当 CDN 提供动态内容时，请务必将其设置为来源拉取）例如：http://origin.site.com"
@@ -2068,7 +2078,6 @@ zh_CN:
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
-    bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
@@ -2162,7 +2171,6 @@ zh_CN:
     max_tags_in_filter_list: "要在筛选器下拉列表中显示的最大标签数。将显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
-    pm_tags_allowed_for_groups: "允许所包含群组的成员标记任何个人消息"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     tag_topic_allowed_groups: "允许为主题添加标签的群组。"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
@@ -2222,8 +2230,10 @@ zh_CN:
       must_include_latest: "顶部菜单必须包含“最新”标签页。"
       invalid_string: "无效值。"
       invalid_string_min_max: "必须介于 %{min} 和 %{max} 个字符之间。"
-      invalid_string_min: "必须至少为 %{min} 个字符。"
-      invalid_string_max: "不得超过 %{max} 个字符。"
+      invalid_string_min:
+        other: "必须至少为 %{count} 个字符."
+      invalid_string_max:
+        other: "不得超过 %{count} 个字符."
       invalid_json: "无效的 JSON。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
@@ -2256,7 +2266,8 @@ zh_CN:
         regex_invalid: "正则表达式无效：%{error}"
         leading_trailing_slash: "正则表达式不得以斜杠作开头或结尾。"
       unicode_usernames_avatars: "内部系统头像不支持 Unicode 用户名。"
-      list_value_count: "该列表必须恰好包含 %{count} 个值。"
+      list_value_count:
+        other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
@@ -2290,6 +2301,14 @@ zh_CN:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "允许配置个人资料背景的最小信任等级"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "停用"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "停用"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2471,8 +2490,10 @@ zh_CN:
     new_user_typed_too_fast: "新用户输入过快"
     content_matches_auto_silence_regex: "内容符合自动禁言的正则表达式"
     username:
-      short: "必须至少为 %{min} 个字符"
-      long: "不得超过 %{max} 个字符"
+      short:
+        other: "必须至少为 %{count} 个字符"
+      long:
+        other: "不得超过 %{count} 个字符"
       too_long: "过长"
       characters: "只得包含数字、字母、破折号、点和下划线"
       unique: "必须唯一"
@@ -2628,35 +2649,9 @@ zh_CN:
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
-    text_body_template: |
-      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
-
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/main)
-
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
-    text_body_template: |
-      万岁，新版本的 [Discourse](https://www.discourse.org) 现已发布！
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 使用我们简单的**[一键浏览器升级](%{base_url}/admin/upgrade)**进行升级
-
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/main)
-
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的资讯、讨论和支持
-
-      ### 版本说明
-
-      %{notes}
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
@@ -3909,104 +3904,6 @@ zh_CN:
     编辑此话题中的第一个帖子以更改 %{page_name} 页面的内容。
   guidelines_topic:
     title: "常见问题解答/准则"
-    body: |
-      <a name="civilized"></a>
-
-      ## [这里是公共讨论的文明场所](#civilized)
-
-      请像对待公共公园一样尊重本讨论区。我们也是一个共享的社区资源 &mdash; 一个通过持续对话分享技能、知识和兴趣的地方。
-
-      这些并非硬性规定。它们是帮助我们社区进行人性化判断的准则，并使这里成为文明公共讨论的友好场所。
-
-      <a name="improve"></a>
-
-      ## [改进讨论](#improve)
-
-      帮助我们使这里成为一个良好的讨论场所，无论多么微小，记得始终为讨论增添一些积极的东西，。如果您不确定自己的帖子是否能促进讨论，请仔细想想自己想说什么，稍后再试。
-
-      改进讨论的方法之一是发现已经在进行的讨论。在回复或开始自己的话题之前，先花时间浏览一下这里的话题，这样您就更有可能遇到与您志同道合的人。
-
-      在这里讨论的话题对我们很重要，我们希望您也能把它们当作对您很重要的话题。即使你不同意某些观点，也要尊重这些话题和讨论这些话题的人。
-
-      <a name="agreeable"></a>
-
-      ## [即使不同意，也要同意](#agreeable)
-
-      您可能希望以不同意的方式来回应。这很好。但请记住，是批评观点，而不是批评人。请避免
-
-      * 谩骂
-      * 主观攻击
-      * 回应帖子的语气而非其实际内容
-      * 一触即发的反驳
-
-      相反，请提供深思熟虑的见解，以改善讨论。
-
-      <a name="participate"></a>
-
-      ## [您的参与很重要](#participate)
-
-      我们在这里的对话为每一位新来者定下了基调。选择参与能让本论坛成为一个有趣的地方的讨论， &mdash; ，避免参与那些不有趣的讨论，从而帮助我们影响这个社区的未来。
-
-      Discourse 提供了各种工具，使社区能够共同识别最佳（和最差）贡献：书签、喜欢、标记、回复、编辑、关注、静音等等。使用这些工具来改善你和其他人的体验。
-
-      让我们的社区变得更好。
-
-      <a name="flag-problems"></a>
-
-      ## [如果您发现问题，请标记它](#flag-problems)
-
-      版主拥有特殊的权力；他们是本论坛的负责人。但您也一样。在您的帮助下，版主可以成为社区的促进者，而不仅仅是看门人或警察。
-
-      看到不良行为时，不要回复。回复会承认不良行为，从而鼓励不良行为，消耗您的精力，浪费大家的时间。直接标记。如果标记的次数足够多，就会自动或由版主介入采取行动。
-
-      为了维护我们的社区，版主保留随时以任何理由删除任何内容和任何用户帐户的权利。版主不预览新帖；版主和网站运营者对社区发布的任何内容不承担任何责任。
-
-      <a name="be-civil"></a>
-
-      ## [始终文明](#be-civil)
-
-      没有什么比粗鲁无礼更能破坏健康的对话了：
-
-      * 要文明。不要张贴任何被认为具有攻击性、辱骂性或仇恨性的言论。
-      * 保持内容干净。不要张贴任何淫秽或色情内容。
-      * 互相尊重。不要骚扰或伤害任何人，不要冒充他人或暴露其私人信息。
-      * 尊重我们的论坛。不要张贴垃圾邮件或以其他方式破坏论坛。
-
-      这些都不是有精确定义的具体术语 &mdash; ，甚至避免出现任何这些情况。如果您不确定，请扪心自问，如果您的帖子出现在人民日报的头版，您会作何感想。
-
-      这是一个公共论坛，搜索引擎会对这些讨论进行索引。对家人和朋友来说，语言、链接和图片都是安全的。
-
-      <a name="keep-tidy"></a>
-
-      ## [保持整洁](#keep-tidy)
-
-      努力把东西摆放在正确的位置，这样我们就可以花更多时间讨论，减少清理工作。所以
-
-      * 不要在错误的分类中启动主题；请阅读分类定义。
-      * 不要在多个主题中交叉张贴相同的内容。
-      * 不要发表无内容的回复。
-      * 不要中途更改主题，从而转移话题。
-      * 不要在帖子上签名 &mdash; 每篇帖子都附有你的个人资料信息。
-
-      不要发表 "+1 "或 "同意 "的帖子，而应使用 "赞 "按钮。不要将现有主题引向完全不同的方向，而应使用回复作为链接主题。
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      未经许可，不得发布任何属于他人的数字内容。不得张贴关于窃取他人知识产权（软件、视频、音频、图像）或违反任何其他法律的描述、链接或方法。
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      本网站由[友好的本地工作人员](%{base_path}/about)和*您*（社区）共同运营。如果您对网站的运作方式有任何疑问，请在 %{feedback_category} 开设一个新主题，让我们一起讨论！如果有无法通过元主题或标记解决的重要或紧急问题，请通过[工作人员页面](%{base_path}/about)联系我们。
-
-      <a name="tos"></a>
-
-      ## [服务条款](#tos)
-
-      是的，法律条文很枯燥，但我们必须保护自己 &ndash; ，进而保护您和您的数据 &ndash; ，防止不友好的人。我们制定了[服务条款](%{base_path}/tos)，描述您（和我们）的行为以及与内容、隐私和法律相关的权利。要使用本服务，您必须同意遵守我们的 [TOS](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
     body: |
@@ -4274,7 +4171,8 @@ zh_CN:
     mass_award:
       errors:
         invalid_csv: 我们在第 %{line_number} 行遇到错误。请确认 CSV 每行有一个电子邮件。
-        too_many_csv_entries: CSV 文件中的条目过多。请提供包含不超过 %{count} 个条目的 CSV 文件。
+        too_many_csv_entries:
+          other: CSV 文件中的条目过多。请提供包含不超过 %{count} 个条目的 CSV 文件。
         badge_disabled: 请先启用%{badge_name}徽章。
         cant_grant_multiple_times: 无法多次向单个用户授予%{badge_name}徽章。
     editor:

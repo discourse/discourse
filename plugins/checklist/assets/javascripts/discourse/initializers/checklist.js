@@ -124,10 +124,16 @@ export function checklistSyntax(elem, postDecorator) {
         // make the first run go to index = 0
         let nth = -1;
         let found = false;
+
         const newRaw = post.raw.replace(
-          /\[(\s|\_|\-|\x|\\?\*)?\]/gi,
+          /\[( |x)?\]/gi,
           (match, ignored, off) => {
             if (found) {
+              return match;
+            }
+
+            // skip empty image URLs - "![](https://example.com/image.jpg)"
+            if (off > 0 && post.raw[off - 1] === "!") {
               return match;
             }
 

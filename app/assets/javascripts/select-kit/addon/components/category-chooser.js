@@ -223,4 +223,9 @@ export default ComboBoxComponent.extend({
   _matchCategory(filter, categoryName) {
     return this._normalize(categoryName).includes(filter);
   },
+
+  _onChange(value) {
+    this._boundaryActionHandler("onChangeCategory", Category.findById(value));
+    return true;
+  },
 });

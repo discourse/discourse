@@ -1,10 +1,9 @@
 import PreloadStore from "discourse/lib/preload-store";
-import DisableSidebar from "discourse/mixins/disable-sidebar";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend(DisableSidebar, {
+export default DiscourseRoute.extend({
   titleToken() {
     return I18n.t("invites.accept_title");
   },

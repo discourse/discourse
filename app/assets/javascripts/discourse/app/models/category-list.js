@@ -2,7 +2,6 @@ import ArrayProxy from "@ember/array/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
-import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { bind } from "discourse-common/utils/decorators";
@@ -40,25 +39,6 @@ export default class CategoryList extends ArrayProxy {
   }
 
   static _buildCategoryResult(c, statPeriod) {
-    if (c.parent_category_id) {
-      c.parentCategory = Category.findById(c.parent_category_id);
-    }
-
-    if (c.subcategory_list) {
-      c.subcategories = c.subcategory_list.map((subCategory) =>
-        this._buildCategoryResult(subCategory, statPeriod)
-      );
-    } else if (c.subcategory_ids) {
-      c.subcategories = c.subcategory_ids.map((subCategoryId) =>
-        Category.findById(parseInt(subCategoryId, 10))
-      );
-    }
-
-    if (c.subcategories) {
-      // TODO: Not all subcategory_ids have been loaded
-      c.subcategories = c.subcategories?.filter(Boolean);
-    }
-
     if (c.topics) {
       c.topics = c.topics.map((t) => Topic.create(t));
     }

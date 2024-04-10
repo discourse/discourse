@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::CleanUpTags do
   subject(:job) { described_class.new }
 

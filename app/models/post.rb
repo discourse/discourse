@@ -326,7 +326,7 @@ class Post < ActiveRecord::Base
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
-    if self.with_secure_uploads?
+    if self.should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -565,10 +565,25 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
-  def with_secure_uploads?
+  # NOTE (martin): This is turning into hack city; when changing this also
+  # consider how it interacts with UploadSecurity and the uploads.rake tasks.
+  def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
     topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
     return false if topic_including_deleted.blank?
+
+    # NOTE: This is to be used for plugins where adding a new public upload
+    # type that should not be secured via UploadSecurity.register_custom_public_type
+    # is not an option. This also is not taken into account in the secure upload
+    # rake tasks, and will more than likely change in future.
+    modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_should_secure_uploads?,
+        nil,
+        self,
+        topic_including_deleted,
+      )
+    return modifier_result if !modifier_result.nil?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
@@ -1353,10 +1368,10 @@ end
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
-#  index_posts_on_reply_to_post_number                    (reply_to_post_number)
 #  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)

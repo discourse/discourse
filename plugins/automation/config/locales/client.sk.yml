@@ -1,0 +1,139 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    discourse_automation:
+      create: Vytvoriť
+      fields:
+        user:
+          label: Používateľ
+        pm:
+          title:
+            label: Názov
+          raw:
+            label: Telo
+        pms:
+          title:
+            label: Názov
+          raw:
+            label: Telo
+        group:
+          label: Skupina
+        text:
+          label: Text
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Odznak
+        stalled_topic:
+          durations:
+            P2W: "Dva týždne"
+            P3M: "Tri mesiace"
+            P6M: "Šesť mesiacov"
+            P1Y: "Jeden rok"
+        recurring:
+          frequencies:
+            minute: minúta
+            hour: hodina
+            day: deň
+            week: týždeň
+            month: mesiac
+            year: rok
+          fields:
+            recurrence:
+              label: Opakovanie
+        stalled_wiki:
+          durations:
+            P2W: "Dva týždne"
+            P3M: "Tri mesiace"
+            P6M: "Šesť mesiacov"
+            P1Y: "Jeden rok"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID témy
+        post_created_edited:
+          fields:
+            restricted_category:
+              label: Kategória
+            restricted_group:
+              label: Skupina
+          created: Vytvorené
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Nadradená kategória
+        pm_created:
+          fields:
+            restricted_user:
+              label: Používatelia
+            restricted_group:
+              label: Skupina
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategória
+            restricted_tags:
+              label: Štítky
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Štítky
+        post:
+          fields:
+            topic:
+              label: ID témy
+        group_category_notification_default:
+          fields:
+            group:
+              label: Skupina
+        user_global_notice:
+          levels:
+            error: Chyba
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Skupina
+            badge:
+              label: Odznak
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Používateľ
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID témy
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID témy
+            user:
+              label: Používateľ
+        close_topic:
+          fields:
+            topic:
+              label: ID témy
+            user:
+              label: Používateľ
+      models:
+        trigger:
+          name:
+            label: Spúšťač
+        automation:
+          name:
+            label: Meno
+          trigger:
+            label: Spúšťač
+          version:
+            label: Verzia
+          enabled:
+            label: Povolené
+          disabled:
+            label: Vypnuté

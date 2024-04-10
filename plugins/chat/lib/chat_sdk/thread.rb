@@ -2,7 +2,7 @@
 
 module ChatSDK
   class Thread
-    include Chat::WithServiceHelper
+    include WithServiceHelper
 
     # Updates the title of a specified chat thread.
     #

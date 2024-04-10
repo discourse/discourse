@@ -109,7 +109,6 @@ hy:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "սահմանափակված է մինչև %{max} սիմվոլ; դուք մուտքագրել եք %{length}:"
       invalid_boolean: "Անվավեր boolean:"
       taken: "արդեն զբաղեցված է"
       accepted: պետք է ընդունվի
@@ -1446,8 +1445,6 @@ hy:
       must_include_latest: "Թոփ մենյուն պետք է ներառի 'վերջին' ներդիրը:"
       invalid_string: "Անվավեր արժեք:"
       invalid_string_min_max: "Պետք է ունենա %{min} -ից %{max} սիմվոլ:"
-      invalid_string_min: "Պետք է ունենա առնվազն %{min} սիմվոլ:"
-      invalid_string_max: "Պետք է լինի %{max} սիմվոլից ոչ ավելի:"
       pop3_polling_host_is_empty: "Դուք պետք է սահմանեք 'pop3 polling հոսթ' ՝ մինչ POP3 polling -ը միացնելը:"
       pop3_polling_username_is_empty: "Դուք պետք է սահմանեք 'pop3 polling օգտանուն' ՝ մինչ POP3 polling -ը միացնելը:"
       pop3_polling_password_is_empty: "Դուք պետք է սահմանեք 'pop3 polling գաղտնաբառ' ՝ մինչ POP3 polling-ը միացնելը:"
@@ -1464,6 +1461,15 @@ hy:
       max_username_length_exists: "Դուք չեք կարող սահմանել օգտանվան առավելագույն երկարություն ամենաերկար օգտանունից ցածր (%{username}):"
       max_username_length_range: "Դուք չեք կարող սահմանել առավելագույնը նվազագույնից ցածր:"
       invalid_hex_value: "Գույների արժեքները պետք է լինեն 6-նիշանոց տասնվեցերորդական կոդեր:"
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "ոչ ակտիվ"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "ոչ ակտիվ"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1603,8 +1609,6 @@ hy:
     activated_by_staff: "Ակտիվացված անձնակազմի կողմից"
     new_user_typed_too_fast: "Նոր օգտատերը չափազանց արագ է տպել"
     username:
-      short: "պետք է ունենա առնվազն %{min} սիմվոլ"
-      long: "պետք է լինի ավելի քան %{max} սիմվոլ"
       unique: "պետք է լինի եզակի"
       blank: "պետք է լինի ներկա"
       must_begin_with_alphanumeric_or_underscore: "պետք է սկսվի տառով, թվով կամ ընդծումով"

@@ -35,6 +35,9 @@ export const TOOLTIP = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    onClose: null,
+    onShow: null,
+    onRegisterApi: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -62,6 +65,10 @@ export const MENU = {
     autoUpdate: true,
     trapTab: true,
     extraClassName: null,
+    onClose: null,
+    onShow: null,
+    onRegisterApi: null,
+    modalForMobile: false,
   },
   portalOutletId: "d-menu-portal-outlet",
 };
@@ -73,5 +80,7 @@ export const TOAST = {
     autoClose: true,
     duration: 3000,
     component: DDefaultToast,
+    showProgressBar: true,
+    views: ["desktop", "mobile"],
   },
 };

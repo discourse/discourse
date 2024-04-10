@@ -16,7 +16,7 @@ It is essential that you provide a meaningful name and description for your site
 [] Edit your welcome topic
 
 ### Legal
-You are responsible for providing your organization's details and legal notices. Discourse will place boilerplate templates in your #staff category when you add your company name in the setup wizard. 
+You are responsible for providing your organization's details and legal notices. Discourse will place boilerplate templates in your [#staff](/c/-/3) category when you add your company name in the setup wizard. 
 
 [] Add your company name and details
 [] Edit the boilerplate TOS or provide a link to the TOS on your main site
@@ -55,7 +55,7 @@ Once you've done the initial setup, you're ready to invite your founding members
 [] Members provide their name, bio and picture
 [] Create interesting topics (at least 5 topics and 30 replies recommended)
 [] Start talking in chat
-[] Talk in #site-feedback about how to use the site and how it is organized
+[] Talk in [#site-feedback](/c/-/2) about how to use the site and how it is organized
 [] Review and edit the provided Community Guidelines (FAQ) 
 
 ### When you're ready, launch your community!
@@ -84,12 +84,13 @@ Promoting members of your community is easy:
 ### Categories
 You have three default categories:
 
-1. [General](/category/general) – create topics here that don't fit into any other existing category.
-2. [Site Feedback](/category/site-feedback) – Discussion about this site, its organization, how it works, and how you and your community can improve it. [It's important!](https://meta.discourse.org/t/5249)
-3. [Staff](/category/staff) – Visible only to staff (admins and moderators)
+1. [#General](/c/-/4) – create topics here that don't fit into any other existing category.
+2. [#Site Feedback](/c/-/2) – Discussion about this site, its organization, how it works, and how you and your community can improve it. [It's important!](https://meta.discourse.org/t/5249)
+3. [#Staff](/c/-/3) – Visible only to staff (admins and moderators)
+   
 **Only create a few initial categories**, as you can overwhelm your community. You can always add more categories later and easily bulk recategorize topics. You and your members will have a better experience if you figure out the organization as you go rather than assuming you'll get it all right from the beginning.
 
-Select the :wrench: admin wrench on the [categories page](https://dev.discourse.org/categories) to add a category. You can set security per-category so only certain groups of users can see topics in that category.
+Select the :wrench: admin wrench on the [categories page](/categories) to add a category. You can set security per-category so only certain groups of users can see topics in that category. ([Learn more about groups and category permissions](https://meta.discourse.org/t/-/87678))
 
 Every category has an initial "About this category" topic which you will want to edit to suit your needs. This topic will be pinned to the top of the category, and the description you enter in the first paragraph will appear throughout. Be sure to give your new category a good, clear description, so people understand what belongs there!
 
@@ -130,7 +131,7 @@ If you'd like to enable *replying* to topics via email, [see this howto](https:/
 
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
 
-- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click upgrade process, visit [/admin/upgrade](/admin/upgrade).
+- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click process, visit [/admin/update](/admin/update).
 
 ### Optional things you might eventually want to set up
 [] [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)

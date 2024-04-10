@@ -19,10 +19,7 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import {
-  bodyScrollFix,
-  stackingContextFix,
-} from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
+import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
@@ -56,7 +53,7 @@ export default class ChatThread extends Component {
   @service router;
   @service siteSettings;
 
-  @tracked isAtBottom = true;
+  @tracked atBottom = true;
   @tracked isScrolling = false;
   @tracked needsArrow = false;
   @tracked uploadDropZone;
@@ -119,7 +116,6 @@ export default class ChatThread extends Component {
         return;
       }
 
-      bodyScrollFix();
       DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
@@ -320,7 +316,15 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    this.messagesManager.addMessages([message]);
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
+    stackingContextFix(this.scrollable, () => {
+      this.messagesManager.addMessages([message]);
+    });
   }
 
   @bind
@@ -578,6 +582,7 @@ export default class ChatThread extends Component {
           @thread={{@thread}}
           @onSendMessage={{this.onSendMessage}}
           @uploadDropZone={{this.uploadDropZone}}
+          @scrollable={{this.scrollable}}
         />
       {{/if}}
 

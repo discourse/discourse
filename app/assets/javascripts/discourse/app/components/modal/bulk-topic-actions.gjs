@@ -1,20 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
+import autoFocus from "discourse/modifiers/auto-focus";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
+
+const _customActions = {};
+
+export function addBulkDropdownAction(name, customAction) {
+  _customActions[name] = customAction;
+}
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -25,6 +32,7 @@ export default class BulkTopicActions extends Component {
   @tracked loading;
   @tracked errors;
   @tracked isSilent = false;
+  @tracked closeNote = null;
 
   notificationLevelId = null;
 
@@ -32,7 +40,11 @@ export default class BulkTopicActions extends Component {
     super(...arguments);
 
     if (this.args.model.initialAction === "set-component") {
-      this.setComponent(ChangeTags);
+      if (this.args.model.initialActionLabel in _customActions) {
+        _customActions[this.args.model.initialActionLabel]({
+          setComponent: this.setComponent.bind(this),
+        });
+      }
     }
   }
 
@@ -75,6 +87,10 @@ export default class BulkTopicActions extends Component {
       operation = { type: "silent_close" };
     }
 
+    if (this.isCloseAction && this.closeNote) {
+      operation["message"] = this.closeNote;
+    }
+
     const tasks = topicChunks.map((topics) => async () => {
       const result = await Topic.bulkOperation(topics, operation, options);
       this.processedTopicCount += topics.length;
@@ -108,6 +124,11 @@ export default class BulkTopicActions extends Component {
   @action
   setComponent(component) {
     this.activeComponent = component;
+  }
+
+  @action
+  registerCustomAction(customAction) {
+    this.customAction = customAction;
   }
 
   @action
@@ -165,6 +186,14 @@ export default class BulkTopicActions extends Component {
           (t) => t.set("category_id", this.categoryId)
         );
         break;
+      default:
+        // Plugins can register their own custom actions via onRegisterAction
+        // when the activeComponent is rendered.
+        if (this.customAction) {
+          this.customAction(this.performAndRefresh.bind(this));
+        } else {
+          _customActions[this.args.model.initialActionLabel](this);
+        }
     }
   }
 
@@ -224,6 +253,17 @@ export default class BulkTopicActions extends Component {
     return this.args.model.action === "update-category";
   }
 
+  @computed("action")
+  get isCloseAction() {
+    return this.args.model.action === "close";
+  }
+
+  @action
+  updateCloseNote(event) {
+    event.preventDefault();
+    this.closeNote = event.target.value;
+  }
+
   get notificationLevels() {
     return topicLevels.map((level) => ({
       id: level.id.toString(),
@@ -240,6 +280,7 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
+      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >
@@ -291,6 +332,29 @@ export default class BulkTopicActions extends Component {
                 @tags={{this.tags}}
                 @categoryId={{@categoryId}}
               /></p>
+          {{/if}}
+
+          {{#if this.activeComponent}}
+            {{component
+              this.activeComponent
+              onRegisterAction=this.registerCustomAction
+            }}
+          {{/if}}
+
+          {{#if this.isCloseAction}}
+            <div class="bulk-close-note-section">
+              <label>
+                {{i18n "topic_bulk_actions.close_topics.note"}}&nbsp;<span
+                  class="label-optional"
+                >{{i18n "topic_bulk_actions.close_topics.optional"}}</span>
+              </label>
+
+              <textarea
+                id="bulk-close-note"
+                {{on "input" this.updateCloseNote}}
+                {{autoFocus}}
+              >{{this.closeNote}}</textarea>
+            </div>
           {{/if}}
         </ConditionalLoadingSection>
       </:body>

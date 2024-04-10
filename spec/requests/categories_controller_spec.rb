@@ -397,6 +397,35 @@ RSpec.describe CategoriesController do
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
     end
+
+    describe "with page" do
+      before { sign_in(admin) }
+
+      let!(:category2) { Fabricate(:category, user: admin) }
+      let!(:category3) { Fabricate(:category, user: admin) }
+
+      it "paginates results wihen lazy_load_categories is enabled" do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+      end
+
+      it "does not paginate results when lazy_load_categories is disabled" do
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(4)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
+      end
+    end
   end
 
   describe "extensibility event" do
@@ -1139,6 +1168,26 @@ RSpec.describe CategoriesController do
       expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
+    end
+
+    context "with a read restricted child category" do
+      before_all { subcategory.update!(read_restricted: true) }
+
+      it "indicates to an admin that the category has a child" do
+        sign_in(admin)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(true)
+      end
+
+      it "indicates to a normal user that the category has no child" do
+        sign_in(user)
+
+        get "/categories/find.json", params: { ids: [category.id] }
+        category = response.parsed_body["categories"].first
+        expect(category["has_children"]).to eq(false)
+      end
     end
   end
 

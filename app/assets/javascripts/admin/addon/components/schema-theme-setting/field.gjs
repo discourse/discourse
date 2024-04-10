@@ -1,17 +1,19 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import htmlSafe from "discourse-common/helpers/html-safe";
-import BooleanField from "./types/boolean";
-import CategoryField from "./types/category";
-import EnumField from "./types/enum";
-import FloatField from "./types/float";
-import GroupField from "./types/group";
-import IntegerField from "./types/integer";
-import StringField from "./types/string";
-import TagField from "./types/tag";
+import BooleanField from "admin/components/schema-theme-setting/types/boolean";
+import CategoriesField from "admin/components/schema-theme-setting/types/categories";
+import EnumField from "admin/components/schema-theme-setting/types/enum";
+import FloatField from "admin/components/schema-theme-setting/types/float";
+import GroupsField from "admin/components/schema-theme-setting/types/groups";
+import IntegerField from "admin/components/schema-theme-setting/types/integer";
+import StringField from "admin/components/schema-theme-setting/types/string";
+import TagsField from "admin/components/schema-theme-setting/types/tags";
 
 export default class SchemaThemeSettingField extends Component {
   get component() {
+    const type = this.args.spec.type;
+
     switch (this.args.spec.type) {
       case "string":
         return StringField;
@@ -23,14 +25,14 @@ export default class SchemaThemeSettingField extends Component {
         return BooleanField;
       case "enum":
         return EnumField;
-      case "category":
-        return CategoryField;
-      case "tag":
-        return TagField;
-      case "group":
-        return GroupField;
+      case "categories":
+        return CategoriesField;
+      case "tags":
+        return TagsField;
+      case "groups":
+        return GroupsField;
       default:
-        throw new Error("unknown type");
+        throw new Error(`unknown type ${type}`);
     }
   }
 
@@ -44,8 +46,8 @@ export default class SchemaThemeSettingField extends Component {
   }
 
   <template>
-    <div class="schema-field" data-name={{@name}}>
-      <label class="schema-field__label">{{@name}}{{if
+    <div class="schema-field" data-name={{@name}} data-type={{@spec.type}}>
+      <label class="schema-field__label">{{@label}}{{if
           @spec.required
           "*"
         }}</label>
@@ -56,6 +58,7 @@ export default class SchemaThemeSettingField extends Component {
           @spec={{@spec}}
           @onChange={{@onValueChange}}
           @description={{this.description}}
+          @setting={{@setting}}
         />
       </div>
     </div>

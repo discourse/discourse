@@ -106,5 +106,25 @@ describe "Search", type: :system do
       search_page.click_search_icon
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
     end
+
+    it "tracks search result clicks" do
+      expect(SearchLog.count).to eq(0)
+
+      visit("/")
+      search_page.click_search_icon
+      search_page.type_in_search_menu("test")
+      search_page.click_search_menu_link
+
+      expect(search_page).to have_topic_title_for_first_search_result(topic.title)
+      find(".search-menu-container .search-result-topic", text: topic.title).click
+
+      try_until_success { expect(SearchLog.count).to eq(1) }
+      try_until_success { expect(SearchLog.last.search_result_id).not_to eq(nil) }
+
+      log = SearchLog.last
+      expect(log.term).to eq("test")
+      expect(log.search_result_id).to eq(topic.first_post.id)
+      expect(log.search_type).to eq(SearchLog.search_types[:header])
+    end
   end
 end

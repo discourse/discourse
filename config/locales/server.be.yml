@@ -99,7 +99,6 @@ be:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "абмяжоўваецца %{max} знакаў; Уведзеныя %{length}"
       invalid_boolean: "Invalid лагічнае."
       taken: "ўжо прынята"
       accepted: павінен быць прыняты

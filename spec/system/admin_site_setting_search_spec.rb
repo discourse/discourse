@@ -33,6 +33,13 @@ describe "Admin Site Setting Search", type: :system do
       expect(settings_page).to have_search_result("anonymous_posting_allowed_groups")
     end
 
+    it "finds the associated site setting when many keywords" do
+      settings_page.visit
+      settings_page.type_in_search("deactivated")
+      expect(settings_page).to have_search_result("clean_up_inactive_users_after_days")
+      expect(settings_page).to have_search_result("purge_unactivated_users_grace_period_days")
+    end
+
     it "can search for previous site setting without underscores" do
       settings_page.visit
       settings_page.type_in_search("anonymous posting min")

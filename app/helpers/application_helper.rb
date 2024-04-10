@@ -158,9 +158,10 @@ module ApplicationHelper
   end
 
   def add_resource_preload_list(resource_url, type)
-    if !@links_to_preload.nil?
-      @links_to_preload << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
-    end
+    links =
+      controller.instance_variable_get(:@asset_preload_links) ||
+        controller.instance_variable_set(:@asset_preload_links, [])
+    links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
   end
 
   def discourse_csrf_tags
@@ -430,7 +431,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    (crawler_layout? || !mobile_view? || !modern_mobile_device?) && !current_user
+    if current_user
+      params.key?(:print)
+    else
+      crawler_layout? || !mobile_view? || !modern_mobile_device?
+    end
   end
 
   def modern_mobile_device?
@@ -555,7 +560,7 @@ module ApplicationHelper
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def build_plugin_html(name)
@@ -752,6 +757,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def anonymous_top_menu_items
+    Discourse.anonymous_top_menu_items.map(&:to_s)
   end
 
   def authentication_data

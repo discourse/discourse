@@ -108,7 +108,7 @@ function defineAdminSection(
     }
 
     get name() {
-      return `admin-nav-section-${this.adminNavSectionData.name}`;
+      return `${ADMIN_PANEL}-${this.adminNavSectionData.name}`;
     }
 
     get title() {
@@ -135,6 +135,10 @@ function defineAdminSection(
     get displaySection() {
       return true;
     }
+
+    get collapsedByDefault() {
+      return this.adminNavSectionData.name !== "root";
+    }
   };
 
   return AdminNavSection;
@@ -152,6 +156,12 @@ export function useAdminNavConfig(navMap) {
           route: "admin.dashboard.general",
           label: "admin.dashboard.title",
           icon: "home",
+        },
+        {
+          name: "admin_all_site_settings",
+          route: "adminSiteSettings",
+          label: "admin.advanced.sidebar_link.all_site_settings",
+          icon: "cog",
         },
       ],
     },

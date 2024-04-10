@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Topic
+    scriptables:
+      pin_topic:
+        title: Zakvači temu
+      close_topic:
+        title: Zatvori temu
+      append_last_checked_by:
+        button_text: Urađeno

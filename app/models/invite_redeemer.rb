@@ -125,6 +125,7 @@ class InviteRedeemer
       fields = user.custom_fields
 
       user_fields.each do |f|
+        field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
         field_val = field_params[f.id.to_s]
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length

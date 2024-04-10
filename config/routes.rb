@@ -235,7 +235,9 @@ Discourse::Application.routes.draw do
           get "preview" => "themes#preview"
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
+          get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
         end
+
         collection do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"
@@ -662,10 +664,6 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/preferences/tracking" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/categories" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1583,6 +1581,8 @@ Discourse::Application.routes.draw do
     root to: "finish_installation#index",
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
+
+    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

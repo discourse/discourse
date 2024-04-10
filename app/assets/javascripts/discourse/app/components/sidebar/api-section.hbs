@@ -9,6 +9,7 @@
     @collapsable={{@collapsable}}
     @displaySection={{this.section.displaySection}}
     @hideSectionHeader={{this.section.hideSectionHeader}}
+    @collapsedByDefault={{this.section.collapsedByDefault}}
   >
     {{#each this.filteredLinks key="name" as |link|}}
       <Sidebar::SectionLink

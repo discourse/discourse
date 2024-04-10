@@ -51,8 +51,8 @@ export default class CategoryList extends Component {
         @onChange={{this.onChangeSelectedCategories}}
       />
 
-      <SiteSettingsDescription @description={{this.setting.description}} />
-      <SettingValidationMessage @message={{this.validationMessage}} />
+      <SiteSettingsDescription @description={{@setting.description}} />
+      <SettingValidationMessage @message={{@validationMessage}} />
     </div>
   </template>
 }

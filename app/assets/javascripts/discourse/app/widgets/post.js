@@ -163,6 +163,7 @@ createWidget("reply-to-tab", {
     };
 
     if (!this.attrs.mobileView) {
+      result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
       result["aria-expanded"] = this.attrs.repliesAbove.length
         ? "true"
@@ -1008,10 +1009,7 @@ export default createWidget("post", {
       return "";
     }
 
-    return [
-      this.attach("post-user-tip-shim"),
-      this.attach("post-article", attrs),
-    ];
+    return [this.attach("post-article", attrs)];
   },
 
   toggleLike() {

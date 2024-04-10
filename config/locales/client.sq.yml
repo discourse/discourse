@@ -151,7 +151,8 @@ sq:
         us_east_1: "US East (N. Virginia)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    edit: "redakto titullin dhe kategorinë e kësaj teme"
+    edit: "Redakto"
+    edit_topic: "redakto titullin dhe kategorinë e kësaj teme"
     expand: "Shpalos"
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -190,7 +191,9 @@ sq:
     every_hour: "çdo orë"
     daily: "çdo ditë"
     weekly: "çdo javë"
-    max_of_count: "max i %{count}"
+    max_of_count:
+      one: "max i %{count}"
+      other: "max i %{count}"
     character_count:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
@@ -216,6 +219,7 @@ sq:
       not_bookmarked: "shto postimin tek të preferuarat"
       save: "Ruaj"
       search: "Kërko"
+      bookmark: "Shto tek të preferuarat"
     drafts:
       remove: "Hiq"
     preview: "shiko"
@@ -457,7 +461,9 @@ sq:
       categories_label: "categories"
       subcategories_label: "nënkategori"
       remove_filter: "hiq filtrin"
-      plus_more_count: "+%{count} tjetër"
+      plus_more_count:
+        one: "+%{count} tjetër"
+        other: "+%{count} të tjera"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
       reorder:
@@ -484,7 +490,9 @@ sq:
       organisation: Organizata
       phone: Telefoni
       other_accounts: "Llogari të tjera me këtë adresë IP:"
-      delete_other_accounts: "Fshi %{count}"
+      delete_other_accounts:
+        one: "Fshi %{count}"
+        other: "Fshi %{count}"
       username: "emri i përdoruesit"
       trust_level: "TL"
       read_time: "koha e leximit"
@@ -700,6 +708,8 @@ sq:
         instructions: "Gjuha e faqes për përdoruesin. Do të ndryshojë pasi të rifreskoni faqen. "
         default: "(paracaktuar)"
         any: "ndonjë"
+      homepage:
+        default: "(paracaktuar)"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       auth_tokens:
@@ -791,7 +801,6 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "Të pakTën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -1134,7 +1143,6 @@ sq:
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
         unlist_topics: "Hiq temat nga lista"
-        defer: "Shty"
         delete: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
@@ -1193,8 +1201,6 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
-      defer:
-        title: "Shty"
       list: "Temat"
       new: "temë e re"
       unread: "palexuar"
@@ -1959,7 +1965,7 @@ sq:
         upload: "Ngarko"
         uploading: "Duke ngarkuar"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."
           email: "Ju lutemi të vendosni një email të vlefshëm."
     table_builder:
@@ -1988,10 +1994,8 @@ sq:
         up_to_date: "Jeni të azhurnuar!"
         critical_available: "Përditësim i rëndësishëm."
         updates_available: "Ka përditësime."
-        please_upgrade: "Ju lutem, azhornoje!"
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
-        version_check_pending: "Me sa shohim keni rinovuar faqen se fundmi. Fantastike!"
         installed_version: "Instaluar"
         latest_version: "Të fundit"
         new_features:
@@ -2265,6 +2269,12 @@ sq:
             text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
+          schema:
+            fields:
+              required: "*e nevojshme"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"

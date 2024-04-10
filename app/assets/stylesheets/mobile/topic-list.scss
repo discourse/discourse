@@ -522,7 +522,7 @@ td .main-link {
       }
       &.default {
         display: flex;
-        span:not(.bulk-select-topics) {
+        .bulk-select-topic-dropdown__count {
           display: none;
         }
       }
@@ -536,9 +536,12 @@ td .main-link {
 
 .bulk-select-topics {
   display: flex;
+  flex-wrap: wrap;
   padding-left: 0.85em;
-  .btn {
-    margin-right: 0.5em;
+  gap: 0.5em;
+  font-size: var(--font-down-1);
+  .select-kit-collection {
+    font-size: var(--font-up-1);
   }
 }
 

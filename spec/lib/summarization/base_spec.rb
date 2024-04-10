@@ -65,5 +65,14 @@ describe Summarization::Base do
         expect(described_class.can_see_summary?(topic, nil)).to eq(true)
       end
     end
+
+    context "when the topic is a PM" do
+      before { SiteSetting.custom_summarization_allowed_groups = group.id }
+      let(:pm) { Fabricate(:private_message_topic) }
+
+      it "returns false" do
+        expect(described_class.can_see_summary?(pm, user)).to eq(false)
+      end
+    end
   end
 end

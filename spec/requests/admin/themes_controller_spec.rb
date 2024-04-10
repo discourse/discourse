@@ -1063,9 +1063,32 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
-      it "should be able to update a theme setting of `objects` typed" do
-        SiteSetting.experimental_objects_type_for_theme_settings = true
+      it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
 
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "a" * 21, url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(422)
+
+        expect(response.parsed_body["errors"]).to eq(
+          ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
+        )
+      end
+
+      it "should be able to update a theme setting of `objects` typed" do
         field =
           theme.set_field(
             target: :settings,
@@ -1311,6 +1334,107 @@ RSpec.describe Admin::ThemesController do
     it "logs the theme destroy action for each theme" do
       StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+    end
+  end
+
+  describe "#objects_setting_metadata" do
+    fab!(:theme)
+
+    let(:theme_setting) do
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+      field = theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+      theme.settings
+    end
+
+    it "returns 404 if user is not an admin" do
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(user)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(moderator)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    context "when user is an admin" do
+      before { sign_in(admin) }
+
+      it "returns 400 if the `id` param is not the id of a valid theme" do
+        get "/admin/themes/some_invalid_id/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 400 if the `setting_name` param does not match a valid setting" do
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/some_invalid_setting_name.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 200 with the right `property_descriptions` attributes" do
+        theme.set_field(
+          target: :translations,
+          name: "en",
+          value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        )
+
+        theme.save!
+
+        theme_setting
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_setting.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["property_descriptions"]).to eq(
+          {
+            "links.name.description" => "Name of the link",
+            "links.name.label" => "Name",
+            "links.url.description" => "URL of the link",
+            "links.url.label" => "URL",
+            "name.description" => "Section Name",
+            "name.label" => "Name",
+          },
+        )
+      end
+
+      it "returns 200 with the right `categories` attribute for a theme setting with categories propertoes" do
+        category_1 = Fabricate(:category)
+        category_2 = Fabricate(:category)
+        category_3 = Fabricate(:category)
+
+        theme_setting[:objects_with_categories].value = [
+          {
+            "category_ids" => [category_1.id, category_2.id],
+            "child_categories" => [{ "category_ids" => [category_3.id] }],
+          },
+        ]
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(200)
+
+        categories = response.parsed_body["categories"]
+
+        expect(categories.keys.map(&:to_i)).to contain_exactly(
+          category_1.id,
+          category_2.id,
+          category_3.id,
+        )
+
+        expect(categories[category_1.id.to_s]["name"]).to eq(category_1.name)
+        expect(categories[category_2.id.to_s]["name"]).to eq(category_2.name)
+        expect(categories[category_3.id.to_s]["name"]).to eq(category_3.name)
+      end
     end
   end
 end

@@ -143,13 +143,19 @@ module PageObjects
         end
 
         def has_no_add_section_button?
-          page.has_no_button?(add_section_button_text)
+          has_no_css?(add_section_button_css)
+        end
+
+        def has_add_section_button?
+          has_css?(add_section_button_css)
         end
 
         def click_edit_categories_button
           within(".sidebar-section[data-section-name='categories']") do
             click_button(class: "sidebar-section-header-button", visible: false)
           end
+
+          expect(page).to have_css(".d-modal:not(.is-animating)")
 
           PageObjects::Modals::SidebarEditCategories.new
         end
@@ -158,6 +164,8 @@ module PageObjects
           within(".sidebar-section[data-section-name='tags']") do
             click_button(class: "sidebar-section-header-button", visible: false)
           end
+
+          expect(page).to have_css(".d-modal:not(.is-animating)")
 
           PageObjects::Modals::SidebarEditTags.new
         end
@@ -190,6 +198,10 @@ module PageObjects
 
         def add_link_button_text
           I18n.t("js.sidebar.sections.custom.links.add")
+        end
+
+        def add_section_button_css
+          ".sidebar-footer-actions-button.add-section"
         end
       end
     end

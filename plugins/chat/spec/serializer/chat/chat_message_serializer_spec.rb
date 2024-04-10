@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageSerializer do
   subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
 
