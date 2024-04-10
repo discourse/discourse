@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
@@ -17,7 +18,6 @@ import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
 import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 const SEARCH_BUTTON_ID = "search-button";
 
