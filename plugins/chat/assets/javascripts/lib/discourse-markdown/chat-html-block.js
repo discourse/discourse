@@ -2,7 +2,7 @@
 // note that allow lister will run on top of it, so if a tag is allowed here but not on
 // the allow list, then it won't show up
 
-const block_names = ["details"];
+const block_names = ["details", "summary"];
 
 const attr_name = "[a-zA-Z_:][a-zA-Z0-9:._-]*";
 const unquoted = "[^\"'=<>`\\x00-\\x20]+";
@@ -108,7 +108,7 @@ function chatHtmlBlock(state, startLine, endLine, silent) {
 export function setup(helper) {
   helper.registerPlugin((md) => {
     if (md.options.discourse.features["chat-html-block"]) {
-      md.block.ruler.push("chat-html-block", chatHtmlBlock);
+      md.block.ruler.before("html_block", "chat-html-block", chatHtmlBlock);
     }
   });
 }

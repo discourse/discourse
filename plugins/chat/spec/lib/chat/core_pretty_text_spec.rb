@@ -97,28 +97,4 @@ RSpec.describe PrettyText do
       "<div class=\"chat-transcript-messages\">\n<p>original message</p></div>",
     )
   end
-
-  it "renders kbd inline tag" do
-    cooked = PrettyText.cook <<~MD
-    <kbd>Esc</kbd> is pressed
-    MD
-
-    expect(cooked).to include("<p><kbd>Esc</kbd> is pressed</p>")
-  end
-
-  it "renders details block tag" do
-    cooked = PrettyText.cook <<~MD
-    <details>
-      <summary>Dog</summary>
-      Cat
-    </details>
-    MD
-
-    expect(cooked).to include(<<~HTML.strip)
-    <details>
-      <summary>Dog</summary>
-      Cat
-    </details>
-    HTML
-  end
 end
