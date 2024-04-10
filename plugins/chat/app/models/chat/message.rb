@@ -186,7 +186,6 @@ module Chat
       censored
       chat-transcript
       discourse-local-dates
-      details
       emoji
       emojiShortcuts
       inlineEmoji
