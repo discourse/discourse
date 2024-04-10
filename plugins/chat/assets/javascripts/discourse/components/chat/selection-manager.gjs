@@ -42,18 +42,20 @@ export default class ChatSelectionManager extends Component {
   }
 
   canDeleteMessage(id) {
-    const message = this.args.messagesManager.findMessage(id);
+    const message = this.args.messagesManager?.findMessage(id);
 
-    const canDelete =
-      this.currentUser.id === message.user.id
-        ? message.channel?.canDeleteSelf
-        : message.channel?.canDeleteOthers;
+    if (message) {
+      const canDelete =
+        this.currentUser.id === message.user.id
+          ? message.channel?.canDeleteSelf
+          : message.channel?.canDeleteOthers;
 
-    return (
-      canDelete &&
-      !message.deletedAt &&
-      message.channel?.canModifyMessages?.(this.currentUser)
-    );
+      return (
+        canDelete &&
+        !message.deletedAt &&
+        message.channel?.canModifyMessages?.(this.currentUser)
+      );
+    }
   }
 
   get deleteButtonTitle() {
