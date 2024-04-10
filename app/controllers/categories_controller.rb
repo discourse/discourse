@@ -46,6 +46,7 @@ class CategoriesController < ApplicationController
       parent_category_id: params[:parent_category_id],
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
+      all: ActiveModel::Type::Boolean.new.cast(params[:all]),
       tag: params[:tag],
       page: params[:page],
     }

@@ -398,7 +398,7 @@ RSpec.describe CategoriesController do
       ).not_to include(uncategorized.id)
     end
 
-    describe "with page" do
+    describe "with 'page' parameter" do
       before { sign_in(admin) }
 
       let!(:category2) { Fabricate(:category, user: admin) }
@@ -424,6 +424,34 @@ RSpec.describe CategoriesController do
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
+      end
+    end
+
+    describe "with 'all' parameter" do
+      let!(:category2) { Fabricate(:category, user: admin, parent_category: category) }
+
+      before do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        sign_in(admin)
+      end
+
+      it "returns all categories" do
+        # Each page will return a category, except last which will return none
+        [
+          Category.find(SiteSetting.uncategorized_category_id),
+          category,
+          category2,
+          nil,
+        ].each_with_index do |result, page|
+          stub_const(CategoryList, "CATEGORIES_PER_PAGE", 1) do
+            stub_const(CategoryList, "SUBCATEGORIES_PER_CATEGORY", 1) do
+              get "/categories.json?all=1&page=#{page + 1}"
+            end
+          end
+
+          category_ids = response.parsed_body["category_list"]["categories"].map { |c| c["id"] }
+          expect(category_ids).to eq([result&.id].compact)
+        end
       end
     end
   end

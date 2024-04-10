@@ -143,13 +143,25 @@ class CategoryList
     query = self.class.order_categories(query)
 
     page = [1, @options[:page].to_i].max
-    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
+    if @guardian.can_lazy_load_categories? && @options[:all]
+      # All categories must be listed, irrespective of their relations
+      # (parent category <-> sub category)
+      query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
+    elsif @guardian.can_lazy_load_categories? && !@options[:all] &&
+          @options[:parent_category_id].blank?
+      # If no parent_category_id is specified, CATEGORIES_PER_PAGE parent
+      # categories will be returned and SUBCATEGORIES_PER_CATEGORY sub
+      # categories will be returned for each category, for a maximum of
+      # CATEGORIES_PER_PAGE * (1 + SUBCATEGORIES_PER_CATEGORY) categories.
+      #
+      # If no parent category is specified, then return top level categories
+      # only now and add subcategories at a later time.
       query =
         query
           .where(parent_category_id: nil)
           .limit(CATEGORIES_PER_PAGE)
           .offset((page - 1) * CATEGORIES_PER_PAGE)
-    elsif page > 1
+    elsif !@guardian.can_lazy_load_categories? && page > 1
       # Pagination is supported only when lazy load is enabled. If it is not,
       # everything is returned on page 1.
       query = query.none
@@ -160,7 +172,9 @@ class CategoryList
 
     @categories = query.to_a
 
-    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
+    if @guardian.can_lazy_load_categories? && !@options[:all] &&
+         @options[:parent_category_id].blank?
+      # Add subcategories now
       categories_with_rownum =
         Category
           .secured(@guardian)
