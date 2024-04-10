@@ -19,7 +19,6 @@ end
 #
 #  id              :bigint           not null, primary key
 #  chat_message_id :integer          not null
-#  user_id         :integer
 #  target_id       :integer
 #  type            :integer          not null
 #  created_at      :datetime         not null
