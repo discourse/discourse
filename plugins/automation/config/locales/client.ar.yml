@@ -27,20 +27,21 @@ ar:
         confirm: "هل تريد بالتأكيد حذف `%{name}`؟"
       fields:
         key_value:
-          label:
-            zero: تعديل التكوين (%{count})
-            one: تعديل التكوين (%{count})
-            two: تعديل التكوين (%{count})
-            few: تعديل التكوين (%{count})
-            many: تعديل التكوين (%{count})
-            other: تعديل التكوين (%{count})
+          label_without_count: "التهيئة"
+          label_with_count:
+            zero: "تعديل التكوين (%{count})"
+            one: "تعديل التكوين (%{count})"
+            two: "تعديل التكوين (%{count})"
+            few: "تعديل التكوين (%{count})"
+            many: "تعديل التكوين (%{count})"
+            other: "تعديل التكوين (%{count})"
         user:
           label: المستخدم
         pm:
           title:
             label: العنوان
           raw:
-            label: النص
+            label: النص الأساسي
         pms:
           confirm_remove_pm: "هل تريد بالتأكيد إزالة هذه الرسالة الشخصية؟"
           placeholder_title: عنوان الرسالة الشخصية
@@ -49,7 +50,7 @@ ar:
           title:
             label: العنوان
           raw:
-            label: النص
+            label: النص الأساسي
           delay:
             label: التأخير (بالدقائق)
           prefers_encrypt:
@@ -63,7 +64,7 @@ ar:
         user_badge_granted:
           fields:
             badge:
-              label: شارة
+              label: الشارة
             only_first_grant:
               label: على المنحة الأولى فقط
         stalled_topic:
@@ -86,9 +87,9 @@ ar:
         recurring:
           every: كل
           frequencies:
-            minute: دقيقة
-            hour: ساعة
-            day: يوم
+            minute: دقيقة واحدة
+            hour: ساعة واحدة
+            day: يوم واحد
             weekday: يوم من أيام الأسبوع
             week: أسبوع
             month: شهر
@@ -157,7 +158,7 @@ ar:
               label: الفئة
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة ضمن هذه الفئة
             restricted_group:
-              label: مجموعة
+              label: المجموعة
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة خاصة في البريد الوارد لهذه المجموعة
             ignore_group_members:
               label: تجاهل أعضاء المجموعة
@@ -171,7 +172,7 @@ ar:
             first_topic_only:
               label: الموضوع الأول فقط
               description: لن يتم تشغيله إلا إذا كان الموضوع هو أول موضوع أنشأه المستخدم
-          created: تم إنشاؤها
+          created: تاريخ الإنشاء
           edited: تم تحريرها
         category_created_edited:
           fields:
@@ -184,7 +185,7 @@ ar:
               label: المستخدمون
               description: لن يتم تشغيله إلا للرسائل الخاصة المُرسَلة إلى هذا المستخدم
             restricted_group:
-              label: مجموعة
+              label: المجموعة
               description: لن يتم تشغيله إلا للرسائل الخاصة المُرسَلة إلى هذه المجموعة
             ignore_staff:
               label: تجاهل فريق العمل
@@ -265,7 +266,7 @@ ar:
             badge_name:
               label: اسم الشارة
             group:
-              label: مجموعة
+              label: المجموعة
               description: المجموعة المستهدفة. ستتم إضافة المستخدمين الذين لديهم الشارة المحدَّدة إلى هذه المجموعة
             update_user_title_and_flair:
               label: تحديث عنوان المستخدم والطابع
@@ -274,7 +275,7 @@ ar:
               label: إزالة الأعضاء الحاليين دون شارة
               description: اختياري، إزالة أعضاء المجموعة الحاليين دون الشارة المحدَّدة
             badge:
-              label: شارة
+              label: الشارة
               description: تحديد الشارة
         suspend_user_by_email:
           fields:
@@ -357,9 +358,9 @@ ar:
           version:
             label: الإصدار
           enabled:
-            label: مفعَّل
+            label: مفعَّلة
           disabled:
-            label: متوقف
+            label: متوقفة
           placeholders:
             label: العناصر النائبة
           last_updated_at:

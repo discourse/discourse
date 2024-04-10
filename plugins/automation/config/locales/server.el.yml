@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 el:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Θέμα
+    scriptables:
+      topic:
+        title: Δημιουργήστε ένα θέμα
+      pin_topic:
+        title: Καρφίτσωμα Θέματος
+      close_topic:
+        title: Κλείσιμο Θέματος
+      append_last_checked_by:
+        button_text: Ολοκληρώθηκε

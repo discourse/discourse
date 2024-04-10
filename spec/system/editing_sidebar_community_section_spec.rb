@@ -30,6 +30,7 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     modal.fill_link("Topics", "/latest", "paper-plane")
     modal.topics_link.drag_to(modal.review_link, delay: 0.4)
     modal.save
+    modal.confirm_update
 
     expect(sidebar.primary_section_links("community")).to eq(
       ["My Posts", "Topics", "Review", "Admin", "More"],

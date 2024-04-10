@@ -193,7 +193,8 @@ da:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     clear_input: "Ryd input"
-    edit: "redigér titel og kategori for dette emne"
+    edit: "Rediger"
+    edit_topic: "redigér titel og kategori for dette emne"
     expand: "Udvid"
     not_implemented: "Beklager! Denne funktion er ikke blevet implementeret endnu."
     no_value: "Nej"
@@ -237,7 +238,9 @@ da:
     weekly: "ugentligt"
     every_month: "hver måned"
     every_six_months: "hvert halvår"
-    max_of_count: "maks af %{count}"
+    max_of_count:
+      one: "maks af %{count}"
+      other: "maks af %{count}"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -295,6 +298,7 @@ da:
         clear_reminder: "Behold bogmærke og ryd påmindelse"
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
+      bookmark: "Bogmærk"
       reminders:
         today_with_time: "i dag kl. %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
@@ -596,6 +600,7 @@ da:
       never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
+      custom_short: "Tilpasset..."
       select_timeframe: "Vælg en tidsramme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> oprettede <a href='%{topicUrl}'>emnet</a>"
@@ -876,7 +881,6 @@ da:
         image: "Overfør et billede"
       default_notifications:
         modal_title: "Bruger standard notifikationer"
-        modal_description: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
         modal_yes: "Ja"
         modal_no: "Nej, anvend kun ændringer fremadrettet"
     user_action_groups:
@@ -898,7 +902,9 @@ da:
       subcategories_label: "underkategorier:"
       no_subcategories: "ingen underkategorier"
       remove_filter: "fjern filter"
-      plus_more_count: "+%{count} mere"
+      plus_more_count:
+        one: "+%{count} mere"
+        other: "+%{count} mere"
       view_all: "vis alle"
       category: "Kategori"
       category_list: "Vis liste over kategorier"
@@ -939,7 +945,9 @@ da:
       organisation: Organisation
       phone: Telefon
       other_accounts: "Andre konti med denne IP adresse"
-      delete_other_accounts: "Slet %{count}"
+      delete_other_accounts:
+        one: "Slet %{count}"
+        other: "Slet %{count}"
       username: "brugernavn"
       trust_level: "TN"
       read_time: "læse tid"
@@ -1054,7 +1062,6 @@ da:
         description: "Spring nye bruger-onboarding tips og emblemer over"
       reset_seen_user_tips: "Vis brugertips igen"
       theme_default_on_all_devices: "Gør dette til standard temaet på alle mine enheder"
-      color_scheme_default_on_all_devices: "Sæt standard farveskema(er) på alle mine enheder"
       color_scheme: "Farveskema"
       color_schemes:
         default_description: "Tema standard"
@@ -1530,7 +1537,6 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "Mindst %{count} tegn."
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
       summary:
@@ -2238,7 +2244,6 @@ da:
           seen: Jeg læste
           unseen: Jeg ikke har læst
           wiki: er wiki
-          images: inkludér billede(r)
           all_tags: Alle ovenstående mærker
         statuses:
           label: Hvor emner
@@ -2354,6 +2359,7 @@ da:
     topic_bulk_actions:
       close_topics:
         name: "Luk indlæg"
+        optional: (valgfri)
       archive_topics:
         name: "Arkiver Emner"
       unlist_topics:
@@ -4244,7 +4250,9 @@ da:
           disabled_component_tooltip: "Denne komponent er deaktiveret"
           default_theme_tooltip: "Dette tema er sidens standard tema"
           updates_available_tooltip: "Opdateringer er tilgængelige til dette tema"
-          and_x_more: "og %{count} mere."
+          and_x_more:
+            one: "og %{count} mere."
+            other: "og %{count} mere."
           collapse: Fald sammen
           uploads: "Overførsler"
           no_uploads: "Du kan overføre aktiver tilknyttet dit tema, f.eks. skrifttyper og billeder"
@@ -4358,8 +4366,6 @@ da:
           schema:
             fields:
               required: "*obligatoriske"
-              string:
-                too_short: "skal være på mindst %%{count} tegn."
               number:
                 too_small: "skal være større eller lig med %{count}"
                 too_large: "skal være mindre end eller lig med %{count}"
@@ -5122,7 +5128,6 @@ da:
           empty: "Der er endnu ingen billeder. Overfør venligst et."
           upload:
             label: "Overfør"
-            title: "Overfør billede (r)"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
         categories:
@@ -5158,7 +5163,6 @@ da:
         secret_list:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
         default_categories:
-          modal_description: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
           modal_yes: "Ja"
           modal_no: "Nej, anvend kun ændringer fremadrettet"
         simple_list:
@@ -5253,9 +5257,7 @@ da:
           perform: "Tildel Emblem til Brugere"
           upload_csv: Overfør en CSV-fil med enten bruger-e-mails eller brugernavne
           aborted: Overfør venligst en CSV-fil, der indeholder enten bruger-e-mails eller brugernavne
-          success: Din CSV blev modtaget, og %{count} brugere vil modtage deres emblem inden længe.
           csv_has_unmatched_users: "Følgende poster er i CSV-filen, men de kunne ikke matches med eksisterende brugere, og vil derfor ikke modtage emblemet:"
-          csv_has_unmatched_users_truncated_list: "Der var %{count} poster i CSV-filen, der ikke kunne matches med eksisterende brugere og modtager derfor ikke emblemet. På grund af det store antal umatchede poster vises kun de første 100:"
           replace_owners: Fjern emblemet fra tidligere ejere
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:

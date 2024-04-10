@@ -185,7 +185,8 @@ nb_NO:
         us_west_1: "USA vest (N. California)"
         us_west_2: "USA vest (Oregon)"
     clear_input: "Tøm inndata"
-    edit: "endre tittelen og kategorien til dette emnet"
+    edit: "Endre"
+    edit_topic: "endre tittelen og kategorien til dette emnet"
     expand: "Utvid"
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
@@ -229,7 +230,9 @@ nb_NO:
     weekly: "ukentlig"
     every_month: "hver måned"
     every_six_months: "hver sjette måned"
-    max_of_count: "maksimum av %{count}"
+    max_of_count:
+      one: "maksimum av %{count}"
+      other: "maksimum av %{count}"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -276,6 +279,7 @@ nb_NO:
         when_reminder_sent: "Slett bokmerke"
       search_placeholder: "Søk i bokmerker etter navn, emnetittel eller innleggsinnhold"
       search: "Søk"
+      bookmark: "Bokmerke"
       reminders:
         today_with_time: "I dag klokken %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
@@ -827,7 +831,6 @@ nb_NO:
         image: "Last opp et bilde"
       default_notifications:
         modal_title: "Standard varslinger for bruker"
-        modal_description: "Ønsker du å bruke denne endringens historikk? Dette vil endre innstillinger for %{count} eksisterende brukere."
         modal_yes: "Ja"
         modal_no: "Nei, bare gjelder endring fremover"
     user_action_groups:
@@ -849,7 +852,9 @@ nb_NO:
       subcategories_label: "underkategorier"
       no_subcategories: "ingen underkategorier"
       remove_filter: "fjern filter"
-      plus_more_count: "+%{count} mer"
+      plus_more_count:
+        one: "+%{count} mer"
+        other: "+%{count} mer"
       category: "Kategori"
       category_list: "Vis kategoriliste"
       reorder:
@@ -877,7 +882,9 @@ nb_NO:
       organisation: Organisasjon
       phone: Telefon
       other_accounts: "Andre kontoer med denne IP-adressen:"
-      delete_other_accounts: "Slett %{count}"
+      delete_other_accounts:
+        one: "Slett %{count}"
+        other: "Slett %{count}"
       username: "brukernavn"
       trust_level: "TN"
       read_time: "lesetid"
@@ -978,7 +985,6 @@ nb_NO:
       skip_new_user_tips:
         description: "Hopp over nye brukeropplæringstips og merker"
       theme_default_on_all_devices: "Gjør dette standardtemaet til alle mine enheter"
-      color_scheme_default_on_all_devices: "Angi standard fargemelding(er) på alle mine enheter"
       color_scheme: "Farge Tema"
       color_schemes:
         default_description: "Tema standard"
@@ -1425,7 +1431,6 @@ nb_NO:
         same_as_username: "Ditt passord er det samme som ditt brukernavn."
         same_as_email: "Ditt passord er det samme som din e-post."
         ok: "Passordet ditt ser bra ut"
-        instructions: "Minst %{count} tegn."
         required: "Skriv inn et passord"
       summary:
         title: "Oppsummering"
@@ -2027,7 +2032,6 @@ nb_NO:
           seen: Jeg leste
           unseen: Jeg har ikke lest
           wiki: er wiki
-          images: inkluder bilde(r)
           all_tags: Alle stikkord nevnt ovenfor
         statuses:
           label: Hvor emner
@@ -2127,6 +2131,7 @@ nb_NO:
     topic_bulk_actions:
       close_topics:
         name: "Lukk emner"
+        optional: (valgfritt)
       archive_topics:
         name: "Arkiver emner"
       unlist_topics:
@@ -3907,8 +3912,6 @@ nb_NO:
           schema:
             fields:
               required: "*påkrevd"
-              string:
-                too_short: "må være minst %{count} tegn"
               number:
                 too_small: "må være lik eller større enn %{count}"
                 too_large: "må være lik eller mindre enn %{count}"
@@ -4517,7 +4520,6 @@ nb_NO:
           empty: "Det finnes ingen bilder enda. Vennligst last opp ett."
           upload:
             label: "Last opp"
-            title: "Last opp bilde(r)"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
         categories:
@@ -4550,7 +4552,6 @@ nb_NO:
           dashboard: "Dashbord"
           navigation: "Navigasjon"
         default_categories:
-          modal_description: "Ønsker du å bruke denne endringens historikk? Dette vil endre innstillinger for %{count} eksisterende brukere."
           modal_yes: "Ja"
           modal_no: "Nei, bare gjelder endring fremover"
         file_types_list:

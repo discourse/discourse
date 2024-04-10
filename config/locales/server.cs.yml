@@ -125,8 +125,6 @@ cs:
       number_value_not_valid_min: "Hodnota musí být větší nebo rovna %{min}."
       number_value_not_valid_max: "Hodnota musí být menší nebo rovna %{max}."
       string_value_not_valid_min_max: "Hodnota musí mít délku od %{min} do %{max} znaků."
-      string_value_not_valid_min: "Hodnota musí mít alespoň %{min} znaků."
-      string_value_not_valid_max: "Hodnota musí být dlouhá maximálně %{max} znaků."
       objects:
         humanize_required: "Vlastnost na ukazateli JSON '%{property_json_pointer}' je povinná."
         required: "nesmí být prázdný"
@@ -156,7 +154,6 @@ cs:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
       invalid_boolean: "Nevalidní boolean."
       taken: "už je zabráno"
       accepted: musí být odsouhlasen
@@ -257,7 +254,6 @@ cs:
       few: "Za posledních 24 hodin jste již odeslali %{count} pozvánky, počkejte prosím %{time_left}, než to zkuste znovu."
       many: "Za posledních 24 hodin jste již odeslali %{count} pozvánek, počkejte prosím %{time_left}, než to zkuste znovu."
       other: "Za posledních 24 hodin jste již odeslali %{count} pozvánek, počkejte prosím %{time_left}, než to zkuste znovu."
-    cant_invite_to_group: "Do těchto skupin nemáte oprávnění zvát uživatele. Ujistěte se, že jste vlastníkem skupin, do kterých se pokoušíte zvát."
     disabled_errors:
       discourse_connect_enabled: "Pozvánky jsou zakázány, protože je povolen DiscourseConnect."
       invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
@@ -1215,6 +1211,14 @@ cs:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivní"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivní"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:

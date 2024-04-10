@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 pt:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tópico
+    scriptables:
+      pin_topic:
+        title: Fixar Tópico
+      close_topic:
+        title: Fechar Tópico
+      append_last_checked_by:
+        button_text: Concluído

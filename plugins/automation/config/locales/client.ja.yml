@@ -27,13 +27,14 @@ ja:
         confirm: "`%{name}` を削除してもよろしいですか？"
       fields:
         key_value:
-          label:
-            other: 構成の編集 (%{count})
+          label_without_count: "構成"
+          label_with_count:
+            other: "構成の編集 (%{count})"
         user:
           label: ユーザー
         pm:
           title:
-            label: タイトル
+            label: タグライン
           raw:
             label: 本文
         pms:
@@ -42,7 +43,7 @@ ja:
           add_pm: PM を追加
           no_pm_created: まだ PM を作成していません。PM は自動化がトリガーされると送信されます。
           title:
-            label: タイトル
+            label: タグライン
           raw:
             label: 本文
           delay:

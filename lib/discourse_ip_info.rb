@@ -27,7 +27,7 @@ class DiscourseIpInfo
   def self.mmdb_download(name)
     url =
       if GlobalSetting.maxmind_mirror_url.present?
-        URI.join(GlobalSetting.maxmind_mirror_url, "#{name}.tar.gz").to_s
+        File.join(GlobalSetting.maxmind_mirror_url, "#{name}.tar.gz").to_s
       else
         if GlobalSetting.maxmind_license_key.blank?
           STDERR.puts "MaxMind IP database updates require a license"

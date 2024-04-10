@@ -77,8 +77,20 @@
             />
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}
-            <div class="clearfix"></div>
-            <p>{{i18n "directory.no_results"}}</p>
+            <div class="empty-state">
+              <div class="empty-state-body">
+                <p>
+                  {{i18n "directory.no_results.body"}}
+                  {{#if this.currentUser.staff}}
+                    {{html-safe
+                      (i18n
+                        "directory.no_results.extra_body" basePath=(base-path)
+                      )
+                    }}
+                  {{/if}}
+                </p>
+              </div>
+            </div>
           {{/if}}
         </ConditionalLoadingSpinner>
       </div>

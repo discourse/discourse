@@ -183,7 +183,8 @@ et:
         us_west_1: "US Lääs (N. California)"
         us_west_2: "US Lääs (Oregon)"
     clear_input: "Kustuta tekst"
-    edit: "muuda teema pealkirja ja foorumit"
+    edit: "Muuda"
+    edit_topic: "muuda teema pealkirja ja foorumit"
     expand: "Näita veel"
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
@@ -227,7 +228,9 @@ et:
     weekly: "iga nädal"
     every_month: "iga kuu"
     every_six_months: "iga kuue kuu tagant"
-    max_of_count: "maksimum %{count}-st"
+    max_of_count:
+      one: "maksimum %{count}-st"
+      other: "maksimum %{count}-st"
     character_count:
       one: "%{count} sümbol"
       other: "%{count} sümbolit"
@@ -276,6 +279,7 @@ et:
       no_user_bookmarks: "Sul pole järjehoidjatesse lisatud postitusi; järjehoidjad võimaldavad kiiresti konkreetsetele postitustele viidata."
       search_placeholder: "Otsi järjehoidjaid nime, pealkirja või postituse sisu järgi"
       search: "Otsi"
+      bookmark: "Järjehoidja"
       reminders:
         today_with_time: "täna kell %{time}"
         tomorrow_with_time: "homme kell %{time}"
@@ -694,7 +698,9 @@ et:
       categories_label: "liigid"
       subcategories_label: "alamfoorumid"
       remove_filter: "eemalda filter"
-      plus_more_count: "+veel %{count}"
+      plus_more_count:
+        one: "+veel %{count}"
+        other: "+veel %{count}"
       category: "Foorum"
       category_list: "Kuva foorumid"
       reorder:
@@ -723,7 +729,9 @@ et:
       topic_stat_sentence_week:
         one: "%{count} uus teema viimase nädala jooksul."
         other: "%{count} uut teemat viimase nädala jooksul."
-      n_more: "Kategooriad (%{count} more)…"
+      n_more:
+        one: "Kategooriad (%{count} more)…"
+        other: "Kategooriad (%{count} more)…"
     ip_lookup:
       title: IP-aadressi Otsing
       hostname: Hostinimi
@@ -732,7 +740,9 @@ et:
       organisation: Organisatsioon
       phone: Telefon
       other_accounts: "Teised kontod selle IP aadressiga:"
-      delete_other_accounts: "Kustuta %{count}"
+      delete_other_accounts:
+        one: "Kustuta %{count}"
+        other: "Kustuta %{count}"
       username: "kasutajanimi"
       trust_level: "UT"
       read_time: "lugemise aeg"
@@ -798,7 +808,6 @@ et:
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       dynamic_favicon: "Kuva arvu brauseri ikoonil"
       theme_default_on_all_devices: "Määra see kõikides minu seadmetes vaiketeemaks"
-      color_scheme_default_on_all_devices: "Määra vaikimisi värviskeemi(de)ks kõikides minu seadmetes"
       color_scheme: "Värviskeem"
       color_schemes:
         default_description: "Teema vaikimisi"
@@ -1120,7 +1129,6 @@ et:
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
         ok: "See parool on sobilik."
-        instructions: "Vähemalt %{count} tähemärki."
       summary:
         title: "Kokkuvõte"
         stats: "Statistika"
@@ -1632,6 +1640,7 @@ et:
     topic_bulk_actions:
       close_topics:
         name: "Sulge Teemad"
+        optional: (valikuline)
       archive_topics:
         name: "Arhiveeri Teemad"
       unlist_topics:

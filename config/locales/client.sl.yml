@@ -228,7 +228,8 @@ sl:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     clear_input: "Počisti vnos"
-    edit: "uredi naslov in kategorijo te teme"
+    edit: "Uredi"
+    edit_topic: "uredi naslov in kategorijo te teme"
     expand: "Razširi"
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
@@ -276,7 +277,11 @@ sl:
     weekly: "tedensko"
     every_month: "vsak mesec"
     every_six_months: "vsakih 6 mesecev"
-    max_of_count: "največ od %{count}"
+    max_of_count:
+      one: "največ od %{count}"
+      two: "največ od %{count}"
+      few: "največ od %{count}"
+      other: "največ od %{count}"
     character_count:
       one: "%{count} znak"
       two: "%{count} znaka"
@@ -337,6 +342,7 @@ sl:
         clear_reminder: "Ohrani zaznamek in počisti opomnik"
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
+      bookmark: "Zaznamek"
       reminders:
         today_with_time: "danes ob %{time}"
         tomorrow_with_time: "jutri ob %{time}"
@@ -622,6 +628,7 @@ sl:
       none: "Brez opomnika"
       never: "Nikoli"
       custom: "Izberi datum in čas"
+      custom_short: "Po meri..."
       select_timeframe: "Izberi časovni okvir"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavil <a href='%{topicUrl}'>temo</a>"
@@ -911,7 +918,11 @@ sl:
       categories_label: "kategorije"
       subcategories_label: "pod Kategorija"
       remove_filter: "odstrani filter"
-      plus_more_count: "+%{count} več"
+      plus_more_count:
+        one: "+%{count} več"
+        two: "+%{count} več"
+        few: "+%{count} več"
+        other: "+%{count} več"
       view_all: "prikaži vse"
       category: "Kategorija"
       category_list: "Prikaži seznam kategorij"
@@ -954,7 +965,11 @@ sl:
         two: "%{count} novi temi v preteklem mesecu."
         few: "%{count} nove teme v preteklem mesecu."
         other: "%{count} novih tem v preteklem mesecu."
-      n_more: "Kategorije (še %{count}) ..."
+      n_more:
+        one: "Kategorije (še %{count}) ..."
+        two: "Kategorije (še %{count}) ..."
+        few: "Kategorije (še %{count}) ..."
+        other: "Kategorije (še %{count}) ..."
     ip_lookup:
       title: Poizvedba IP naslova
       hostname: Ime gostitelja
@@ -963,7 +978,11 @@ sl:
       organisation: Organizacija
       phone: Telefon
       other_accounts: "Ostali računi s tem IP naslovom:"
-      delete_other_accounts: "Izbriši %{count}"
+      delete_other_accounts:
+        one: "Izbriši %{count}"
+        two: "Izbriši %{count}"
+        few: "Izbriši %{count}"
+        other: "Izbriši %{count}"
       username: "uporabniško ime"
       trust_level: "TL"
       read_time: "čas prebiranja"
@@ -1061,7 +1080,6 @@ sl:
       skip_new_user_tips:
         description: "Preskoči namige in značke za nove uporabnike"
       theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
-      color_scheme_default_on_all_devices: "Nastavi privzete barvne sheme v vseh mojih napravah"
       color_scheme: "Barvna shema"
       color_schemes:
         disable_dark_scheme: "Enako kot običajna"
@@ -1512,7 +1530,6 @@ sl:
         same_as_username: "Vaše geslo je enako kot uporabniško ime."
         same_as_email: "Vaše geslo je enako kot vaš e-naslov."
         ok: "Vaše geslo je videti v redu."
-        instructions: "Vsaj %{count} znakov."
         required: "Vnesite geslo"
         confirm: "Potrdi"
         incorrect_password: "Vneseno geslo ni pravilno."
@@ -2196,7 +2213,6 @@ sl:
           seen: ki sem jih prebral
           unseen: ki jih nisem prebral
           wiki: so wiki
-          images: vsebujejo sliko(-e)
           all_tags: Vse zgornje oznake
         statuses:
           label: Kjer so teme
@@ -2301,6 +2317,7 @@ sl:
     topic_bulk_actions:
       close_topics:
         name: "Zapri teme"
+        optional: (neobvezno)
       archive_topics:
         name: "Arhiviraj teme"
       unlist_topics:

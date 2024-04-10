@@ -1,9 +1,10 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,14 +14,16 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   `;
 
   test("Message with edits", async function (assert) {
-    this.message = fabricators.message({ edited: true });
+    this.message = new ChatFabricators(getOwner(this)).message({
+      edited: true,
+    });
     await render(template);
 
     assert.true(exists(".chat-message-edited"), "has the correct css class");
   });
 
   test("Deleted message", async function (assert) {
-    this.message = fabricators.message({
+    this.message = new ChatFabricators(getOwner(this)).message({
       user: this.currentUser,
       deleted_at: moment(),
     });
@@ -33,7 +36,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Hidden message", async function (assert) {
-    this.message = fabricators.message({ hidden: true });
+    this.message = new ChatFabricators(getOwner(this)).message({
+      hidden: true,
+    });
     await render(template);
 
     assert.true(
@@ -43,7 +48,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   });
 
   test("Message with reply", async function (assert) {
-    this.message = fabricators.message({ inReplyTo: fabricators.message() });
+    this.message = new ChatFabricators(getOwner(this)).message({
+      inReplyTo: new ChatFabricators(getOwner(this)).message(),
+    });
     await render(template);
 
     assert.true(

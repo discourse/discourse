@@ -184,7 +184,8 @@ vi:
         us_west_1: "Miền Tây Hoa Kỳ (N. California)"
         us_west_2: "Miền Tây Hoa Kỳ (Oregon)"
     clear_input: "Xóa đầu vào"
-    edit: "sửa tiêu đề và chuyên mục của chủ đề"
+    edit: "Sửa"
+    edit_topic: "sửa tiêu đề và chuyên mục của chủ đề"
     expand: "Mở rộng"
     not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
@@ -226,7 +227,8 @@ vi:
     weekly: "hàng tuần"
     every_month: "hàng tháng"
     every_six_months: "mỗi sáu tháng"
-    max_of_count: "tối đa trong %{count}"
+    max_of_count:
+      other: "tối đa trong %{count}"
     character_count:
       other: "%{count} ký tự"
     period_chooser:
@@ -287,6 +289,7 @@ vi:
         clear_reminder: "Giữ dấu trang và xóa lời nhắc"
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
+      bookmark: "Đánh dấu chỉ mục"
       reminders:
         today_with_time: "hôm nay lúc %{time}"
         tomorrow_with_time: "ngày mai lúc %{time}"
@@ -554,6 +557,7 @@ vi:
       never: "Không bao giờ"
       last_custom: "Ngày giờ tùy chỉnh cuối cùng"
       custom: "Ngày giờ tùy chỉnh"
+      custom_short: "Tùy chỉnh..."
       select_timeframe: "Chọn khung thời gian"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
@@ -832,7 +836,8 @@ vi:
         image: "Tải lên một hình ảnh"
       default_notifications:
         modal_title: "Thông báo mặc định của người dùng"
-        modal_description: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
+        modal_description:
+          other: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
         modal_yes: "Có"
         modal_no: "Không, chỉ áp dụng thay đổi về sau"
     user_action_groups:
@@ -854,7 +859,8 @@ vi:
       subcategories_label: "phân loại phụ"
       no_subcategories: "không có danh mục phụ"
       remove_filter: "bỏ đièu kiện lọc"
-      plus_more_count: "+%{count} khác"
+      plus_more_count:
+        other: "+%{count} khác"
       view_all: "xem tất cả"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
@@ -890,7 +896,8 @@ vi:
       organisation: Công ty
       phone: Điện thoại
       other_accounts: "Tài khoản khác với địa chỉ IP này"
-      delete_other_accounts: "Xoá %{count}"
+      delete_other_accounts:
+        other: "Xoá %{count}"
       username: "tên đăng nhập"
       trust_level: "TL"
       read_time: "thời gian đọc"
@@ -998,7 +1005,6 @@ vi:
       skip_new_user_tips:
         description: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới"
       theme_default_on_all_devices: "Đặt giao diện này là mặc định trên tất cả các thiết bị của tôi"
-      color_scheme_default_on_all_devices: "Đặt (các) bảng màu mặc định trên tất cả các thiết bị của tôi"
       color_scheme: "Sơ đồ màu"
       color_schemes:
         default_description: "Chủ đề mặc định"
@@ -1465,7 +1471,8 @@ vi:
         same_as_username: "Mật khẩu của bạn trùng với tên đăng nhập."
         same_as_email: "Mật khẩu của bạn trùng với email của bạn."
         ok: "Mật khẩu của bạn có vẻ ổn."
-        instructions: "Ít nhất %{count} kí tự."
+        instructions:
+          other: "Ít nhất %{count} kí tự."
         required: "Vui lòng nhập mật khẩu"
         confirm: "Xác nhận"
       summary:
@@ -2154,7 +2161,6 @@ vi:
           seen: tôi đọc
           unseen: Tôi chưa đọc
           wiki: là wiki
-          images: bao gồm (các) hình ảnh
           all_tags: Tất cả các thẻ trên
         statuses:
           label: Nơi chủ đề
@@ -2265,6 +2271,8 @@ vi:
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
           other: "Bạn đã chọn <b>%{count}</b> chủ đề"
+        selected_count:
+          other: "%{count} được chọn"
         change_tags: "Thay thế thẻ"
         append_tags: "Thêm thẻ"
         choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
@@ -2302,6 +2310,7 @@ vi:
     topic_bulk_actions:
       close_topics:
         name: "Đóng các chủ đề"
+        optional: (tùy chọn)
       archive_topics:
         name: "Chủ đề Lưu trữ"
       unlist_topics:
@@ -4188,13 +4197,15 @@ vi:
           convert_theme_tooltip: "Chuyển đổi chủ đề này thành thành phần"
           inactive_themes: "Chủ đề không hoạt động:"
           inactive_components: "Các thành phần không sử dụng:"
-          selected: "%{count} được chọn"
+          selected:
+            other: "%{count} được chọn"
           cancel: "Huỷ"
           broken_theme_tooltip: "Chủ đề này có lỗi trong CSS, HTML hoặc YAML"
           disabled_component_tooltip: "Thành phần này đã bị vô hiệu hóa"
           default_theme_tooltip: "Chủ đề này là chủ đề mặc định của trang web"
           updates_available_tooltip: "Cập nhật có sẵn cho chủ đề này"
-          and_x_more: "và %{count} nữa."
+          and_x_more:
+            other: "và %{count} nữa."
           collapse: Thu gọn
           uploads: "Tải lên"
           no_uploads: "Bạn có thể tải lên nội dung được liên kết với chủ đề của mình, chẳng hạn như phông chữ và hình ảnh"
@@ -4304,7 +4315,8 @@ vi:
             fields:
               required: "*bắt buộc"
               string:
-                too_short: "phải ít nhất %{count} ký tự"
+                too_short:
+                  other: "phải ít nhất %{count} ký tự"
               number:
                 too_small: "phải lớn hơn hoặc bằng %{count}"
                 too_large: "phải nhỏ hơn hoặc bằng %{count}"
@@ -4992,7 +5004,6 @@ vi:
           empty: "Không có hình ảnh nào được nêu ra. Vui lòng tải lên một cái."
           upload:
             label: "Tải lên"
-            title: "Tải lên hình ảnh(s)"
         selectable_avatars:
           title: "Danh sách ảnh đại diện mà người dùng có thể chọn"
         categories:
@@ -5028,7 +5039,8 @@ vi:
         secret_list:
           invalid_input: "Các trường nhập không được để trống hoặc chứa ký tự thanh dọc."
         default_categories:
-          modal_description: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
+          modal_description:
+            other: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
           modal_yes: "Đồng ý"
           modal_no: "Không, chỉ áp dụng thay đổi về sau"
         simple_list:
@@ -5120,9 +5132,11 @@ vi:
           perform: "Trao huy hiệu cho người dùng"
           upload_csv: Tải lên CSV có email hoặc tên người dùng
           aborted: Vui lòng tải lên CSV có chứa email người dùng hoặc tên người dùng
-          success: CSV của bạn đã được nhận và %{count} người dùng sẽ sớm nhận được huy hiệu của họ.
+          success:
+            other: "CSV của bạn đã được nhận và %{count} người dùng sẽ sớm nhận được huy hiệu của họ."
           csv_has_unmatched_users: "Các mục nhập sau nằm trong tệp CSV nhưng chúng không thể khớp với người dùng hiện tại và do đó sẽ không nhận được huy hiệu:"
-          csv_has_unmatched_users_truncated_list: "Có %{count} mục nhập trong tệp CSV không thể khớp với người dùng hiện tại và do đó sẽ không nhận được huy hiệu. Do số lượng lớn các mục nhập chưa từng có, chỉ 100 mục đầu tiên được hiển thị:"
+          csv_has_unmatched_users_truncated_list:
+            other: "Có %{count} mục nhập trong tệp CSV không thể khớp với người dùng hiện tại và do đó sẽ không nhận được huy hiệu. Do số lượng lớn các mục nhập chưa từng có, chỉ 100 mục đầu tiên được hiển thị:"
           replace_owners: Xóa huy hiệu khỏi chủ sở hữu trước đó
           grant_existing_holders: Cấp huy hiệu bổ sung cho những chủ sở hữu huy hiệu hiện có
       emoji:

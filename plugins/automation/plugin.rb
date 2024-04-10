@@ -7,9 +7,6 @@
 # authors: jjaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/automation
 
-gem "iso8601", "0.13.0"
-gem "rrule", "0.4.4"
-
 enabled_site_setting :discourse_automation_enabled
 
 register_asset "stylesheets/common/discourse-automation.scss"
@@ -62,6 +59,7 @@ after_initialize do
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
+    lib/discourse_automation/scripts/topic
     lib/discourse_automation/scripts/send_pms
     lib/discourse_automation/scripts/suspend_user_by_email
     lib/discourse_automation/scripts/topic_required_words

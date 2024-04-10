@@ -26,6 +26,8 @@ hu:
       destroy_automation:
         confirm: "Biztos, hogy törli: „%{name}\"?"
       fields:
+        key_value:
+          label_without_count: "Beállítás"
         user:
           label: Felhasználó
         pm:
@@ -63,11 +65,11 @@ hu:
             PT1H: "Egy óra"
             P1D: "Egy nap"
             P1W: "Egy hét"
-            P2W: "Két hét"
+            P2W: "Két hét múlva"
             P1M: "Egy hónap"
-            P3M: "Három hónap"
-            P6M: "Hat hónap"
-            P1Y: "Egy év"
+            P3M: "Három hónap múlva"
+            P6M: "Hat hónap múlva"
+            P1Y: "Egy év múlva"
           fields:
             categories:
               label: Kategóriákra korlátozva
@@ -78,13 +80,13 @@ hu:
         recurring:
           every: Minden
           frequencies:
-            minute: percben
-            hour: órában
-            day: napon
+            minute: perc
+            hour: óra
+            day: nap
             weekday: hétköznapon
-            week: héten
-            month: hónapban
-            year: évben
+            week: hét
+            month: hónap
+            year: év
           fields:
             recurrence:
               label: Ismétlődés
@@ -95,11 +97,11 @@ hu:
             PT1H: "Egy óra"
             P1D: "Egy nap"
             P1W: "Egy hét"
-            P2W: "Két hét"
+            P2W: "Két hét múlva"
             P1M: "Egy hónap"
-            P3M: "Három hónap"
-            P6M: "Hat hónap"
-            P1Y: "Egy év"
+            P3M: "Három hónap múlva"
+            P6M: "Hat hónap múlva"
+            P1Y: "Egy év múlva"
           fields:
             stalled_after:
               label: Aktiváló késleltetése
@@ -139,8 +141,15 @@ hu:
               label: Kategória
             restricted_group:
               label: Csoport
+          created: Létrehozott
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Szülő kategória
         pm_created:
           fields:
+            restricted_user:
+              label: Felhasználók
             restricted_group:
               label: Csoport
             ignore_staff:
@@ -225,3 +234,13 @@ hu:
               label: Témaazonosító
             user:
               label: Felhasználó
+      models:
+        automation:
+          name:
+            label: Név
+          version:
+            label: Verzió
+          enabled:
+            label: Engedélyezed
+          disabled:
+            label: Kikapcsolt

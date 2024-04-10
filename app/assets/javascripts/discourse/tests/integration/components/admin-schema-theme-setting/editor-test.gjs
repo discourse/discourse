@@ -651,14 +651,20 @@ module(
               default: "awesome",
               choices: ["nice", "cool", "awesome"],
             },
+            required_enum_field: {
+              type: "enum",
+              default: "awesome",
+              required: true,
+              choices: ["nice", "cool", "awesome"],
+            },
           },
         },
         value: [
           {
-            enum_field: "awesome",
+            required_enum_field: "awesome",
           },
           {
-            enum_field: "cool",
+            required_enum_field: "cool",
           },
         ],
       });
@@ -673,25 +679,31 @@ module(
         `${inputFields.fields.enum_field.selector} .select-kit`
       );
 
-      assert.strictEqual(enumSelector.header().value(), "awesome");
+      assert.strictEqual(enumSelector.header().value(), null);
 
-      await enumSelector.expand();
-      await enumSelector.selectRowByValue("nice");
+      const requiredEnumSelector = selectKit(
+        `${inputFields.fields.required_enum_field.selector} .select-kit`
+      );
 
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
+
+      await requiredEnumSelector.expand();
+      await requiredEnumSelector.selectRowByValue("nice");
+
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
-      assert.strictEqual(enumSelector.header().value(), "cool");
+      assert.strictEqual(requiredEnumSelector.header().value(), "cool");
 
       tree.refresh();
 
       await click(tree.nodes[0].element);
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
 
       await click(TOP_LEVEL_ADD_BTN);
 
-      assert.strictEqual(enumSelector.header().value(), "awesome");
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
     });
 
     test("input fields of type categories that is not required with min and max validations", async function (assert) {

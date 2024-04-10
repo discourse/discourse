@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 sq:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Topic
+    scriptables:
+      pin_topic:
+        title: Ngjite temën
+      close_topic:
+        title: Mbyll temën
+      append_last_checked_by:
+        button_text: Përfundo

@@ -88,6 +88,25 @@ describe "Topic bulk select", type: :system do
       expect(topic_list).to have_no_unread_badge(topics.first)
     end
 
+    it "closes topics with message" do
+      # Bulk close the topic with a message
+      sign_in(admin)
+      visit("/latest")
+      topic = topics.first
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topics.first)
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_close_topics_button
+
+      # Fill in message
+      topic_list_header.fill_in_close_note("My message")
+      topic_list_header.click_bulk_topics_confirm
+
+      # Check that the topic now has the message
+      visit("/t/#{topic.slug}/#{topic.id}")
+      expect(topic_page).to have_content("My message")
+    end
+
     it "works with keyboard shortcuts" do
       sign_in(admin)
       visit("/latest")

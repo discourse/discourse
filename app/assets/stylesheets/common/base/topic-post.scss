@@ -59,9 +59,9 @@
     font-weight: bold;
   }
 
-  span {
+  > span {
     font-size: var(--font-0);
-    margin-right: 8px;
+    margin-right: 0.33em;
     display: inline-block;
     @include ellipsis;
     vertical-align: middle;

@@ -201,7 +201,8 @@ bs_BA:
         us_gov_west_1: "AWS GovCloud (SAD-Zapad)"
         us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
         us_west_2: "SAD Zapad (Oregon)"
-    edit: "izmjeni naslov i kategoriju ove teme"
+    edit: "Edit"
+    edit_topic: "izmjeni naslov i kategoriju ove teme"
     expand: "Proširi"
     not_implemented: "Nažalost ta funkcionalnost nije još implementirana!"
     no_value: "Ne"
@@ -247,7 +248,10 @@ bs_BA:
     weekly: "sedmično"
     every_month: "svaki mjesec"
     every_six_months: "svakih šest mjeseci"
-    max_of_count: "maksimalno %{count}"
+    max_of_count:
+      one: "maksimalno %{count}"
+      few: "maksimalno %{count}"
+      other: "maksimalno %{count}"
     character_count:
       one: "%{count} karakter"
       few: "%{count} karaktera"
@@ -290,6 +294,7 @@ bs_BA:
         when_reminder_sent: "Obriši zabilješku"
       search_placeholder: "Pretražite zabilješke po imenu, naslovu teme ili sadržaju objave"
       search: "Pretraži"
+      bookmark: "Sačuvaj"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
@@ -797,7 +802,10 @@ bs_BA:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
       remove_filter: "show all posts in this topic again."
-      plus_more_count: "+ još %{count}"
+      plus_more_count:
+        one: "+ još %{count}"
+        few: "+ još %{count}"
+        other: "+ još %{count}"
       category: "Kategorija"
       category_list: "Prikaži listu kategorija"
       reorder:
@@ -834,7 +842,10 @@ bs_BA:
       organisation: Organizacija
       phone: Telefon
       other_accounts: "Ostali računi sa ovom IP adresom"
-      delete_other_accounts: "Izbriši %{count}"
+      delete_other_accounts:
+        one: "Izbriši %{count}"
+        few: "Izbriši %{count}"
+        other: "Izbriši %{count}"
       username: "korisničko ime"
       trust_level: "NP"
       read_time: "vrijeme čitanja"
@@ -1301,7 +1312,6 @@ bs_BA:
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
         ok: "Vaša lozinka dobro izgleda."
-        instructions: "Minimalno %{count} karaktera."
         required: "Molimo unesite lozinku"
       summary:
         title: "Sumirano"
@@ -1853,7 +1863,6 @@ bs_BA:
           seen: Koje sam čitao/la
           unseen: Nepročitane
           wiki: su wiki
-          images: uključujući slike
           all_tags: Sve gore navedene oznake
         statuses:
           label: Gdje teme
@@ -1933,6 +1942,7 @@ bs_BA:
     topic_bulk_actions:
       close_topics:
         name: "Zatvori teme"
+        optional: (opciono)
       archive_topics:
         name: "Arhiviraj teme"
       unlist_topics:
@@ -3524,7 +3534,10 @@ bs_BA:
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova tema je podrazumevana tema sajta"
           updates_available_tooltip: "Ažuriranja su dostupna za ovu temu"
-          and_x_more: "i %{count} više."
+          and_x_more:
+            one: "i %{count} više."
+            few: "i %{count} više."
+            other: "i %{count} više."
           collapse: Spusti
           uploads: "Uploads"
           no_uploads: "Možete prenijeti sredstva povezana s vašom temom, kao što su fontovi i slike"
@@ -3606,8 +3619,6 @@ bs_BA:
           schema:
             fields:
               required: "*required"
-              string:
-                too_short: "must be at least %{count} characters"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -4212,7 +4223,6 @@ bs_BA:
           empty: "Još nema slika. Molimo, učitajte jedan."
           upload:
             label: "Učitavanje"
-            title: "Snimi sliku(e)"
         selectable_avatars:
           title: "Popis avatara koje korisnici mogu izabrati"
         categories:

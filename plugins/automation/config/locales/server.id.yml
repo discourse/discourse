@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 id:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        transition_placeholder: "dari %{from_level_name} ke %{to_level_name}"
+      topic:
+        title: Topik
+    scriptables:
+      topic:
+        title: Buat topik

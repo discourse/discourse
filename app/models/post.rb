@@ -326,7 +326,7 @@ class Post < ActiveRecord::Base
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
-    if self.with_secure_uploads?
+    if self.should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -567,7 +567,7 @@ class Post < ActiveRecord::Base
 
   # NOTE (martin): This is turning into hack city; when changing this also
   # consider how it interacts with UploadSecurity and the uploads.rake tasks.
-  def with_secure_uploads?
+  def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
     topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
     return false if topic_including_deleted.blank?
@@ -578,12 +578,12 @@ class Post < ActiveRecord::Base
     # rake tasks, and will more than likely change in future.
     modifier_result =
       DiscoursePluginRegistry.apply_modifier(
-        :post_with_secure_uploads?,
+        :post_should_secure_uploads?,
         nil,
         self,
         topic_including_deleted,
       )
-    return modifier_result if modifier_result != nil
+    return modifier_result if !modifier_result.nil?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.

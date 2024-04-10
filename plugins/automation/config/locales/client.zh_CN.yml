@@ -27,8 +27,9 @@ zh_CN:
         confirm: "确定要删除 `%{name}` 吗？"
       fields:
         key_value:
-          label:
-            other: 编辑配置 (%{count})
+          label_without_count: "配置"
+          label_with_count:
+            other: "编辑配置 (%{count})"
         user:
           label: 用户
         pm:
@@ -50,7 +51,7 @@ zh_CN:
           prefers_encrypt:
             label: 加密 PM（如果可用）
         group:
-          label: 群组
+          label: 组
         text:
           label: 文本
       triggerables:
@@ -152,7 +153,7 @@ zh_CN:
               label: 类别
               description: 可选，仅当帖子所属话题属于此类别时才会触发
             restricted_group:
-              label: 群组
+              label: 组
               description: 可选，仅当帖子所属话题是此群组收件箱中的私信时才会触发
             ignore_group_members:
               label: 忽略群组成员
@@ -179,7 +180,7 @@ zh_CN:
               label: 用户
               description: 仅对发送给此用户的私信触发
             restricted_group:
-              label: 群组
+              label: 组
               description: 仅对发送给此群组的私信触发
             ignore_staff:
               label: 忽略管理人员
@@ -237,7 +238,7 @@ zh_CN:
         group_category_notification_default:
           fields:
             group:
-              label: 群组
+              label: 组
             notification_level:
               label: 通知级别
             update_existing_members:
@@ -260,7 +261,7 @@ zh_CN:
             badge_name:
               label: 徽章名称
             group:
-              label: 群组
+              label: 组
               description: 目标群组。具有指定徽章的用户将被添加到此群组
             update_user_title_and_flair:
               label: 更新用户头衔和资质
@@ -341,12 +342,12 @@ zh_CN:
             label: 脚本
         trigger:
           name:
-            label: 触发器
+            label: 触发条件
         automation:
           name:
             label: 名称
           trigger:
-            label: 触发器
+            label: 触发条件
           script:
             label: 脚本
           version:

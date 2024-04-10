@@ -53,7 +53,6 @@ en_GB:
     ip_lookup:
       organisation: Organisation
     user:
-      color_scheme_default_on_all_devices: "Set default colour scheme(s) on all my devices"
       color_scheme: "Colour Scheme"
       color_schemes:
         dark_instructions: "You can preview the dark mode colour scheme by toggling your device's dark mode."

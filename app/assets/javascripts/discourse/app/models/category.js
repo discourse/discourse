@@ -157,6 +157,10 @@ export default class Category extends RestModel {
     return categories;
   }
 
+  static async asyncFindById(id) {
+    return (await Category.asyncFindByIds([id]))[0];
+  }
+
   static findBySlugAndParent(slug, parentCategory) {
     if (this.slugEncoded()) {
       slug = encodeURI(slug);

@@ -64,6 +64,8 @@ zh_CN:
       post:
         title: 创建帖子
         description: 在指定话题上创建帖子
+      topic:
+        title: 创建话题
       flag_post_on_words:
         title: 基于字词举报帖子
         description: 如果帖子包含指定字词，则举报它
@@ -127,7 +129,7 @@ zh_CN:
         text: "最后由 @%{username} 在 %{date_time} 检查"
         summary: 检查文档
         details: "对文档执行检查："
-        button_text: 已完成
+        button_text: 完成
       add_user_to_group_through_custom_field:
         title: "通过用户自定义字段将用户添加到群组"
       group_category_notification_default:

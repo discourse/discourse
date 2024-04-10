@@ -176,7 +176,8 @@ th:
         us_gov_west_1: "AWS GovCloud (สหรัฐอเมริกาฝั่งตะวันตก)"
         us_west_1: "สหรัฐอเมริกาฝั่งตะวันตก (แคลิฟอร์เนียเหนือ)"
         us_west_2: "สหรัฐอเมริกาฝั่งตะวันตก (ออริกอน)"
-    edit: "แก้ไขหัวข้อและหมวดหมู่ของกระทู้นี้"
+    edit: "แก้ไข"
+    edit_topic: "แก้ไขหัวข้อและหมวดหมู่ของกระทู้นี้"
     expand: "ขยาย"
     not_implemented: "ขออภัย! คุณสมบัตินั้นยังไม่เสร็จสมบูรณ์"
     no_value: "ไม่ใช่"
@@ -218,7 +219,8 @@ th:
     weekly: "รายสัปดาห์"
     every_month: "ทุกเดือน"
     every_six_months: "ทุกหกเดือน"
-    max_of_count: "สูงสุดของ %{count}"
+    max_of_count:
+      other: "สูงสุดของ %{count}"
     character_count:
       other: "%{count} ตัวอักษร"
     period_chooser:
@@ -261,6 +263,7 @@ th:
         label: "หลังจากที่คุณได้รับแจ้ง"
         when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
+      bookmark: "บุ๊คมาร์ค"
       reminders:
         today_with_time: "วันนี้ตอน%{time}"
         tomorrow_with_time: "พรุ่งนี้ตอน%{time}"
@@ -643,7 +646,8 @@ th:
       subcategories_label: "หมวดหมู่ย่อย"
       no_subcategories: "ไม่มีหมวดหมู่ย่อย"
       remove_filter: "เอาตัวกรองออก"
-      plus_more_count: "อีก+%{count}"
+      plus_more_count:
+        other: "อีก+%{count}"
       view_all: "ดูทั้งหมด"
       category: "หมวดหมู่"
       category_list: "แสดงรายชื่อหมวดหมู่"
@@ -674,7 +678,8 @@ th:
       organisation: องค์กร
       phone: โทรศัพท์
       other_accounts: "บัญชีอื่นที่ใช้ไอพีนี้"
-      delete_other_accounts: "ลบ %{count}"
+      delete_other_accounts:
+        other: "ลบ %{count}"
       username: "ชื่อผู้ใช้"
       trust_level: "TL"
       read_time: "เวลาที่อ่าน"
@@ -1059,7 +1064,8 @@ th:
         same_as_username: "รหัสผ่านเหมือนกับชื่อผู้ใช้ของคุณ"
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
         ok: "รหัสผ่านของคุณเหมาะสม"
-        instructions: "อย่างน้อย %{count} ตัวอักษร."
+        instructions:
+          other: "อย่างน้อย %{count} ตัวอักษร."
         required: "กรุณากรอกรหัสผ่าน"
       summary:
         title: "สรุปภาพรวม"
@@ -1536,7 +1542,6 @@ th:
           pinned: ถูกปักหมุด
           seen: ฉันได้อ่าน
           unseen: ฉันยังไม่ได้อ่าน
-          images: พร้อมรูปภาพ
           all_tags: แท็กด้านบนทั้งหมด
         statuses:
           label: ประเภทกระทู้
@@ -1611,6 +1616,7 @@ th:
     topic_bulk_actions:
       close_topics:
         name: "ปิดกระทู้"
+        optional: (ทางเลือก)
       archive_topics:
         name: "คลังกระทู้"
       unlist_topics:
@@ -2731,7 +2737,8 @@ th:
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"
-          and_x_more: "และอีก%{count}"
+          and_x_more:
+            other: "และอีก%{count}"
           collapse: ย่อ
           uploads: "อัปโหลด"
           upload: "อัปโหลด"
@@ -3133,7 +3140,6 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
-            title: "อัปโหลดรูปภาพ"
         categories:
           all_results: "ทั้งหมด"
           required: "ต้องการ"
