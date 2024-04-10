@@ -181,6 +181,11 @@ createWidget(
       },
 
       html(attrs) {
+        const body = [this.attach("header-notifications", attrs)];
+        if (attrs.contents) {
+          body.push(attrs.contents.call(this));
+        }
+
         return h(
           "button.icon.btn.no-text.btn-flat",
           {
@@ -192,7 +197,7 @@ createWidget(
               }),
             },
           },
-          this.attach("header-notifications", attrs)
+          body
         );
       },
     },
@@ -265,6 +270,7 @@ createWidget("header-icons", {
             active: this.search.visible,
             href: getURL("/search"),
             classNames: ["search-dropdown"],
+            contents: () => h("span", {}, `Search`),
           })
         );
       } else if (icon.key === "user-menu" && attrs.user) {
@@ -273,6 +279,7 @@ createWidget("header-icons", {
             active: attrs.userVisible,
             action: "toggleUserMenu",
             user: attrs.user,
+            contents: () => h("span", {}, `Me`),
           })
         );
       } else if (

@@ -8,6 +8,13 @@
   }
 }
 
+span.card-huge-avatar {
+  height: 100%;
+  display: inline-block;
+  border-radius: 8rem;
+  border: 1px solid black;
+}
+
 .d-header {
   display: flex;
   align-items: center;
@@ -127,6 +134,20 @@
   }
 }
 
+.header-dropdown-toggle {
+  &:hover .btn span,
+  &.active .btn span {
+    color: var(--primary);
+  }
+
+  .btn span {
+    margin-left: 0.5rem;
+    color: var(--secondary);
+    font-size: 16px;
+    font-weight: 300;
+  }
+}
+
 .header-dropdown-toggle,
 .drop-down,
 .panel-body {
@@ -141,6 +162,13 @@
   display: flex;
   margin: 0 0 0 0.5em;
   list-style: none;
+  margin-left: auto;
+  gap: 1.5rem;
+
+  span.wrapper:last-of-type {
+    // Hide empty span causing layout issues
+    display: none;
+  }
 
   .icon {
     box-sizing: content-box;
@@ -149,9 +177,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.2857em;
+    // width: auto;
     height: 2.2857em;
-    padding: 0.2143em;
+    padding: 0.2143em 0.5em;
     text-decoration: none;
     cursor: pointer;
     border: 1px solid transparent;
@@ -205,7 +233,7 @@
   }
 
   .d-icon {
-    width: 100%;
+    // width: 100%;
     font-size: var(--font-up-4);
     line-height: var(--line-height-large);
     display: inline-block;

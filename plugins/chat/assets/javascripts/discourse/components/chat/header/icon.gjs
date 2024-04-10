@@ -96,6 +96,7 @@ export default class ChatHeaderIcon extends Component {
             @indicatorPreference={{@indicatorPreference}}
           />
         {{/if}}
+        <span>Chat</span>
       </DButton>
     </li>
   </template>
