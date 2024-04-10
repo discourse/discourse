@@ -278,6 +278,14 @@ export default createWidget("post-stream", {
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
         result.push(this.attach("post", transformed, { model: post }));
+        result.push(
+          new RenderGlimmer(
+            this,
+            "div.after-post",
+            hbs`<PluginOutlet @name="after-post" @outletArgs={{hash post=@data.post}} />`,
+            { post }
+          )
+        );
       }
 
       // Post gap - after
