@@ -5,7 +5,9 @@ export default class ProfileSidebar extends Component {
   @service currentUser;
 
   get course() {
-    return this.currentUser.custom_fields?.user_field_1;
+    return this.currentUser.custom_fields?.[
+      this.siteSettings.user_enrollment_field
+    ];
   }
 
   get viewCount() {

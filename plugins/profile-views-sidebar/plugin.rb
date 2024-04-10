@@ -5,3 +5,5 @@
 # version: 0.1
 # authors: KD
 # url: https://github.com/cap-txt/
+
+enabled_site_setting :user_enrollment_field

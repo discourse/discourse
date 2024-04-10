@@ -1,0 +1,4 @@
+plugins:
+  user_enrollment_field:
+    default: "user_field_1"
+    client: true
