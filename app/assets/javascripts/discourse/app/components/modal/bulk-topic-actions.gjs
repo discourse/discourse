@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
+import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import autoFocus from "discourse/modifiers/auto-focus";
 import htmlSafe from "discourse-common/helpers/html-safe";
@@ -39,9 +41,9 @@ export default class BulkTopicActions extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.args.model.initialAction === "set-component") {
-      if (this.args.model.initialActionLabel in _customActions) {
-        _customActions[this.args.model.initialActionLabel]({
+    if (this.model.initialAction === "set-component") {
+      if (this.model.initialActionLabel in _customActions) {
+        _customActions[this.model.initialActionLabel]({
           setComponent: this.setComponent.bind(this),
         });
       }
@@ -49,7 +51,7 @@ export default class BulkTopicActions extends Component {
   }
 
   async perform(operation) {
-    if (this.args.model.bulkSelectHelper.selected.length > 20) {
+    if (this.model.bulkSelectHelper.selected.length > 20) {
       this.showProgress = true;
     }
 
@@ -78,7 +80,7 @@ export default class BulkTopicActions extends Component {
   }
 
   _processChunks(operation) {
-    const allTopics = this.args.model.bulkSelectHelper.selected;
+    const allTopics = this.model.bulkSelectHelper.selected;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
     const options = {};
@@ -134,7 +136,7 @@ export default class BulkTopicActions extends Component {
   @action
   performAction() {
     this.loading = true;
-    switch (this.args.model.action) {
+    switch (this.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
         break;
@@ -192,7 +194,7 @@ export default class BulkTopicActions extends Component {
         if (this.customAction) {
           this.customAction(this.performAndRefresh.bind(this));
         } else {
-          _customActions[this.args.model.initialActionLabel](this);
+          _customActions[this.model.initialActionLabel](this);
         }
     }
   }
@@ -218,9 +220,9 @@ export default class BulkTopicActions extends Component {
 
     if (topics) {
       topics.forEach(cb);
-      this.args.model.refreshClosure?.();
+      this.model.refreshClosure?.();
       this.args.closeModal();
-      this.args.model.bulkSelectHelper.toggleBulkSelect();
+      this.model.bulkSelectHelper.toggleBulkSelect();
       this.showToast();
     }
   }
@@ -229,33 +231,29 @@ export default class BulkTopicActions extends Component {
   async performAndRefresh(operation) {
     await this.perform(operation);
 
-    this.args.model.refreshClosure?.();
+    this.model.refreshClosure?.();
     this.args.closeModal();
-    this.args.model.bulkSelectHelper.toggleBulkSelect();
+    this.model.bulkSelectHelper.toggleBulkSelect();
     this.showToast();
   }
 
-  @computed("action")
   get isTagAction() {
     return (
-      this.args.model.action === "append-tags" ||
-      this.args.model.action === "replace-tags"
+      this.model.action === "append-tags" ||
+      this.model.action === "replace-tags"
     );
   }
 
-  @computed("action")
   get isNotificationAction() {
-    return this.args.model.action === "update-notifications";
+    return this.model.action === "update-notifications";
   }
 
-  @computed("action")
   get isCategoryAction() {
-    return this.args.model.action === "update-category";
+    return this.model.action === "update-category";
   }
 
-  @computed("action")
   get isCloseAction() {
-    return this.args.model.action === "close";
+    return this.model.action === "close";
   }
 
   @action
@@ -264,12 +262,42 @@ export default class BulkTopicActions extends Component {
     this.closeNote = event.target.value;
   }
 
+  get model() {
+    return this.args.model;
+  }
+
   get notificationLevels() {
     return topicLevels.map((level) => ({
       id: level.id.toString(),
       name: i18n(`topic.notifications.${level.key}.title`),
       description: i18n(`topic.notifications.${level.key}.description`),
     }));
+  }
+
+  get soleCategoryId() {
+    if (this.model.bulkSelectHelper.selectedCategoryIds.length === 1) {
+      return this.model.bulkSelectHelper.selectedCategoryIds[0];
+    }
+
+    return null;
+  }
+
+  get soleCategory() {
+    if (!this.soleCategoryId) {
+      return null;
+    }
+
+    return Category.findById(this.soleCategoryId);
+  }
+
+  get soleCategoryBadgeHTML() {
+    return categoryBadgeHTML(this.soleCategory, {
+      allowUncategorized: true,
+    });
+  }
+
+  get showSoleCategoryTip() {
+    return this.soleCategory && this.isTagAction;
   }
 
   @action
@@ -289,13 +317,18 @@ export default class BulkTopicActions extends Component {
           @isLoading={{this.loading}}
           @title={{i18n "topics.bulk.performing"}}
         >
-          <div>
+          <div class="topic-bulk-actions-modal__selection-info">
             {{htmlSafe
               (i18n
                 "topics.bulk.selected"
                 count=@model.bulkSelectHelper.selected.length
               )
             }}
+
+            {{#if this.showSoleCategoryTip}}
+              {{i18n "topics.bulk.all_categories_same"}}
+              {{htmlSafe this.soleCategoryBadgeHTML}}
+            {{/if}}
           </div>
 
           {{#if this.isCategoryAction}}
@@ -330,7 +363,7 @@ export default class BulkTopicActions extends Component {
           {{#if this.isTagAction}}
             <p><TagChooser
                 @tags={{this.tags}}
-                @categoryId={{@categoryId}}
+                @categoryId={{this.soleCategoryId}}
               /></p>
           {{/if}}
 
