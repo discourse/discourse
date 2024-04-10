@@ -203,19 +203,6 @@ function wrapWithErrorHandler(func, messageKey) {
   };
 }
 
-function deprecatedHeaderWidgetOverride(widgetName, override) {
-  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-    deprecated(
-      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-      {
-        since: "v3.3.0.beta1-dev",
-        id: "discourse.header-widget-overrides",
-        url: "https://meta.discourse.org/t/296544",
-      }
-    );
-  }
-}
-
 class PluginApi {
   constructor(version, container) {
     this.version = version;
@@ -560,7 +547,7 @@ class PluginApi {
    **/
   decorateWidget(name, fn) {
     const widgetName = name.split(":")[0];
-    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
 
     decorateWidget(name, fn);
   }
@@ -591,7 +578,7 @@ class PluginApi {
       return;
     }
 
-    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
+    this.#deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -910,7 +897,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
-    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -944,7 +931,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
-    deprecatedHeaderWidgetOverride(name, "reopenWidget");
+    this.#deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -979,6 +966,7 @@ class PluginApi {
         url: "https://meta.discourse.org/t/296544",
       }
     );
+    this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -2951,6 +2939,20 @@ class PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, mode, links);
+  }
+
+  #deprecatedHeaderWidgetOverride(widgetName, override) {
+    if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+      this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.3.0.beta1-dev",
+          id: "discourse.header-widget-overrides",
+          url: "https://meta.discourse.org/t/296544",
+        }
+      );
+    }
   }
 }
 

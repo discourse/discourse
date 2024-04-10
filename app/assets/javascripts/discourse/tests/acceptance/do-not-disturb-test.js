@@ -27,7 +27,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: null });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -52,7 +52,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: null });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -94,7 +94,7 @@ acceptance("Do not disturb", function (needs) {
       "The active dnd icon is shown"
     );
 
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     assert.strictEqual(
       query(".do-not-disturb .relative-date").textContent.trim(),
@@ -126,7 +126,7 @@ acceptance("Do not disturb", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -137,7 +137,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: DoNotDisturb.forever });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.dom(".do-not-disturb .relative-date").doesNotExist();

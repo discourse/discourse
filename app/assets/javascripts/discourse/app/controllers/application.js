@@ -13,6 +13,7 @@ export default Controller.extend({
   showTop: true,
   router: service(),
   footer: service(),
+  header: service(),
   sidebarState: service(),
   showSidebar: false,
   sidebarDisabledRouteOverride: false,

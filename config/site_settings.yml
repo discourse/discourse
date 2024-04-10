@@ -2352,12 +2352,14 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  experimental_glimmer_header_groups:
+  glimmer_header_mode:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: auto
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact

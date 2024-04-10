@@ -8,6 +8,9 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 // header is the default.
 acceptance("Header API - authenticated", function (needs) {
   needs.user();
+  needs.settings({
+    glimmer_header_mode: "disabled",
+  });
 
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
@@ -93,7 +96,7 @@ acceptance("Header API - anonymous", function () {
 acceptance("Glimmer Header API - authenticated", function (needs) {
   needs.user({ groups: AUTO_GROUPS.everyone });
   needs.settings({
-    experimental_glimmer_header_groups: AUTO_GROUPS.everyone,
+    glimmer_header_mode: "enabled",
   });
 
   test("can add buttons to the header", async function (assert) {

@@ -51,7 +51,7 @@ acceptance(
 
     test("history modal is shown when navigating from a non-topic page", async function (assert) {
       await visit("/");
-      await click(".header-dropdown-toggle.current-user");
+      await click(".header-dropdown-toggle.current-user button");
       await click(".notification.edited a");
       const [v1, v2] = queryAll(".history-modal .revision-content");
 
@@ -88,7 +88,7 @@ acceptance(
 
     test("history modal is not shown when navigating from a non-topic page", async function (assert) {
       await visit("/");
-      await click(".header-dropdown-toggle.current-user");
+      await click(".header-dropdown-toggle.current-user button");
       await click(".notification.edited a");
       assert
         .dom(".history-modal")
@@ -117,7 +117,7 @@ acceptance(
 
     test("history modal is not shown when navigating from a non-topic page", async function (assert) {
       await visit("/");
-      await click(".header-dropdown-toggle.current-user");
+      await click(".header-dropdown-toggle.current-user button");
       await click(".notification.edited a");
       assert
         .dom(".history-modal")

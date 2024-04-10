@@ -26,7 +26,7 @@ export default class CloseOnClickOutside extends Modifier {
     }
 
     if (
-      document.querySelector(this.targetSelector).contains(event.target) ||
+      document.querySelector(this.targetSelector)?.contains(event.target) ||
       (this.secondaryTargetSelector &&
         document
           .querySelector(this.secondaryTargetSelector)
