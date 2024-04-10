@@ -201,7 +201,6 @@ module Chat
       upload-protocol
       watched-words
       chat-html-inline
-      chat-html-block
     ]
 
     MARKDOWN_IT_RULES = %w[
