@@ -565,10 +565,25 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
+  # NOTE (martin): This is turning into hack city; when changing this also
+  # consider how it interacts with UploadSecurity and the uploads.rake tasks.
   def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
     topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
     return false if topic_including_deleted.blank?
+
+    # NOTE: This is to be used for plugins where adding a new public upload
+    # type that should not be secured via UploadSecurity.register_custom_public_type
+    # is not an option. This also is not taken into account in the secure upload
+    # rake tasks, and will more than likely change in future.
+    modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_should_secure_uploads?,
+        nil,
+        self,
+        topic_including_deleted,
+      )
+    return modifier_result if !modifier_result.nil?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
