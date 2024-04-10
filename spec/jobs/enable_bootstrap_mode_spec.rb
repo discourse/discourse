@@ -26,13 +26,14 @@ RSpec.describe Jobs::EnableBootstrapMode do
 
     it "does not amend setting that is not in default state" do
       SiteSetting.default_trust_level = TrustLevel[3]
-      StaffActionLogger.any_instance.expects(:log_site_setting_change).twice
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
       Jobs::EnableBootstrapMode.new.execute(user_id: admin.id)
     end
 
     it "successfully turns on bootstrap mode" do
-      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(4)
       Jobs::EnableBootstrapMode.new.execute(user_id: admin.id)
+      expect(admin.reload.moderator).to be_truthy
     end
   end
 end
