@@ -286,7 +286,7 @@ export default class StoreService extends Service {
 
   _extrasClass(type) {
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
-    return klass.class?.Extras;
+    return klass.class?.ExtrasClass;
   }
 
   _build(type, obj) {
