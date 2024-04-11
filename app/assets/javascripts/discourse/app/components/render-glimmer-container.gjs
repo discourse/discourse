@@ -6,7 +6,7 @@ export default class RenderGlimmerContainer extends Component {
 
   <template>
     {{#each this.renderGlimmer._registrations as |info|}}
-      {{#in-element info.element insertBefore=null}}
+      {{#in-element info.element insertBefore=info.insertBefore}}
         <info.component
           @data={{info.data}}
           @setWrapperElementAttrs={{info.setWrapperElementAttrs}}

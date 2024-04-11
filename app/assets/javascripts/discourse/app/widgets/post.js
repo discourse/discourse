@@ -1,7 +1,9 @@
 import { getOwner } from "@ember/application";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import AfterPostOutlet from "discourse/components/after-post-outlet";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
@@ -936,13 +938,17 @@ export function addPostClassesCallback(callback) {
 
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
-  services: ["dialog", "user-tips"],
+  services: ["dialog", "user-tips", "render-glimmer"],
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
-      ? { style: `min-height: ${attrs.height}px` }
-      : undefined;
+    const attributes = {
+      "data-render-glimmer-ref": attrs.renderGlimmerRef,
+    };
+
+    if (attrs.height) {
+      attributes["style"] = `min-height: ${attrs.height}px`;
+    }
   },
 
   buildId(attrs) {
@@ -1010,6 +1016,33 @@ export default createWidget("post", {
     }
 
     return [this.attach("post-article", attrs)];
+  },
+
+  didRenderWidget() {
+    let info = this.state.renderGlimmerInfo;
+    if (info) {
+      info.data = { post: this.model };
+    } else {
+      const insertAfter = document
+        .getElementById(`post_${this.attrs.post_number}`)
+        .closest(".topic-post");
+
+      this.state.renderGlimmerInfo = info = new TrackedObject({
+        element: insertAfter.parentElement,
+        insertBefore: insertAfter.nextElementSibling,
+        component: AfterPostOutlet,
+        data: { post: this.model },
+      });
+
+      this.renderGlimmer.add(info);
+    }
+  },
+
+  destroy() {
+    const info = this.state.renderGlimmerInfo;
+    if (info) {
+      this.renderGlimmer.remove(info);
+    }
   },
 
   toggleLike() {
