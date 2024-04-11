@@ -10,11 +10,11 @@ export default Component.extend({
   editingCategory: false,
   editingCategoryTab: null,
 
-  @discourseComputed("category.ancestors", "categories", "noSubcategories")
-  categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
-    categoryAncestors = categoryAncestors || [];
-    const parentCategories = [undefined, ...categoryAncestors];
-    const categories = [...categoryAncestors, undefined];
+  @discourseComputed("category", "categories", "noSubcategories")
+  categoryBreadcrumbs(cat, filteredCategories, noSubcategories) {
+    const ancestors = cat?.ancestors || [];
+    const parentCategories = [undefined, ...ancestors];
+    const categories = [...ancestors, undefined];
     const zipped = parentCategories.map((x, i) => [x, categories[i]]);
 
     return zipped.map((record) => {
