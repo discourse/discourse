@@ -6,7 +6,11 @@ module PageObjects
       SELECTOR = ".badge-category__wrapper"
 
       def find(category)
-        page.find(SELECTOR).find(".badge-category[data-category-id='#{category.id}']")
+        find(category_selector(category))
+      end
+
+      def category_selector(category)
+        "#{SELECTOR}.badge-category[data-category-id='#{category.id}']"
       end
     end
   end

@@ -18,12 +18,17 @@ describe "Topic bulk select", type: :system do
 
     before { SiteSetting.tagging_enabled = true }
 
-    def open_append_modal
+    def open_append_modal(topics = nil)
       sign_in(admin)
       visit("/latest")
 
       topic_list_header.click_bulk_select_button
-      topic_list.click_topic_checkbox(topics.last)
+
+      if !topics
+        topic_list.click_topic_checkbox(topics.last)
+      else
+        topics.each { |topic| topic_list.click_topic_checkbox(topic) }
+      end
 
       topic_list_header.click_bulk_select_topics_dropdown
       topic_list_header.click_bulk_button("append-tags")
@@ -47,6 +52,24 @@ describe "Topic bulk select", type: :system do
       expect(
         find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
       ).to have_content(tag2.name)
+    end
+
+    context "when selecting topics in different categories" do
+      before do
+        topics
+          .last(2)
+          .each do |topic|
+            topic.update!(category: Fabricate(:category))
+            topic.update!(category: Fabricate(:category))
+          end
+      end
+
+      it "does not show an additional note about the category in the modal" do
+        open_append_modal(topics.last(2))
+
+        expect(page).not_to have_content(I18n.t("js.topics.bulk.all_categories_same"))
+        expect(topic_bulk_actions_modal).to have_no_category_badge(topics.last.reload.category)
+      end
     end
 
     context "when selecting topics that are all in the same category" do
