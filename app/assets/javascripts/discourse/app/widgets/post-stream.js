@@ -281,9 +281,10 @@ export default createWidget("post-stream", {
         result.push(
           new RenderGlimmer(
             this,
-            "div.after-post",
+            "",
             hbs`<PluginOutlet @name="after-post" @outletArgs={{hash post=@data.post}} />`,
-            { post }
+            { post },
+            { afterSelector: `#post_${post.post_number}` }
           )
         );
       }

@@ -1,0 +1,17 @@
+diff --git a/node_modules/ember-source/dist/ember-template-compiler.js b/node_modules/ember-source/dist/ember-template-compiler.js
+index 718b9b7..034b76e 100644
+--- a/node_modules/ember-source/dist/ember-template-compiler.js
++++ b/node_modules/ember-source/dist/ember-template-compiler.js
+@@ -15660,9 +15660,9 @@ define("ember-template-compiler/lib/plugins/transform-in-element", ["exports", "
+               node.params.unshift(subExpr);
+             }
+             node.hash.pairs.forEach(pair => {
+-              if (pair.key === 'insertBefore') {
+-                (true && !(pair.value.type === 'NullLiteral' || pair.value.type === 'UndefinedLiteral') && (0, _debug.assert)("Can only pass null to insertBefore in in-element, received: " + JSON.stringify(pair.value), pair.value.type === 'NullLiteral' || pair.value.type === 'UndefinedLiteral'));
+-              }
++              // if (pair.key === 'insertBefore') {
++              //   (true && !(pair.value.type === 'NullLiteral' || pair.value.type === 'UndefinedLiteral') && (0, _debug.assert)("Can only pass null to insertBefore in in-element, received: " + JSON.stringify(pair.value), pair.value.type === 'NullLiteral' || pair.value.type === 'UndefinedLiteral'));
++              // }
+             });
+           }
+         }

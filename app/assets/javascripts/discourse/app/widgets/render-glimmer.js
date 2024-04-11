@@ -92,7 +92,7 @@ export default class RenderGlimmer {
    * @param template - a glimmer template compiled via ember-cli-htmlbars
    * @param data - will be made available at `@data` in your template
    */
-  constructor(widget, renderInto, template, data) {
+  constructor(widget, renderInto, template, data, opts = {}) {
     assert(
       "`template` should be a template compiled via `ember-cli-htmlbars`",
       template.name === "factory"
@@ -103,11 +103,15 @@ export default class RenderGlimmer {
     }
     this.template = template;
     this.data = data;
+    this.afterSelector = opts.afterSelector;
+    this.beforeSelector = opts.beforeSelector;
   }
 
   init() {
     if (this.renderInto instanceof Element) {
       this.element = this.renderInto;
+    } else if (this.renderInto === "") {
+      this.element = null;
     } else {
       const [type, ...classNames] = this.renderInto.split(".");
       this.element = document.createElement(type);
@@ -146,19 +150,21 @@ export default class RenderGlimmer {
   }
 
   connectComponent() {
-    const { element, template } = this;
+    const { element, template, beforeSelector, afterSelector } = this;
 
     const component = templateOnly();
     component.name = "Widgets/RenderGlimmer";
     setComponentTemplate(template, component);
 
-    this._componentInfo = {
+    this._componentInfo = new ComponentInfo({
       element,
+      beforeSelector,
+      afterSelector,
       component,
-      @tracked data: this.data,
+      data: this.data,
       setWrapperElementAttrs: (attrs) =>
         this.updateElementAttrs(element, attrs),
-    };
+    });
 
     this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
   }
@@ -208,4 +214,38 @@ export function registerWidgetShim(name, tagName, template) {
   };
 
   createWidgetFrom(RenderGlimmerShim, name, {});
+}
+
+class ComponentInfo {
+  @tracked data;
+  component;
+  setWrapperElementAttrs;
+  afterSelector;
+  beforeSelector;
+
+  constructor(params) {
+    Object.assign(this, params);
+  }
+
+  get insertBefore() {
+    if (this.afterSelector) {
+      return this.element.querySelector(this.afterSelector)?.nextSibling;
+    } else if (this.beforeSelector) {
+      return this.element.querySelector(this.beforeSelector);
+    } else {
+      return null;
+    }
+  }
+
+  get element() {
+    return (
+      this._element ||
+      document.querySelector(this.afterSelector)?.parentElement ||
+      document.querySelector(this.beforeSelector)?.parentElement
+    );
+  }
+
+  set element(value) {
+    this._element = value;
+  }
 }
