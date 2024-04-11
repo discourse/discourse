@@ -1,7 +1,7 @@
 let narrowDesktopForced = false;
 
 const NarrowDesktop = {
-  narrowDesktopView: false,
+  narrowDesktopView: true,
 
   init() {
     this.narrowDesktopView =
