@@ -43,7 +43,7 @@ module("Unit | Notification Types | linked-consolidated", function (hooks) {
     );
     assert.strictEqual(
       director.linkHref,
-      "/u/eviltrout/notifications",
+      "/u/eviltrout/notifications/links?acting_username=liker439",
       "links to the notifications page of the user"
     );
   });

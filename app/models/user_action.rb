@@ -22,6 +22,7 @@ class UserAction < ActiveRecord::Base
   GOT_PRIVATE_MESSAGE = 13
   SOLVED = 15
   ASSIGNED = 16
+  LINKED = 17
 
   ORDER =
     Hash[
@@ -38,6 +39,7 @@ class UserAction < ActiveRecord::Base
         EDIT,
         SOLVED,
         ASSIGNED,
+        LINKED,
       ].each_with_index.to_a.flatten
     ]
 
@@ -60,6 +62,7 @@ class UserAction < ActiveRecord::Base
         got_private_message: 13,
         solved: 15,
         assigned: 16,
+        linked: 17,
       )
   end
 
