@@ -16,6 +16,7 @@ acceptance("Admin - Webhooks", function (needs) {
         total_rows_web_hooks: 0,
         load_more_web_hooks: "/admin/api/web_hooks.json?limit=50&offset=50",
         extras: {
+          categories: [],
           content_types: [
             { id: 1, name: "application/json" },
             { id: 2, name: "application/x-www-form-urlencoded" },
