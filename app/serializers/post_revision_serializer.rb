@@ -28,7 +28,7 @@ class PostRevisionSerializer < ApplicationSerializer
              :wiki,
              :can_edit
 
-  has_many :categories, serializer: BasicCategorySerializer, embed: :objects
+  has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
 
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision

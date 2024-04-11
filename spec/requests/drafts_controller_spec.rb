@@ -50,6 +50,21 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
+
+    it "returns categories when lazy load categories is enabled" do
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+      Draft.set(topic.user, "topic_#{topic.id}", 0, "{}")
+      sign_in(topic.user)
+
+      get "/drafts.json"
+      expect(response.status).to eq(200)
+      draft_keys = response.parsed_body["drafts"].map { |draft| draft["draft_key"] }
+      expect(draft_keys).to contain_exactly("topic_#{topic.id}")
+      category_ids = response.parsed_body["categories"].map { |cat| cat["id"] }
+      expect(category_ids).to contain_exactly(category.id)
+    end
   end
 
   describe "#show" do

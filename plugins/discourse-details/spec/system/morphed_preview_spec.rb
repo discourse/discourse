@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-describe "Composer Preview", type: :system do
+describe "Morphed Composer Preview", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 
-  before { sign_in user }
-
-  it "keeps details element open when morphing content" do
+  before do
     SiteSetting.enable_diffhtml_preview = true
-
+    sign_in user
     visit("/new-topic")
+  end
 
+  it "keeps details element open" do
     composer.type_content <<~MD
       [details=Velcro]
       What a rip-off!

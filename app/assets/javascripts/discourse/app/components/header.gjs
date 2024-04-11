@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
@@ -44,7 +45,6 @@ export default class GlimmerHeader extends Component {
   @service header;
 
   @tracked skipSearchContext = this.site.mobileView;
-  @tracked panelElement;
 
   appEventsListeners = modifier(() => {
     this.appEvents.on(
@@ -166,11 +166,6 @@ export default class GlimmerHeader extends Component {
     }
   }
 
-  @action
-  setPanelElement(element) {
-    this.panelElement = element;
-  }
-
   <template>
     <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
@@ -202,7 +197,6 @@ export default class GlimmerHeader extends Component {
               @toggleHamburger={{this.toggleHamburger}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
-              @panelElement={{this.panelElement}}
             />
           {{/if}}
 
@@ -216,9 +210,6 @@ export default class GlimmerHeader extends Component {
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
 
-          <div id="additional-panel-wrapper" {{didInsert this.setPanelElement}}>
-          </div>
-
           {{#if
             (and
               (or this.site.mobileView this.site.narrowDesktopView)
@@ -229,6 +220,10 @@ export default class GlimmerHeader extends Component {
           {{/if}}
         </Contents>
       </div>
+      <PluginOutlet
+        @name="after-header"
+        @outletArgs={{hash minimized=this.header.topic}}
+      />
     </header>
   </template>
 }

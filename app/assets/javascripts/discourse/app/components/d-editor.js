@@ -445,15 +445,16 @@ export default Component.extend(TextareaTextManipulation, {
 
     this.set("preview", cooked);
 
+    let unseenMentions, unseenHashtags;
+
     if (this.siteSettings.enable_diffhtml_preview) {
       const previewElement = this.element.querySelector(".d-editor-preview");
       const cookedElement = previewElement.cloneNode(false);
       cookedElement.innerHTML = cooked;
 
-      // Same order of operation as in the "previewUpdated" method in "composer-editor.js"
-      linkSeenMentions(cookedElement, this.siteSettings);
+      unseenMentions = linkSeenMentions(cookedElement, this.siteSettings);
 
-      linkSeenHashtagsInContext(
+      unseenHashtags = linkSeenHashtagsInContext(
         this.site.hashtag_configurations["topic-composer"],
         cookedElement
       );
@@ -464,11 +465,17 @@ export default Component.extend(TextareaTextManipulation, {
         this.topicId,
         this.categoryId,
         this.siteSettings.max_oneboxes_per_post,
-        false,
-        true
+        /* refresh */ false,
+        /* offline */ true
       );
 
       resolveCachedShortUrls(this.siteSettings, cookedElement);
+
+      // trigger all the "api.decorateCookedElement"
+      this.appEvents.trigger(
+        "decorate-non-stream-cooked-element",
+        cookedElement
+      );
 
       (await import("morphlex")).morph(
         previewElement,
@@ -490,7 +497,7 @@ export default Component.extend(TextareaTextManipulation, {
       const previewElement = this.element.querySelector(".d-editor-preview");
 
       if (previewElement && this.previewUpdated) {
-        this.previewUpdated(previewElement);
+        this.previewUpdated(previewElement, unseenMentions, unseenHashtags);
       }
     });
   },

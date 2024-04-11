@@ -31,7 +31,7 @@ class PostRevision < ActiveRecord::Base
   def categories
     return [] if modifications["category_id"].blank?
 
-    @categories ||= Category.where(id: modifications["category_id"])
+    @categories ||= Category.with_parents(modifications["category_id"])
   end
 
   def hide!

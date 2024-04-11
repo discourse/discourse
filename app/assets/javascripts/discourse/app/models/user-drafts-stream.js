@@ -8,6 +8,7 @@ import {
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import UserDraft from "discourse/models/user-draft";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -63,6 +64,10 @@ export default class UserDraftsStream extends RestModel {
         if (!result.drafts) {
           return;
         }
+
+        result.categories?.forEach((category) =>
+          Site.current().updateCategory(category)
+        );
 
         this.set("hasMore", result.drafts.size >= this.limit);
 

@@ -44,8 +44,21 @@ export default class SchemaThemeSettingNewEditor extends Component {
     this.activeIndex = index;
   }
 
+  @action
   generateSchemaTitle(object, schema, index) {
-    return object[schema.identifier] || `${schema.name} ${index + 1}`;
+    let title;
+
+    if (schema.properties[schema.identifier]?.type === "categories") {
+      title = this.activeData[index][schema.identifier]
+        ?.map((categoryId) => {
+          return this.args.setting.metadata.categories[categoryId].name;
+        })
+        .join(", ");
+    } else {
+      title = object[schema.identifier];
+    }
+
+    return title || `${schema.name} ${index + 1}`;
   }
 
   get backButtonText() {

@@ -211,6 +211,12 @@ class Category < ActiveRecord::Base
         )
       SQL
 
+  scope :with_parents, ->(ids) { where(<<~SQL, ids: ids) }
+    id IN (:ids)
+    OR
+    id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
+  SQL
+
   delegate :post_template, to: "self.class"
 
   # permission is just used by serialization

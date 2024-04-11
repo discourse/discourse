@@ -68,7 +68,7 @@ RSpec.describe "Move message to channel", type: :system do
       fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
       fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
       fab!(:message_1) do
-        Fabricate(:chat_message, chat_channel: channel_1, user: current_admin_user)
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_admin_user, message: "hi")
       end
       fab!(:thread) do
         chat_thread_chain_bootstrap(

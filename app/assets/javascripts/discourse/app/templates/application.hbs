@@ -12,7 +12,7 @@
   />
 
   {{#if this.showSiteHeader}}
-    {{#if this.currentUser.glimmer_header_enabled}}
+    {{#if this.header.useGlimmerHeader}}
       <GlimmerSiteHeader
         @canSignUp={{this.canSignUp}}
         @showCreateAccount={{route-action "showCreateAccount"}}

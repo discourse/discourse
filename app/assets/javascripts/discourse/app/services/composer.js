@@ -698,7 +698,7 @@ export default class ComposerService extends Service {
   }
 
   @action
-  afterRefresh($preview) {
+  afterRefresh(preview) {
     const topic = this.get("model.topic");
     const linkLookup = this.linkLookup;
 
@@ -712,13 +712,12 @@ export default class ComposerService extends Service {
     }
 
     const post = this.get("model.post");
-    const $links = $("a[href]", $preview);
-    $links.each((idx, l) => {
+    preview.querySelectorAll("a[href]").forEach((l) => {
       const href = l.href;
       if (href && href.length) {
         // skip links added by watched words
         if (l.dataset.word !== undefined) {
-          return true;
+          return;
         }
 
         // skip links in quotes and oneboxes
@@ -734,7 +733,7 @@ export default class ComposerService extends Service {
             element.tagName === "ASIDE" &&
             element.classList.contains("quote")
           ) {
-            return true;
+            return;
           }
 
           if (
@@ -742,7 +741,7 @@ export default class ComposerService extends Service {
             element.classList.contains("onebox") &&
             href !== element.dataset["onebox-src"]
           ) {
-            return true;
+            return;
           }
         }
 
@@ -771,11 +770,8 @@ export default class ComposerService extends Service {
               }),
             });
           }
-
-          return false;
         }
       }
-      return true;
     });
   }
 
