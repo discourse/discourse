@@ -98,11 +98,7 @@ export default Controller.extend({
   },
 
   calculateShowSidebar() {
-    return (
-      this.canDisplaySidebar &&
-      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
-      !this.site.narrowDesktopView
-    );
+    return false;
   },
 
   @action
