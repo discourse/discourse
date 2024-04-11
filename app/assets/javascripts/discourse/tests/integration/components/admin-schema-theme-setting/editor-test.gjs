@@ -838,6 +838,65 @@ module(
       );
     });
 
+    test("input field of type categories with schema's identifier set to categories field", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "category",
+          identifier: "category",
+          properties: {
+            category: {
+              type: "categories",
+              required: true,
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "support",
+            },
+            7: {
+              id: 7,
+              name: "something",
+            },
+          },
+        },
+        value: [
+          {
+            category: [6, 7],
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].textElement).hasText("support, something");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      const categorySelector = selectKit(
+        `${inputFields.fields.category.selector} .select-kit`
+      );
+
+      await categorySelector.expand();
+      await categorySelector.deselectItemByValue("6");
+      await categorySelector.collapse();
+
+      assert.dom(tree.nodes[0].textElement).hasText("something");
+
+      await click(TOP_LEVEL_ADD_BTN);
+
+      tree.refresh();
+
+      assert.dom(tree.nodes[1].textElement).hasText("category 2");
+    });
+
     test("input fields of type tags which is required", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
