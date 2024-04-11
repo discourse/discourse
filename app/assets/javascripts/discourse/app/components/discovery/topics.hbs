@@ -74,14 +74,26 @@
     />
   </span>
 
-  <h2 style="margin-bottom: 1em; margin-top: 0; font-size: 24px;">
-    Welcome
-    {{#if this.currentUser.name}}
-      {{this.currentUser.name}}!
-    {{else}}
-      {{this.currentUser.username}}!
-    {{/if}}
-  </h2>
+  <div
+    style="display: flex; justify-content: space-between; margin-bottom: 1rem;"
+  >
+    <h2 style="margin-bottom: 0; margin-top: 0; font-size: 24px;">
+      Welcome
+      {{#if this.currentUser.name}}
+        {{this.currentUser.name}}!
+      {{else}}
+        {{this.currentUser.username}}!
+      {{/if}}
+    </h2>
+    <CreateTopicButton
+      @canCreateTopic={{true}}
+      @action={{action "clickCreateTopicButton"}}
+      @disabled={{false}}
+      @label="topic.create_post"
+      @btnClass={{this.createTopicClass}}
+      @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+    />
+  </div>
 
   <TagDrop
     @currentCategory={{@category}}

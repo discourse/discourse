@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
+import htmlSafe from "discourse-common/helpers/html-safe";
 import I18n from "discourse-i18n";
 
 export default class DiscoveryTopics extends Component {
@@ -51,6 +52,17 @@ export default class DiscoveryTopics extends Component {
 
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
+  }
+
+  @action
+  clickCreateTopicButton() {
+    if (this.categoryReadOnlyBanner && !this.hasDraft) {
+      this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
+    } else {
+      this.composer.openNewTopic({
+        preferDraft: true,
+      });
+    }
   }
 
   // Show newly inserted topics
