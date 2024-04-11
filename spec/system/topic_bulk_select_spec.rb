@@ -18,17 +18,73 @@ describe "Topic bulk select", type: :system do
 
     before { SiteSetting.tagging_enabled = true }
 
-    it "appends tags to selected topics" do
+    def open_append_modal
       sign_in(admin)
       visit("/latest")
 
       topic_list_header.click_bulk_select_button
-      topic_list.click_topic_checkbox(topics.first)
+      topic_list.click_topic_checkbox(topics.last)
 
       topic_list_header.click_bulk_select_topics_dropdown
       topic_list_header.click_bulk_button("append-tags")
       expect(topic_bulk_actions_modal).to be_open
-      pause_test
+    end
+
+    it "appends tags to selected topics" do
+      open_append_modal
+
+      topic_bulk_actions_modal.tag_selector.expand
+      topic_bulk_actions_modal.tag_selector.search(tag1.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+      topic_bulk_actions_modal.tag_selector.search(tag2.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag2.name)
+
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(
+        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
+      ).to have_content(tag1.name)
+      expect(
+        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
+      ).to have_content(tag2.name)
+    end
+
+    context "when selecting topics that are all in the same category" do
+      fab!(:category)
+
+      before { topics.last.update!(category_id: category.id) }
+
+      it "shows an additional note about the category in the modal" do
+        open_append_modal
+
+        expect(page).to have_content(I18n.t("js.topics.bulk.all_categories_same"))
+        expect(topic_bulk_actions_modal).to have_category_badge(category)
+      end
+
+      it "allows for searching restricted tags for that category and other tags too if the category allows it" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_tag = Fabricate(:tag)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+        category.update!(allow_global_tags: true)
+
+        open_append_modal
+
+        topic_bulk_actions_modal.tag_selector.expand
+        topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_value(restricted_tag.name)
+        topic_bulk_actions_modal.tag_selector.search(tag1.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+
+        expect(
+          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
+        ).to have_content(restricted_tag.name)
+        expect(
+          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
+        ).to have_content(tag1.name)
+      end
     end
   end
 

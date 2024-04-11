@@ -2952,7 +2952,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
-        all_categories_same: "All topics belong to the same category, tags restricted to that category are available for use."
+        all_categories_same: "All topics are in the same category; you can select tags restricted to:"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"

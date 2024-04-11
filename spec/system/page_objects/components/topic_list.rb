@@ -75,11 +75,11 @@ module PageObjects
         find("#topic-entrance button.jump-top").native.send_keys(:return)
       end
 
-      private
-
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end
+
+      private
 
       def topic_list_item_closed(topic)
         "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.locked"

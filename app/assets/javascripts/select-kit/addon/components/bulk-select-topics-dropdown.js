@@ -161,7 +161,9 @@ export default DropdownSelectBoxComponent.extend({
         title,
         description,
         bulkSelectHelper: this.bulkSelectHelper,
-        refreshClosure: () => this.router.refresh(),
+        refreshClosure: () => {
+          return this.router.refresh();
+        },
         allowSilent,
         initialAction,
         initialActionLabel,

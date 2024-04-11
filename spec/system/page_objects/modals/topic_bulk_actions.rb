@@ -19,6 +19,10 @@ module PageObjects
       def fill_in_close_note(message)
         find("#bulk-close-note").set(message)
       end
+
+      def has_category_badge?(category)
+        within(MODAL_SELECTOR) { Components::CategoryBadge.new.find(category) }
+      end
     end
   end
 end

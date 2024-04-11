@@ -231,10 +231,11 @@ export default class BulkTopicActions extends Component {
   async performAndRefresh(operation) {
     await this.perform(operation);
 
-    this.model.refreshClosure?.();
-    this.args.closeModal();
-    this.model.bulkSelectHelper.toggleBulkSelect();
-    this.showToast();
+    this.model.refreshClosure?.().then(() => {
+      this.args.closeModal();
+      this.model.bulkSelectHelper.toggleBulkSelect();
+      this.showToast();
+    });
   }
 
   get isTagAction() {
