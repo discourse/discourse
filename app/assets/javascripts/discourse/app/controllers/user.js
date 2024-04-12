@@ -26,7 +26,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("viewingSelf", "model.profile_hidden")
   canExpandProfile(viewingSelf, profileHidden) {
-    return !profileHidden && viewingSelf;
+    return false && !profileHidden && viewingSelf;
   },
 
   @discourseComputed("model.profileBackgroundUrl")

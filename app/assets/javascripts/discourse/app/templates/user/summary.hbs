@@ -1,6 +1,29 @@
 {{body-class "user-summary-page"}}
 
-<div class="user-content" id="user-content">
+<div class="new-user-content-wrapper" style="margin-top: 2.25rem">
+  <div>
+    {{#if this.currentUser.bio_excerpt}}
+      <p
+        style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;"
+      >About</p>
+      <div class="card-row second-row">
+        <div class="bio-contents">
+          {{html-safe this.currentUser.bio_cooked}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+  <hr />
+  <div>
+    <p
+      style="font-size: 20px; font-weight: 700; margin-bottom: 1rem; margin-top: 2.25rem"
+    >
+      College List
+    </p>
+  </div>
+</div>
+
+<div class="user-content hidden hidden" id="user-content">
   <PluginOutlet
     @name="above-user-summary-stats"
     @outletArgs={{hash model=this.model user=this.user}}

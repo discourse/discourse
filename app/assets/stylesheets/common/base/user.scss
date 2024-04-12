@@ -156,8 +156,8 @@
     }
 
     .details {
-      background: rgba(var(--secondary-rgb), 0.8);
-      border-bottom: 1px solid var(--primary-low);
+      // background: rgba(var(--secondary-rgb), 0.8);
+      // border-bottom: 1px solid var(--primary-low);
 
       .groups {
         display: inline;
@@ -175,6 +175,7 @@
         width: 100%;
         position: relative;
         display: flex;
+        gap: 1.75rem;
 
         .bio {
           max-height: 300px;
@@ -188,7 +189,7 @@
 
       .user-profile-avatar {
         position: relative;
-        align-self: flex-start;
+        align-self: center;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -207,7 +208,7 @@
     &.collapsed-info {
       .details {
         margin-top: 0;
-        background: rgba(var(--secondary-rgb), 0.8);
+        // background: rgba(var(--secondary-rgb), 0.8);
 
         .bio {
           display: none;

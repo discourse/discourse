@@ -14,8 +14,7 @@
       {{i18n "skip_user_nav"}}
     </a>
     <section
-      class="{{if this.collapsedInfo 'collapsed-info'}}
-        about
+      class="about
         {{if this.hasProfileBackgroundUrl 'has-background' 'no-background'}}"
     >
       {{#unless this.collapsedInfo}}
@@ -129,7 +128,10 @@
             @outletArgs={{hash model=this.model}}
           />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-          <div class="primary-textual">
+          <div
+            class="primary-textual"
+            style="display: flex; flex-direction: column; justify-content: center; gap: 1rem;"
+          >
             <div class="user-profile-names">
               <div
                 class="{{if this.nameFirst 'full-name' 'username'}}
@@ -147,7 +149,7 @@
               </div>
               <div
                 class="{{if this.nameFirst 'username' 'full-name'}}
-                  user-profile-names__secondary"
+                  user-profile-names__secondary hidden"
               >{{#if
                   this.nameFirst
                 }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</div>
@@ -169,7 +171,15 @@
                 />
               </span>
             </div>
-
+            <div style="font-size: 16px; color: #000;">
+              Enrolling in
+              {{this.course}}
+            </div>
+            <div class="tags" style="display: flex; gap: .5rem;">
+              <span>#hello</span>
+              <span>#world</span>
+              <span>#college</span>
+            </div>
             {{#if this.showFeaturedTopic}}
               <div class="featured-topic user-profile__featured-topic">
                 <span title={{i18n "user.featured_topic"}}>
@@ -186,73 +196,8 @@
               </div>
             {{/if}}
 
-            <div
-              class="location-and-website user-profile__location-and-website"
-            >
-              {{#if this.model.location}}<div
-                  class="user-profile-location"
-                >{{d-icon "map-marker-alt"~}}
-                  {{this.model.location}}</div>{{/if}}
-              {{#if this.model.website_name}}
-                <div class="user-profile-website">
-                  {{! template-lint-disable link-rel-noopener }}
-                  {{d-icon "globe"~}}
-                  {{#if this.linkWebsite~}}
-                    <a
-                      href={{this.model.website}}
-                      rel="noopener {{unless
-                        this.removeNoFollow
-                        'nofollow ugc'
-                      }}"
-                      target="_blank"
-                    >{{this.model.website_name}}</a>
-                  {{else}}
-                    <span
-                      title={{this.model.website}}
-                    >{{this.model.website_name}}</span>
-                  {{/if}}
-                  {{! template-lint-enable link-rel-noopener }}
-                </div>
-              {{/if}}
-              <span>
-                <PluginOutlet
-                  @name="user-location-and-website"
-                  @connectorTagName="div"
-                  @outletArgs={{hash model=this.model}}
-                />
-              </span>
-            </div>
-
-            <div class="bio">
-              {{#if this.model.suspended}}
-                <div class="suspended">
-                  {{d-icon "ban"}}
-                  <b>
-                    {{#if this.model.suspendedForever}}
-                      {{i18n "user.suspended_permanently"}}
-                    {{else}}
-                      {{i18n
-                        "user.suspended_notice"
-                        date=this.model.suspendedTillDate
-                      }}
-                    {{/if}}
-                  </b>
-                  <br />
-                  {{#if this.model.suspend_reason}}
-                    <b>{{i18n "user.suspended_reason"}}</b>
-                    {{this.model.suspend_reason}}
-                  {{/if}}
-                </div>
-              {{/if}}
-              {{#if this.isNotSuspendedOrIsStaff}}
-                <HtmlWithLinks>
-                  {{html-safe this.model.bio_cooked}}
-                </HtmlWithLinks>
-              {{/if}}
-            </div>
-
             {{#if this.publicUserFields}}
-              <div class="public-user-fields">
+              <div class="public-user-fields hidden">
                 {{#each this.publicUserFields as |uf|}}
                   {{#if uf.value}}
                     <div class="public-user-field {{uf.field.dasherized_name}}">
@@ -291,9 +236,9 @@
             </span>
           </div>
 
-          <section class="controls">
+          <section class="controls" style="align-self: center;">
             <ul>
-              {{#if this.model.can_send_private_message_to_user}}
+              {{#if false}}
                 <li>
                   <DButton
                     @action={{fn
@@ -307,7 +252,7 @@
                 </li>
               {{/if}}
 
-              {{#if this.canMuteOrIgnoreUser}}
+              {{#if false}}
                 <li>
                   <UserNotificationsDropdown
                     @user={{this.model}}
@@ -359,7 +304,7 @@
           @outletArgs={{hash model=this.model collapsedInfo=this.collapsedInfo}}
         />
         {{#unless this.collapsedInfo}}
-          <div class="secondary" id="collapsed-info-panel">
+          <div class="secondary hidden" id="collapsed-info-panel">
             <dl>
               {{#if this.model.created_at}}
                 <div><dt class="created-at">{{i18n "user.created"}}</dt><dd

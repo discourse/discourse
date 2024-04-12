@@ -78,6 +78,8 @@
   }
 
   .user-navigation-primary {
+    display: none;
+
     [class*="horizontal-overflow-nav__scroll"] {
       font-size: var(--font-up-1);
       .d-icon {
