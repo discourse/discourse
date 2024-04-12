@@ -80,7 +80,7 @@ export const TOAST = {
     autoClose: true,
     duration: 3000,
     component: DDefaultToast,
-    showProgressBar: true,
+    showProgressBar: false,
     views: ["desktop", "mobile"],
   },
 };
