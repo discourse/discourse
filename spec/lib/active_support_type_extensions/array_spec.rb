@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Types::Array do
+RSpec.describe ActiveSupportTypeExtensions::Array do
   subject(:type) { described_class.new }
 
   describe "#cast" do
