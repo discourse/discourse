@@ -5,7 +5,7 @@ module PageObjects
     class CategoryBadge < PageObjects::Components::Base
       SELECTOR = ".badge-category__wrapper"
 
-      def find(category)
+      def find_for_category(category)
         find(category_selector(category))
       end
 

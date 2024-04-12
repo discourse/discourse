@@ -21,7 +21,7 @@ module PageObjects
       end
 
       def has_category_badge?(category)
-        within(MODAL_SELECTOR) { Components::CategoryBadge.new.find(category) }
+        within(MODAL_SELECTOR) { Components::CategoryBadge.new.find_for_category(category) }
       end
 
       def has_no_category_badge?(category)

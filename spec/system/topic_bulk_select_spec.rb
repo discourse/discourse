@@ -18,16 +18,16 @@ describe "Topic bulk select", type: :system do
 
     before { SiteSetting.tagging_enabled = true }
 
-    def open_append_modal(topics = nil)
+    def open_append_modal(topics_to_select = nil)
       sign_in(admin)
       visit("/latest")
 
       topic_list_header.click_bulk_select_button
 
-      if !topics
+      if !topics_to_select
         topic_list.click_topic_checkbox(topics.last)
       else
-        topics.each { |topic| topic_list.click_topic_checkbox(topic) }
+        topics_to_select.each { |topic| topic_list.click_topic_checkbox(topic) }
       end
 
       topic_list_header.click_bulk_select_topics_dropdown
@@ -115,7 +115,6 @@ describe "Topic bulk select", type: :system do
     it "closes multiple topics" do
       sign_in(admin)
       visit("/latest")
-      expect(topic_bulk_actions_modal).to be_open
 
       # Click bulk select button
       topic_list_header.click_bulk_select_button
