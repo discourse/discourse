@@ -319,16 +319,23 @@ export default class BulkTopicActions extends Component {
           @title={{i18n "topics.bulk.performing"}}
         >
           <div class="topic-bulk-actions-modal__selection-info">
-            {{htmlSafe
-              (i18n
-                "topics.bulk.selected"
-                count=@model.bulkSelectHelper.selected.length
-              )
-            }}
 
             {{#if this.showSoleCategoryTip}}
-              {{i18n "topics.bulk.all_categories_same"}}
+              {{htmlSafe
+                (i18n
+                  "topics.bulk.selected_sole_category"
+                  count=@model.bulkSelectHelper.selected.length
+                )
+              }}
               {{htmlSafe this.soleCategoryBadgeHTML}}
+            {{else}}
+              {{htmlSafe
+                (i18n
+                  "topics.bulk.selected"
+                  count=@model.bulkSelectHelper.selected.length
+                )
+              }}
+
             {{/if}}
           </div>
 

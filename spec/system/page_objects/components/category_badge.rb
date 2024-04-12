@@ -10,7 +10,7 @@ module PageObjects
       end
 
       def category_selector(category)
-        "#{SELECTOR}.badge-category[data-category-id='#{category.id}']"
+        "#{SELECTOR} .badge-category[data-category-id='#{category.id}']"
       end
     end
   end

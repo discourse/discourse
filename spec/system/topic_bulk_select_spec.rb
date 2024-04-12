@@ -67,7 +67,6 @@ describe "Topic bulk select", type: :system do
       it "does not show an additional note about the category in the modal" do
         open_append_modal(topics.last(2))
 
-        expect(page).not_to have_content(I18n.t("js.topics.bulk.all_categories_same"))
         expect(topic_bulk_actions_modal).to have_no_category_badge(topics.last.reload.category)
       end
     end
@@ -79,8 +78,6 @@ describe "Topic bulk select", type: :system do
 
       it "shows an additional note about the category in the modal" do
         open_append_modal
-
-        expect(page).to have_content(I18n.t("js.topics.bulk.all_categories_same"))
         expect(topic_bulk_actions_modal).to have_category_badge(category)
       end
 

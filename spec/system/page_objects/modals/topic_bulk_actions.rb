@@ -5,7 +5,7 @@ module PageObjects
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
       def tag_selector
-        Components::SelectKit.new(".tag-chooser")
+        PageObjects::Components::SelectKit.new(".tag-chooser")
       end
 
       def click_bulk_topics_confirm
@@ -21,12 +21,14 @@ module PageObjects
       end
 
       def has_category_badge?(category)
-        within(MODAL_SELECTOR) { Components::CategoryBadge.new.find_for_category(category) }
+        within(MODAL_SELECTOR) do
+          PageObjects::Components::CategoryBadge.new.find_for_category(category)
+        end
       end
 
       def has_no_category_badge?(category)
         within(MODAL_SELECTOR) do
-          has_no_css?(Components::CategoryBadge.new.category_selector(category))
+          has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))
         end
       end
     end
