@@ -21,7 +21,6 @@ export default class ChatMessageActionsMobile extends Component {
   @service capabilities;
 
   @tracked hasExpandedReply = false;
-  @tracked showFadeIn = false;
 
   get message() {
     return this.chat.activeMessage.model;
@@ -60,14 +59,14 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   actAndCloseMenu(fnId) {
-    this.messageInteractor[fnId]();
     this.args.closeModal();
+    this.messageInteractor[fnId]();
   }
 
   @action
   openEmojiPicker(_, event) {
-    this.messageInteractor.openEmojiPicker(_, event);
     this.args.closeModal();
+    this.messageInteractor.openEmojiPicker(_, event);
   }
 
   <template>
