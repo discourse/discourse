@@ -7,7 +7,7 @@
 
 .chat-message-info__username {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
 
   & + .chat-message-info__bot-indicator,
   & + .chat-message-info__date {
@@ -61,8 +61,8 @@
   margin-inline: 0.33rem;
 
   .emoji {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
   }
 }
 

@@ -62,14 +62,12 @@
     }
 
     .sidebar-section-link-content-text {
-      align-items: center;
-      display: inline-flex;
-
       @include ellipsis;
 
       .emoji {
         width: 15px;
         height: 15px;
+        vertical-align: baseline;
       }
 
       .badge-category__wrapper {
