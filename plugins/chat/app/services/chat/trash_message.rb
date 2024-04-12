@@ -35,7 +35,6 @@ module Chat
       attribute :channel_id, :integer
       validates :message_id, presence: true
       validates :channel_id, presence: true
-      attribute :skip_publish, :boolean, default: false
     end
 
     private
@@ -83,9 +82,6 @@ module Chat
 
     def publish_events(contract:, guardian:, message:)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
-
-      return if contract.skip_publish
-
       Chat::Publisher.publish_delete!(message.chat_channel, message)
 
       if message.thread.present?
