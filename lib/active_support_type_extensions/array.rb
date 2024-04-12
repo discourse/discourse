@@ -26,7 +26,3 @@ module ActiveSupportTypeExtensions
     end
   end
 end
-
-ActiveSupport.on_load(:active_record) do
-  ActiveModel::Type.register(:array, ActiveSupportTypeExtensions::Array)
-end
