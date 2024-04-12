@@ -2,23 +2,38 @@
 
 <div class="new-user-content-wrapper" style="margin-top: 2.25rem">
   <div>
-    {{#if this.currentUser.bio_excerpt}}
-      <p
-        style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;"
-      >About</p>
+    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">About</p>
+    {{#if this.user.bio_excerpt}}
       <div class="card-row second-row">
         <div class="bio-contents">
-          {{html-safe this.currentUser.bio_cooked}}
+          {{html-safe this.user.bio_cooked}}
         </div>
       </div>
+    {{else if (eq this.user.username this.currentUser.username)}}
+      <a
+        href="/u/{{this.currentUser.username}}/preferences/profile/"
+        class="about-edit-link"
+      >
+        Write something about yourself
+        <svg
+          style="width: 10px;"
+          class="fa d-icon d-icon-pencil-alt svg-icon svg-string"
+          xmlns="http://www.w3.org/2000/svg"
+        ><use href="#pencil-alt"></use></svg>
+      </a>
+    {{else}}
+      <p style="color: hsl(210,8%,42%);">
+        Apparently, this user prefers to keep an air of mystery about them
+      </p>
     {{/if}}
   </div>
-  <hr />
+  <hr style="margin: 2.25rem 0" />
   <div>
-    <p
-      style="font-size: 20px; font-weight: 700; margin-bottom: 1rem; margin-top: 2.25rem"
-    >
+    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">
       College List
+    </p>
+    <p style="color: hsl(210,8%,42%);">
+      This section needs to be filled out ... by someone
     </p>
   </div>
 </div>
