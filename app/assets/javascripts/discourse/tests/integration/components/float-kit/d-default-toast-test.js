@@ -29,7 +29,7 @@ module(
       this.toast = new DToastInstance(this, {});
 
       await render(
-        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{true}} @autoClose={{true}} @onRegisterProgressBar={{(noop)}} />`
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{true}} @onRegisterProgressBar={{(noop)}} />`
       );
 
       assert.dom(".fk-d-default-toast__progress-bar").exists();
@@ -39,7 +39,7 @@ module(
       this.toast = new DToastInstance(this, {});
 
       await render(
-        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{false}} @autoClose={{false}} />`
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{false}} />`
       );
 
       assert.dom(".fk-d-default-toast__progress-bar").doesNotExist();
