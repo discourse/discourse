@@ -366,13 +366,7 @@ class CategoriesController < ApplicationController
 
     categories = Category.secured(guardian)
 
-    categories =
-      categories
-        .includes(:category_search_data)
-        .references(:category_search_data)
-        .where(
-          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
-        ) if term.present?
+    categories = categories.where("name ILIKE ?", "%#{term}%") if term.present?
 
     categories =
       (
