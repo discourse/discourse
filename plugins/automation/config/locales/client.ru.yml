@@ -8,7 +8,7 @@ ru:
   js:
     discourse_automation:
       title: Автоматизация
-      create: Создать
+      create: Создание
       update: Обновить
       select_script: Выберите скрипт
       select_trigger: Выберите триггер
@@ -27,18 +27,19 @@ ru:
         confirm: "Действительно удалить `%{name}`?"
       fields:
         key_value:
-          label:
-            one: Изменить конфигурацию (%{count})
-            few: Изменить конфигурацию (%{count})
-            many: Изменить конфигурацию (%{count})
-            other: Изменить конфигурацию (%{count})
+          label_without_count: "Настроить"
+          label_with_count:
+            one: "Изменить конфигурацию (%{count})"
+            few: "Изменить конфигурацию (%{count})"
+            many: "Изменить конфигурацию (%{count})"
+            other: "Изменить конфигурацию (%{count})"
         user:
           label: Пользователь
         pm:
           title:
             label: Название
           raw:
-            label: Тело сообщения
+            label: Текст сообщения
         pms:
           confirm_remove_pm: "Действительно удалить это ЛС?"
           placeholder_title: Название ЛС
@@ -47,7 +48,7 @@ ru:
           title:
             label: Название
           raw:
-            label: Тело сообщения
+            label: Текст сообщения
           delay:
             label: Задержка (в минутах)
           prefers_encrypt:
@@ -69,11 +70,11 @@ ru:
             PT1H: "Один час"
             P1D: "Один день"
             P1W: "Одна неделя"
-            P2W: "Две недели"
+            P2W: "Через 2 недели"
             P1M: "Один месяц"
-            P3M: "Три месяца"
-            P6M: "Шесть месяцев"
-            P1Y: "Один год"
+            P3M: "Через 3 месяца"
+            P6M: "Через 6 месяцев"
+            P1Y: "Через год"
           fields:
             categories:
               label: Ограничено по категориям
@@ -101,11 +102,11 @@ ru:
             PT1H: "Один час"
             P1D: "Один день"
             P1W: "Одна неделя"
-            P2W: "Две недели"
+            P2W: "Через 2 недели"
             P1M: "Один месяц"
-            P3M: "Три месяца"
-            P6M: "Шесть месяцев"
-            P1Y: "Один год"
+            P3M: "Через 3 месяца"
+            P6M: "Через 6 месяцев"
+            P1Y: "Через год"
           fields:
             restricted_category:
               label: Ограничено по категории
@@ -142,7 +143,7 @@ ru:
         topic:
           fields:
             restricted_topic:
-              label: Идентификатор темы
+              label: ID темы
         post_created_edited:
           fields:
             action_type:
@@ -153,7 +154,7 @@ ru:
               description: Сработает, только если запись создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
             restricted_category:
               label: Категория
-              description: Необязательно, срабатывает только в случае, если тема публикации находится в этой категории
+              description: Необязательно, срабатывает только в том случае, если тема публикации находится в этой категории
             restricted_group:
               label: Группа
               description: Необязательно, срабатывает только в случае, если тема публикации является личным сообщением в папке «Входящие» этой группы
@@ -169,7 +170,7 @@ ru:
             first_topic_only:
               label: Только первая тема
               description: Срабатывает только в том случае, если это первая тема пользователя
-          created: Создано
+          created: Создан
           edited: Изменено
         category_created_edited:
           fields:
@@ -179,7 +180,7 @@ ru:
         pm_created:
           fields:
             restricted_user:
-              label: Пользователи
+              label: По пользователям
               description: Сработает только для личных сообщений, отправленных этому пользователю
             restricted_group:
               label: Группа
@@ -234,7 +235,7 @@ ru:
             creator:
               label: Автор
             topic:
-              label: Идентификатор темы
+              label: ID темы
             post:
               label: Контент записи
         group_category_notification_default:
@@ -256,7 +257,7 @@ ru:
           levels:
             warning: Предупреждение
             info: Информация
-            success: Выполнено
+            success: Слово добавлено
             error: Ошибка
         user_group_membership_through_badge:
           fields:
@@ -286,7 +287,7 @@ ru:
         pin_topic:
           fields:
             pinnable_topic:
-              label: Идентификатор темы
+              label: ID темы
             pinned_globally:
               label: Закреплено глобально
             pinned_until:
@@ -294,7 +295,7 @@ ru:
         banner_topic:
           fields:
             topic_id:
-              label: Идентификатор темы
+              label: ID темы
             banner_until:
               label: Сделать баннером до
             user:
@@ -327,7 +328,7 @@ ru:
         close_topic:
           fields:
             topic:
-              label: Идентификатор темы
+              label: ID темы
             message:
               label: Сообщение о закрытии
               description: "Необязательное сообщение для показа при закрытии темы"
@@ -344,12 +345,12 @@ ru:
             label: Скрипт
         trigger:
           name:
-            label: Триггер
+            label: Запуск
         automation:
           name:
             label: Название
           trigger:
-            label: Триггер
+            label: Запуск
           script:
             label: Скрипт
           version:
@@ -357,7 +358,7 @@ ru:
           enabled:
             label: Включено
           disabled:
-            label: Отключено
+            label: Отключен
           placeholders:
             label: Заполнители
           last_updated_at:

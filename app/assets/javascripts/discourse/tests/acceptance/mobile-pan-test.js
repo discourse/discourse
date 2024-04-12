@@ -64,8 +64,9 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
 // new Touch() isn't available in Firefox, so this is skipped there
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
-  needs.user({
-    glimmer_header_enabled: true,
+  needs.user();
+  needs.settings({
+    glimmer_header_mode: "enabled",
   });
 
   chromeTest("swipe to close hamburger", async function (assert) {

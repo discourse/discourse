@@ -155,8 +155,8 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for enum properties" do
-      let(:schema) do
-        {
+      def schema(required: false)
+        property = {
           name: "section",
           properties: {
             enum_property: {
@@ -165,6 +165,9 @@ RSpec.describe ThemeSettingsObjectValidator do
             },
           },
         }
+
+        property[:properties][:enum_property][:required] = true if required
+        property
       end
 
       it "should not return any error messages when the value of the property is in the enum" do
@@ -184,14 +187,16 @@ RSpec.describe ThemeSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when enum property is not present" do
-        errors = described_class.new(schema: schema, object: {}).validate
+      it "should not return any error messages when enum property is not present but is not required" do
+        expect(described_class.new(schema: schema(required: false), object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when enum property is not present and is required" do
+        errors = described_class.new(schema: schema(required: true), object: {}).validate
 
         expect(errors.keys).to eq(["/enum_property"])
 
-        expect(errors["/enum_property"].full_messages).to contain_exactly(
-          "must be one of the following: [\"choice 1\", 2, false]",
-        )
+        expect(errors["/enum_property"].full_messages).to contain_exactly("must be present")
       end
     end
 

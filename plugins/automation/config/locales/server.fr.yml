@@ -43,7 +43,7 @@ fr:
         description: Lorsqu'un utilisateur est supprimé du groupe spécifié, l'automatisation est déclenchée
       user_promoted:
         title: Utilisateur promu
-        description: Lorsqu'un utilisateur est promu à un niveau de confiance supérieur
+        description: Lorsqu'un utilisateur est promu d'un niveau de confiance à un autre
         transition_placeholder: "de %{from_level_name} à %{to_level_name}"
       stalled_wiki:
         title: Wiki bloqué
@@ -64,6 +64,8 @@ fr:
       post:
         title: Créer un message
         description: Créer un message sur un sujet spécifique
+      topic:
+        title: Créer un sujet
       flag_post_on_words:
         title: Signaler un message en fonction des mots
         description: Signale un message s'il contient des mots spécifiés
@@ -127,7 +129,7 @@ fr:
         text: "Dernière vérification par @%{username} %{date_time}"
         summary: Vérifier le document
         details: "Effectuer une vérification du document : "
-        button_text: Terminé
+        button_text: Terminer
       add_user_to_group_through_custom_field:
         title: "Ajouter un utilisateur au groupe via le champ personnalisé de l'utilisateur"
       group_category_notification_default:

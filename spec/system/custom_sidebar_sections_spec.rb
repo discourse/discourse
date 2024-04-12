@@ -231,6 +231,7 @@ describe "Custom sidebar sections", type: :system do
     latest_link = find(".draggable[data-link-name='Sidebar Latest']")
     tags_link.drag_to(latest_link, html5: true, delay: 0.4)
     section_modal.save
+    expect(section_modal).to be_closed
 
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
@@ -292,6 +293,7 @@ describe "Custom sidebar sections", type: :system do
     sidebar.edit_custom_section("My section")
 
     section_modal.delete
+    expect(section_modal).to have_text("Are you sure you want to delete this section?")
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("My section")
@@ -315,13 +317,49 @@ describe "Custom sidebar sections", type: :system do
     section_modal.fill_name("Edited public section")
     section_modal.save
 
+    expect(section_modal).to have_text(
+      "Changes will be visible to everyone on this site. Are you sure?",
+    )
+
+    section_modal.confirm_update
+
     expect(sidebar).to have_section("Edited public section")
 
     sidebar.edit_custom_section("Edited public section")
     section_modal.delete
+    expect(section_modal).to have_text(
+      "This section is visible to everyone, are you sure you want to delete it?",
+    )
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("Edited public section")
+  end
+
+  it "displays warning when public section is marked as private" do
+    sign_in admin
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    section_modal.fill_name("Public section")
+    section_modal.fill_link("Sidebar Tags", "/tags")
+    section_modal.mark_as_public
+    section_modal.save
+
+    sidebar.edit_custom_section("Public section")
+    section_modal.fill_name("Edited public section")
+    section_modal.mark_as_public
+    section_modal.save
+
+    expect(section_modal).to have_text(
+      "This section is visible to everyone. After the update, it will be visible only to you. Are you sure?",
+    )
+
+    section_modal.confirm_update
+
+    expect(sidebar).to have_section("Edited public section")
+    expect(page).not_to have_css(
+      ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",
+    )
   end
 
   it "shows anonymous public sections" do

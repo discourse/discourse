@@ -135,9 +135,9 @@ export default class ChatMessageInfo extends Component {
           >
             <span class="chat-message-info__username__name">{{this.name}}</span>
             {{#if this.showStatus}}
-              <div class="chat-message-info__status">
+              <span class="chat-message-info__status">
                 <UserStatusMessage @status={{@message.user.status}} />
-              </div>
+              </span>
             {{/if}}
           </span>
         {{/if}}

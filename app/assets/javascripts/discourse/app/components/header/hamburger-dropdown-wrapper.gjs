@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { waitForPromise } from "@ember/test-waiters";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
@@ -9,14 +10,13 @@ import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import HamburgerDropdown from "../sidebar/hamburger-dropdown";
 
+const CLOSE_ON_CLICK_SELECTORS =
+  "a[href], .sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link";
+
 export default class HamburgerDropdownWrapper extends Component {
   @action
   click(e) {
-    if (
-      e.target.closest(
-        ".sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link"
-      )
-    ) {
+    if (e.target.closest(CLOSE_ON_CLICK_SELECTORS)) {
       this.args.toggleHamburger();
     }
   }
@@ -30,9 +30,9 @@ export default class HamburgerDropdownWrapper extends Component {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition = isDocumentRTL() ? "340px" : "-340px";
-      panel
+      const panelAnimatePromise = panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
-          duration: 200,
+          duration: isTesting() ? 0 : 200,
           fill: "forwards",
           easing: "ease-in",
         })
@@ -43,11 +43,13 @@ export default class HamburgerDropdownWrapper extends Component {
             discourseLater(() => this.args.toggleHamburger());
           }
         });
-      headerCloak.animate([{ opacity: 0 }], {
-        duration: 200,
+      const cloakAnimatePromise = headerCloak.animate([{ opacity: 0 }], {
+        duration: isTesting() ? 0 : 200,
         fill: "forwards",
         easing: "ease-in",
-      });
+      }).finished;
+      waitForPromise(panelAnimatePromise);
+      waitForPromise(cloakAnimatePromise);
     } else {
       this.args.toggleHamburger();
     }

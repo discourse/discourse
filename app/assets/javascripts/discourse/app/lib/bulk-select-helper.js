@@ -29,6 +29,10 @@ export default class BulkSelectHelper {
     this.selected.concat(topics);
   }
 
+  get selectedCategoryIds() {
+    return this.selected.mapBy("category_id").uniq();
+  }
+
   @bind
   toggleBulkSelect() {
     this.bulkSelectEnabled = !this.bulkSelectEnabled;

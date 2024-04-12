@@ -8,7 +8,7 @@ he:
   js:
     discourse_automation:
       title: אוטומציה
-      create: יצירה
+      create: ליצור
       update: עדכון
       select_script: בחירת סקריפט
       select_trigger: בחירת גורם מפעיל
@@ -26,18 +26,19 @@ he:
         confirm: "למחוק את `%{name}`?"
       fields:
         key_value:
-          label:
-            one: עריכת הגדרה (%{count})
-            two: עריכת הגדרות (%{count})
-            many: עריכת הגדרות (%{count})
-            other: עריכת הגדרות (%{count})
+          label_without_count: "הגדרה"
+          label_with_count:
+            one: "עריכת הגדרות (%{count})"
+            two: "עריכת הגדרות (%{count})"
+            many: "עריכת הגדרות (%{count})"
+            other: "עריכת הגדרות (%{count})"
         user:
           label: משתמש
         pm:
           title:
             label: כותרת
           raw:
-            label: גוף
+            label: Body
         pms:
           confirm_remove_pm: "להסיר את ההודעה הפרטית הזאת?"
           placeholder_title: כותרת ההודעה הפרטית
@@ -45,7 +46,7 @@ he:
           title:
             label: כותרת
           raw:
-            label: גוף
+            label: Body
           delay:
             label: השהיה (דקות)
           prefers_encrypt:
@@ -89,7 +90,7 @@ he:
             year: שנה
           fields:
             recurrence:
-              label: חזרתיות
+              label: חזרה
             start_date:
               label: תאריך התחלה
         stalled_wiki:
@@ -164,7 +165,7 @@ he:
             first_topic_only:
               label: נושא ראשון בלבד
               description: יוקפץ רק אם הנושא הוא הנושא הראשון שיצר המשתמש
-          created: נוצרו
+          created: נוצר
           edited: נערכו
         user_updated:
           fields:
@@ -180,7 +181,7 @@ he:
         category_created_edited:
           fields:
             restricted_category:
-              label: קטגוריית הורה
+              label: קטגורית אם
               description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
         pm_created:
           fields:
@@ -195,7 +196,7 @@ he:
               description: לדלג על גורם ההפעלה אם זה משתמש מהסגל
             ignore_group_members:
               label: התעלמות מחברי הקבוצה
-              description: לדלג על ההזנקה אם המוען הוא חבר קבוצה שצוינה לעיל
+              description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
             ignore_automated:
               label: התעלמות מאוטומטי
               description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על הודעות פרטיות שנוצרו דרך דוא״ל
@@ -264,9 +265,9 @@ he:
               description: מקבל HTML, לא למלא את זה בקלט מפוקפק!
           levels:
             warning: אזהרה
-            info: מידע
+            info: פרטים
             success: הצלחה
-            error: שגיאה
+            error: תקלה
         user_group_membership_through_badge:
           fields:
             badge_name:
@@ -340,20 +341,20 @@ he:
             label: סקריפט
         trigger:
           name:
-            label: גורם מפעיל
+            label: הקפצה
         automation:
           name:
             label: שם
           trigger:
-            label: גורם מפעיל
+            label: הקפצה
           script:
             label: סקריפט
           version:
-            label: גירסה
+            label: גרסה
           enabled:
-            label: מופעל
+            label: פעיל
           disabled:
-            label: מושבת
+            label: כבוי
           placeholders:
             label: ממלאי מקום
           last_updated_at:

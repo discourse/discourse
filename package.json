@@ -25,7 +25,7 @@
     "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.0",
-    "lefthook": "^1.6.8",
+    "lefthook": "^1.6.10",
     "lint-to-the-future": "^2.0.0",
     "lint-to-the-future-ember-template": "^1.1.1",
     "lint-to-the-future-eslint": "^2.0.1",
@@ -36,9 +36,9 @@
     "pikaday": "1.8.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^22.6.2",
+    "puppeteer-core": "^22.6.4",
     "squoosh": "discourse/squoosh#dc9649d",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
@@ -59,7 +59,7 @@
   },
   "workspaces": [
     "app/assets/javascripts/admin",
-    "app/assets/javascripts/bootstrap-json",
+    "app/assets/javascripts/custom-proxy",
     "app/assets/javascripts/deprecation-silencer",
     "app/assets/javascripts/dialog-holder",
     "app/assets/javascripts/discourse",

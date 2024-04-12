@@ -22,11 +22,15 @@ da:
       destroy_automation:
         confirm: "Er du sikker på, at du vil slette `%{name}`?"
       fields:
+        key_value:
+          label_without_count: "Konfigurer"
         user:
           label: Bruger
         pm:
           title:
             label: Titel
+          raw:
+            label: Brødtekst
         pms:
           confirm_remove_pm: "Er du sikker på, at du vil fjerne denne PM?"
           placeholder_title: PM titel
@@ -34,6 +38,8 @@ da:
           no_pm_created: Du har ikke oprettet nogen PM endnu. PM'er vil blive sendt, når din automatisering er udløst.
           title:
             label: Titel
+          raw:
+            label: Brødtekst
           delay:
             label: Forsinkelse (minutter)
           prefers_encrypt:
@@ -75,6 +81,8 @@ da:
             month: måned
             year: år
           fields:
+            recurrence:
+              label: Gentagelse
             start_date:
               label: Start dato
         stalled_wiki:
@@ -126,14 +134,16 @@ da:
               label: Kategori
             restricted_group:
               label: Gruppe
-          created: Skabt
+          created: Oprettet
           edited: Redigeret
         category_created_edited:
           fields:
             restricted_category:
-              label: Overordnet Kategori
+              label: Overordnet kategori
         pm_created:
           fields:
+            restricted_user:
+              label: Brugere
             restricted_group:
               label: Gruppe
             valid_trust_levels:
@@ -240,7 +250,7 @@ da:
           name:
             label: Navn
           trigger:
-            label: Aftrækkeren
+            label: Udløser
           script:
             label: Script
           version:

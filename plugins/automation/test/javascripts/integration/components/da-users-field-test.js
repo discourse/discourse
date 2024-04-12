@@ -1,16 +1,17 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import fabricators from "discourse/plugins/automation/discourse/lib/fabricators";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-users-field", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.automation = fabricators.automation();
+    this.automation = new AutomationFabricators(getOwner(this)).automation();
 
     pretender.get("/u/search/users", () =>
       response({
@@ -31,7 +32,7 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("sets values", async function (assert) {
-    this.field = fabricators.field({
+    this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 
@@ -49,7 +50,7 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("allows emails", async function (assert) {
-    this.field = fabricators.field({
+    this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 

@@ -43,7 +43,7 @@ es:
         description: Cuando un usuario sea eliminado del grupo especificado, se activará la automatización
       user_promoted:
         title: Usuario sube de nivel de confianza
-        description: Cuando un usuario sube de un nivel de confianza a otro
+        description: Cuando un usuario asciende de nivel de confianza
         transition_placeholder: "de %{from_level_name} a %{to_level_name}"
       stalled_wiki:
         title: Wiki estancada
@@ -64,6 +64,8 @@ es:
       post:
         title: Crear una publicación
         description: Crear una publicación sobre un tema específico
+      topic:
+        title: Crear un tema
       flag_post_on_words:
         title: Denunciar publicación según su contenido
         description: Denuncia una publicación si contiene las palabras especificadas
@@ -79,7 +81,7 @@ es:
         title: Etiquetar automáticamente tea
         description: Añadir etiquetas automáticamente a un tema
       pin_topic:
-        title: Fijar tema
+        title: Anclar tema
         description: Fija un tema específico en una fecha determinada
       banner_topic:
         title: Hacer tema de encabezado

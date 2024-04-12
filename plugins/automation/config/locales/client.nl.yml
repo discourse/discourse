@@ -27,16 +27,17 @@ nl:
         confirm: "Weet je zeker dat je '%{name}' wilt verwijderen?"
       fields:
         key_value:
-          label:
-            one: Configuratie bewerken (%{count})
-            other: Configuratie bewerken (%{count})
+          label_without_count: "Configureren"
+          label_with_count:
+            one: "Configuratie bewerken (%{count})"
+            other: "Configuratie bewerken (%{count})"
         user:
           label: Gebruiker
         pm:
           title:
             label: Titel
           raw:
-            label: Tekst
+            label: Inhoud
         pms:
           confirm_remove_pm: "Weet je zeker dat je dit PB wilt verwijderen?"
           placeholder_title: PB-titel
@@ -45,7 +46,7 @@ nl:
           title:
             label: Titel
           raw:
-            label: Tekst
+            label: Inhoud
           delay:
             label: Vertraging (minuten)
           prefers_encrypt:
@@ -84,7 +85,7 @@ nl:
           frequencies:
             minute: minuut
             hour: uur
-            day: dag
+            day: day
             weekday: weekdag
             week: week
             month: maand
@@ -253,8 +254,8 @@ nl:
               description: Accepteert HTML, vul dit niet met niet-vertrouwde invoer!
           levels:
             warning: Waarschuwing
-            info: Informatie
-            success: Geslaagd
+            info: Info
+            success: Succes
             error: Fout
         user_group_membership_through_badge:
           fields:

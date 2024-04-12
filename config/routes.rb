@@ -667,10 +667,6 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/preferences/categories" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/preferences/users" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,

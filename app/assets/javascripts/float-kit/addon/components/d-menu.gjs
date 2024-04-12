@@ -5,14 +5,18 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
+import { isTesting } from "discourse-common/config/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
   @service menu;
+  @service site;
 
   @tracked menuInstance = null;
 
@@ -92,31 +96,56 @@ export default class DMenu extends Component {
     </DButton>
 
     {{#if this.menuInstance.expanded}}
-      <DFloatBody
-        @instance={{this.menuInstance}}
-        @trapTab={{this.options.trapTab}}
-        @mainClass={{concatClass
-          "fk-d-menu"
-          (concat this.options.identifier "-content")
-        }}
-        @innerClass="fk-d-menu__inner-content"
-        @role="dialog"
-        @inline={{this.options.inline}}
-        @portalOutletElement={{this.menu.portalOutletElement}}
-      >
-        {{#if (has-block)}}
-          {{yield this.componentArgs}}
-        {{else if (has-block "content")}}
-          {{yield this.componentArgs to="content"}}
-        {{else if this.options.component}}
-          <this.options.component
-            @data={{this.options.data}}
-            @close={{this.menuInstance.close}}
-          />
-        {{else if this.options.content}}
-          {{this.options.content}}
-        {{/if}}
-      </DFloatBody>
+      {{#if (and this.site.mobileView this.options.modalForMobile)}}
+        <DModal
+          @closeModal={{this.menuInstance.close}}
+          @hideHeader={{true}}
+          class={{concatClass
+            "fk-d-menu-modal"
+            (concat this.options.identifier "-content")
+          }}
+          @inline={{(isTesting)}}
+        >
+          {{#if (has-block)}}
+            {{yield this.componentArgs}}
+          {{else if (has-block "content")}}
+            {{yield this.componentArgs to="content"}}
+          {{else if this.options.component}}
+            <this.options.component
+              @data={{this.options.data}}
+              @close={{this.menuInstance.close}}
+            />
+          {{else if this.options.content}}
+            {{this.options.content}}
+          {{/if}}
+        </DModal>
+      {{else}}
+        <DFloatBody
+          @instance={{this.menuInstance}}
+          @trapTab={{this.options.trapTab}}
+          @mainClass={{concatClass
+            "fk-d-menu"
+            (concat this.options.identifier "-content")
+          }}
+          @innerClass="fk-d-menu__inner-content"
+          @role="dialog"
+          @inline={{this.options.inline}}
+          @portalOutletElement={{this.menu.portalOutletElement}}
+        >
+          {{#if (has-block)}}
+            {{yield this.componentArgs}}
+          {{else if (has-block "content")}}
+            {{yield this.componentArgs to="content"}}
+          {{else if this.options.component}}
+            <this.options.component
+              @data={{this.options.data}}
+              @close={{this.menuInstance.close}}
+            />
+          {{else if this.options.content}}
+            {{this.options.content}}
+          {{/if}}
+        </DFloatBody>
+      {{/if}}
     {{/if}}
   </template>
 }

@@ -18,6 +18,6 @@ export default class PlaceholdersList extends Component {
 
   @action
   copyPlaceholder(placeholder) {
-    this.args.onCopy(`${this.args.currentValue}{{${placeholder}}}`);
+    this.args.onCopy(`${this.args.currentValue || ""}{{${placeholder}}}`);
   }
 }

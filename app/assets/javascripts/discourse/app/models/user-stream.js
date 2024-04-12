@@ -5,6 +5,7 @@ import { url } from "discourse/lib/computed";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -110,6 +111,11 @@ export default class UserStream extends RestModel {
       .then((result) => {
         if (result && result.user_actions) {
           const copy = A();
+
+          result.categories?.forEach((category) => {
+            Site.current().updateCategory(category);
+          });
+
           result.user_actions.forEach((action) => {
             action.title = emojiUnescape(escapeExpression(action.title));
             copy.pushObject(UserAction.create(action));

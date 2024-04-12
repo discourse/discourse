@@ -43,8 +43,8 @@ tr_TR:
         description: Bir kullanıcı belirtilen gruptan çıkarıldığında otomasyon tetiklenir
       user_promoted:
         title: Kullanıcı yükseltildi
-        description: Bir kullanıcı bir güven seviyesinden diğerine yükseldiğinde
-        transition_placeholder: "%{from_level_name} seviyesinden %{to_level_name} seviyesine"
+        description: Bir kullanıcı bir güven seviyesinden diğerine terfi ettiğinde
+        transition_placeholder: "%{from_level_name} iken %{to_level_name} oldu"
       stalled_wiki:
         title: Durmuş viki
         description: Bir viki tanımlanandan daha uzun bir süre boyunca düzenlenmediğinde otomasyon tetiklenir
@@ -64,6 +64,8 @@ tr_TR:
       post:
         title: Gönderi oluştur
         description: Belirli bir konuda gönderi oluşturun
+      topic:
+        title: Yeni konu oluşturun
       flag_post_on_words:
         title: Kelimeler üzerine gönderiye bayrak ekle
         description: Belirtilen kelimeleri içeriyorsa bir gönderiye bayrak ekler
@@ -127,7 +129,7 @@ tr_TR:
         text: "Son kontrol eden: @%{username} %{date_time}"
         summary: Belgeyi kontrol et
         details: "Belge üzerinde kontrol gerçekleştirin: "
-        button_text: Bitti
+        button_text: Tamamlandı
       add_user_to_group_through_custom_field:
         title: "Kullanıcı Özel Alanı aracılığıyla gruba kullanıcı ekleyin"
       group_category_notification_default:

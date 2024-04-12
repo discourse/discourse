@@ -25,6 +25,8 @@ da:
       zapier_webhook:
         title: Zapier webhook
       pin_topic:
-        title: Fastgør emne
+        title: Fastgør Emne
       close_topic:
-        title: Luk Emne
+        title: Luk emne
+      append_last_checked_by:
+        button_text: Færdig

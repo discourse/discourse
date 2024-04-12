@@ -9,22 +9,24 @@ fa_IR:
     discourse_automation:
       title: اتوماسیون
       create: ایجاد
-      update: به‌روزرسانی
+      update: به روز رسانی
       destroy_automation:
         confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
       fields:
+        key_value:
+          label_without_count: "پیکربندی"
         user:
           label: کاربر
         pm:
           title:
             label: عنوان
           raw:
-            label: بدنه
+            label: Body
         pms:
           title:
             label: عنوان
           raw:
-            label: بدنه
+            label: Body
           delay:
             label: تاخیر (دقیقه)
         group:
@@ -62,6 +64,8 @@ fa_IR:
             month: ماه
             year: سال
           fields:
+            recurrence:
+              label: همروندی
             start_date:
               label: تاریخ شروع
         stalled_wiki:
@@ -89,10 +93,16 @@ fa_IR:
               label: دسته‌بندی
             restricted_group:
               label: گروه
-          created: ایجاد شده
+          created: ساخته شده
           edited: ویرایش شده
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: دسته‌بندی مادر
         pm_created:
           fields:
+            restricted_user:
+              label: کاربران
             restricted_group:
               label: گروه
         after_post_cook:
@@ -170,9 +180,14 @@ fa_IR:
         script:
           name:
             label: اسکریپت
+        trigger:
+          name:
+            label: گیره
         automation:
           name:
             label: نام
+          trigger:
+            label: گیره
           script:
             label: اسکریپت
           version:
@@ -180,7 +195,7 @@ fa_IR:
           enabled:
             label: فعال شد
           disabled:
-            label: غیرفعال شد
+            label: غیرفعال
           last_updated_at:
             label: آخرین به‌روزرسانی
           last_updated_by:

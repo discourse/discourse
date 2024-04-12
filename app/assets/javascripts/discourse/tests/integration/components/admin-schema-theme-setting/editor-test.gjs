@@ -651,14 +651,20 @@ module(
               default: "awesome",
               choices: ["nice", "cool", "awesome"],
             },
+            required_enum_field: {
+              type: "enum",
+              default: "awesome",
+              required: true,
+              choices: ["nice", "cool", "awesome"],
+            },
           },
         },
         value: [
           {
-            enum_field: "awesome",
+            required_enum_field: "awesome",
           },
           {
-            enum_field: "cool",
+            required_enum_field: "cool",
           },
         ],
       });
@@ -673,25 +679,31 @@ module(
         `${inputFields.fields.enum_field.selector} .select-kit`
       );
 
-      assert.strictEqual(enumSelector.header().value(), "awesome");
+      assert.strictEqual(enumSelector.header().value(), null);
 
-      await enumSelector.expand();
-      await enumSelector.selectRowByValue("nice");
+      const requiredEnumSelector = selectKit(
+        `${inputFields.fields.required_enum_field.selector} .select-kit`
+      );
 
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
+
+      await requiredEnumSelector.expand();
+      await requiredEnumSelector.selectRowByValue("nice");
+
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
-      assert.strictEqual(enumSelector.header().value(), "cool");
+      assert.strictEqual(requiredEnumSelector.header().value(), "cool");
 
       tree.refresh();
 
       await click(tree.nodes[0].element);
-      assert.strictEqual(enumSelector.header().value(), "nice");
+      assert.strictEqual(requiredEnumSelector.header().value(), "nice");
 
       await click(TOP_LEVEL_ADD_BTN);
 
-      assert.strictEqual(enumSelector.header().value(), "awesome");
+      assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
     });
 
     test("input fields of type categories that is not required with min and max validations", async function (assert) {
@@ -824,6 +836,65 @@ module(
           count: 1,
         })
       );
+    });
+
+    test("input field of type categories with schema's identifier set to categories field", async function (assert) {
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "category",
+          identifier: "category",
+          properties: {
+            category: {
+              type: "categories",
+              required: true,
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "support",
+            },
+            7: {
+              id: 7,
+              name: "something",
+            },
+          },
+        },
+        value: [
+          {
+            category: [6, 7],
+          },
+        ],
+      });
+
+      await render(<template>
+        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+      </template>);
+
+      const tree = new TreeFromDOM();
+
+      assert.dom(tree.nodes[0].textElement).hasText("support, something");
+
+      const inputFields = new InputFieldsFromDOM();
+
+      const categorySelector = selectKit(
+        `${inputFields.fields.category.selector} .select-kit`
+      );
+
+      await categorySelector.expand();
+      await categorySelector.deselectItemByValue("6");
+      await categorySelector.collapse();
+
+      assert.dom(tree.nodes[0].textElement).hasText("something");
+
+      await click(TOP_LEVEL_ADD_BTN);
+
+      tree.refresh();
+
+      assert.dom(tree.nodes[1].textElement).hasText("category 2");
     });
 
     test("input fields of type tags which is required", async function (assert) {

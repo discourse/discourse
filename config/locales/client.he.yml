@@ -287,7 +287,8 @@ he:
         us_west_1: "מערב ארה״ב (צפון קליפורניה)"
         us_west_2: "מערב ארה״ב (אורגון)"
     clear_input: "פינוי הקלט"
-    edit: "עריכת הכותרת והקטגוריה של נושא זה"
+    edit: "עריכה"
+    edit_topic: "עריכת הכותרת והקטגוריה של נושא זה"
     expand: "הרחבה"
     not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
@@ -336,7 +337,11 @@ he:
     weekly: "שבועית"
     every_month: "כל חודש"
     every_six_months: "כל שישה חודשים"
-    max_of_count: "%{count} לכל היותר"
+    max_of_count:
+      one: "%{count} לכל היותר"
+      two: "%{count} לכל היותר"
+      many: "%{count} לכל היותר"
+      other: "%{count} לכל היותר"
     character_count:
       one: "תו אחד"
       two: "%{count} תווים"
@@ -382,6 +387,10 @@ he:
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה"
     bookmarks:
+      also_set_reminder: "להגדיר גם תזכורת?"
+      bookmarked_success: "מסומן!"
+      deleted_bookmark_success: "הסימנייה נמחקה!"
+      reminder_set_success: "תזכורת הוגדרה!"
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
@@ -404,8 +413,11 @@ he:
         when_reminder_sent: "מחיקת סימנייה"
         on_owner_reply: "מחיקת מסד נתונים, לאחר התגובה"
         clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
+        after_reminder_label: "לאחר שהזכרנו לך עלינו…"
+        after_reminder_checkbox: "להגדיר את זה כברירת מחדל לכל תזכורות הסימניות העתידיות"
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
+      bookmark: "סימנייה"
       reminders:
         today_with_time: "היום ב־%{time}"
         tomorrow_with_time: "מחר ב־%{time}"
@@ -737,6 +749,7 @@ he:
       in_two_hours: "תוך שעתיים"
       later_today: "בהמשך היום"
       two_days: "יומיים"
+      three_days: "תוך שלושה ימים"
       next_business_day: "יום העסקים הבא"
       tomorrow: "מחר"
       post_local_date: "תאריך בפוסט"
@@ -758,6 +771,7 @@ he:
       never: "לעולם לא"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
       custom: "תאריך ושעה מותאמים אישית"
+      custom_short: "התאמה אישית…"
       select_timeframe: "נא לבחור טווח זמן"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
@@ -1050,7 +1064,6 @@ he:
         image: "העלאת תמונה"
       default_notifications:
         modal_title: "התראות ברירת המחדל של המשתמש"
-        modal_description: "מעניין אותך להחיל את השינוי הזה רטרואקטיבית? פעולה זו תשנה את העדפותיהם של %{count} משתמשים קיימים."
         modal_yes: "כן"
         modal_no: "לא, להחיל את השינוי מעתה ואילך"
     user_action_groups:
@@ -1073,7 +1086,11 @@ he:
       all_subcategories: "כל תת־הקטגוריות"
       no_subcategories: "אין תת־קטגוריות"
       remove_filter: "הסרת הסינון"
-      plus_more_count: "+עוד %{count}"
+      plus_more_count:
+        one: "+עוד %{count}"
+        two: "+עוד %{count}"
+        many: "+עוד %{count}"
+        other: "+עוד %{count}"
       view_all: "להציג הכול"
       category: "קטגוריה"
       category_list: "הצגת רשימת קטגוריות"
@@ -1116,7 +1133,11 @@ he:
         two: "%{count} נושאים חדשים בחודש האחרון"
         many: "%{count} נושאים חדשים בחודש האחרון"
         other: "%{count} נושאים חדשים בחודש האחרון"
-      n_more: "קטגוריות (%{count} נוספות)…"
+      n_more:
+        one: "קטגוריות (%{count} נוספות)…"
+        two: "קטגוריות (%{count} נוספות)…"
+        many: "קטגוריות (%{count} נוספות)…"
+        other: "קטגוריות (%{count} נוספות)…"
     ip_lookup:
       title: חיפוש כתובת IP
       hostname: שם שרת
@@ -1125,7 +1146,11 @@ he:
       organisation: ארגון
       phone: טלפון
       other_accounts: "חשבונות נוספים עם כתובת IP זו:"
-      delete_other_accounts: "מחיקה %{count}"
+      delete_other_accounts:
+        one: "מחיקה %{count}"
+        two: "מחיקה %{count}"
+        many: "מחיקה %{count}"
+        other: "מחיקה %{count}"
       username: "שם משתמש"
       trust_level: "דרגת-אמון"
       read_time: "זמן צפייה"
@@ -1256,7 +1281,6 @@ he:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
-      color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
@@ -1912,7 +1936,6 @@ he:
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
         same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
-        instructions: "לפחות %{count} תווים."
         required: "נא למלא סיסמה"
         confirm: "אישור"
         incorrect_password: "הסיסמה שמילאת שגויה."
@@ -2019,12 +2042,12 @@ he:
       remove_status: "הסרת מצב"
     user_tips:
       button: "הבנתי!"
+      skip: "דילוג על עצות"
       first_notification:
         title: "ההתראה הראשונה שלך!"
         content: "התראות משמשות לעדכן אותך במה שקורה בקהילה."
       topic_timeline:
         title: "ציר הזמן של הנושא"
-        content: "אפשר לגלול במהירות על פני הפוסט באמצעות ציר הזמן של הנושא."
       post_menu:
         title: "תפריט פוסט"
         content: "ניתן לראות אילו פעולות נוספות ניתן לבצע עם הפוסט על ידי לחיצה על שלוש הנקודות!"
@@ -2415,7 +2438,6 @@ he:
         two: "אזכור %{group} יודיע ל<a href='%{group_link}'>שני אנשים</a>."
         many: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
         other: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
-      larger_group_mentioned: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>. להמשיך?"
       cannot_see_mention:
         category: "אזכרת את ‎@%{username} אבל לא תישלח התראה עקב העדר גישה לקטגוריה הזו. עליך להוסיף את מי שאוזכר לקבוצה שיש לה גישה לקטגוריה הזאת."
         private: "אזכרת את ‎@%{username} אבל לא תישלח התראה עקב העדר גישה לצפייה בהודעה האישית הזאת. עליך להזמין את מי שאוזכר להודעה האישית הזאת."
@@ -2817,7 +2839,6 @@ he:
           seen: קראתי
           unseen: לא קראתי
           wiki: הם ויקי
-          images: לרבות תמונות
           all_tags: כל התגיות הנ"ל
         statuses:
           label: כאשר נושאים
@@ -2984,6 +3005,11 @@ he:
           two: "בחרת ב־<b>%{count}</b> נושאים."
           many: "בחרת ב־<b>%{count}</b> נושאים."
           other: "בחרת ב־<b>%{count}</b> נושאים."
+        selected_count:
+          one: "%{count} נבחרו"
+          two: "%{count} נבחרו"
+          many: "%{count} נבחרו"
+          other: "%{count} נבחרו"
         change_tags: "החלפת תגיות"
         append_tags: "הוספת תגיות"
         choose_new_tags: "בחירה בתגיות חדשות לנושאים אלו:"
@@ -3035,6 +3061,7 @@ he:
     topic_bulk_actions:
       close_topics:
         name: "סגירת נושאים"
+        optional: (רשות)
       archive_topics:
         name: "העברת נושאים לארכיון"
       unlist_topics:
@@ -4301,7 +4328,6 @@ he:
         filter_sidebar: "%{shortcut} סרגל צד סינון"
         help: "%{shortcut} פתיחת קיצורי מקשים"
         toggle_bulk_select: "%{shortcut} החלפת מצב בחירה במרוכז"
-        dismiss: "%{shortcut} התעלמות מהנושאים הנבחרים"
         x: "%{shortcut} החלפת מצב בחירה (במצב בחירה במרוכז)"
         log_out: "%{shortcut} התנתקות"
       composing:
@@ -4663,23 +4689,19 @@ he:
               label: "סמל"
               validation:
                 blank: "הסמל לא יכול להיות ריק"
-                maximum: "הסמל חייב להיות קצר מ־%{count} תווים"
             name:
               label: "שם"
               validation:
                 blank: "השם לא יכול להיות ריק"
-                maximum: "השם חייב להיות קצר מ־%{count} תווים"
             value:
               label: "קישור"
               validation:
                 blank: "הקישור לא יכול להיות ריק"
-                maximum: "הקישור חייב להיות קצר מ־%{count} תווים"
                 invalid: "התבנית שגויה"
           title:
             label: "כותרת מקטע"
             validation:
               blank: "הכותרת לא יכולה להיות ריקה"
-              maximum: "הכותרת חייבת להיות קצרה מ־%{count} תווים"
         about:
           header_link_text: "אודות"
         messages:
@@ -4744,7 +4766,11 @@ he:
             review:
               content: "סקירה"
               title: "פוסטים מסומנים ופריטים אחרים בתור"
-              pending_count: "%{count} ממתינים"
+              pending_count:
+                one: "%{count} ממתינים"
+                two: "%{count} ממתינים"
+                many: "%{count} ממתינים"
+                other: "%{count} ממתינים"
         global_section: "סעיף כללי, גלוי לכולם"
       panels:
         forum:
@@ -5562,13 +5588,21 @@ he:
           convert_theme_tooltip: "המרת ערכת עיצוב זו לרכיב"
           inactive_themes: "ערכות עיצוב בלתי פעילות:"
           inactive_components: "רכיבים שאינם בשימוש:"
-          selected: "%{count} נבחרו"
+          selected:
+            one: "%{count} נבחרו"
+            two: "%{count} נבחרו"
+            many: "%{count} נבחרו"
+            other: "%{count} נבחרו"
           cancel: "ביטול"
           broken_theme_tooltip: "לערכת עיצוב זו יש שגיאות ב־CSS,‏ HTML או YAML"
           disabled_component_tooltip: "הרכיב הזה נוטרל"
           default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"
           updates_available_tooltip: "קיימים עדכונים לערכת עיצוב זו"
-          and_x_more: "ו־%{count} נוספות."
+          and_x_more:
+            one: "ו־%{count} נוספות."
+            two: "ו־%{count} נוספות."
+            many: "ו־%{count} נוספות."
+            other: "ו־%{count} נוספות."
           collapse: צמצום
           uploads: "העלאות"
           no_uploads: "ניתן להעלות משאבים שקשורים לערכת העיצוב שלך כגון גופנים ותמונות"
@@ -5709,8 +5743,6 @@ he:
                   two: "צריך לפחות שתי תגיות"
                   many: "צריך לפחות %{count} תגיות"
                   other: "צריך לפחות %{count} תגיות"
-              string:
-                too_short: "חייבים להיות לפחות %{count} תווים"
               number:
                 too_small: "חייב להיות גדול או שווה ל־%{count}"
                 too_large: "חייב להיות קטן או שווה ל־%{count}"
@@ -6567,7 +6599,6 @@ he:
           empty: "אין תמונות עדיין. נא להעלות אחת."
           upload:
             label: "העלאה"
-            title: "העלאת תמונות"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         categories:
@@ -6603,7 +6634,6 @@ he:
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
         default_categories:
-          modal_description: "מעניין אותך להחיל את השינוי הזה רטרואקטיבית? פעולה זו תשנה את העדפותיהם של %{count} משתמשים קיימים."
           modal_yes: "כן"
           modal_no: "לא, להחיל את השינוי מעתה ואילך"
         simple_list:
@@ -6704,9 +6734,7 @@ he:
           perform: "להעניק עיטור למשתמשים"
           upload_csv: להעלות CSV עם כתובות דוא״ל או שמות משתמשים
           aborted: נא להעלות קובץ CSV שמכיל או כתובות דוא״ל או שמות משתמשים
-          success: ה־CSV שלך התקבל ו־%{count} משתמשים יקבלו את העיטור שלהם בעוד רגע קט.
           csv_has_unmatched_users: "הערכים הבאים נמצאים בקובץ ה־CSV אך לא ניתן היה להתאים אותם למשתמשים קיימים ולכן לא יקבלו את העיטור:"
-          csv_has_unmatched_users_truncated_list: "בקובץ ה־CSV היו %{count} רשומות שלא ניתן היה להתאים למשתמשים קיימים ולכן לא יקבלו את העיטור. בשל מספר הרשומות הרב ללא התאמה, רק 100 הראשונות מוצגות:"
           replace_owners: הסרת העיטור מהבעלים הקודמים
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:

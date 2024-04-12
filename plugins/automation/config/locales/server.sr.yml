@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 sr:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Tema
+    scriptables:
+      pin_topic:
+        title: Zakači temu
+      close_topic:
+        title: Zatvori temu
+      append_last_checked_by:
+        button_text: Gotovo

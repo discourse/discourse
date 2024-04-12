@@ -1,4 +1,4 @@
-import { hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import emoji from "discourse/helpers/emoji";
 import I18n from "discourse-i18n";
 
@@ -17,7 +17,8 @@ const UserStatusBubble = <template>
   <div class="user-status-background">
     {{emoji
       @status.emoji
-      (hash title=(title @status.description @status.ends_at @timezone))
+      title=(title @status.description @status.ends_at @timezone)
+      alt=(concat ":" @status.emoji ":")
     }}
   </div>
 </template>;

@@ -5,3 +5,19 @@
 # https://translate.discourse.org/
 
 hr:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        description: Kada se korisnik unaprijedi s jedne razine povjerenja na drugu
+        transition_placeholder: "od %{from_level_name} do %{to_level_name}"
+      topic:
+        title: Tema
+    scriptables:
+      topic:
+        title: Napravite temu
+      pin_topic:
+        title: Zakvači temu
+      close_topic:
+        title: Zatvori temu
+      append_last_checked_by:
+        button_text: Gotovo

@@ -27,9 +27,10 @@ tr_TR:
         confirm: "Şunu silmek istediğinizden emin misiniz: \"%{name}\"?"
       fields:
         key_value:
-          label:
-            one: Yapılandırmayı Düzenle (%{count})
-            other: Yapılandırmayı Düzenle (%{count})
+          label_without_count: "Yapılandır"
+          label_with_count:
+            one: "Yapılandırmayı Düzenle (%{count})"
+            other: "Yapılandırmayı Düzenle (%{count})"
         user:
           label: Kullanıcı
         pm:
@@ -140,7 +141,7 @@ tr_TR:
         topic:
           fields:
             restricted_topic:
-              label: Konu Kimliği
+              label: Konu kimliği
         post_created_edited:
           fields:
             action_type:
@@ -167,8 +168,12 @@ tr_TR:
             first_topic_only:
               label: Yalnızca ilk konu
               description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
-          created: Oluşturuldu
+          created: Oluşturulma
           edited: Düzenlendi
+        user_updated:
+          fields:
+            user_profile:
+              label: Kullanıcı profili alanları
         category_created_edited:
           fields:
             restricted_category:
@@ -232,7 +237,7 @@ tr_TR:
             creator:
               label: Oluşturucu
             topic:
-              label: Konu Kimliği
+              label: Konu kimliği
             post:
               label: Gönderi içeriği
         group_category_notification_default:
@@ -284,7 +289,7 @@ tr_TR:
         pin_topic:
           fields:
             pinnable_topic:
-              label: Konu Kimliği
+              label: Konu kimliği
             pinned_globally:
               label: Küresel olarak sabitlendi
             pinned_until:
@@ -292,7 +297,7 @@ tr_TR:
         banner_topic:
           fields:
             topic_id:
-              label: Konu Kimliği
+              label: Konu kimliği
             banner_until:
               label: 'Şu tarihe kadar banner yap:'
             user:
@@ -325,7 +330,7 @@ tr_TR:
         close_topic:
           fields:
             topic:
-              label: Konu Kimliği
+              label: Konu kimliği
             message:
               label: Kapanış mesajı
               description: "Konu Kapatıldı kaydında gösterilecek isteğe bağlı mesaj"
@@ -345,7 +350,7 @@ tr_TR:
             label: Tetikleyici
         automation:
           name:
-            label: İsim
+            label: Ad
           trigger:
             label: Tetikleyici
           script:
@@ -353,7 +358,7 @@ tr_TR:
           version:
             label: Sürüm
           enabled:
-            label: Etkin
+            label: Etkin mi
           disabled:
             label: Devre Dışı
           placeholders:

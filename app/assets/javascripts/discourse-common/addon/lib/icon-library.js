@@ -41,6 +41,7 @@ export const REPLACEMENTS = {
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out-alt",
   "notification.linked": "link",
+  "notification.linked_consolidated": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "discourse-bell-one",

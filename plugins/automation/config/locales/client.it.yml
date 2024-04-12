@@ -27,9 +27,10 @@ it:
         confirm: "Vuoi davvero eliminare `%{name}`?"
       fields:
         key_value:
-          label:
-            one: Modifica configurazione (%{count})
-            other: Modifica configurazione (%{count})
+          label_without_count: "Configura"
+          label_with_count:
+            one: "Modifica configurazione (%{count})"
+            other: "Modifica configurazione (%{count})"
         user:
           label: Utente
         pm:
@@ -84,7 +85,7 @@ it:
           frequencies:
             minute: minuto
             hour: ora
-            day: giorno
+            day: al giorno
             weekday: giorno feriale
             week: settimana
             month: mese
@@ -140,7 +141,7 @@ it:
         topic:
           fields:
             restricted_topic:
-              label: ID argomento
+              label: ID dell'argomento
         post_created_edited:
           fields:
             action_type:
@@ -167,12 +168,12 @@ it:
             first_topic_only:
               label: Solo il primo argomento
               description: Si attiverà solo se l'argomento è il primo creato da un utente
-          created: Creati
+          created: Creazione
           edited: Modificati
         category_created_edited:
           fields:
             restricted_category:
-              label: Categoria principale
+              label: Categoria Superiore
               description: Facoltativo, consente di limitare l'attivazione di questa categoria
         pm_created:
           fields:
@@ -203,7 +204,7 @@ it:
               label: Categoria
               description: Facoltativo, verrà attivato solo se l'argomento del post rientra in questa categoria
             restricted_tags:
-              label: Tag
+              label: Etichette
               description: Facoltativo, si attiverà solo se il messaggio ha una di queste etichette
       scriptables:
         not_found: Impossibile trovare lo script `%{script}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
@@ -232,7 +233,7 @@ it:
             creator:
               label: Autore
             topic:
-              label: ID argomento
+              label: ID dell'argomento
             post:
               label: Contenuto messaggio
         group_category_notification_default:
@@ -253,7 +254,7 @@ it:
               description: Accetta HTML, non riempire questo campo con contenuti non attendibili!
           levels:
             warning: Avvertenza
-            info: Informazioni
+            info: Info
             success: Riuscito
             error: Errore
         user_group_membership_through_badge:
@@ -284,7 +285,7 @@ it:
         pin_topic:
           fields:
             pinnable_topic:
-              label: ID argomento
+              label: ID dell'argomento
             pinned_globally:
               label: Fissato a livello globale
             pinned_until:
@@ -292,7 +293,7 @@ it:
         banner_topic:
           fields:
             topic_id:
-              label: ID argomento
+              label: ID dell'argomento
             banner_until:
               label: Crea banner fino a
             user:
@@ -325,7 +326,7 @@ it:
         close_topic:
           fields:
             topic:
-              label: ID argomento
+              label: ID dell'argomento
             message:
               label: Messaggio di chiusura
               description: "Messaggio opzionale da mostrare nel registro Argomento chiuso"
@@ -342,20 +343,20 @@ it:
             label: Script
         trigger:
           name:
-            label: Azione di attivazione
+            label: Attivazione
         automation:
           name:
             label: Nome
           trigger:
-            label: Azione di attivazione
+            label: Attivazione
           script:
             label: Script
           version:
             label: Versione
           enabled:
-            label: Abilitato
+            label: Abilitati
           disabled:
-            label: Disabilitato
+            label: Disabilitati
           placeholders:
             label: Segnaposto
           last_updated_at:

@@ -1160,7 +1160,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
+      context "when the post is should_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)

@@ -96,7 +96,6 @@ fa_IR:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "محدود به %{max} نویسه؛ شما %{length} نویسه وارد کردیدکردید "
       invalid_boolean: "عملگر دودویی نامعتبر است."
       taken: "قبلا انتخاب شده است"
       accepted: باید تایید شود
@@ -1206,8 +1205,6 @@ fa_IR:
       must_include_latest: "بهترین فهرست باید شامل آخرین تب‌ها باشد. "
       invalid_string: "مقدار نامعتبر."
       invalid_string_min_max: "باید بین %{min} و %{max} نویسه باشد"
-      invalid_string_min: "باید حداقل %{min} نویسه باشد "
-      invalid_string_max: "نباید بیشتر از %{max} نویسه باشد"
       invalid_reply_by_email_address: "مقدار باید شامل '%{reply_key}' و از ایمیل آگاه سازی متفاوت باشد"
       invalid_alternative_reply_by_email_addresses: "تمام مقدار‌ها باید شامل '%{reply_key}' و ازسایر ایمیل‌های اطلاع‌رسانی جدا باشند."
       pop3_polling_host_is_empty: "حداقل باید یک 'هاست رای‌گیری pop3' قبل از فعالسازی رای‌گیری POP3 تنظیم کرده باشید."
@@ -1224,6 +1221,14 @@ fa_IR:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "غیر‌فعال"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "غیر‌فعال"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1358,8 +1363,6 @@ fa_IR:
     activated_by_staff: "فعال شده توسط کارمندان"
     new_user_typed_too_fast: "کاربر جدید خیلی سریع تایپ کرده"
     username:
-      short: "نباید کمتر از %{min} نویسه باشد"
-      long: "نباید بیشتر از %{max} نویسه باشد"
       unique: "باید خاص باشد"
       blank: "باید حاضر باشد"
       must_begin_with_alphanumeric_or_underscore: "باید با یک حرف، عدد یا زیر‌خط شروع شود"

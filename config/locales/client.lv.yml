@@ -191,7 +191,8 @@ lv:
         us_west_1: "ASV rietumi (Z-Kalifornija)"
         us_west_2: "ASV rietumi (Oregona)"
     clear_input: "Notīrīt ievadi"
-    edit: "labot šīs tēmas nosaukumu un sadaļu"
+    edit: "Rediģēt"
+    edit_topic: "labot šīs tēmas nosaukumu un sadaļu"
     expand: "Paplašināt"
     not_implemented: "Šī funkcionalitāte vēl nav ieviesta, atvainojiet!"
     no_value: "Nē"
@@ -237,7 +238,10 @@ lv:
     weekly: "katru nedēļu"
     every_month: "katru mēnesi"
     every_six_months: "katrus sešus mēnešus"
-    max_of_count: "ne vairāk kā %{count}"
+    max_of_count:
+      zero: "ne vairāk kā %{count}"
+      one: "ne vairāk kā %{count}"
+      other: "ne vairāk kā %{count}"
     character_count:
       zero: "%{count} zīmes"
       one: "%{count} zīme"
@@ -279,6 +283,7 @@ lv:
       no_user_bookmarks: "Jums nav ziņu ar grāmatzīmēm; grāmatzīmes ļauj ātri atsaukties uz konkrētām ziņām."
       search_placeholder: "Meklējiet grāmatzīmes pēc nosaukuma, tēmas nosaukuma vai ziņas satura"
       search: "Meklēt"
+      bookmark: "Grāmatzīmes"
       reminders:
         today_with_time: "šodien %{time}"
         tomorrow_with_time: "rīt %{time}"
@@ -772,7 +777,6 @@ lv:
         image: "Augšupielādēt attēlu"
       default_notifications:
         modal_title: "Lietotāja noklusējuma paziņojumi"
-        modal_description: "Vai vēlaties šīs izmaiņas piemērot vēsturiski? Tas mainīs %{count} esošo lietotāju preferences."
         modal_yes: "Jā"
         modal_no: "Nē, piemērojiet izmaiņas tikai turpmāk"
     user_action_groups:
@@ -793,7 +797,10 @@ lv:
       categories_label: "sadaļas"
       subcategories_label: "apakšsadaļas"
       remove_filter: "noņemt filtru"
-      plus_more_count: "+vēl %{count}"
+      plus_more_count:
+        zero: "+vēl %{count}"
+        one: "+vēl %{count}"
+        other: "+vēl %{count}"
       category: "Sadaļa"
       category_list: "Parādīt sadaļu sarakstu"
       reorder:
@@ -822,7 +829,10 @@ lv:
       organisation: Organizācija
       phone: Tālrunis
       other_accounts: "Citi profili ar šo IP adresi:"
-      delete_other_accounts: "Izdzēst %{count}"
+      delete_other_accounts:
+        zero: "Izdzēst %{count}"
+        one: "Izdzēst %{count}"
+        other: "Izdzēst %{count}"
       username: "lietotājvārds"
       trust_level: "Uzticības līmenis"
       read_time: "lasīšanas laiks"
@@ -921,7 +931,6 @@ lv:
       skip_new_user_tips:
         description: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti"
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
-      color_scheme_default_on_all_devices: "Iestatīt noklusējuma krāsu shēmu (-as) visās manās ierīcēs"
       color_scheme: "Krāsu shēma"
       color_schemes:
         default_description: "Tēma pēc noklusējuma"
@@ -1333,7 +1342,6 @@ lv:
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
         ok: "Jūsu parole izskatās labi."
-        instructions: "Vismaz %{count} rakstzīmes."
         required: "Lūdzu, ievadiet paroli"
       summary:
         title: "Kopsavilkums"
@@ -1801,7 +1809,6 @@ lv:
           seen: ES lasu
           unseen: neesmu izlasījis
           wiki: ir wiki
-          images: iekļaut attēlu (-us)
           all_tags: Visi iepriekš minētie tagi
         statuses:
           label: Kur tēmas
@@ -1890,6 +1897,7 @@ lv:
     topic_bulk_actions:
       close_topics:
         name: "Slēgt tēmas"
+        optional: (pēc izvēles)
       archive_topics:
         name: "Arhivēt tēmas"
       unlist_topics:
@@ -3634,7 +3642,6 @@ lv:
           dashboard: "Administrācijas panelis"
           navigation: "Pārvietošanās"
         default_categories:
-          modal_description: "Vai vēlaties šīs izmaiņas piemērot vēsturiski? Tas mainīs %{count} esošo lietotāju preferences."
           modal_yes: "Jā"
           modal_no: "Nē, piemērojiet izmaiņas tikai turpmāk"
         file_types_list:

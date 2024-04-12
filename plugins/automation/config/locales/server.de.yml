@@ -45,8 +45,8 @@ de:
         description: Wenn ein Benutzer aus der angegebenen Gruppe entfernt wird, wird die Automatisierung ausgelöst
       user_promoted:
         title: Benutzer befördert
-        description: Wenn ein Benutzer von einer Vertrauensstufe zu einer anderen befördert wird
-        transition_placeholder: "von %{from_level_name} auf %{to_level_name}"
+        description: Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird
+        transition_placeholder: "von %{from_level_name} bis %{to_level_name}"
       stalled_wiki:
         title: Festgefahrenes Wiki
         description: Wenn ein Wiki für einen längeren als den definierten Zeitraum nicht bearbeitet wurde, wird die Automatisierung ausgelöst
@@ -69,6 +69,9 @@ de:
       post:
         title: Beitrag erstellen
         description: Einen Beitrag zu einem bestimmten Thema erstellen
+      topic:
+        title: Thema erstellen
+        description: Ein Thema als ein bestimmter Benutzer erstellen
       flag_post_on_words:
         title: Beitrag wegen Wörtern markieren
         description: Markiert einen Beitrag, falls er bestimmte Wörter enthält
@@ -132,7 +135,7 @@ de:
         text: "Zuletzt überprüft von @%{username} %{date_time}"
         summary: Dokument überprüfen
         details: "Überprüfung des Dokuments durchführen: "
-        button_text: Fertig
+        button_text: Erledigt
       add_user_to_group_through_custom_field:
         title: "Benutzer über benutzerdefiniertes Benutzerfeld zur Gruppe hinzufügen"
       group_category_notification_default:

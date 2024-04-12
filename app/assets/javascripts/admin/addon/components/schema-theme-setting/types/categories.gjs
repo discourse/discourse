@@ -15,7 +15,10 @@ export default class SchemaThemeSettingTypeCategories extends SchemaThemeSetting
   type = "categories";
 
   onChange(categories) {
-    return categories.mapBy("id");
+    return categories.map((category) => {
+      this.args.setting.metadata.categories[category.id] ||= category;
+      return category.id;
+    });
   }
 
   <template>

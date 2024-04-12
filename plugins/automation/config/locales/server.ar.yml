@@ -43,7 +43,7 @@ ar:
         description: عند إزالة مستخدم من المجموعة المحدَّدة، سيتم تشغيل الأتمتة.
       user_promoted:
         title: تمت ترقية المستخدم
-        description: عند ترقية مستخدم من مستوى ثقة إلى آخر
+        description: عندما تتم ترقية المستخدم من مستوى ثقة إلى آخر
         transition_placeholder: "من %{from_level_name} إلى %{to_level_name}"
       stalled_wiki:
         title: Wiki متوقفة
@@ -64,6 +64,8 @@ ar:
       post:
         title: إنشاء منشور
         description: إنشاء منشور في الموضوع المحدَّد
+      topic:
+        title: إنشاء موضوع
       flag_post_on_words:
         title: الإبلاغ عن منشور حسب كلمات معيَّنة
         description: يُبلغ عن المنشور إذا احتوى على كلمات معيَّنة

@@ -33,7 +33,6 @@ import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
 import Composer from "discourse/models/composer";
 import { isTesting } from "discourse-common/config/environment";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -106,6 +105,9 @@ let apiImageWrapperBtnEvents = [];
 export function addApiImageWrapperButtonClickEvent(fn) {
   apiImageWrapperBtnEvents.push(fn);
 }
+
+const DEBOUNCE_FETCH_MS = 450;
+const DEBOUNCE_JIT_MS = 2000;
 
 export default Component.extend(ComposerUploadUppy, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
@@ -218,10 +220,11 @@ export default Component.extend(ComposerUploadUppy, {
 
   @on("didInsertElement")
   _composerEditorInit() {
-    const $input = $(this.element.querySelector(".d-editor-input"));
+    const input = this.element.querySelector(".d-editor-input");
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
     if (this.siteSettings.enable_mentions) {
-      $input.autocomplete({
+      $(input).autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
         dataSource: (term) => {
           destroyUserStatuses();
@@ -235,9 +238,7 @@ export default Component.extend(ComposerUploadUppy, {
             return result;
           });
         },
-        onRender: (options) => {
-          renderUserStatusHtml(options);
-        },
+        onRender: (options) => renderUserStatusHtml(options),
         key: "@",
         transformComplete: (v) => v.username || v.name,
         afterComplete: this._afterMentionComplete,
@@ -247,13 +248,16 @@ export default Component.extend(ComposerUploadUppy, {
       });
     }
 
-    this.element
-      .querySelector(".d-editor-input")
-      ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
+    input?.addEventListener(
+      "scroll",
+      this._throttledSyncEditorAndPreviewScroll
+    );
+
+    this._registerImageAltTextButtonClick(preview);
 
     // Focus on the body unless we have a title
     if (!this.get("composer.canEditTitle")) {
-      putCursorAtEnd(this.element.querySelector(".d-editor-input"));
+      putCursorAtEnd(input);
     }
 
     if (this.allowUpload) {
@@ -488,6 +492,17 @@ export default Component.extend(ComposerUploadUppy, {
     $preview.scrollTop(desired + 50);
   },
 
+  _renderMentions(preview, unseen) {
+    unseen ||= linkSeenMentions(preview, this.siteSettings);
+    if (unseen.length > 0) {
+      this._renderUnseenMentions(preview, unseen);
+    } else {
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
+    }
+  },
+
+  @debounce(DEBOUNCE_FETCH_MS)
   _renderUnseenMentions(preview, unseen) {
     fetchUnseenMentions({
       names: unseen,
@@ -501,17 +516,50 @@ export default Component.extend(ComposerUploadUppy, {
     });
   },
 
-  _renderUnseenHashtags(preview) {
-    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
-    const unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+  _renderHashtags(preview, unseen) {
+    const context = this.site.hashtag_configurations["topic-composer"];
+    unseen ||= linkSeenHashtagsInContext(context, preview);
     if (unseen.length > 0) {
-      fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
-        linkSeenHashtagsInContext(hashtagContext, preview);
-      });
+      this._renderUnseenHashtags(preview, unseen, context);
     }
   },
 
-  @debounce(2000)
+  @debounce(DEBOUNCE_FETCH_MS)
+  _renderUnseenHashtags(preview, unseen, context) {
+    fetchUnseenHashtagsInContext(context, unseen).then(() =>
+      linkSeenHashtagsInContext(context, preview)
+    );
+  },
+
+  @debounce(DEBOUNCE_FETCH_MS)
+  _refreshOneboxes(preview) {
+    const post = this.get("composer.post");
+    // If we are editing a post, we'll refresh its contents once.
+    const refresh = post && !post.get("refreshedPost");
+
+    const loaded = loadOneboxes(
+      preview,
+      ajax,
+      this.get("composer.topic.id"),
+      this.get("composer.category.id"),
+      this.siteSettings.max_oneboxes_per_post,
+      refresh
+    );
+
+    if (refresh && loaded > 0) {
+      post.set("refreshedPost", true);
+    }
+  },
+
+  _expandShortUrls(preview) {
+    resolveAllShortUrls(ajax, this.siteSettings, preview);
+  },
+
+  _decorateCookedElement(preview) {
+    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+  },
+
+  @debounce(DEBOUNCE_JIT_MS)
   _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
       preview
@@ -537,7 +585,7 @@ export default Component.extend(ComposerUploadUppy, {
 
   // add a delay to allow for typing, so you don't open the warning right away
   // previously we would warn after @bob even if you were about to mention @bob2
-  @debounce(2000)
+  @debounce(DEBOUNCE_JIT_MS)
   _warnCannotSeeMention(preview) {
     if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
@@ -773,24 +821,31 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _registerImageAltTextButtonClick(preview) {
+    preview.addEventListener("click", this._handleAltTextCancelButtonClick);
     preview.addEventListener("click", this._handleAltTextEditButtonClick);
     preview.addEventListener("click", this._handleAltTextOkButtonClick);
-    preview.addEventListener("click", this._handleAltTextCancelButtonClick);
     preview.addEventListener("click", this._handleImageDeleteButtonClick);
-    preview.addEventListener("keypress", this._handleAltTextInputKeypress);
     preview.addEventListener("click", this._handleImageGridButtonClick);
+    preview.addEventListener("click", this._handleImageScaleButtonClick);
+    preview.addEventListener("keypress", this._handleAltTextInputKeypress);
 
-    if (apiImageWrapperBtnEvents.length > 0) {
-      apiImageWrapperBtnEvents.forEach((fn) => {
-        preview.addEventListener("click", fn);
-      });
-    }
+    apiImageWrapperBtnEvents.forEach((fn) =>
+      preview.addEventListener("click", fn)
+    );
   },
 
   @on("willDestroyElement")
   _composerClosed() {
-    this._unbindMobileUploadButton();
+    const input = this.element.querySelector(".d-editor-input");
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+
+    if (this.allowUpload) {
+      this._unbindUploadTarget();
+      this._unbindMobileUploadButton();
+    }
+
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
+
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer
       discourseLater(
@@ -799,27 +854,22 @@ export default Component.extend(ComposerUploadUppy, {
       );
     });
 
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener(
-        "scroll",
-        this._throttledSyncEditorAndPreviewScroll
-      );
+    input?.removeEventListener(
+      "scroll",
+      this._throttledSyncEditorAndPreviewScroll
+    );
 
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
     preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
     preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
     preview?.removeEventListener("click", this._handleImageGridButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
+    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
     preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
 
-    if (apiImageWrapperBtnEvents.length > 0) {
-      apiImageWrapperBtnEvents.forEach((fn) => {
-        preview?.removeEventListener("click", fn);
-      });
-    }
+    apiImageWrapperBtnEvents.forEach((fn) =>
+      preview?.removeEventListener("click", fn)
+    );
   },
 
   onExpandPopupMenuOptions(toolbarEvent) {
@@ -919,65 +969,17 @@ export default Component.extend(ComposerUploadUppy, {
       });
     },
 
-    previewUpdated(preview) {
-      // cache jquery objects for functions still using jquery
-      const $preview = $(preview);
+    previewUpdated(preview, unseenMentions, unseenHashtags) {
+      this._renderMentions(preview, unseenMentions);
+      this._renderHashtags(preview, unseenHashtags);
+      this._refreshOneboxes(preview);
+      this._expandShortUrls(preview);
 
-      // Paint mentions
-      const unseenMentions = linkSeenMentions(preview, this.siteSettings);
-      if (unseenMentions.length) {
-        discourseDebounce(
-          this,
-          this._renderUnseenMentions,
-          preview,
-          unseenMentions,
-          450
-        );
+      if (!this.siteSettings.enable_diffhtml_preview) {
+        this._decorateCookedElement(preview);
       }
 
-      this._warnMentionedGroups(preview);
-      this._warnCannotSeeMention(preview);
-
-      // Paint category, tag, and other data source hashtags
-      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
-      if (linkSeenHashtagsInContext(hashtagContext, preview).length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
-      }
-
-      // Paint oneboxes
-      const paintFunc = () => {
-        const post = this.get("composer.post");
-        let refresh = false;
-
-        //If we are editing a post, we'll refresh its contents once.
-        if (post && !post.get("refreshedPost")) {
-          refresh = true;
-        }
-
-        const paintedCount = loadOneboxes(
-          preview,
-          ajax,
-          this.get("composer.topic.id"),
-          this.get("composer.category.id"),
-          this.siteSettings.max_oneboxes_per_post,
-          refresh
-        );
-
-        if (refresh && paintedCount > 0) {
-          post.set("refreshedPost", true);
-        }
-      };
-
-      discourseDebounce(this, paintFunc, 450);
-
-      // Short upload urls need resolution
-      resolveAllShortUrls(ajax, this.siteSettings, preview);
-
-      preview.addEventListener("click", this._handleImageScaleButtonClick);
-      this._registerImageAltTextButtonClick(preview);
-
-      this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
-      this.afterRefresh($preview);
+      this.afterRefresh(preview);
     },
   },
 });

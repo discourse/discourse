@@ -152,9 +152,7 @@ RSpec.describe "Navigation", type: :system do
       chat_page.open
       chat_page.minimize_full_page
 
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
+      expect(page).to have_current_path("/latest")
     end
   end
 

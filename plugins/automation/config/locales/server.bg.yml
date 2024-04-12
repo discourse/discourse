@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 bg:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        transition_placeholder: "от %{from_level_name} до %{to_level_name}"
+      topic:
+        title: Тема
+    scriptables:
+      pin_topic:
+        title: Закови темата
+      close_topic:
+        title: Изчисти темата
+      append_last_checked_by:
+        button_text: Готово

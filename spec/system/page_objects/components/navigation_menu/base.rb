@@ -143,7 +143,11 @@ module PageObjects
         end
 
         def has_no_add_section_button?
-          page.has_no_button?(add_section_button_text)
+          has_no_css?(add_section_button_css)
+        end
+
+        def has_add_section_button?
+          has_css?(add_section_button_css)
         end
 
         def click_edit_categories_button
@@ -194,6 +198,10 @@ module PageObjects
 
         def add_link_button_text
           I18n.t("js.sidebar.sections.custom.links.add")
+        end
+
+        def add_section_button_css
+          ".sidebar-footer-actions-button.add-section"
         end
       end
     end

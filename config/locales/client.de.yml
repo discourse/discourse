@@ -231,7 +231,8 @@ de:
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
     clear_input: "Eingabe löschen"
-    edit: "Titel und Kategorie dieses Themas ändern"
+    edit: "Bearbeiten"
+    edit_topic: "Titel und Kategorie dieses Themas ändern"
     expand: "Aufklappen"
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -276,7 +277,9 @@ de:
     weekly: "wöchentlich"
     every_month: "jeden Monat"
     every_six_months: "alle sechs Monate"
-    max_of_count: "max. %{count}"
+    max_of_count:
+      one: "max. %{count}"
+      other: "max. %{count}"
     character_count:
       one: "%{count} Zeichen"
       other: "%{count} Zeichen"
@@ -320,6 +323,10 @@ de:
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen"
     bookmarks:
+      also_set_reminder: "Erinnerung hinzufügen?"
+      bookmarked_success: "Lesezeichen!"
+      deleted_bookmark_success: "Lesezeichen gelöscht!"
+      reminder_set_success: "Erinnerung gesetzt!"
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       created_generic: "Du hast dies mit einem Lesezeichen versehen: %{name}"
       create: "Lesezeichen erstellen"
@@ -342,8 +349,11 @@ de:
         when_reminder_sent: "Lesezeichen löschen"
         on_owner_reply: "Lesezeichen löschen, sobald ich antworte"
         clear_reminder: "Lesezeichen behalten und Erinnerung löschen"
+        after_reminder_label: "Nachdem du erinnert wurdest, sollen wir..."
+        after_reminder_checkbox: "Als Standard für alle zukünftigen Lesezeichen-Erinnerungen festlegen"
       search_placeholder: "Lesezeichen nach Namen, Thementitel oder Beitragsinhalt durchsuchen"
       search: "Suche"
+      bookmark: "Lesezeichen"
       reminders:
         today_with_time: "heute um %{time}"
         tomorrow_with_time: "morgen um %{time}"
@@ -637,6 +647,7 @@ de:
       in_two_hours: "In zwei Stunden"
       later_today: "Im Laufe des Tages"
       two_days: "Zwei Tage"
+      three_days: "In 3 Tagen"
       next_business_day: "Nächster Arbeitstag"
       tomorrow: "Morgen"
       post_local_date: "Datum im Beitrag"
@@ -658,6 +669,7 @@ de:
       never: "Nie"
       last_custom: "Letztes benutzerdefiniertes Datum"
       custom: "Datum und Uhrzeit auswählen"
+      custom_short: "Benutzerdefiniert …"
       select_timeframe: "Wähle einen Zeitrahmen aus"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
@@ -946,7 +958,9 @@ de:
         image: "Lade ein Bild hoch"
       default_notifications:
         modal_title: "Benutzer-Standardbenachrichtigungen"
-        modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
+        modal_description:
+          one: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehenden Benutzer."
+          other: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
         modal_yes: "Ja"
         modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
     user_action_groups:
@@ -969,7 +983,9 @@ de:
       all_subcategories: "alle Unterkategorien"
       no_subcategories: "keine Unterkategorien"
       remove_filter: "Filter entfernen"
-      plus_more_count: "+%{count} weitere"
+      plus_more_count:
+        one: "+%{count} weitere"
+        other: "+%{count} weitere"
       view_all: "alle ansehen"
       category: "Kategorie"
       category_list: "Kategorieliste anzeigen"
@@ -1002,7 +1018,9 @@ de:
       topic_stat_sentence_month:
         one: "%{count} neues Thema im letzten Monat."
         other: "%{count} neue Themen im letzten Monat."
-      n_more: "Kategorien (%{count} weitere) …"
+      n_more:
+        one: "Kategorien (%{count} weitere) …"
+        other: "Kategorien (%{count} weitere) …"
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -1011,7 +1029,9 @@ de:
       organisation: Organisation
       phone: Telefon
       other_accounts: "Andere Konten mit dieser IP-Adresse:"
-      delete_other_accounts: "%{count} löschen"
+      delete_other_accounts:
+        one: "%{count} löschen"
+        other: "%{count} löschen"
       username: "Benutzername"
       trust_level: "VS"
       read_time: "Lesezeit"
@@ -1142,7 +1162,7 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
       reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
-      color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
+      color_scheme_default_on_all_devices: "Standard-Farbschema auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
       color_schemes:
         default_description: "Theme-Standard"
@@ -1757,7 +1777,9 @@ de:
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
-        instructions: "Mindestens %{count} Zeichen."
+        instructions:
+          one: "Mindestens %{count} Zeichen."
+          other: "Mindestens %{count} Zeichen."
         required: "Bitte Passwort eingeben"
         confirm: "Bestätigen"
         incorrect_password: "Das eingegebene Passwort ist falsch."
@@ -1848,12 +1870,13 @@ de:
       remove_status: "Status entfernen"
     user_tips:
       button: "Verstanden!"
+      skip: "Tipps überspringen"
       first_notification:
         title: "Deine erste Benachrichtigung!"
         content: "Benachrichtigungen dienen dazu, dich auf dem Laufenden zu halten, was in der Community passiert."
       topic_timeline:
         title: "Themenzeitleiste"
-        content: "Mit der Themenzeitleiste kannst du schnell durch einen Beitrag scrollen."
+        content: "Mit der Themenzeitleiste kannst du schnell durch lange Themen scrollen."
       post_menu:
         title: "Menü „Beitrag“"
         content: "Schau dir an, wie du sonst noch mit dem Beitrag interagieren kannst, indem du auf die drei Punkte klickst!"
@@ -2225,7 +2248,9 @@ de:
       group_mentioned:
         one: "Wenn du %{group} erwähnst, wird <a href='%{group_link}'>%{count} Person</a> benachrichtigt."
         other: "Wenn du %{group} erwähnst, werden <a href='%{group_link}'>%{count} Personen</a> benachrichtigt."
-      larger_group_mentioned: "Wenn du %{group} erwähnst, werden <a href='%{group_link}'>%{count} Personen</a> benachrichtigt. Bist du sicher?"
+      larger_group_mentioned:
+        one: "Wenn du %{group} erwähnst, wird <a href='%{group_link}'>%{count} Person</a> benachrichtigt. Bist du sicher?"
+        other: "Wenn du %{group} erwähnst, werden <a href='%{group_link}'>%{count} Personen</a> benachrichtigt. Bist du sicher?"
       cannot_see_mention:
         category: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
         private: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
@@ -2587,7 +2612,7 @@ de:
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
-          images: Mit Bild(ern)
+          images: mit Bildern
           all_tags: Enthält alle Schlagwörter
         statuses:
           label: 'Themen einschränken:'
@@ -2686,6 +2711,7 @@ de:
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
+        defer: "Als ungelesen markieren"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
@@ -2726,6 +2752,9 @@ de:
         selected:
           one: "Du hast <b>%{count}</b> Thema ausgewählt."
           other: "Du hast <b>%{count}</b> Themen ausgewählt."
+        selected_count:
+          one: "%{count} ausgewählt"
+          other: "%{count} ausgewählt"
         change_tags: "Schlagwörter ersetzen"
         append_tags: "Schlagwörter hinzufügen"
         choose_new_tags: "Neue Schlagwörter für diese Themen wählen:"
@@ -2773,6 +2802,7 @@ de:
     topic_bulk_actions:
       close_topics:
         name: "Themen schließen"
+        optional: (optional)
       archive_topics:
         name: "Themen archivieren"
       unlist_topics:
@@ -2794,6 +2824,7 @@ de:
         name: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         description: "Setzt das \"nach oben verschieben\"- Datum auf das vom zuletzt erstellten Beitrag zurück, was die Reihenfolge in der Themenliste beeinflusst"
       defer:
+        name: "Als ungelesen markieren"
         description: "Themen als ungelesen markieren"
       update_notifications:
         name: "Update-Benachrichtigungen"
@@ -2813,6 +2844,9 @@ de:
       move_to_inbox:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
+      defer:
+        help: "Thema als ungelesen markieren"
+        title: "Als ungelesen markieren"
       list: "Themen"
       new: "neues Thema"
       unread: "ungelesen"
@@ -3600,7 +3634,7 @@ de:
           description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktullen Themen erscheinen."
+          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       search_priority:
         label: "Suchpriorität"
         options:
@@ -3967,6 +4001,7 @@ de:
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
+        defer: "%{shortcut} Thema als ungelesen markieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
         archive_private_message: "%{shortcut} Archivierung privater Nachricht umschalten"
       search_menu:
@@ -4244,6 +4279,9 @@ de:
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
+          delete_public_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Bist du sicher, dass du ihn löschen willst?"
+          update_public_confirm: "Die Änderungen werden <strong>für alle sichtbar</strong> sein. Bist du sicher?"
+          mark_as_private_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Nach dem Update wird er <strong>nur noch für dich sichtbar</strong> sein. Bist du sicher?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
           public: "Für alle sichtbar"
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
@@ -4256,23 +4294,31 @@ de:
               label: "Symbol"
               validation:
                 blank: "Das Symbol darf nicht leer sein"
-                maximum: "Symbol muss kürzer als %{count} Zeichen sein"
+                maximum:
+                  one: "Symbol muss kürzer als %{count} Zeichen sein"
+                  other: "Symbol muss kürzer als %{count} Zeichen sein"
             name:
               label: "Name"
               validation:
                 blank: "Der Name darf nicht leer sein"
-                maximum: "Der Name muss kürzer als %{count} Zeichen sein"
+                maximum:
+                  one: "Der Name muss kürzer als %{count} Zeichen sein"
+                  other: "Der Name muss kürzer als %{count} Zeichen sein"
             value:
               label: "Link"
               validation:
                 blank: "Link darf nicht leer sein"
-                maximum: "Der Link muss kürzer als %{count} Zeichen sein"
+                maximum:
+                  one: "Der Link muss kürzer als %{count} Zeichen sein"
+                  other: "Der Link muss kürzer als %{count} Zeichen sein"
                 invalid: "Format ist ungültig"
           title:
             label: "Titel des Abschnitts"
             validation:
               blank: "Der Titel darf nicht leer sein"
-              maximum: "Titel muss kürzer als %{count} Zeichen sein"
+              maximum:
+                one: "Titel muss kürzer als %{count} Zeichen sein"
+                other: "Titel muss kürzer als %{count} Zeichen sein"
         about:
           header_link_text: "Über uns"
         messages:
@@ -4335,7 +4381,9 @@ de:
             review:
               content: "Überprüfen"
               title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
-              pending_count: "%{count} ausstehend"
+              pending_count:
+                one: "%{count} ausstehend"
+                other: "%{count} ausstehend"
         global_section: "Globaler Abschnitt, für alle sichtbar"
       panels:
         forum:
@@ -5137,13 +5185,17 @@ de:
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
-          selected: "%{count} ausgewählt"
+          selected:
+            one: "%{count} ausgewählt"
+            other: "%{count} ausgewählt"
           cancel: "Abbrechen"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."
           updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
-          and_x_more: "und %{count} mehr."
+          and_x_more:
+            one: "und %{count} mehr."
+            other: "und %{count} mehr."
           collapse: Zuklappen
           uploads: "Uploads"
           no_uploads: "Du kannst Medieninhalte hochladen, die zu deinem Theme gehören, wie etwa Schriftarten und Bilder."
@@ -5283,7 +5335,9 @@ de:
                   one: "mindestens %{count} Schlagwort ist erforderlich"
                   other: "mindestens %{count} Schlagwörter sind erforderlich"
               string:
-                too_short: "muss mindestens %{count} Zeichen lang sein"
+                too_short:
+                  one: "muss mindestens %{count} Zeichen lang sein"
+                  other: "muss mindestens %{count} Zeichen lang sein"
               number:
                 too_small: "muss größer oder gleich %{count} sein"
                 too_large: "muss weniger oder gleich %{count} sein"
@@ -6126,7 +6180,7 @@ de:
           empty: "Es gibt noch keine Bilder. Bitte lade eines hoch."
           upload:
             label: "Hochladen"
-            title: "Bild(er) hochladen"
+            title: "Bilder hochladen"
         selectable_avatars:
           title: "Liste von Avataren, aus der Benutzer wählen können."
         categories:
@@ -6162,7 +6216,9 @@ de:
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
-          modal_description: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
+          modal_description:
+            one: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehenden Benutzer."
+            other: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehende Benutzer."
           modal_yes: "Ja"
           modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         simple_list:
@@ -6261,9 +6317,13 @@ de:
           perform: "Verleihe Abzeichen an Benutzer"
           upload_csv: Lade eine CSV-Datei mit entweder den E-Mail-Adressen oder den Benutzernamen hoch
           aborted: Bitte lade eine CSV-Datei hoch, die entweder E-Mail-Adressen oder Benutzernamen enthält
-          success: Deine CSV-Datei wurde empfangen und %{count} Benutzer werden in Kürze ihr Abzeichen erhalten.
+          success:
+            one: "Deine CSV-Datei wurde empfangen und %{count} Benutzer wird in Kürze sein Abzeichen erhalten."
+            other: "Deine CSV-Datei wurde empfangen und %{count} Benutzer werden in Kürze ihr Abzeichen erhalten."
           csv_has_unmatched_users: "Die folgenden Einträge befinden sich in der CSV-Datei, konnten jedoch nicht mit vorhandenen Benutzern abgeglichen werden (entsprechend wird ihnen kein Abzeichen verliehen):"
-          csv_has_unmatched_users_truncated_list: "Es gab %{count} Einträge in der CSV-Datei, die nicht vorhandenen Benutzern zugeordnet werden konnten und daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden nur die ersten 100 angezeigt:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Es gab %{count} Eintrag in der CSV-Datei, der keinem vorhandenen Benutzer zugeordnet werden konnte und der daher das Abzeichen nicht erhält. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden nur die ersten 100 angezeigt:"
+            other: "Es gab %{count} Einträge in der CSV-Datei, die keinem vorhandenen Benutzer zugeordnet werden konnten und die daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden nur die ersten 100 angezeigt:"
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
           grant_existing_holders: Weitere Abzeichen an bestehende Abzeicheninhaber verleihen
       emoji:

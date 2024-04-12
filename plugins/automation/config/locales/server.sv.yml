@@ -41,6 +41,8 @@ sv:
       topic:
         title: Ämne
     scriptables:
+      topic:
+        title: Skapa ett ämne
       auto_responder:
         title: Automatiskt svar
         description: Skickar ett svar på ett inlägg inklusive specificerade nyckelord

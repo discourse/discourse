@@ -5,7 +5,7 @@ describe "Homepage", type: :system do
   fab!(:user)
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }
   let(:discovery) { PageObjects::Pages::Discovery.new }
-  let!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   before do
     # A workaround to avoid the global notice from interfering with the tests
@@ -76,23 +76,8 @@ describe "Homepage", type: :system do
       expect(page).to have_css(".alert-info")
     end
 
-    context "when the theme adds content to the [custom-homepage] connector" do
-      let!(:basic_html_field) do
-        Fabricate(
-          :theme_field,
-          theme: theme,
-          type_id: ThemeField.types[:html],
-          target_id: Theme.targets[:common],
-          name: "head_tag",
-          value: <<~HTML,
-            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
-              <div class="new-home">Hi friends!</div>
-            </script>
-          HTML
-        )
-      end
-
-      it "shows the custom homepage from the theme on the homepage" do
+    shared_examples "a custom homepage" do
+      it "shows the custom homepage component" do
         visit "/"
 
         expect(page).to have_css(".new-home", text: "Hi friends!")
@@ -147,6 +132,47 @@ describe "Homepage", type: :system do
         expect(page).not_to have_css(".list-container")
         expect(page).to have_css(".new-home", text: "Hi friends!")
       end
+    end
+
+    context "when the theme adds content to the [custom-homepage] connector" do
+      let!(:basic_html_field) do
+        Fabricate(
+          :theme_field,
+          theme: theme,
+          type_id: ThemeField.types[:html],
+          target_id: Theme.targets[:common],
+          name: "head_tag",
+          value: <<~HTML,
+            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
+              <div class="new-home">Hi friends!</div>
+            </script>
+          HTML
+        )
+      end
+
+      include_examples "a custom homepage"
+    end
+
+    context "when a theme component adds content to the [custom-homepage] connector" do
+      let!(:component) { Fabricate(:theme, component: true) }
+      let!(:component_html_field) do
+        Fabricate(
+          :theme_field,
+          theme: component,
+          type_id: ThemeField.types[:html],
+          target_id: Theme.targets[:common],
+          name: "head_tag",
+          value: <<~HTML,
+            <script type="text/x-handlebars" data-template-name="/connectors/custom-homepage/new-home">
+              <div class="new-home">Hi friends!</div>
+            </script>
+          HTML
+        )
+      end
+
+      before { theme.add_relative_theme!(:child, component) }
+
+      include_examples "a custom homepage"
     end
   end
 end

@@ -16,6 +16,7 @@ module DiscourseAutomation
     POST = "post"
     SEND_PMS = "send_pms"
     SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
+    TOPIC = "topic"
     TOPIC_REQUIRED_WORDS = "topic_required_words"
     USER_GLOBAL_NOTICE = "user_global_notice"
     USER_GROUP_MEMBERSHIP_THROUGH_BADGE = "user_group_membership_through_badge"

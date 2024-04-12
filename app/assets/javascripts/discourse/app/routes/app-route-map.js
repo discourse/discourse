@@ -140,6 +140,7 @@ export default function () {
           this.route("likesReceived", { path: "likes-received" });
           this.route("mentions");
           this.route("edits");
+          this.route("links");
         }
       );
 
@@ -177,7 +178,6 @@ export default function () {
         this.route("emails");
         this.route("notifications");
         this.route("tracking");
-        this.route("categories");
         this.route("users");
         this.route("tags");
         this.route("interface");

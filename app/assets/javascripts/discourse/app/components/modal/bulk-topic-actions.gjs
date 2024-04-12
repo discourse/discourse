@@ -1,15 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { action, computed } from "@ember/object";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
+import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
+import autoFocus from "discourse/modifiers/auto-focus";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -30,15 +34,16 @@ export default class BulkTopicActions extends Component {
   @tracked loading;
   @tracked errors;
   @tracked isSilent = false;
+  @tracked closeNote = null;
 
   notificationLevelId = null;
 
   constructor() {
     super(...arguments);
 
-    if (this.args.model.initialAction === "set-component") {
-      if (this.args.model.initialActionLabel in _customActions) {
-        _customActions[this.args.model.initialActionLabel]({
+    if (this.model.initialAction === "set-component") {
+      if (this.model.initialActionLabel in _customActions) {
+        _customActions[this.model.initialActionLabel]({
           setComponent: this.setComponent.bind(this),
         });
       }
@@ -46,7 +51,7 @@ export default class BulkTopicActions extends Component {
   }
 
   async perform(operation) {
-    if (this.args.model.bulkSelectHelper.selected.length > 20) {
+    if (this.model.bulkSelectHelper.selected.length > 20) {
       this.showProgress = true;
     }
 
@@ -75,13 +80,17 @@ export default class BulkTopicActions extends Component {
   }
 
   _processChunks(operation) {
-    const allTopics = this.args.model.bulkSelectHelper.selected;
+    const allTopics = this.model.bulkSelectHelper.selected;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
     const options = {};
 
     if (this.isSilent) {
       operation = { type: "silent_close" };
+    }
+
+    if (this.isCloseAction && this.closeNote) {
+      operation["message"] = this.closeNote;
     }
 
     const tasks = topicChunks.map((topics) => async () => {
@@ -127,7 +136,7 @@ export default class BulkTopicActions extends Component {
   @action
   performAction() {
     this.loading = true;
-    switch (this.args.model.action) {
+    switch (this.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
         break;
@@ -185,7 +194,7 @@ export default class BulkTopicActions extends Component {
         if (this.customAction) {
           this.customAction(this.performAndRefresh.bind(this));
         } else {
-          _customActions[this.args.model.initialActionLabel](this);
+          _customActions[this.model.initialActionLabel](this);
         }
     }
   }
@@ -211,9 +220,9 @@ export default class BulkTopicActions extends Component {
 
     if (topics) {
       topics.forEach(cb);
-      this.args.model.refreshClosure?.();
+      this.model.refreshClosure?.();
       this.args.closeModal();
-      this.args.model.bulkSelectHelper.toggleBulkSelect();
+      this.model.bulkSelectHelper.toggleBulkSelect();
       this.showToast();
     }
   }
@@ -222,28 +231,40 @@ export default class BulkTopicActions extends Component {
   async performAndRefresh(operation) {
     await this.perform(operation);
 
-    this.args.model.refreshClosure?.();
-    this.args.closeModal();
-    this.args.model.bulkSelectHelper.toggleBulkSelect();
-    this.showToast();
+    this.model.refreshClosure?.().then(() => {
+      this.args.closeModal();
+      this.model.bulkSelectHelper.toggleBulkSelect();
+      this.showToast();
+    });
   }
 
-  @computed("action")
   get isTagAction() {
     return (
-      this.args.model.action === "append-tags" ||
-      this.args.model.action === "replace-tags"
+      this.model.action === "append-tags" ||
+      this.model.action === "replace-tags"
     );
   }
 
-  @computed("action")
   get isNotificationAction() {
-    return this.args.model.action === "update-notifications";
+    return this.model.action === "update-notifications";
   }
 
-  @computed("action")
   get isCategoryAction() {
-    return this.args.model.action === "update-category";
+    return this.model.action === "update-category";
+  }
+
+  get isCloseAction() {
+    return this.model.action === "close";
+  }
+
+  @action
+  updateCloseNote(event) {
+    event.preventDefault();
+    this.closeNote = event.target.value;
+  }
+
+  get model() {
+    return this.args.model;
   }
 
   get notificationLevels() {
@@ -252,6 +273,32 @@ export default class BulkTopicActions extends Component {
       name: i18n(`topic.notifications.${level.key}.title`),
       description: i18n(`topic.notifications.${level.key}.description`),
     }));
+  }
+
+  get soleCategoryId() {
+    if (this.model.bulkSelectHelper.selectedCategoryIds.length === 1) {
+      return this.model.bulkSelectHelper.selectedCategoryIds[0];
+    }
+
+    return null;
+  }
+
+  get soleCategory() {
+    if (!this.soleCategoryId) {
+      return null;
+    }
+
+    return Category.findById(this.soleCategoryId);
+  }
+
+  get soleCategoryBadgeHTML() {
+    return categoryBadgeHTML(this.soleCategory, {
+      allowUncategorized: true,
+    });
+  }
+
+  get showSoleCategoryTip() {
+    return this.soleCategory && this.isTagAction;
   }
 
   @action
@@ -271,13 +318,25 @@ export default class BulkTopicActions extends Component {
           @isLoading={{this.loading}}
           @title={{i18n "topics.bulk.performing"}}
         >
-          <div>
-            {{htmlSafe
-              (i18n
-                "topics.bulk.selected"
-                count=@model.bulkSelectHelper.selected.length
-              )
-            }}
+          <div class="topic-bulk-actions-modal__selection-info">
+
+            {{#if this.showSoleCategoryTip}}
+              {{htmlSafe
+                (i18n
+                  "topics.bulk.selected_sole_category"
+                  count=@model.bulkSelectHelper.selected.length
+                )
+              }}
+              {{htmlSafe this.soleCategoryBadgeHTML}}
+            {{else}}
+              {{htmlSafe
+                (i18n
+                  "topics.bulk.selected"
+                  count=@model.bulkSelectHelper.selected.length
+                )
+              }}
+
+            {{/if}}
           </div>
 
           {{#if this.isCategoryAction}}
@@ -312,7 +371,7 @@ export default class BulkTopicActions extends Component {
           {{#if this.isTagAction}}
             <p><TagChooser
                 @tags={{this.tags}}
-                @categoryId={{@categoryId}}
+                @categoryId={{this.soleCategoryId}}
               /></p>
           {{/if}}
 
@@ -321,6 +380,22 @@ export default class BulkTopicActions extends Component {
               this.activeComponent
               onRegisterAction=this.registerCustomAction
             }}
+          {{/if}}
+
+          {{#if this.isCloseAction}}
+            <div class="bulk-close-note-section">
+              <label>
+                {{i18n "topic_bulk_actions.close_topics.note"}}&nbsp;<span
+                  class="label-optional"
+                >{{i18n "topic_bulk_actions.close_topics.optional"}}</span>
+              </label>
+
+              <textarea
+                id="bulk-close-note"
+                {{on "input" this.updateCloseNote}}
+                {{autoFocus}}
+              >{{this.closeNote}}</textarea>
+            </div>
           {{/if}}
         </ConditionalLoadingSection>
       </:body>
