@@ -3000,6 +3000,9 @@ en:
         selected:
           one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>%{count}</b> topics."
+        selected_sole_category:
+          one: "You have selected <b>%{count}</b> topic from category:"
+          other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
