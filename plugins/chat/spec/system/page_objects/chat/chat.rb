@@ -35,8 +35,9 @@ module PageObjects
         find(".chat-header-icon").has_link?(href: href)
       end
 
-      def open
+      def open(with_preloaded_channels: true)
         visit("/chat")
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
       end
 
       def open_new_message(ensure_open: true)

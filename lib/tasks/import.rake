@@ -12,12 +12,12 @@ task "import:ensure_consistency" => :environment do
   insert_user_actions
   insert_user_options
   insert_user_profiles
-  insert_user_stats
+  insert_user_stats unless ENV["SKIP_USER_STATS"]
   insert_user_visits
   insert_draft_sequences
   insert_automatic_group_users
 
-  update_user_stats
+  update_user_stats unless ENV["SKIP_USER_STATS"]
   update_posts
   update_topics
   update_categories

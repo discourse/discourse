@@ -126,7 +126,14 @@ export default class StoreService extends Service {
       let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
 
       if (result.extras) {
-        hydrated.set("extras", result.extras);
+        let extras = result.extras;
+
+        const extrasClass = this._extrasClass(type);
+        if (extrasClass) {
+          extras = new extrasClass(extras);
+        }
+
+        hydrated.set("extras", extras);
       }
 
       if (adapter.cache) {
@@ -260,10 +267,26 @@ export default class StoreService extends Service {
     };
 
     if (result.extras) {
-      createArgs.extras = result.extras;
+      let extras = result.extras;
+
+      const extrasClass = this._extrasClass(type);
+      if (extrasClass) {
+        extras = new extrasClass(extras);
+      }
+
+      createArgs.extras = extras;
+
+      for (const obj of content) {
+        obj.extras = extras;
+      }
     }
 
     return ResultSet.create(createArgs);
+  }
+
+  _extrasClass(type) {
+    const klass = this.register.lookupFactory("model:" + type) || RestModel;
+    return klass.class?.ExtrasClass;
   }
 
   _build(type, obj) {

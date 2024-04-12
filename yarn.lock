@@ -1274,10 +1274,10 @@
     "@babel/core" "^7.14.5"
     babel-loader "^9.0.0"
 
-"@embroider/compat@^3.4.6":
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.4.6.tgz#f84881ed02649731fbf9700c2fa897019a640198"
-  integrity sha512-EOH/gaH9lNvni68aj1Sq4p64TBrfyjs/CtRNqejduiWhIbVs48D2sH6lZU81KF+4aeCOfg4hyyHsSLxJEb19ig==
+"@embroider/compat@^3.4.7":
+  version "3.4.7"
+  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.4.7.tgz#d5a6950366d1b226e2681faf526d9ef2920468d0"
+  integrity sha512-dCx0+S+cd2L60GFpo5RBT+xug/mtwpDUGsXmmnyKj43oiaZjaG05n/sSWm+52Oxwt1bsPRe6aJrPqL5rPmsWMQ==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.5"
@@ -1286,7 +1286,7 @@
     "@babel/preset-env" "^7.14.5"
     "@babel/runtime" "^7.18.6"
     "@babel/traverse" "^7.14.5"
-    "@embroider/macros" "1.15.0"
+    "@embroider/macros" "1.15.1"
     "@types/babel__code-frame" "^7.0.2"
     "@types/yargs" "^17.0.3"
     assert-never "^1.1.0"
@@ -1321,16 +1321,16 @@
     walk-sync "^3.0.0"
     yargs "^17.0.1"
 
-"@embroider/core@^3.4.6":
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/@embroider/core/-/core-3.4.6.tgz#92cfa5cb8311e81ea5611fb0b24bd3d77b8e843a"
-  integrity sha512-RR+3WHS0l/itoyNYs2n/Fk7YOtpT7j7n9onJJeUo+C1RpocpGYsww/cR1EQaPbWVF8iv1PyRKKlS8kVO4zuipA==
+"@embroider/core@^3.4.7":
+  version "3.4.7"
+  resolved "https://registry.yarnpkg.com/@embroider/core/-/core-3.4.7.tgz#2a69fe12eaf027de6ab423d0a4d111087450df7e"
+  integrity sha512-JTXpPBzsIrTdQdv/UdUQVinCxCtcLjHb0CgCksifFyut/JZC+6Dh65eP8KuPuF9eUX0ptxEhr7DQiMNeAD/p7w==
   dependencies:
     "@babel/core" "^7.14.5"
     "@babel/parser" "^7.14.5"
     "@babel/traverse" "^7.14.5"
-    "@embroider/macros" "1.15.0"
-    "@embroider/shared-internals" "2.5.2"
+    "@embroider/macros" "1.15.1"
+    "@embroider/shared-internals" "2.6.0"
     assert-never "^1.2.1"
     babel-plugin-ember-template-compilation "^2.1.1"
     broccoli-node-api "^1.7.0"
@@ -1356,13 +1356,13 @@
   resolved "https://registry.yarnpkg.com/@embroider/hbs-loader/-/hbs-loader-3.0.3.tgz#73eee9a54fa893d4f48b7ffe05c40c26cb491dae"
   integrity sha512-sI2K3/III1WGGxS+aIf8uW5tgcNiE7APNhThn2ZTwqU47fK20Uz8TJZhst0GfNZFsCsmuQMRUikRJvQU8naSWA==
 
-"@embroider/macros@1.15.0", "@embroider/macros@^1.0.0", "@embroider/macros@^1.10.0", "@embroider/macros@^1.13.1", "@embroider/macros@^1.8.3":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-1.15.0.tgz#409e494281d365bdc55fb9eb6ab983819a22be55"
-  integrity sha512-gXh46ZafqYb6AJVoCCaQwYRsqFIwAat/PVCaJgEDKnOgOP/BTyIXwAld0gLZlIgSKkqOccBih83bXMShflKkLg==
+"@embroider/macros@1.15.1", "@embroider/macros@^1.0.0", "@embroider/macros@^1.10.0", "@embroider/macros@^1.13.1", "@embroider/macros@^1.8.3":
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-1.15.1.tgz#fbcd10f5df47243a1561445ec066f97e1a87649a"
+  integrity sha512-l6rv4UVyQ+0XZbabpGXXUNpm7vMEVFzFwWnBeyKFLmmxuEQ4tgxEgR9qDRF/IWJXGS6na6pXN3jTk/cOaQiCpw==
   dependencies:
     "@babel/core" "^7.24.0"
-    "@embroider/shared-internals" "2.5.2"
+    "@embroider/shared-internals" "2.6.0"
     assert-never "^1.2.1"
     babel-import-util "^2.0.0"
     ember-cli-babel "^8.2.0"
@@ -1379,10 +1379,10 @@
     "@ember/test-waiters" "^3.0.2"
     "@embroider/addon-shim" "^1.8.7"
 
-"@embroider/shared-internals@2.5.2", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.5.1":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-2.5.2.tgz#5cd49c6164147c68fe9d6994ef5cccb47e138bb4"
-  integrity sha512-jNDJ9YlV6Qp9Na9v17qirUewVuq6T0t32nn+bbnFlCRTvmllKluZdYPSC5RuRnEZKTloVYRSF0+f1rgkTIEvxQ==
+"@embroider/shared-internals@2.6.0", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.5.1":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-2.6.0.tgz#851fd8d051fd4f7f93b2b7130e2ae5cdd537c5d6"
+  integrity sha512-A2BYQkhotdKOXuTaxvo9dqOIMbk+2LqFyqvfaaePkZcFJvtCkvTaD31/sSzqvRF6rdeBHjdMwU9Z2baPZ55fEQ==
   dependencies:
     babel-import-util "^2.0.0"
     debug "^4.3.2"
@@ -1390,6 +1390,7 @@
     fs-extra "^9.1.0"
     js-string-escape "^1.0.1"
     lodash "^4.17.21"
+    minimatch "^3.0.4"
     resolve-package-path "^4.0.1"
     semver "^7.3.5"
     typescript-memoize "^1.0.1"
@@ -1402,15 +1403,15 @@
     lodash "^4.17.21"
     resolve "^1.20.0"
 
-"@embroider/webpack@^3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-3.2.2.tgz#f09d45454f05d2801581076e42e65e7a3a2f584b"
-  integrity sha512-ygUQiej6uEgtF63opuyzvnoF8SjEsgOFaIDY9osaMKmoFe06QidjT2utLVqOB+k3vBiYfxQkVZ1HJaM0ud4F4A==
+"@embroider/webpack@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-3.2.3.tgz#157b9b088af8fe1a31a162af771e253403040159"
+  integrity sha512-WXV5nLH4qzykla9ADxqAyP28dJoBihnbByJRN/QRgj0kmNvU2CPqNVhpsVJpgOjSf8bFBVyQwq5bUjj/Kswwew==
   dependencies:
     "@babel/core" "^7.14.5"
     "@embroider/babel-loader-9" "3.1.1"
     "@embroider/hbs-loader" "3.0.3"
-    "@embroider/shared-internals" "2.5.2"
+    "@embroider/shared-internals" "2.6.0"
     "@types/supports-color" "^8.1.0"
     assert-never "^1.2.1"
     babel-loader "^8.2.2"
@@ -4666,10 +4667,10 @@ chrome-trace-event@^1.0.2:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
   integrity sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==
 
-chromium-bidi@0.5.16:
-  version "0.5.16"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.5.16.tgz#345d04fee80d24729486f87d0f4c1c32f317a59d"
-  integrity sha512-IT5lnR44h/qZQ4GaCHvBxYIl4cQL2i9UvFyYeRyVdcpY04hx5H720HQfe/7Oz7ndxaYVLQFGpCO71J4X2Ye/Gw==
+chromium-bidi@0.5.17:
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.5.17.tgz#04b66fa77f9ab80234b72206e71fc2af96fd08c4"
+  integrity sha512-BqOuIWUgTPj8ayuBFJUYCCuwIcwjBsb3/614P7tt1bEPJ4i1M0kCdIl0Wi9xhtswBXnfO2bTpTMkHD71H8rJMg==
   dependencies:
     mitt "3.0.1"
     urlpattern-polyfill "10.0.0"
@@ -8975,59 +8976,59 @@ lcid@^3.0.0:
   dependencies:
     invert-kv "^3.0.0"
 
-lefthook-darwin-arm64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.6.9.tgz#ad05ce551495ca95bbb69e64cb160aae8f7be4c1"
-  integrity sha512-7ooCgGgPANCYmiiRSoSzwS09TYQ62P506FVx2GCiN20pWK9Q5r0oQv9v35MH6BJKbB/gVHY+tUcF9FSGxZAk+w==
+lefthook-darwin-arm64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.6.10.tgz#31c6ba2f0e5c24a938b468f77bdff3b829bb528d"
+  integrity sha512-Hh11OkoKG7FEOByS1dcgNV7ETq45VmwBbw0VPTiBznyfOG4k+pi0fIdc1qbmbxvYqNE0r420QR/Q3bimaa4Kxg==
 
-lefthook-darwin-x64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.6.9.tgz#abaf65c81f7db293d2928e5bfa3b849f23b8a6b2"
-  integrity sha512-id3B3+TjwZ1/vKKFeqaXHi5jWPPx/8sNzHe5HRijzDrn0+WrMWwQdS9Ws7Dy66ZFKtbwEPiBwMjXMBIE75WvxQ==
+lefthook-darwin-x64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.6.10.tgz#4d49622dccb0f3ff7a6a2c4d4a9af0c098e2595c"
+  integrity sha512-FiOB0t5OBcQ8OnG/LSdfUYj736SJdlLjWuOZ4wTlJ7EUrHditieap6VNAxwMmFVyQN0X2ZwKWytwY35y+Hflhw==
 
-lefthook-freebsd-arm64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.6.9.tgz#2078b6826231fc92f93975dfeb4f57c578ac08bc"
-  integrity sha512-W/Kix6qun5vUKPop0AetiMP5gsm2TJ5TKvVO633n1k0b9n5NtVMUM2XSrttxk3hjEe6AFc+vvWR2nQkM6cLV1g==
+lefthook-freebsd-arm64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.6.10.tgz#b3594d47582a2b90025c585ec6ec85a10b515294"
+  integrity sha512-IxGgS3RrNwk3Kr83o5SQhGxqppQi7fu2t//nsp6ocgnJeStrTtXZJOrel2VohzrFxpzQdJVXBGgUGLXtY8t8qw==
 
-lefthook-freebsd-x64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.6.9.tgz#cbe736c4ccae796e98a92b8e573fd3c0b7e7f808"
-  integrity sha512-uobjPgtSi3KqWUhLCqZSsaYnsDQg7rGiOzQnPHAyw1BIvBwaxcENHhYO7Mjbc17JnPOynUhJmT7uUJuU2fNWng==
+lefthook-freebsd-x64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.6.10.tgz#3eba68b410d4913038672404ed535b8fa5248eb1"
+  integrity sha512-sFSe+dGLa4iBblWAhAGTP9moarcbFtFAH6aaCeyqSX51O6p9VPdGjqNtcE8aGbGAk4lO6v1ScRjk5ogMSinJwQ==
 
-lefthook-linux-arm64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.6.9.tgz#07a3776896cd25797e3d83090eea99764c693ea1"
-  integrity sha512-KXmJwchr2v4pcFXL3iP0D7XEEBjGKbgKRWywN9K2+R4bEsMHNNxgAEq9ZgbzkViTspqm9+1U9fpsNgwwSabgFg==
+lefthook-linux-arm64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.6.10.tgz#4a39cc574ea05d742fc7765a03ccae66a01a634a"
+  integrity sha512-fXnKiNdRIW+FRvc1keVrvWX5EqIhVFfPjcy+PbsKdxiWRXgjtidi6LPmQ8eosH0DC9PxZ0mpdCMf40FHEZLbQA==
 
-lefthook-linux-x64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.6.9.tgz#b909d12ff6989c950e14f778737f8a0fe36dd692"
-  integrity sha512-ZxvCzXEEmIrrxyyZasOLoiEcxil7ArS6NA1+aTOm6q7UK0btVbwxzOcvF5WkJ57kD963JGpNm45uuSuErNN3RA==
+lefthook-linux-x64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.6.10.tgz#546e134afea574cb72ea9b0dd2829f45ae6fb309"
+  integrity sha512-bm6l2GOFnmYreZxmHb47QeOiFAItttOOxvCEX1okIRD7JbUC+lGC9evW5GJv/ltjZBoTDYEtQAUa+BpHTGuY2A==
 
-lefthook-windows-arm64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.6.9.tgz#52d869f890cbc7737236aca576fdab01eed8beb8"
-  integrity sha512-69sCcalUSA+rJC4YHvrDYYmB++Gx+P5kZixXENGDDSLGeFhBNr1cVGPTWLoBbxxdVT7jZCsfN5QVoVC0dvmJjQ==
+lefthook-windows-arm64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.6.10.tgz#4a3feeb23cf2118de5025f65b5c239ca05ed54d8"
+  integrity sha512-pFxT8KbOMzGxj6cz4glHYwQSNC7XCuy9RDqIO0AxPlpATsCpapkF4ngDxBT1iFv2VhdeweMa7RXUDsMAGQA4Qw==
 
-lefthook-windows-x64@1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.6.9.tgz#905c2a555eff32bffff9d29eb1ec8e7ca18f4cfa"
-  integrity sha512-y5WWsN3NEZ2EjItKs6AOw10roGX6BY+/UoD3ADMvycYRv7+wDKtTjuws+UMGJ96aagUOClzDszf+fDRyypMzlA==
+lefthook-windows-x64@1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.6.10.tgz#fb775fbc14d6122cec5fb041c442951175dd8fc2"
+  integrity sha512-fcDnUSTv95AdLvm0NIrn3jBWXuRq8SlbDDjkkB5OHLiSmjz4eOr6wyD7xceDp33zZgZmWFzHebJngxxcIaUuHw==
 
-lefthook@^1.6.9:
-  version "1.6.9"
-  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.6.9.tgz#0af26e2fca60a101591861c2a9a80456ac13dbcf"
-  integrity sha512-bpr1jWW/IwP43iv9TAz6WuZV2KMmRA2HN6UFRIzsTvHB8LDwSCu5HrkSTfP9cx70XQdYbzFbJbR16KLmnxNw4g==
+lefthook@^1.6.10:
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.6.10.tgz#f0175c1042635d54a15687e6f2f7109fc6c40ce3"
+  integrity sha512-HeVjsDCrHLe9htQHbLuQJu2YdLK6Tl5bh36fOpmXqckEXTI0BDR0Y5JYc7G5Inj4YXQsc51a9dUDZMeniSnSag==
   optionalDependencies:
-    lefthook-darwin-arm64 "1.6.9"
-    lefthook-darwin-x64 "1.6.9"
-    lefthook-freebsd-arm64 "1.6.9"
-    lefthook-freebsd-x64 "1.6.9"
-    lefthook-linux-arm64 "1.6.9"
-    lefthook-linux-x64 "1.6.9"
-    lefthook-windows-arm64 "1.6.9"
-    lefthook-windows-x64 "1.6.9"
+    lefthook-darwin-arm64 "1.6.10"
+    lefthook-darwin-x64 "1.6.10"
+    lefthook-freebsd-arm64 "1.6.10"
+    lefthook-freebsd-x64 "1.6.10"
+    lefthook-linux-arm64 "1.6.10"
+    lefthook-linux-x64 "1.6.10"
+    lefthook-windows-arm64 "1.6.10"
+    lefthook-windows-x64 "1.6.10"
 
 levn@^0.4.1:
   version "0.4.1"
@@ -10754,13 +10755,13 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
 
-puppeteer-core@^22.6.3:
-  version "22.6.3"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.6.3.tgz#b1b189c14586c135899ec59f5be97baa39e6f634"
-  integrity sha512-YrTAak5zCTWVTnVaCK1b7FD1qFCCT9bSvQhLzamnIsJ57/tfuXiT8ZvPJR2SBfahyFTYFCcaZAd/Npow3lmDGA==
+puppeteer-core@^22.6.4:
+  version "22.6.4"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.6.4.tgz#b0f9b3c7e90013e892fc34f0a3685543aa7b6326"
+  integrity sha512-QtfJwPmqQec3EHc6LqbEz03vSiuVAr9bYp0TV87dLoreev6ZevsXdLgOfQgoA3GocrsSe/eUf7NRPQ1lQfsc3w==
   dependencies:
     "@puppeteer/browsers" "2.2.1"
-    chromium-bidi "0.5.16"
+    chromium-bidi "0.5.17"
     debug "4.3.4"
     devtools-protocol "0.0.1262051"
     ws "8.16.0"
@@ -12486,10 +12487,10 @@ typescript-memoize@^1.0.0-alpha.3, typescript-memoize@^1.0.1:
   resolved "https://registry.yarnpkg.com/typescript-memoize/-/typescript-memoize-1.1.1.tgz#02737495d5df6ebf72c07ba0d002e8f4cf5ccfa0"
   integrity sha512-GQ90TcKpIH4XxYTI2F98yEQYZgjNMOGPpOgdjIBhaLaWji5HPWlRnZ4AeA1hfBxtY7bCGDJsqDDHk/KaHOl5bA==
 
-typescript@^5.4.4:
-  version "5.4.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.4.tgz#eb2471e7b0a5f1377523700a21669dce30c2d952"
-  integrity sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==
+typescript@^5.4.5:
+  version "5.4.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.5.tgz#42ccef2c571fdbd0f6718b1d1f5e6e5ef006f611"
+  integrity sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"

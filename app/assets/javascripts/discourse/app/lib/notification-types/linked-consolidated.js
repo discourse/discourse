@@ -4,8 +4,9 @@ import I18n from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get linkHref() {
-    // Linking here for now until we have a proper new page for "linked" in the profile
-    return userPath(`${this.currentUser.username}/notifications`);
+    return userPath(
+      `${this.currentUser.username}/notifications/links?acting_username=${this.notification.data.username}`
+    );
   }
 
   get description() {
