@@ -857,6 +857,21 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "mandatory_values for group list settings" do
+    it "adds mandatory values" do
+      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|13")
+
+      SiteSetting.create_tag_allowed_groups = 14
+      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|14")
+
+      SiteSetting.create_tag_allowed_groups = "13|14"
+      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|13|14")
+
+      SiteSetting.create_tag_allowed_groups = ""
+      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2")
+    end
+  end
+
   describe "_map extension for list settings" do
     it "handles splitting group_list settings" do
       SiteSetting.personal_message_enabled_groups = "1|2"

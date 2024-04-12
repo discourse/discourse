@@ -23,4 +23,8 @@ export default Component.extend(UtilsMixin, {
   itemName: computed("item", function () {
     return this.getName(this.item);
   }),
+
+  readOnly: computed("item", function () {
+    return this.get("mandatoryValues")?.split("|")?.includes(this.item.id);
+  }),
 });

@@ -87,6 +87,10 @@ module SiteSettingExtension
     @categories ||= {}
   end
 
+  def mandatory_values
+    @mandatory_values ||= {}
+  end
+
   def shadowed_settings
     @shadowed_settings ||= []
   end
@@ -238,6 +242,7 @@ module SiteSettingExtension
           preview: previews[s],
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
+          mandatory_values: mandatory_values[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -554,12 +559,17 @@ module SiteSettingExtension
           return false if !plugin.configurable? && plugin.enabled_site_setting == name
         end
 
-        if (c = current[name]).nil?
-          refresh!
-          current[name]
-        else
-          c
+        value =
+          if (c = current[name]).nil?
+            refresh!
+            current[name]
+          else
+            c
+          end
+        if mandatory_values[name]
+          return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+        value
       end
     end
 
@@ -626,6 +636,8 @@ module SiteSettingExtension
 
     mutex.synchronize do
       defaults.load_setting(name, default, opts.delete(:locale_default))
+
+      mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
 
       categories[name] = opts[:category] || :uncategorized
 
