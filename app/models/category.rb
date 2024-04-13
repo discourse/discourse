@@ -226,7 +226,8 @@ class Category < ActiveRecord::Base
                 :subcategory_ids,
                 :subcategory_list,
                 :notification_level,
-                :has_children
+                :has_children,
+                :subcategories_count
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
@@ -244,13 +245,14 @@ class Category < ActiveRecord::Base
         Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
       end
 
-    # Categories with children
-    with_children =
+    # Load subcategory counts (used to fill has_children property)
+    subcategories_count =
       Category
         .secured(guardian)
-        .where(parent_category_id: category_ids)
-        .pluck(:parent_category_id)
-        .to_set
+        .where.not(parent_category_id: nil)
+        .group(:parent_category_id)
+        .pluck(:parent_category_id, "COUNT(*)")
+        .to_h
 
     # Update category attributes
     categories.each do |category|
@@ -259,7 +261,9 @@ class Category < ActiveRecord::Base
       category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
         allowed_topic_create_ids&.include?(category[:id])
 
-      category.has_children = with_children.include?(category[:id])
+      category.has_children = subcategories_count.key?(category[:id])
+
+      category.subcategories_count = subcategories_count[category[:id]] if category.has_children
     end
   end
 

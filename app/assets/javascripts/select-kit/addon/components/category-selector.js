@@ -80,6 +80,7 @@ export default MultiSelectComponent.extend({
       if (this.site.lazy_load_categories) {
         await Category.asyncSearch("", {
           parentCategoryId: categories[0].id,
+          limit: 100,
         });
       }
 
@@ -92,7 +93,9 @@ export default MultiSelectComponent.extend({
             // that parseInt still returns a valid ID in order to generate the
             // label
             id: `${categories[0].id}+subcategories`,
-            categories: categories[0].descendants,
+            // We limit to the first 100 subcategories because a large number
+            // of categories selected would break the UI
+            categories: categories[0].descendants.slice(0, 100),
           })
         );
       }
@@ -101,7 +104,7 @@ export default MultiSelectComponent.extend({
     return categories;
   },
 
-  select(value, item) {
+  async select(value, item) {
     if (item.categories) {
       this.selectKit.change(
         makeArray(this.value).concat(item.categories.mapBy("id")),

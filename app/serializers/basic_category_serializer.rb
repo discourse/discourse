@@ -20,6 +20,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :can_edit,
              :topic_template,
              :has_children,
+             :subcategories_count,
              :sort_order,
              :sort_ascending,
              :show_subcategory_list,
