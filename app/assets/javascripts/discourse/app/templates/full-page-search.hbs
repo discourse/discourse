@@ -30,13 +30,6 @@
         @aria-controls="search-result-count"
         class="full-page-search search no-blur search-query"
       />
-      <ComboBox
-        @id="search-type"
-        @value={{this.search_type}}
-        @content={{this.searchTypes}}
-        @onChange={{fn (mut this.search_type)}}
-        @options={{hash castInteger=true}}
-      />
       <DButton
         @action={{fn (action "search") (hash collapseFilters=true)}}
         @icon="search"
@@ -61,7 +54,7 @@
         </div>
       {{/if}}
 
-      <div class="search-filters">
+      <div class="search-filters hidden">
         <SearchAdvancedOptions
           @searchTerm={{readonly this.searchTerm}}
           @onChangeSearchTerm={{fn (mut this.searchTerm)}}
@@ -83,6 +76,37 @@
   </div>
 
   <div class="search-advanced">
+    <nav
+      class="horizontal-overflow-nav"
+      aria-label="User secondary - preferences"
+    >
+      <ul class="search-nav-pills action-list">
+        <li>
+          <a
+            href="/search?search_type=topics_posts{{if
+              this.q
+              (concat '&q=' this.q)
+            }}"
+            class={{if (eq this.search_type 'topics_posts') 'active' ''}}
+          ><span>Posts</span></a>
+        </li>
+        <li>
+          <a
+            href="/search?search_type=categories_tags{{if
+              this.q
+              (concat '&q=' this.q)
+            }}"
+            class={{if (eq this.search_type 'categories_tags') 'active' ''}}
+          ><span>Tags</span></a>
+        </li>
+        <li>
+          <a
+            href="/search?search_type=users{{if this.q (concat '&q=' this.q)}}"
+            class={{if (eq this.search_type 'users') 'active' ''}}
+          ><span>People</span></a>
+        </li>
+      </ul>
+    </nav>
     <PluginOutlet
       @name="full-page-search-below-search-header"
       @connectorTagName="div"
@@ -94,7 +118,7 @@
       }}
     />
 
-    {{#if this.hasResults}}
+    {{#if false}}
       {{#if this.usingDefaultSearchType}}
         <div
           class={{this.searchInfoClassNames}}
@@ -216,8 +240,6 @@
                     {{#if this.isLastPage}}
                       {{i18n "search.more_results"}}
                     {{/if}}
-                  {{else}}
-                    {{i18n "search.no_more_results"}}
                   {{/if}}
                 </h3>
               {{/if}}
