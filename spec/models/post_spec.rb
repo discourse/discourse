@@ -1749,13 +1749,6 @@ RSpec.describe Post do
             audio_upload.update!(access_control_post_id: other_post.id)
           end
 
-          it "does nothing if the post is not in a secure context" do
-            SiteSetting.login_required = false
-            post.link_post_uploads
-            image_upload.reload
-            expect(image_upload.access_control_post_id).to eq(nil)
-          end
-
           it "does nothing if secure uploads is disabled" do
             SiteSetting.secure_uploads = false
             post.link_post_uploads

@@ -40,6 +40,7 @@ describe "Secure uploads" do
 
   it "does not convert an upload to secure when it was first used in a site setting then in a post" do
     upload = create_upload
+    stub_presign_upload_get(upload)
     SiteSetting.favicon = upload
     expect(upload.reload.upload_references.count).to eq(1)
     create_post(
@@ -55,6 +56,7 @@ describe "Secure uploads" do
 
   it "does not convert an upload to insecure when it was first used in a secure post then a site setting" do
     upload = create_upload
+    stub_presign_upload_get(upload)
     create_post(
       title: "Secure upload post",
       raw: "This is a new post <img src=\"#{upload.url}\" />",
@@ -80,7 +82,7 @@ describe "Secure uploads" do
     upload.reload
     expect(upload.upload_references.count).to eq(1)
     expect(upload.secure).to eq(false)
-    expect(upload.access_control_post).to eq(post)
+    expect(upload.access_control_post).to eq(nil)
 
     stub_presign_upload_get(upload)
     create_post(
@@ -92,7 +94,7 @@ describe "Secure uploads" do
     upload.reload
     expect(upload.upload_references.count).to eq(2)
     expect(upload.secure).to eq(false)
-    expect(upload.access_control_post).to eq(post)
+    expect(upload.access_control_post).to eq(nil)
   end
 
   it "does not convert an upload to insecure when it was first used in a secure post then in a public post" do
