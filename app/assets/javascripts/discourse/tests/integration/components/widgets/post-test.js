@@ -782,11 +782,14 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("topic map - few posts", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("participants", [
+      { username: "eviltrout" },
+      { username: "codinghorror" },
+    ]);
     this.set("args", {
       topic,
       showTopicMap: true,
       topicPostsCount: 2,
-      participants: [{ username: "eviltrout" }, { username: "codinghorror" }],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -799,6 +802,14 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("topic map - participants", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
+    topic.postStream.setProperties({ userFilters: ["sam", "codinghorror"] });
+    topic.details.set("participants", [
+      { username: "eviltrout" },
+      { username: "codinghorror" },
+      { username: "sam" },
+      { username: "ZogStrIP" },
+    ]);
+
     this.set("args", {
       topic,
       showTopicMap: true,
@@ -824,18 +835,15 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("topic map - links", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
-    this.set("args", {
-      topic,
-      showTopicMap: true,
-      topicLinks: [
-        { url: "http://link1.example.com", clicks: 0 },
-        { url: "http://link2.example.com", clicks: 0 },
-        { url: "http://link3.example.com", clicks: 0 },
-        { url: "http://link4.example.com", clicks: 0 },
-        { url: "http://link5.example.com", clicks: 0 },
-        { url: "http://link6.example.com", clicks: 0 },
-      ],
-    });
+    topic.details.set("topicLinks", [
+      { url: "http://link1.example.com", clicks: 0 },
+      { url: "http://link2.example.com", clicks: 0 },
+      { url: "http://link3.example.com", clicks: 0 },
+      { url: "http://link4.example.com", clicks: 0 },
+      { url: "http://link5.example.com", clicks: 0 },
+      { url: "http://link6.example.com", clicks: 0 },
+    ]);
+    this.set("args", { topic, showTopicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 

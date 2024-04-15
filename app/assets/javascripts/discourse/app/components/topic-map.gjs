@@ -12,6 +12,7 @@ export default class TopicMap extends Component {
   @tracked collapsed = !this.args.model.has_summary;
   topicDetails = this.args.model.get("details");
   postStream = this.args.model.postStream;
+  userFilters = this.postStream.userFilters || [];
 
   @action
   toggleMap() {
@@ -31,7 +32,10 @@ export default class TopicMap extends Component {
         class="topic-map-expanded"
         id="topic-map-expanded__aria-controls"
       >
-        <TopicMapExpanded @postAttrs={{@postAttrs}} />
+        <TopicMapExpanded
+          @topicDetails={{this.topicDetails}}
+          @userFilters={{this.userFilters}}
+        />
       </section>
     {{/unless}}
     {{#if (or @model.has_summary @model.summarizable)}}
