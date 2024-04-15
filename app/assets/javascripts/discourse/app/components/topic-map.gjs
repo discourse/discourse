@@ -34,10 +34,11 @@ export default class TopicMap extends Component {
         <TopicMapExpanded @postAttrs={{@postAttrs}} />
       </section>
     {{/unless}}
-    {{#if (or this.topicDetails.has_summary @model.summarizable)}}
+    {{#if (or @model.has_summary @model.summarizable)}}
       <section class="information toggle-summary">
         <SummaryBox
-          @postAttrs={{@postAttrs}}
+          @topic={{@model}}
+          @postStream={{this.postStream}}
           @cancelFilter={{@cancelFilter}}
           @showTopReplies={{@showTopReplies}}
           @collapseSummary={{@collapseSummary}}

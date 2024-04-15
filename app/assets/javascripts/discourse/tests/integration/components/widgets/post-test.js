@@ -865,9 +865,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("topic map - has top replies summary", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
-    topic.details.set("has_summary", true);
-    this.set("args", { topic, showTopicMap: true, hasTopRepliesSummary: true });
+    const topic = store.createRecord("topic", { id: 123, has_summary: true });
+    this.set("args", { topic, showTopicMap: true });
     this.set("showTopReplies", () => (this.summaryToggled = true));
 
     await render(
