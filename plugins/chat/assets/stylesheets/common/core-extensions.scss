@@ -11,6 +11,65 @@
   }
 }
 
+.user-summary-page .college-list {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+
+  .college-card {
+    width: 228px;
+    padding: 1.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #e8eff2;
+    position: relative;
+
+    .card-contents {
+      display: flex;
+      padding: 0.5rem;
+      gap: 0.5rem;
+      justify-content: space-around;
+    }
+
+    .subtext {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      gap: 4px;
+    }
+
+    .toptext {
+      color: #0d374a;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      top: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 160px;
+      position: absolute;
+      background-color: #cef8dd;
+      padding: 4px 12px;
+      border-radius: 24px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .college {
+      font-size: 14px;
+      font-weight: 500;
+      color: #050505;
+      margin: 0;
+    }
+
+    .course {
+      color: #676b89;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
 .user-summary-page .details .controls ul {
   display: flex;
   flex-direction: column;
