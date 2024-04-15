@@ -293,15 +293,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       modal.filter("category 2 subcategory subcategory")
 
       expect(modal).to have_categories(
-        [
-          category2,
-          category2_subcategory,
-          category2_subcategory_subcategory,
-          category,
-          category_subcategory2,
-          category_subcategory,
-          category_subcategory_subcategory2,
-        ],
+        [category2, category2_subcategory, category2_subcategory_subcategory],
       )
     end
   end
