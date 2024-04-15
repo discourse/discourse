@@ -208,11 +208,11 @@ export default class ThemesList extends Component {
   changeView(newTab) {
     if (newTab !== this.currentTab) {
       this.set("selectInactiveMode", false);
-      this.set("currentTab", newTab);
       this.set("filter", ALL_FILTER);
       if (!this.showSearchAndFilter) {
         this.set("searchTerm", null);
       }
+      this.router.transitionTo("adminCustomizeThemes", newTab);
     }
   }
 

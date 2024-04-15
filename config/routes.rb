@@ -221,6 +221,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
@@ -257,6 +258,7 @@ Discourse::Application.routes.draw do
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
+        get "components/:id" => "themes#index"
         get "themes/:id/export" => "themes#export"
         get "themes/:id/schema/:setting_name" => "themes#schema"
 

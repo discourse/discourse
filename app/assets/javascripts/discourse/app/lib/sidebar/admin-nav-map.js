@@ -150,9 +150,17 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_themes",
         route: "adminCustomizeThemes",
-        query: { tab: "themes" },
+        routeModels: ["themes"],
+        model: "themes",
         label: "admin.appearance.sidebar_link.themes",
         icon: "paint-brush",
+      },
+      {
+        name: "admin_components",
+        route: "adminCustomizeThemes",
+        routeModels: ["components"],
+        label: "admin.appearance.sidebar_link.components",
+        icon: "puzzle-piece",
       },
       {
         name: "admin_customize_site_texts",
