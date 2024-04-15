@@ -170,10 +170,6 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
-#      - name: Setup MacOS
-#        run: brew install gnu-tar
-#        if: runner.os == 'macOS'
-
       - name: Run converter
         working-directory: migrations
         run: bin/convert version
